@@ -196,7 +196,7 @@
             url: "{{ url('doctor/patient') }}",
             type: 'POST',
             success: function(data){
-                sendData(data);
+                sendNormalData(data);
             },
             error: function(){
                 alert('error');
@@ -205,7 +205,7 @@
 
     });
 
-    function sendData(id)
+    function sendNormalData(id)
     {
         var reason = $('.reason_referral').val();
         var dbRef = firebase.database();
@@ -217,7 +217,7 @@
             age: age,
             sex: sex,
             date: "{{ date('M d, Y h:i:s') }}",
-            form_type: 'normal',
+            form_type: '#normalFormModal',
             form_id: id
         });
 
