@@ -18,7 +18,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): </td>
-                        <td colspan="3">Date/Time Referred (ReCo): </td>
+                        <td colspan="3">Date/Time Transferred: </td>
                     </tr>
                     <tr>
                         <td colspan="3">Name of Patient: </td>

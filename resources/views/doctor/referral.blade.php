@@ -1,3 +1,6 @@
+<?php
+    $user = Session::get('auth');
+?>
 @extends('layouts.app')
 
 @section('content')
@@ -22,7 +25,6 @@
                                     <a class="btn btn-info btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
                                 </div>
                             </div>
-
                         </li>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
@@ -61,15 +63,42 @@
 
     </div>
     <div class="col-md-3">
-        @include('sidebar.rhu')
+        @include('sidebar.quick')
     </div>
     @include('modal.accept_reject')
     @include('modal.reject')
     @include('modal.refer')
     @include('modal.accept')
 @endsection
-
+@include('script.firebase')
 @section('js')
+<script>
+    var dbRef = firebase.database();
+    var connRef = dbRef.ref('Referral');
+    var myfacility = "{{ $user->facility_id }}";
+    var count_referral = $('.count_referral').html();
+    var content = '';
 
+    console.log(myfacility);
+    connRef.child(myfacility).on('child_added',function(snapshot){
+        var data = snapshot.val();
+        count_referral = parseInt(count_referral);
+        count_referral += 1;
+        $('.count_referral').html(count_referral);
+        content = '<li>' +
+            '                            <i class="fa fa-ambulance bg-blue-active"></i>' +
+            '                            <div class="timeline-item unread-section">' +
+            '                                <span class="time"><i class="fa fa-calendar"></i> '+data.date+'</span>' +
+            '                                <h3 class="timeline-header no-border"><a href="#">'+data.name+'</a> is referred to your facility from <a href="#">'+data.referring_name+'</a></h3>' +
+            '                                <div class="timeline-footer">\n' +
+            '                                    <a class="btn btn-info btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>' +
+            '                                </div>' +
+            '                            </div>' +
+            '                        </li>';
+        $('.timeline').prepend(content);
+
+        console.log(data);
+    });
+</script>
 @endsection
 

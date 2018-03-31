@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        @include('sidebar.rhu')
+        @include('sidebar.quick')
     </div>
 @endsection
 

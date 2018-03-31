@@ -15,9 +15,9 @@ class HomeCtrl extends Controller
     public function index()
     {
         $user = Session::get('auth');
-        if($user->user_priv==5){
-
-        }else if($user->user_priv==6){
+        if($user->level=='doctor'){
+            return redirect('/doctor');
+        }else if($user->level=='chief'){
 
         }else{
             Session::flush();

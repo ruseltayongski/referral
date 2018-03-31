@@ -26,10 +26,10 @@ class LoginCtrl extends Controller
                 if(Hash::check($req->password,$login->password))
                 {
                     Session::put('auth',$login);
-                    if($login->user_priv==5){
-                        return 'rhu';
-                    }else if($login->user_priv==6){
-                        return 'hospital';
+                    if($login->level=='doctor'){
+                        return 'doctor';
+                    }else if($login->level=='chief'){
+                        return 'chief';
                     }else{
                         Session::forget('auth');
                         return 'denied';

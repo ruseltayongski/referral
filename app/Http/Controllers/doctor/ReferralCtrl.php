@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\rhu;
+namespace App\Http\Controllers\doctor;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PatientCtrl extends Controller
+class ReferralCtrl extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('rhu');
+        $this->middleware('doctor');
     }
 
     public function index()
     {
 
-        return view('rhu.patient',[
-            'title' => 'Patient List'
+        return view('doctor.referral',[
+            'title' => 'Referral'
         ]);
     }
 }

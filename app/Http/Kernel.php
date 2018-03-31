@@ -3,8 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\Auth;
-use App\Http\Middleware\Hospital;
-use App\Http\Middleware\Rhu;
+use App\Http\Middleware\Chief;
+use App\Http\Middleware\Doctor;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,7 +60,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'auth' => Auth::class,
-        'rhu' => Rhu::class,
-        'hospital' => Hospital::class,
+        'doctor' => Doctor::class,
+        'chief' => Chief::class,
     ];
 }

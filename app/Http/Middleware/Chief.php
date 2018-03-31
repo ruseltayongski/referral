@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Session;
 
-class Rhu
+class Chief
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Rhu
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
-        if($user->user_priv!=5)
+        if($user->level!='chief')
         {
             return redirect('/login');
         }

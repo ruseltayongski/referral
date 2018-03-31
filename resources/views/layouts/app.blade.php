@@ -32,8 +32,7 @@
             background: url('{{ asset('resources/img/backdrop.png') }}'), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
         }
         .loading {
-            opacity:0.4;
-            background:#ccc url('{{ asset('resources/img/spin.gif')}}') no-repeat center;
+            background: rgba(255, 255, 255, 0.5) url('{{ asset('resources/img/loading.gif')}}') no-repeat center;
             position:fixed;
             width:100%;
             height:100%;
@@ -65,7 +64,7 @@
                 <?php
                     $user = Session::get('auth');
                 ?>
-                <span class="title-info">Welcome,</span> <span class="title-desc">{{ $user->fname }} {{ $user->lname }}</span>
+                <span class="title-info">Welcome,</span> <span class="title-desc">Dr. {{ $user->fname }} {{ $user->lname }}</span>
             </div>
 
             <div class="pull-right">
@@ -92,10 +91,10 @@
 
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url('rhu/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('rhu/referral') }}"><i class="fa fa-wheelchair"></i> Referral <span class="badge">2 New</span></a></li>
-                <li><a href="{{ url('rhu/patient') }}"><i class="fa fa-users"></i> Patients</a></li>
-                <li><a href="{{ url('rhu/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
+                <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">2</span> New</span></a></li>
+                <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-users"></i> Patients</a></li>
+                <li><a href="{{ url('doctor/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -114,6 +113,7 @@
     @yield('content')
     <div class="clearfix"></div>
 </div> <!-- /container -->
+@include('modal.server')
 <footer class="footer">
     <div class="container">
         <p>All Rights Reserved 2017 | Version 1.0</p>
@@ -125,17 +125,12 @@
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="{{ asset('resources/assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
 <script src="{{ asset('resources/assets/js/jquery-validate.js') }}"></script>
 <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
-
-
 @yield('js')
-
-@section('js')
-
-@show
 </body>
 </html>

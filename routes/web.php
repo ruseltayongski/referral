@@ -18,12 +18,27 @@ Route::get('logout', function(){
 });
 
 /*RHU Pages*/
-Route::get('rhu','rhu\HomeCtrl@index');
+Route::get('doctor','doctor\HomeCtrl@index');
 
-Route::get('rhu/referral','rhu\ReferralCtrl@index');
+Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
-Route::get('rhu/patient','rhu\PatientCtrl@index');
+Route::get('doctor/patient','doctor\PatientCtrl@index');
+Route::post('doctor/patient','doctor\PatientCtrl@referPatient');
+
+Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
+Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
+
 /*Hospital Pages*/
 
 Route::get('login','LoginCtrl@index');
 Route::post('login','LoginCtrl@validateLogin');
+
+/*Param */
+//Route::get('uploadcsv','ParamCtrl@upload');
+Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
+Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
+Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
+//
+//Route::get('sample',function(){
+//    echo date('y');
+//});

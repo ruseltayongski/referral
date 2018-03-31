@@ -8,7 +8,7 @@
                 Referral
                 <span class="pull-right">
                         <div class="badge">
-                            <i class="fa fa-wheelchair-alt"></i> 2 New
+                            <i class="fa fa-wheelchair-alt"></i> <span class="count_referral">2</span> New
                         </div>
 
                     </span>

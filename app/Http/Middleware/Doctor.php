@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Session;
 
-class Hospital
+class Doctor
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Hospital
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
-        if($user->user_priv!=6)
+        if($user->level!='doctor')
         {
             return redirect('/login');
         }
