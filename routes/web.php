@@ -22,8 +22,13 @@ Route::get('doctor','doctor\HomeCtrl@index');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
+Route::get('doctor/referred','doctor\ReferralCtrl@referred');
+
 Route::get('doctor/patient','doctor\PatientCtrl@index');
-Route::post('doctor/patient','doctor\PatientCtrl@referPatient');
+
+Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
+
+Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
 
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');

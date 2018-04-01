@@ -210,6 +210,14 @@ label {
     margin-top: 20px;
 }
 
-.unread-section {
-    background-color: #e4ff92 !important;
+.normal-section {
+    background-color: #abff95 !important;
+}
+
+.pregnant-section {
+    background-color: #c3fcff !important;
+}
+
+.read-section {
+    background-color: #eeeeee !important;
 }

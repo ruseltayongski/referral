@@ -16,6 +16,8 @@ class Tracking extends Model
         'referred_from',
         'referred_to',
         'remarks',
-        'status'
+        'status',
+        'type',
+        'form_id'
     ];
 }

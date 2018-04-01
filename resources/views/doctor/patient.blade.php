@@ -6,8 +6,7 @@
 
 @section('content')
     <div class="col-md-3">
-        @include('sidebar.filter_profile')
-        @include('sidebar.tsekap_profile')
+        @include('sidebar.'.$sidebar)
     </div>
     <div class="col-md-9">
         <div class="jim-content">
@@ -60,7 +59,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($row->sex=='Female' && ($age > 14 || $age < 50))
+                                @if($row->sex=='Female' && ($age > 14 && $age < 50))
                                     <a href="#pregnantModal"
                                        data-patient_id = "{{ $row->id }}"
                                        data-name = "{{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}"
@@ -113,21 +112,21 @@
     </div>
     @include('modal.pregnantModal')
     @include('modal.normal_form_editable')
-    @include('modal.pregnant_form')
+    @include('modal.pregnant_form_editable')
 @endsection
 
 @section('js')
 @include('script.filterMuncity')
 @include('script.firebase')
+@include('script.datetime')
 <script>
     var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";
     var referred_name = '';
     var referring_name = $(".referring_name").val();
     var patient_form_id = 0;
-    console.log(referring_name);
     var name = '';
-    var age, sex, address;
+    var age, sex, address,form_type,reason;
     $('.form-submit').on('submit',function(){
         $('.loading').show();
         $('.btn-submit').attr('disabled',true);
@@ -192,39 +191,60 @@
 <script>
     $('.normal_form').on('submit',function(e){
         e.preventDefault();
+        reason = $('.reason_referral').val();
+        form_type = '#normalFormModal';
         $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient') }}",
+            url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data){
                 sendNormalData(data);
             },
             error: function(){
-                alert('error');
+                $('#serverModal').modal();
             }
         });
 
     });
 
-    function sendNormalData(id)
+    $('.pregnant_form').on('submit',function(e){
+        e.preventDefault();
+        form_type = '#pregnantModal';
+        sex = 'Female';
+        reason = $('.woman_information_given').val();
+        $(this).ajaxSubmit({
+            url: "{{ url('doctor/patient/refer/pregnant') }}",
+            type: 'POST',
+            success: function(data){
+                //console.log(data);
+                sendNormalData(data);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+
+    });
+
+    function sendNormalData(data)
     {
-        var reason = $('.reason_referral').val();
         var dbRef = firebase.database();
         var connRef = dbRef.ref('Referral');
         connRef.child(referred_facility).push({
             referring_name: referring_name,
             reason: reason,
+            ref_no: data.ref_no,
             name: name,
             age: age,
             sex: sex,
             date: "{{ date('M d, Y h:i:s') }}",
-            form_type: '#normalFormModal',
-            form_id: id
+            form_type: form_type,
+            form_id: data.id
         });
 
         connRef.on('child_added',function(data){
             setTimeout(function(){
-                window.location.reload(false);
                 //connRef.child(data.key).remove();
+                window.location.reload(false);
             },500);
         });
     }

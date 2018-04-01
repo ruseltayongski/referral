@@ -15,9 +15,15 @@ class ReferralCtrl extends Controller
 
     public function index()
     {
-
         return view('doctor.referral',[
-            'title' => 'Referral'
+            'title' => 'Incoming Patients'
+        ]);
+    }
+
+    public function referred()
+    {
+        return view('doctor.referred',[
+            'title' => 'Referred Patients'
         ]);
     }
 }

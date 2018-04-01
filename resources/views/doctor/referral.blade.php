@@ -4,9 +4,14 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .timeline .facility {
+            color: #ff8456;
+        }
+    </style>
     <div class="col-md-9">
         <div class="jim-content">
-            <h3 class="page-header">Referred Patients
+            <h3 class="page-header">Incoming Patients
             </h3>
             <div class="row">
                 <div class="col-md-12">
@@ -18,30 +23,42 @@
                         <!-- timeline item -->
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
-                            <div class="timeline-item unread-section">
-                                <span class="time"><i class="fa fa-calendar"></i> March 7, 2018 9:34 AM</span>
-                                <h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> is referred to your hospital from <a href="#">Cebu Health Unit</a></h3>
+                            <div class="timeline-item normal-section">
+                                <span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>
+                                <h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> is referred to your hospital from <span class="facility">Cebu Health Unit</span></h3>
                                 <div class="timeline-footer">
-                                    <a class="btn btn-info btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
+                                    <a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
+                                    <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
-                            <div class="timeline-item unread-section">
-                                <span class="time"><i class="fa fa-calendar"></i> March 7, 2018 11:40 AM</span>
-                                <h3 class="timeline-header no-border"><a href="#">Carlos Dumaguete</a> is referred to your hospital from <a href="#">Cebu Health Unit</a></h3>
+                            <div class="timeline-item pregnant-section">
+                                <span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>
+                                <h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> is referred to your hospital from <span class="facility">Cebu Health Unit</span></h3>
                                 <div class="timeline-footer">
-                                    <a class="btn btn-info btn-xs" href="#normalFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
+                                    <a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
+                                    <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>
                                 </div>
                             </div>
-
+                        </li>
+                        <li>
+                            <i class="fa fa-ambulance bg-blue-active"></i>
+                            <div class="timeline-item read-section">
+                                <span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>
+                                <h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> is referred to your hospital from <span class="facility">Cebu Health Unit</span></h3>
+                                <div class="timeline-footer">
+                                    <a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>
+                                    <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>
+                                </div>
+                            </div>
                         </li>
                         <li>
                             <i class="fa fa-user-plus bg-olive"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> March 6, 2018 01:23 PM</span>
-                                <h3 class="timeline-header no-border"><a href="#">Ester Forester</a> was accepted by your <a href="#">Hospital</a></h3>
+                                <h3 class="timeline-header no-border"><a href="#">Ester Forester</a> was ACCEPTED</h3>
 
                             </div>
 
@@ -50,7 +67,7 @@
                             <i class="fa fa-user-times bg-maroon"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> March 5, 2018 03:45 PM</span>
-                                <h3 class="timeline-header no-border"><a href="#">Garry Harlem</a> was rejected by your <a href="#">Hospital</a></h3>
+                                <h3 class="timeline-header no-border"><a href="#">Garry Harlem</a> was REJECTED</h3>
 
                             </div>
 

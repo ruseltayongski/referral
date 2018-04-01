@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\doctor;
 
+use App\Baby;
 use App\Muncity;
 use App\PatientForm;
 use App\Patients;
+use App\PregnantForm;
 use App\Profile;
 use App\Tracking;
 use App\User;
@@ -32,7 +34,8 @@ class PatientCtrl extends Controller
             'title' => 'Patient List',
             'data' => $data,
             'muncity' => $muncity,
-            'source' => $source
+            'source' => $source,
+            'sidebar' => 'filter_profile'
         ]);
     }
 
@@ -92,15 +95,15 @@ class PatientCtrl extends Controller
             'title' => 'Patient List',
             'data' => $data,
             'muncity' => $muncity,
-            'source' => 'tsekap'
+            'source' => 'tsekap',
+            'sidebar' => 'tsekap_profile'
         ]);
     }
 
-    function referPatient(Request $req)
+    function referPatient(Request $req,$type)
     {
         $user = Session::get('auth');
         $patient_id = $req->patient_id;
-
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
         $code = date('ymd').'-'.$user_code.'-'.date('His');
 
@@ -118,35 +121,125 @@ class PatientCtrl extends Controller
             'date_referred' => $req->date_referred,
             'referred_from' => $user->id,
             'referred_to' => $req->referred_facility,
-            'remarks' => $req->reason,
+            'remarks' => ($req->reason) ? $req->reason: '',
             'status' => 'referred'
         );
-        Tracking::updateOrCreate($match,$track);
+        $tracking = Tracking::updateOrCreate($match,$track);
+        $tracking_id = $tracking->id;
 
         $unique_id = "$patient_id-$user->facility_id-".date('ymdH');
         $match = array(
             'unique_id' => $unique_id
         );
-        $data = array(
-            'code' => $code,
-            'referring_facility' => $user->facility_id,
-            'referred_to' => $req->referred_facility,
-            'time_referred' => $req->date_referred,
-            'time_transferred' => '',
-            'patient_id' => $patient_id,
-            'case_summary' => $req->case_summary,
-            'reco_summary' => $req->reco_summary,
-            'diagnosis' => $req->diagnosis,
-            'reason' => $req->reason,
-            'referring_md' => $user->id,
-            'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
-        );
-        $form = PatientForm::updateOrCreate($match,$data);
 
-        return $form->id;
+        if($type==='normal')
+        {
+            $data = array(
+                'code' => $code,
+                'referring_facility' => $user->facility_id,
+                'referred_to' => $req->referred_facility,
+                'time_referred' => $req->date_referred,
+                'time_transferred' => '',
+                'patient_id' => $patient_id,
+                'case_summary' => $req->case_summary,
+                'reco_summary' => $req->reco_summary,
+                'diagnosis' => $req->diagnosis,
+                'reason' => $req->reason,
+                'referring_md' => $user->id,
+                'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
+            );
+            $form = PatientForm::updateOrCreate($match,$data);
+        }
+        else if($type==='pregnant')
+        {
+            $baby = array(
+                'fname' => $req->baby_fname,
+                'mname' => $req->baby_mname,
+                'lname' => $req->baby_lname,
+                'dob' => $req->baby_dob,
+                'civil_status' => 'Single'
+            );
+            $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+
+            Tracking::updateOrCreate([
+                'code' => $code
+            ],[
+                'remarks' => $req->woman_information_given
+            ]);
+
+            Baby::updateOrCreate([
+                'baby_id' => $baby_id,
+                'mother_id' => $patient_id
+            ],[
+                'weight' => $req->baby_weight,
+                'gestational_age' => $req->baby_gestational_age
+            ]);
+
+            $data = array(
+                'code' => $code,
+                'referring_facility' => $user->facility_id,
+                'referred_by' => $user->id,
+                'record_no' => $req->record_no,
+                'referred_date' => $req->date_referred,
+                'referred_to' => $req->referred_facility,
+                'health_worker' => $req->health_worker,
+                'patient_woman_id' => $patient_id,
+                'woman_reason' => $req->woman_reason,
+                'woman_major_findings' => $req->woman_major_findings,
+                'woman_before_treatment' => $req->woman_before_treatment,
+                'woman_before_given_time' => $req->woman_before_given_time,
+                'woman_during_transport' => $req->woman_during_treatment,
+                'woman_transport_given_time' => $req->woman_during_given_time,
+                'woman_information_given' => $req->woman_information_given,
+                'patient_baby_id' => $baby_id,
+                'baby_reason' => $req->baby_reason,
+                'baby_major_findings' => $req->baby_major_findings,
+                'baby_last_feed' => $req->baby_last_feed,
+                'baby_before_treatment' => $req->baby_before_treatment,
+                'baby_before_given_time' => $req->baby_before_given_time,
+                'baby_during_transport' => $req->baby_during_treatment,
+                'baby_transport_given_time' => $req->baby_during_given_time,
+                'baby_information_given' => $req->baby_information_given,
+            );
+            $form = PregnantForm::updateOrCreate($match,$data);
+        }
+        Tracking::where('id',$tracking_id)
+            ->update([
+                'type' => $type,
+                'form_id' => $form->id
+            ]);
+
+        return array(
+            'id' => $form->id,
+            'ref_no' => $code
+        );
     }
 
-    function importTsekap($patient_id,$civil_status,$phic_id,$phic_status)
+    function storeBabyAsPatient($data,$mother_id)
+    {
+        $mother = Patients::find($mother_id);
+        $data['brgy'] = $mother->brgy;
+        $data['muncity'] = $mother->muncity;
+        $data['province'] = $mother->province;
+        $dob = date('ymd',strtotime($data['dob']));
+        $tmp = array(
+            $data['fname'],
+            $data['mname'],
+            $data['lname'],
+            $data['brgy'],
+            $dob
+        );
+        $unique = implode($tmp);
+        $match = array(
+            'unique_id' => $unique
+        );
+
+        $patient = Patients::updateOrCreate($match,$data);
+        return $patient->id;
+
+    }
+
+    function importTsekap($patient_id,$civil_status='',$phic_id='',$phic_status='')
     {
         $profile = Profile::find($patient_id);
 
@@ -159,7 +252,7 @@ class PatientCtrl extends Controller
             'lname' => $profile->lname,
             'dob' => $profile->dob,
             'sex' => $profile->sex,
-            'civil_status' => $civil_status,
+            'civil_status' => ($civil_status) ? $civil_status: 'N/A',
             'phic_id' => ($phic_id) ? $phic_id: 'N/A',
             'phic_status' => ($phic_status) ? $phic_status: 'N/A',
             'brgy' => $profile->barangay_id,
@@ -169,5 +262,12 @@ class PatientCtrl extends Controller
         );
         $patient = Patients::updateOrCreate($match,$data);
         return $patient->id;
+    }
+
+    function accepted()
+    {
+        return view('doctor.accepted',[
+            'title' => 'Accepted Patients'
+        ]);
     }
 }

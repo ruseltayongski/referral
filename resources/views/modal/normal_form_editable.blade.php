@@ -71,6 +71,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">PhilHealth status:
+                            <label>None <input type="radio" name="phic_status" value="none" checked></label>
                             <label>Member <input type="radio" name="phic_status" value="member"></label>
                             <label>Dependent <input type="radio" name="phic_status" value="dependent"></label>
                         </td>

@@ -92,15 +92,29 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">2</span> New</span></a></li>
-                <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-users"></i> Patients</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                        <li><a href="{{ url('doctor/patient/tsekap') }}"><i class="fa fa-table"></i> PHA Check-Up Profiles</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">2</span> New</span><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">2</span> New</span></a></li>
+                        <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i> Referred Patients</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{ url('doctor/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ URL::to('logout') }}"><i class="fa fa-user"></i>&nbsp;&nbsp; Account Settings</a></li>
+                        <li><a href="{{ url('account') }}"><i class="fa fa-user"></i>&nbsp;&nbsp; Account Settings</a></li>
                         <li class="divider"></li>
-                        <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                     </ul>
                 </li>
             </ul>
