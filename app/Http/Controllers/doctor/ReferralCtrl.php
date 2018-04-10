@@ -56,7 +56,10 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $count = Tracking::where('referred_to',$user->facility_id)
-            ->where('status','referred')
+            ->where(function($q){
+                $q->where('status','referred')
+                    ->orwhere('status','seen');
+            })
             ->count();
         return $count;
     }
@@ -208,6 +211,7 @@ class ReferralCtrl extends Controller
                     ->orwhere('status','seen')
                     ->orwhere('status','accepted')
                     ->orwhere('status','transferred')
+                    ->orwhere('status','discharged')
                     ->orwhere('status','rejected');
             })
             ->orderBy('date_referred','desc')
@@ -318,7 +322,7 @@ class ReferralCtrl extends Controller
         return date('M d, Y h:i A',strtotime($date));
     }
 
-    public function arrive($track_id)
+    public function arrive(Request $req, $track_id)
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
@@ -330,7 +334,7 @@ class ReferralCtrl extends Controller
             'referred_from' => $track->referred_to,
             'referred_to' => 0,
             'action_md' => $user->id,
-            'remarks' => 'arrived',
+            'remarks' => $req->remarks,
             'status' => 'arrived'
         );
         Activity::create($data);
@@ -338,10 +342,10 @@ class ReferralCtrl extends Controller
         return date('M d, Y h:i A',strtotime($date));
     }
 
-    public function admit($track_id)
+    public function admit(Request $req, $track_id)
     {
         $user = Session::get('auth');
-        $date = date('Y-m-d H:i:s');
+        $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
         $data = array(
             'code' => $track->code,
@@ -358,10 +362,10 @@ class ReferralCtrl extends Controller
         return date('M d, Y h:i A',strtotime($date));
     }
 
-    public function discharge($track_id)
+    public function discharge(Request $req, $track_id)
     {
         $user = Session::get('auth');
-        $date = date('Y-m-d H:i:s');
+        $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
         $data = array(
             'code' => $track->code,
@@ -370,11 +374,15 @@ class ReferralCtrl extends Controller
             'referred_from' => $track->referred_to,
             'referred_to' => 0,
             'action_md' => $user->id,
-            'remarks' => 'discharged',
+            'remarks' => $req->remarks,
             'status' => 'discharged'
         );
         Activity::create($data);
 
+        Tracking::where('id',$track_id)
+            ->update([
+                'status' => 'discharged'
+            ]);
         return date('M d, Y h:i A',strtotime($date));
     }
 

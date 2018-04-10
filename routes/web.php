@@ -25,9 +25,9 @@ Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if th
 Route::post('doctor/referral/reject/{track_id}','doctor\ReferralCtrl@reject');//if form is rejected
 Route::post('doctor/referral/accept/{track_id}','doctor\ReferralCtrl@accept');//if form is accepted
 Route::get('doctor/referral/call/{track_id}','doctor\ReferralCtrl@call');//if form is called
-Route::get('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//if patient is arrived
-Route::get('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
-Route::get('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
+Route::post('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//if patient is arrived
+Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
+Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
 
 

@@ -72,10 +72,6 @@ $('body').on('click','.btn-refer',function () {
     var count_referral = $('.count_referral').html();
 
     if(status=='referred'){
-        count_referral = parseInt(count_referral);
-        count_referral -= 1;
-        $('.count_referral').html(count_referral);
-
         seenMessage();
     }else{
         setTimeout(function () {

@@ -11,23 +11,26 @@
     current_facility = "{{ \App\Facility::find($user->facility_id)->name }}";
 
     $('body').on('click','.btn-action',function(){
-        $('.loading').show();
         code = $(this).data('code');
         patient_name = $(this).data('patient_name');
         track_id = $(this).data('track_id');
     });
 
-    $('body').on('click','.btn-arrive',function(){
-        $.ajax({
+    $('#arriveForm').on('submit',function(e){
+        $('.loading').show();
+         e.preventDefault();
+         var remarks = $(this).find('.remarks').val();
+        $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/arrive/') }}/" + track_id,
-            type: 'GET',
-            success: function(date) {
+            type: 'POST',
+            success: function(date){
                 var arrive_data = {
                     code: code,
                     patient_name: patient_name,
                     track_id: track_id,
                     date: date,
-                    current_facility: current_facility
+                    current_facility: current_facility,
+                    remarks: remarks
                 };
                 arriveRef.push(arrive_data);
                 arriveRef.on('child_added',function(data){
@@ -35,6 +38,7 @@
                         arriveRef.child(data.key).remove();
                         var msg = 'Patient arrived to your facility';
                         $('.info').removeClass('hide').find('.message').html(msg);
+                        $('#arriveModal').modal('hide');
                         $('.loading').hide();
                     },500);
                 });
@@ -45,11 +49,13 @@
         });
     });
 
-    $('body').on('click','.btn-admit',function(){
-        $.ajax({
+    $('#admitForm').on('submit',function(e){
+        $('.loading').show();
+        e.preventDefault();
+        $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/admit/') }}/" + track_id,
-            type: 'GET',
-            success: function(date) {
+            type: 'POST',
+            success: function(date){
                 var arrive_data = {
                     code: code,
                     patient_name: patient_name,
@@ -63,6 +69,7 @@
                         admitRef.child(data.key).remove();
                         var msg = 'Patient admitted to your facility';
                         $('.info').removeClass('hide').find('.message').html(msg);
+                        $('#admitModal').modal('hide');
                         $('.loading').hide();
                     },500);
                 });
@@ -73,25 +80,30 @@
         });
     });
 
-    $('body').on('click','.btn-discharge',function(){
-        $.ajax({
+
+    $('#dischargeForm').on('submit',function(e){
+        $('.loading').show();
+        e.preventDefault();
+        var remarks = $(this).find('.remarks').val();
+        $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/discharge/') }}/" + track_id,
-            type: 'GET',
-            success: function(date) {
+            type: 'POST',
+            success: function(date){
+                var msg = 'Patient admitted to your facility';
+                $('.info').removeClass('hide').find('.message').html(msg);
                 var arrive_data = {
                     code: code,
                     patient_name: patient_name,
                     track_id: track_id,
                     date: date,
-                    current_facility: current_facility
+                    current_facility: current_facility,
+                    remarks: remarks
                 };
                 dischargetRef.push(arrive_data);
                 dischargetRef.on('child_added',function(data){
                     setTimeout(function(){
                         dischargetRef.child(data.key).remove();
-                        var msg = 'Patient discharged from your facility';
-                        $('.info').removeClass('hide').find('.message').html(msg);
-                        $('.loading').hide();
+                        window.location.reload(false);
                     },500);
                 });
             },
@@ -100,6 +112,8 @@
             }
         });
     });
+
+
 
     $('body').on('click','.btn-transfer',function(){
         $('.loading').hide();

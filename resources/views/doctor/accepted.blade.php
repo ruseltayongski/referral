@@ -41,24 +41,33 @@ $user = Session::get('auth');
                                 <td>{{ $row->patient_name }}</td>
                                 <td>{{ $row->date_accepted }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary btn-action btn-arrive"
+                                    <button class="btn btn-sm btn-primary btn-action"
+                                        data-toggle="modal"
+                                        data-target="#arriveModal"
                                         data-track_id="{{ $row->id }}"
                                         data-patient_name="{{ $row->patient_name }}"
                                         data-code="{{ $row->code}}">
                                         <i class="fa fa-wheelchair"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-info btn-action btn-admit"
+
+                                    <button class="btn btn-sm btn-info btn-action"
+                                            data-toggle="modal"
+                                            data-target="#admitModal"
                                             data-track_id="{{ $row->id }}"
                                             data-patient_name="{{ $row->patient_name }}"
                                             data-code="{{ $row->code}}">
                                         <i class="fa fa-stethoscope"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-warning btn-action btn-discharge"
+
+                                    <button class="btn btn-sm btn-warning btn-action"
+                                            data-toggle="modal"
+                                            data-target="#dischargeModal"
                                             data-track_id="{{ $row->id }}"
                                             data-patient_name="{{ $row->patient_name }}"
                                             data-code="{{ $row->code}}">
                                         <i class="fa fa-wheelchair-alt"></i>
                                     </button>
+
                                     <button class="btn btn-sm btn-success btn-action btn-transfer"
                                             data-toggle="modal"
                                             data-target="#referFormModal"
@@ -108,9 +117,11 @@ $user = Session::get('auth');
 
     </div>
 @include('modal.refer')
+@include('modal.accepted')
 @endsection
 @include('script.firebase')
 @section('js')
+@include('script.datetime')
 @include('script.accepted')
 @endsection
 

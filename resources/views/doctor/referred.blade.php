@@ -12,6 +12,11 @@ $user = Session::get('auth');
             padding: 10px;
             color: #333;
         }
+        .text-remarks {
+            padding: 3px 5px;
+            background: #c0ff99;
+            margin-top: 10px;
+        }
     </style>
     <div class="col-md-9">
         <div class="jim-content">
@@ -101,7 +106,7 @@ $user = Session::get('auth');
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was rejected by <span class="text-danger">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> and referred to <span class="facility">{{ $new_facility }}.</span>
                                                         <br />
-                                                        <span class="text-danger">Reason: {{ $act->remarks }}</span>
+                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 
@@ -113,7 +118,7 @@ $user = Session::get('auth');
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
                                                         <br />
-                                                        <span class="text-info">Reason: {{ $act->remarks }}</span>
+                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 
@@ -133,6 +138,8 @@ $user = Session::get('auth');
                                                 <a href="#">
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} arrived at <span class="facility">{{ $old_facility }}</span>.
+                                                        <br />
+                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
                                             </div>
@@ -151,6 +158,8 @@ $user = Session::get('auth');
                                                 <a href="#">
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} discharged from <span class="facility">{{ $old_facility }}</span>.
+                                                        <br />
+                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
                                             </div>
@@ -161,7 +170,7 @@ $user = Session::get('auth');
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.</span>
                                                         <br />
-                                                        <span class="text-success">Reason: {{ $act->remarks }}</span>
+                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 

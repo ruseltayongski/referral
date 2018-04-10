@@ -36,7 +36,7 @@
             '            <div class="timeline-header no-border">\n' +
             '                '+patient_name+'  was accepted by <span class="text-success">Dr. '+action_md+'</span> of <span class="facility">'+facility_name+'</span>.</span>\n' +
             '            <br />' +
-            '            <span class="text-success">Remarks: '+data.reason+'</span>'+
+            '            <div class="text-remarks">Remarks: '+data.reason+'</div>'+
             '            </div>\n' +
             '        </a>\n' +
             '\n' +
@@ -59,7 +59,7 @@
             '        <div class="timeline-header no-border">\n' +
             '            '+patient_name+'  was rejected by <span class="text-danger">Dr. '+action_md+'</span> of <span class="facility">'+old_facility+'</span> and referred to <span class="facility">'+new_facility+'.</span>\n' +
             '            <br />' +
-            '            <span class="text-danger">Remarks: '+data.reason+'</span>'+
+            '            <div class="text-remarks">Remarks: '+data.reason+'</div>'+
             '        </div>\n' +
             '    </a>\n' +
             '\n' +
@@ -99,6 +99,8 @@
             '    <a href="#">\n' +
             '        <div class="timeline-header no-border">\n' +
             '            '+patient_name+' arrived at <span class="facility">'+current_facility+'</span>.\n' +
+            '            <br />' +
+            '            <div class="text-remarks">Remarks: '+data.remarks+'</div>'+
             '        </div>\n' +
             '    </a>\n' +
             '\n' +
@@ -115,7 +117,7 @@
         var current_facility = data.current_facility;
 
         admitContent = '<li><div class="timeline-item read-section">\n' +
-            '    <span class="time"><i class="fa fa-wheelchair"></i> '+date+'</span>\n' +
+            '    <span class="time"><i class="fa fa-stethoscope"></i> '+date+'</span>\n' +
             '    <a href="#">\n' +
             '        <div class="timeline-header no-border">\n' +
             '            '+patient_name+' admitted at <span class="facility">'+current_facility+'</span>.\n' +
@@ -135,10 +137,12 @@
         var current_facility = data.current_facility;
 
         dischargeContent = '<li><div class="timeline-item read-section">\n' +
-            '    <span class="time"><i class="fa fa-wheelchair"></i> '+date+'</span>\n' +
+            '    <span class="time"><i class="fa fa-wheelchair-alt"></i> '+date+'</span>\n' +
             '    <a href="#">\n' +
             '        <div class="timeline-header no-border">\n' +
             '            '+patient_name+' discharged from <span class="facility">'+current_facility+'</span>.\n' +
+            '            <br />' +
+            '            <div class="text-remarks">Remarks: '+data.remarks+'</div>'+
             '        </div>\n' +
             '    </a>\n' +
             '\n' +
@@ -162,7 +166,7 @@
             '        <div class="timeline-header no-border">\n' +
             '            '+patient_name+'  was referred by <span class="text-success">Dr. '+action_md+'</span> of <span class="facility">'+old_facility+'</span> to <span class="facility">'+new_facility+'.</span>\n' +
             '            <br />' +
-            '            <span class="text-info">Remarks: '+data.reason+'</span>'+
+            '            <div class="text-remarks">Remarks: '+data.reason+'</div>'+
             '        </div>\n' +
             '    </a>\n' +
             '\n' +
