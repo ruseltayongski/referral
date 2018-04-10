@@ -11,11 +11,10 @@ class Activity extends Model
         'patient_id',
         'code',
         'date_referred',
-        'date_arrived',
-        'date_seen',
         'referred_from',
         'referred_to',
         'remarks',
-        'status'
+        'status',
+        'action_md'
     ];
 }

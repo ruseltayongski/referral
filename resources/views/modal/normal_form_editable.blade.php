@@ -3,6 +3,7 @@
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
         ->where('province',$user->province)
+        ->where('stats',1)
         ->orderBy('name','asc')->get();
     $myfacility = \App\Facility::find($user->facility_id);
 ?>
@@ -56,7 +57,7 @@
                                 <option>Female</option>
                             </select></td>
                         <td>Status:
-                            <select name="patient_status" class="form-control-select" style="padding: 3px" required>
+                            <select name="civil_status" class="civil_status form-control-select" style="padding: 3px" required>
                                 <option value="">Select...</option>
                                 <option>Single</option>
                                 <option>Married</option>
@@ -71,9 +72,9 @@
                     </tr>
                     <tr>
                         <td colspan="3">PhilHealth status:
-                            <label>None <input type="radio" name="phic_status" value="none" checked></label>
-                            <label>Member <input type="radio" name="phic_status" value="member"></label>
-                            <label>Dependent <input type="radio" name="phic_status" value="dependent"></label>
+                            <label>None <input type="radio" name="phic_status" value="None" checked></label>
+                            <label>Member <input type="radio" name="phic_status" value="Member"></label>
+                            <label>Dependent <input type="radio" name="phic_status" value="Dependent"></label>
                         </td>
                         <td colspan="3">PhilHealth #: <input type="text" class="text-danger form-control phic_id" name="phic_id" /> </td>
                     </tr>

@@ -1,5 +1,5 @@
 <?php
-    $user = Session::get('auth');
+$user = Session::get('auth');
 ?>
 
 @extends('layouts.app')
@@ -18,24 +18,31 @@
                         <tr>
                             <th>Name</th>
                             <th>Gender</th>
-                            <th>Age / DOB</th>
+                            <th>Age</th>
                             <th>Barangay</th>
                             <th style="width:18%;">Action</th>
                         </tr>
                         @foreach($data as $row)
-                        <tr>
-                            <td>
-                                {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
-                            </td>
-                            <td>{{ $row->sex }}</td>
-                            <td>
-                                <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
-                                {{ $age }} years old
-                                <br />
-                                <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
-                            </td>
-                            <td>
-                                <?php
+                            <tr>
+                                <td>
+                                    {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}<br />
+                                    <small class="text-info">
+                                        @if($source=='tsekap')
+                                            Family ID: {{ $row->familyID }}
+                                        @else
+
+                                        @endif
+                                    </small>
+                                </td>
+                                <td>{{ $row->sex }}</td>
+                                <td>
+                                    <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
+                                    {{ $age }}
+                                    <br />
+                                    <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
+                                </td>
+                                <td>
+                                    <?php
                                     $brgy_id = ($source=='tsekap') ? $row->barangay_id: $row->brgy;
                                     $city_id = ($source=='tsekap') ? $row->muncity_id: $row->muncity;
                                     $phic_id = ($source=='tsekap') ? $row->phicID: $row->phic_id;
@@ -43,41 +50,41 @@
                                     if($phic_id){
                                         $phic_id_stat = 1;
                                     }
-                                ?>
-                                @if($brgy_id!=0)
-                                {{ $brgy = \App\Barangay::find($brgy_id)->description }}<br />
-                                <small class="text-success">{{ $city = \App\Muncity::find($city_id)->description }}</small>
-                                @else
-                                    {{ $row->address }}
-                                @endif
-                            </td>
-                            <td>
-                                @if($row->sex=='Female' && ($age > 14 && $age < 50))
-                                    <a href="#pregnantModal"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info">
-                                        <i class="fa fa-stethoscope"></i>
-                                        Refer
-                                    </a>
-                                @else
-                                    <a href="#normalFormModal"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-backdrop="static"
-                                       data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info">
-                                        <i class="fa fa-stethoscope"></i>
-                                        Refer
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
+                                    ?>
+                                    @if($brgy_id!=0)
+                                        {{ $brgy = \App\Barangay::find($brgy_id)->description }}<br />
+                                        <small class="text-success">{{ $city = \App\Muncity::find($city_id)->description }}</small>
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($row->sex=='Female' && ($age > 14 && $age < 50))
+                                        <a href="#pregnantModal"
+                                           data-patient_id = "{{ $row->id }}"
+                                           data-toggle="modal"
+                                           class="btn btn-primary btn-xs profile_info">
+                                            <i class="fa fa-stethoscope"></i>
+                                            Refer
+                                        </a>
+                                    @else
+                                        <a href="#normalFormModal"
+                                           data-patient_id = "{{ $row->id }}"
+                                           data-backdrop="static"
+                                           data-toggle="modal"
+                                           class="btn btn-primary btn-xs profile_info">
+                                            <i class="fa fa-stethoscope"></i>
+                                            Refer
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
                 <ul class="pagination pagination-sm no-margin pull-right">
-                        {{ $data->links() }}
+                    {{ $data->links() }}
                 </ul>
 
             @else
@@ -96,12 +103,13 @@
 @endsection
 
 @section('js')
-@include('script.filterMuncity')
-@include('script.firebase')
-@include('script.datetime')
+    @include('script.filterMuncity')
+    @include('script.firebase')
+    @include('script.datetime')
 <script>
     var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";
+    console.log(referring_facility);
     var referred_facility = '';
     var referring_facility_name = $(".referring_name").val();
     var patient_form_id = 0;
@@ -166,7 +174,7 @@
     $('.profile_info').on('click',function(){
         patient_id = $(this).data('patient_id');
         $.ajax({
-            url: "{{ url('doctor/patient/info/') }}/"+patient_id,
+            url: "{{ url('doctor/patient/tsekapinfo/') }}/"+patient_id,
             type: "GET",
             success: function(data){
                 patient_id = data.id;
@@ -231,12 +239,9 @@
 
     });
 
-
     function sendNormalData(data)
     {
-        var dbRef = firebase.database();
-        var connRef = dbRef.ref('Referral');
-        connRef.child(referred_facility).push({
+        var form_data = {
             referring_name: referring_facility_name,
             patient_code: data.patient_code,
             name: name,
@@ -247,7 +252,10 @@
             tracking_id: data.id,
             referring_md: referring_md,
             referred_from: referring_facility
-        });
+        };
+        var dbRef = firebase.database();
+        var connRef = dbRef.ref('Referral');
+        connRef.child(referred_facility).push(form_data);
 
         var data = {
             "to": "/topics/ReferralSystem",

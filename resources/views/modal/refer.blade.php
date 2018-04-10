@@ -1,26 +1,31 @@
+<?php
+    $user = Session::get('auth');
+    $facilities = \App\Facility::select('id','name')
+    ->where('id','!=',$user->facility_id)
+    ->where('province',$user->province)
+    ->where('stats',1)
+    ->orderBy('name','asc')->get();
+?>
+
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
                 <h4>REFER TO OTHER FACILITY</h4>
                 <hr />
-                <form method="post">
+                <form method="post" id="referForm">
+                {{ csrf_field() }}
                 <div class="form-group">
                     <label style="padding:0px;">REMARKS:</label>
-                    <textarea class="form-control" rows="5" style="resize: none;"></textarea>
+                    <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Municipality / City</label>
-                    <select class="form-control">
-                        <option>Select Municipality/City...</option>
-                        <option>Cebu City</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Facility</label>
-                    <select class="form-control">
-                        <option>Select Facility...</option>
-                        <option>Vicente Sotto Memorial Medical Center</option>
+                    <label style="padding:0px;">FACILITY:</label>
+                    <select class="form-control new_facility" name="facility" required>
+                        <option value="">Select Facility...</option>
+                        @foreach($facilities as $row)
+                        <option value="{{ $row->id }}">{{ $row->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <hr />

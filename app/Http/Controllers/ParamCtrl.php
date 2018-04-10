@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
+use App\Baby;
 use App\Facility;
+use App\PatientForm;
+use App\PregnantForm;
+use App\Tracking;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -53,5 +58,23 @@ class ParamCtrl extends Controller
             Facility::create($facility);
         }
         fclose($file);
+    }
+
+    public function maintenance()
+    {
+        return view('error',[
+            'title' => 'Under Maintenance'
+        ]);
+    }
+
+    public function defaultTable()
+    {
+        Activity::truncate();
+        Baby::truncate();
+        PatientForm::truncate();
+        PregnantForm::truncate();
+        Tracking::truncate();
+
+        return redirect('doctor/patient/tsekap');
     }
 }

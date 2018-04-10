@@ -20,6 +20,7 @@ class Patients extends Model
         'brgy',
         'muncity',
         'province',
+        'address',
         'tsekap_patient'
     ];
 }

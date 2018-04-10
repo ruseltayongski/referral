@@ -221,3 +221,6 @@ label {
 .read-section {
     background-color: #eeeeee !important;
 }
+
+.modal { overflow: auto !important; }
+

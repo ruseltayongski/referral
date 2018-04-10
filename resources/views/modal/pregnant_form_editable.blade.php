@@ -4,6 +4,7 @@
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
         ->where('province',$user->province)
+        ->where('stats',1)
         ->orderBy('name','asc')->get();
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
@@ -72,10 +73,10 @@
                             <tr>
                                 <td colspan="4">
                                     Main Reason for Referral
-                                    <label><input type="radio" name="woman_reason" value="none" checked /> None </label>
-                                    <label><input type="radio" name="woman_reason" value="emergency" /> Emergency </label>
-                                    <label><input type="radio" name="woman_reason" value="non_emergency" /> Non-Emergency </label>
-                                    <label><input type="radio" name="woman_reason" value="accompany_baby" /> To accompany the baby </label>
+                                    <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
+                                    <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                                    <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                    <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
                                 </td>
                             </tr>
                             <tr>
@@ -133,10 +134,10 @@
                             <tr>
                                 <td colspan="4">
                                     Main Reason for Referral
-                                    <label><input type="radio" name="baby_reason" value="none" checked /> None </label>
-                                    <label><input type="radio" name="baby_reason" value="emergency" /> Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="non_emergency" /> Non-Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="accompany_mother" /> To accompany the mother </label>
+                                    <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                    <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
                                 </td>
                             </tr>
                             <tr>

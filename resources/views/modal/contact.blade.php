@@ -1,19 +1,20 @@
-<div class="modal fade" role="dialog" id="acceptFormModal">
+<div class="modal fade" role="dialog" id="contactModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4>ACCEPT PATIENT</h4>
+                <h4>CALL REFERRING FACILITY</h4>
                 <hr />
-                <form method="post" id="acceptForm">
+                <form method="post" id="callForm">
                     {{ csrf_field() }}
-                    <div class="form-group">
-                        <label style="padding:0px;">REMARKS:</label>
-                        <textarea class="form-control accept_remarks" name="remarks" required rows="5" style="resize: none;"></textarea>
-                    </div>
+                    <table class="table table-striped">
+                        <tr><td>Facility Contact #:</td></tr>
+                        <tr><td class="title-info referring_contact">123-456</td></tr>
+                        <tr><td>Referring MD/HCW Contact #:</td></tr>
+                        <tr><td class="title-info referring_md_contact">123-456</td></tr>
+                    </table>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Accept</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

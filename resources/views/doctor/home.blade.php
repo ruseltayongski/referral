@@ -27,12 +27,12 @@
                 {
                     label: 'Accepted',
                     backgroundColor: '#26B99A',
-                    data: [65, 59, 80, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                     label: 'Rejected',
                     backgroundColor: '#03586A',
-                    data: [28, 48, 40, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             ]
         }

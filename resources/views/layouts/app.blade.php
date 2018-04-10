@@ -68,7 +68,7 @@
             </div>
 
             <div class="pull-right">
-                <span class="title-info">Date:</span> <span class="title-desc">{{ date('M d, Y') }}</span>
+                <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -88,7 +88,9 @@
             </button>
             <a class="navbar-brand" href="#"></a>
         </div>
-
+        <?php
+            $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
+        ?>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
@@ -102,9 +104,9 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">2</span> New</span><span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">2</span> New</span></a></li>
+                        <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
                         <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i> Referred Patients</a></li>
                     </ul>
                 </li>
@@ -145,6 +147,12 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
+@include('script.firebase')
+@include('script.newreferral')
 @yield('js')
+
+<script>
+
+</script>
 </body>
 </html>
