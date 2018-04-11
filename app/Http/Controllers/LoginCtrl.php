@@ -26,10 +26,17 @@ class LoginCtrl extends Controller
                 if(Hash::check($req->password,$login->password))
                 {
                     Session::put('auth',$login);
+                    $last_login = date('Y-m-d H:i:s');
+                    User::where('id',$login->id)
+                        ->update([
+                            'last_login' => $last_login
+                        ]);
                     if($login->level=='doctor'){
                         return 'doctor';
                     }else if($login->level=='chief'){
                         return 'chief';
+                    }else if($login->level=='support'){
+                        return 'support';
                     }else{
                         Session::forget('auth');
                         return 'denied';

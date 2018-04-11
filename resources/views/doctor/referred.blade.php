@@ -118,7 +118,7 @@ $user = Session::get('auth');
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
                                                         <br />
-                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
+                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 
@@ -170,7 +170,7 @@ $user = Session::get('auth');
                                                     <div class="timeline-header no-border">
                                                         {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.</span>
                                                         <br />
-                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
+                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 

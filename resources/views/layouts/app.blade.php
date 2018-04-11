@@ -63,8 +63,13 @@
             <div class="pull-left">
                 <?php
                     $user = Session::get('auth');
+                    $t = '';
+                    if($user->level=='doctor')
+                    {
+                        $t='Dr.';
+                    }
                 ?>
-                <span class="title-info">Welcome,</span> <span class="title-desc">Dr. {{ $user->fname }} {{ $user->lname }}</span>
+                <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }}</span>
             </div>
 
             <div class="pull-right">
@@ -93,6 +98,7 @@
         ?>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                @if($user->level=='doctor')
                 <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
@@ -111,6 +117,10 @@
                     </ul>
                 </li>
                 <li><a href="{{ url('doctor/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
+                @elseif($user->level=='support')
+                <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url('support/users') }}"><i class="fa fa-users"></i> Manage Users</a></li>
+                @endif
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">

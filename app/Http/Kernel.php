@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\Auth;
 use App\Http\Middleware\Chief;
 use App\Http\Middleware\Doctor;
+use App\Http\Middleware\Support;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -62,5 +63,6 @@ class Kernel extends HttpKernel
         'auth' => Auth::class,
         'doctor' => Doctor::class,
         'chief' => Chief::class,
+        'support' => Support::class,
     ];
 }

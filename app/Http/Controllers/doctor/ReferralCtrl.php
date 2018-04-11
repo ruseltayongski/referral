@@ -207,12 +207,12 @@ class ReferralCtrl extends Controller
             ->join('facility','facility.id','=','tracking.referred_to')
             ->where('referred_from',$user->facility_id)
             ->where(function($q){
-                $q->where('status','referred')
-                    ->orwhere('status','seen')
-                    ->orwhere('status','accepted')
-                    ->orwhere('status','transferred')
-                    ->orwhere('status','discharged')
-                    ->orwhere('status','rejected');
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','accepted')
+                    ->orwhere('tracking.status','transferred')
+                    ->orwhere('tracking.status','discharged')
+                    ->orwhere('tracking.status','rejected');
             })
             ->orderBy('date_referred','desc')
             ->paginate(15);

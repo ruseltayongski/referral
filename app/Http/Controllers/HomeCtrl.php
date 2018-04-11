@@ -17,6 +17,8 @@ class HomeCtrl extends Controller
         $user = Session::get('auth');
         if($user->level=='doctor'){
             return redirect('/doctor');
+        }else if($user->level=='support'){
+            return redirect('/support');
         }else if($user->level=='chief'){
 
         }else{

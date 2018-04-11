@@ -77,4 +77,25 @@ class ParamCtrl extends Controller
 
         return redirect('doctor/patient/tsekap');
     }
+
+    public function support()
+    {
+        $data = array(
+            'username' => 'jlomocso',
+            'password' => bcrypt('jlomocso'),
+            'level' => 'support',
+            'facility_id' => 1,
+            'fname' => 'Jimmy',
+            'mname' => 'Sky',
+            'lname' => 'Parker',
+            'contact' => '0916-27-2427',
+            'email' => 'jimmy.lomocso@gmail.com',
+            'muncity' => 63,
+            'province' => 2,
+            'designation' => 'CP II',
+            'status' => 'active'
+        );
+
+        User::create($data);
+    }
 }

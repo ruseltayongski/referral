@@ -13,6 +13,7 @@ class User extends Authenticatable
         'password',
         'level',
         'facility_id',
+        'department_id',
         'fname',
         'mname',
         'lname',
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'prefix',
         'picture',
         'designation',
-        'status'
+        'status',
+        'last_login'
     ];
 }

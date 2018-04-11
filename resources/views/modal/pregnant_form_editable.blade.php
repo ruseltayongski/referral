@@ -4,7 +4,7 @@
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
         ->where('province',$user->province)
-        ->where('stats',1)
+        ->where('status',1)
         ->orderBy('name','asc')->get();
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">

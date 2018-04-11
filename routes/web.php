@@ -16,8 +16,18 @@ Route::get('logout', function(){
     \Illuminate\Support\Facades\Session::flush();
     return redirect('login');
 });
+//SUPPORT Page
+Route::get('support','support\HomeCtrl@index');
 
-/*RHU Pages*/
+Route::get('support/users','support\UserCtrl@index');
+Route::post('support/users/store','support\UserCtrl@store');
+Route::post('support/users/update','support\UserCtrl@update');
+Route::post('support/users/search','support\UserCtrl@search');
+
+Route::get('support/users/check_username/{string}','support\UserCtrl@check');
+Route::get('support/users/check_username/update/{string}/{user_id}','support\UserCtrl@checkUpdate');
+Route::get('support/users/info/{user_id}','support\UserCtrl@info');
+/*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
@@ -64,7 +74,8 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
 Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
 
-Route::get('default','ParamCtrl@defaultTable');
+//Route::get('default','ParamCtrl@defaultTable');
+Route::get('create/support','ParamCtrl@support');
 //Route::get('user/create','UserCtrl@createUser');
 //
 //Route::get('sample',function(){
