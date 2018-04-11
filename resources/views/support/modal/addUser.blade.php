@@ -46,7 +46,7 @@
 
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" class="form-control" name="username" required>
+                        <input type="text" class="form-control username_1" name="username" required>
                         <div class="username-has-error text-bold text-danger hide">
                             <small>Username already taken!</small>
                         </div>

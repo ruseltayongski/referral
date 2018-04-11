@@ -5,9 +5,11 @@ $('#addUserForm').on('submit',function(e){
     proceed = 0;
     e.preventDefault();
     $('.loading').show();
-    var string = $('.username').val();
+    var string = $('.username_1').val();
+    var link = "{{ url('support/users/check_username') }}/"+string;
+    console.log(link);
     $.ajax({
-        url: "{{ url('support/users/check_username') }}/"+string,
+        url: link,
         type: "GET",
         success: function(data){
             if(data==1){
