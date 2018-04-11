@@ -103,6 +103,10 @@
                          }
                      },500);
 
+                     setTimeout(function(){
+                            window.location.reload(false);
+                     },10000);
+
                  }
              });
         });
