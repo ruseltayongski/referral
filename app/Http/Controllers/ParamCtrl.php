@@ -81,21 +81,71 @@ class ParamCtrl extends Controller
     public function support()
     {
         $data = array(
-            'username' => 'jlomocso',
-            'password' => bcrypt('jlomocso'),
+            'username' => 'IT_VSMMC',
+            'password' => bcrypt('IT_VSMMC'),
             'level' => 'support',
-            'facility_id' => 1,
-            'fname' => 'Jimmy',
-            'mname' => 'Sky',
-            'lname' => 'Parker',
-            'contact' => '0916-27-2427',
-            'email' => 'jimmy.lomocso@gmail.com',
+            'facility_id' => 24,
+            'fname' => 'IT',
+            'mname' => 'Support',
+            'lname' => 'VSMMC',
+            'contact' => 'N/A',
+            'email' => 'N/A',
             'muncity' => 63,
             'province' => 2,
-            'designation' => 'CP II',
+            'designation' => 'IT',
             'status' => 'active'
         );
+        User::create($data);
 
+        $data = array(
+            'username' => 'IT_SAMCH',
+            'password' => bcrypt('IT_SAMCH'),
+            'level' => 'support',
+            'facility_id' => 19,
+            'fname' => 'IT',
+            'mname' => 'Support',
+            'lname' => 'SAMCH',
+            'contact' => 'N/A',
+            'email' => 'N/A',
+            'muncity' => 63,
+            'province' => 2,
+            'designation' => 'IT',
+            'status' => 'active'
+        );
+        User::create($data);
+
+        $data = array(
+            'username' => 'IT_TDH',
+            'password' => bcrypt('IT_TDH'),
+            'level' => 'support',
+            'facility_id' => 23,
+            'fname' => 'IT',
+            'mname' => 'Support',
+            'lname' => 'TDH',
+            'contact' => 'N/A',
+            'email' => 'N/A',
+            'muncity' => 67,
+            'province' => 2,
+            'designation' => 'IT',
+            'status' => 'active'
+        );
+        User::create($data);
+
+        $data = array(
+            'username' => 'IT_ECS',
+            'password' => bcrypt('IT_ECS'),
+            'level' => 'support',
+            'facility_id' => 23,
+            'fname' => 'IT',
+            'mname' => 'Support',
+            'lname' => 'ECS',
+            'contact' => 'N/A',
+            'email' => 'N/A',
+            'muncity' => 80,
+            'province' => 2,
+            'designation' => 'IT',
+            'status' => 'active'
+        );
         User::create($data);
     }
 }
