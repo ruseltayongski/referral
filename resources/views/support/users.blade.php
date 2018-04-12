@@ -89,7 +89,7 @@ if($searchKeyword){
                 @else
                     <div class="alert alert-warning">
                         <span class="text-warning">
-                            <i class="fa fa-warning"></i> No users found!
+                            <i class="fa fa-warning"></i> No doctors found!
                         </span>
                     </div>
                 @endif

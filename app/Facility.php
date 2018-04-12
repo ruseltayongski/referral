@@ -14,6 +14,7 @@ class Facility extends Model
         'muncity',
         'province',
         'contact',
-        'email'
+        'email',
+        'status'
     ];
 }

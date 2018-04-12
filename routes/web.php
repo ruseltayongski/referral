@@ -27,6 +27,9 @@ Route::post('support/users/search','support\UserCtrl@search');
 Route::get('support/users/check_username/{string}','support\UserCtrl@check');
 Route::get('support/users/check_username/update/{string}/{user_id}','support\UserCtrl@checkUpdate');
 Route::get('support/users/info/{user_id}','support\UserCtrl@info');
+
+Route::get('support/hospital','support\HospitalCtrl@index');
+Route::post('support/hospital/update','support\HospitalCtrl@update');
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 

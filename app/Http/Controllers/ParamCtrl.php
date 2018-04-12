@@ -135,7 +135,7 @@ class ParamCtrl extends Controller
             'username' => 'IT_ECS',
             'password' => bcrypt('IT_ECS'),
             'level' => 'support',
-            'facility_id' => 23,
+            'facility_id' => 25,
             'fname' => 'IT',
             'mname' => 'Support',
             'lname' => 'ECS',
