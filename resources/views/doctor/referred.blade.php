@@ -72,8 +72,10 @@ $user = Session::get('auth');
                                     <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                     <h3 class="timeline-header no-border">
                                         <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="facility">{{ $row->facility_name }}</span>
+                                        @if($last_login && ($row->status=='referred' || $row->status=='seen'))
                                         <br />
-                                        <span class="text-warning" style="font-weight: normal; font-size: 0.8em;">Contact : {{ $last_login->contact }}</span>
+                                        <span class="text-warning" style="font-weight: normal; font-size: 0.8em;">Contact : Dr. {{ $last_login->fname }} {{ $last_login->lname }} - {{ $last_login->contact }}</span>
+                                        @endif
                                     </h3>
                                     <div class="timeline-footer hide">
                                         <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
