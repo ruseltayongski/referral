@@ -94,7 +94,7 @@ class UserCtrl extends Controller
         $user = Session::get('auth');
         $match = array(
             'fname' => $req->fname,
-            'mname' => $req->mname,
+            'mname' => ($req->mname) ? $req->mname: '',
             'lname' => $req->lname
         );
         $data = array(
