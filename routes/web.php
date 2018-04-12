@@ -20,6 +20,8 @@ Route::get('logout', function(){
 Route::get('support','support\HomeCtrl@index');
 
 Route::get('support/users','support\UserCtrl@index');
+Route::get('support/uers/add','support\UserCtrl@create');
+Route::post('support/uers/add','support\UserCtrl@add');
 Route::post('support/users/store','support\UserCtrl@store');
 Route::post('support/users/update','support\UserCtrl@update');
 Route::post('support/users/search','support\UserCtrl@search');
@@ -32,6 +34,7 @@ Route::get('support/hospital','support\HospitalCtrl@index');
 Route::post('support/hospital/update','support\HospitalCtrl@update');
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
+Route::get('doctor/chart','doctor\HomeCtrl@chart');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if the form is seen
@@ -81,6 +84,6 @@ Route::get('default','ParamCtrl@defaultTable');
 Route::get('create/support','ParamCtrl@support');
 //Route::get('user/create','UserCtrl@createUser');
 //
-//Route::get('sample',function(){
-//    echo date('y');
-//});
+Route::get('sample',function(){
+    echo date('Y',strtotime("+1 year"));
+});

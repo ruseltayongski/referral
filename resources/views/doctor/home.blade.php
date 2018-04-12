@@ -18,6 +18,16 @@
 @section('js')
 @include('script.chart')
 <script>
+    var accepted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var rejected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var link = "{{ url('doctor/chart') }}";
+    $.ajax({
+        url: link,
+        type: "GET",
+        success: function(data){
+            console.log(data);
+        }
+    });
     var chartdata = {
         type: 'bar',
         data: {
@@ -27,12 +37,12 @@
                 {
                     label: 'Accepted',
                     backgroundColor: '#26B99A',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: accepted
                 },
                 {
                     label: 'Rejected',
                     backgroundColor: '#03586A',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: rejected
                 }
             ]
         }

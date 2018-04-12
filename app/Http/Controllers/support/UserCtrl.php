@@ -55,6 +55,15 @@ class UserCtrl extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $departments = Department::get();
+        return view('support.addUser',[
+            'title' => 'Add User',
+            'departments' => $departments
+        ]);
+    }
+
     public function store(Request $req)
     {
         $user = Session::get('auth');
@@ -78,6 +87,32 @@ class UserCtrl extends Controller
         );
         User::updateOrCreate($match,$data);
         return 'added';
+    }
+
+    public function add(Request $req)
+    {
+        $user = Session::get('auth');
+        $match = array(
+            'fname' => $req->fname,
+            'mname' => $req->mname,
+            'lname' => $req->lname
+        );
+        $data = array(
+            'level' => 'doctor',
+            'facility_id' => $user->facility_id,
+            'status' => 'active',
+            'contact' => $req->contact,
+            'email' => $req->email,
+            'designation' => $req->designation,
+            'department_id' => $req->department_id,
+            'username' => $req->username,
+            'password' => bcrypt($req->password),
+            'muncity' => $user->muncity,
+            'province' => $user->province
+        );
+        User::updateOrCreate($match,$data);
+
+        return redirect()->back()->with('status','added');
     }
 
     public function update(Request $req)
