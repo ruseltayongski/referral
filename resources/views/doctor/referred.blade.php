@@ -68,7 +68,11 @@ $user = Session::get('auth');
                                 <i class="fa fa-user bg-blue-active"></i>
                                 <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                     <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                    <h3 class="timeline-header no-border"><a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="facility">{{ $row->facility_name }}</span></h3>
+                                    <h3 class="timeline-header no-border">
+                                        <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="facility">{{ $row->facility_name }}</span>
+                                        <br />
+                                        <span class="text-muted" style="font-weight: normal; font-size: 0.9em;">Contact : {{ $row->facility_contact }}</span>
+                                    </h3>
                                     <div class="timeline-footer hide">
                                         <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
                                            data-toggle="modal"

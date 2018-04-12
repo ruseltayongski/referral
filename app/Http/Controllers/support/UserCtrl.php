@@ -45,7 +45,7 @@ class UserCtrl extends Controller
 
         $data = $data
                 ->orderBy('fname','asc')
-                ->paginate(10);
+                ->paginate(15);
         $departments = Department::get();
 
         return view('support.users',[
@@ -102,7 +102,7 @@ class UserCtrl extends Controller
             'facility_id' => $user->facility_id,
             'status' => 'active',
             'contact' => $req->contact,
-            'email' => $req->email,
+            'email' => ($req->email) ? $req->email: '',
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'username' => $req->username,
