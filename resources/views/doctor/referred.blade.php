@@ -62,6 +62,8 @@ $user = Session::get('auth');
                                     ->leftJoin('users','users.id','=','activity.action_md')
                                     ->get();
                             }
+
+                            $last_login = \App\Http\Controllers\ParamCtrl::getLastLogin($row->facility_id);
                             ?>
                             <ul class="timeline activity-{{ $row->id }} code-{{ $row->code }}">
                             <li>
@@ -71,7 +73,7 @@ $user = Session::get('auth');
                                     <h3 class="timeline-header no-border">
                                         <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="facility">{{ $row->facility_name }}</span>
                                         <br />
-                                        <span class="text-muted" style="font-weight: normal; font-size: 0.9em;">Contact : {{ $row->facility_contact }}</span>
+                                        <span class="text-warning" style="font-weight: normal; font-size: 0.8em;">Contact : {{ $last_login->contact }}</span>
                                     </h3>
                                     <div class="timeline-footer hide">
                                         <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"

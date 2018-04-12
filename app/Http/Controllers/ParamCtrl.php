@@ -78,6 +78,15 @@ class ParamCtrl extends Controller
         return redirect('doctor/patient/tsekap');
     }
 
+    public static function getLastLogin($facility_id)
+    {
+        $doctor = User::where('level','doctor')
+                ->where('facility_id',$facility_id)
+                ->orderBy('last_login','desc')
+                ->first();
+        return $doctor;
+    }
+
     public function support()
     {
         $data = array(

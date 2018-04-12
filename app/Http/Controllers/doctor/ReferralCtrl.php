@@ -202,7 +202,7 @@ class ReferralCtrl extends Controller
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex',
             'facility.name as facility_name',
-            'facility.contact as facility_contact'
+            'facility.id as facility_id'
         )
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_to')
