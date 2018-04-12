@@ -82,6 +82,7 @@ class ParamCtrl extends Controller
     {
         $doctor = User::where('level','doctor')
                 ->where('facility_id',$facility_id)
+                ->where('last_login','!=','0000-00-00 00:00:00')
                 ->orderBy('last_login','desc')
                 ->first();
         return $doctor;
