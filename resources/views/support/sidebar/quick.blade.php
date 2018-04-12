@@ -7,17 +7,8 @@
     ?>
     <div class="panel-body">
         <div class="list-group">
-            <a href="{{ asset('doctor/referral') }}" class="list-group-item clearfix">
-                Referral
-                <span class="pull-right">
-                        <div class="badge">
-                            <i class="fa fa-wheelchair-alt"></i> <span class="count_referral">{{ $count }}</span> New
-                        </div>
-
-                    </span>
-            </a>
-            <a href="{{ asset('doctor/patient') }}" class="list-group-item clearfix">
-                Patient List
+            <a href="{{ asset('support/users') }}" class="list-group-item clearfix">
+                Manage Users
                 <span class="pull-right">
                         <i class="fa fa-users"></i>
                     </span>

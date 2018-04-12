@@ -15,7 +15,7 @@ class HomeCtrl extends Controller
 
     public function index()
     {
-        return view('error',[
+        return view('support.home',[
             'title' => 'Support: Dashboard'
         ]);
     }

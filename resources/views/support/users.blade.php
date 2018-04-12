@@ -34,7 +34,7 @@ if($searchKeyword){
                         </div>
                     </form>
                 </div>
-                <h3>Players</h3>
+                <h3>{{ $title }}</h3>
             </div>
             <div class="box-body">
                 @if(count($data)>0)
