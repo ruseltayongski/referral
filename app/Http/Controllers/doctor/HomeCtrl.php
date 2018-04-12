@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\doctor;
 
+use App\Activity;
+use App\Tracking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -29,13 +31,23 @@ class HomeCtrl extends Controller
             $new = str_pad($i, 2, '0', STR_PAD_LEFT);
             $current = '01.'.$new.'.'.date('Y');
 
-            $startdate = date('Y-m-d',strtotime($current));
+            $startdate = date('Y-m-d',strtotime($current)).' 00:00:00';
             $end = '01.'.($new+1).'.'.date('Y');
             if($new==12){
                 $end = '01/01/'.date('Y',strtotime("+1 year"));
             }
-            $enddate = date('Y-m-d',strtotime($end));
-            $data['accepted'][] = 0;
+            $enddate = date('Y-m-d',strtotime($end)).' 23:59:59';;
+            $data['accepted'][] = Tracking::where('status','accepted')
+                    ->where('referred_to',$user->facility_id)
+                    ->where('date_accepted','>=',$startdate)
+                    ->where('date_accepted','<=',$enddate)
+                    ->count();
+
+            $data['rejected'][] = Tracking::where('status','rejected')
+                ->where('referred_to',$user->facility_id)
+                ->where('date_referred','>=',$startdate)
+                ->where('date_referred','<=',$enddate)
+                ->count();
         }
         return $data;
     }

@@ -25,32 +25,33 @@
         url: link,
         type: "GET",
         success: function(data){
-            console.log(data);
+            console.log(data)
+            var chartdata = {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    // labels: month,
+                    datasets: [
+                        {
+                            label: 'Accepted',
+                            backgroundColor: '#26B99A',
+                            data: data.accepted
+                        },
+                        {
+                            label: 'Rejected',
+                            backgroundColor: '#03586A',
+                            data: data.rejected
+                        }
+                    ]
+                }
+            };
+
+
+            var ctx = document.getElementById('barChart').getContext('2d');
+            new Chart(ctx, chartdata);
         }
     });
-    var chartdata = {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            // labels: month,
-            datasets: [
-                {
-                    label: 'Accepted',
-                    backgroundColor: '#26B99A',
-                    data: accepted
-                },
-                {
-                    label: 'Rejected',
-                    backgroundColor: '#03586A',
-                    data: rejected
-                }
-            ]
-        }
-    }
 
-
-    var ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, chartdata);
 </script>
 @endsection
 
