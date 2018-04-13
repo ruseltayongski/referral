@@ -73,6 +73,7 @@ Route::get('doctor/report','ParamCtrl@maintenance');
 
 Route::get('login','LoginCtrl@index');
 Route::post('login','LoginCtrl@validateLogin');
+Route::post('reset/password','LoginCtrl@resetPassword');
 
 /*Param */
 //Route::get('uploadcsv','ParamCtrl@upload');

@@ -413,6 +413,7 @@ class PatientCtrl extends Controller
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.id',
+                    'tracking.type',
                     'tracking.code',
                     'facility.name',
                     DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),

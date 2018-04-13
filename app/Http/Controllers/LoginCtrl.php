@@ -51,4 +51,31 @@ class LoginCtrl extends Controller
             return 'error';
         }
     }
+
+    public function resetPassword(Request $req)
+    {
+        $user = Session::get('auth');
+        if(Hash::check($req->current,$user->password))
+        {
+            if($req->newPass == $req->confirm){
+                $lenght = strlen($req->newPass);
+                if($lenght>=6)
+                {
+                    $password = bcrypt($req->newPass);
+                    User::where('id',$user->id)
+                        ->update([
+                            'password' => $password
+                        ]);
+                    return 'changed';
+                }else{
+                    return 'length';
+                }
+            }else{
+                return 'not_match';
+            }
+        }else{
+            return 'error';
+        }
+
+    }
 }

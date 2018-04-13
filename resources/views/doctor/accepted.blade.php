@@ -27,19 +27,41 @@ $user = Session::get('auth');
                             <thead class="bg-gray">
                             <tr>
                                 <th>Referring Facility</th>
-                                <th>Patient Code</th>
-                                <th>Patient Name</th>
+                                <th>Patient Name/Code</th>
                                 <th>Date Accepted</th>
+                                <th>Current Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($data as $row)
+                            <?php
+                                $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                            ?>
                             <tr>
                                 <td><span class="facility">{{ $row->name }}</span></td>
-                                <td>{{ $row->code }}</td>
-                                <td>{{ $row->patient_name }}</td>
+                                <td>
+                                    <a href="{{ $modal }}" class="view_form"
+                                       data-toggle="modal"
+                                       data-type="{{ $row->type }}"
+                                       data-code="{{ $row->code }}">
+                                        <span class="text-primary">{{ $row->patient_name }}</span>
+                                        <br />
+                                        <small class="text-warning">{{ $row->code }}</small>
+                                    </a>
+                                </td>
                                 <td>{{ $row->date_accepted }}</td>
+                                <?php
+                                    $status = '';
+                                    $current = \App\Activity::where('code',$row->code)
+                                        ->orderBy('id','desc')
+                                        ->first();
+                                    if($current)
+                                    {
+                                        $status = strtoupper($current->status);
+                                    }
+                                ?>
+                                <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary btn-action"
                                         data-toggle="modal"
@@ -118,6 +140,7 @@ $user = Session::get('auth');
     </div>
 @include('modal.refer')
 @include('modal.accepted')
+@include('modal.view_form')
 @endsection
 @include('script.firebase')
 @section('js')

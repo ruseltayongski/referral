@@ -125,7 +125,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('account') }}"><i class="fa fa-user"></i>&nbsp;&nbsp; Account Settings</a></li>
+                        <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i>&nbsp; Change Password</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                     </ul>
@@ -141,6 +141,7 @@
     <div class="clearfix"></div>
 </div> <!-- /container -->
 @include('modal.server')
+@include('modal.password')
 <footer class="footer">
     <div class="container">
         <p>All Rights Reserved 2017 | Version 1.0</p>
@@ -160,6 +161,7 @@
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
 @include('script.firebase')
 @include('script.newreferral')
+@include('script.password')
 @yield('js')
 
 <script>

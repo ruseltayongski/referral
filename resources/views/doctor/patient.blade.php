@@ -23,6 +23,9 @@
                             <th style="width:18%;">Action</th>
                         </tr>
                         @foreach($data as $row)
+                        <?php
+                            $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                        ?>
                         <tr>
                             <td>
                                 {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
