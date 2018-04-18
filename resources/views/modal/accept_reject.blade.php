@@ -97,7 +97,7 @@
                 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <div class="form-fotter pull-right">
                     <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#contactModal"><i class="fa fa-phone"></i> Call</button>
-                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-trash"></i> Reject</button>
+                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Redirect</button>
                     <button class="btn btn-success btn-flat" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
                 </div>
                 <div class="clearfix"></div>
@@ -232,7 +232,7 @@
                 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <div class="form-fotter pull-right">
                     <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#contactModal"><i class="fa fa-phone"></i> Call</button>
-                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-trash"></i> Reject</button>
+                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Redirect</button>
                     <button class="btn btn-success btn-flat"  data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
                 </div>
                 <div class="clearfix"></div>

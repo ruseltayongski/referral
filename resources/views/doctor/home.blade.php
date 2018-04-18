@@ -38,7 +38,7 @@
                             data: data.accepted
                         },
                         {
-                            label: 'Rejected',
+                            label: 'Redirected',
                             backgroundColor: '#03586A',
                             data: data.rejected
                         }

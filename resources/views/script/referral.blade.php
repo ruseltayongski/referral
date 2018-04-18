@@ -450,7 +450,7 @@ function getPregnantForm()
         var content = '<i class="fa fa-user-times bg-maroon"></i>\n' +
             '<div class="timeline-item">\n' +
             '    <span class="time"><i class="fa fa-calendar"></i> '+data.date+'</span>\n' +
-            '    <h3 class="timeline-header no-border"><a href="#">'+data.patient_name+'</a> was REJECTED by <span class="text-danger">Dr. '+data.action_md+'</span></h3>\n' +
+            '    <h3 class="timeline-header no-border"><a href="#">'+data.patient_name+'</a> was REDIRECTED by <span class="text-danger">Dr. '+data.action_md+'</span></h3>\n' +
             '\n' +
             '</div>';
         form.html(content);

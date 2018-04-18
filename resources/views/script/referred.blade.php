@@ -57,7 +57,7 @@
             '    <span class="time"><i class="fa fa-user-times"></i> '+date+'</span>\n' +
             '    <a href="#">\n' +
             '        <div class="timeline-header no-border">\n' +
-            '            '+patient_name+'  was rejected by <span class="text-danger">Dr. '+action_md+'</span> of <span class="facility">'+old_facility+'</span> and referred to <span class="facility">'+new_facility+'.</span>\n' +
+            '            '+patient_name+'  was redirected to <span class="facility">'+new_facility+'</span> by <span class="text-danger">Dr. '+action_md+'</span> of <span class="facility">'+old_facility+'</span>.\n' +
             '            <br />' +
             '            <div class="text-remarks">Remarks: '+data.reason+'</div>'+
             '        </div>\n' +

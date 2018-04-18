@@ -8,7 +8,7 @@
                 <button  data-target="#normalFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6">
                     <img src="{{ url('resources/img/female.png') }}" width="100" />
                     <br />
-                    Normal Patient
+                    Non-Pregnant
                 </button>
                 <button data-target="#pregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6">
                     <img src="{{ url('resources/img/pregnant.png') }}" width="100" />

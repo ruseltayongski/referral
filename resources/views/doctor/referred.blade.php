@@ -112,9 +112,9 @@ $user = Session::get('auth');
                                                 <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                 <a href="#">
                                                     <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was rejected by <span class="text-danger">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> and referred to <span class="facility">{{ $new_facility }}.</span>
+                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was redirected to <span class="facility">{{ $new_facility }}</span> by <span class="text-danger">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.
                                                         <br />
-                                                        <div class="text-remarks">Reason: {{ $act->remarks }}</div>
+                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                     </div>
                                                 </a>
 

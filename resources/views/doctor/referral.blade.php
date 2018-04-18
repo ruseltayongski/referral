@@ -69,7 +69,7 @@
                             <i class="fa fa-user-times bg-maroon"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                <h3 class="timeline-header no-border"><a href="#">{{ $row->patient_name }}</a> was REJECTED by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
+                                <h3 class="timeline-header no-border"><a href="#">{{ $row->patient_name }}</a> was REDIRECTED by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
 
                             </div>
 

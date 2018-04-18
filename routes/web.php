@@ -81,9 +81,9 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
 Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
 
-Route::get('default','ParamCtrl@defaultTable');
-Route::get('create/support','ParamCtrl@support');
-//Route::get('user/create','UserCtrl@createUser');
+//Route::get('default','ParamCtrl@defaultTable');
+//Route::get('create/support','ParamCtrl@support');
+Route::get('user/create','UserCtrl@createUser');
 //
 Route::get('sample',function(){
     echo date('Y',strtotime("+1 year"));

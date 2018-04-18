@@ -36,7 +36,7 @@
           <div class="login-box-body">
             <p class="login-box-msg">Sign in to start your session</p>        
               <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-                <input id="username" autocomplete="off" type="text" placeholder="Login ID" class="form-control" name="username" value="{{ old('username') }}">
+                <input id="username" autocomplete="off" type="text" placeholder="Login ID" autofocus class="form-control" name="username" value="{{ old('username') }}">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 <span class="help-block hide">
 
@@ -103,10 +103,13 @@
                          }
                      },500);
 
-                     setTimeout(function(){
-                            window.location.reload(false);
-                     },10000);
 
+
+                 },
+                 error: function(){
+                     setTimeout(function(){
+                         window.location.reload(false);
+                     },5000);
                  }
              });
         });
