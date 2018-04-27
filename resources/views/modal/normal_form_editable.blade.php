@@ -6,6 +6,7 @@
         ->where('status',1)
         ->orderBy('name','asc')->get();
     $myfacility = \App\Facility::find($user->facility_id);
+    $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 ?>
 <div class="modal fade" role="dialog" id="normalFormModal">
     <div class="modal-dialog modal-lg" role="document">
@@ -27,7 +28,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span class="text-success">{{ \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id) }}</span> </td>
+                        <td colspan="6">Address: <span class="text-success">{{ $facility_address['address'] }}</span> </td>
                     </tr>
                     <tr>
                         <td colspan="6">
@@ -37,6 +38,9 @@
                                 @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                 @endforeach
+                            </select>
+                            <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
+                                <option value="">Select Department...</option>
                             </select>
                         </td>
                     </tr>

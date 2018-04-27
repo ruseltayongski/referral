@@ -109,7 +109,6 @@ $user = Session::get('auth');
 <script>
     var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";
-    console.log(referring_facility);
     var referred_facility = '';
     var referring_facility_name = $(".referring_name").val();
     var patient_form_id = 0;
@@ -123,7 +122,9 @@ $user = Session::get('auth');
         patient_id,
         civil_status,
         phic_status,
-        phic_id;
+        phic_id,
+        department_id,
+        department_name;
 
     $('.form-submit').on('submit',function(){
         $('.loading').show();
@@ -140,7 +141,21 @@ $user = Session::get('auth');
             url: url+'/'+id,
             type: 'GET',
             success: function(data){
-                $('.facility_address').html(data);
+                console.log(data);
+                $('.facility_address').html(data.address);
+
+                $('.select_department').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.select_department').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+
+                });
             },
             error: function(){
                 $('#serverModal').modal();
@@ -206,11 +221,13 @@ $user = Session::get('auth');
         e.preventDefault();
         reason = $('.reason_referral').val();
         form_type = '#normalFormModal';
+        department_id = $('.select_department_normal').val();
+        department_name = $('.select_department_normal :selected').text();
+
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data){
-                console.log(data);
                 sendNormalData(data);
             },
             error: function(){
@@ -225,6 +242,8 @@ $user = Session::get('auth');
         form_type = '#pregnantFormModal';
         sex = 'Female';
         reason = $('.woman_information_given').val();
+        department_id = $('.select_department_pregnant').val();
+        department_name = $('.select_department_pregnant :selected').text();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
@@ -241,52 +260,60 @@ $user = Session::get('auth');
 
     function sendNormalData(data)
     {
-        var form_data = {
-            referring_name: referring_facility_name,
-            patient_code: data.patient_code,
-            name: name,
-            age: age,
-            sex: sex,
-            date: data.referred_date,
-            form_type: form_type,
-            tracking_id: data.id,
-            referring_md: referring_md,
-            referred_from: referring_facility
-        };
-        var dbRef = firebase.database();
-        var connRef = dbRef.ref('Referral');
-        connRef.child(referred_facility).push(form_data);
+        console.log(data);
+        if(data.id!=0){
+            var form_data = {
+                referring_name: referring_facility_name,
+                patient_code: data.patient_code,
+                name: name,
+                age: age,
+                sex: sex,
+                date: data.referred_date,
+                form_type: form_type,
+                tracking_id: data.id,
+                referring_md: referring_md,
+                referred_from: referring_facility,
+                department_id: department_id,
+                department_name: department_name
+            };
+            var dbRef = firebase.database();
+            var connRef = dbRef.ref('Referral');
+            connRef.child(referred_facility).push(form_data);
 
-        var data = {
-            "to": "/topics/ReferralSystem",
-            "data": {
-                "subject": "New Referral",
-                "date": data.referred_date,
-                "body": name+" was referred to your facility from "+referring_facility_name+"!"
-            }
-        };
-        $.ajax({
-            url: 'https://fcm.googleapis.com/fcm/send',
-            type: 'post',
-            data: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
-            },
-            dataType: 'json',
-            success: function (data) {
-                console.info(data);
-            }
-        });
+            var data = {
+                "to": "/topics/ReferralSystem",
+                "data": {
+                    "subject": "New Referral",
+                    "date": data.referred_date,
+                    "body": name+" was referred to your facility from "+referring_facility_name+"!"
+                }
+            };
+            $.ajax({
+                url: 'https://fcm.googleapis.com/fcm/send',
+                type: 'post',
+                data: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.info(data);
+                }
+            });
 
 
-        connRef.on('child_added',function(data){
+            connRef.on('child_added',function(data){
+                setTimeout(function(){
+                    connRef.child(data.key).remove();
+                    window.location.reload(false);
+                },500);
+            });
+        }else{
             setTimeout(function(){
-                connRef.child(data.key).remove();
                 window.location.reload(false);
             },500);
-        });
-
+        }
     }
 </script>
 @endsection

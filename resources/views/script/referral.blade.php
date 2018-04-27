@@ -16,6 +16,9 @@
         referring_contact,
         referring_md_contact;
     var my_facility_name = "{{ \App\Facility::find($user->facility_id)->name }}";
+    var my_department_id = "{{ $user->department_id }}";
+    var my_contact = "{{ $user->contact }}";
+
 </script>
 
 <script>
@@ -32,20 +35,25 @@
             '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
             '    <div class="timeline-item '+type+'" id="item-'+data.tracking_id+'">\n' +
             '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+data.date+'</span></span>\n' +
-            '        <h3 class="timeline-header no-border"><a href="#" class="patient_name">'+data.name+'</a> <small class="status">[ '+data.sex+', '+data.age+' ]</small> was referred to your facility by <span class="text-warning">Dr. '+data.referring_md+'</span> of <span class="facility">'+data.referring_name+'</span></h3>\n' +
-            '        <div class="timeline-footer">\n' +
-            '            <a class="btn btn-warning btn-xs btn-refer" href="'+data.form_type+'"\n' +
-            '               data-toggle="modal"\n' +
-            '               data-code="'+data.patient_code+'"\n' +
-            '               data-item="#item-'+data.tracking_id+'"\n' +
-            '               data-status="referred"\n' +
-            '               data-type="'+referral_type+'"\n' +
-            '               data-id="'+data.tracking_id+'"\n' +
-            '               data-referred_from="'+data.referred_from+'"\n' +
-            '               data-backdrop="static">\n' +
-            '                <i class="fa fa-folder"></i> View Form\n' +
-            '            </a>\n' +
-            '            <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: '+data.patient_code+'</a>\n' +
+            '        <h3 class="timeline-header no-border"><a href="#" class="patient_name">'+data.name+'</a> <small class="status">[ '+data.sex+', '+data.age+' ]</small> was referred to <span class="text-danger">'+data.department_name+'</span> by <span class="text-warning">Dr. '+data.referring_md+'</span> of <span class="facility">'+data.referring_name+'</span></h3>\n' +
+            '        <div class="timeline-footer">\n';
+
+        if(my_department_id==data.department_id){
+            content +=  '            <a class="btn btn-warning btn-xs btn-refer" href="'+data.form_type+'"\n' +
+                '               data-toggle="modal"\n' +
+                '               data-code="'+data.patient_code+'"\n' +
+                '               data-item="#item-'+data.tracking_id+'"\n' +
+                '               data-status="referred"\n' +
+                '               data-type="'+referral_type+'"\n' +
+                '               data-id="'+data.tracking_id+'"\n' +
+                '               data-referred_from="'+data.referred_from+'"\n' +
+                '               data-backdrop="static">\n' +
+                '                <i class="fa fa-folder"></i> View Form\n' +
+                '            </a>';
+        }
+
+
+         content +=   '<a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: '+data.patient_code+'</a>\n' +
             '        </div>\n' +
             '    </div>\n' +
             '</li>';
@@ -71,7 +79,7 @@ $('body').on('click','.btn-refer',function () {
     facility = $(item).find('.facility').html();
     var count_referral = $('.count_referral').html();
 
-    if(status=='referred'){
+    if(status=='referred' || status=='redirected'){
         seenMessage();
     }else{
         setTimeout(function () {
@@ -125,7 +133,6 @@ $('body').on('submit','#referForm',function(e){
     e.preventDefault();
     $('.loading').show();
     referred_to = $('.new_facility').val();
-    var new_facility = $('.new_facility').find(':selected').html();
     var old_facility = "{{ \App\Facility::find($user->facility_id)->name }}";
     var reason = $('.reject_reason').val();
     referring_name = old_facility;
@@ -142,60 +149,18 @@ $('body').on('submit','#referForm',function(e){
                 rejectRef.push({
                     date: getDateReferred(),
                     item: form_id,
-                    new_facility: new_facility,
+                    activity_id: tracking_id,
                     old_facility: old_facility,
                     action_md: action_md,
                     patient_name: patient_name,
                     code: code,
-                    reason: reason
+                    reason: reason,
+                    referred_from: referred_from
                 });
 
                 rejectRef.on('child_added',function(data){
                     setTimeout(function(){
                         rejectRef.child(data.key).remove();
-                    },500);
-                });
-
-                var connRef = dbRef.ref('Referral');
-                var refer_data = {
-                    referring_name: referring_name,
-                    patient_code: code,
-                    name: patient_name,
-                    age: age,
-                    sex: sex,
-                    date: getDateReferred(),
-                    form_type: form_type,
-                    tracking_id: tracking_id,
-                    referring_md: action_md
-                };
-                console.log(refer_data);
-                connRef.child(referred_to).push(refer_data);
-
-            var data = {
-                "to": "/topics/ReferralSystem",
-                "data": {
-                    "subject": "New Referral",
-                    "date": getDateReferred(),
-                    "body": patient_name+" was referred to your facility from "+referring_name+"!"
-                }
-            };
-            $.ajax({
-                url: 'https://fcm.googleapis.com/fcm/send',
-                type: 'post',
-                data: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.info(data);
-                }
-            });
-
-                connRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        connRef.child(data.key).remove();
                         window.location.reload(false);
                     },500);
                 });
@@ -241,11 +206,12 @@ function seenMessage()
     $.ajax({
         url: "{{ url('doctor/referral/seen') }}/"+form_id,
         type: "GET",
-        success: function(){
+        success: function(activity_id){
             var seenRef = dbRef.ref('Seen');
             seenRef.push({
                 date: getDateReferred(),
                 item: form_id,
+                activity_id: activity_id,
                 code: code
             });
 
@@ -268,7 +234,7 @@ function getNormalForm()
         url: "{{ url('doctor/referral/data/normal') }}/"+code,
         type: "GET",
         success: function(data){
-
+            console.log(data);
             patient_name = data.patient_name;
             referring_name = data.referring_name;
 
@@ -330,6 +296,7 @@ function getNormalForm()
             $('span.referring_md').html(data.md_referring);
             $('span.referring_md_contact').html(data.referring_md_contact);
             $('span.referred_md').html(data.md_referred);
+            $('span.department_name').html(data.department);
         },
         error: function(){
             $('#serverModal').modal();
@@ -345,6 +312,7 @@ function getPregnantForm()
         success: function(record){
             var data = record.form;
             var baby = record.baby;
+            console.log("{{ url('doctor/referral/data/pregnant') }}/"+code);
             var patient_address='';
             patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
             patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
@@ -387,6 +355,7 @@ function getPregnantForm()
             $('span.md_referring').html(data.md_referring);
             $('span.referring_md_contact').html(data.referring_md_contact);
             $('span.referring_facility').html(data.referring_facility);
+            $('span.department_name').html(data.department);
             $('span.referring_contact').html(data.referring_contact);
             $('span.facility_brgy').html(data.facility_brgy);
             $('span.facility_muncity').html(data.facility_muncity);
@@ -450,7 +419,7 @@ function getPregnantForm()
         var content = '<i class="fa fa-user-times bg-maroon"></i>\n' +
             '<div class="timeline-item">\n' +
             '    <span class="time"><i class="fa fa-calendar"></i> '+data.date+'</span>\n' +
-            '    <h3 class="timeline-header no-border"><a href="#">'+data.patient_name+'</a> was REDIRECTED by <span class="text-danger">Dr. '+data.action_md+'</span></h3>\n' +
+            '    <h3 class="timeline-header no-border"><a href="#">'+data.patient_name+'</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. '+data.action_md+'</span></h3>\n' +
             '\n' +
             '</div>';
         form.html(content);
@@ -474,18 +443,37 @@ $('body').on('click','.btn-call',function(){
     $('.referring_contact').html(referring_contact);
     $('.referring_md_contact').html(referring_md_contact);
 
-
+//    var callRef = dbRef.ref('Call');
+//    var call_data = {
+//        date: date, //can be change to returne date
+//        facility_calling: my_facility_name,
+//        action_md: action_md,
+//        tracking_id: form_id,
+//        code: code,
+//        contact: my_contact
+//    };
+//    callRef.push(call_data);
+//    callRef.on('child_added',function(data){
+//        setTimeout(function(){
+//            //callRef.child(data.key).remove();
+//            $('.loading').hide();
+//        },300);
+//    });
     $.ajax({
-        url: "{{ url('doctor/referral/call/') }}/" + form_id,
+        url: "{{ url('doctor/referral/calling/') }}/" + form_id,
         type: 'GET',
-        success: function(date) {
+        success: function(data) {
             var callRef = dbRef.ref('Call');
             var call_data = {
-                date: date, //can be change to returne date
+                date: data.date, //can be change to returne date
                 facility_calling: my_facility_name,
                 action_md: action_md,
                 tracking_id: form_id,
-                code: code
+                code: code,
+                contact: my_contact,
+                activity_id: data.activity_id,
+                referred_from: referred_from,
+                referred_name: referred_name
             };
             callRef.push(call_data);
             callRef.on('child_added',function(data){

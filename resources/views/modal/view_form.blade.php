@@ -1,6 +1,7 @@
 <?php
 $user = Session::get('auth');
 $myfacility = \App\Facility::find($user->facility_id);
+$facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 ?>
 <style>
     #normalFormModal span {
@@ -27,10 +28,11 @@ $myfacility = \App\Facility::find($user->facility_id);
                         <td colspan="6">Address: <span class="referring_address"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Referred to: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Referred to: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span>{{ \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id) }}</span></td>
+                        <td colspan="6">Address: <span>{{ $facility['address'] }}</span></td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="time_referred"></span></td>
@@ -125,7 +127,8 @@ $myfacility = \App\Facility::find($user->facility_id);
                         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="4">Facility: <span class="referring_facility"></span></td>
+                        <td colspan="2">Facility: <span class="referring_facility"></span></td>
+                        <td colspan="2">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
                         <td colspan="4">Facility Contact #: <span class="referring_contact"></span></td>
@@ -135,6 +138,9 @@ $myfacility = \App\Facility::find($user->facility_id);
                     </tr>
                     <tr>
                         <td colspan="4">Referred To: <span>{{ $myfacility->name }}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Address: <span>{{ $facility['address'] }}</span></td>
                     </tr>
                 </table>
                 <div class="col-sm-6">

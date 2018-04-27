@@ -64,12 +64,18 @@
                 <?php
                     $user = Session::get('auth');
                     $t = '';
+                    $dept_desc = '';
                     if($user->level=='doctor')
                     {
                         $t='Dr.';
                     }
+
+                    if($user->department_id > 0)
+                    {
+                        $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
+                    }
                 ?>
-                <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }}</span>
+                <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
             </div>
 
             <div class="pull-right">
@@ -107,6 +113,7 @@
                         <li><a href="{{ url('doctor/patient/tsekap') }}"><i class="fa fa-table"></i> PHA Check-Up Profiles</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
+                        <li><a href="{{ url('doctor/routed') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -114,9 +121,12 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
                         <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i> Referred Patients</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url('doctor/walkin') }}"><i class="fa fa-hospital-o"></i> Emergency Walk-In</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ url('doctor/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
+                <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
+                <li><a href="{{ url('doctor/report') }}"><i class="fa fa-print"></i> Reports</a></li>
                 @elseif($user->level=='support')
                 <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
@@ -126,6 +136,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i>&nbsp; Change Password</a></li>
+                        <li><a href="##dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i>&nbsp; Change Login Status</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                     </ul>
@@ -142,6 +153,7 @@
 </div> <!-- /container -->
 @include('modal.server')
 @include('modal.password')
+@include('modal.duty')
 <footer class="footer">
     <div class="container">
         <p>All Rights Reserved 2017 | Version 1.0</p>
@@ -152,7 +164,7 @@
         <!-- Bootstrap core JavaScript
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="{{ asset('resources/assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
 <script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
 <script src="{{ asset('resources/assets/js/jquery-validate.js') }}"></script>
 <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
@@ -162,6 +174,7 @@
 @include('script.firebase')
 @include('script.newreferral')
 @include('script.password')
+@include('script.duty')
 @yield('js')
 
 <script>

@@ -12,6 +12,7 @@ class PatientForm extends Model
         'unique_id',
         'referring_facility',
         'referred_to',
+        'department_id',
         'time_referred',
         'time_transferred',
         'patient_id',

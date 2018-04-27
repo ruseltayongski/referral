@@ -5,7 +5,7 @@
     var admitRef = dbRef.ref('Admit');
     var dischargetRef = dbRef.ref('Discharge');
     var transferRef = dbRef.ref('Transfer');
-
+    var referred_name = '';
     //initializes variables
     var current_facility, code, patient_name, track_id, form_type;
     current_facility = "{{ \App\Facility::find($user->facility_id)->name }}";
@@ -122,16 +122,49 @@
         $('.loading').hide();
     });
 
-    $('body').on('submit','#referForm',function(e){
+    $('.select_facility').on('change',function(){
+        var id = $(this).val();
+        var url = "{{ url('location/facility/') }}";
+        $.ajax({
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.facility_address').html(data.address);
+
+                $('.select_department').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.select_department').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+                });
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+
+    });
+
+    $('body').on('submit','#referAcceptForm',function(e){
         $('.loading').show();
         e.preventDefault();
-        referred_to = $('.new_facility').val();
-        var new_facility = $('.new_facility').find(':selected').html();
-        var reason = $('.reject_reason').val();
+        referred_to = $('#referAcceptForm').find('.new_facility').val();
+        var new_facility = $('#referAcceptForm').find('.new_facility').find(':selected').html();
+        var referred_to = $('#referAcceptForm').find('.new_facility').val();
+        var department_name = $('.select_department_accept :selected').text();
+        var department_id = $('.select_department_accept').val();
+        var reason = $('#referAcceptForm').find('.reject_reason').val();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/transfer/') }}/"+track_id,
             type: 'POST',
             success: function(data){
+                console.log(data);
                 transferRef.push({
                     date: data.date,
                     item: track_id,
@@ -140,12 +173,13 @@
                     action_md: data.action_md,
                     patient_name: patient_name,
                     code: code,
-                    reason: reason
+                    reason: reason,
+                    activity_id: data.activity_id
                 });
 
-                transferRef.on('child_added',function(data){
+                transferRef.on('child_added',function(d){
                     setTimeout(function(){
-                        transferRef.child(data.key).remove();
+                        transferRef.child(d.key).remove();
                     },500);
                 });
 
@@ -159,7 +193,11 @@
                     date: data.date,
                     form_type: data.form_type,
                     tracking_id: data.track_id,
-                    referring_md: data.action_md
+                    referring_md: data.action_md,
+                    referred_from: data.referred_facility,
+                    department_id: department_id,
+                    department_name: department_name,
+                    activity_id: data.activity_id
                 };
                 console.log(refer_data);
                 connRef.child(referred_to).push(refer_data);
@@ -263,6 +301,7 @@
                 referred_name = data.referring_name;
 
                 $('span.referring_name').html(data.referring_name);
+                $('span.department_name').html(data.department);
                 $('span.referring_contact').html(data.referring_contact);
                 $('span.referring_address').html(address);
                 $('span.patient_name').html(data.patient_name);
@@ -292,6 +331,7 @@
             url: "{{ url('doctor/referral/data/pregnant') }}/"+code,
             type: "GET",
             success: function(record){
+                console.log(record);
                 var data = record.form;
                 var baby = record.baby;
                 var patient_address='';
@@ -336,6 +376,7 @@
                 $('span.md_referring').html(data.md_referring);
                 $('span.referring_md_contact').html(data.referring_md_contact);
                 $('span.referring_facility').html(data.referring_facility);
+                $('span.department_name').html(data.department);
                 $('span.referring_contact').html(data.referring_contact);
                 $('span.facility_brgy').html(data.facility_brgy);
                 $('span.facility_muncity').html(data.facility_muncity);

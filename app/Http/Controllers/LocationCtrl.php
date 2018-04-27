@@ -6,6 +6,7 @@ use App\Barangay;
 use App\Facility;
 use App\Muncity;
 use App\Province;
+use App\User;
 use Illuminate\Http\Request;
 
 class LocationCtrl extends Controller
@@ -20,6 +21,9 @@ class LocationCtrl extends Controller
 
     static function facilityAddress($facility_id)
     {
+        $data['address'] = 'N/A';
+        $data['departments'] = array();
+
         $facility = Facility::select(
             'barangay.description as brgy',
                 'muncity.description as muncity',
@@ -34,7 +38,7 @@ class LocationCtrl extends Controller
 
         $address = '';
         if(!$facility){
-            return 'N/A';
+            return $data;
         }
 
         $address .= ($facility->address) ? $facility->address.', ':null;
@@ -42,7 +46,28 @@ class LocationCtrl extends Controller
         $address .= ($facility->muncity) ? $facility->muncity.', ':null;
         $address .= ($facility->province) ? $facility->province:null;
 
-        return $address;
+        $data['address'] = $address;
+
+        $data['departments'] = User::select('department.id','department.description')
+                ->leftJoin('department','department.id','=','users.department_id')
+                ->where('department.id','!=',null)
+                ->where('users.facility_id',$facility_id)
+                ->groupBy('users.department_id')
+                ->get();
+
+        return $data;
+    }
+
+    static function getDepartmentByFacility($facility_id)
+    {
+        $departments = User::select('department.id','department.description')
+            ->leftJoin('department','department.id','=','users.department_id')
+            ->where('department.id','!=',null)
+            ->where('users.facility_id',$facility_id)
+            ->groupBy('users.department_id')
+            ->get();
+
+        return $departments;
     }
 
     static function getBrgyName($id)

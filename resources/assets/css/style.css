@@ -224,3 +224,12 @@ label {
 
 .modal { overflow: auto !important; }
 
+.dot {
+    height: 16px;
+    width: 16px;
+    background-color: #41bb29;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+
+}

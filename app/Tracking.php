@@ -15,6 +15,7 @@ class Tracking extends Model
         'date_seen',
         'referred_from',
         'referred_to',
+        'department_id',
         'remarks',
         'referring_md',
         'action_md',

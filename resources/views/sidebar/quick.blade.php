@@ -25,7 +25,7 @@
             <a href="{{ asset('doctor/report') }}" class="list-group-item clearfix">
                 Generate Report
                 <span class="pull-right">
-                        <i class="fa fa-line-chart"></i>
+                        <i class="fa fa-print"></i>
                     </span>
             </a>
         </div>

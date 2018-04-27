@@ -13,7 +13,12 @@
 
 Route::get('/', 'HomeCtrl@index');
 Route::get('logout', function(){
+    $user = \Illuminate\Support\Facades\Session::get('auth');
     \Illuminate\Support\Facades\Session::flush();
+    \App\User::where('id',$user->id)
+            ->update([
+                'login_status' => 'logout'
+            ]);
     return redirect('login');
 });
 //SUPPORT Page
@@ -37,14 +42,18 @@ Route::get('doctor','doctor\HomeCtrl@index');
 Route::get('doctor/chart','doctor\HomeCtrl@chart');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
+Route::post('doctor/referral','doctor\ReferralCtrl@searchReferral');
+
 Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if the form is seen
 Route::post('doctor/referral/reject/{track_id}','doctor\ReferralCtrl@reject');//if form is rejected
 Route::post('doctor/referral/accept/{track_id}','doctor\ReferralCtrl@accept');//if form is accepted
-Route::get('doctor/referral/call/{track_id}','doctor\ReferralCtrl@call');//if form is called
+Route::get('doctor/referral/call/{activity_id}','doctor\ReferralCtrl@call');//if form is called
+Route::get('doctor/referral/calling/{track_id}','doctor\ReferralCtrl@calling');//if form is called
 Route::post('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//if patient is arrived
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
+Route::post('doctor/referral/redirect/{activity_id}','doctor\ReferralCtrl@redirect');//if patient is discharge
 
 
 Route::get('doctor/referral/data/normal/{code}','doctor\ReferralCtrl@normalForm');
@@ -69,6 +78,11 @@ Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 
 Route::get('doctor/report','ParamCtrl@maintenance');
 
+
+Route::get('doctor/list','doctor\UserCtrl@index');
+Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
+
+Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
 Route::get('login','LoginCtrl@index');
@@ -81,7 +95,7 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
 Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
 
-//Route::get('default','ParamCtrl@defaultTable');
+Route::get('default','ParamCtrl@defaultTable');
 //Route::get('create/support','ParamCtrl@support');
 Route::get('user/create','UserCtrl@createUser');
 //

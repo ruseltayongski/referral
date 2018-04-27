@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\doctor;
 
+use App\Activity;
 use App\Baby;
 use App\Barangay;
 use App\Http\Controllers\ParamCtrl;
@@ -220,34 +221,56 @@ class PatientCtrl extends Controller
         ]);
     }
 
+    function addTracking($code,$patient_id,$user,$req,$type, $form_id)
+    {
+        $match = array(
+            'code' => $code
+        );
+        $track = array(
+            'patient_id' => $patient_id,
+            'date_referred' => $req->date_referred,
+            'referred_from' => $user->facility_id,
+            'referred_to' => $req->referred_facility,
+            'department_id' => $req->referred_department,
+            'referring_md' => $user->id,
+            'action_md' => '',
+            'type' => $type,
+            'form_id' => $form_id,
+            'remarks' => ($req->reason) ? $req->reason: '',
+            'status' => 'referred'
+        );
+        $tracking = Tracking::updateOrCreate($match,$track);
+
+        $activity = array(
+            'code' => $code,
+            'patient_id' => $patient_id,
+            'date_referred' => $req->date_referred,
+            'referred_from' => $user->facility_id,
+            'referred_to' => $req->referred_facility,
+            'department_id' => $req->referred_department,
+            'referring_md' => $user->id,
+            'action_md' => '',
+            'remarks' => ($req->reason) ? $req->reason: '',
+            'status' => 'referred'
+        );
+        Activity::create($activity);
+
+        $tracking_id = $tracking->id;
+
+        return $tracking_id;
+    }
+
     function referPatient(Request $req,$type)
     {
         $user = Session::get('auth');
         $patient_id = $req->patient_id;
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
         $code = date('ymd').'-'.$user_code.'-'.date('His');
-
+        $tracking_id = 0;
         if($req->source==='tsekap')
         {
             $patient_id = self::importTsekap($req->patient_id,$req->patient_status,$req->phic_id,$req->phic_status);
         }
-
-        $match = array(
-            'code' => $code
-        );
-        $track = array(
-            'patient_id' => $patient_id,
-            'code' => $code,
-            'date_referred' => $req->date_referred,
-            'referred_from' => $user->facility_id,
-            'referred_to' => $req->referred_facility,
-            'referring_md' => $user->id,
-            'action_md' => '',
-            'remarks' => ($req->reason) ? $req->reason: '',
-            'status' => 'referred'
-        );
-        $tracking = Tracking::updateOrCreate($match,$track);
-        $tracking_id = $tracking->id;
 
         $unique_id = "$patient_id-$user->facility_id-".date('ymdH');
         $match = array(
@@ -265,9 +288,9 @@ class PatientCtrl extends Controller
                 ]);
 
             $data = array(
-                'code' => $code,
                 'referring_facility' => $user->facility_id,
                 'referred_to' => $req->referred_facility,
+                'department_id' => $req->referred_department,
                 'time_referred' => $req->date_referred,
                 'time_transferred' => '',
                 'patient_id' => $patient_id,
@@ -279,6 +302,13 @@ class PatientCtrl extends Controller
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
             );
             $form = PatientForm::updateOrCreate($match,$data);
+            if($form->wasRecentlyCreated){
+                PatientForm::where('unique_id',$unique_id)
+                    ->update([
+                        'code' => $code
+                    ]);
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+            }
         }
         else if($type==='pregnant')
         {
@@ -291,12 +321,6 @@ class PatientCtrl extends Controller
             );
             $baby_id = self::storeBabyAsPatient($baby,$patient_id);
 
-            Tracking::updateOrCreate([
-                'code' => $code
-            ],[
-                'remarks' => $req->woman_information_given
-            ]);
-
             Baby::updateOrCreate([
                 'baby_id' => $baby_id,
                 'mother_id' => $patient_id
@@ -306,12 +330,12 @@ class PatientCtrl extends Controller
             ]);
 
             $data = array(
-                'code' => $code,
                 'referring_facility' => ($user->facility_id) ? $user->facility_id: '',
                 'referred_by' => ($user->id) ? $user->id: '',
                 'record_no' => ($req->record_no) ? $req->record_no: '',
                 'referred_date' => ($req->date_referred) ? $req->date_referred: '',
                 'referred_to' => ($req->referred_facility) ? $req->referred_facility: '',
+                'department_id' => ($req->referred_department) ? $req->referred_department:'',
                 'health_worker' => ($req->health_worker) ? $req->health_worker: '',
                 'patient_woman_id' => $patient_id,
                 'woman_reason' => ($req->woman_reason) ? $req->woman_reason: '',
@@ -332,12 +356,14 @@ class PatientCtrl extends Controller
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
             );
             $form = PregnantForm::updateOrCreate($match,$data);
+            if($form->wasRecentlyCreated){
+                PregnantForm::where('unique_id',$unique_id)
+                    ->update([
+                        'code' => $code
+                    ]);
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+            }
         }
-        Tracking::where('id',$tracking_id)
-            ->update([
-                'type' => $type,
-                'form_id' => $form->id
-            ]);
 
         return array(
             'id' => $tracking_id,
@@ -425,6 +451,7 @@ class PatientCtrl extends Controller
                 ->where('tracking.status','accepted')
                 ->orderBy('id','desc')
                 ->paginate(15);
+
         return view('doctor.accepted',[
             'title' => 'Accepted Patients',
             'data' => $data

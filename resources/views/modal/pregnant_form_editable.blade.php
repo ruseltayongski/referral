@@ -52,6 +52,9 @@
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
+                                <select name="referred_department" class="form-control-select select_department select_department_pregnant" style="padding: 3px" required>
+                                    <option value="">Select Department...</option>
+                                </select>
                             </td>
                         </tr>
                         <tr>

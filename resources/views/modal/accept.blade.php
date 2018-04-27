@@ -22,3 +22,18 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" role="dialog" id="callConfirmationModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4>CALL REQUEST</h4>
+                <hr />
+                <button type="button" class="btn btn-lg btn-block btn-success"><i class="fa fa-phone"></i> Called</button>
+                <hr />
+
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

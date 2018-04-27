@@ -1,6 +1,8 @@
 <?php
     $user = Session::get('auth');
     $myfacility = \App\Facility::find($user->facility_id);
+    $department = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+    $facility_address = $department['address'];
 ?>
 <style>
     #normalFormModal span {
@@ -27,10 +29,11 @@
                         <td colspan="6">Address: <span class="referring_address"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Referred to: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Referred to: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span>{{ \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id) }}</span></td>
+                        <td colspan="6">Address: <span>{{ $facility_address  }}</span></td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="time_referred"></span></td>
@@ -96,8 +99,8 @@
                 <hr />
                 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <div class="form-fotter pull-right">
-                    <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#contactModal"><i class="fa fa-phone"></i> Call</button>
-                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Redirect</button>
+                    <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request</button>
+                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
                     <button class="btn btn-success btn-flat" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
                 </div>
                 <div class="clearfix"></div>
@@ -128,7 +131,8 @@
                         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="4">Facility: <span class="referring_facility"></span></td>
+                        <td colspan="2">Facility: <span class="referring_facility"></span></td>
+                        <td colspan="2">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
                         <td colspan="4">Facility Contact #: <span class="referring_contact"></span></td>
@@ -231,8 +235,8 @@
                 <hr />
                 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <div class="form-fotter pull-right">
-                    <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#contactModal"><i class="fa fa-phone"></i> Call</button>
-                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Redirect</button>
+                    <button class="btn btn-info btn-flat btn-call" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request</button>
+                    <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
                     <button class="btn btn-success btn-flat"  data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
                 </div>
                 <div class="clearfix"></div>

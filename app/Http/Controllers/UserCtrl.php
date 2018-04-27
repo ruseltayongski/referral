@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facility;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class UserCtrl extends Controller
 {
@@ -19,6 +20,7 @@ class UserCtrl extends Controller
                 'password' => bcrypt($username),
                 'level' => 'doctor',
                 'facility_id' => $row->id,
+                'department_id' => 1,
                 'fname' => self::getFirstName(),
                 'mname' => self::getMiddleName().'.',
                 'lname' => self::getLastName(),
@@ -87,5 +89,16 @@ class UserCtrl extends Controller
             "Wanda","Thomas");
         $newLastName = $lastNameCollection[rand(0, count($lastNameCollection)-1)];
         return $newLastName;
+    }
+
+    public function duty($option)
+    {
+        $user = Session::get('auth');
+        $option = ($option=='onduty') ? 'login' : 'login_off';
+        User::where('id',$user->id)
+            ->update([
+                'login_status' => $option
+            ]);
+        Session::put('duty',true);
     }
 }

@@ -64,7 +64,10 @@ $user = Session::get('auth');
                                 <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary btn-action"
+                                        title="Patient Arrived"
+
                                         data-toggle="modal"
+                                        data-toggle="tooltip"
                                         data-target="#arriveModal"
                                         data-track_id="{{ $row->id }}"
                                         data-patient_name="{{ $row->patient_name }}"
@@ -73,7 +76,10 @@ $user = Session::get('auth');
                                     </button>
 
                                     <button class="btn btn-sm btn-info btn-action"
+                                            title="Patient Admitted"
+
                                             data-toggle="modal"
+                                            data-toggle="tooltip"
                                             data-target="#admitModal"
                                             data-track_id="{{ $row->id }}"
                                             data-patient_name="{{ $row->patient_name }}"
@@ -82,7 +88,10 @@ $user = Session::get('auth');
                                     </button>
 
                                     <button class="btn btn-sm btn-warning btn-action"
+                                            title="Patient Discharged"
+
                                             data-toggle="modal"
+                                            data-toggle="tooltip"
                                             data-target="#dischargeModal"
                                             data-track_id="{{ $row->id }}"
                                             data-patient_name="{{ $row->patient_name }}"
@@ -91,8 +100,11 @@ $user = Session::get('auth');
                                     </button>
 
                                     <button class="btn btn-sm btn-success btn-action btn-transfer"
+                                            title="Refer Patient"
+
                                             data-toggle="modal"
-                                            data-target="#referFormModal"
+                                            data-toggle="tooltip"
+                                            data-target="#referAcceptFormModal"
                                             data-track_id="{{ $row->id }}"
                                             data-patient_name="{{ $row->patient_name }}"
                                             data-code="{{ $row->code}}">
@@ -106,26 +118,26 @@ $user = Session::get('auth');
                         <div class="text-center">
                             {{ $data->links() }}
                         </div>
-                        <table class="table table-striped">
-                            <caption>LEGENDS:</caption>
-                            <tr>
-                                <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
-                                <td>Patient Arrived</td>
-                            </tr>
-                            <tr>
-                                <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>
-                                <td>Patient Admitted</td>
-                            </tr>
-                            <tr>
-                                <td class="text-right" width="60px"><button class="btn btn-sm btn-warning"><i class="fa fa-wheelchair-alt"></i> </button></td>
-                                <td>Patient Discharged</td>
-                            </tr>
-                            <tr>
-                                <td class="text-right" width="60px"><button class="btn btn-sm btn-success"><i class="fa fa-ambulance"></i></button></td>
-                                <td>Refer Patient</td>
-                            </tr>
-                        </table>
                     </div>
+                    <table class="table table-striped">
+                        <caption>LEGENDS:</caption>
+                        <tr>
+                            <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
+                            <td>Patient Arrived</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>
+                            <td>Patient Admitted</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" width="60px"><button class="btn btn-sm btn-warning"><i class="fa fa-wheelchair-alt"></i> </button></td>
+                            <td>Patient Discharged</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" width="60px"><button class="btn btn-sm btn-success"><i class="fa fa-ambulance"></i></button></td>
+                            <td>Refer Patient</td>
+                        </tr>
+                    </table>
                     @else
                     <div class="alert alert-warning">
                         <span class="text-warning">
@@ -144,6 +156,11 @@ $user = Session::get('auth');
 @endsection
 @include('script.firebase')
 @section('js')
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 @include('script.datetime')
 @include('script.accepted')
 @endsection

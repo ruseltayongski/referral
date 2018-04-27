@@ -29,7 +29,8 @@ class LoginCtrl extends Controller
                     $last_login = date('Y-m-d H:i:s');
                     User::where('id',$login->id)
                         ->update([
-                            'last_login' => $last_login
+                            'last_login' => $last_login,
+                            'login_status' => 'login'
                         ]);
                     if($login->level=='doctor'){
                         return 'doctor';

@@ -65,7 +65,14 @@ if($searchKeyword){
                                 </a>
                             </td>
                             <td>
-                                {{ \App\Department::find($row->department_id)->description }}
+                                <?php
+                                    $department = \App\Department::find($row->department_id);
+                                    $description = '';
+                                    if($department){
+                                        $description = $department->description;
+                                    }
+                                ?>
+                                {{ $description }}
                             </td>
                             <td>
                                 {{ $row->contact }}

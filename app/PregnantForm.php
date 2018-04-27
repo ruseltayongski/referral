@@ -15,6 +15,7 @@ class PregnantForm extends Model
         'record_no',
         'referred_date',
         'referred_to',
+        'department_id',
         'arrival_date',
         'health_worker',
         'patient_woman_id',
