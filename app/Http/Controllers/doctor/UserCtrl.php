@@ -60,6 +60,7 @@ class UserCtrl extends Controller
         }
 
         $data = $data
+                ->where('users.level','doctor')
                 ->orderBy('users.facility_id','asc')
                 ->orderBy('users.fname','asc')
                 ->paginate(15);

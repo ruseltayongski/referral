@@ -98,6 +98,17 @@ Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
 Route::get('default','ParamCtrl@defaultTable');
 //Route::get('create/support','ParamCtrl@support');
 Route::get('user/create','UserCtrl@createUser');
+Route::get('user/update',function(){
+    \App\User::where('id','!=',0)
+        ->update([
+            'password' => bcrypt('123')
+        ]);
+    \App\Facility::where('id','!=',0)
+        ->update([
+            'status' => 1
+        ]);
+    echo 'Passwords updated!';
+});
 //
 Route::get('sample',function(){
     echo date('Y',strtotime("+1 year"));

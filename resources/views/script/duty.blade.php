@@ -1,6 +1,9 @@
-<?php $duty = Session::get('duty'); ?>
+<?php
+    $duty = Session::get('duty');
+    $user = Session::get('auth');
+?>
 <script>
-    @if(!$duty)
+    @if(!$duty && $user->level=='doctor')
         $('#dutyModal').modal();
     @endif
 

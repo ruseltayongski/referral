@@ -40,10 +40,10 @@ $user = Session::get('auth');
                             $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
 
                             $activities = \App\Activity::select(
-                                    'activity.*',
-                                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
-                                    DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
-                                    'users.contact'
+                                'activity.*',
+                                DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
+                                DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
+                                'users.contact'
                             )
                                 ->where('activity.code',$row->code)
                                 ->where('activity.id','>=',function($q) use($row,$user){
@@ -56,7 +56,7 @@ $user = Session::get('auth');
                                                 ->orwhere('status','rejected')
                                                 ->orwhere('status','transferred');
                                         })
-                                        ->where('referred_to','!=',0)
+                                        //->where('referred_to','!=',0)
                                         ->first()
                                     ;
                                 })
@@ -65,23 +65,23 @@ $user = Session::get('auth');
                                 ->orderBy('id','desc')
                                 ->get();
 
-//                            $starter = \App\PregnantForm::select('id');
-//                            if($row->type=='normal'){
-//                                $starter = \App\PatientForm::select('id');
-//                            }
-//                            $starter = $starter->where('code',$row->code)
-//                                ->where('referring_facility',$user->facility_id)
-//                                ->first();
-//                            if($starter){
-//                                $activities = App\Activity::select(
-//                                    'activity.*',
-//                                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
-//                                    'users.contact'
-//                                )
-//                                    ->where('activity.code',$row->code)
-//                                    ->leftJoin('users','users.id','=','activity.action_md')
-//                                    ->get();
-//                            }
+                            //                            $starter = \App\PregnantForm::select('id');
+                            //                            if($row->type=='normal'){
+                            //                                $starter = \App\PatientForm::select('id');
+                            //                            }
+                            //                            $starter = $starter->where('code',$row->code)
+                            //                                ->where('referring_facility',$user->facility_id)
+                            //                                ->first();
+                            //                            if($starter){
+                            //                                $activities = App\Activity::select(
+                            //                                    'activity.*',
+                            //                                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
+                            //                                    'users.contact'
+                            //                                )
+                            //                                    ->where('activity.code',$row->code)
+                            //                                    ->leftJoin('users','users.id','=','activity.action_md')
+                            //                                    ->get();
+                            //                            }
                             ?>
                             <ul class="timeline activity-{{ $row->id }} code-{{ $row->code }}">
                                 <li>
@@ -90,19 +90,19 @@ $user = Session::get('auth');
                                         {{--<span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>--}}
                                         <h3 class="timeline-header no-border">
                                             <?php
-                                                $department_name = 'N/A';
-                                                $dept = \App\Department::find($row->department_id);
-                                                if($dept){
-                                                    $department_name = $dept->description;
-                                                }
-                                                $patient = \App\Patients::find($row->patient_id);
-                                                $patient_address = '';
-                                                $patient_address .= ($patient->brgy) ? \App\Barangay::find($patient->brgy)->description.', ': '';
-                                                $patient_address .= ($patient->muncity) ? \App\Muncity::find($patient->muncity)->description: '';
-                                                if($patient->muncity=='others')
-                                                {
-                                                       $patient_address = $patient->address;
-                                                }
+                                            $department_name = 'N/A';
+                                            $dept = \App\Department::find($row->department_id);
+                                            if($dept){
+                                                $department_name = $dept->description;
+                                            }
+                                            $patient = \App\Patients::find($row->patient_id);
+                                            $patient_address = '';
+                                            $patient_address .= ($patient->brgy) ? \App\Barangay::find($patient->brgy)->description.', ': '';
+                                            $patient_address .= ($patient->muncity) ? \App\Muncity::find($patient->muncity)->description: '';
+                                            if($patient->muncity=='others')
+                                            {
+                                                $patient_address = $patient->address;
+                                            }
                                             ?>
                                             {{--<a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department_name }}</span> of <span class="facility">{{ $row->facility_name }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span>.--}}
                                             <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> from <span class="facility">{{ $patient_address }}</span>.
@@ -121,10 +121,10 @@ $user = Session::get('auth');
                                         </div>
                                     </div>
                                 </li>
-                            @if(count($activities) > 0)
+                                @if(count($activities) > 0)
 
-                                @foreach($activities as $act)
-                                    <?php
+                                    @foreach($activities as $act)
+                                        <?php
 
                                         $act_icon = ($act->status=='rejected') ? 'fa-user-times': 'fa-user-plus';
                                         $act_name = \App\Patients::find($act->patient_id);
@@ -137,29 +137,29 @@ $user = Session::get('auth');
                                         if($tmp_new){
                                             $new_facility = $tmp_new->name;
                                         }
-                                    ?>
-                                    <li>
-                                        @if($act->status=='rejected')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        <span class="text-danger">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span> recommended to redirect <span class="text-success">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
-                                                        <br />
-                                                        <div class="text-remarks">
-                                                            Remarks: {{ $act->remarks }}
+                                        ?>
+                                        <li>
+                                            @if($act->status=='rejected')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            <span class="text-danger">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span> recommended to redirect <span class="text-success">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
+                                                            <br />
+                                                            <div class="text-remarks">
+                                                                Remarks: {{ $act->remarks }}
+                                                            </div>
+                                                            @if($act->department_id==0 && $user->facility_id==$act->referred_from)
+                                                                <button class="btn btn-success btn-xs btn-referred" data-toggle="modal" data-target="#referredFormModal" data-activity_id="{{ $act->id }}">
+                                                                    <i class="fa fa-ambulance"></i> Refer to other facility
+                                                                </button>
+                                                            @endif
                                                         </div>
-                                                        @if($act->department_id==0 && $user->facility_id==$act->referred_from)
-                                                        <button class="btn btn-success btn-xs btn-referred" data-toggle="modal" data-target="#referredFormModal" data-activity_id="{{ $act->id }}">
-                                                            <i class="fa fa-ambulance"></i> Refer to other facility
-                                                        </button>
-                                                        @endif
-                                                    </div>
-                                                </a>
+                                                    </a>
 
-                                            </div>
-                                        @elseif($act->status=='referred' || $act->status=='redirected')
-                                            <?php
+                                                </div>
+                                            @elseif($act->status=='referred' || $act->status=='redirected')
+                                                <?php
                                                 $act_section = 'normal';
                                                 $act_icon = 'ambulance';
                                                 $act_date = $act->date_referred;
@@ -169,172 +169,142 @@ $user = Session::get('auth');
                                                     $act_icon ='eye';
                                                     $act_date = $act->date_seen;
                                                 }
-                                            ?>
-                                            <div class="timeline-item {{ $act_section }}-section" id="activity-{{ $act->id }}">
-                                                <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->referring_md }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='transferred')
-                                            <?php
-                                            $act_section = 'normal';
-                                            $act_icon = 'ambulance';
-                                            $act_date = $act->date_referred;
-                                            if($act->date_seen!='0000-00-00 00:00:00')
-                                            {
-                                                $act_section = 'read';
-                                                $act_icon ='eye';
-                                                $act_date = $act->date_seen;
-                                            }
-                                            ?>
-                                            <div class="timeline-item {{ $act_section }}-section" id="activity-{{ $act->id }}">
-                                                <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
-                                                        <br />
-                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
-                                                    </div>
-                                                </a>
-
-                                            </div>
-                                        @elseif($act->status=='redirected')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> to <span class="facility">{{ $new_facility }}.</span>
-                                                    </div>
-                                                </a>
-
-                                            </div>
-                                        @elseif($act->status=='calling')
-                                            <div class="timeline-item {{ ($act->remarks=='N/A') ? 'normal-section': 'read-section' }}">
-                                                <span class="time"><i class="fa fa-phone"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span> is requesting a call from <span class="facility">{{ $old_facility }}</span>.
-                                                        @if($user->facility_id==$act->referred_from)
-                                                        Please contact this number <span class="text-danger">({{ $act->contact }})</span> .
-                                                        @endif
-                                                        <br />
-                                                        @if($act->remarks==='N/A')
-                                                            @if($user->facility_id==$act->referred_from)
-                                                            <button type="button" class="btn btn-success btn-sm btn-call"
-                                                                    data-action_md = "{{ $act->md_name }}"
-                                                                    data-facility_name = "{{ $old_facility }}"
-                                                                    data-activity_id="{{ $act->id }}"><i class="fa fa-phone"></i> Called</button>
-                                                            @endif
-                                                            <div class="text-remarks hide"></div>
-                                                        @else
+                                                ?>
+                                                <div class="timeline-item {{ $act_section }}-section" id="activity-{{ $act->id }}">
+                                                    <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->referring_md }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='transferred')
+                                                <?php
+                                                $act_section = 'normal';
+                                                $act_icon = 'ambulance';
+                                                $act_date = $act->date_referred;
+                                                if($act->date_seen!='0000-00-00 00:00:00')
+                                                {
+                                                    $act_section = 'read';
+                                                    $act_icon ='eye';
+                                                    $act_date = $act->date_seen;
+                                                }
+                                                ?>
+                                                <div class="timeline-item {{ $act_section }}-section" id="activity-{{ $act->id }}">
+                                                    <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
+                                                            <br />
                                                             <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
-                                                        @endif
+                                                        </div>
+                                                    </a>
 
-                                                    </div>
+                                                </div>
+                                            @elseif($act->status=='redirected')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->md_name }}</span> to <span class="facility">{{ $new_facility }}.</span>
+                                                        </div>
+                                                    </a>
 
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='called')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa fa-phone"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a href="#">
-                                                    <div class="timeline-header no-border">
-                                                        <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> called the referring facility.
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='arrived')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa fa-wheelchair"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} arrived at <span class="facility">{{ $old_facility }}</span>.
-                                                        <br />
-                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='admitted')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a href="#">
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} admitted at <span class="facility">{{ $old_facility }}</span>.
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='discharged')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} discharged from <span class="facility">{{ $old_facility }}</span>.
-                                                        <br />
-                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @elseif($act->status=='accepted')
-                                            <div class="timeline-item read-section">
-                                                <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
-                                                <a>
-                                                    <div class="timeline-header no-border">
-                                                        {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.</span>
-                                                        <br />
-                                                        <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
-                                                    </div>
-                                                </a>
+                                                </div>
+                                            @elseif($act->status=='calling')
+                                                <div class="timeline-item {{ ($act->remarks=='N/A') ? 'normal-section': 'read-section' }}">
+                                                    <span class="time"><i class="fa fa-phone"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span> is requesting a call from <span class="facility">{{ $old_facility }}</span>.
+                                                            @if($user->facility_id==$act->referred_from)
+                                                                Please contact this number <span class="text-danger">({{ $act->contact }})</span> .
+                                                            @endif
+                                                            <br />
+                                                            @if($act->remarks==='N/A')
+                                                                @if($user->facility_id==$act->referred_from)
+                                                                    <button type="button" class="btn btn-success btn-sm btn-call"
+                                                                            data-action_md = "{{ $act->md_name }}"
+                                                                            data-facility_name = "{{ $old_facility }}"
+                                                                            data-activity_id="{{ $act->id }}"><i class="fa fa-phone"></i> Called</button>
+                                                                @endif
+                                                                <div class="text-remarks hide"></div>
+                                                            @else
+                                                                <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
+                                                            @endif
 
-                                            </div>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            @endif
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='called')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa fa-phone"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a href="#">
+                                                        <div class="timeline-header no-border">
+                                                            <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> called the referring facility.
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='arrived')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa fa-wheelchair"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} arrived at <span class="facility">{{ $old_facility }}</span>.
+                                                            <br />
+                                                            <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='admitted')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a href="#">
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} admitted at <span class="facility">{{ $old_facility }}</span>.
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='discharged')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} discharged from <span class="facility">{{ $old_facility }}</span>.
+                                                            <br />
+                                                            <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @elseif($act->status=='accepted')
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.</span>
+                                                            <br />
+                                                            <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
+                                                        </div>
+                                                    </a>
+
+                                                </div>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                @endif
                             </ul>
                         @endforeach
-                        {{--<li>--}}
-                            {{--<i class="fa fa-user bg-blue-active"></i>--}}
-                            {{--<div class="timeline-item read-section">--}}
-                                {{--<span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>--}}
-                                {{--<h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> was referred to <span class="facility">Badian District Hospital</span></h3>--}}
-                                {{--<div class="timeline-footer">--}}
-                                    {{--<a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>--}}
-                                    {{--<a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</li>--}}
-                        {{--<li>--}}
-                            {{--<div class="timeline-item read-section">--}}
-                                {{--<span class="time"><i class="fa fa-user-times"></i> March 7, 2018 9:34 AM</span>--}}
-                                {{--<a href="#">--}}
-                                {{--<div class="timeline-header no-border">--}}
-                                    {{--Anna Baclayon  was rejected by <span class="facility">Badian District Hospital</span> and referred to <span class="facility">Toledo District Hospital.</span>--}}
-                                {{--</div>--}}
-                                {{--</a>--}}
 
-                            {{--</div>--}}
-                        {{--</li>--}}
-                        {{--<li>--}}
-                            {{--<div class="timeline-item read-section">--}}
-                                {{--<span class="time"><i class="fa fa-user-plus"></i> March 7, 2018 9:34 AM</span>--}}
-                                {{--<a href="#">--}}
-                                {{--<div class="timeline-header no-border">--}}
-                                    {{--Anna Baclayon was accepted to <span class="facility">Toledo District Hospital</span></div>--}}
-                                {{--</a>--}}
-                            {{--</div>--}}
-                        {{--</li>--}}
                         <div class="text-center">
                             {{ $data->links() }}
                         </div>
                     @else
-                    <div class="alert alert-warning">
+                        <div class="alert alert-warning">
                         <span class="text-warning">
                             <i class="fa fa-warning"></i> No Referred Patients!
                         </span>
-                    </div>
+                        </div>
                     @endif
                 </div><!-- /.col -->
             </div><!-- /.row -->
