@@ -43,7 +43,10 @@ class HomeCtrl extends Controller
                     ->where('date_accepted','<=',$enddate)
                     ->count();
 
-            $data['rejected'][] = Tracking::where('status','rejected')
+            $data['rejected'][] = Activity::where(function($q){
+                    $q->where('status','redirected')
+                        ->orwhere('status','rejected');
+                })
                 ->where('referred_to',$user->facility_id)
                 ->where('date_referred','>=',$startdate)
                 ->where('date_referred','<=',$enddate)
