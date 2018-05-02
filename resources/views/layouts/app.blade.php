@@ -113,7 +113,7 @@
                         <li><a href="{{ url('doctor/patient/tsekap') }}"><i class="fa fa-table"></i> PHA Check-Up Profiles</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
-                        <li><a href="{{ url('doctor/routed') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
+                        <li><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -122,7 +122,7 @@
                         <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
                         <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i> Referred Patients</a></li>
                         <li class="divider"></li>
-                        <li><a href="{{ url('doctor/walkin') }}"><i class="fa fa-hospital-o"></i> Emergency Walk-In</a></li>
+                        <li><a href="{{ url('maintenance') }}"><i class="fa fa-hospital-o"></i> Emergency Walk-In</a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
@@ -156,7 +156,7 @@
 @include('modal.duty')
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2017 | Version 1.0</p>
+        <p>All Rights Reserved 2017 | Version 1.1</p>
     </div>
 </footer>
 

@@ -88,6 +88,9 @@ Route::get('duty/{option}','UserCtrl@duty');
 Route::get('login','LoginCtrl@index');
 Route::post('login','LoginCtrl@validateLogin');
 Route::post('reset/password','LoginCtrl@resetPassword');
+Route::get('maintenance',function(){
+    return view('error',['title' => 'Maintenance']);
+});
 
 /*Param */
 //Route::get('uploadcsv','ParamCtrl@upload');
