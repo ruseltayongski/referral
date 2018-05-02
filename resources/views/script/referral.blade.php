@@ -11,6 +11,7 @@
         form_id,
         age,
         sex,
+        id,
         form_type,
         referring_name,
         referring_contact,
@@ -231,10 +232,9 @@ function seenMessage()
 function getNormalForm()
 {
     $.ajax({
-        url: "{{ url('doctor/referral/data/normal') }}/"+code,
+        url: "{{ url('doctor/referral/data/normal') }}/"+form_id,
         type: "GET",
         success: function(data){
-            console.log(data);
             patient_name = data.patient_name;
             referring_name = data.referring_name;
 
@@ -307,12 +307,11 @@ function getNormalForm()
 function getPregnantForm()
 {
     $.ajax({
-        url: "{{ url('doctor/referral/data/pregnant') }}/"+code,
+        url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id,
         type: "GET",
         success: function(record){
             var data = record.form;
             var baby = record.baby;
-            console.log("{{ url('doctor/referral/data/pregnant') }}/"+code);
             var patient_address='';
             patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
             patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
