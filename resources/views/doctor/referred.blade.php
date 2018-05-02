@@ -114,7 +114,11 @@ $user = Session::get('auth');
                                                data-toggle="modal">
                                                 <i class="fa fa-folder"></i> View Form
                                             </a>
-                                            <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
+                                            <a href="{{ $modal }}" data-toggle="modal"
+                                               data-type="{{ $row->type }}"
+                                               data-id="{{ $row->id }}"
+                                               data-code="{{ $row->code }}"
+                                               class="view_form btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
                                             @if(count($activities)>2)
                                                 <a class="btn btn-info btn-xs btn-activity"><i class="fa fa-line-chart"></i> View {{ count($activities) }} Activities</a>
                                             @endif
@@ -316,9 +320,11 @@ $user = Session::get('auth');
     </div>
     @include('modal.accept')
     @include('modal.refer')
+    @include('modal.view_form')
 @endsection
 @include('script.firebase')
 @section('js')
     @include('script.referred')
+
 @endsection
 

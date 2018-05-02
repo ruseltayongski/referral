@@ -241,8 +241,14 @@
 {{--VIEW FORM--}}
 <script>
     $('.view_form').on('click',function(){
+        $('.loading').show();
         code = $(this).data('code');
         form_type = $(this).data('type');
+        id = $(this).data('id');
+
+        $('#normalFormModal').find('span').html('');
+        $('#pregnantFormModal').find('span').html('');
+
         if(form_type=='normal'){
             getNormalForm();
         }else{
@@ -251,9 +257,8 @@
     });
     function getNormalForm()
     {
-        console.log(code);
         $.ajax({
-            url: "{{ url('doctor/referral/data/normal') }}/"+code,
+            url: "{{ url('doctor/referral/data/normal') }}/"+id,
             type: "GET",
             success: function(data){
                 patient_name = data.patient_name;
@@ -261,9 +266,15 @@
 
                 var address='';
                 var patient_address='';
+                var referred_address = '';
+
                 address += (data.facility_brgy) ? data.facility_brgy+', ': '';
                 address += (data.facility_muncity) ? data.facility_muncity+', ': '';
                 address += (data.facility_province) ? data.facility_province: '';
+
+                referred_address += (data.ff_brgy) ? data.ff_brgy+', ': '';
+                referred_address += (data.ff_muncity) ? data.ff_muncity+', ': '';
+                referred_address += (data.ff_province) ? data.ff_province: '';
 
                 patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
                 patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
@@ -304,6 +315,9 @@
                 $('span.department_name').html(data.department);
                 $('span.referring_contact').html(data.referring_contact);
                 $('span.referring_address').html(address);
+                $('span.referred_name').html(data.referred_name);
+                $('span.referred_address').html(referred_address);
+                $('span.time_referred').html(data.time_referred);
                 $('span.patient_name').html(data.patient_name);
                 $('span.patient_age').html(data.age);
                 $('span.patient_sex').html(data.sex);
@@ -318,20 +332,23 @@
                 $('span.referring_md').html(data.md_referring);
                 $('span.referring_md_contact').html(data.referring_md_contact);
                 $('span.referred_md').html(data.md_referred);
+                $('.loading').hide();
             },
             error: function(){
                 $('#serverModal').modal();
+                $('.loading').hide();
             }
+
         });
     }
 
     function getPregnantForm()
     {
         $.ajax({
-            url: "{{ url('doctor/referral/data/pregnant') }}/"+code,
+            url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
             type: "GET",
             success: function(record){
-                console.log(record);
+                console.log("{{ url('doctor/referral/data/pregnant') }}/"+code);
                 var data = record.form;
                 var baby = record.baby;
                 var patient_address='';
@@ -408,10 +425,11 @@
                     $('span.baby_transport_given_time').html(baby.baby_transport_given_time);
                     $('span.baby_information_given').html(baby_information_given);
                 }
-
+                $('.loading').hide();
             },
             error: function(){
                 $('#serverModal').modal();
+                $('.loading').hide();
             }
         });
     }

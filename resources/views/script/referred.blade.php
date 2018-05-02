@@ -388,3 +388,202 @@
 //        item.not(":first-child").not(":nth-child(2)").toggle();
 //    });
 </script>
+
+{{--VIEW FORM--}}
+<script>
+    var id = 0;
+    $('.view_form').on('click',function(){
+        $('.loading').show();
+        code = $(this).data('code');
+        form_type = $(this).data('type');
+        id = $(this).data('id');
+
+        $('#normalFormModal').find('span').html('');
+        $('#pregnantFormModal').find('span').html('');
+
+        if(form_type=='normal'){
+            getNormalForm();
+        }else{
+            getPregnantForm();
+        }
+    });
+    function getNormalForm()
+    {
+        $.ajax({
+            url: "{{ url('doctor/referral/data/normal') }}/"+id,
+            type: "GET",
+            success: function(data){
+                console.log("{{ url('doctor/referral/data/normal') }}/"+id);
+                patient_name = data.patient_name;
+                referring_name = data.referring_name;
+
+                var address='';
+                var patient_address='';
+                var referred_address = '';
+
+                address += (data.facility_brgy) ? data.facility_brgy+', ': '';
+                address += (data.facility_muncity) ? data.facility_muncity+', ': '';
+                address += (data.facility_province) ? data.facility_province: '';
+
+                referred_address += (data.ff_brgy) ? data.ff_brgy+', ': '';
+                referred_address += (data.ff_muncity) ? data.ff_muncity+', ': '';
+                referred_address += (data.ff_province) ? data.ff_province: '';
+
+                patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
+                patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
+                patient_address += (data.patient_province) ? data.patient_province: '';
+
+                var case_summary = data.case_summary;
+                if (/\n/g.test(case_summary))
+                {
+                    case_summary = case_summary.replace(/\n/g, '<br>');
+                }
+
+                var reco_summary = data.reco_summary;
+                if (/\n/g.test(reco_summary))
+                {
+                    reco_summary = reco_summary.replace(/\n/g, '<br>');
+                }
+
+                var diagnosis = data.diagnosis;
+                if (/\n/g.test(diagnosis))
+                {
+                    diagnosis = diagnosis.replace(/\n/g, '<br>');
+                }
+
+                var reason = data.reason;
+                if (/\n/g.test(reason))
+                {
+                    reason = reason.replace(/\n/g, '<br>');
+                }
+
+
+                age = data.age;
+                sex = data.sex;
+                referring_contact = data.referring_contact;
+                referring_md_contact = data.referring_md_contact;
+                referred_name = data.referring_name;
+
+                $('span.referring_name').html(data.referring_name);
+                $('span.department_name').html(data.department);
+                $('span.referring_contact').html(data.referring_contact);
+                $('span.referring_address').html(address);
+                $('span.referred_name').html(data.referred_name);
+                $('span.referred_address').html(referred_address);
+                $('span.time_referred').html(data.time_referred);
+                $('span.patient_name').html(data.patient_name);
+                $('span.patient_age').html(data.age);
+                $('span.patient_sex').html(data.sex);
+                $('span.patient_status').html(data.civil_status);
+                $('span.patient_address').html(patient_address);
+                $('span.phic_status').html(data.phic_status);
+                $('span.phic_id').html(data.phic_id);
+                $('span.case_summary').append(case_summary);
+                $('span.reco_summary').html(reco_summary);
+                $('span.diagnosis').html(diagnosis);
+                $('span.reason').html(reason);
+                $('span.referring_md').html(data.md_referring);
+                $('span.referring_md_contact').html(data.referring_md_contact);
+                $('span.referred_md').html(data.md_referred);
+                $('.loading').hide();
+            },
+            error: function(){
+                $('#serverModal').modal();
+                $('.loading').hide();
+            }
+
+        });
+    }
+
+    function getPregnantForm()
+    {
+        $.ajax({
+            url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
+            type: "GET",
+            success: function(record){
+                console.log("{{ url('doctor/referral/data/pregnant') }}/"+id);
+                var data = record.form;
+                var baby = record.baby;
+                var patient_address='';
+                patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
+                patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
+                patient_address += (data.patient_province) ? data.patient_province: '';
+
+                var woman_major_findings = data.woman_major_findings;
+                if (/\n/g.test(woman_major_findings))
+                {
+                    woman_major_findings = woman_major_findings.replace(/\n/g, '<br>');
+                }
+
+                var woman_information_given = data.woman_information_given;
+                if (/\n/g.test(woman_information_given))
+                {
+                    woman_information_given = woman_information_given.replace(/\n/g, '<br>');
+                }
+
+                if(baby){
+                    var baby_major_findings = baby.baby_major_findings;
+                    if (/\n/g.test(baby_major_findings))
+                    {
+                        baby_major_findings = baby_major_findings.replace(/\n/g, '<br>');
+                    }
+
+                    var baby_information_given = baby.baby_information_given;
+                    if (/\n/g.test(baby_information_given))
+                    {
+                        baby_information_given = baby_information_given.replace(/\n/g, '<br>');
+                    }
+                }
+
+                age = data.woman_age;
+                sex = data.sex;
+                referring_contact = data.referring_contact;
+                referring_md_contact = data.referring_md_contact;
+                referred_name = data.referring_facility;
+
+                $('span.record_no').html(data.record_no);
+                $('span.referred_date').html(data.referred_date);
+                $('span.md_referring').html(data.md_referring);
+                $('span.referring_md_contact').html(data.referring_md_contact);
+                $('span.referring_facility').html(data.referring_facility);
+                $('span.department_name').html(data.department);
+                $('span.referring_contact').html(data.referring_contact);
+                $('span.facility_brgy').html(data.facility_brgy);
+                $('span.facility_muncity').html(data.facility_muncity);
+                $('span.facility_province').html(data.facility_province);
+                $('span.health_worker').html(data.health_worker);
+                $('span.woman_name').html(data.woman_name);
+                $('span.woman_age').html(data.woman_age);
+                $('span.woman_address').html(patient_address);
+                $('span.woman_reason').html(data.woman_reason);
+                $('span.woman_major_findings').html(woman_major_findings);
+                $('span.woman_before_treatment').html(data.woman_before_treatment);
+                $('span.woman_before_given_time').html(data.woman_before_given_time);
+                $('span.woman_during_transport').html(data.woman_during_transport);
+                $('span.woman_transport_given_time').html(data.woman_transport_given_time);
+                $('span.woman_information_given').html(woman_information_given);
+
+                if(baby){
+
+                    $('span.baby_name').html(baby.baby_name);
+                    $('span.baby_dob').html(baby.baby_dob);
+                    $('span.weight').html(baby.weight);
+                    $('span.gestational_age').html(baby.gestational_age);
+                    $('span.baby_reason').html(baby.baby_reason);
+                    $('span.baby_major_findings').html(baby_major_findings);
+                    $('span.baby_last_feed').html(baby.baby_last_feed);
+                    $('span.baby_before_treatment').html(baby.baby_before_treatment);
+                    $('span.baby_before_given_time').html(baby.baby_before_given_time);
+                    $('span.baby_during_transport').html(baby.baby_during_transport);
+                    $('span.baby_transport_given_time').html(baby.baby_transport_given_time);
+                    $('span.baby_information_given').html(baby_information_given);
+                }
+                $('.loading').hide();
+            },
+            error: function(){
+                $('#serverModal').modal();
+                $('.loading').hide();
+            }
+        });
+    }
+</script>

@@ -56,8 +56,8 @@ Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer'
 Route::post('doctor/referral/redirect/{activity_id}','doctor\ReferralCtrl@redirect');//if patient is discharge
 
 
-Route::get('doctor/referral/data/normal/{code}','doctor\ReferralCtrl@normalForm');
-Route::get('doctor/referral/data/pregnant/{code}','doctor\ReferralCtrl@pregnantForm');
+Route::get('doctor/referral/data/normal/{id}','doctor\ReferralCtrl@normalForm');
+Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 

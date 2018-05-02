@@ -28,11 +28,11 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="6">Address: <span class="referring_address"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="3">Referred to: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Referred to: <span class="referred_name">{{ $myfacility->name }}</span></td>
                         <td colspan="3">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span>{{ $facility['address'] }}</span></td>
+                        <td colspan="6">Address: <span class="referred_address">{{ $facility['address'] }}</span></td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="time_referred"></span></td>

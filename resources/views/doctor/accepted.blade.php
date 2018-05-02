@@ -37,13 +37,19 @@ $user = Session::get('auth');
                             @foreach($data as $row)
                             <?php
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                                $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
                             ?>
                             <tr>
-                                <td><span class="facility">{{ $row->name }}</span></td>
+                                <td>
+                                    <span class="facility">{{ $row->name }}</span>
+                                    <br />
+                                    <span class="text-muted">{{ $type }}</span>
+                                </td>
                                 <td>
                                     <a href="{{ $modal }}" class="view_form"
                                        data-toggle="modal"
                                        data-type="{{ $row->type }}"
+                                       data-id="{{ $row->id }}"
                                        data-code="{{ $row->code }}">
                                         <span class="text-primary">{{ $row->patient_name }}</span>
                                         <br />
