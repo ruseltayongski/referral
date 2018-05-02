@@ -20,7 +20,7 @@
 <script>
     var accepted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var rejected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var link = "{{ url('doctor/chart') }}";
+    var link = "{{ url('chart') }}";
     $.ajax({
         url: link,
         type: "GET",

@@ -23,6 +23,7 @@ Route::get('logout', function(){
 });
 //SUPPORT Page
 Route::get('support','support\HomeCtrl@index');
+Route::get('support/dashboard/count','support\HomeCtrl@count');
 
 Route::get('support/users','support\UserCtrl@index');
 Route::get('support/uers/add','support\UserCtrl@create');
@@ -39,7 +40,6 @@ Route::get('support/hospital','support\HospitalCtrl@index');
 Route::post('support/hospital/update','support\HospitalCtrl@update');
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
-Route::get('doctor/chart','doctor\HomeCtrl@chart');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 Route::post('doctor/referral','doctor\ReferralCtrl@searchReferral');
@@ -93,6 +93,7 @@ Route::get('maintenance',function(){
 });
 
 /*Param */
+Route::get('chart','HomeCtrl@chart');
 //Route::get('uploadcsv','ParamCtrl@upload');
 Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
