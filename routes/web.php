@@ -21,6 +21,9 @@ Route::get('logout', function(){
             ]);
     return redirect('login');
 });
+//ADMIN Page
+Route::get('admin','admin\HomeCtrl@index');
+
 //SUPPORT Page
 Route::get('support','support\HomeCtrl@index');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
@@ -38,6 +41,8 @@ Route::get('support/users/info/{user_id}','support\UserCtrl@info');
 
 Route::get('support/hospital','support\HospitalCtrl@index');
 Route::post('support/hospital/update','support\HospitalCtrl@update');
+
+
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 
@@ -99,20 +104,21 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
 Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
 
-Route::get('default','ParamCtrl@defaultTable');
+//Route::get('default','ParamCtrl@defaultTable');
 //Route::get('create/support','ParamCtrl@support');
-Route::get('user/create','UserCtrl@createUser');
-Route::get('user/update',function(){
-    \App\User::where('id','!=',0)
-        ->update([
-            'password' => bcrypt('123')
-        ]);
-    \App\Facility::where('id','!=',0)
-        ->update([
-            'status' => 1
-        ]);
-    echo 'Passwords updated!';
-});
+Route::get('create/admin','ParamCtrl@admin');
+//Route::get('user/create','UserCtrl@createUser');
+//Route::get('user/update',function(){
+//    \App\User::where('id','!=',0)
+//        ->update([
+//            'password' => bcrypt('123')
+//        ]);
+//    \App\Facility::where('id','!=',0)
+//        ->update([
+//            'status' => 1
+//        ]);
+//    echo 'Passwords updated!';
+//});
 //
 Route::get('sample',function(){
     echo date('Y',strtotime("+1 year"));

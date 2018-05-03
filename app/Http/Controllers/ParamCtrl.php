@@ -88,6 +88,26 @@ class ParamCtrl extends Controller
         return $doctor;
     }
 
+    public function admin()
+    {
+        $data = array(
+            'username' => 'admin_doh',
+            'password' => bcrypt('s3cur1ty'),
+            'level' => 'admin',
+            'facility_id' => 63,
+            'fname' => 'Admin',
+            'mname' => 'RO7',
+            'lname' => 'DOH',
+            'contact' => '418-7633',
+            'email' => 'jimmy.lomocso@gmail.com',
+            'muncity' => 63,
+            'province' => 2,
+            'designation' => 'CP II',
+            'status' => 'active'
+        );
+        User::create($data);
+    }
+
     public function support()
     {
         $data = array(

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Admin;
 use App\Http\Middleware\Auth;
 use App\Http\Middleware\Chief;
 use App\Http\Middleware\Doctor;
@@ -64,5 +65,6 @@ class Kernel extends HttpKernel
         'doctor' => Doctor::class,
         'chief' => Chief::class,
         'support' => Support::class,
+        'admin' => Admin::class,
     ];
 }

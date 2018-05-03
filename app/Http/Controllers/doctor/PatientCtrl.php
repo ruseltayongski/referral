@@ -228,7 +228,7 @@ class PatientCtrl extends Controller
         );
         $track = array(
             'patient_id' => $patient_id,
-            'date_referred' => $req->date_referred,
+            'date_referred' => date('Y-m-d H:i:s'),
             'referred_from' => $user->facility_id,
             'referred_to' => $req->referred_facility,
             'department_id' => $req->referred_department,
@@ -244,7 +244,7 @@ class PatientCtrl extends Controller
         $activity = array(
             'code' => $code,
             'patient_id' => $patient_id,
-            'date_referred' => $req->date_referred,
+            'date_referred' => date('Y-m-d H:i:s'),
             'referred_from' => $user->facility_id,
             'referred_to' => $req->referred_facility,
             'department_id' => $req->referred_department,
@@ -291,7 +291,7 @@ class PatientCtrl extends Controller
                 'referring_facility' => $user->facility_id,
                 'referred_to' => $req->referred_facility,
                 'department_id' => $req->referred_department,
-                'time_referred' => $req->date_referred,
+                'time_referred' => date('Y-m-d H:i:s'),
                 'time_transferred' => '',
                 'patient_id' => $patient_id,
                 'case_summary' => $req->case_summary,
@@ -333,7 +333,7 @@ class PatientCtrl extends Controller
                 'referring_facility' => ($user->facility_id) ? $user->facility_id: '',
                 'referred_by' => ($user->id) ? $user->id: '',
                 'record_no' => ($req->record_no) ? $req->record_no: '',
-                'referred_date' => ($req->date_referred) ? $req->date_referred: '',
+                'referred_date' => date('Y-m-d H:i:s'),
                 'referred_to' => ($req->referred_facility) ? $req->referred_facility: '',
                 'department_id' => ($req->referred_department) ? $req->referred_department:'',
                 'health_worker' => ($req->health_worker) ? $req->health_worker: '',
@@ -368,7 +368,7 @@ class PatientCtrl extends Controller
         return array(
             'id' => $tracking_id,
             'patient_code' => $code,
-            'referred_date' => date('M d, Y h:i A',strtotime($req->date_referred))
+            'referred_date' => date('M d, Y h:i A')
         );
     }
 
