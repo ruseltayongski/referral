@@ -134,7 +134,7 @@
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('admin/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
-                <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login <As></As></a></li>
+                <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
