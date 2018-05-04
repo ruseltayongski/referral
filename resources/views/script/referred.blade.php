@@ -501,13 +501,19 @@
             url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
             type: "GET",
             success: function(record){
-
+                console.log(record);
                 var data = record.form;
                 var baby = record.baby;
                 var patient_address='';
+                var referred_address= '';
+
                 patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
                 patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
                 patient_address += (data.patient_province) ? data.patient_province: '';
+
+                referred_address += (data.ff_brgy) ? data.ff_brgy+', ': '';
+                referred_address += (data.ff_muncity) ? data.ff_muncity+', ': '';
+                referred_address += (data.ff_province) ? data.ff_province: '';
 
                 var woman_major_findings = data.woman_major_findings;
                 if (/\n/g.test(woman_major_findings))
@@ -546,6 +552,8 @@
                 $('span.md_referring').html(data.md_referring);
                 $('span.referring_md_contact').html(data.referring_md_contact);
                 $('span.referring_facility').html(data.referring_facility);
+                $('span.referred_name').html(data.referred_facility);
+                $('span.referred_address').html(referred_address);
                 $('span.department_name').html(data.department);
                 $('span.referring_contact').html(data.referring_contact);
                 $('span.facility_brgy').html(data.facility_brgy);

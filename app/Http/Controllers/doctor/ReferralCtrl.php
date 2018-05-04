@@ -221,7 +221,7 @@ class ReferralCtrl extends Controller
             ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
             ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
             ->leftJoin('facility','facility.id','=','tracking.referred_from')
-            ->leftJoin('facility as ff','facility.id','=','tracking.referred_to')
+            ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
             ->leftJoin('users','users.id','=','pregnant_form.referred_by')
             ->leftJoin('barangay','barangay.id','=','patients.brgy')
             ->leftJoin('muncity','muncity.id','=','patients.muncity')
