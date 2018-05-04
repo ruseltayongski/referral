@@ -413,7 +413,7 @@
             url: "{{ url('doctor/referral/data/normal') }}/"+id,
             type: "GET",
             success: function(data){
-                console.log("{{ url('doctor/referral/data/normal') }}/"+id);
+                console.log(data);
                 patient_name = data.patient_name;
                 referring_name = data.referring_name;
 
@@ -501,7 +501,7 @@
             url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
             type: "GET",
             success: function(record){
-                console.log("{{ url('doctor/referral/data/pregnant') }}/"+id);
+
                 var data = record.form;
                 var baby = record.baby;
                 var patient_address='';

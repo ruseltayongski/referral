@@ -182,7 +182,7 @@ class ParamCtrl extends Controller
 
     public function returnToAdmin()
     {
-        //Session::forget('admin');
+        Session::forget('admin');
         $user = Session::get('auth');
         $user->facility_id = 63;
         $user->level = 'admin';

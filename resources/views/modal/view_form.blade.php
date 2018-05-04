@@ -28,11 +28,11 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="6">Address: <span class="referring_address"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="3">Referred to: <span class="referred_name">{{ $myfacility->name }}</span></td>
+                        <td colspan="3">Referred to: <span class="referred_name"></span></td>
                         <td colspan="3">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span class="referred_address">{{ $facility['address'] }}</span></td>
+                        <td colspan="6">Address: <span class="referred_address"></span></td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="time_referred"></span></td>
@@ -137,10 +137,10 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="4">Accompanied by the Health Worker: <span class="health_worker"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="4">Referred To: <span>{{ $myfacility->name }}</span></td>
+                        <td colspan="4">Referred To: <span class="referred_name"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="4">Address: <span>{{ $facility['address'] }}</span></td>
+                        <td colspan="4">Address: <span class="referred_address"></span></td>
                     </tr>
                 </table>
                 <div class="col-sm-6">

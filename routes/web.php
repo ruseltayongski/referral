@@ -127,5 +127,38 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 Route::get('sample',function(){
-    echo date('Y',strtotime("+1 year"));
+    $pdf = new Fpdf();
+    $pdf::AddPage();
+    $pdf::SetFont('Arial','B',18);
+    $pdf::Cell(0,10,"Title",0,"","C");
+    $pdf::Ln();
+    $pdf::Ln();
+    $pdf::SetFont('Arial','B',12);
+    $pdf::cell(25,8,"ID",1,"","C");
+    $pdf::cell(45,8,"Name",1,"","L");
+    $pdf::cell(35,8,"Address",1,"","R");
+    $pdf::Ln();
+    $pdf::SetFont("Arial","",10);
+    $pdf::cell(25,8,"1",1,"","C");
+    $pdf::cell(45,8,"John",1,"","L");
+    $pdf::cell(35,8,"New York",1,"","L");
+    $pdf::Ln();
+
+    $x = $pdf::GetX();
+    $y = $pdf::GetY();
+
+    $col1="PILOT REMARKS\n\n";
+    $pdf::MultiCell(100, 10, $col1, 1, 1);
+
+    $pdf::SetXY($x + 189, $y);
+
+    $col2="Pilot's Name and Signature\nJimmy Lomocso";
+    $pdf::MultiCell(63, 10, $col2, 1);
+    $pdf::Ln(0);
+    $col3="Date Prepared\nMay 4, 2018";
+    $pdf::MultiCell(63, 10, $col3, 1);
+
+    $pdf::Output();
+    exit;
 });
+
