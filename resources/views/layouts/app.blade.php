@@ -134,6 +134,7 @@
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('admin/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
+                <li><a href="{{ url('admin/facility') }}"><i class="fa fa-hospital-o"></i> Manage Facilities</a></li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
                 <li class="dropdown">
@@ -143,6 +144,9 @@
                         <li><a href="##dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i>&nbsp; Change Login Status</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        @if(Session::get('admin'))
+                        <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> Back as Admin</a></li>
+                        @endif
                     </ul>
                 </li>
             </ul>

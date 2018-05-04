@@ -10,6 +10,7 @@ use App\PregnantForm;
 use App\Tracking;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ParamCtrl extends Controller
 {
@@ -177,5 +178,16 @@ class ParamCtrl extends Controller
             'status' => 'active'
         );
         User::create($data);
+    }
+
+    public function returnToAdmin()
+    {
+        //Session::forget('admin');
+        $user = Session::get('auth');
+        $user->facility_id = 63;
+        $user->level = 'admin';
+        Session::put('auth',$user);
+        print_r($user);
+        return redirect('/admin');
     }
 }

@@ -26,6 +26,10 @@ Route::get('admin','admin\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
+Route::get('admin/login','admin\UserCtrl@loginAs');
+Route::post('admin/login','admin\UserCtrl@assignLogin');
+Route::get('admin/account/return','ParamCtrl@returnToAdmin');
+
 //SUPPORT Page
 Route::get('support','support\HomeCtrl@index');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
