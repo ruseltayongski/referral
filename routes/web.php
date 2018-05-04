@@ -126,6 +126,7 @@ Route::get('create/admin','ParamCtrl@admin');
 //    echo 'Passwords updated!';
 //});
 //
+
 Route::get('sample',function(){
 //    $pdf = new Fpdf();
 //    $pdf::AddPage();
