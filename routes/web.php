@@ -127,7 +127,7 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 Route::get('sample',function(){
-    $pdf = new Fpdf();
+//    $pdf = new Fpdf();
 //    $pdf::AddPage();
 //    $pdf::SetFont('Arial','B',18);
 //    $pdf::Cell(0,10,"Title",0,"","C");
@@ -159,6 +159,10 @@ Route::get('sample',function(){
 //    $pdf::MultiCell(63, 10, $col3, 1);
 //
 //    $pdf::Output();
+    Fpdf::AddPage();
+    Fpdf::SetFont('Arial','B',18);
+    Fpdf::Cell(0,10,"Title",0,"","C");
+    Fpdf::Output();
     exit;
 });
 
