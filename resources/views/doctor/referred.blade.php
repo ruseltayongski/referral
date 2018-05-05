@@ -246,7 +246,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="fa fa-phone"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                     <a href="#">
                                                         <div class="timeline-header no-border">
-                                                            <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span> called the referring facility.
+                                                            <span class="text-info">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span> called the referring facility.
                                                         </div>
                                                     </a>
                                                 </div>
@@ -255,7 +255,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="fa fa-wheelchair"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                     <a>
                                                         <div class="timeline-header no-border">
-                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} arrived at <span class="facility">{{ $old_facility }}</span>.
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} arrived at <span class="facility">{{ $new_facility }}</span>.
                                                             <br />
                                                             <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                         </div>
@@ -266,7 +266,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                     <a href="#">
                                                         <div class="timeline-header no-border">
-                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} admitted at <span class="facility">{{ $old_facility }}</span>.
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} admitted at <span class="facility">{{ $new_facility }}</span>.
                                                         </div>
                                                     </a>
                                                 </div>
@@ -275,7 +275,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                     <a>
                                                         <div class="timeline-header no-border">
-                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} discharged from <span class="facility">{{ $old_facility }}</span>.
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }} discharged from <span class="facility">{{ $new_facility }}</span>.
                                                             <br />
                                                             <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                         </div>
@@ -286,7 +286,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
                                                     <a>
                                                         <div class="timeline-header no-border">
-                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $old_facility }}</span>.</span>
+                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was accepted by <span class="text-success">Dr. {{ $act->md_name }}</span> of <span class="facility">{{ $new_facility }}</span>.</span>
                                                             <br />
                                                             <div class="text-remarks">Remarks: {{ $act->remarks }}</div>
                                                         </div>
