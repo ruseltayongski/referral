@@ -138,6 +138,12 @@ $user = Session::get('auth');
                                         }
                                         $new_facility = 'N/A';
                                         $tmp_new = \App\Facility::find($act->referred_to);
+
+                                        if($act->referred_to==0)
+                                        {
+                                            $tmp_new = \App\Facility::find($act->referred_from);
+                                        }
+
                                         if($tmp_new){
                                             $new_facility = $tmp_new->name;
                                         }

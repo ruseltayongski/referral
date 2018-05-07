@@ -89,6 +89,8 @@ Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 
 Route::get('doctor/report','ParamCtrl@maintenance');
 
+Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
+
 
 Route::get('doctor/list','doctor\UserCtrl@index');
 Route::post('doctor/list','doctor\UserCtrl@searchDoctor');

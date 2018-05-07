@@ -413,7 +413,8 @@
             url: "{{ url('doctor/referral/data/normal') }}/"+id,
             type: "GET",
             success: function(data){
-                console.log(data);
+                var print_url = "{{ url('doctor/print/form/') }}/"+id;
+                $('.btn-refer-normal').attr('href',print_url);
                 patient_name = data.patient_name;
                 referring_name = data.referring_name;
 
