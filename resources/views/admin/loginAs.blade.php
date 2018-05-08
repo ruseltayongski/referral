@@ -2,7 +2,6 @@
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
     ->where('province',$user->province)
-    ->where('status',1)
     ->orderBy('name','asc')->get();
 ?>
 @extends('layouts.app')
