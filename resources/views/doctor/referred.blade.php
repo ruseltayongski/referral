@@ -119,7 +119,7 @@ $user = Session::get('auth');
                                                data-id="{{ $row->id }}"
                                                data-code="{{ $row->code }}"
                                                class="view_form btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
-                                            @if(count($activities)>2)
+                                            @if(count($activities)>1)
                                                 <a class="btn btn-info btn-xs btn-activity"><i class="fa fa-line-chart"></i> View {{ count($activities) }} Activities</a>
                                             @endif
                                         </div>

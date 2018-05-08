@@ -97,7 +97,7 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                 </table>
                 <hr />
                 <div class="pull-right">
-                    <a href="{{ url('doctor/print/form') }}" target="_blank" class="hide btn-refer-normal btn btn-success btn-flat"><i class="fa fa-print"></i> Print Form</a>
+                    <a href="{{ url('doctor/print/form') }}" target="_blank" class="btn-refer-normal btn btn-success btn-flat"><i class="fa fa-print"></i> Print Form</a>
                     <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 </div>
                 <div class="clearfix"></div>
