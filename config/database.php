@@ -43,7 +43,7 @@ return [
             'driver' => 'mysql',
             'host' => 'localhost',
             'port' => '3306',
-            'database' => 'doh_referral',
+            'database' => 'dummy_referral', //doh_referral dummy_referral
             'username' => 'root',
             'password' => '',
             'unix_socket' => '',
