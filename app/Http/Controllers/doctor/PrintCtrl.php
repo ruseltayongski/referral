@@ -245,7 +245,7 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"PhilHealth Status: ").self::orange($pdf,$data->phic_status,"PhilHealth status:"), 0, 'L');
         $y = $pdf->getY();
         $pdf->SetXY($x/2+10, $y-7);
-        $pdf->MultiCell($x/2, 7, "PhilHealth # :".$data->phic_id, 0);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"PhilHealth # : ").self::orange($pdf,$data->phic_id,"PhilHealth # :"), 0);
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), 0, 'L');
         $pdf->SetTextColor(224,142,11);
