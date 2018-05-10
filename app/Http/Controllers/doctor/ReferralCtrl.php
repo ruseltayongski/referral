@@ -125,7 +125,7 @@ class ReferralCtrl extends Controller
         return $activity->id;
     }
 
-    function normalForm($id)
+    static function normalForm($id)
     {
         $user = Session::get('auth');
 
@@ -183,7 +183,7 @@ class ReferralCtrl extends Controller
         return $form;
     }
 
-    function pregnantForm($id)
+    static function pregnantForm($id)
     {
         $user = Session::get('auth');
         $form = PregnantForm::select(
@@ -284,6 +284,7 @@ class ReferralCtrl extends Controller
             ->where('referred_from',$user->facility_id)
             ->where(function($q){
                 $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen')
                     ->orwhere('tracking.status','seen')
                     ->orwhere('tracking.status','accepted')
                     ->orwhere('tracking.status','transferred')

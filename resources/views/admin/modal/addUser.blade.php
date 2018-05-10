@@ -24,26 +24,24 @@
                         <input type="text" class="form-control" name="contact" required>
                     </div>
                     <div class="form-group">
-                        <label>Email Address:</label>
-                        <input type="text" class="form-control" name="email" value="None" required>
+                        <label>Email Address <small class="text-muted"><em>(Optional):</em></small></label>
+                        <input type="text" class="form-control" name="email">
                     </div>
                     <hr />
 
+                    <div class="form-group">
+                        <label>Facility:</label>
+                        <select class="form-control" name="facility_id" required>
+                            @foreach($facility as $fac)
+                                <option value="{{ $fac->id }}">{{ $fac->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Designation:</label>
                         <input type="text" class="form-control" name="designation" required>
                     </div>
-                    <div class="form-group">
-                        <label>Department:</label>
-                        <select class="form-control" name="department_id" required>
-                            @foreach($departments as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->description }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <hr />
-
                     <div class="form-group">
                         <label>Username</label>
                         <input type="text" class="form-control username_1" name="username" required>
@@ -102,22 +100,22 @@
                         <input type="text" class="form-control contact" name="contact" required>
                     </div>
                     <div class="form-group">
-                        <label>Email Address:</label>
-                        <input type="text" class="form-control email" name="email" required>
+                        <label>Email Address <small class="text-muted"><em>(Optional):</em></small></label>
+                        <input type="email" class="form-control email" name="email">
                     </div>
                     <hr />
 
                     <div class="form-group">
-                        <label>Designation:</label>
-                        <input type="text" class="form-control designation" name="designation" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Department:</label>
-                        <select class="form-control department_id" name="department_id" required>
-                            @foreach($departments as $dept)
-                                <option value="{{ $dept->id }}">{{ $dept->description }}</option>
+                        <label>Facility:</label>
+                        <select class="form-control facility_id" name="facility_id" required>
+                            @foreach($facility as $fac)
+                                <option value="{{ $fac->id }}">{{ $fac->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Designation:</label>
+                        <input type="text" class="form-control designation" name="designation" required>
                     </div>
 
                     <hr />

@@ -97,12 +97,17 @@ class UserCtrl extends Controller
             'mname' => ($req->mname) ? $req->mname: '',
             'lname' => $req->lname
         );
+        $email = 'N/A';
+        if($req->email)
+        {
+            $email = $req->email;
+        }
         $data = array(
             'level' => 'doctor',
             'facility_id' => $user->facility_id,
             'status' => 'active',
             'contact' => $req->contact,
-            'email' => ($req->email) ? $req->email: '',
+            'email' => $email,
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'username' => $req->username,
@@ -122,9 +127,8 @@ class UserCtrl extends Controller
             'mname' => $req->mname,
             'lname' => $req->lname,
             'level' => 'doctor',
-            'status' => 'active',
             'contact' => $req->contact,
-            'email' => $req->email,
+            'email' => ($req->email) ? $req->email: 'N/A',
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'username' => $req->username,

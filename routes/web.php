@@ -26,6 +26,14 @@ Route::get('admin','admin\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
+Route::get('admin/users','admin\UserCtrl@index');
+Route::post('admin/users/store','admin\UserCtrl@store');
+Route::post('admin/users/update','admin\UserCtrl@update');
+
+Route::get('admin/users/info/{user_id}','admin\UserCtrl@info');
+Route::get('admin/users/check_username/{string}','admin\UserCtrl@check');
+Route::get('admin/users/check_username/update/{string}/{user_id}','admin\UserCtrl@checkUpdate');
+
 Route::get('admin/login','admin\UserCtrl@loginAs');
 Route::post('admin/login','admin\UserCtrl@assignLogin');
 Route::get('admin/account/return','ParamCtrl@returnToAdmin');

@@ -502,6 +502,8 @@
             url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
             type: "GET",
             success: function(record){
+                var print_url = "{{ url('doctor/print/form/') }}/"+id;
+                $('.btn-refer-pregnant').attr('href',print_url);
                 console.log(record);
                 var data = record.form;
                 var baby = record.baby;

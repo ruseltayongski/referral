@@ -97,7 +97,7 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                 </table>
                 <hr />
                 <div class="pull-right">
-                    <a href="{{ url('doctor/print/form') }}" target="_blank" class="hide btn-refer-normal btn btn-success btn-flat"><i class="fa fa-print"></i> Print Form</a>
+                    <a href="{{ url('doctor/print/form') }}" target="_blank" class="btn-refer-normal btn btn-success btn-flat"><i class="fa fa-print"></i> Print Form</a>
                     <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 </div>
                 <div class="clearfix"></div>
@@ -121,15 +121,14 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="2">Referred Date: <span class="referred_date"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="2">Name: <span class="md_referring"></span></td>
+                        <td colspan="2">Name of referring MD/HCW: <span class="md_referring"></span></td>
                         <td colspan="2">Arrival Date: </td>
                     </tr>
                     <tr>
                         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="2">Facility: <span class="referring_facility"></span></td>
-                        <td colspan="2">Department: <span class="department_name"></span></td>
+                        <td colspan="4">Facility: <span class="referring_facility"></span></td>
                     </tr>
                     <tr>
                         <td colspan="4">Facility Contact #: <span class="referring_contact"></span></td>
@@ -138,7 +137,8 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="4">Accompanied by the Health Worker: <span class="health_worker"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="4">Referred To: <span class="referred_name"></span></td>
+                        <td colspan="2">Referred To: <span class="referred_name"></span></td>
+                        <td colspan="2">Department: <span class="department_name"></span></td>
                     </tr>
                     <tr>
                         <td colspan="4">Address: <span class="referred_address"></span></td>
@@ -232,6 +232,7 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                 <div class="clearfix"></div>
                 <hr />
                 <div class="pull-right">
+                    <a href="{{ url('doctor/print/form') }}" target="_blank" class="btn-refer-pregnant btn btn-success btn-flat"><i class="fa fa-print"></i> Print Form</a>
                     <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 </div>
 
