@@ -103,20 +103,40 @@ $user = Session::get('auth');
                                             {
                                                 $patient_address = $patient->address;
                                             }
+
+                                            $seen = \App\Seen::where('tracking_id',$row->id)->count();
+
                                             ?>
                                             {{--<a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department_name }}</span> of <span class="facility">{{ $row->facility_name }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span>.--}}
                                             <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> from <span class="facility">{{ $patient_address }}</span>.
                                         </h3>
                                         <div class="timeline-footer">
-                                            <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
-                                            <a href="{{ $modal }}" data-toggle="modal"
-                                               data-type="{{ $row->type }}"
-                                               data-id="{{ $row->id }}"
-                                               data-code="{{ $row->code }}"
-                                               class="view_form btn btn-warning btn-xs"><i class="fa fa-folder"></i> View Form</a>
-                                            @if(count($activities)>1)
-                                                <a class="btn btn-info btn-xs btn-activity"><i class="fa fa-line-chart"></i> View {{ count($activities) }} Activities</a>
-                                            @endif
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <a class="btn btn-default btn-xs col-xs-12"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
+                                                </div>
+                                                <div class="form-group">
+                                                    <a href="{{ $modal }}" data-toggle="modal"
+                                                       data-type="{{ $row->type }}"
+                                                       data-id="{{ $row->id }}"
+                                                       data-code="{{ $row->code }}"
+                                                       class="view_form btn btn-warning btn-xs col-xs-12"><i class="fa fa-folder"></i> View Form</a>
+                                                </div>
+                                                @if(count($activities)>1)
+                                                <div class="form-group">
+                                                    <a class="btn btn-info btn-xs btn-activity col-xs-12"><i class="fa fa-line-chart"></i> View {{ count($activities) }} Activities</a>
+                                                </div>
+                                                @endif
+
+                                                @if($seen > 0)
+                                                <div class="form-group">
+                                                    <a href="#seenModal" data-toggle="modal"
+                                                       data-id="{{ $row->id }}"
+                                                       class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen by {{ $seen }} User{{ ($seen>1) ? 's':'' }}</a>
+                                                </div>
+                                                @endif
+
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -322,6 +342,7 @@ $user = Session::get('auth');
     @include('modal.accept')
     @include('modal.refer')
     @include('modal.view_form')
+    @include('modal.seen')
 @endsection
 @include('script.firebase')
 @section('js')

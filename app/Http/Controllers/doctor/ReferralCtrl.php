@@ -7,6 +7,7 @@ use App\Facility;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
+use App\Seen;
 use App\Tracking;
 use App\User;
 use Illuminate\Http\Request;
@@ -611,5 +612,29 @@ class ReferralCtrl extends Controller
             'activity_id' => $activity->id,
             'referred_facility' => Facility::find($req->facility)->name
         );
+    }
+
+    public function seenBy($track_id)
+    {
+        $user = Session::get('auth');
+        $data = array(
+            'tracking_id' => $track_id,
+            'facility_id' => $user->facility_id,
+            'user_md' => $user->id
+        );
+        Seen::create($data);
+    }
+
+    public function seenByList($track_id)
+    {
+        $data = Seen::select(
+                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as user_md'),
+                    DB::raw("DATE_FORMAT(seen.created_at,'%M %d, %Y %h:%i %p') as date_seen"),
+                    'users.contact'
+                )
+                ->join('users','users.id','=','seen.user_md')
+                ->where('seen.tracking_id',$track_id)
+                ->get();
+        return $data;
     }
 }

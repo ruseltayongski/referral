@@ -79,6 +79,17 @@ $('body').on('click','.btn-refer',function () {
     patient_name = $(item).find('.patient_name').html();
     facility = $(item).find('.facility').html();
     var count_referral = $('.count_referral').html();
+    var seenUrl = "{{ url('doctor/referral/seenBy/') }}/"+form_id;
+    $.ajax({
+        url: seenUrl,
+        type: "GET",
+        success: function(){
+            console.log(seenUrl);
+        },
+        error: function(){
+            console.log('error');
+        }
+    });
 
     if(status=='referred' || status=='redirected'){
         seenMessage();
