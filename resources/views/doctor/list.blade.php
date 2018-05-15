@@ -44,10 +44,10 @@ $user = Session::get('auth');
                             <tr>
                                 <td class="title-name {{ $class }}">Dr. {{ $name }}</td>
                                 <td class="text-muted">
-                                    {{ $row->facility }}
+                                    <strong>{{ $row->facility }}</strong>
                                     @if($row->department)
                                     <br />
-                                    <small><em>({{ $row->department }})</em></small>
+                                    <small class="text-danger"><em>({{ $row->department }})</em></small>
                                     @endif
                                 </td>
                                 <td class="text-muted">{{ $row->contact }}</td>
