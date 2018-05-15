@@ -55,7 +55,7 @@ $user = Session::get('auth');
                                     {!! $status !!}
                                     <br />
                                     @if($class=='text-success')
-                                    <small class="text-muted">Time: {{ date('h:i A',strtotime($row->last_login)) }}</small>
+                                    <small class="text-muted">{{ date('h:i A',strtotime($row->last_login)) }}</small>
                                     @endif
                                 </td>
                             </tr>
