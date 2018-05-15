@@ -28,12 +28,17 @@ class HomeCtrl extends Controller
     {
         $user = Session::get('auth');
         $facility_id = $user->facility_id;
+
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d 23:59:59');
+
         $tmp = User::where('level','doctor');
         $data['countDoctors'] = $tmp->count();
         $data['countOnline'] = $tmp->where(function($q){
                 $q->where('login_status','login')
                     ->orwhere('login_status','login_off');
             })
+            ->whereBetween('last_login',[$start,$end])
             ->count();
         $data['countReferral'] = Tracking::count();
         $countFacility = Facility::where('status',1)->count();
