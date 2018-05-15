@@ -66,8 +66,7 @@ class UserCtrl extends Controller
         $data = $data
                 ->where('users.level','doctor')
                 ->whereBetween('users.last_login',[$start,$end])
-                ->orderBy('users.facility_id','asc')
-                ->orderBy('users.fname','asc')
+                ->orderBy('users.last_login','desc')
                 ->paginate(15);
 
         return view('doctor.list',[
