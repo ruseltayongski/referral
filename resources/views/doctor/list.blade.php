@@ -51,7 +51,13 @@ $user = Session::get('auth');
                                     @endif
                                 </td>
                                 <td class="text-muted">{{ $row->contact }}</td>
-                                <td class="text-muted {{ $class }}">{!! $status !!}</td>
+                                <td class="text-muted {{ $class }}">
+                                    {!! $status !!}
+                                    <br />
+                                    @if($class=='text-success')
+                                    <small class="text-muted">Time: {{ date('h:i A',strtotime($row->last_login)) }}</small>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </table>

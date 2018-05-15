@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\doctor;
 
+use App\Http\Controllers\ParamCtrl;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,7 @@ class UserCtrl extends Controller
 
     public function index()
     {
+        ParamCtrl::lastLogin();
         $search = Session::get('search_doctor');
 
         $data = User::select(
@@ -59,8 +61,11 @@ class UserCtrl extends Controller
             $data = $data->where('users.facility_id',$facility_id);
         }
 
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d 23:59:59');
         $data = $data
                 ->where('users.level','doctor')
+                ->whereBetween('users.last_login',[$start,$end])
                 ->orderBy('users.facility_id','asc')
                 ->orderBy('users.fname','asc')
                 ->paginate(15);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\doctor;
 
 use App\Activity;
 use App\Facility;
+use App\Http\Controllers\ParamCtrl;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
@@ -35,6 +36,7 @@ class ReferralCtrl extends Controller
 
     public function index()
     {
+        ParamCtrl::lastLogin();
         $search = Session::get('search_referral');
         $user = Session::get('auth');
         $data = Tracking::select(
@@ -268,6 +270,7 @@ class ReferralCtrl extends Controller
 
     public function referred()
     {
+        ParamCtrl::lastLogin();
         $user = Session::get('auth');
         $data = Tracking::select(
             'tracking.*',

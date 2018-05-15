@@ -41,6 +41,7 @@ class PatientCtrl extends Controller
 
     public function index()
     {
+        ParamCtrl::lastLogin();
         $source='referral';
         $user = Session::get('auth');
         $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
@@ -180,6 +181,7 @@ class PatientCtrl extends Controller
 
     public function tsekap()
     {
+        ParamCtrl::lastLogin();
         $keyword = '';
         $brgy = '';
         $mun = '';

@@ -190,4 +190,14 @@ class ParamCtrl extends Controller
         print_r($user);
         return redirect('/admin');
     }
+
+    static function lastLogin()
+    {
+        $user = Session::get('auth');
+        $date = date('Y-m-d H:i:s');
+        User::where('id',$user->id)
+            ->update([
+                'last_login' => $date
+            ]);
+    }
 }
