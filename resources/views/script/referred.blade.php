@@ -637,17 +637,17 @@
     });
 </script>
 
-<div class="list-group">
-<a href="#" class="list-group-item clearfix">
-<span class="title-info">Dr. Jimmy</span>
-<br />
-<small class="text-primary">
-Seen: May 15, 2018 03:15 PM
-</small>
-<br />
-<small class="text-success">
-Contact: 0916-207-2427
-</small>
-</a>
+{{--<div class="list-group">--}}
+{{--<a href="#" class="list-group-item clearfix">--}}
+{{--<span class="title-info">Dr. Jimmy</span>--}}
+{{--<br />--}}
+{{--<small class="text-primary">--}}
+{{--Seen: May 15, 2018 03:15 PM--}}
+{{--</small>--}}
+{{--<br />--}}
+{{--<small class="text-success">--}}
+{{--Contact: 0916-207-2427--}}
+{{--</small>--}}
+{{--</a>--}}
 
-</div>
+{{--</div>--}}
