@@ -499,3 +499,45 @@ $('body').on('click','.btn-call',function(){
     });
 });
 </script>
+
+{{--SEEN BY--}}
+<script>
+    $('body').on('click','.btn-seen',function(){
+        var de = '<hr />\n' +
+            '                    LOADING...\n' +
+            '                    <br />\n' +
+            '                    <br />';
+        $('#seenBy_section').html(de);
+        var id = $(this).data('id');
+        console.log(id);
+        var seenUrl = "{{ url('doctor/referral/seenBy/list/') }}/"+id;
+        $.ajax({
+            url: seenUrl,
+            type: "GET",
+            success: function(data){
+                var content = '<div class="list-group">';
+
+                jQuery.each(data, function(i,val){
+                    content += '<a href="#" class="list-group-item clearfix">\n' +
+                        '<span class="title-info">Dr. '+val.user_md+'</span>\n' +
+                        '<br />\n' +
+                        '<small class="text-primary">\n' +
+                        'Seen: '+val.date_seen+'\n' +
+                        '</small>\n' +
+                        '<br />\n' +
+                        '<small class="text-success">\n' +
+                        'Contact: '+val.contact+'\n' +
+                        '</small>\n' +
+                        '</a>';
+                });
+                content += '</div>';
+                setTimeout(function () {
+                    $('#seenBy_section').html(content);
+                },500);
+            },
+            error: function () {
+                $('#serverModal').modal('show');
+            }
+        });
+    });
+</script>

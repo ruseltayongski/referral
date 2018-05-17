@@ -43,6 +43,7 @@
                             {
                                 $department = $check_dept->description;
                             }
+                            $seen = \App\Seen::where('tracking_id',$row->id)->count();
                         ?>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
@@ -50,20 +51,34 @@
                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                 <h3 class="timeline-header no-border"><a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of <span class="facility">{{ $row->facility_name }}</span></h3>
                                 <div class="timeline-footer">
-                                    @if($user->department_id==$row->department_id || $row->department_id==0)
-                                    <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
-                                       data-toggle="modal"
-                                       data-code="{{ $row->code }}"
-                                       data-item="#item-{{ $row->id }}"
-                                       data-status="{{ $row->status }}"
-                                       data-type="{{ $row->type }}"
-                                       data-id="{{ $row->id }}"
-                                       data-referred_from="{{ $row->referred_from }}"
-                                       data-backdrop="static">
-                                        <i class="fa fa-folder"></i> View Form
-                                    </a>
-                                    @endif
-                                    <a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
+                                    <div class="form-inline">
+                                        @if($user->department_id==$row->department_id || $row->department_id==0)
+                                        <div class="form-group">
+                                            <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
+                                               data-toggle="modal"
+                                               data-code="{{ $row->code }}"
+                                               data-item="#item-{{ $row->id }}"
+                                               data-status="{{ $row->status }}"
+                                               data-type="{{ $row->type }}"
+                                               data-id="{{ $row->id }}"
+                                               data-referred_from="{{ $row->referred_from }}"
+                                               data-backdrop="static">
+                                                <i class="fa fa-folder"></i> View Form
+                                            </a>
+                                        </div>
+                                        @endif
+                                        <div class="form-group">
+                                            <a class="btn btn-default btn-xs col-xs-12"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
+                                        </div>
+
+                                        @if($seen > 0)
+                                            <div class="form-group">
+                                                <a href="#seenModal" data-toggle="modal"
+                                                   data-id="{{ $row->id }}"
+                                                   class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen by {{ $seen }} User{{ ($seen>1) ? 's':'' }}</a>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -141,6 +156,7 @@
     @include('modal.refer')
     @include('modal.accept')
     @include('modal.contact')
+    @include('modal.seen')
 @endsection
 @section('js')
 @include('script.referral')
