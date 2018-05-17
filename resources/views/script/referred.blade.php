@@ -603,6 +603,11 @@
 {{--SEEN BY--}}
 <script>
     $('body').on('click','.btn-seen',function(){
+        var de = '<hr />\n' +
+            '                    LOADING...\n' +
+            '                    <br />\n' +
+            '                    <br />';
+        $('#seenBy_section').html(de);
         var id = $(this).data('id');
         console.log(id);
         var seenUrl = "{{ url('doctor/referral/seenBy/list/') }}/"+id;
