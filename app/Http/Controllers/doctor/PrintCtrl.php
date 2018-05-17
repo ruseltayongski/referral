@@ -248,25 +248,25 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"PhilHealth # : ").self::orange($pdf,$data->phic_id,"PhilHealth # :"), 0);
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), 0, 'L');
-        $pdf->SetTextColor(224,142,11);
+        $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
         $pdf->MultiCell(0, 5, $data->case_summary, 0, 'L');
         $pdf->Ln();
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');
-        $pdf->SetTextColor(224,142,11);
+        $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
         $pdf->MultiCell(0, 5, $data->reco_summary, 0, 'L');
         $pdf->Ln();
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
-        $pdf->SetTextColor(224,142,11);
+        $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
         $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
         $pdf->Ln();
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
-        $pdf->SetTextColor(224,142,11);
+        $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
         $pdf->MultiCell(0, 5, $data->reason, 0, 'L');
         $pdf->Ln();
@@ -285,7 +285,7 @@ class PrintCtrl extends Controller
         $y = $pdf->getY()+4.5;
         $x = $pdf->getX()+2;
         $ln = $pdf->GetStringWidth($str)+1;
-        $pdf->SetTextColor(224,142,11);
+        $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
         $r = $pdf->Text($x+$ln,$y,$val);
         $pdf->SetFont('Arial','',10);
@@ -294,7 +294,7 @@ class PrintCtrl extends Controller
 
     public function staticGreen($pdf,$val)
     {
-        $pdf->SetTextColor(43,139,89);
+        $pdf->SetTextColor(0,50,0);
         $pdf->SetFont('Arial','',10);
         return $val;
     }
@@ -313,7 +313,7 @@ class PrintCtrl extends Controller
         $y = $pdf->getY()+4.5;
         $x = $pdf->getX()+2;
         $ln = $pdf->GetStringWidth($str)+1;
-        $pdf->SetTextColor(43,139,89);
+        $pdf->SetTextColor(0,50,0);
         $pdf->SetFont('Arial','I',10);
         $r = $pdf->Text($x+$ln,$y,$val);
         $pdf->SetFont('Arial','',10);
