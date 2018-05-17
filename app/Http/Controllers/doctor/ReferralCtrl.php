@@ -637,6 +637,7 @@ class ReferralCtrl extends Controller
                 )
                 ->join('users','users.id','=','seen.user_md')
                 ->where('seen.tracking_id',$track_id)
+                ->orderBy('seen.created_at','desc')
                 ->get();
         return $data;
     }
