@@ -380,7 +380,7 @@
 <script>
     $('ul.timeline li').not(":first-child").not(":nth-child(2)").hide();
     $('.btn-activity').on('click',function(){
-        var item = $(this).parent().parent().parent().parent().find('li');
+        var item = $(this).parent().parent().parent().parent().parent().parent().find('li');
         item.not(":first-child").not(":nth-child(2)").toggle();
     });
 //    $('ul.timeline li:first-child').on('click',function(){
