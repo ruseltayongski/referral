@@ -128,7 +128,16 @@ class PatientCtrl extends Controller
         );
 
         Patients::updateOrCreate($match,$data);
-        return redirect()->back()->with('status','added');
+
+        $data = array(
+            'keyword' => $req->fname.' '.$req->lname,
+            'brgy' => $req->brgy,
+            'muncity' => $req->muncity,
+            'others' => ''
+        );
+        Session::put('profileSearch',$data);
+        return redirect('doctor/patient');
+        //return redirect()->back()->with('status','added');
     }
 
     public function showPatientProfile($id)

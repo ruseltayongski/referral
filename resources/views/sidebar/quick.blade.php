@@ -22,7 +22,7 @@
                         <i class="fa fa-ambulance"></i>
                     </span>
             </a>
-            <a href="{{ asset('doctor/patient') }}" class="list-group-item clearfix">
+            <a href="{{ asset('doctor/accepted') }}" class="list-group-item clearfix">
                 Accepted
                 <span class="pull-right">
                         <i class="fa fa-users"></i>
