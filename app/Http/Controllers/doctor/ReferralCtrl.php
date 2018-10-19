@@ -50,7 +50,7 @@ class ReferralCtrl extends Controller
                 )
                 ->join('patients','patients.id','=','tracking.patient_id')
                 ->join('facility','facility.id','=','tracking.referred_from')
-                ->join('users','users.id','=','tracking.referring_md')
+                ->leftJoin('users','users.id','=','tracking.referring_md')
                 ->leftJoin('users as action','action.id','=','tracking.action_md')
                 ->where('referred_to',$user->facility_id);
         if($search['keyword'])
@@ -168,7 +168,7 @@ class ReferralCtrl extends Controller
                 ->join('tracking','tracking.form_id','=','patient_form.id')
                 ->join('facility','facility.id','=','tracking.referred_from')
                 ->join('facility as ff','ff.id','=','tracking.referred_to')
-                ->join('users','users.id','=','patient_form.referring_md')
+                ->leftJoin('users','users.id','=','patient_form.referring_md')
                 ->leftJoin('users as u','u.id','=','patient_form.referred_md')
                 ->leftJoin('barangay','barangay.id','=','patients.brgy')
                 ->leftJoin('muncity','muncity.id','=','patients.muncity')
@@ -284,7 +284,7 @@ class ReferralCtrl extends Controller
         )
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_to')
-            ->join('users','users.id','=','tracking.referring_md')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
             ->where('referred_from',$user->facility_id)
             ->where(function($q){
                 $q->where('tracking.status','referred')

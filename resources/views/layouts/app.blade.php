@@ -133,8 +133,21 @@
                 <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('admin/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
-                <li><a href="{{ url('admin/facility') }}"><i class="fa fa-hospital-o"></i> Manage Facilities</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; IT Support</a></li>
+                        <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
+                        <li><a href="{{ url('admin/referral') }}" data-toggle="modal"><i class="fa fa-file-o"></i>&nbsp; Referral</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('admin/report/login') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Doctor's Online</a></li>
+                        <li><a href="{{ url('admin/report/referred') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Referral Status</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
                 <li class="dropdown">

@@ -199,7 +199,11 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
                                                     <a>
                                                         <div class="timeline-header no-border">
-                                                            {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->referring_md }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
+                                                            @if($act->referring_md!=0)
+                                                                {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->referring_md }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
+                                                            @else
+                                                                <strong>Walk-In Patient:</strong> <span class="text-success">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
+                                                            @endif
                                                         </div>
                                                     </a>
                                                 </div>

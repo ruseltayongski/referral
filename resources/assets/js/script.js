@@ -4,7 +4,8 @@
     var host = window.location.hostname;
     var filename = window.location.href;
     //$('.sidebar-menu li a[href="'+filename+'"]').parent('li').addClass('active');
-    $('.navbar-nav li a[href="'+filename+'"]').parent('li').addClass('active');
+    $('.navbar-nav li a[href="'+filename+'"]').parent('li').addClass('active')
+        .parent().parent().addClass('active');
     //console.log('.navbar-nav li a[href="'+filename+'"]').addClass('active');
 
     //tracking history of the document

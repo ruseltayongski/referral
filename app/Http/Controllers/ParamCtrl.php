@@ -26,10 +26,11 @@ class ParamCtrl extends Controller
         return $age;
     }
 
-    function getDoctorList($facility_id)
+    function getDoctorList($facility_id,$department_id)
     {
         $user = User::select('id','fname','mname','lname','contact')
             ->where('facility_id',$facility_id)
+            ->where('department_id',$department_id)
             ->where('level','doctor')
             ->get();
         return $user;

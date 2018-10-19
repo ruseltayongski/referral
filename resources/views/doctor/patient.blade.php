@@ -13,7 +13,7 @@
             <h3 class="page-header">Patient List</h3>
             @if(count($data))
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped"  style="white-space:nowrap;">
                         <tbody>
                         <tr>
                             <th>Name</th>
@@ -63,6 +63,13 @@
                                         <i class="fa fa-stethoscope"></i>
                                         Refer
                                     </a>
+                                    <a href="#pregnantModalWalkIn"
+                                       data-patient_id = "{{ $row->id }}"
+                                       data-toggle="modal"
+                                       class="btn btn-warning btn-xs profile_info">
+                                        <i class="fa fa-ambulance"></i>
+                                        Walk-In
+                                    </a>
                                 @else
                                     <a href="#normalFormModal"
                                        data-patient_id = "{{ $row->id }}"
@@ -71,6 +78,14 @@
                                        class="btn btn-primary btn-xs profile_info">
                                         <i class="fa fa-stethoscope"></i>
                                         Refer
+                                    </a>
+                                    <a href="#normalFormModalWalkIn"
+                                       data-patient_id = "{{ $row->id }}"
+                                       data-backdrop="static"
+                                       data-toggle="modal"
+                                       class="btn btn-warning btn-xs profile_info">
+                                        <i class="fa fa-ambulance"></i>
+                                        Walk-In
                                     </a>
                                 @endif
                             </td>
@@ -95,7 +110,9 @@
     </div>
     @include('modal.pregnantModal')
     @include('modal.normal_form_editable')
+    @include('modal.normal_form_editable_walkin')
     @include('modal.pregnant_form_editable')
+    @include('modal.pregnant_form_editable_walkin')
 @endsection
 
 @section('js')
@@ -129,7 +146,6 @@
 
     $('.select_facility').on('change',function(){
         var id = $(this).val();
-        referred_facility = $(this).find(':selected').data('name');
         referred_facility = id;
         var url = "{{ url('location/facility/') }}";
 
@@ -157,10 +173,35 @@
                 $('#serverModal').modal();
             }
         });
+    });
 
-        var list = "{{ url('list/doctor') }}";
+    $('.select_facility_walkin').on('change',function(){
+        var id = $(this).val();
+        referred_facility = "{{ $user->facility_id }}";
+        var url = "{{ url('location/facility/') }}";
+        referring_facility_name = $(this).find(':selected').data('name');
+
         $.ajax({
-            url: list+'/'+id,
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.facility_address').html(data.address);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
+    $('.select_department').on('change',function(){
+        var id = $(this).val();
+        var list = "{{ url('list/doctor') }}";
+        if(referred_facility==0){
+            referred_facility = "{{ $user->facility_id }}";
+        }
+        $.ajax({
+            url: list+'/'+referred_facility+'/'+id,
             type: 'GET',
             success: function(data){
                 $('.referred_md').empty()
@@ -233,6 +274,28 @@
 
     });
 
+    $('.normal_form_walkin').on('submit',function(e){
+        e.preventDefault();
+        reason = $('.reason_referral').val();
+        form_type = '#normalFormModal';
+        department_id = $('.select_department_normal').val();
+        department_name = $('.select_department_normal :selected').text();
+        $(this).ajaxSubmit({
+            url: "{{ url('doctor/patient/refer/walkin/normal') }}",
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                setTimeout(function(){
+                    window.location.reload(false);
+                },500);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+
+    });
+
     $('.pregnant_form').on('submit',function(e){
         e.preventDefault();
         form_type = '#pregnantFormModal';
@@ -253,6 +316,31 @@
         });
 
     });
+
+    $('.pregnant_form_walkin').on('submit',function(e){
+        e.preventDefault();
+        form_type = '#pregnantFormModal';
+        sex = 'Female';
+        reason = $('.woman_information_given').val();
+        department_id = $('.select_department_pregnant').val();
+        department_name = $('.select_department_pregnant :selected').text();
+        $(this).ajaxSubmit({
+            url: "{{ url('doctor/patient/refer/walkin/pregnant') }}",
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                setTimeout(function(){
+                    window.location.reload(false);
+                },500);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+
+    });
+
+
 
 
     function sendNormalData(data)

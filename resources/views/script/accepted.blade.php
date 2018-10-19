@@ -257,6 +257,7 @@
     });
     function getNormalForm()
     {
+        console.log("{{ url('doctor/referral/data/normal') }}/"+id);
         $.ajax({
             url: "{{ url('doctor/referral/data/normal') }}/"+id,
             type: "GET",

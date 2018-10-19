@@ -2,7 +2,6 @@
     $user = Session::get('auth');
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
-        ->where('province',$user->province)
         ->where('status',1)
         ->orderBy('name','asc')->get();
     $myfacility = \App\Facility::find($user->facility_id);
@@ -31,7 +30,7 @@
                         <td colspan="6">Address: <span class="text-success">{{ $facility_address['address'] }}</span> </td>
                     </tr>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="3">
                             Referred to:
                             <select name="referred_facility" class="form-control-select select_facility" style="padding: 3px" required>
                                 <option value="">Select Facility...</option>
@@ -39,9 +38,11 @@
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                 @endforeach
                             </select>
-                            <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
-                                <option value="">Select Department...</option>
-                            </select>
+                        </td>
+                        <td colspan="3">
+                            Department: <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
+                                            <option value="">Select Department...</option>
+                                        </select>
                         </td>
                     </tr>
                     <tr>

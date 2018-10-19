@@ -232,7 +232,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    function addTracking($code,$patient_id,$user,$req,$type, $form_id)
+    function addTracking($code,$patient_id,$user,$req,$type, $form_id,$status='')
     {
         $match = array(
             'code' => $code
@@ -240,31 +240,49 @@ class PatientCtrl extends Controller
         $track = array(
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
-            'referred_from' => $user->facility_id,
-            'referred_to' => $req->referred_facility,
+            'referred_from' => ($status=='walkin') ? $req->referring_facility_walkin : $user->facility_id,
+            'referred_to' => ($status=='walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
-            'referring_md' => $user->id,
+            'referring_md' => ($status=='walkin') ? 0 : $user->id,
             'action_md' => '',
             'type' => $type,
             'form_id' => $form_id,
             'remarks' => ($req->reason) ? $req->reason: '',
-            'status' => 'referred'
+            'status' => ($status=='walkin') ? 'accepted' : 'referred',
+            'walkin' => 'no'
         );
+
+        if($status=='walkin'){
+            $track['date_seen'] = date('Y-m-d H:i:s');
+            $track['date_accepted'] = date('Y-m-d H:i:s');
+            $track['action_md'] = $user->id;
+            $track['walkin'] = 'yes';
+        }
+
         $tracking = Tracking::updateOrCreate($match,$track);
 
         $activity = array(
             'code' => $code,
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
-            'referred_from' => $user->facility_id,
-            'referred_to' => $req->referred_facility,
+            'date_seen' => ($status=='walkin') ? date('Y-m-d H:i:s') : '',
+            'referred_from' => ($status=='walkin') ? $req->referring_facility_walkin : $user->facility_id,
+            'referred_to' => ($status=='walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
-            'referring_md' => $user->id,
+            'referring_md' => ($status=='walkin') ? 0 : $user->id,
             'action_md' => '',
             'remarks' => ($req->reason) ? $req->reason: '',
             'status' => 'referred'
         );
+
         Activity::create($activity);
+        if($status=='walkin'){
+            $activity['date_seen'] = date('Y-m-d H:i:s');
+            $activity['status'] = 'accepted';
+            $activity['remarks'] = 'Walk-In Patient';
+            $activity['action_md'] = $user->id;
+            Activity::create($activity);
+        }
 
         $tracking_id = $tracking->id;
 
@@ -318,7 +336,7 @@ class PatientCtrl extends Controller
                     ->update([
                         'code' => $code
                     ]);
-                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
             }
         }
         else if($type==='pregnant')
@@ -373,6 +391,120 @@ class PatientCtrl extends Controller
                         'code' => $code
                     ]);
                 $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+            }
+        }
+
+        return array(
+            'id' => $tracking_id,
+            'patient_code' => $code,
+            'referred_date' => date('M d, Y h:i A')
+        );
+    }
+
+    function referPatientWalkin(Request $req,$type)
+    {
+        $user = Session::get('auth');
+        $patient_id = $req->patient_id;
+        $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
+        $code = date('ymd').'-'.$user_code.'-'.date('His');
+        $tracking_id = 0;
+        if($req->source==='tsekap')
+        {
+            $patient_id = self::importTsekap($req->patient_id,$req->patient_status,$req->phic_id,$req->phic_status);
+        }
+
+        $unique_id = "$patient_id-$user->facility_id-".date('ymdH');
+        $match = array(
+            'unique_id' => $unique_id
+        );
+
+        if($type==='normal')
+        {
+            Patients::where('id',$patient_id)
+                ->update([
+                    'sex' => $req->patient_sex,
+                    'civil_status' => $req->civil_status,
+                    'phic_status' => $req->phic_status,
+                    'phic_id' => $req->phic_id
+                ]);
+
+            $data = array(
+                'referring_facility' => $req->referring_facility_walkin,
+                'referred_to' => $user->facility_id,
+                'department_id' => $req->referred_department,
+                'time_referred' => date('Y-m-d H:i:s'),
+                'time_transferred' => '',
+                'patient_id' => $patient_id,
+                'case_summary' => $req->case_summary,
+                'reco_summary' => $req->reco_summary,
+                'diagnosis' => $req->diagnosis,
+                'reason' => $req->reason,
+                'referring_md' => 0,
+                'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
+            );
+            $form = PatientForm::updateOrCreate($match,$data);
+            if($form->wasRecentlyCreated){
+                PatientForm::where('unique_id',$unique_id)
+                    ->update([
+                        'code' => $code
+                    ]);
+                $req->reffered_to = $user->facility_id;
+
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
+            }
+        }
+        else if($type==='pregnant')
+        {
+            $baby = array(
+                'fname' => ($req->baby_fname) ? $req->baby_fname: '',
+                'mname' => ($req->baby_mname) ? $req->baby_mname: '',
+                'lname' => ($req->baby_lname) ? $req->baby_lname: '',
+                'dob' => ($req->baby_dob) ? $req->baby_dob: '',
+                'civil_status' => 'Single'
+            );
+            $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+
+            Baby::updateOrCreate([
+                'baby_id' => $baby_id,
+                'mother_id' => $patient_id
+            ],[
+                'weight' => ($req->baby_weight) ? $req->baby_weight:'',
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
+            ]);
+
+            $data = array(
+                'referring_facility' => ($req->referring_facility_walkin) ? $req->referring_facility_walkin: '',
+                'referred_by' => '',
+                'record_no' => ($req->record_no) ? $req->record_no: '',
+                'referred_date' => date('Y-m-d H:i:s'),
+                'referred_to' => ($user->facility_id) ? $user->facility_id: '',
+                'department_id' => ($req->referred_department) ? $req->referred_department:'',
+                'health_worker' => ($req->health_worker) ? $req->health_worker: '',
+                'patient_woman_id' => $patient_id,
+                'woman_reason' => ($req->woman_reason) ? $req->woman_reason: '',
+                'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings: '',
+                'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment: '',
+                'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time: '',
+                'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment: '',
+                'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time: '',
+                'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given: '',
+                'patient_baby_id' => $baby_id,
+                'baby_reason' => ($req->baby_reason) ? $req->baby_reason: '',
+                'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings: '',
+                'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed: '',
+                'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment: '',
+                'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time: '',
+                'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
+                'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
+                'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
+            );
+            $form = PregnantForm::updateOrCreate($match,$data);
+            if($form->wasRecentlyCreated){
+                PregnantForm::where('unique_id',$unique_id)
+                    ->update([
+                        'code' => $code
+                    ]);
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
             }
         }
 

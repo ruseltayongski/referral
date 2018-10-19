@@ -89,7 +89,9 @@ Route::get('doctor/patient/info/{id}','doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add','doctor\PatientCtrl@addPatient');
 Route::post('doctor/patient/store','doctor\PatientCtrl@storePatient');
 
+Route::post('doctor/patient/refer/walkin/{type}','doctor\PatientCtrl@referPatientWalkin');
 Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
+
 
 Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
 
@@ -120,7 +122,7 @@ Route::get('chart','HomeCtrl@chart');
 //Route::get('uploadcsv','ParamCtrl@upload');
 Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
-Route::get('list/doctor/{facility_id}','ParamCtrl@getDoctorList');
+Route::get('list/doctor/{facility_id}/{department_id}','ParamCtrl@getDoctorList');
 
 //Route::get('default','ParamCtrl@defaultTable');
 //Route::get('create/support','ParamCtrl@support');
@@ -140,6 +142,6 @@ Route::get('create/admin','ParamCtrl@admin');
 //
 
 Route::get('sample',function(){
-    print_r($_SESSION);
+
 });
 

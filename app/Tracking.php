@@ -13,6 +13,7 @@ class Tracking extends Model
         'date_referred',
         'date_arrived',
         'date_seen',
+        'date_accepted',
         'referred_from',
         'referred_to',
         'department_id',
@@ -21,6 +22,7 @@ class Tracking extends Model
         'action_md',
         'status',
         'type',
-        'form_id'
+        'form_id',
+        'walkin'
     ];
 }
