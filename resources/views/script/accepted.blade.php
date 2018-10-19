@@ -352,7 +352,7 @@
             url: "{{ url('doctor/referral/data/pregnant') }}/"+id,
             type: "GET",
             success: function(record){
-                console.log("{{ url('doctor/referral/data/pregnant') }}/"+code);
+                console.log(record);
                 var print_url = "{{ url('doctor/print/form/') }}/"+id;
                 $('.btn-refer-pregnant').attr('href',print_url);
                 var data = record.form;
@@ -401,6 +401,7 @@
                 referred_name = data.referring_facility;
 
                 $('span.record_no').html(data.record_no);
+                $('span.arrival_date').html(data.arrival_date);
                 $('span.referred_date').html(data.referred_date);
                 $('span.md_referring').html(data.md_referring);
                 $('span.referring_md_contact').html(data.referring_md_contact);

@@ -122,7 +122,7 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                     </tr>
                     <tr>
                         <td colspan="2">Name of referring MD/HCW: <span class="md_referring"></span></td>
-                        <td colspan="2">Arrival Date: </td>
+                        <td colspan="2">Arrival Date: <span class="arrival_date"></span></td>
                     </tr>
                     <tr>
                         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact"></span></td>

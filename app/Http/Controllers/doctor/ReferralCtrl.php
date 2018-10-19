@@ -193,6 +193,7 @@ class ReferralCtrl extends Controller
                 'pregnant_form.patient_baby_id',
                 'pregnant_form.record_no',
                 DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
+                DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
                 DB::raw('CONCAT("Dr. ",users.fname," ",users.mname," ",users.lname) as md_referring'),
                 'facility.name as referring_facility',
                 'b.description as facility_brgy',
@@ -428,6 +429,15 @@ class ReferralCtrl extends Controller
             'status' => 'arrived'
         );
         Activity::create($data);
+
+        Tracking::where("id",$track_id)
+                ->update([
+                    'date_arrived' => $date
+                ]);
+        PregnantForm::where('id',$track->form_id)
+                ->update([
+                    'arrival_date' => $date
+                ]);
 
         return date('M d, Y h:i A',strtotime($date));
     }
