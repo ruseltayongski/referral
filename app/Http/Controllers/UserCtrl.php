@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\Login;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -98,6 +99,12 @@ class UserCtrl extends Controller
         User::where('id',$user->id)
             ->update([
                 'login_status' => $option
+            ]);
+
+        Login::where('userId',$user->id)
+            ->orderBy('id','desc')
+            ->update([
+                'status' => $option
             ]);
         Session::put('duty',true);
     }

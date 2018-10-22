@@ -19,6 +19,12 @@ Route::get('logout', function(){
             ->update([
                 'login_status' => 'logout'
             ]);
+    $logout = date('Y-m-d H:i:s');
+    \App\Login::where('userId',$user->id)
+            ->orderBy('id','desc')
+            ->update([
+                'logout' => $logout
+            ]);
     return redirect('login');
 });
 //ADMIN Page

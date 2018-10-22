@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Login;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -32,6 +33,12 @@ class LoginCtrl extends Controller
                             'last_login' => $last_login,
                             'login_status' => 'login'
                         ]);
+                    $l = new Login();
+                    $l->userId = $login->id;
+                    $l->login = $last_login;
+                    $l->status = 'login';
+                    $l->save();
+
                     if($login->level=='doctor'){
                         return 'doctor';
                     }else if($login->level=='chief'){

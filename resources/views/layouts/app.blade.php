@@ -126,11 +126,20 @@
                     </ul>
                 </li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
-                <li><a href="{{ url('doctor/report') }}"><i class="fa fa-print"></i> Reports</a></li>
                 @elseif($user->level=='support')
                 <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
                 <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
+                        <li><a href="#"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
+                        <li><a href="#"><i class="fa fa-male"></i>&nbsp; Walk-In</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral</a></li>
+                    </ul>
+                </li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li class="dropdown">
