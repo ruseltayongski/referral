@@ -1,8 +1,18 @@
+<?php
+    $error = \Illuminate\Support\Facades\Input::get('error');
+?>
 @extends('layouts.app')
 
 @section('content')
     <div class="col-md-9">
         <div class="jim-content">
+            @if($error)
+            <div class="alert alert-danger">
+                <span class="text-danger">
+                    <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                </span>
+            </div>
+            @endif
             <h3 class="page-header">Monthly Activity
             </h3>
             <div class="chart">

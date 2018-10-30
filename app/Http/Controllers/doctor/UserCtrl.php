@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Http\Controllers\ParamCtrl;
+use App\Login;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class UserCtrl extends Controller
@@ -73,5 +76,70 @@ class UserCtrl extends Controller
             'title' => 'Online Doctors',
             'data' => $data
         ]);
+    }
+
+    public function changeLogin(Request $req)
+    {
+        $login = User::find($req->loginId);
+
+        if($login->status==='inactive'){
+            return 'inactive';
+        }else{
+            if(Hash::check($req->loginPassword,$login->password))
+            {
+                $user = Session::get('auth');
+                Session::flush();
+                User::where('id',$user->id)
+                    ->update([
+                        'login_status' => 'logout'
+                    ]);
+                $logout = date('Y-m-d H:i:s');
+                $logoutId = Login::where('userId',$user->id)
+                    ->orderBy('id','desc')
+                    ->first()
+                    ->id;
+
+                Login::where('id',$logoutId)
+                    ->update([
+                        'logout' => $logout
+                    ]);
+
+                Session::put('auth',$login);
+                $last_login = date('Y-m-d H:i:s');
+                User::where('id',$login->id)
+                    ->update([
+                        'last_login' => $last_login,
+                        'login_status' => 'login'
+                    ]);
+                $checkLastLogin = self::checkLastLogin($login->id);
+
+                if(!$checkLastLogin){
+                    $l = new Login();
+                    $l->userId = $login->id;
+                    $l->login = $last_login;
+                    $l->status = 'login';
+                    $l->save();
+                }
+                return redirect('doctor');
+            }
+            else
+            {
+                return redirect('doctor?error=1');
+            }
+        }
+    }
+
+    function checkLastLogin($id)
+    {
+        $start = Carbon::now()->startOfDay();
+        $end = Carbon::now()->endOfDay();
+        $login = Login::where('userId',$id)
+            ->whereBetween('login',[$start,$end])
+            ->orderBy('id','desc')
+            ->first();
+        if($login && (!$login->logout>=$start && $login->logout<=$end)){
+            return true;
+        }
+        return false;
     }
 }

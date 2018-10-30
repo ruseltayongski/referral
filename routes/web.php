@@ -20,8 +20,12 @@ Route::get('logout', function(){
                 'login_status' => 'logout'
             ]);
     $logout = date('Y-m-d H:i:s');
-    \App\Login::where('userId',$user->id)
+    $logoutId = \App\Login::where('userId',$user->id)
             ->orderBy('id','desc')
+            ->first()
+            ->id;
+
+    \App\Login::where('id',$logoutId)
             ->update([
                 'logout' => $logout
             ]);
@@ -62,7 +66,9 @@ Route::get('support/users/info/{user_id}','support\UserCtrl@info');
 Route::get('support/hospital','support\HospitalCtrl@index');
 Route::post('support/hospital/update','support\HospitalCtrl@update');
 
-
+Route::get('support/report/users','support\ReportCtrl@users');
+Route::post('support/report/users','support\ReportCtrl@usersFilter');
+Route::get('support/report/users/export','support\ExportCtrl@dailyUsers');
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 
@@ -113,6 +119,8 @@ Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
 Route::get('doctor/list','doctor\UserCtrl@index');
 Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
 
+Route::post('doctor/change/login','doctor\UserCtrl@changeLogin');
+
 Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
@@ -147,7 +155,5 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 
-Route::get('sample',function(){
-
-});
+Route::get('sample','support\ExportCtrl@exportUsers');
 

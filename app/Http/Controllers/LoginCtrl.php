@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Login;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -33,11 +34,15 @@ class LoginCtrl extends Controller
                             'last_login' => $last_login,
                             'login_status' => 'login'
                         ]);
-                    $l = new Login();
-                    $l->userId = $login->id;
-                    $l->login = $last_login;
-                    $l->status = 'login';
-                    $l->save();
+                    $checkLastLogin = self::checkLastLogin($login->id);
+
+                    if(!$checkLastLogin){
+                        $l = new Login();
+                        $l->userId = $login->id;
+                        $l->login = $last_login;
+                        $l->status = 'login';
+                        $l->save();
+                    }
 
                     if($login->level=='doctor'){
                         return 'doctor';
@@ -60,6 +65,20 @@ class LoginCtrl extends Controller
         }else{
             return 'error';
         }
+    }
+
+    function checkLastLogin($id)
+    {
+        $start = Carbon::now()->startOfDay();
+        $end = Carbon::now()->endOfDay();
+        $login = Login::where('userId',$id)
+                    ->whereBetween('login',[$start,$end])
+                    ->orderBy('id','desc')
+                    ->first();
+        if($login && (!$login->logout>=$start && $login->logout<=$end)){
+            return true;
+        }
+        return false;
     }
 
     public function resetPassword(Request $req)

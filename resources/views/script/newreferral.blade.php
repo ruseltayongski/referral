@@ -8,6 +8,7 @@
     function play()
     {
         audioElement.play();
+        $('#incomingModal').modal();
         setTimeout(function(){
             audioElement.pause();
         },5300);

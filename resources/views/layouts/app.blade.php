@@ -32,7 +32,7 @@
             background: url('{{ asset('resources/img/backdrop.png') }}'), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
         }
         .loading {
-            background: rgba(255, 255, 255, 0.5) url('{{ asset('resources/img/loading.gif')}}') no-repeat center;
+            background: rgba(255, 255, 255, 0.9) url('{{ asset('resources/img/loading.gif')}}') no-repeat center;
             position:fixed;
             width:100%;
             height:100%;
@@ -68,12 +68,15 @@
                     if($user->level=='doctor')
                     {
                         $t='Dr.';
+                    }else if($user->level=='support'){
+                        $dept_desc = ' / IT Support';
                     }
 
                     if($user->department_id > 0)
                     {
                         $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
                     }
+
                 ?>
                 <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
             </div>
@@ -133,7 +136,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
+                        <li><a href="{{ url('support/report/users') }}"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
                         <li><a href="#"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
                         <li><a href="#"><i class="fa fa-male"></i>&nbsp; Walk-In</a></li>
                         <li class="divider"></li>
@@ -165,6 +168,9 @@
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i>&nbsp; Change Password</a></li>
                         <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i>&nbsp; Change Login Status</a></li>
                         <li class="divider"></li>
+                        @if($user->level=='doctor')
+                        <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-sign-in"></i>&nbsp; Change Login</a></li>
+                        @endif
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                         @if(Session::get('admin'))
                         <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> Back as Admin</a></li>
@@ -184,6 +190,8 @@
 @include('modal.server')
 @include('modal.password')
 @include('modal.duty')
+@include('modal.login')
+@include('modal.incoming')
 <footer class="footer">
     <div class="container">
         <p>All Rights Reserved 2017 | Version 1.1</p>
