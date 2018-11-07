@@ -137,7 +137,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('support/report/users') }}"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
-                        <li><a href="#"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
+                        <li><a href="{{ url('support/report/referral') }}"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
                         <li><a href="#"><i class="fa fa-male"></i>&nbsp; Walk-In</a></li>
                         <li class="divider"></li>
                         <li><a href="#"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral</a></li>

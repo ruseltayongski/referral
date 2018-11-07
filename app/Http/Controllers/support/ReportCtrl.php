@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\support;
 
+use App\Activity;
 use App\Login;
+use App\Seen;
+use App\Tracking;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -28,6 +32,19 @@ class ReportCtrl extends Controller
 
         return view('support.report.users',[
             'title' => "Daily Users",
+            'data' => $data
+        ]);
+    }
+
+    public function referral()
+    {
+        $user = Session::get('auth');
+        $data = User::where('facility_id',$user->facility_id)
+            ->where('level','doctor')
+            ->orderBy('lname','asc')
+            ->paginate(20);
+        return view('support.report.referral',[
+            'title' => 'Daily Referral',
             'data' => $data
         ]);
     }
@@ -126,5 +143,89 @@ class ReportCtrl extends Controller
         }
 
         return $data->status;
+    }
+
+    static function countOutgoingReferral($id)
+    {
+        $date = Session::get('dateReportReferral');
+        if(!$date){
+            $date = date('Y-m-d');
+        }
+
+        $start = Carbon::parse($date)->startOfDay();
+        $end = Carbon::parse($date)->endOfDay();
+
+
+        $accepted = Activity::where('referring_md',$id)
+            ->whereBetween('date_referred',[$start,$end])
+            ->where('status','accepted')
+            ->count();
+
+        $redirected = Tracking::join('activity','activity.code','=','tracking.code')
+            ->where('tracking.referring_md',$id)
+            ->where('activity.status','rejected')
+            ->whereBetween('tracking.date_referred',[$start,$end])
+            ->count();
+
+        $seen = Seen::select('tracking_id',DB::raw('count(*) as total'))
+                    ->join('tracking','tracking.id','=','seen.tracking_id')
+                    ->where('tracking.referring_md',$id)
+                    ->whereBetween('tracking.date_referred',[$start,$end])
+                    ->groupBy('tracking_id')
+                    ->get();
+
+        $total = Tracking::where('tracking.referring_md',$id)
+                ->whereBetween('tracking.date_referred',[$start,$end])
+                ->count();
+
+        $cseen = (count($seen)- ($accepted+$redirected));
+        $unseen = $total - count($seen);
+
+        return array(
+            'accepted' => $accepted,
+            'redirected' => $redirected,
+            'seen' => $cseen,
+            'unseen' => $unseen,
+            'total' => $total
+        );
+    }
+
+    static function countIncommingReferral($id)
+    {
+        $date = Session::get('dateReportReferral');
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
+
+        $start = Carbon::parse($date)->startOfDay();
+        $end = Carbon::parse($date)->endOfDay();
+
+        $accepted = Activity::where('action_md',$id)
+            ->whereBetween('date_referred',[$start,$end])
+            ->where('status','accepted')
+            ->count();
+
+        $redirected = Activity::where('action_md',$id)
+            ->whereBetween('date_referred',[$start,$end])
+            ->where('status','rejected')
+            ->count();
+
+        $seen = Seen::select('tracking_id',DB::raw('count(*) as total'))
+            ->join('tracking','tracking.id','=','seen.tracking_id')
+            ->where('seen.user_md',$id)
+            ->whereBetween('tracking.date_referred',[$start,$end])
+            ->groupBy('tracking_id')
+            ->get();
+
+        $cseen = (count($seen)- ($accepted+$redirected));
+        $total = $cseen + $accepted + $redirected;
+
+
+        return array(
+            'accepted' => $accepted,
+            'redirected' => $redirected,
+            'seen' => $cseen,
+            'total' => $total
+        );
     }
 }

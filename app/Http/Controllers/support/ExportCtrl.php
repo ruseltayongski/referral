@@ -29,7 +29,7 @@ class ExportCtrl extends Controller
 //        })->download('xlsx');
     }
 
-    public function dailyUsers()
+    static function dailyUsers()
     {
         $user = Session::get('auth');
 

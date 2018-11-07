@@ -38,7 +38,7 @@ if(!$dateReportUsers){
             <div class="box-body">
                 @if(count($data)>0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover table-bordered">
                             <tr class="bg-black">
                                 <th>User</th>
                                 <th class="text-center">On Duty</th>
@@ -53,7 +53,7 @@ if(!$dateReportUsers){
                             ?>
 
                             <tr>
-                                <td style="font-size:0.9em;">{{ $row->lname }}, {{ $row->fname }}</td>
+                                <td style="font-size:0.9em;white-space: nowrap;">{{ $row->lname }}, {{ $row->fname }}</td>
                                 <td class="text-center text-success">
                                     @if($log->status=='login')
                                     <i class="fa fa-check"></i>
@@ -95,6 +95,8 @@ if(!$dateReportUsers){
 
 @endsection
 @section('js')
+<script>
 
+</script>
 @endsection
 

@@ -69,6 +69,8 @@ Route::post('support/hospital/update','support\HospitalCtrl@update');
 Route::get('support/report/users','support\ReportCtrl@users');
 Route::post('support/report/users','support\ReportCtrl@usersFilter');
 Route::get('support/report/users/export','support\ExportCtrl@dailyUsers');
+
+Route::get('support/report/referral','support\ReportCtrl@referral');
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 

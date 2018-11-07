@@ -43,7 +43,8 @@ $user = Session::get('auth');
                                 'activity.*',
                                 DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
                                 DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
-                                'users.contact'
+                                'users.contact',
+                                'referring_md as referring_md_id'
                             )
                                 ->where('activity.code',$row->code)
                                 ->where('activity.id','>=',function($q) use($row,$user){
@@ -164,6 +165,7 @@ $user = Session::get('auth');
                                         }
                                         ?>
                                         <li>
+
                                             @if($act->status=='rejected')
                                                 <div class="timeline-item read-section">
                                                     <span class="time"><i class="fa {{ $act_icon }}"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
@@ -199,7 +201,7 @@ $user = Session::get('auth');
                                                     <span class="time"><i class="icon fa fa-{{ $act_icon }}"></i> <span class="date_activity">{{ date('M d, Y h:i A',strtotime($act_date)) }}</span></span>
                                                     <a>
                                                         <div class="timeline-header no-border">
-                                                            @if($act->referring_md!=0)
+                                                            @if($act->referring_md_id!=0)
                                                                 {{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}  was referred by <span class="text-success">Dr. {{ $act->referring_md }}</span> of <span class="facility">{{ $old_facility }}</span> to <span class="facility">{{ $new_facility }}.</span>
                                                             @else
                                                                 <strong>Walk-In Patient:</strong> <span class="text-success">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
