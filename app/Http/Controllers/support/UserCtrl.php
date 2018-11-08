@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\support;
 
 use App\Department;
+use App\Facility;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -72,6 +73,8 @@ class UserCtrl extends Controller
             'mname' => $req->mname,
             'lname' => $req->lname
         );
+
+        $facility = Facility::find($req->facility_id);
         $data = array(
             'level' => 'doctor',
             'facility_id' => $user->facility_id,
@@ -82,8 +85,8 @@ class UserCtrl extends Controller
             'department_id' => $req->department_id,
             'username' => $req->username,
             'password' => bcrypt($req->password),
-            'muncity' => $user->muncity,
-            'province' => $user->province
+            'muncity' => $facility->muncity,
+            'province' => $facility->province
         );
         User::updateOrCreate($match,$data);
         return 'added';
@@ -102,6 +105,8 @@ class UserCtrl extends Controller
         {
             $email = $req->email;
         }
+
+        $facility = Facility::find($user->facility_id);
         $data = array(
             'level' => 'doctor',
             'facility_id' => $user->facility_id,
@@ -112,8 +117,8 @@ class UserCtrl extends Controller
             'department_id' => $req->department_id,
             'username' => $req->username,
             'password' => bcrypt($req->password),
-            'muncity' => $user->muncity,
-            'province' => $user->province
+            'muncity' => $facility->muncity,
+            'province' => $facility->province
         );
         User::updateOrCreate($match,$data);
 
@@ -122,6 +127,8 @@ class UserCtrl extends Controller
 
     public function update(Request $req)
     {
+        $user = Session::get('auth');
+        $facility = Facility::find($user->facility_id);
         $data = array(
             'fname' => $req->fname,
             'mname' => $req->mname,
@@ -132,7 +139,9 @@ class UserCtrl extends Controller
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'username' => $req->username,
-            'status' => $req->status
+            'status' => $req->status,
+            'muncity' => $facility->muncity,
+            'province' => $facility->province
         );
 
         if ($req->password)
