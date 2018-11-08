@@ -55,9 +55,9 @@ if(!$dateReportUsers){
                         </div>
                     </div>
                 @else
-                    <div class="alert alert-warning">
-                        <span class="text-warning">
-                            <i class="fa fa-warning"></i> No data found!
+                    <div class="alert alert-success">
+                        <span class="text-success">
+                            <i class="fa fa-success"></i> Congrats! No incoming referral at this moment.
                         </span>
                     </div>
                 @endif

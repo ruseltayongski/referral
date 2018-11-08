@@ -40,9 +40,12 @@ class UserCtrl extends Controller
     {
         $user = Session::get('auth');
 
-        print_r($_POST);
         $user->facility_id = $req->facility_id;
+        $province = Facility::find($req->facility_id)->province;
+
         $user->level = $req->level;
+        $user->province = $province;
+
         Session::put('auth',$user);
         Session::put('admin',true);
 
@@ -84,7 +87,7 @@ class UserCtrl extends Controller
             'username' => $req->username,
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
-            'province' => $user->province
+            'province' => $facility->province
         );
         User::updateOrCreate($match,$data);
         return 'added';
@@ -92,6 +95,7 @@ class UserCtrl extends Controller
 
     public function update(Request $req)
     {
+        $facility = Facility::find($req->facility_id);
         $data = array(
             'fname' => $req->fname,
             'mname' => $req->mname,
@@ -102,7 +106,9 @@ class UserCtrl extends Controller
             'designation' => $req->designation,
             'facility_id' => $req->facility_id,
             'username' => $req->username,
-            'status' => $req->status
+            'status' => $req->status,
+            'muncity' => $facility->muncity,
+            'province' => $facility->province
         );
 
         if ($req->password)

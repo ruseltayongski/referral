@@ -101,7 +101,7 @@
                     </div>
                     <div class="form-group">
                         <label>Email Address <small class="text-muted"><em>(Optional):</em></small></label>
-                        <input type="email" class="form-control email" name="email">
+                        <input type="text" class="form-control email" name="email">
                     </div>
                     <hr />
 
