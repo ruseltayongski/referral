@@ -194,7 +194,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2017 | Version 1.1</p>
+        <p>All Rights Reserved 2018 | Version 1.3</p>
     </div>
 </footer>
 

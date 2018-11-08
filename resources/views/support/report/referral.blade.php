@@ -22,7 +22,7 @@ if(!$dateReportReferral){
         }
     </style>
     <div class="col-md-3">
-        @include('support.sidebar.filter')
+        @include('support.sidebar.referral')
         @include('support.sidebar.quick')
     </div>
 

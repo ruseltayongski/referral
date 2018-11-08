@@ -49,6 +49,13 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function referralFilter(Request $req)
+    {
+        Session::put('dateReportReferral',$req->date);
+
+        return self::referral();
+    }
+
     public function usersFilter(Request $req)
     {
         Session::put('dateReportUsers',$req->date);

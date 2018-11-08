@@ -13,7 +13,7 @@
                         <i class="fa fa-users"></i>
                     </span>
             </a>
-            <a href="{{ asset('doctor/report') }}" class="list-group-item clearfix">
+            <a href="{{ asset('support/report/users') }}" class="list-group-item clearfix">
                 Generate Report
                 <span class="pull-right">
                         <i class="fa fa-line-chart"></i>
