@@ -73,6 +73,9 @@ Route::get('support/report/users/export','support\ExportCtrl@dailyUsers');
 Route::get('support/report/referral','support\ReportCtrl@referral');
 Route::post('support/report/referral','support\ReportCtrl@referralFilter');
 Route::get('support/report/referral/export','support\ExportCtrl@dailyReferral');
+
+Route::get('support/report/incoming','support\ReportCtrl@incoming');
+
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 

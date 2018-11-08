@@ -235,4 +235,33 @@ class ReportCtrl extends Controller
             'total' => $total
         );
     }
+
+    public function incoming()
+    {
+        $user = Session::get('auth');
+
+        $data = Tracking::select(
+                        'tracking.id as id',
+                        'tracking.*',
+                        DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                        'facility.name as facility',
+                        'department.description as department',
+                        DB::raw("DATE_FORMAT(tracking.date_referred,'%M %d, %Y %h:%i %p') as date_referred")
+                    )
+                    ->where('tracking.referred_to',$user->facility_id)
+                    ->where(function($q) {
+                        $q->orwhere('tracking.status','referred')
+                            ->orwhere('tracking.status','seen');
+                    })
+                    ->join('patients','patients.id','=','tracking.patient_id')
+                    ->join('facility','facility.id','=','tracking.referred_from')
+                    ->join('department','department.id','=','tracking.department_id')
+                    ->orderBy('tracking.id','desc')
+                    ->paginate(20);
+
+        return view('support.report.incoming',[
+            'title' => 'Incoming Referrals',
+            'data' => $data
+        ]);
+    }
 }

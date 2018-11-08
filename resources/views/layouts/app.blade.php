@@ -140,7 +140,7 @@
                         <li><a href="{{ url('support/report/referral') }}"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
                         <li><a href="#"><i class="fa fa-male"></i>&nbsp; Walk-In</a></li>
                         <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral</a></li>
+                        <li><a href="{{ url('support/report/incoming') }}"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral</a></li>
                     </ul>
                 </li>
                 @elseif($user->level=='admin')
