@@ -29,6 +29,105 @@ class ExportCtrl extends Controller
 //        })->download('xlsx');
     }
 
+    static function dailyReferral()
+    {
+        $user = Session::get('auth');
+
+        $date = Session::get('dateReportReferral');
+        if(!$date){
+            $date = date('Y-m-d');
+        }
+
+        $users = User::where('facility_id',$user->facility_id)
+            ->where('level','doctor')
+            ->orderBy('lname','asc')
+            ->get();
+        $data[] = array('Monitoring Tool for Central Visayas Electronic Health Referral System');
+        $data[] = array('Form 2');
+        $data[] = array('DAILY REPORT FOR REFERRALS');
+        $data[] = array('');
+        $data[] = array('Name of Hospital: ' . Facility::find($user->facility_id)->name);
+        $data[] = array('Date: '. date('F d, Y',strtotime($date)));
+        $data[] = array('');
+        $data[] = array('Name of User','Number of Outgoing Referrals','','','','','Number of Incoming Referrals');
+        $data[] = array('','Accepted','Redirected','Seen','Unseen','Total','Accepted','Redirected','Seen','Total');
+
+        foreach($users as $row)
+        {
+            $referral = ReportCtrl::countOutgoingReferral($row->id);
+            $incoming = ReportCtrl::countIncommingReferral($row->id);
+            $data[] = array(
+                'users' => $row->lname.', '.$row->fname,
+                'accepted' => $referral['accepted'],
+                'redirected' => $referral['redirected'],
+                'seen' => $referral['seen'],
+                'unseen' => $referral['unseen'],
+                'total' => $referral['total'],
+                'i_accepted' => $incoming['accepted'],
+                'i_redirected' => $incoming['redirected'],
+                'i_seen' => $incoming['seen'],
+                'i_total' => $incoming['total']
+            );
+        }
+
+
+
+        return Excel::create("DailyReferral-$date",function ($excel) use ($data) {
+            $excel->sheet('Users',function($sheet) use ($data) {
+                $totalCell = count($data) + 1;
+
+                $sheet->mergeCells('A1:J1');
+                $sheet->mergeCells('A2:J2');
+                $sheet->mergeCells('A3:J3');
+                $sheet->mergeCells('A4:J4');
+                $sheet->mergeCells('A5:J5');
+                $sheet->mergeCells('A6:J6');
+                $sheet->mergeCells('A7:J7');
+                $sheet->mergeCells('A8:J8');
+
+                $sheet->mergeCells('A9:A10');
+                $sheet->mergeCells('B9:F9');
+                $sheet->mergeCells('G9:J9');
+
+                $sheet->setBorder("A1:J$totalCell", 'thin');
+
+                $sheet->cell("A9:A10", function($cell){
+                    $cell->setValignment('center');
+                });
+
+                $sheet->cell("A1:J4", function($cell){
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->cell("B9:J$totalCell", function($cell){
+                    $cell->setAlignment('center');
+                });
+
+                $sheet->getStyle('A1:A7')->applyFromArray([
+                    'font' => [
+                        'bold' => true
+                    ]
+                ]);
+
+                $sheet->getStyle('A9:J9')->applyFromArray([
+                    'font' => [
+                        'bold' => true
+                    ]
+                ]);
+
+                $sheet->getStyle('B10:J10')->applyFromArray([
+                    'font' => [
+                        'bold' => true
+                    ]
+                ]);
+
+
+                $sheet->fromArray($data);
+
+            });
+        })->download('xlsx');
+    }
+
     static function dailyUsers()
     {
         $user = Session::get('auth');
