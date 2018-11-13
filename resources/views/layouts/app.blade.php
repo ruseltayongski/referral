@@ -145,7 +145,6 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('support/report/users') }}"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
                         <li><a href="{{ url('support/report/referral') }}"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
-                        <li><a href="#"><i class="fa fa-male"></i>&nbsp; Walk-In</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('support/report/incoming') }}"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral
                                 @if($count>0)
@@ -170,8 +169,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/report/login') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Doctor's Online</a></li>
-                        <li><a href="{{ url('admin/report/referred') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Referral Status</a></li>
+                        <li><a href="{{ url('admin/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Online Users</a></li>
+                        <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Referral Status</a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>

@@ -12,7 +12,7 @@
     <form method="post" action="{{ url('support/report/users') }}">
         {{ csrf_field() }}
     <div class="panel-body">
-        <input type="date" max="{{ date('Y-m-d') }}" value="{{ $dateReportUsers }}" name="date" class="form-control" />
+        <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateReportUsers }}" name="date" class="form-control" />
     </div>
     <div class="panel-footer">
         <button type="submit" class="btn btn-success btn-block">

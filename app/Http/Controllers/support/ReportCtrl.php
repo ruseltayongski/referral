@@ -51,8 +51,18 @@ class ReportCtrl extends Controller
 
     public function referralFilter(Request $req)
     {
-        Session::put('dateReportReferral',$req->date);
+        //Session::put('dateReportReferral',$req->date);
 
+        //return self::referral();
+        $range = explode('-',str_replace(' ', '', $req->date));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startDateReportReferral',$start);
+        Session::put('endDateReportReferral',$end);
         return self::referral();
     }
 
@@ -94,11 +104,6 @@ class ReportCtrl extends Controller
             $data['logout'] = $tmp->logout;
         }
 
-//        $data['logout'] = Login::where('userId',$id)
-//            ->whereBetween('logout',[$start,$end])
-//            ->orderBy('id','desc')
-//            ->first();
-//
         $tmp = Login::where('userId',$id)
             ->whereBetween('logout',[$start,$end])
             ->orderBy('id','desc')
@@ -154,13 +159,15 @@ class ReportCtrl extends Controller
 
     static function countOutgoingReferral($id)
     {
-        $date = Session::get('dateReportReferral');
-        if(!$date){
-            $date = date('Y-m-d');
-        }
+        $start = Session::get('startDateReportReferral');
+        $end = Session::get('endDateReportReferral');
+        if(!$start)
+            $start = date('Y-m-d');
+        if(!$end)
+            $end = date('Y-m-d');
 
-        $start = Carbon::parse($date)->startOfDay();
-        $end = Carbon::parse($date)->endOfDay();
+        $start = Carbon::parse($start)->startOfDay();
+        $end = Carbon::parse($end)->endOfDay();
 
 
         $accepted = Activity::where('referring_md',$id)
@@ -199,13 +206,15 @@ class ReportCtrl extends Controller
 
     static function countIncommingReferral($id)
     {
-        $date = Session::get('dateReportReferral');
-        if (!$date) {
-            $date = date('Y-m-d');
-        }
+        $start = Session::get('startDateReportReferral');
+        $end = Session::get('endDateReportReferral');
+        if(!$start)
+            $start = date('Y-m-d');
+        if(!$end)
+            $end = date('Y-m-d');
 
-        $start = Carbon::parse($date)->startOfDay();
-        $end = Carbon::parse($date)->endOfDay();
+        $start = Carbon::parse($start)->startOfDay();
+        $end = Carbon::parse($end)->endOfDay();
 
         $accepted = Activity::where('action_md',$id)
             ->whereBetween('date_referred',[$start,$end])

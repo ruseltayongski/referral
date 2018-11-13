@@ -94,9 +94,24 @@ if(!$dateReportUsers){
 
 
 @endsection
-@section('js')
-<script>
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+@endsection
 
+@section('js')
+    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+<script>
+    <?php
+        $date = date('m/d/Y',strtotime($dateReportUsers));
+    ?>
+    $('#daterange').daterangepicker({
+        "singleDatePicker": true,
+        "startDate": "{{ $date }}",
+        "endDate": "{{ $date }}"
+    }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
 </script>
 @endsection
 

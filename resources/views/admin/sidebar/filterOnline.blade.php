@@ -1,18 +1,18 @@
 <?php
-$dateReportReferral = \Illuminate\Support\Facades\Session::get('dateReportReferral');
-if(!$dateReportReferral){
-    $dateReportReferral = date('Y-m-d');
-}
+$dateReportOnline = \Illuminate\Support\Facades\Session::get('dateReportOnline');
+if(!$dateReportOnline)
+    $dateReportOnline = date('Y-m-d');
+
 ?>
 
 <div class="panel panel-jim">
     <div class="panel-heading">
         <h3 class="panel-title">Select Date</h3>
     </div>
-    <form method="post" action="{{ url('support/report/referral') }}">
+    <form method="post" action="{{ url('admin/report/online') }}">
         {{ csrf_field() }}
         <div class="panel-body">
-            <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateReportReferral }}" name="date" class="form-control" />
+            <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateReportOnline }}" name="date" class="form-control" />
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-success btn-block">

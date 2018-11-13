@@ -1,0 +1,122 @@
+<?php
+$user = Session::get('auth');
+$facilities = \App\Facility::select('id','name')
+    ->orderBy('name','asc')->get();
+
+$dateReportOnline = \Illuminate\Support\Facades\Session::get('dateReportOnline');
+if(!$dateReportOnline)
+    $dateReportOnline = date('m/d/Y');
+?>
+@extends('layouts.app')
+
+@section('content')
+    <style>
+        label {
+            padding: 0px !important;
+        }
+    </style>
+
+    <div class="col-md-12">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <div class="pull-right">
+                    <form action="{{ url('admin/report/online') }}" method="POST" class="form-inline">
+                        {{ csrf_field() }}
+                        <div class="form-group-sm" style="margin-bottom: 10px;">
+                            <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateReportOnline }}" name="date" class="form-control" />
+                            <button type="submit" class="btn btn-success btn-sm btn-flat">
+                                <i class="fa fa-calendar"></i> Change Date
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <h3>{{ $title }}<br />
+                    <small class="text-success">
+                        Date: {{ date('F d, Y',strtotime($dateReportOnline))}}
+                    </small></h3>
+            </div>
+            <div class="box-body">
+                @if(count($data) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered">
+                            <tr class="bg-black">
+                                <th>Facility</th>
+                                <th>Name of User</th>
+                                <th>Level</th>
+                                <th>Status</th>
+                                <th>Login</th>
+                                <th>Logout</th>
+                            </tr>
+                            <?php $h = 0; ?>
+                            @foreach($data as $row)
+                            <tr>
+                                <td class="text-warning text-bold">
+                                    @if($h != $row->facility_id)
+                                    {{ \App\Facility::find($row->facility_id)->name }}
+                                    <?php $h = $row->facility_id; ?>
+                                    @endif
+                                </td>
+                                <td class="text-success">
+                                    {{ $row->lname }}, {{ $row->fname }}
+                                </td>
+                                <td class="text-danger">
+                                    {{ ucfirst($row->level) }}
+                                </td>
+                                <td>
+                                    {{ ($row->login_status=='login') ? 'On Duty' : 'Off Duty' }}
+                                </td>
+                                <td>
+                                    {{ date('h:i A',strtotime($row->login)) }}
+                                </td>
+                                <td>
+                                    @if($row->logout > 0)
+                                        @if(date('m/d/Y',strtotime($row->logout))!=$dateReportOnline)
+                                        <small class="text-danger">
+                                        {{ date('M d, Y',strtotime($row->logout)) }}
+                                        </small>
+                                        <br />
+                                        @endif
+                                        {{ date('h:i A',strtotime($row->logout)) }}
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        <div class="text-center">
+                            {{ $data->links() }}
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-warning">
+                        <span class="text-warning">
+                            <i class="fa fa-warning"></i> No data found!
+                        </span>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+@endsection
+
+@section('js')
+    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+
+    <script>
+        <?php
+        $date = date('m/d/Y',strtotime($dateReportOnline));
+        ?>
+        $('#daterange').daterangepicker({
+            "singleDatePicker": true,
+            "startDate": "{{ $date }}",
+            "endDate": "{{ $date }}"
+        }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
+    </script>
+@endsection
+

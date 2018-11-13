@@ -6,8 +6,19 @@ if(!$dateReportReferral){
     $dateReportReferral = date('Y-m-d');
 }
 
+$start = \Illuminate\Support\Facades\Session::get('startDateReportReferral');
+$end = \Illuminate\Support\Facades\Session::get('endDateReportReferral');
+if(!$start)
+    $start = date('Y-m-d');
+if(!$end)
+    $end = date('Y-m-d');
+
 ?>
 @extends('layouts.app')
+
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+@endsection
 
 @section('content')
     <style>
@@ -29,9 +40,9 @@ if(!$dateReportReferral){
     <div class="col-md-9">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3>{{ $title }}
-                    <small class="pull-right text-success">
-                        Date: {{ date('F d, Y',strtotime($dateReportReferral ))}}
+                <h3>{{ $title }}<br />
+                    <small class="text-success">
+                        Date: {{ date('F d, Y',strtotime($start))}} to {{ date('F d, Y',strtotime($end))}}
                     </small>
                 </h3>
             </div>
@@ -93,6 +104,20 @@ if(!$dateReportReferral){
 
 @endsection
 @section('js')
+<script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+<script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
 
+<script>
+    <?php
+        $start = date('m/d/Y',strtotime($start));
+        $end = date('m/d/Y',strtotime($end));
+    ?>
+    $('#daterange').daterangepicker({
+        "startDate": "{{ $start }}",
+        "endDate": "{{ $end }}"
+    }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+</script>
 @endsection
 
