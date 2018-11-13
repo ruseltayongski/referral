@@ -56,7 +56,7 @@ if($searchKeyword){
                             </tr>
                             @foreach($data as $row)
                                 <tr>
-                                    <td>
+                                    <td style="white-space: nowrap;">
                                         <a href="#updateUserModal"
                                            data-toggle="modal"
                                            data-id = "{{ $row->id }}"
