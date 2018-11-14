@@ -42,7 +42,7 @@ if(!$end)
             <div class="box-header with-border">
                 <h3>{{ $title }}<br />
                     <small class="text-success">
-                        Date: {{ date('F d, Y',strtotime($start))}} to {{ date('F d, Y',strtotime($end))}}
+                        {{ date('F d, Y',strtotime($start))}} to {{ date('F d, Y',strtotime($end))}}
                     </small>
                 </h3>
             </div>

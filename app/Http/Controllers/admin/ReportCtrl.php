@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Facility;
 use App\Login;
 use App\Tracking;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -64,11 +66,7 @@ class ReportCtrl extends Controller
         $start = Carbon::parse($start)->startOfDay();
         $end = Carbon::parse($end)->endOfDay();
 
-        $data = Tracking::where(function($q) {
-                    $q->where('status','referred')
-                        ->orwhere('status','seen');
-            })
-            ->whereBetween('date_referred',[$start,$end])
+        $data = Tracking::whereBetween('date_referred',[$start,$end])
             ->orderBy('id','desc')
             ->paginate(20);
         return view('admin.referral',[
@@ -89,5 +87,55 @@ class ReportCtrl extends Controller
         Session::put('startDateReportReferral',$start);
         Session::put('endDateReportReferral',$end);
         return self::referral();
+    }
+
+    public function users()
+    {
+        $facilities = Facility::where('status',1)
+                ->orderBy('name','asc')
+                ->paginate(20);
+
+        return view('admin.report.users',[
+            'title' => 'Daily Users',
+            'data' => array(),
+            'facilities' => $facilities
+        ]);
+    }
+
+    static function countDailyUsers($id)
+    {
+        return array(
+            'on' => self::countLogin($id,'login','doctor'),
+            'off' => self::countLogin($id,'login_off','doctor'),
+            'total' => self::countTotal($id,'doctor'),
+            'it_on' => self::countLogin($id,'login','support'),
+            'it_total' => self::countTotal($id,'support')
+        );
+    }
+
+    static function countLogin($id,$status,$level)
+    {
+        $date = Session::get('dateAdminDailyUsers');
+        if(!$date){
+            $date = date('Y-m-d');
+        }
+
+        $start = Carbon::parse($date)->startOfDay();
+        $end = Carbon::parse($date)->endOfDay();
+
+        $data = Login::join('users','users.id','=','login.userId')
+            ->where('users.facility_id',$id)
+            ->whereBetween('login.login',[$start,$end])
+            ->groupBy('login.userId')
+            ->where('users.level',$level)
+            ->where('login.status',$status)
+            ->get();
+        return count($data);
+    }
+
+    static function countTotal($id,$level){
+        return User::where('facility_id',$id)
+                    ->where('level',$level)
+                    ->count();
     }
 }

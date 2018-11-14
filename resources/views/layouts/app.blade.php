@@ -170,7 +170,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('admin/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Online Users</a></li>
-                        <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Referral Status</a></li>
+                        <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Referral Status</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url('admin/daily/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
+                        <li><a href="{{ url('admin/daily/referral') }}" data-toggle="modal"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referral</a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
