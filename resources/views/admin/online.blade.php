@@ -32,7 +32,7 @@ if(!$dateReportOnline)
                 </div>
                 <h3>{{ $title }}<br />
                     <small class="text-success">
-                        Date: {{ date('F d, Y',strtotime($dateReportOnline))}}
+                        {{ date('F d, Y',strtotime($dateReportOnline))}}
                     </small></h3>
             </div>
             <div class="box-body">
@@ -57,7 +57,7 @@ if(!$dateReportOnline)
                                     @endif
                                 </td>
                                 <td class="text-success">
-                                    {{ $row->lname }}, {{ $row->fname }}
+                                    {{ ucwords(mb_strtolower($row->lname)) }}, {{ ucwords(mb_strtolower($row->fname)) }}
                                 </td>
                                 <td class="text-danger">
                                     {{ ucfirst($row->level) }}

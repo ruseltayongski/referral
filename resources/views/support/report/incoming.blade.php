@@ -42,7 +42,7 @@ if(!$dateReportUsers){
                             </tr>
                             @foreach($data as $row)
                             <tr>
-                                <td><span class="text-primary text-bold">{{ $row->patient_name }}</span></td>
+                                <td><span class="text-primary text-bold">{{ ucwords(strtolower($row->patient_name)) }}</span></td>
                                 <td><span class="facility">{{ $row->facility }}</span></td>
                                 <td><span class="facility">{{ $row->department }}</span></td>
                                 <td><span class="text-success">{{ $row->date_referred }}</span></td>

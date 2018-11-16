@@ -31,7 +31,7 @@ if(!$dateReportUsers){
             <div class="box-header with-border">
                 <h3>{{ $title }}
                 <small class="pull-right text-success">
-                    Date: {{ date('F d, Y',strtotime($dateReportUsers ))}}
+                    {{ date('F d, Y',strtotime($dateReportUsers ))}}
                 </small>
                 </h3>
             </div>

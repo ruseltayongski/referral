@@ -56,12 +56,14 @@ if(!$end)
                             </tr>
 
                             @foreach($data as $row)
-                            <?php $c = ($row->status=='referred') ? 'bg-danger':'' ?>
+                            <?php $c = ($row->status=='rejected' || $row->status=='seen') ? 'bg-danger':'' ?>
+                            <?php $c = ($row->status=='accepted') ? 'bg-success':$c ?>
+                            <?php $c = ($row->status=='discharged' || $row->status=='admitted') ? 'bg-warning':$c ?>
                             <tr class="{{ $c }}">
                                 <td class="text-success">
                                     {{ date('M d, Y h:i A',strtotime($row->date_referred)) }}
                                 </td>
-                                <td class="text-warning">
+                                <td class="text-warning" title="{{ \App\Facility::find($row->referred_from)->name }}">
                                     <?php $f = \App\Facility::find($row->referred_from)->name; ?>
                                     @if(strlen($f)>25)
                                         {{ substr($f,0,25) }}...
@@ -69,7 +71,7 @@ if(!$end)
                                         {{ $f }}
                                     @endif
                                 </td>
-                                <td class="text-warning">
+                                <td class="text-warning" title="{{ \App\Facility::find($row->referred_to)->name }}">
                                     <?php $f = \App\Facility::find($row->referred_to)->name; ?>
                                     @if(strlen($f)>25)
                                         {{ substr($f,0,25) }}...
@@ -82,7 +84,7 @@ if(!$end)
                                 </td>
                                 <td class="text-primary">
                                     <?php $p = \App\Patients::find($row->patient_id); ?>
-                                    {{ ucfirst(strtolower($p->lname))}}, {{ ucfirst(strtolower($p->fname))}}
+                                    {{ ucwords(strtolower($p->lname))}}, {{ ucwords(strtolower($p->fname))}}
                                 </td>
                                 <td class="text-danger">
                                     {{ ucfirst($row->status) }}
