@@ -36,6 +36,7 @@ class ReportCtrl extends Controller
                 )
                 ->join('users','users.id','=','login.userId')
                 ->whereBetween('login.login',[$start,$end])
+                ->where('login.logout','0000-00-00 00:00:00')
                 ->where('users.level','!=','admin')
                 ->orderBy('users.facility_id','asc')
                 ->orderBy('login.login','asc')

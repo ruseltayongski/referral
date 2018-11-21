@@ -32,10 +32,16 @@ $user = Session::get('auth');
                             </tr>
                             @foreach($data as $row)
                             <?php
-                                $name = "$row->fname $row->mname $row->lname";
+                                $strMname = strlen($row->mname);
+                                $mname = '';
+                                if($strMname>0){
+                                    $mname = $row->mname[0] .'.';
+                                }
+
+                                $name = "$row->fname $mname $row->lname";
                                 $status = '<strong>ON DUTY</strong>';
                                 $class = 'text-success';
-                                if($row->login_status=='login_off')
+                                if($row->status=='login_off')
                                 {
                                     $status = '<em>OFF DUTY</em>';
                                     $class = 'text-danger';
@@ -55,7 +61,7 @@ $user = Session::get('auth');
                                     {!! $status !!}
                                     <br />
                                     @if($class=='text-success')
-                                    <small class="text-muted">{{ date('h:i A',strtotime($row->last_login)) }}</small>
+                                    <small class="text-muted">{{ date('h:i A',strtotime($row->login)) }}</small>
                                     @endif
                                 </td>
                             </tr>

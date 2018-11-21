@@ -103,6 +103,7 @@ class UserCtrl extends Controller
 
         Login::where('userId',$user->id)
             ->orderBy('id','desc')
+            ->first()
             ->update([
                 'status' => $option
             ]);
