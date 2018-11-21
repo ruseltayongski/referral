@@ -35,18 +35,27 @@ class UserCtrl extends Controller
         ParamCtrl::lastLogin();
         $search = Session::get('search_doctor');
 
-        $data = User::select(
-                'users.*',
-                'facility.name as facility',
-                'department.description as department'
+        $start = Carbon::now()->startOfDay();
+        $end = Carbon::now()->endOfDay();
+
+        $data = Login::select(
+            'users.id as id',
+            'users.fname as fname',
+            'users.lname as lname',
+            'users.mname as mname',
+            'facility.name as facility',
+            'department.description as department',
+            'login.login as login',
+            'login.status as status'
         );
 
         $data = $data->where(function($q) {
-            $q->where('login_status','login')
-                ->orwhere('login_status','login_off');
+            $q->where('login.status','login')
+                ->orwhere('login.status','login_off');
         });
 
-        $data = $data->join('facility','facility.id','=','users.facility_id')
+        $data = $data->join('users','users.id','=','login.userId')
+                ->join('facility','facility.id','=','users.facility_id')
                 ->leftJoin('department','department.id','=','users.department_id');
 
         if($search['keyword'])
@@ -64,12 +73,11 @@ class UserCtrl extends Controller
             $data = $data->where('users.facility_id',$facility_id);
         }
 
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 23:59:59');
         $data = $data
                 ->where('users.level','doctor')
-                ->whereBetween('users.last_login',[$start,$end])
-                ->orderBy('users.last_login','desc')
+                ->whereBetween('login.login',[$start,$end])
+                ->where('login.logout','0000-00-00 00:00:00')
+                ->orderBy('login.id','desc')
                 ->paginate(15);
 
         return view('doctor.list',[
@@ -120,6 +128,20 @@ class UserCtrl extends Controller
                     $l->status = 'login';
                     $l->save();
                 }
+
+                if($checkLastLogin > 0 ){
+                    Login::where('id',$checkLastLogin)
+                        ->update([
+                            'logout' => $last_login
+                        ]);
+
+                    $l = new Login();
+                    $l->userId = $login->id;
+                    $l->login = $last_login;
+                    $l->status = 'login';
+                    $l->save();
+                }
+
                 return redirect('doctor');
             }
             else
@@ -140,6 +162,10 @@ class UserCtrl extends Controller
         if($login && (!$login->logout>=$start && $login->logout<=$end)){
             return true;
         }
-        return false;
+        if(!$login){
+            return false;
+        }
+
+        return $login->id;
     }
 }

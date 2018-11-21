@@ -44,6 +44,19 @@ class LoginCtrl extends Controller
                         $l->save();
                     }
 
+                    if($checkLastLogin > 0 ){
+                        Login::where('id',$checkLastLogin)
+                            ->update([
+                                'logout' => $last_login
+                            ]);
+
+                        $l = new Login();
+                        $l->userId = $login->id;
+                        $l->login = $last_login;
+                        $l->status = 'login';
+                        $l->save();
+                    }
+
                     if($login->level=='doctor'){
                         return 'doctor';
                     }else if($login->level=='chief'){
@@ -78,7 +91,12 @@ class LoginCtrl extends Controller
         if($login && (!$login->logout>=$start && $login->logout<=$end)){
             return true;
         }
-        return false;
+
+        if(!$login){
+            return false;
+        }
+
+        return $login->id;
     }
 
     public function resetPassword(Request $req)

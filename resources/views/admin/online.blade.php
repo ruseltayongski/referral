@@ -45,7 +45,6 @@ if(!$dateReportOnline)
                                 <th>Level</th>
                                 <th>Status</th>
                                 <th>Login</th>
-                                <th>Logout</th>
                             </tr>
                             <?php $h = 0; ?>
                             @foreach($data as $row)
@@ -67,17 +66,6 @@ if(!$dateReportOnline)
                                 </td>
                                 <td>
                                     {{ date('h:i A',strtotime($row->login)) }}
-                                </td>
-                                <td>
-                                    @if($row->logout > 0)
-                                        @if(date('m/d/Y',strtotime($row->logout))!=$dateReportOnline)
-                                        <small class="text-danger">
-                                        {{ date('M d, Y',strtotime($row->logout)) }}
-                                        </small>
-                                        <br />
-                                        @endif
-                                        {{ date('h:i A',strtotime($row->logout)) }}
-                                    @endif
                                 </td>
                             </tr>
                             @endforeach
