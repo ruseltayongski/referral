@@ -185,14 +185,19 @@ class ReportCtrl extends Controller
                     ->join('tracking','tracking.id','=','seen.tracking_id')
                     ->where('tracking.referring_md',$id)
                     ->whereBetween('tracking.date_referred',[$start,$end])
-                    ->groupBy('tracking_id')
+                    ->groupBy('seen.tracking_id')
                     ->get();
 
-        $total = Tracking::where('tracking.referring_md',$id)
-                ->whereBetween('tracking.date_referred',[$start,$end])
-                ->count();
+        $total = Activity::where('referring_md',$id)
+                ->whereBetween('date_referred',[$start,$end])
+                ->groupBy('code')
+                ->get();
+        $total = count($total);
 
-        $cseen = (count($seen)- ($accepted+$redirected));
+        $cseen = (count($seen) - ($accepted+$redirected));
+        if($cseen < 0)
+            $cseen = 0;
+
         $unseen = $total - count($seen);
 
         return array(
@@ -234,6 +239,10 @@ class ReportCtrl extends Controller
             ->get();
 
         $cseen = (count($seen)- ($accepted+$redirected));
+
+        if($cseen < 0)
+            $cseen = 0;
+
         $total = $cseen + $accepted + $redirected;
 
 

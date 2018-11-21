@@ -1,9 +1,9 @@
 <?php
 $user = Session::get('auth');
 
-$dateAdminDailyUsers = \Illuminate\Support\Facades\Session::get('dateAdminDailyUsers');
-if(!$dateAdminDailyUsers)
-    $dateAdminDailyUsers = date('Y-m-d');
+$dateDailyUsers = \Illuminate\Support\Facades\Session::get('dateDailyUsers');
+if(!$dateDailyUsers)
+    $dateDailyUsers = date('Y-m-d');
 
 ?>
 @extends('layouts.app')
@@ -26,15 +26,16 @@ if(!$dateAdminDailyUsers)
     </style>
     <div class="col-md-3">
 
-        @include('support.sidebar.quick')
+        @include('admin.sidebar.filterDailyUser')
+        @include('admin.sidebar.quick')
     </div>
 
     <div class="col-md-9">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3>{{ $title }}
-                    <small class="pull-right text-success">
-                        Date: {{ date('F d, Y',strtotime($dateAdminDailyUsers ))}}
+                <h3>{{ $title }}<br />
+                    <small class="text-success">
+                        {{ date('F d, Y',strtotime($dateDailyUsers ))}}
                     </small>
                 </h3>
             </div>
@@ -58,7 +59,7 @@ if(!$dateAdminDailyUsers)
                         </tr>
                         @foreach($facilities as $row)
                         <?php
-                            $log = \App\Http\Controllers\admin\ReportCtrl::countDailyUsers($row->id);
+                            $log = \App\Http\Controllers\admin\DailyCtrl::countDailyUsers($row->id);
                             $offline = $log['total'] - ($log['on'] + $log['off']);
                             $it_offline = $log['it_total'] - $log['it_on'];
                         ?>
@@ -97,7 +98,7 @@ if(!$dateAdminDailyUsers)
     <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
     <script>
         <?php
-        $date = date('m/d/Y',strtotime($dateAdminDailyUsers));
+        $date = date('m/d/Y',strtotime($dateDailyUsers));
         ?>
         $('#daterange').daterangepicker({
             "singleDatePicker": true,

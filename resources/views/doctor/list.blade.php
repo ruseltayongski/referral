@@ -48,7 +48,7 @@ $user = Session::get('auth');
                                 }
                             ?>
                             <tr>
-                                <td class="title-name {{ $class }}">Dr. {{ $name }}</td>
+                                <td class="title-name {{ $class }}">Dr. {{ ucwords(mb_strtolower($name))}}</td>
                                 <td class="text-muted">
                                     <strong>{{ $row->facility }}</strong>
                                     @if($row->department)

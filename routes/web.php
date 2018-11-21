@@ -54,12 +54,12 @@ Route::post('admin/report/online','admin\ReportCtrl@filterOnline');
 Route::get('admin/report/referral','admin\ReportCtrl@referral');
 Route::post('admin/report/referral','admin\ReportCtrl@filterReferral');
 
-Route::get('admin/daily/users','admin\ReportCtrl@users');
-Route::post('admin/daily/users','admin\ReportCtrl@usersFilter');
+Route::get('admin/daily/users','admin\DailyCtrl@users');
+Route::post('admin/daily/users','admin\DailyCtrl@usersFilter');
 Route::get('admin/daily/users/export','admin\ExportCtrl@dailyUsers');
 
-Route::get('admin/daily/referral','admin\ReportCtrl@referral');
-Route::post('admin/daily/referral','admin\ReportCtrl@referralFilter');
+Route::get('admin/daily/referral','admin\DailyCtrl@referral');
+Route::post('admin/daily/referral','admin\DailyCtrl@referralFilter');
 Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
 
 //SUPPORT Page
