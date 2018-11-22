@@ -39,7 +39,7 @@ class ReportCtrl extends Controller
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->where('users.level','!=','admin')
                 ->orderBy('users.facility_id','asc')
-                ->orderBy('login.login','asc')
+                ->orderBy('login.id','desc')
                 ->orderBy('users.lname','asc')
                 ->paginate(20);
 

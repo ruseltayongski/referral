@@ -43,6 +43,7 @@ if(!$dateReportOnline)
                                 <th>Facility</th>
                                 <th>Name of User</th>
                                 <th>Level</th>
+                                <th>Department</th>
                                 <th>Status</th>
                                 <th>Login</th>
                             </tr>
@@ -60,6 +61,9 @@ if(!$dateReportOnline)
                                 </td>
                                 <td class="text-danger">
                                     {{ ucfirst($row->level) }}
+                                </td>
+                                <td class="text-danger">
+                                    {{ ucfirst(\App\Department::find($row->department_id)->description) }}
                                 </td>
                                 <td>
                                     {{ ($row->login_status=='login') ? 'On Duty' : 'Off Duty' }}
