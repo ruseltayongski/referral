@@ -8,7 +8,7 @@
     function play()
     {
         audioElement.play();
-        $('#incomingModal').modal();
+
         setTimeout(function(){
             audioElement.pause();
         },5300);
@@ -21,6 +21,15 @@
 
     connRef.child(myfacility).on('child_added',function(snapshot){
         play();
+        var data = snapshot.val();
+        Lobibox.notify('success', {
+            delay: false,
+            title: 'New Referral',
+            msg: data.name+' was referred by Dr. '+data.referring_md+' of '+data.referring_name,
+            img: "{{ url('resources/img/ro7.png') }}",
+            sound: false
+        });
+
         count_referral = parseInt(count_referral);
         count_referral += 1;
         $('.count_referral').html(count_referral);

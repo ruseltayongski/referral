@@ -1,7 +1,11 @@
+<?php
+    $user = \Illuminate\Support\Facades\Session::get('auth');
+?>
 <div class="modal fade" role="dialog" id="addUserModal">
     <div class="modal-dialog modal-sm" role="document">
         <form method="POST" id="addUserForm">
             {{ csrf_field() }}
+            <input type="hidden" name="facility_id" value="{{ $user->facility_id }}" />
             <div class="modal-content">
                 <div class="modal-body">
                     <fieldset>
@@ -79,6 +83,7 @@
     <div class="modal-dialog modal-sm" role="document">
         <form method="POST" id="updateUserForm">
             {{ csrf_field() }}
+            <input type="hidden" name="facility_id" value="{{ $user->facility_id }}" />
             <div class="modal-content">
                 <div class="modal-body">
                     <input type="hidden" class="user_id" name="user_id" value="" />

@@ -225,14 +225,13 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
+<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=1"></script>
 @include('script.firebase')
 @include('script.newreferral')
 @include('script.password')
 @include('script.duty')
+@include('script.notification')
 @yield('js')
 
-<script>
-
-</script>
 </body>
 </html>

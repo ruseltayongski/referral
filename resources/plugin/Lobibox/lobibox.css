@@ -865,8 +865,8 @@ fieldset[disabled] .lobibox .lobibox-btn.lobibox-btn-default.active {
 }
 .lobibox-notify .lobibox-notify-icon img {
   border-radius: 4px;
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
 }
 .lobibox-notify .lobibox-notify-body {
   margin: 10px 20px;

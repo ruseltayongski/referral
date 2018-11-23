@@ -201,4 +201,22 @@ class ParamCtrl extends Controller
                 'last_login' => $date
             ]);
     }
+
+    public function verifyCode($code)
+    {
+        $user = Session::get('auth');
+        if($user->level=='admin')
+        {
+            return 1;
+        }
+        $tracking = Tracking::where('code',$code)->first();
+
+        if($tracking){
+            if($tracking->referred_from == $user->facility_id){
+                return 1;
+            }
+            return 0;
+        }
+        return 0;
+    }
 }
