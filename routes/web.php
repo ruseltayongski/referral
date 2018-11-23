@@ -142,6 +142,8 @@ Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
 
 Route::post('doctor/change/login','doctor\UserCtrl@changeLogin');
 
+Route::get('doctor/verify/{code}','ParamCtrl@verifyCode');
+
 Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
