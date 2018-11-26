@@ -178,5 +178,5 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 
-Route::get('sample','support\ExportCtrl@exportUsers');
+Route::get('sample','HomeCtrl@sample');
 

@@ -57,7 +57,7 @@ if(!$end)
 
                             @foreach($data as $row)
                             <?php $c = ($row->status=='rejected' || $row->status=='seen') ? 'bg-danger':'' ?>
-                            <?php $c = ($row->status=='accepted') ? 'bg-success':$c ?>
+                            <?php $c = ($row->status=='accepted' || $row->status=='arrived' || $row->status=='admitted') ? 'bg-success':$c ?>
                             <?php $c = ($row->status=='discharged' || $row->status=='admitted') ? 'bg-warning':$c ?>
                             <tr class="{{ $c }}">
                                 <td class="text-success">
