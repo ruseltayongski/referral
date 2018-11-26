@@ -432,7 +432,8 @@ class ReferralCtrl extends Controller
 
         Tracking::where("id",$track_id)
                 ->update([
-                    'date_arrived' => $date
+                    'date_arrived' => $date,
+                    'status' => 'arrived'
                 ]);
         PregnantForm::where('id',$track->form_id)
                 ->update([
@@ -458,6 +459,11 @@ class ReferralCtrl extends Controller
             'status' => 'admitted'
         );
         Activity::create($data);
+
+        Tracking::where('id',$track_id)
+            ->update([
+                'status' => 'admitted'
+            ]);
 
         return date('M d, Y h:i A',strtotime($date));
     }
