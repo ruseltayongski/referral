@@ -40,8 +40,14 @@ $user = Session::get('auth');
                                 $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
                             ?>
                             <tr>
-                                <td>
-                                    <span class="facility">{{ $row->name }}</span>
+                                <td style="white-space: nowrap;">
+                                    <span class="facility" title="{{ $row->name }}">
+                                    @if(strlen($row->name)>25)
+                                        {{ substr($row->name,0,25) }}...
+                                    @else
+                                        {{ $row->name }}
+                                    @endif
+                                    </span>
                                     <br />
                                     <span class="text-muted">{{ $type }}</span>
                                 </td>
@@ -68,7 +74,7 @@ $user = Session::get('auth');
                                     }
                                 ?>
                                 <td class="activity_{{ $row->code }}">{{ $status }}</td>
-                                <td>
+                                <td style="white-space: nowrap;">
                                     <button class="btn btn-sm btn-primary btn-action"
                                         title="Patient Arrived"
 
