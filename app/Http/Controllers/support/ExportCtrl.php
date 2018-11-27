@@ -33,10 +33,12 @@ class ExportCtrl extends Controller
     {
         $user = Session::get('auth');
 
-        $date = Session::get('dateReportReferral');
-        if(!$date){
-            $date = date('Y-m-d');
-        }
+        $start = Session::get('startDateReportReferral');
+        $end = Session::get('endDateReportReferral');
+        if(!$start)
+            $start = date('Y-m-d');
+        if(!$end)
+            $end = date('Y-m-d');
 
         $users = User::where('facility_id',$user->facility_id)
             ->where('level','doctor')
@@ -47,7 +49,7 @@ class ExportCtrl extends Controller
         $data[] = array('DAILY REPORT FOR REFERRALS');
         $data[] = array('');
         $data[] = array('Name of Hospital: ' . Facility::find($user->facility_id)->name);
-        $data[] = array('Date: '. date('F d, Y',strtotime($date)));
+        $data[] = array('Date: '. date('F d, Y',strtotime($start)) .' - '.date('F d, Y',strtotime($end)));
         $data[] = array('');
         $data[] = array('Name of User','Number of Outgoing Referrals','','','','','Number of Incoming Referrals');
         $data[] = array('','Accepted','Redirected','Seen','Unseen','Total','Accepted','Redirected','Seen','Total');
