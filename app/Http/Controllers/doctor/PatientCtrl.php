@@ -591,7 +591,11 @@ class PatientCtrl extends Controller
                 ->join('facility','facility.id','=','tracking.referred_from')
                 ->join('patients','patients.id','=','tracking.patient_id')
                 ->where('referred_to',$user->facility_id)
-                ->where('tracking.status','accepted')
+                ->where(function($q){
+                    $q->where('tracking.status','accepted')
+                        ->orwhere('tracking.status','admitted')
+                        ->orwhere('tracking.status','arrived');
+                })
                 ->orderBy('id','desc')
                 ->paginate(15);
 
