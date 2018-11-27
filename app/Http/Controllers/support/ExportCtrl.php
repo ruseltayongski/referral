@@ -72,7 +72,7 @@ class ExportCtrl extends Controller
             );
         }
 
-
+        $date = date('Y-m-d');
 
         return Excel::create("DailyReferral-$date",function ($excel) use ($data) {
             $excel->sheet('Users',function($sheet) use ($data) {
