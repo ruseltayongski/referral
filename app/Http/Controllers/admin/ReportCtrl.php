@@ -68,7 +68,7 @@ class ReportCtrl extends Controller
         $end = Carbon::parse($end)->endOfDay();
 
         $data = Tracking::whereBetween('updated_at',[$start,$end])
-            ->orderBy('id','desc')
+            ->orderBy('updated_at','desc')
             ->paginate(20);
         return view('admin.referral',[
             'title' => 'Referral Status',
