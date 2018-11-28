@@ -74,44 +74,44 @@
         });
 
         $('.form-submit').submit(function(e){
-             e.preventDefault();
-             var username = $(this).find(':input#username').val();
-             var password = $(this).find(':input#password').val();
-             var link = "{{ url('login') }}";
-             $.ajax({
-                 url: link,
-                 type: 'POST',
-                 data: {
-                     _token: "{{ csrf_token() }}",
-                     username: username,
-                     password: password
-                 },
-                 success: function(data){
-                     console.log(data);
-                     setTimeout(function(){
-                         if(data==='error'){
-                             $('.has-feedback').addClass('has-error ');
-                             $('.help-block').removeClass('hide').html('<strong>These credentials do not match our records.</strong>');
-                             $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
+            e.preventDefault();
+            var username = $(this).find(':input#username').val();
+            var password = $(this).find(':input#password').val();
+            var link = "{{ url('login') }}";
+            $.ajax({
+                url: link,
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    username: username,
+                    password: password
+                },
+                success: function(data){
+                    console.log(data);
+                    setTimeout(function(){
+                        if(data==='error'){
+                            $('.has-feedback').addClass('has-error ');
+                            $('.help-block').removeClass('hide').html('<strong>These credentials do not match our records.</strong>');
+                            $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
 
-                         }else if(data==='denied'){
-                             $('.has-feedback').addClass('has-error ');
-                             $('.help-block').removeClass('hide').html('<strong>You don\'t have access in this system.</strong>');
-                             $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
-                         }else{
-                             window.location.href = "{{ url('/') }}/"+data;
-                         }
-                     },500);
+                        }else if(data==='denied'){
+                            $('.has-feedback').addClass('has-error ');
+                            $('.help-block').removeClass('hide').html('<strong>You don\'t have access in this system.</strong>');
+                            $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
+                        }else{
+                            window.location.href = "{{ url('/') }}/"+data;
+                        }
+                    },500);
 
 
 
-                 },
-                 error: function(){
-                     setTimeout(function(){
-                         window.location.reload(false);
-                     },5000);
-                 }
-             });
+                },
+                error: function(){
+                    setTimeout(function(){
+                        window.location.reload(false);
+                    },5000);
+                }
+            });
         });
     </script>
   </body>
