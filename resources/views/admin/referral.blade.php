@@ -47,7 +47,7 @@ if(!$end)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <tr class="bg-black">
-                                <th>Date Referred</th>
+                                <th>Date</th>
                                 <th>Referred From</th>
                                 <th>Referred To</th>
                                 <th>Department</th>
@@ -61,7 +61,7 @@ if(!$end)
                             <?php $c = ($row->status=='discharged' || $row->status=='admitted') ? 'bg-warning':$c ?>
                             <tr class="{{ $c }}">
                                 <td class="text-success">
-                                    {{ date('M d, Y h:i A',strtotime($row->date_referred)) }}
+                                    {{ date('M d, h:i A',strtotime($row->date_referred)) }}
                                 </td>
                                 <td class="text-warning" title="{{ \App\Facility::find($row->referred_from)->name }}">
                                     <?php $f = \App\Facility::find($row->referred_from)->name; ?>
@@ -84,10 +84,10 @@ if(!$end)
                                 </td>
                                 <td class="text-primary">
                                     <?php $p = \App\Patients::find($row->patient_id); ?>
-                                    {{ ucwords(strtolower($p->lname))}}, {{ ucwords(strtolower($p->fname))}}
+                                    {{ ucwords(mb_strtolower($p->lname))}}, {{ ucwords(mb_strtolower($p->fname))}}
                                 </td>
                                 <td class="text-danger">
-                                    {{ ucfirst($row->status) }}
+                                    {{ ucfirst($row->status) }} <small style="font-style: italic;">({{ date('M d, h:i A',strtotime($row->updated_at)) }})</small>
                                 </td>
                             </tr>
                             @endforeach
