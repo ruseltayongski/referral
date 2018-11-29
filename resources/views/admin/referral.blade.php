@@ -47,7 +47,7 @@ if(!$end)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <tr class="bg-black">
-                                <th>Date</th>
+                                <th>Date Referred</th>
                                 <th>Referred From</th>
                                 <th>Referred To</th>
                                 <th>Department</th>
