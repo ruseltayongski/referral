@@ -43,6 +43,7 @@ class UserCtrl extends Controller
             'users.fname as fname',
             'users.lname as lname',
             'users.mname as mname',
+            'users.contact',
             'facility.name as facility',
             'department.description as department',
             'login.login as login',
