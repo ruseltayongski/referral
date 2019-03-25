@@ -98,20 +98,20 @@ class UserCtrl extends Controller
             {
                 $user = Session::get('auth');
                 Session::flush();
-                User::where('id',$user->id)
-                    ->update([
-                        'login_status' => 'logout'
-                    ]);
-                $logout = date('Y-m-d H:i:s');
-                $logoutId = Login::where('userId',$user->id)
-                    ->orderBy('id','desc')
-                    ->first()
-                    ->id;
-
-                Login::where('id',$logoutId)
-                    ->update([
-                        'logout' => $logout
-                    ]);
+//                User::where('id',$user->id)
+//                    ->update([
+//                        'login_status' => 'logout'
+//                    ]);
+//                $logout = date('Y-m-d H:i:s');
+//                $logoutId = Login::where('userId',$user->id)
+//                    ->orderBy('id','desc')
+//                    ->first()
+//                    ->id;
+//
+//                Login::where('id',$logoutId)
+//                    ->update([
+//                        'logout' => $logout
+//                    ]);
 
                 Session::put('auth',$login);
                 $last_login = date('Y-m-d H:i:s');

@@ -642,6 +642,15 @@
     });
 </script>
 
+
+{{--CANCEL REFERRAL--}}
+<script>
+    $('body').on('click','.btn-cancel',function(){
+        var id = $(this).data('id');
+        var url = "{{ url('doctor/referred/cancel') }}/"+id;
+        $("#cancelReferralForm").attr('action',url);
+    });
+</script>
 {{--<div class="list-group">--}}
 {{--<a href="#" class="list-group-item clearfix">--}}
 {{--<span class="title-info">Dr. Jimmy</span>--}}

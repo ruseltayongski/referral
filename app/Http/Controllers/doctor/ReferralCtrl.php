@@ -134,6 +134,7 @@ class ReferralCtrl extends Controller
 
         $form = PatientForm::select(
                     //'patient_form.*',
+                    'patient_form.code as code',
                     DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
                     DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
                     'patients.sex',
@@ -191,6 +192,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $form = PregnantForm::select(
                 'pregnant_form.patient_baby_id',
+                'pregnant_form.code',
                 'pregnant_form.record_no',
                 DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
                 DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
@@ -269,7 +271,7 @@ class ReferralCtrl extends Controller
         );
     }
 
-    public function referred()
+    public function referred2()
     {
         ParamCtrl::lastLogin();
         $user = Session::get('auth');
@@ -294,6 +296,7 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.status','accepted')
                     ->orwhere('tracking.status','transferred')
                     ->orwhere('tracking.status','discharged')
+                    ->orwhere('tracking.status','cancelled')
                     ->orwhere('tracking.status','rejected');
             })
             ->orderBy('date_referred','desc')
@@ -303,6 +306,157 @@ class ReferralCtrl extends Controller
             'title' => 'Referred Patients',
             'data' => $data
         ]);
+    }
+
+    public function searchReferred(Request $req)
+    {
+        $keyword = $req->keyword;
+        $type = $req->type;
+        Session::put('referredKeyword',$keyword);
+        Session::put('referredSelect',$type);
+        return redirect('doctor/referred');
+    }
+
+    public function referred()
+    {
+        $keyword = Session::get('referredKeyword');
+        $type = Session::get('referredSelect');
+
+        ParamCtrl::lastLogin();
+        $user = Session::get('auth');
+        $data = Tracking::select(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+            'patients.sex',
+            'facility.name as facility_name',
+            'facility.id as facility_id',
+            'patients.id as patient_id'
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->where('referred_from',$user->facility_id)
+            ->where(function($q){
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','accepted')
+                    ->orwhere('tracking.status','arrived')
+                    ->orwhere('tracking.status','admitted')
+                    ->orwhere('tracking.status','transferred')
+                    ->orwhere('tracking.status','discharged')
+                    ->orwhere('tracking.status','cancelled')
+                    ->orwhere('tracking.status','archived')
+                    ->orwhere('tracking.status','rejected');
+            });
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                        $q->where('patients.fname','like',"%$keyword%")
+                            ->orwhere('patients.mname','like',"%$keyword%")
+                            ->orwhere('patients.lname','like',"%$keyword%")
+                            ->orwhere('tracking.code','like',"%$keyword%");
+                });
+        }
+
+        if($type){
+            $data = $data->where('tracking.status',$type);
+        }
+
+        $data = $data->orderBy('date_referred','desc')
+                    ->paginate(10);
+
+        return view('doctor.referred2',[
+            'title' => 'Referred Patients',
+            'data' => $data
+        ]);
+    }
+
+    public function searchTrackReferral(Request $req)
+    {
+        Session::put('referredCode',$req->keyword);
+        return redirect('doctor/track/patient');
+    }
+
+    public function trackReferral()
+    {
+        $code = Session::get('referredCode');
+
+        ParamCtrl::lastLogin();
+        $user = Session::get('auth');
+        $data = Tracking::select(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+            'patients.sex',
+            'facility.name as facility_name',
+            'facility.id as facility_id',
+            'patients.id as patient_id'
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->where(function($q){
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','accepted')
+                    ->orwhere('tracking.status','arrived')
+                    ->orwhere('tracking.status','admitted')
+                    ->orwhere('tracking.status','transferred')
+                    ->orwhere('tracking.status','discharged')
+                    ->orwhere('tracking.status','cancelled')
+                    ->orwhere('tracking.status','archived')
+                    ->orwhere('tracking.status','rejected');
+            })
+            ->where('tracking.code',$code)
+            ->orderBy('date_referred','desc')
+            ->paginate(10);
+
+        return view('doctor.tracking',[
+            'title' => 'Track Patients',
+            'data' => $data
+        ]);
+    }
+
+    static function step($code)
+    {
+        $step = 0;
+        $seen = Tracking::where('code',$code)
+                    ->where('date_seen','<>','')
+                    ->first();
+        if(self::hasStatus('referred',$code))
+            $step = 1;
+        if($seen)
+            $step = 2;
+        if(self::hasStatus('accepted',$code))
+            $step = 3;
+        if(self::hasStatus('arrived',$code))
+            $step = 4;
+        if(self::hasStatus('admitted',$code))
+            $step = 5;
+        if(self::hasStatus('discharged',$code))
+            $step = 6;
+        if(self::hasStatus('transferred',$code))
+            $step = 6;
+        if(self::hasStatus('cancelled',$code))
+            $step = 0;
+        if(self::hasStatus('archived',$code))
+            $step = 4.5;
+
+        return $step;
+
+    }
+
+    static function hasStatus($status,$code)
+    {
+        $check = Activity::where('code',$code)
+                ->where('status',$status)
+                ->first();
+        if($check)
+            return true;
+        return false;
     }
 
     public function reject(Request $req, $track_id)
@@ -434,6 +588,36 @@ class ReferralCtrl extends Controller
                 ->update([
                     'date_arrived' => $date,
                     'status' => 'arrived'
+                ]);
+        PregnantForm::where('id',$track->form_id)
+                ->update([
+                    'arrival_date' => $date
+                ]);
+
+        return date('M d, Y h:i A',strtotime($date));
+    }
+
+    public function archive(Request $req, $track_id)
+    {
+        $user = Session::get('auth');
+        $date = date('Y-m-d H:i:s');
+        $track = Tracking::find($track_id);
+        $data = array(
+            'code' => $track->code,
+            'patient_id' => $track->patient_id,
+            'date_referred' => $date,
+            'referred_from' => $track->referred_to,
+            'referred_to' => 0,
+            'action_md' => $user->id,
+            'remarks' => $req->remarks,
+            'status' => 'archived'
+        );
+        Activity::create($data);
+
+        Tracking::where("id",$track_id)
+                ->update([
+                    'date_arrived' => $date,
+                    'status' => 'archived'
                 ]);
         PregnantForm::where('id',$track->form_id)
                 ->update([
@@ -656,5 +840,49 @@ class ReferralCtrl extends Controller
                 ->orderBy('seen.created_at','desc')
                 ->get();
         return $data;
+    }
+
+    static function checkForCancellation($code)
+    {
+        $check = Activity::where('code',$code)
+                ->where(function($q) {
+                    $q->where('status','arrived')
+                        ->orwhere('status','admitted')
+                        ->orwhere('status','discharged')
+                        ->orwhere('status','cancelled')
+                        ->orwhere('status','archived')
+                        ->orwhere('status','transferred');
+                })
+                ->first();
+        if($check)
+            return true;
+        return false;
+    }
+
+    public function cancelReferral(Request $req, $id)
+    {
+        $tracking = Tracking::find($id);
+        print_r($tracking);
+
+        $user = Session::get('auth');
+        $date = date('Y-m-d H:i:s');
+        $track = Tracking::find($id);
+        $data = array(
+            'code' => $track->code,
+            'patient_id' => $track->patient_id,
+            'date_referred' => $date,
+            'referred_from' => $track->referred_to,
+            'referred_to' => 0,
+            'action_md' => $user->id,
+            'remarks' => $req->reason,
+            'status' => 'cancelled'
+        );
+        Activity::create($data);
+
+        Tracking::where('id',$id)
+            ->update([
+                'status' => 'cancelled'
+            ]);
+        return redirect()->back();
     }
 }

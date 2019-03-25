@@ -72,9 +72,14 @@ $user = Session::get('auth');
                                     {
                                         $status = strtoupper($current->status);
                                     }
+
+                                    $start = \Carbon\Carbon::parse($row->date_accepted);
+                                    $end = \Carbon\Carbon::now();
+                                    $diff = $end->diffInHours($start);
                                 ?>
                                 <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                 <td style="white-space: nowrap;">
+                                    @if($status=='ACCEPTED' && $diff < 72)
                                     <button class="btn btn-sm btn-primary btn-action"
                                         title="Patient Arrived"
 
@@ -86,18 +91,36 @@ $user = Session::get('auth');
                                         data-code="{{ $row->code}}">
                                         <i class="fa fa-wheelchair"></i>
                                     </button>
+                                    @endif
 
-                                    <button class="btn btn-sm btn-info btn-action"
-                                            title="Patient Admitted"
+                                    @if($status=='ACCEPTED' && $diff >= 72)
+                                        <button class="btn btn-sm btn-danger btn-action"
+                                                title="Patient Didn't Arrived"
 
-                                            data-toggle="modal"
-                                            data-toggle="tooltip"
-                                            data-target="#admitModal"
-                                            data-track_id="{{ $row->id }}"
-                                            data-patient_name="{{ $row->patient_name }}"
-                                            data-code="{{ $row->code}}">
-                                        <i class="fa fa-stethoscope"></i>
-                                    </button>
+                                                data-toggle="modal"
+                                                data-toggle="tooltip"
+                                                data-target="#archiveModal"
+                                                data-track_id="{{ $row->id }}"
+                                                data-patient_name="{{ $row->patient_name }}"
+                                                data-code="{{ $row->code}}">
+                                            <i class="fa fa-wheelchair"></i>
+                                        </button>
+                                    @endif
+
+                                    @if($status=='ARRIVED' || $status=='ADMITTED')
+                                        @if($status <> 'ADMITTED')
+                                        <button class="btn btn-sm btn-info btn-action"
+                                                title="Patient Admitted"
+
+                                                data-toggle="modal"
+                                                data-toggle="tooltip"
+                                                data-target="#admitModal"
+                                                data-track_id="{{ $row->id }}"
+                                                data-patient_name="{{ $row->patient_name }}"
+                                                data-code="{{ $row->code}}">
+                                            <i class="fa fa-stethoscope"></i>
+                                        </button>
+                                        @endif
 
                                     <button class="btn btn-sm btn-warning btn-action"
                                             title="Patient Discharged"
@@ -122,6 +145,7 @@ $user = Session::get('auth');
                                             data-code="{{ $row->code}}">
                                         <i class="fa fa-ambulance"></i>
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -136,6 +160,10 @@ $user = Session::get('auth');
                         <tr>
                             <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
                             <td>Patient Arrived</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" width="60px"><button class="btn btn-sm btn-danger"><i class="fa fa-wheelchair"></i></button></td>
+                            <td>Patient Didn't Arrived</td>
                         </tr>
                         <tr>
                             <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>

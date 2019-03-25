@@ -104,6 +104,7 @@ Route::post('doctor/referral/accept/{track_id}','doctor\ReferralCtrl@accept');//
 Route::get('doctor/referral/call/{activity_id}','doctor\ReferralCtrl@call');//if form is called
 Route::get('doctor/referral/calling/{track_id}','doctor\ReferralCtrl@calling');//if form is called
 Route::post('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//if patient is arrived
+Route::post('doctor/referral/archive/{track_id}','doctor\ReferralCtrl@archive');//if patient is archived
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
@@ -114,6 +115,11 @@ Route::get('doctor/referral/data/normal/{id}','doctor\ReferralCtrl@normalForm');
 Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
+Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
+Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
+Route::post('doctor/referred/search','doctor\ReferralCtrl@searchReferred');
+Route::get('doctor/track/patient','doctor\ReferralCtrl@trackReferral');
+Route::post('doctor/track/patient','doctor\ReferralCtrl@searchTrackReferral');
 
 Route::get('doctor/patient','doctor\PatientCtrl@index');
 Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');
@@ -127,6 +133,8 @@ Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
 
 
 Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
+Route::get('doctor/discharge','doctor\PatientCtrl@discharge');
+Route::get('doctor/cancelled','doctor\PatientCtrl@cancel');
 
 Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfile');
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');

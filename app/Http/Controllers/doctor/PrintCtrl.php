@@ -70,6 +70,8 @@ class PrintCtrl extends Controller
         $pdf->SetFont('Arial','B',12);
         $pdf->Cell(0,0,"BEmONC/ CEmONC REFERRAL FORM",0,"","C");
         $pdf->ln(10);
+        $pdf->MultiCell(0, 7, self::black($pdf,"Patient Code: ").self::orange($pdf,$data->code,"Patient Code :"), 0, 'L');
+        $pdf->Ln(5);
         $pdf->SetFont('Arial','',10);
         $pdf->MultiCell(0, 7, self::black($pdf,"REFERRAL RECORD"), 0, 'L');
         $pdf->SetFont('Arial','',10);
@@ -211,7 +213,8 @@ class PrintCtrl extends Controller
         $pdf->Cell(0,12,"Clinical Referral Form",0,"","C");
         $pdf->Ln(20);
         $pdf->SetFont('Arial','',10);
-
+        $pdf->MultiCell(0, 7, self::black($pdf,"Patient Code: ").self::orange($pdf,$data->code,"Patient Code :"), 0, 'L');
+        $pdf->Ln(5);
         $pdf->MultiCell(0, 7, self::black($pdf,"Name of Referring Facility: ").self::orange($pdf,$data->referring_name,"Name of Referring Facility:"), 0, 'L');
         $pdf->MultiCell(0, 7, self::black($pdf,"Facility Contact #: ").self::orange($pdf,$data->referring_contact,"Facility Contact #:"), 0, 'L');
         $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$address,"Address:"), 0, 'L');

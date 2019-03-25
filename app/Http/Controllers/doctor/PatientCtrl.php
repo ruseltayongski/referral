@@ -604,4 +604,74 @@ class PatientCtrl extends Controller
             'data' => $data
         ]);
     }
+
+    function discharge()
+    {
+        $user = Session::get('auth');
+        $data = Tracking::select(
+                    'tracking.id',
+                    'tracking.type',
+                    'tracking.code',
+                    'facility.name',
+                    DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                    DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+                )
+                ->join('facility','facility.id','=','tracking.referred_from')
+                ->join('patients','patients.id','=','tracking.patient_id')
+                ->where('referred_to',$user->facility_id)
+                ->where(function($q){
+                    $q->where('tracking.status','discharged')
+                        ->orwhere('tracking.status','transferred');
+                })
+                ->orderBy('date_referred','desc')
+                ->paginate(15);
+
+        return view('doctor.discharge',[
+            'title' => 'Discharged/Transferred Patients',
+            'data' => $data
+        ]);
+    }
+
+    function cancel()
+    {
+        $user = Session::get('auth');
+        $data = Tracking::select(
+            'tracking.id',
+            'tracking.type',
+            'tracking.code',
+            'facility.name',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->where('referred_to',$user->facility_id)
+            ->where('tracking.status','cancelled')
+            ->orderBy('date_referred','asc')
+            ->paginate(15);
+
+        return view('doctor.cancel',[
+            'title' => 'Cancelled Patients',
+            'data' => $data
+        ]);
+    }
+    static function getCancellationReason($code)
+    {
+        $act = Activity::where('code',$code)
+                    ->where('status','cancelled')
+                    ->first();
+        if($act)
+            return $act->remarks;
+        return 'No Reason';
+    }
+
+    static function getDischargeDate($status, $code)
+    {
+        $date = Activity::where('code',$code)
+                    ->where('status',$status)
+                    ->first()
+                    ->date_referred;
+
+        return date('F d, Y h:i A',strtotime($date));
+    }
 }
