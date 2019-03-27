@@ -69,7 +69,6 @@ $user = Session::get('auth');
                         $q->select('id')
                             ->from('activity')
                             ->where('code',$row->code)
-                            ->where('referred_from',$user->facility_id)
                             ->where(function($q){
                                 $q->where('status','referred')
                                     ->orwhere('status','rejected')
@@ -140,7 +139,7 @@ $user = Session::get('auth');
                         <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
                             <div class="text-center bs-wizard-stepnum">
                                 @if($step==4.5)
-                                    <span class="text-danger">Didn't Arrived</span>
+                                    <span class="text-danger">Didn't Arrive</span>
                                 @else
                                     Arrived
                                 @endif
@@ -270,7 +269,7 @@ $user = Session::get('auth');
                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                             <td>
-                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrived to <span class="txtHospital">{{ $new_facility }}</span>.
+                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                             </td>
                                         </tr>
@@ -281,7 +280,7 @@ $user = Session::get('auth');
                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                             <td>
-                                                Referral was cancelled by  by <span class="txtDoctor">Dr. {{ $doctor->fname }} {{ $doctor->lname }}</span>.
+                                                Referral was cancelled by <span class="txtDoctor">Dr. {{ $doctor->fname }} {{ $doctor->lname }}</span>.
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                             </td>
                                         </tr>

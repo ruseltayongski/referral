@@ -133,8 +133,18 @@ Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
 
 
 Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
+Route::post('doctor/accepted','doctor\PatientCtrl@searchAccepted');
+
 Route::get('doctor/discharge','doctor\PatientCtrl@discharge');
+Route::post('doctor/discharge','doctor\PatientCtrl@searchDischarged');
+
 Route::get('doctor/cancelled','doctor\PatientCtrl@cancel');
+Route::post('doctor/cancelled','doctor\PatientCtrl@searchCancelled');
+
+Route::get('doctor/archived','doctor\PatientCtrl@archived');
+Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
+
+Route::get('doctor/history/{code}','doctor\PatientCtrl@history');
 
 Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfile');
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');

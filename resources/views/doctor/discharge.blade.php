@@ -3,6 +3,10 @@ $user = Session::get('auth');
 ?>
 @extends('layouts.app')
 
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+@endsection
+
 @section('content')
     <style>
         .facility {
@@ -11,8 +15,19 @@ $user = Session::get('auth');
     </style>
     <div class="col-md-12">
         <div class="jim-content">
-            <h3 class="page-header">{{ $title }}
-            </h3>
+            <div class="pull-right">
+                <form class="form-inline" action="{{ url('doctor/discharge') }}" method="post">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordDischarged') }}" name="keyword">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-sm" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
+                    </div>
+                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> </h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -29,7 +44,7 @@ $user = Session::get('auth');
                                     <th>Referring Facility</th>
                                     <th>Patient Name/Code</th>
                                     <th>Date Discharged</th>
-                                    <th>Current Status</th>
+                                    <th>Status</th>
                                     <th>History</th>
                                 </tr>
                                 </thead>
@@ -63,19 +78,14 @@ $user = Session::get('auth');
                                             </a>
                                         </td>
                                         <?php
-                                        $status = '';
-                                        $current = \App\Activity::where('code',$row->code)
-                                            ->orderBy('id','desc')
-                                            ->first();
-                                        if($current)
-                                        {
-                                            $status = strtoupper($current->status);
-                                        }
+                                            $status = \App\Http\Controllers\doctor\PatientCtrl::getDischargeDate('discharged',$row->code);
+                                            if(!$status)
+                                                $status = \App\Http\Controllers\doctor\PatientCtrl::getDischargeDate('transferred',$row->code);
                                         ?>
-                                        <td>{{ \App\Http\Controllers\doctor\PatientCtrl::getDischargeDate($current->status,$row->code) }}</td>
-                                        <td class="activity_{{ $row->code }}">{{ $status }}</td>
+                                        <td>{{ $status }}</td>
+                                        <td>{{ strtoupper($row->status) }}</td>
                                         <td>
-                                            <a href="#view_history" class="btn btn-block btn-success">
+                                            <a href="{{ url('doctor/history/'.$row->code) }}" class="btn btn-block btn-success">
                                                 <i class="fa fa-stethoscope"></i> View History
                                             </a>
                                         </td>
@@ -91,7 +101,7 @@ $user = Session::get('auth');
                     @else
                         <div class="alert alert-warning">
                         <span class="text-warning">
-                            <i class="fa fa-warning"></i> No discharged/transferred patients!
+                            <i class="fa fa-warning"></i> No data found!
                         </span>
                         </div>
                     @endif
@@ -111,5 +121,30 @@ $user = Session::get('auth');
     </script>
     @include('script.datetime')
     @include('script.accepted')
+
+    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+    <?php
+    $start = \Illuminate\Support\Facades\Session::get('startDischargedDate');
+    $end = \Illuminate\Support\Facades\Session::get('endDischargedDate');
+    if(!$start)
+        $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
+
+    if(!$end)
+        $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
+
+    $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
+    $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
+    ?>
+    <script>
+        $('#daterange').daterangepicker({
+            "startDate": "{{ $start }}",
+            "endDate": "{{ $end }}",
+            "opens": "left"
+        }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            console.log("{{ $start }}");
+        });
+    </script>
 @endsection
 

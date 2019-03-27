@@ -1,7 +1,15 @@
 <?php
 $user = Session::get('auth');
+$daterange = \Illuminate\Support\Facades\Session::get('dateAccepted');
+if(!$daterange){
+    $daterange = date('Y-m-d');
+}
 ?>
 @extends('layouts.app')
+
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+@endsection
 
 @section('content')
     <style>
@@ -11,8 +19,20 @@ $user = Session::get('auth');
     </style>
     <div class="col-md-12">
         <div class="jim-content">
-            <h3 class="page-header">{{ $title }}
-            </h3>
+            <div class="pull-right">
+                <form class="form-inline" action="{{ url('doctor/accepted') }}" method="post">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordAccepted') }}" name="keyword">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-sm" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
+                    </div>
+                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> </h3>
+            <div class="clearfix"></div>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -181,7 +201,7 @@ $user = Session::get('auth');
                     @else
                     <div class="alert alert-warning">
                         <span class="text-warning">
-                            <i class="fa fa-warning"></i> No accepted patients!
+                            <i class="fa fa-warning"></i> No data found!
                         </span>
                     </div>
                     @endif
@@ -196,12 +216,38 @@ $user = Session::get('auth');
 @endsection
 @include('script.firebase')
 @section('js')
-<script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 @include('script.datetime')
 @include('script.accepted')
+
+    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+    <?php
+        $start = \Illuminate\Support\Facades\Session::get('startAcceptedDate');
+        $end = \Illuminate\Support\Facades\Session::get('endAcceptedDate');
+        if(!$start)
+            $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
+
+        if(!$end)
+            $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
+
+        $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
+        $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
+    ?>
+    <script>
+        $('#daterange').daterangepicker({
+            "startDate": "{{ $start }}",
+            "endDate": "{{ $end }}",
+            "opens": "left"
+        }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            console.log("{{ $start }}");
+        });
+    </script>
 @endsection
 

@@ -139,7 +139,7 @@ $user = Session::get('auth');
                             <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
                                 <div class="text-center bs-wizard-stepnum">
                                     @if($step==4.5)
-                                        <span class="text-danger">Didn't Arrived</span>
+                                        <span class="text-danger">Didn't Arrive</span>
                                     @else
                                         Arrived
                                     @endif
@@ -188,12 +188,6 @@ $user = Session::get('auth');
                                                     <td>
                                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                        <br />
-                                                        @if($act->department_id==0 && $user->facility_id==$act->referred_from)
-                                                            <button class="btn btn-success btn-xs btn-referred" data-toggle="modal" data-target="#referredFormModal" data-activity_id="{{ $act->id }}">
-                                                                <i class="fa fa-ambulance"></i> Refer to other facility
-                                                            </button>
-                                                        @endif
                                                     </td>
                                                 </tr>
                                             @elseif($act->status=='referred' || $act->status=='redirected')
@@ -269,7 +263,7 @@ $user = Session::get('auth');
                                                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                         <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                         <td>
-                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrived to <span class="txtHospital">{{ $new_facility }}</span>.
+                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                                                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                         </td>
                                                     </tr>

@@ -45,6 +45,7 @@ class UserCtrl extends Controller
             'users.mname as mname',
             'users.contact',
             'facility.name as facility',
+            'facility.abbr as abbr',
             'department.description as department',
             'login.login as login',
             'login.status as status'
@@ -79,7 +80,7 @@ class UserCtrl extends Controller
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->orderBy('login.id','desc')
-                ->paginate(15);
+                ->get();
 
         return view('doctor.list',[
             'title' => 'Online Doctors',

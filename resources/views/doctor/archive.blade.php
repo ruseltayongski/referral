@@ -16,10 +16,10 @@ $user = Session::get('auth');
     <div class="col-md-12">
         <div class="jim-content">
             <div class="pull-right">
-                <form class="form-inline" action="{{ url('doctor/cancelled') }}" method="post">
+                <form class="form-inline" action="{{ url('doctor/archived') }}" method="post">
                     {{ csrf_field() }}
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordCancelled') }}" name="keyword">
+                        <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordArchived') }}" name="keyword">
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control form-control-sm" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
@@ -43,7 +43,7 @@ $user = Session::get('auth');
                                 <tr>
                                     <th width="25%">Referring Facility</th>
                                     <th width="25%">Patient Name/Code</th>
-                                    <th width="25%">Date Cancelled</th>
+                                    <th width="25%">Date Archived</th>
                                     <th width="25%">Reason</th>
                                 </tr>
                                 </thead>
@@ -126,8 +126,8 @@ $user = Session::get('auth');
     <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
     <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
     <?php
-    $start = \Illuminate\Support\Facades\Session::get('startCancelledDate');
-    $end = \Illuminate\Support\Facades\Session::get('endCancelledDate');
+    $start = \Illuminate\Support\Facades\Session::get('startArchivedDate');
+    $end = \Illuminate\Support\Facades\Session::get('endArchivedDate');
     if(!$start)
         $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
 
