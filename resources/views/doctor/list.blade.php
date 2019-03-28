@@ -112,8 +112,19 @@ $user = Session::get('auth');
                             <div class="box box-widget widget-user-2">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="widget-user-header bg-{{ $color }}-active">
-
-                                    <h3 class="widget-user-username" style="margin-left: 0px;">{{ ucwords(mb_strtolower($row->fname)) }} {{ ucwords(mb_strtolower($row->lname)) }}</h3>
+                                    <?php
+                                        $fname = ucwords(mb_strtolower($row->fname));
+                                        $name = ucwords(mb_strtolower($row->lname))." ".$fname[0];
+                                        $facility = $row->facility;
+                                    ?>
+                                    <h3 class="widget-user-username" style="margin-left: 0px;" title="{{ $name }}">
+                                        Dr.
+                                        @if(strlen($name)>16)
+                                            {{ substr($name,0,16) }}...
+                                        @else
+                                            {{ $name }}.
+                                        @endif
+                                    </h3>
                                     <h5 class="widget-user-desc" style="margin-left: 0px;">{{ $row->abbr }}</h5>
                                 </div>
                                 <div class="box-footer no-padding">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\doctor;
 
 use App\Activity;
 use App\Facility;
+use App\Feedback;
 use App\Http\Controllers\ParamCtrl;
 use App\PatientForm;
 use App\Patients;
@@ -884,5 +885,86 @@ class ReferralCtrl extends Controller
                 'status' => 'cancelled'
             ]);
         return redirect()->back();
+    }
+
+    public function feedback($code){
+        $data = Feedback::select(
+                    'feedback.sender as sender',
+                    'feedback.message',
+                    'users.fname as fname',
+                    'users.lname as lname',
+                    'facility.name as facility',
+                    'facility.abbr as abbr',
+                    'feedback.created_at as date'
+                )
+                ->leftJoin('users','users.id','=','feedback.sender')
+                ->leftJoin('facility','facility.id','=','users.facility_id')
+                ->where('code',$code)
+                ->get();
+
+        return view('doctor.feedback',[
+            'data' => $data
+        ]);
+    }
+
+    public function replyFeedback($id)
+    {
+        $user = Session::get('auth');
+        $position = '';
+        $icon = 'receiver.png';
+
+        $data = Feedback::select(
+            'feedback.sender as sender',
+            'feedback.message',
+            'users.fname as fname',
+            'users.lname as lname',
+            'facility.name as facility',
+            'facility.abbr as abbr',
+            'feedback.created_at as date'
+        )
+            ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->where('feedback.id',$id)
+            ->first();
+
+        if($user->id==$data->sender){
+            $position = 'right';
+            $icon = 'sender.png';
+        }
+
+        $fullname = ucwords(mb_strtolower($data->fname))." ".ucwords(mb_strtolower($data->lname));
+        $picture = url('resources/img/'.$icon);
+
+        $content = '
+            <div class="direct-chat-msg '.$position.'">
+                    <div class="direct-chat-info clearfix">
+                    <span class="direct-chat-name pull-left">'.$fullname.'</span>
+                    <span class="direct-chat-timestamp pull-right">'.date('d M h:i a',strtotime($data->date)).'</span>
+                    </div>
+
+                    <img class="direct-chat-img" title="'.$data->facility.'" src="'.$picture.'" alt="'.$data->facility.'">
+                    <div class="direct-chat-text">
+                        '.$data->message.'
+                    </div>
+
+                </div>
+        ';
+
+        return $content;
+    }
+    public function saveFeedback(Request $req)
+    {
+        $user = Session::get('auth');
+
+        $data = array(
+            'code'=> $req->code,
+            'sender'=> $user->id,
+            'receiver'=> 0,
+            'message'=> $req->message,
+        );
+
+        $f = Feedback::create($data);
+
+        return $f->id;
     }
 }

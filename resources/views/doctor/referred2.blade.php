@@ -43,6 +43,7 @@ $user = Session::get('auth');
         /*END Form Wizard*/
         @media only screen and (max-width: 440px) {
             .bs-wizard-stepnum { visibility: hidden; }
+            .tracking table td:first-child { color: #959595; letter-spacing: normal; white-space: normal;}
         }
     </style>
     <div class="col-md-3">
@@ -121,19 +122,19 @@ $user = Session::get('auth');
                                 @endif
                             </div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot" title="Referred" @if($step==0) style="background-color:#a94442;" @endif ></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==0) Cancelled @else Referred @endif" @if($step==0) style="background-color:#a94442;" @endif ></a>
                         </div>
 
                         <div class="col-xs-2 bs-wizard-step @if($step==2) active @elseif($step>=2) complete @else disabled @endif"><!-- complete -->
                             <div class="text-center bs-wizard-stepnum">Seen</div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot"></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Seen"></a>
                         </div>
 
                         <div class="col-xs-2 bs-wizard-step @if($step==3) active @elseif($step>=3) complete @else disabled @endif"><!-- complete -->
                             <div class="text-center bs-wizard-stepnum">Accepted</div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot"></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Accepted"></a>
                         </div>
 
                         <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
@@ -145,17 +146,17 @@ $user = Session::get('auth');
                                 @endif
                             </div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot" @if($step==4.5) style="background-color:#a94442;" @endif></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==4.5) Didn't Arrive @else Arrived @endif" @if($step==4.5) style="background-color:#a94442;" @endif></a>
                         </div>
                         <div class="col-xs-2 bs-wizard-step @if($step==5) active @elseif($step>=5) complete @else disabled @endif"><!-- complete -->
                             <div class="text-center bs-wizard-stepnum">Admitted</div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot"></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Admitted"></a>
                         </div>
                         <div class="col-xs-2 bs-wizard-step @if($step==6) active @elseif($step>=6) complete @else disabled @endif"><!-- complete -->
                             <div class="text-center bs-wizard-stepnum">Discharged</div>
                             <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="javascript:void(0)" class="bs-wizard-dot"></a>
+                            <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Discharged/Transferred"></a>
                         </div>
                     </div>
                     @if(count($activities) > 0)
@@ -310,7 +311,9 @@ $user = Session::get('auth');
                             data-id="{{ $row->id }}"
                             class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen ({{ $seen }})</a>
                     @endif
-                    <button class="btn btn-xs btn-info"><i class="fa fa-envelope"></i> Feedback</button>
+                    <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                            data-target="#feedbackModal"
+                            data-code="{{ $row->code }}"><i class="fa fa-envelope"></i> Feedback</button>
                     @if(!$checkForCancellation)
                     <a href="#cancelModal" data-toggle="modal"
                             data-id="{{ $row->id }}" class="btn btn-xs btn-danger btn-cancel"><i class="fa fa-user-times"></i> Cancel</a>
@@ -337,9 +340,12 @@ $user = Session::get('auth');
     @include('modal.view_form')
     @include('modal.seen')
     @include('modal.cancel')
+    @include('modal.feedback')
 @endsection
 @include('script.firebase')
+
 @section('js')
+    @include('script.feedback')
     @include('script.referred')
     <script>
         $(document).ready(function(){
@@ -351,6 +357,8 @@ $user = Session::get('auth');
                 var txt = ($(this).html() =='View More') ? 'View Less': 'View More';
                 $(this).html(txt);
             });
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 @endsection

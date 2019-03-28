@@ -144,6 +144,10 @@ Route::post('doctor/cancelled','doctor\PatientCtrl@searchCancelled');
 Route::get('doctor/archived','doctor\PatientCtrl@archived');
 Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
 
+Route::get('doctor/feedback/{code}','doctor\ReferralCtrl@feedback');
+Route::get('doctor/feedback/reply/{id}','doctor\ReferralCtrl@replyFeedback');
+Route::post('doctor/feedback','doctor\ReferralCtrl@saveFeedback');
+
 Route::get('doctor/history/{code}','doctor\PatientCtrl@history');
 
 Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfile');
