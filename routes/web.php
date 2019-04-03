@@ -180,3 +180,21 @@ Route::get('create/admin','ParamCtrl@admin');
 
 Route::get('sample','HomeCtrl@sample');
 
+//reset password
+Route::get('resetPassword/{username}',function($username){
+    $user = \App\User::where('username','=',$username)->first();
+    if($user){
+        $password = bcrypt('123');
+        $user->update([
+            'password' => $password
+        ]);
+        return 'Successfully Reset Password';
+    } else {
+        return 'Failed Reset Password';
+    }
+});
+
+//API
+Route::get('api','ApiController@api');
+
+
