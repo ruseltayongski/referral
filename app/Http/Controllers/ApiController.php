@@ -21,7 +21,11 @@ class ApiController extends Controller
         $user = $req->user;
         $pass = $req->pass;
 
-        $login = User::where('username',$user)
+        $login = User::
+              select('users.*','facility.name as hospital','department.description as department')
+            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('department','department.id','=','users.department_id')
+            ->where('username','=',$user)
             ->first();
         if($login){
             if($login->status==='inactive'){
@@ -57,8 +61,14 @@ class ApiController extends Controller
                         $l->status = 'login';
                         $l->save();
                     }
-
-                    return $login;
+                    return array(
+                        'name' => $login->fname.' '.$login->lname,
+                        'department' => $login->department,
+                        'hospital' => $login->hospital,
+                        'facility_id' => $login->facility_id,
+                        'level' => $login->level,
+                        'status' => 'success'
+                    );
                 }
                 else
                 {
