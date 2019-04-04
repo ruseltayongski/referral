@@ -90,6 +90,13 @@ Route::get('support/report/referral/export','support\ExportCtrl@dailyReferral');
 
 Route::get('support/report/incoming','support\ReportCtrl@incoming');
 
+Route::get('support/chat','support\ChatCtrl@index');
+Route::post('support/chat','support\ChatCtrl@send');
+Route::get('support/chat/messages','support\ChatCtrl@messages');
+Route::get('support/chat/messages/load','support\ChatCtrl@loadMessages');
+Route::get('support/chat/messages/reply/{id}','support\ChatCtrl@reply');
+Route::get('support/chat/sample','support\ChatCtrl@sample');
+
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 
@@ -146,6 +153,8 @@ Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
 
 Route::get('doctor/feedback/{code}','doctor\ReferralCtrl@feedback');
 Route::get('doctor/feedback/reply/{id}','doctor\ReferralCtrl@replyFeedback');
+Route::get('doctor/feedback/load/{code}','doctor\ReferralCtrl@loadFeedback');
+Route::get('doctor/feedback/notification/{code}/{user_id}','doctor\ReferralCtrl@notificationFeedback');
 Route::post('doctor/feedback','doctor\ReferralCtrl@saveFeedback');
 
 Route::get('doctor/history/{code}','doctor\PatientCtrl@history');
@@ -201,4 +210,9 @@ Route::get('create/admin','ParamCtrl@admin');
 //
 
 Route::get('sample','HomeCtrl@sample');
+
+Route::get('/token/save/{token}','DeviceTokenCtrl@save');
+Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
+
+Route::get('/fcm/send','FcmCtrl@send');
 

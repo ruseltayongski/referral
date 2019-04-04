@@ -22,6 +22,7 @@
     <!-- bootstrap datepicker -->
     <link href="{{ asset('resources/plugin/datepicker/datepicker3.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <title>
         @yield('title','Home')
     </title>
@@ -158,6 +159,11 @@
                                 @endif
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ url('support/chat') }}">
+                                <i class="fa fa-comments"></i> IT Support: Group Chat
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @elseif($user->level=='admin')
@@ -235,6 +241,7 @@
 @include('script.password')
 @include('script.duty')
 @include('script.notification')
+@include('script.fcm')
 @yield('js')
 
 </body>

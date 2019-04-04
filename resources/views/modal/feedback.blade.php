@@ -8,7 +8,6 @@
                     </h3>
 
                     <div class="box-tools pull-right">
-                        <span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>
                         <button type="button" class="btn btn-box-tool" onclick="reloadMessage()">
                             <i class="fa fa-refresh"></i></button>
                         <button type="button" data-dismiss="modal" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>

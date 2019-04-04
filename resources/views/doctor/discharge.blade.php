@@ -45,7 +45,7 @@ $user = Session::get('auth');
                                     <th>Patient Name/Code</th>
                                     <th>Date Discharged</th>
                                     <th>Status</th>
-                                    <th>History</th>
+                                    <th>Record</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,7 +86,7 @@ $user = Session::get('auth');
                                         <td>{{ strtoupper($row->status) }}</td>
                                         <td>
                                             <a href="{{ url('doctor/history/'.$row->code) }}" class="btn btn-block btn-success">
-                                                <i class="fa fa-stethoscope"></i> View History
+                                                <i class="fa fa-stethoscope"></i> Track
                                             </a>
                                         </td>
                                     </tr>

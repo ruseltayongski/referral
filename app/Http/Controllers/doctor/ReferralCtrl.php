@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Facility;
 use App\Feedback;
+use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\PatientForm;
 use App\Patients;
@@ -525,6 +526,12 @@ class ReferralCtrl extends Controller
         );
         Activity::create($data);
 
+        $doc = User::find($user->id);
+        $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
+        $hosp = Facility::find($user->facility_id)->name;
+        $msg = "Referral code $track->code was accepted by Dr. $name of $hosp.";
+        DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);
+
         return $track_id;
     }
 
@@ -562,6 +569,12 @@ class ReferralCtrl extends Controller
         );
         $activity = Activity::create($data);
 
+        $doc = User::find($user->id);
+        $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
+        $hosp = Facility::find($track->referred_to)->name;
+        $msg = "Dr. $name of $hosp is requesting a call regarding on $track->code. Please contact this number $doc->contact";
+        DeviceTokenCtrl::send('Requesting a Call',$msg,$track->referred_from);
+
         return array(
             'date' => date('M d, Y h:i A',strtotime($date)),
             'activity_id' => $activity->id
@@ -594,6 +607,10 @@ class ReferralCtrl extends Controller
                 ->update([
                     'arrival_date' => $date
                 ]);
+
+        $hosp = Facility::find($user->facility_id)->name;
+        $msg = "$track->code arrived at $hosp.";
+        DeviceTokenCtrl::send('Arrived',$msg,$track->referred_from);
 
         return date('M d, Y h:i A',strtotime($date));
     }
@@ -650,6 +667,10 @@ class ReferralCtrl extends Controller
                 'status' => 'admitted'
             ]);
 
+        $hosp = Facility::find($user->facility_id)->name;
+        $msg = "$track->code admitted at $hosp.";
+        DeviceTokenCtrl::send('Admitted',$msg,$track->referred_from);
+
         return date('M d, Y h:i A',strtotime($date));
     }
 
@@ -674,6 +695,10 @@ class ReferralCtrl extends Controller
             ->update([
                 'status' => 'discharged'
             ]);
+
+        $hosp = Facility::find($user->facility_id)->name;
+        $msg = "$track->code discharged from $hosp.";
+        DeviceTokenCtrl::send('Discharged',$msg,$track->referred_from);
         return date('M d, Y h:i A',strtotime($date));
     }
 
@@ -731,6 +756,12 @@ class ReferralCtrl extends Controller
         if($track->type=='pregnant'){
             $form_type = '#pregnantFormModal';
         }
+
+        $hosp = Facility::find($user->facility_id)->name;
+        $hospTo = Facility::find($req->facility)->name;
+
+        $msg = "$track->code transferred to $hospTo from $hosp.";
+        DeviceTokenCtrl::send('Transferred',$msg,$track->referred_from);
 
         return array(
             'date' => date('M d, Y h:i A',strtotime($date)),
@@ -826,6 +857,13 @@ class ReferralCtrl extends Controller
             'facility_id' => $user->facility_id,
             'user_md' => $user->id
         );
+        $code = Tracking::find($track_id)->code;
+        $facility = Tracking::find($track_id)->referred_from;
+        $hospital = Facility::find($user->facility_id)->name;
+        $name = User::find($user->id);
+        $doctor = ucwords(mb_strtolower($name->fname))." ".ucwords(mb_strtolower($name->lname));
+
+        DeviceTokenCtrl::send('Referral Seen',"Referral code $code seen by Dr. $doctor of $hospital",$facility);
         Seen::create($data);
     }
 
@@ -889,6 +927,7 @@ class ReferralCtrl extends Controller
 
     public function feedback($code){
         $data = Feedback::select(
+                    'feedback.id as id',
                     'feedback.sender as sender',
                     'feedback.message',
                     'users.fname as fname',
@@ -900,10 +939,41 @@ class ReferralCtrl extends Controller
                 ->leftJoin('users','users.id','=','feedback.sender')
                 ->leftJoin('facility','facility.id','=','users.facility_id')
                 ->where('code',$code)
+                ->latest('feedback.id')
+                ->take(5)
                 ->get();
 
         return view('doctor.feedback',[
-            'data' => $data
+            'data' => $data->reverse()
+        ]);
+    }
+
+    public function loadFeedback($code)
+    {
+        $id = Session::get('last_scroll_id');
+        $data = Feedback::select(
+            'feedback.id as id',
+            'feedback.sender as sender',
+            'feedback.message',
+            'users.fname as fname',
+            'users.lname as lname',
+            'facility.name as facility',
+            'facility.abbr as abbr',
+            'feedback.created_at as date'
+        )
+            ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->where('code',$code)
+            ->where('feedback.id','<',$id)
+            ->latest('feedback.id')
+            ->take(5)
+            ->get();
+
+        if(count($data)==0)
+            return 0;
+
+        return view('doctor.feedback',[
+            'data' => $data->reverse()
         ]);
     }
 
@@ -952,6 +1022,7 @@ class ReferralCtrl extends Controller
 
         return $content;
     }
+
     public function saveFeedback(Request $req)
     {
         $user = Session::get('auth');
@@ -965,6 +1036,38 @@ class ReferralCtrl extends Controller
 
         $f = Feedback::create($data);
 
+        $doc = User::find($user->id);
+        $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
+
+        $msg = "From: Dr. $name\nReferral Code: $req->code\nMessage: $req->message";
+        $facility_id = Tracking::where('code',$req->code)
+                            ->first()
+                            ->referred_from;
+
+        DeviceTokenCtrl::send('New Feedback/Comment',$msg,$facility_id);
+
         return $f->id;
+    }
+
+    public function notificationFeedback($code,$user_id)
+    {
+        $user = Session::get('auth');
+        $facility_id = $user->facility_id;
+        $dr = User::find($user_id);
+        $check = Tracking::where(function($q) use ($facility_id){
+                    $q->where('referred_from',$facility_id)
+                        ->orwhere('referred_to',$facility_id);
+                })
+                ->where('code',$code)
+                ->first();
+        if($check){
+            $data['check'] = 1;
+            $data['info'] = array(
+                'fname' => ucwords(mb_strtolower($dr->fname)),
+                'lname' => ucwords(mb_strtolower($dr->lname))
+            );
+            return $data;
+        }
+        return 0;
     }
 }

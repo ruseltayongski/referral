@@ -5,6 +5,8 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Baby;
 use App\Barangay;
+use App\Facility;
+use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Muncity;
 use App\PatientForm;
@@ -394,6 +396,8 @@ class PatientCtrl extends Controller
                 $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
             }
         }
+        $hospital_name = Facility::find($user->facility_id)->name;
+        DeviceTokenCtrl::send('New Referral','A new referral from '.$hospital_name,$req->referred_facility);
 
         return array(
             'id' => $tracking_id,

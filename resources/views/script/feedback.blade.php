@@ -1,12 +1,15 @@
 <script>
     //var objDiv = document.getElementById("feedback-181105-023-134025");
+    <?php $user = \Illuminate\Support\Facades\Session::get('auth'); ?>
     var code = 0;
     var feedbackRef = dbRef.ref('Feedback');
+    var last_id = 0;
 
     $('.btn-feedback').on('click',function () {
         code = $(this).data('code');
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
+        $('#message').addClass("message input-"+code+"-{{ $user->id }}");
         $("#"+code).html("Loading...");
         $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
         $("#current_code").val(code);
@@ -18,7 +21,6 @@
         setTimeout(function () {
             objDiv.scrollTop = objDiv.scrollHeight;
         },500);
-        $('#message').focus();
     });
 
     function reloadMessage() {
@@ -31,13 +33,11 @@
         setTimeout(function () {
             objDiv.scrollTop = objDiv.scrollHeight;
         },500);
-        $('#message').focus();
     }
 
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
         var msg = $("#message").val()
-        $("#message").val('').focus();
         $.ajax({
             url: "{{ url('doctor/feedback') }}",
             type: 'post',
@@ -49,7 +49,9 @@
             success: function(data) {
                 feedbackRef.push({
                     id: data,
-                    code: code
+                    code: code,
+                    msg: msg,
+                    user_id: "{{ $user->id }}"
                 });
                 feedbackRef.on('child_added',function(data){
                     setTimeout(function(){
@@ -63,9 +65,37 @@
         });
     });
 
+    $('.direct-chat-messages').scroll(function() {
+        var current_top_element = $('.direct-chat-messages').children().first();
+        var previous_height = 0;
+
+
+        var pos = $('.direct-chat-messages').scrollTop();
+        var objDiv = document.getElementById(code);
+
+
+        if (pos == 0) {
+            $.ajax({
+                url: "{{ url('doctor/feedback/load/') }}/"+code,
+                type: "get",
+                success: function (data) {
+                    if(data!=0){
+                        $("#"+code).prepend(data);
+                        current_top_element.prevAll().each(function() {
+                            previous_height += $(this).outerHeight();
+                        });
+
+                        objDiv.scrollTop = previous_height;
+                    }
+                }
+            })
+        }
+    });
+
     feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var c = data.code;
+
         $("#"+c).append(data.content);
         $.ajax({
             url: "{{ url('doctor/feedback/reply/') }}/"+data.id,

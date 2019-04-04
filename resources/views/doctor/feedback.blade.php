@@ -1,9 +1,16 @@
 <!-- Message. Default to the left -->
 <?php
     $user = \Illuminate\Support\Facades\Session::get('auth');
+    $session = 0;
 ?>
 @if(count($data)>0)
     @foreach($data as $row)
+        <?php
+            if($session==0){
+                \Illuminate\Support\Facades\Session::put('last_scroll_id',$row->id);
+                $session = 1;
+            }
+        ?>
         <div class="direct-chat-msg @if($user->id==$row->sender) right @endif">
             <div class="direct-chat-info clearfix">
                 <span class="direct-chat-name pull-left">{{ ucwords(mb_strtolower($row->fname)) }} {{ ucwords(mb_strtolower($row->lname)) }}</span>
@@ -22,12 +29,6 @@
             <!-- /.direct-chat-text -->
         </div>
     @endforeach
-@else
-    <div class="alert alert-warning">
-        <spann class="text-warning">
-            <i class="fa fa-comments"></i> Start a feedback/comment in this referral.
-        </spann>
-    </div>
 @endif
 <!-- /.direct-chat-msg -->
 

@@ -101,6 +101,7 @@ $user = Session::get('auth');
                     $checkForCancellation = \App\Http\Controllers\doctor\ReferralCtrl::checkForCancellation($row->code);
 
                     $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                    $feedback = \App\Feedback::where('code',$row->code)->count();
             ?>
             <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
                 <div class="panel-heading">
@@ -305,15 +306,26 @@ $user = Session::get('auth');
                        data-type="{{ $row->type }}"
                        data-id="{{ $row->id }}"
                        data-code="{{ $row->code }}"
-                       class="view_form btn btn-warning btn-xs"><i class="fa fa-folder"></i> View</button>
+                       class="view_form btn btn-warning btn-xs"><i class="fa fa-folder"></i> View Form</button>
                     @if($seen>0)
                     <a href="#seenModal" data-toggle="modal"
                             data-id="{{ $row->id }}"
-                            class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen ({{ $seen }})</a>
+                            class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen
+                        @if($seen>0)
+                            <small class="badge bg-green-active">{{ $seen }}</small>
+                        @endif
+                    </a>
                     @endif
+                    @if($step<=4)
                     <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                             data-target="#feedbackModal"
-                            data-code="{{ $row->code }}"><i class="fa fa-envelope"></i> Feedback</button>
+                            data-code="{{ $row->code }}">
+                        <i class="fa fa-comments"></i> Feedback
+                        @if($feedback>0)
+                            <span class="badge bg-blue">{{ $feedback }}</span>
+                        @endif
+                    </button>
+                    @endif
                     @if(!$checkForCancellation)
                     <a href="#cancelModal" data-toggle="modal"
                             data-id="{{ $row->id }}" class="btn btn-xs btn-danger btn-cancel"><i class="fa fa-user-times"></i> Cancel</a>

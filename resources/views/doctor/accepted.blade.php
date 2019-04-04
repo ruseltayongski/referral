@@ -58,6 +58,8 @@ if(!$daterange){
                             <?php
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
+                                $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                                $feedback = \App\Feedback::where('code',$row->code)->count();
                             ?>
                             <tr>
                                 <td style="white-space: nowrap;">
@@ -115,7 +117,7 @@ if(!$daterange){
 
                                     @if($status=='ACCEPTED' && $diff >= 72)
                                         <button class="btn btn-sm btn-danger btn-action"
-                                                title="Patient Didn't Arrived"
+                                                title="Patient Didn't Arrive"
 
                                                 data-toggle="modal"
                                                 data-toggle="tooltip"
@@ -166,6 +168,15 @@ if(!$daterange){
                                         <i class="fa fa-ambulance"></i>
                                     </button>
                                     @endif
+
+                                    @if($step<=4)
+                                        <button class="btn btn-sm btn-info btn-feedback" data-toggle="modal"
+                                                data-target="#feedbackModal"
+                                                data-code="{{ $row->code }}">
+                                            <i class="fa fa-comments"> {{ $feedback }}</i>
+
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -183,7 +194,7 @@ if(!$daterange){
                         </tr>
                         <tr>
                             <td class="text-right" width="60px"><button class="btn btn-sm btn-danger"><i class="fa fa-wheelchair"></i></button></td>
-                            <td>Patient Didn't Arrived</td>
+                            <td>Patient Didn't Arrive</td>
                         </tr>
                         <tr>
                             <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>
@@ -213,6 +224,7 @@ if(!$daterange){
 @include('modal.refer')
 @include('modal.accepted')
 @include('modal.view_form')
+@include('modal.feedback')
 @endsection
 @include('script.firebase')
 @section('js')
@@ -224,6 +236,7 @@ if(!$daterange){
     </script>
 @include('script.datetime')
 @include('script.accepted')
+@include('script.feedback')
 
     <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
     <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
