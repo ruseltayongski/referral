@@ -220,7 +220,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2018 | Version 1.3</p>
+        <p>All Rights Reserved 2018 | Version 1.5</p>
     </div>
 </footer>
 

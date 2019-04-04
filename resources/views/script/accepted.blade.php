@@ -244,7 +244,7 @@
                 });
 
             var data = {
-                "to": "/topics/ReferralSystem",
+                "to": "/topics/ReferralSystem"+referred_to,
                 "data": {
                     "subject": "New Referral",
                     "date": data.date,

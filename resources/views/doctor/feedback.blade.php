@@ -6,15 +6,21 @@
 @if(count($data)>0)
     @foreach($data as $row)
         <?php
+            $pull = 'right';
+            $position = 'left';
             if($session==0){
                 \Illuminate\Support\Facades\Session::put('last_scroll_id',$row->id);
                 $session = 1;
             }
+            if($user->id==$row->sender){
+                $pull = 'left';
+                $position = 'right';
+            }
         ?>
-        <div class="direct-chat-msg @if($user->id==$row->sender) right @endif">
+        <div class="direct-chat-msg {{ $position }}">
             <div class="direct-chat-info clearfix">
-                <span class="direct-chat-name pull-left">{{ ucwords(mb_strtolower($row->fname)) }} {{ ucwords(mb_strtolower($row->lname)) }}</span>
-                <span class="direct-chat-timestamp pull-right">{{ date('d M h:i a',strtotime($row->date)) }}</span>
+                <span class="direct-chat-name pull-{{ $position }}">{{ ucwords(mb_strtolower($row->fname)) }} {{ ucwords(mb_strtolower($row->lname)) }}</span>
+                <span class="direct-chat-timestamp pull-{{ $pull }}">{{ date('d M h:i a',strtotime($row->date)) }}</span>
             </div>
             <!-- /.direct-chat-info -->
             <?php

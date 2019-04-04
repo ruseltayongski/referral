@@ -982,6 +982,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $position = '';
         $icon = 'receiver.png';
+        $pull = 'right';
 
         $data = Feedback::select(
             'feedback.sender as sender',
@@ -1000,6 +1001,7 @@ class ReferralCtrl extends Controller
         if($user->id==$data->sender){
             $position = 'right';
             $icon = 'sender.png';
+            $pull = 'left';
         }
 
         $fullname = ucwords(mb_strtolower($data->fname))." ".ucwords(mb_strtolower($data->lname));
@@ -1008,8 +1010,8 @@ class ReferralCtrl extends Controller
         $content = '
             <div class="direct-chat-msg '.$position.'">
                     <div class="direct-chat-info clearfix">
-                    <span class="direct-chat-name pull-left">'.$fullname.'</span>
-                    <span class="direct-chat-timestamp pull-right">'.date('d M h:i a',strtotime($data->date)).'</span>
+                    <span class="direct-chat-name pull-'.$position.'">'.$fullname.'</span>
+                    <span class="direct-chat-timestamp pull-'.$pull.'">'.date('d M h:i a',strtotime($data->date)).'</span>
                     </div>
 
                     <img class="direct-chat-img" title="'.$data->facility.'" src="'.$picture.'" alt="'.$data->facility.'">

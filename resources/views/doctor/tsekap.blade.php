@@ -281,7 +281,7 @@ $user = Session::get('auth');
             connRef.child(referred_facility).push(form_data);
 
             var data = {
-                "to": "/topics/ReferralSystem",
+                "to": "/topics/ReferralSystem"+referred_facility,
                 "data": {
                     "subject": "New Referral",
                     "date": data.referred_date,

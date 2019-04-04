@@ -348,13 +348,14 @@
                 });
 
                 var data = {
-                    "to": "/topics/ReferralSystem",
+                    "to": "/topics/ReferralSystem"+referred_to,
                     "data": {
                         "subject": "New Referral",
                         "date": data.date,
                         "body": data.patient_name+" was referred to your facility from "+myfacility_name+"!"
                     }
                 };
+                console.log(data);
                 $.ajax({
                     url: 'https://fcm.googleapis.com/fcm/send',
                     type: 'post',
