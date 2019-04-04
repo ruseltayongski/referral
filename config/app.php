@@ -163,6 +163,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Kawankoding\Fcm\FcmServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -228,6 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Fpdf' => Anouar\Fpdf\Facades\Fpdf::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Fcm' => Kawankoding\Fcm\FcmFacade::class,
     ],
 
 ];

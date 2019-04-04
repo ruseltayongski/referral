@@ -22,6 +22,7 @@
     <!-- bootstrap datepicker -->
     <link href="{{ asset('resources/plugin/datepicker/datepicker3.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <title>
         @yield('title','Home')
     </title>
@@ -113,10 +114,14 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
-                        <li><a href="{{ url('doctor/patient/tsekap') }}"><i class="fa fa-table"></i> PHA Check-Up Profiles</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
-                        <li><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
+                        <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-ambulance"></i> Discharged/Transfered Patients</a></li>
+                        <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
+                        <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                        <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -154,6 +159,11 @@
                                 @endif
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ url('support/chat') }}">
+                                <i class="fa fa-comments"></i> IT Support: Group Chat
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @elseif($user->level=='admin')
@@ -185,7 +195,7 @@
                         <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i>&nbsp; Change Login Status</a></li>
                         <li class="divider"></li>
                         @if($user->level=='doctor')
-                        <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-sign-in"></i>&nbsp; Change Login</a></li>
+                        <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Switch User</a></li>
                         @endif
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                         @if(Session::get('admin'))
@@ -210,7 +220,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2018 | Version 1.3</p>
+        <p>All Rights Reserved 2018 | Version 1.5</p>
     </div>
 </footer>
 
@@ -231,6 +241,7 @@
 @include('script.password')
 @include('script.duty')
 @include('script.notification')
+@include('script.fcm')
 @yield('js')
 
 </body>

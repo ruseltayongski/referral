@@ -30,6 +30,31 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" role="dialog" id="archiveModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4>PATIENT DIDN'T ARRIVED</h4>
+                <hr />
+                <form method="post" id="archiveForm">
+                    {{ csrf_field() }}
+                    <div class="form-group-lg">
+                        <label style="padding: 0px;">Remarks: </label>
+                        <br />
+                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none"></textarea>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="modal fade" role="dialog" id="admitModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -71,7 +96,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Enter Remarks:</label>
                         <br />
-                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none"></textarea>
+                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none" required></textarea>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">

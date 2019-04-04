@@ -5,6 +5,8 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Baby;
 use App\Barangay;
+use App\Facility;
+use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Muncity;
 use App\PatientForm;
@@ -14,6 +16,7 @@ use App\Profile;
 use App\Province;
 use App\Tracking;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -393,6 +396,8 @@ class PatientCtrl extends Controller
                 $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
             }
         }
+        $hospital_name = Facility::find($user->facility_id)->name;
+        DeviceTokenCtrl::send('New Referral','A new referral from '.$hospital_name,$req->referred_facility);
 
         return array(
             'id' => $tracking_id,
@@ -580,6 +585,10 @@ class PatientCtrl extends Controller
     function accepted()
     {
         $user = Session::get('auth');
+        $keyword = Session::get('keywordAccepted');
+        $start = Session::get('startAcceptedDate');
+        $end = Session::get('endAcceptedDate');
+
         $data = Tracking::select(
                     'tracking.id',
                     'tracking.type',
@@ -595,13 +604,263 @@ class PatientCtrl extends Controller
                     $q->where('tracking.status','accepted')
                         ->orwhere('tracking.status','admitted')
                         ->orwhere('tracking.status','arrived');
-                })
-                ->orderBy('id','desc')
+                });
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                $q->where('patients.fname','like',"%$keyword%")
+                    ->orwhere('patients.mname','like',"%$keyword%")
+                    ->orwhere('patients.lname','like',"%$keyword%")
+                    ->orwhere('tracking.code','like',"%$keyword%");
+            });
+        }
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+            $data = $data->whereBetween('tracking.date_accepted',[$start,$end]);
+        }
+
+        $data = $data->orderBy('id','desc')
                 ->paginate(15);
 
         return view('doctor.accepted',[
             'title' => 'Accepted Patients',
             'data' => $data
         ]);
+    }
+
+    public function searchAccepted(Request $req)
+    {
+        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startAcceptedDate',$start);
+        Session::put('endAcceptedDate',$end);
+        Session::put('keywordAccepted',$req->keyword);
+
+        return redirect('/doctor/accepted');
+    }
+
+    function discharge()
+    {
+        $keyword = Session::get('keywordDischarged');
+        $start = Session::get('startDischargedDate');
+        $end = Session::get('endDischargedDate');
+
+        $user = Session::get('auth');
+        $data = Tracking::select(
+                    'tracking.id',
+                    'tracking.type',
+                    'tracking.code',
+                    'facility.name',
+                    'tracking.status',
+                    DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                    DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+                )
+                ->join('facility','facility.id','=','tracking.referred_from')
+                ->join('patients','patients.id','=','tracking.patient_id')
+                ->where('tracking.referred_to',$user->facility_id);
+
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                $q->where('patients.fname','like',"%$keyword%")
+                    ->orwhere('patients.mname','like',"%$keyword%")
+                    ->orwhere('patients.lname','like',"%$keyword%")
+                    ->orwhere('tracking.code','like',"%$keyword%");
+            });
+        }
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+            $data = $data
+                    ->leftJoin('activity','activity.code','=','tracking.code')
+                    ->where(function ($q) {
+                        $q->where('activity.status','discharged')
+                            ->orwhere('activity.status','transferred');
+                    })
+                    ->whereBetween('activity.date_referred',[$start,$end]);
+        }else{
+            $data = $data->where(function($q){
+                        $q->where('tracking.status','discharged')
+                            ->orwhere('tracking.status','transferred');
+                    });
+        }
+
+        $data = $data->orderBy('tracking.updated_at','desc')
+                ->paginate(15);
+
+        return view('doctor.discharge',[
+            'title' => 'Discharged/Transferred Patients',
+            'data' => $data
+        ]);
+    }
+
+    public function searchDischarged(Request $req)
+    {
+        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startDischargedDate',$start);
+        Session::put('endDischargedDate',$end);
+        Session::put('keywordDischarged',$req->keyword);
+
+        return redirect('/doctor/discharge');
+    }
+
+    function cancel()
+    {
+        $user = Session::get('auth');
+        $keyword = Session::get('keywordCancelled');
+        $start = Session::get('startCancelledDate');
+        $end = Session::get('endCancelledDate');
+
+        $data = Tracking::select(
+            'tracking.id',
+            'tracking.type',
+            'tracking.code',
+            'facility.name',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->where('referred_to',$user->facility_id)
+            ->where('tracking.status','cancelled');
+
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                $q->where('patients.fname','like',"%$keyword%")
+                    ->orwhere('patients.mname','like',"%$keyword%")
+                    ->orwhere('patients.lname','like',"%$keyword%")
+                    ->orwhere('tracking.code','like',"%$keyword%");
+            });
+        }
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+        }
+
+        $data = $data->orderBy('date_referred','asc')
+            ->paginate(15);
+
+        return view('doctor.cancel',[
+            'title' => 'Cancelled Patients',
+            'data' => $data
+        ]);
+    }
+
+    public function searchCancelled(Request $req)
+    {
+        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startCancelledDate',$start);
+        Session::put('endCancelledDate',$end);
+        Session::put('keywordCancelled',$req->keyword);
+
+        return redirect('/doctor/cancelled');
+    }
+
+    function archived()
+    {
+        $user = Session::get('auth');
+        $keyword = Session::get('keywordArchived');
+        $start = Session::get('startArchivedDate');
+        $end = Session::get('endArchivedDate');
+
+        $data = Tracking::select(
+            'tracking.id',
+            'tracking.type',
+            'tracking.code',
+            'facility.name',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->where('referred_to',$user->facility_id)
+            ->where('tracking.status','archived');
+
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                $q->where('patients.fname','like',"%$keyword%")
+                    ->orwhere('patients.mname','like',"%$keyword%")
+                    ->orwhere('patients.lname','like',"%$keyword%")
+                    ->orwhere('tracking.code','like',"%$keyword%");
+            });
+        }
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+        }
+        $data = $data->orderBy('date_referred','asc')
+                     ->paginate(15);
+
+        return view('doctor.archive',[
+            'title' => 'Archived Patients',
+            'data' => $data
+        ]);
+    }
+
+    public function searchArchived(Request $req)
+    {
+        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startArchivedDate',$start);
+        Session::put('endArchivedDate',$end);
+        Session::put('keywordArchived',$req->keyword);
+
+        return redirect('/doctor/archived');
+    }
+
+    static function getCancellationReason($status, $code)
+    {
+        $act = Activity::where('code',$code)
+                    ->where('status',$status)
+                    ->first();
+        if($act)
+            return $act->remarks;
+        return 'No Reason';
+    }
+
+    static function getDischargeDate($status, $code)
+    {
+        $date = Activity::where('code',$code)
+                    ->where('status',$status)
+                    ->first();
+        if($date)
+            $date = $date->date_referred;
+        else
+            return false;
+
+        return date('F d, Y h:i A',strtotime($date));
+    }
+
+    public function history($code)
+    {
+        Session::put('referredCode',$code);
+        return redirect('doctor/track/patient');
     }
 }

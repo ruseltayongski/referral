@@ -90,6 +90,13 @@ Route::get('support/report/referral/export','support\ExportCtrl@dailyReferral');
 
 Route::get('support/report/incoming','support\ReportCtrl@incoming');
 
+Route::get('support/chat','support\ChatCtrl@index');
+Route::post('support/chat','support\ChatCtrl@send');
+Route::get('support/chat/messages','support\ChatCtrl@messages');
+Route::get('support/chat/messages/load','support\ChatCtrl@loadMessages');
+Route::get('support/chat/messages/reply/{id}','support\ChatCtrl@reply');
+Route::get('support/chat/sample','support\ChatCtrl@sample');
+
 /*DOCTOR Pages*/
 Route::get('doctor','doctor\HomeCtrl@index');
 
@@ -104,6 +111,7 @@ Route::post('doctor/referral/accept/{track_id}','doctor\ReferralCtrl@accept');//
 Route::get('doctor/referral/call/{activity_id}','doctor\ReferralCtrl@call');//if form is called
 Route::get('doctor/referral/calling/{track_id}','doctor\ReferralCtrl@calling');//if form is called
 Route::post('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//if patient is arrived
+Route::post('doctor/referral/archive/{track_id}','doctor\ReferralCtrl@archive');//if patient is archived
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
@@ -114,6 +122,11 @@ Route::get('doctor/referral/data/normal/{id}','doctor\ReferralCtrl@normalForm');
 Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
+Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
+Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
+Route::post('doctor/referred/search','doctor\ReferralCtrl@searchReferred');
+Route::get('doctor/track/patient','doctor\ReferralCtrl@trackReferral');
+Route::post('doctor/track/patient','doctor\ReferralCtrl@searchTrackReferral');
 
 Route::get('doctor/patient','doctor\PatientCtrl@index');
 Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');
@@ -127,6 +140,24 @@ Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
 
 
 Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
+Route::post('doctor/accepted','doctor\PatientCtrl@searchAccepted');
+
+Route::get('doctor/discharge','doctor\PatientCtrl@discharge');
+Route::post('doctor/discharge','doctor\PatientCtrl@searchDischarged');
+
+Route::get('doctor/cancelled','doctor\PatientCtrl@cancel');
+Route::post('doctor/cancelled','doctor\PatientCtrl@searchCancelled');
+
+Route::get('doctor/archived','doctor\PatientCtrl@archived');
+Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
+
+Route::get('doctor/feedback/{code}','doctor\ReferralCtrl@feedback');
+Route::get('doctor/feedback/reply/{id}','doctor\ReferralCtrl@replyFeedback');
+Route::get('doctor/feedback/load/{code}','doctor\ReferralCtrl@loadFeedback');
+Route::get('doctor/feedback/notification/{code}/{user_id}','doctor\ReferralCtrl@notificationFeedback');
+Route::post('doctor/feedback','doctor\ReferralCtrl@saveFeedback');
+
+Route::get('doctor/history/{code}','doctor\PatientCtrl@history');
 
 Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfile');
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
@@ -197,4 +228,8 @@ Route::get('resetPassword/{username}',function($username){
 //API
 Route::get('api','ApiController@api');
 
+Route::get('/token/save/{token}','DeviceTokenCtrl@save');
+Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
+
+Route::get('/fcm/send','FcmCtrl@send');
 

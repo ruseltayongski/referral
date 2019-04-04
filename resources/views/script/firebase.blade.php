@@ -1,4 +1,4 @@
-<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
 <script>
     // Initialize Firebase
     var config = {
@@ -10,5 +10,4 @@
         messagingSenderId: "164087586580"
     };
     firebase.initializeApp(config);
-
 </script>

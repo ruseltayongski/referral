@@ -348,13 +348,14 @@
                 });
 
                 var data = {
-                    "to": "/topics/ReferralSystem",
+                    "to": "/topics/ReferralSystem"+referred_to,
                     "data": {
                         "subject": "New Referral",
                         "date": data.date,
                         "body": data.patient_name+" was referred to your facility from "+myfacility_name+"!"
                     }
                 };
+                console.log(data);
                 $.ajax({
                     url: 'https://fcm.googleapis.com/fcm/send',
                     type: 'post',
@@ -642,6 +643,15 @@
     });
 </script>
 
+
+{{--CANCEL REFERRAL--}}
+<script>
+    $('body').on('click','.btn-cancel',function(){
+        var id = $(this).data('id');
+        var url = "{{ url('doctor/referred/cancel') }}/"+id;
+        $("#cancelReferralForm").attr('action',url);
+    });
+</script>
 {{--<div class="list-group">--}}
 {{--<a href="#" class="list-group-item clearfix">--}}
 {{--<span class="title-info">Dr. Jimmy</span>--}}

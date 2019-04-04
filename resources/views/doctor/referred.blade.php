@@ -22,7 +22,7 @@ $user = Session::get('auth');
             cursor: pointer;
         }
     </style>
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div class="jim-content">
             <h3 class="page-header">Referred Patients
 
@@ -57,7 +57,6 @@ $user = Session::get('auth');
                                                 ->orwhere('status','rejected')
                                                 ->orwhere('status','transferred');
                                         })
-                                        //->where('referred_to','!=',0)
                                         ->first()
                                     ;
                                 })
@@ -65,24 +64,6 @@ $user = Session::get('auth');
                                 ->leftJoin('users as u','u.id','=','activity.referring_md')
                                 ->orderBy('id','desc')
                                 ->get();
-
-                            //                            $starter = \App\PregnantForm::select('id');
-                            //                            if($row->type=='normal'){
-                            //                                $starter = \App\PatientForm::select('id');
-                            //                            }
-                            //                            $starter = $starter->where('code',$row->code)
-                            //                                ->where('referring_facility',$user->facility_id)
-                            //                                ->first();
-                            //                            if($starter){
-                            //                                $activities = App\Activity::select(
-                            //                                    'activity.*',
-                            //                                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
-                            //                                    'users.contact'
-                            //                                )
-                            //                                    ->where('activity.code',$row->code)
-                            //                                    ->leftJoin('users','users.id','=','activity.action_md')
-                            //                                    ->get();
-                            //                            }
                             ?>
                             <ul class="timeline activity-{{ $row->id }} code-{{ $row->code }}">
                                 <li>
@@ -110,12 +91,19 @@ $user = Session::get('auth');
                                             ?>
                                             {{--<a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department_name }}</span> of <span class="facility">{{ $row->facility_name }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span>.--}}
                                             <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> from <span class="facility">{{ $patient_address }}</span>.
+                                            <br />
+                                            <small style="font-size: 0.8em;" class="text-danger">[ Patient Code: {{ $row->code }} ]</small>
                                         </h3>
                                         <div class="timeline-footer">
                                             <div class="form-inline">
+                                                <?php $checkForCancellation = \App\Http\Controllers\doctor\ReferralCtrl::checkForCancellation($row->code);?>
+                                                @if(!$checkForCancellation)
                                                 <div class="form-group">
-                                                    <a class="btn btn-default btn-xs col-xs-12"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
+                                                    <a href="#cancelModal" data-toggle="modal"
+                                                       data-id="{{ $row->id }}"
+                                                       class="btn btn-danger btn-xs btn-cancel col-xs-12"><i class="fa fa-user-times"></i> Cancel Referral</a>
                                                 </div>
+                                                @endif
                                                 <div class="form-group">
                                                     <a href="{{ $modal }}" data-toggle="modal"
                                                        data-type="{{ $row->type }}"
@@ -139,6 +127,7 @@ $user = Session::get('auth');
 
                                             </div>
                                         </div>
+                                        <div class="clearfix"></div>
                                     </div>
                                 </li>
                                 @if(count($activities) > 0)
@@ -288,6 +277,20 @@ $user = Session::get('auth');
                                                         </div>
                                                     </a>
                                                 </div>
+                                            @elseif($act->status=='cancelled')
+                                                <?php
+                                                    $doctor = \App\User::find($act->action_md);
+                                                ?>
+                                                <div class="timeline-item read-section">
+                                                    <span class="time"><i class="fa fa-user-times"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
+                                                    <a>
+                                                        <div class="timeline-header no-border">
+                                                            Referral was cancelled by  by <span class="text-success">Dr. {{ ucwords(strtolower($doctor->fname)) }} {{ ucwords(strtolower($doctor->lname)) }}</span>.
+                                                            <br />
+                                                            <div class="text-remarks">Reason: {{ $act->remarks }}</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
                                             @elseif($act->status=='admitted')
                                                 <div class="timeline-item read-section">
                                                     <span class="time"><i class="fa fa-stethoscope"></i> {{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</span>
@@ -342,13 +345,14 @@ $user = Session::get('auth');
         </div>
 
     </div>
-    <div class="col-md-3">
-        @include('sidebar.quick')
-    </div>
+    {{--<div class="col-md-3">--}}
+        {{--@include('sidebar.quick')--}}
+    {{--</div>--}}
     @include('modal.accept')
     @include('modal.refer')
     @include('modal.view_form')
     @include('modal.seen')
+    @include('modal.cancel')
 @endsection
 @include('script.firebase')
 @section('js')

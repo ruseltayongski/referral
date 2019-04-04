@@ -7,6 +7,7 @@
     var admitRef = dbRef.ref('Admit');
     var dischargeRef = dbRef.ref('Discharge');
     var transferRef = dbRef.ref('Transfer');
+    var feedbackRef = dbRef.ref('Feedback');
 
     acceptRef.on('child_added',function(snapshot){
         var data = snapshot.val();
@@ -16,7 +17,9 @@
 
         var msg = patient_name+'  was accepted by Dr. '+action_md+' of '+facility_name+
             '<br />'+ data.date;
-        verify(data.code,'success','Accepted',msg);
+        var msg2 = patient_name+'  was accepted by Dr. '+action_md+' of '+facility_name+
+            '\n'+ data.date;
+        verify(data.code,'success','Accepted',msg,msg2);
     });
 
     rejectRef.on('child_added',function(snapshot){
@@ -27,7 +30,9 @@
 
         var msg = 'Dr. '+action_md+' of '+old_facility+' recommended to redirect '+patient_name+' to other facility.'+
                 '<br />'+ data.date;
-        verify(data.code,'error','Redirected',msg);
+        var msg2 = 'Dr. '+action_md+' of '+old_facility+' recommended to redirect '+patient_name+' to other facility.'+
+            '\n'+ data.date;
+        verify(data.code,'error','Redirected',msg,msg2);
     });
 
     callRef.on('child_added',function(snapshot){
@@ -38,7 +43,9 @@
 
         var msg = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call from '+data.referred_name+
             '<br />'+ data.date;
-        verify(data.code,'warning','Requesting a Call',msg);
+        var msg2 = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call from '+data.referred_name+
+            '\n'+ data.date;
+        verify(data.code,'warning','Requesting a Call',msg,msg2);
     });
 
     arriveRef.on('child_added',function(snapshot){
@@ -50,7 +57,9 @@
 
         var msg = patient_name+' arrived at '+current_facility+
             '<br />'+ data.date;
-        verify(data.code,'success','Arrived',msg);
+        var msg2 = patient_name+' arrived at '+current_facility+
+            '\n'+ data.date;
+        verify(data.code,'success','Arrived',msg,msg2);
     });
 
     admitRef.on('child_added',function(snapshot){
@@ -60,7 +69,9 @@
 
         var msg = patient_name+' admitted at '+current_facility+
             '<br />'+ data.date;
-        verify(data.code,'info','Admitted',msg);
+        var msg2 = patient_name+' admitted at '+current_facility+
+            '\n'+ data.date;
+        verify(data.code,'info','Admitted',msg,msg2);
     });
 
     dischargeRef.on('child_added',function(snapshot){
@@ -71,7 +82,9 @@
 
         var msg = patient_name+' discharged from '+current_facility+
             '<br />'+ data.date;
-        verify(data.code,'info','Discharged',msg);
+        var msg2 = patient_name+' discharged from '+current_facility+
+            '\n'+ data.date;
+        verify(data.code,'info','Discharged',msg,msg2);
     });
 
     transferRef.on('child_added',function(snapshot){
@@ -84,7 +97,9 @@
 
         var msg = patient_name+'  was referred by Dr. '+action_md+' of '+old_facility+' to '+new_facility+
             '<br />'+ data.date;
-        verify(data.code,'warning','Transferred',msg);
+        var msg2 = patient_name+'  was referred by Dr. '+action_md+' of '+old_facility+' to '+new_facility+
+            '<br />'+ data.date;
+        verify(data.code,'warning','Transferred',msg,msg2);
 
     });
 
@@ -99,7 +114,7 @@
         });
     }
 
-    function verify(code,status,title,msg)
+    function verify(code,status,title,msg,msg2)
     {
         $.ajax({
             url: "{{ url('doctor/verify/') }}/"+ code,
@@ -111,4 +126,11 @@
             }
         });
     }
+
+    feedbackRef.on('child_added',function(snapshot){
+        var data = snapshot.val();
+        var input_id = ".input-"+data.code+"-"+data.user_id;
+        $(input_id).val('');
+    });
+
 </script>

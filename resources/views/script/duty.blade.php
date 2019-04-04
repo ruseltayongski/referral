@@ -3,9 +3,9 @@
     $user = Session::get('auth');
 ?>
 <script>
-    @if(!$duty && $user->level=='doctor')
-        $('#dutyModal').modal();
-    @endif
+    {{--@if(!$duty && $user->level=='doctor')--}}
+        {{--$('#dutyModal').modal();--}}
+    {{--@endif--}}
 
     $('#btn-on-duty').on('click',function(){
         $('.loading').show();

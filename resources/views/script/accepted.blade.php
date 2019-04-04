@@ -40,7 +40,41 @@
                         var msg = 'Patient arrived to your facility';
                         $('.info').removeClass('hide').find('.message').html(msg);
                         $('#arriveModal').modal('hide');
-                        $('.loading').hide();
+                        window.location.reload(true);
+                    },500);
+                });
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
+    $('#archiveForm').on('submit',function(e){
+        $('.loading').show();
+         e.preventDefault();
+         var remarks = $(this).find('.remarks').val();
+        $(this).ajaxSubmit({
+            url: "{{ url('doctor/referral/archive/') }}/" + track_id,
+            type: 'POST',
+            success: function(date){
+                var arrive_data = {
+                    code: code,
+                    patient_name: patient_name,
+                    track_id: track_id,
+                    date: date,
+                    current_facility: current_facility,
+                    remarks: remarks
+                };
+                $('.activity_'+code).html('ARCHIVED');
+                arriveRef.push(arrive_data);
+                arriveRef.on('child_added',function(data){
+                    setTimeout(function(){
+                        arriveRef.child(data.key).remove();
+                        var msg = 'Patient archived';
+                        $('.info').removeClass('hide').find('.message').html(msg);
+                        $('#arriveModal').modal('hide');
+                        window.location.reload(true);
                     },500);
                 });
             },
@@ -72,7 +106,7 @@
                         var msg = 'Patient admitted to your facility';
                         $('.info').removeClass('hide').find('.message').html(msg);
                         $('#admitModal').modal('hide');
-                        $('.loading').hide();
+                        window.location.reload(true);
                     },500);
                 });
             },
@@ -210,7 +244,7 @@
                 });
 
             var data = {
-                "to": "/topics/ReferralSystem",
+                "to": "/topics/ReferralSystem"+referred_to,
                 "data": {
                     "subject": "New Referral",
                     "date": data.date,

@@ -33,6 +33,8 @@
                             $icon = ($row->status=='referred' || $row->status=='redirected') ? 'fa-ambulance' : 'fa-eye';
                             $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                             $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
+                            $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                            $feedback = \App\Feedback::where('code',$row->code)->count();
                         ?>
 
                         @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
@@ -44,12 +46,15 @@
                                 $department = $check_dept->description;
                             }
                             $seen = \App\Seen::where('tracking_id',$row->id)->count();
+
                         ?>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
                             <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                <h3 class="timeline-header no-border"><a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of <span class="facility">{{ $row->facility_name }}</span></h3>
+                                <h3 class="timeline-header no-border">
+                                    <small class="text-bold">{{ $row->code }}</small> <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of <span class="facility">{{ $row->facility_name }}</span>
+                                </h3>
                                 <div class="timeline-footer">
                                     <div class="form-inline">
                                         @if($user->department_id==$row->department_id || $row->department_id==0)
@@ -67,16 +72,27 @@
                                             </a>
                                         </div>
                                         @endif
-                                        <div class="form-group">
-                                            <a class="btn btn-default btn-xs col-xs-12"><i class="fa fa-user"></i> Patient No.: {{ $row->code }}</a>
-                                        </div>
 
                                         @if($seen > 0)
                                             <div class="form-group">
                                                 <a href="#seenModal" data-toggle="modal"
                                                    data-id="{{ $row->id }}"
-                                                   class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen by {{ $seen }} User{{ ($seen>1) ? 's':'' }}</a>
+                                                   class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen
+                                                    @if($seen>0)
+                                                        <small class="badge bg-green-active">{{ $seen }}</small>
+                                                    @endif
+                                                </a>
                                             </div>
+                                        @endif
+                                        @if($step>=2 && $step<=4)
+                                            <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                                                    data-target="#feedbackModal"
+                                                    data-code="{{ $row->code }}">
+                                                <i class="fa fa-comments"></i> Feedback
+                                                @if($feedback>0)
+                                                    <span class="badge bg-blue">{{ $feedback }}</span>
+                                                @endif
+                                            </button>
                                         @endif
                                     </div>
                                 </div>
@@ -87,7 +103,18 @@
                             <i class="fa fa-user-plus bg-olive"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                <h3 class="timeline-header no-border"><a href="#">{{ $row->patient_name }}</a> was ACCEPTED by <span class="text-success">Dr. {{ $row->action_md }}</span></h3>
+                                <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was ACCEPTED by <span class="text-success">Dr. {{ $row->action_md }}</span>
+                                    @if($step<=4)
+                                        <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                                                data-target="#feedbackModal"
+                                                data-code="{{ $row->code }}">
+                                            <i class="fa fa-comments"></i>
+                                            @if($feedback>0)
+                                                <span class="badge bg-blue">{{ $feedback }}</span>
+                                            @endif
+                                        </button>
+                                    @endif
+                                </h3>
 
                             </div>
 
@@ -104,32 +131,6 @@
                         </li>
                         @endif
                         @endforeach
-
-                        {{--<li>--}}
-                            {{--<i class="fa fa-ambulance bg-blue-active"></i>--}}
-                            {{--<div class="timeline-item pregnant-section">--}}
-                                {{--<span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>--}}
-                                {{--<h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> is referred to your hospital from <span class="facility">Cebu Health Unit</span></h3>--}}
-                                {{--<div class="timeline-footer">--}}
-                                    {{--<a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>--}}
-                                    {{--<a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</li>--}}
-                        {{--<li>--}}
-                            {{--<i class="fa fa-ambulance bg-blue-active"></i>--}}
-                            {{--<div class="timeline-item read-section">--}}
-                                {{--<span class="time"><i class="fa fa-eye"></i> March 7, 2018 9:34 AM</span>--}}
-                                {{--<h3 class="timeline-header no-border"><a href="#">Anna Baclayon</a> <small class="status">[ Female, 26 ]</small> is referred to your hospital from <span class="facility">Cebu Health Unit</span></h3>--}}
-                                {{--<div class="timeline-footer">--}}
-                                    {{--<a class="btn btn-warning btn-xs" href="#pregnantFormModal" data-toggle="modal" data-backdrop="static"><i class="fa fa-folder"></i> View Form</a>--}}
-                                    {{--<a class="btn btn-default btn-xs"><i class="fa fa-user"></i> Patient No.: 180401-001-160446</a>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</li>--}}
-
-
-                        <!-- END timeline item -->
                     </ul>
                     <div class="text-center">
                         {{ $data->links() }}
@@ -157,8 +158,10 @@
     @include('modal.accept')
     @include('modal.contact')
     @include('modal.seen')
+    @include('modal.feedback')
 @endsection
 @section('js')
 @include('script.referral')
+@include('script.feedback')
 @endsection
 

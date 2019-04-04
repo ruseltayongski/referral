@@ -45,6 +45,7 @@ class UserCtrl extends Controller
             'users.mname as mname',
             'users.contact',
             'facility.name as facility',
+            'facility.abbr as abbr',
             'department.description as department',
             'login.login as login',
             'login.status as status'
@@ -79,7 +80,7 @@ class UserCtrl extends Controller
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->orderBy('login.id','desc')
-                ->paginate(15);
+                ->get();
 
         return view('doctor.list',[
             'title' => 'Online Doctors',
@@ -98,20 +99,20 @@ class UserCtrl extends Controller
             {
                 $user = Session::get('auth');
                 Session::flush();
-                User::where('id',$user->id)
-                    ->update([
-                        'login_status' => 'logout'
-                    ]);
-                $logout = date('Y-m-d H:i:s');
-                $logoutId = Login::where('userId',$user->id)
-                    ->orderBy('id','desc')
-                    ->first()
-                    ->id;
-
-                Login::where('id',$logoutId)
-                    ->update([
-                        'logout' => $logout
-                    ]);
+//                User::where('id',$user->id)
+//                    ->update([
+//                        'login_status' => 'logout'
+//                    ]);
+//                $logout = date('Y-m-d H:i:s');
+//                $logoutId = Login::where('userId',$user->id)
+//                    ->orderBy('id','desc')
+//                    ->first()
+//                    ->id;
+//
+//                Login::where('id',$logoutId)
+//                    ->update([
+//                        'logout' => $logout
+//                    ]);
 
                 Session::put('auth',$login);
                 $last_login = date('Y-m-d H:i:s');
