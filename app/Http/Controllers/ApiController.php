@@ -14,6 +14,13 @@ class ApiController extends Controller
     {
         if($req->r==='login')
             return self::login($req);
+        elseif($req->r=='getContactList')
+            return User::select(\DB::raw("concat(users.fname,' ',users.lname) as name"),'department.description as department','facility.name as hospital')
+                ->leftJoin('facility','facility.id','=','users.facility_id')
+                ->leftJoin('department','department.id','=','users.department_id')
+                ->get();
+        else
+            return 'Error API';
     }
 
     public function login(Request $req)
