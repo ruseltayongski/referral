@@ -95,6 +95,7 @@ class HomeCtrl extends Controller
 
     public function sample()
     {
-        return view('sample');
+        
+        //return view('sample');
     }
 }

@@ -102,8 +102,11 @@
             type: 'get',
             success: function(content) {
                 $("#"+c).append(content);
-                var objDiv = document.getElementById(code);
-                objDiv.scrollTop = objDiv.scrollHeight;
+
+                if(data.user_id == "{{ $user->id }}"){
+                    var objDiv = document.getElementById(code);
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
             }
         });
     });

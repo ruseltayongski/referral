@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "743ff4f9d852ef218dd151c67f607ea2",
@@ -1769,7 +1769,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2380,8 +2380,8 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xroot/laravel-fpdf/zipball/1a357759191cfd8506c7ef6669d0406bcf7b289b",
-                "reference": "1a357759191cfd8506c7ef6669d0406bcf7b289b",
+                "url": "https://api.github.com/repos/xroot/laravel-fpdf/zipball/master",
+                "reference": "master",
                 "shasum": ""
             },
             "require": {
@@ -3269,6 +3269,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
         },
         {

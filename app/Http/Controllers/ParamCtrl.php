@@ -219,4 +219,12 @@ class ParamCtrl extends Controller
         }
         return 0;
     }
+
+    public function getDoctorName($id){
+        $name = User::find($id);
+        $fname = ucwords(mb_strtolower($name->fname));
+        $lname = ucwords(mb_strtolower($name->lname));
+
+        return "$fname $lname";
+    }
 }

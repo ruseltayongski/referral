@@ -232,4 +232,4 @@ Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 
 Route::get('/fcm/send','FcmCtrl@send');
-
+Route::get('/doctor/name/{id}','ParamCtrl@getDoctorName');

@@ -122,6 +122,7 @@
             success: function(data){
                 if(data==1){
                     lobibox(status,title,msg);
+                    desktopNotification(title,msg2);
                 }
             }
         });
@@ -129,6 +130,16 @@
 
     feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();
+        var doctor_name = function(){
+            $.ajax({
+                url: "{{ url('doctor/name/') }}/"+data.id,
+                success: function(name){
+                    return name;
+                }
+            });
+        };
+
+        console.log(doctor_name);
         var input_id = ".input-"+data.code+"-"+data.user_id;
         $(input_id).val('');
     });
