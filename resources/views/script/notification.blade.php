@@ -130,17 +130,18 @@
 
     feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();
-        var doctor_name = function(){
-            $.ajax({
-                url: "{{ url('doctor/name/') }}/"+data.id,
-                success: function(name){
-                    return name;
-                }
-            });
-        };
+        var doctor_name = $.ajax({
+            async: false,
+            url: "{{ url('doctor/name/') }}/"+data.user_id,
+            success: function(name){
+                return name;
+            }
+        }).responseText;
 
-        console.log(doctor_name);
+        var msg = "From: "+doctor_name+"\nCode: "+data.code+"\nMessage: "+data.msg;
         var input_id = ".input-"+data.code+"-"+data.user_id;
+        desktopNotification('New Feedback',msg);
+        console.log(msg);
         $(input_id).val('');
     });
 
