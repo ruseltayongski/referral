@@ -139,11 +139,11 @@
         }).responseText;
 
         var msg = "From: "+doctor_name+"<br>Code: "+data.code+"<br>Message: "+data.msg;
-        var msg = "From: "+doctor_name+"\nCode: "+data.code+"\nMessage: "+data.msg;
-        var input_id = ".input-"+data.code+"-"+data.user_id;
+        var msg2 = "From: "+doctor_name+"\nCode: "+data.code+"\nMessage: "+data.msg;
         verify(data.code,'Success','New Feedback',msg,msg2);
-        console.log(msg);
-        $(input_id).val('');
+        {{--if(data.user_id != "{{ $user->id }}"){--}}
+            {{----}}
+        {{--}--}}
     });
 
 </script>

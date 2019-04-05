@@ -104,6 +104,8 @@
                 $("#"+c).append(content);
 
                 if(data.user_id == "{{ $user->id }}"){
+                    var input_id = ".input-"+data.code+"-"+data.user_id;
+                    $(input_id).val('');
                     var objDiv = document.getElementById(code);
                     objDiv.scrollTop = objDiv.scrollHeight;
                 }
