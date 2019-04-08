@@ -32,7 +32,10 @@ class UserCtrl extends Controller
         $search = Session::get('searchKeyword');
         $user = Session::get('auth');
         $data = User::where('facility_id',$user->facility_id)
-                ->where('level','doctor');
+                ->where(function($q){
+                    $q->where('level','doctor')
+                        ->orwhere('level','mcc');
+                });
         if($search){
             $keyword = $search['keyword'];
             $data = $data->where(function($q) use($keyword){
@@ -109,7 +112,7 @@ class UserCtrl extends Controller
 
         $facility = Facility::find($user->facility_id);
         $data = array(
-            'level' => 'doctor',
+            'level' => $req->level,
             'facility_id' => $user->facility_id,
             'status' => 'active',
             'contact' => $req->contact,
@@ -134,7 +137,7 @@ class UserCtrl extends Controller
             'fname' => $req->fname,
             'mname' => $req->mname,
             'lname' => $req->lname,
-            'level' => 'doctor',
+            'level' => $req->level,
             'contact' => $req->contact,
             'email' => ($req->email) ? $req->email: 'N/A',
             'designation' => $req->designation,

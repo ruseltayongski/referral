@@ -138,5 +138,6 @@ function updateProfile() {
     $('.department_id').val(user_info.department_id);
     $('.username').val(user_info.username);
     $('.status').val(user_info.status);
+    $('.level').val(user_info.level);
 }
 </script>

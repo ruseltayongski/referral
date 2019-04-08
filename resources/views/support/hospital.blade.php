@@ -46,6 +46,10 @@ $status = session('status');
                             <td>Facility Name :<br/></td>
                             <td><input type="text" name="facility_name" class="form-control" value="{{ $info->name }}" /></td>
                         </tr>
+                        <tr>
+                            <td>Short Name :<br/></td>
+                            <td><input type="text" name="abbr" class="form-control" value="{{ $info->abbr }}" /></td>
+                        </tr>
                         <tr class="has-group">
                             <td>Municipality/City :</td>
                             <td>

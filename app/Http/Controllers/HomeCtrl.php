@@ -96,6 +96,8 @@ class HomeCtrl extends Controller
     public function sample()
     {
         
-        //return view('sample');
+        $date = '04/08/2019 - 04/08/2019';
+        $range = explode('-',str_replace(' ', '', $date));
+        print_r($range);
     }
 }

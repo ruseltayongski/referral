@@ -34,6 +34,7 @@ class HospitalCtrl extends Controller
         $user = Session::get('auth');
         $data = array(
             'name' => $req->facility_name,
+            'abbr' => $req->abbr,
             'muncity' => $req->muncity,
             'brgy' => $req->brgy,
             'address' => $req->address,

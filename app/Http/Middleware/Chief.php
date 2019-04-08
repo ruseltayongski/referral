@@ -17,7 +17,7 @@ class Chief
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
-        if($user->level!='chief')
+        if($user->level!='mcc')
         {
             return redirect('/login');
         }

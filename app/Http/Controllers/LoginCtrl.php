@@ -63,6 +63,8 @@ class LoginCtrl extends Controller
                         return 'chief';
                     }else if($login->level=='support'){
                         return 'support';
+                    }else if($login->level=='mcc'){
+                        return 'mcc';
                     }else if($login->level=='admin'){
                         return 'admin';
                     }else{

@@ -233,3 +233,11 @@ Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 
 Route::get('/fcm/send','FcmCtrl@send');
 Route::get('/doctor/name/{id}','ParamCtrl@getDoctorName');
+
+//MANAGE MCC PAGE
+Route::get('/mcc','mcc\HomeCtrl@index');
+Route::get('/mcc/dashboard/count','mcc\HomeCtrl@count');
+Route::get('/mcc/report/online','mcc\ReportCtrl@online');
+Route::post('/mcc/report/online','mcc\ReportCtrl@filterOnline');
+Route::get('/mcc/report/incoming','mcc\ReportCtrl@incoming');
+Route::post('/mcc/report/incoming','mcc\ReportCtrl@filterIncoming');

@@ -40,6 +40,7 @@
                     <div class="form-group">
                         <label>Department:</label>
                         <select class="form-control" name="department_id" required>
+                            <option value="jim">Select Department...</option>
                             @foreach($departments as $dept)
                             <option value="{{ $dept->id }}">{{ $dept->description }}</option>
                             @endforeach
@@ -47,7 +48,14 @@
                     </div>
 
                     <hr />
-
+                    <div class="form-group">
+                        <label>Level:</label>
+                        <select class="form-control level" name="level" required>
+                            <option value="doctor">Doctor</option>
+                            <option value="mcc">Medical Center Chief</option>
+                        </select>
+                    </div>
+                    <hr />
                     <div class="form-group">
                         <label>Username</label>
                         <input type="text" class="form-control username_1" name="username" required>
@@ -132,6 +140,13 @@
                         <select class="form-control status" name="status" required>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Level:</label>
+                        <select class="form-control level" name="level" required>
+                            <option value="doctor">Doctor</option>
+                            <option value="mcc">Medical Center Chief</option>
                         </select>
                     </div>
                     <hr />

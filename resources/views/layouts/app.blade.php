@@ -166,6 +166,16 @@
                         </li>
                     </ul>
                 </li>
+                @elseif($user->level=='mcc')
+                <li><a href="{{ url('mcc/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('mcc/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Online Doctors</a></li>
+                        <li><a href="{{ url('mcc/report/incoming') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Incoming Referral</a></li>
+                        <li><a href="{{ url('mcc/daily/referral') }}" data-toggle="modal"><i class="fa fa-calendar"></i>&nbsp; Referral Time Frame</a></li>
+                    </ul>
+                </li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li class="dropdown">
