@@ -22,8 +22,8 @@ class HomeCtrl extends Controller
             return redirect('/doctor');
         }else if($user->level=='support'){
             return redirect('/support');
-        }else if($user->level=='chief'){
-
+        }else if($user->level=='mcc'){
+            return redirect('/mcc');
         }else{
             Session::flush();
             return redirect('/');

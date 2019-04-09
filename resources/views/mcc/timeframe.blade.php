@@ -13,7 +13,7 @@
         }
     </style>
     <div class="col-md-3">
-        @include('mcc.sidebar.incomingfilter')
+        @include('mcc.sidebar.timeframefilter')
         @include('mcc.sidebar.links')
     </div>
 
@@ -31,38 +31,53 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover table-bordered">
                             <tr class="bg-black">
-                                <th class="text-center" rowspan="2">Hospital</th>
-                                <th class="text-center" colspan="3">Seen</th>
-                                <th class="text-center" rowspan="2">No Action</th>
-                                <th class="text-center" rowspan="2">TOTAL</th>
+                                <th class="text-center" rowspan="2">Referral Code</th>
+                                <th class="text-center" rowspan="2">Time<br>Referred</th>
+                                <th class="text-center" colspan="4">Time Frame for Actions Taken</th>
                             </tr>
                             <tr class="bg-black">
+                                <th class="text-center">Seen</th>
                                 <th class="text-center">Accepted</th>
+                                <th class="text-center">Arrived</th>
                                 <th class="text-center">Redirected</th>
-                                <th class="text-center">Idle</th>
                             </tr>
                             @foreach($data as $row)
                             <?php
-                                $accepted = \App\Http\Controllers\mcc\ReportCtrl::countIncoming('accepted',$row->id);
-                                $redirected = \App\Http\Controllers\mcc\ReportCtrl::countIncoming('rejected',$row->id);
-                                $total = \App\Http\Controllers\mcc\ReportCtrl::countIncoming('',$row->id);
-                                $total += $redirected;
-                                $seen = \App\Http\Controllers\mcc\ReportCtrl::countIncoming('seen',$row->id);
-                                $idle = $seen - $accepted;
-                                if($idle<0) $idle = 0;
-                                $no_action = $total - ($accepted + $redirected + $idle);
+                                $accepted = \App\Http\Controllers\mcc\ReportCtrl::getDateAction('accepted',$row->code);
+                                $arrived = \App\Http\Controllers\mcc\ReportCtrl::getDateAction('arrived',$row->code);
+                                $rejected = \App\Http\Controllers\mcc\ReportCtrl::getDateAction('rejected',$row->code);
                             ?>
                             <tr>
-                                <td class="text-warning">{{ $row->name }}</td>
-                                <td class="text-center text-success">{{ $accepted }}</td>
-                                <td class="text-center text-danger">{{ $redirected }}</td>
-                                <td class="text-center text-muted">{{ $idle }}</td>
-                                <td class="text-center text-muted">{{ $no_action }}</td>
-                                <td class="text-center text-primary text-bold">{{ $total }}</td>
+                                <td class="text-warning">{{ $row->code }}</td>
+                                <td class="text-muted">{{ date('M d, Y h:i a',strtotime($row->date_referred)) }}</td>
+                                <td class="text-right text-danger">
+                                    @if($row->date_referred < $row->date_seen)
+                                        {{ \App\Http\Controllers\mcc\ReportCtrl::timeDiff($row->date_referred,$row->date_seen) }}
+                                    @endif
+                                </td>
+                                <td class="text-right text-danger">
+                                    @if($accepted)
+                                        {{ \App\Http\Controllers\mcc\ReportCtrl::timeDiff($row->date_referred,$accepted) }}
+                                    @endif
+                                </td>
+                                <td class="text-right text-danger">
+                                    @if($arrived)
+                                        {{ \App\Http\Controllers\mcc\ReportCtrl::timeDiff($row->date_referred,$arrived) }}
+                                    @endif
+                                </td>
+                                <td class="text-right text-danger">
+                                    @if($rejected)
+                                        {{ \App\Http\Controllers\mcc\ReportCtrl::timeDiff($row->date_referred,$rejected) }}
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </table>
 
+                    </div>
+                    <hr />
+                    <div class="text-center">
+                        {{ $data->links() }}
                     </div>
                 @else
                     <div class="alert alert-warning">

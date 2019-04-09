@@ -241,3 +241,5 @@ Route::get('/mcc/report/online','mcc\ReportCtrl@online');
 Route::post('/mcc/report/online','mcc\ReportCtrl@filterOnline');
 Route::get('/mcc/report/incoming','mcc\ReportCtrl@incoming');
 Route::post('/mcc/report/incoming','mcc\ReportCtrl@filterIncoming');
+Route::get('/mcc/report/timeframe','mcc\ReportCtrl@timeframe');
+Route::post('/mcc/report/timeframe','mcc\ReportCtrl@filterTimeframe');

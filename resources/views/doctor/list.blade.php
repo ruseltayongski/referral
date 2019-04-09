@@ -117,7 +117,7 @@ $user = Session::get('auth');
                                         $name = ucwords(mb_strtolower($row->lname))." ".$fname[0];
                                         $facility = $row->facility;
                                     ?>
-                                    <h3 class="widget-user-username" style="margin-left: 0px;" title="{{ $name }}">
+                                    <h3 class="widget-user-username" style="margin-left: 0px;" title="Dr. {{ $row->fname }} {{ $row->lname }}">
                                         Dr.
                                         @if(strlen($name)>16)
                                             {{ substr($name,0,16) }}...

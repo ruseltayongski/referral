@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\mcc;
 
+use App\Activity;
 use App\Facility;
+use App\Seen;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
@@ -100,6 +102,10 @@ class ReportCtrl extends Controller
             $end = Carbon::parse($range[1])->endOfDay();
         }
 
+        if($status=='seen'){
+            return self::countIncomingSeen($facility_id,$start,$end,$user);
+        }
+
         $ref = Tracking::where('tracking.referred_to',$user->facility_id)
                     ->where('tracking.referred_from',$facility_id)
                     ->whereBetween('tracking.date_referred',[$start,$end]);
@@ -113,6 +119,17 @@ class ReportCtrl extends Controller
             $ref = $ref->count();
         }
 
+        return $ref;
+    }
+
+    static function countIncomingSeen($facility_id,$start,$end,$user)
+    {
+        $ref = Tracking::leftJoin('seen','seen.tracking_id','=','tracking.id')
+                    ->where('tracking.referred_to',$user->facility_id)
+                    ->where('tracking.referred_from',$facility_id)
+                    ->whereBetween('tracking.date_referred',[$start,$end])
+                    ->distinct('seen.tracking_id')
+                    ->count('tracking_id');
         return $ref;
     }
 
@@ -130,8 +147,13 @@ class ReportCtrl extends Controller
         }
 
         $users = User::where("users.level",'doctor')
-                    ->where('users.department_id',$department_id)
                     ->where('users.facility_id',$u->facility_id);
+
+        if($department_id){
+            $users = $users->where('users.department_id',$department_id);
+        }else{
+            $users = $users->where('users.department_id','');
+        }
 
         if($status){
             $users = $users->join('login','login.userId','=','users.id')
@@ -147,4 +169,108 @@ class ReportCtrl extends Controller
 
 
     }
+
+    public function timeframe()
+    {
+        $user = Session::get('auth');
+
+        $start = Carbon::now()->startOfMonth()->format('m/d/Y');
+        $end = Carbon::now()->endOfMonth()->format('m/d/Y');
+
+        $date = Session::get('date_timeframe');
+        if($date){
+            $range = explode('-',str_replace(' ', '', $date));
+            $start = $range[0];
+            $end = $range[1];
+        }
+
+        $start_date = Carbon::parse($start)->startOfDay();
+        $end_date = Carbon::parse($end)->endOfDay();
+
+        $data = Tracking::select('code','date_referred','date_seen')
+                    ->where('referred_from',$user->facility_id)
+                    ->whereBetween('date_referred',[$start_date,$end_date])
+                    ->orderBy('id','desc')
+                    ->paginate(20);
+
+        return view('mcc.timeframe',[
+            'title' => 'Referral Time Frame',
+            'data' => $data,
+            'start' => $start,
+            'end' => $end
+        ]);
+    }
+
+    static function timeDiff($start,$end)
+    {
+        $start = Carbon::parse($start);
+        $end = Carbon::parse($end);
+
+        if($start > $end)
+            return false;
+
+        //$totalDuration = $end->diffInSeconds($start);
+        //$totalDuration = gmdate('H:i:s', $totalDuration);
+        //return $totalDuration;
+
+        $end_date='2015-12-05 11:59:29';
+        $start_date='2015-11-01 11:58:14';
+
+
+        $start_time = strtotime($start);
+        $end_time = strtotime($end);
+        $difference = $end_time - $start_time;
+        $diff = '';
+
+        $seconds = $difference % 60;            //seconds
+        $difference = floor($difference / 60);
+
+        if($seconds) $diff = $seconds."s";
+
+        $min = $difference % 60;              // min
+        $difference = floor($difference / 60);
+
+        if($min) $diff = $min."m $diff";
+
+        $hours = $difference % 24;  //hours
+        $difference = floor($difference / 24);
+
+        if($hours) $diff = $hours."h $diff";
+
+        $days = $difference % 30;  //days
+        $difference = floor($difference / 30);
+
+        if($days) $diff = $days."d $diff";
+
+        $month = $difference % 12;  //month
+        $difference = floor($difference / 12);
+
+        if($month) $diff = $month."mo $diff";
+
+
+        return $diff;
+    }
+
+    static function getDateAction($status,$code)
+    {
+        $user = Session::get('auth');
+        $ref = Activity::where('code',$code);
+
+        if($status == 'accepted'){
+            $ref = $ref->where('referred_from',$user->facility_id);
+        }
+        $ref = $ref->where('status',$status)
+                    ->orderBy('id','desc')
+                    ->first();
+        if($ref)
+            return $ref->date_referred;
+        return false;
+    }
+
+    public function filterTimeframe(Request $req)
+    {
+        Session::put('date_timeframe',$req->date);
+        return redirect()->back();
+    }
+
 }

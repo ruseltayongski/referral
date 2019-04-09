@@ -5,7 +5,7 @@
 
     <div class="panel-body">
         <div class="list-group">
-            <a href="{{ asset('mcc/report/users') }}" class="list-group-item clearfix">
+            <a href="{{ asset('mcc/report/online') }}" class="list-group-item clearfix">
                 Generate Report
                 <span class="pull-right">
                         <i class="fa fa-line-chart"></i>

@@ -173,9 +173,10 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('mcc/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Online Doctors</a></li>
                         <li><a href="{{ url('mcc/report/incoming') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Incoming Referral</a></li>
-                        <li><a href="{{ url('mcc/daily/referral') }}" data-toggle="modal"><i class="fa fa-calendar"></i>&nbsp; Referral Time Frame</a></li>
+                        <li><a href="{{ url('mcc/report/timeframe') }}" data-toggle="modal"><i class="fa fa-calendar"></i>&nbsp; Referral Time Frame</a></li>
                     </ul>
                 </li>
+                <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li class="dropdown">
@@ -202,10 +203,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i>&nbsp; Change Password</a></li>
+                        @if($user->level=='doctor')
                         <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i>&nbsp; Change Login Status</a></li>
                         <li class="divider"></li>
-                        @if($user->level=='doctor')
                         <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Switch User</a></li>
+                        @else
+                        <li class="divider"></li>
                         @endif
                         <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
                         @if(Session::get('admin'))

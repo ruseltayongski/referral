@@ -50,6 +50,7 @@ $facilities = \App\Facility::select('id','name')
                                     <option value="">Select Level...</option>
                                     <option value="support">IT Support</option>
                                     <option value="doctor">Doctor</option>
+                                    <option value="mcc">Medical Center Chief</option>
                                 </select>
                             </td>
                         </tr>

@@ -38,7 +38,13 @@
                             </tr>
                             @foreach($data as $row)
                             <tr>
-                                <td class="text-warning">{{ $row->description }}</td>
+                                <td class="text-warning">
+                                    @if($row->description)
+                                        {{ $row->description }}
+                                    @else
+                                        No Department
+                                    @endif
+                                </td>
                                 <td class="text-success text-center"><strong>{{ \App\Http\Controllers\mcc\ReportCtrl::countLogin('login',$row->id) }}</strong></td>
                                 <td class="text-danger text-center"><strong>{{ \App\Http\Controllers\mcc\ReportCtrl::countLogin('login_off',$row->id) }}</strong></td>
                                 <td class="text-info text-center"><strong>{{ \App\Http\Controllers\mcc\ReportCtrl::countLogin('',$row->id) }}</strong></td>
