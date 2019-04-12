@@ -620,7 +620,7 @@ class PatientCtrl extends Controller
             $data = $data->whereBetween('tracking.date_accepted',[$start,$end]);
         }
 
-        $data = $data->orderBy('id','desc')
+        $data = $data->orderBy('tracking.date_accepted','desc')
                 ->paginate(15);
 
         return view('doctor.accepted',[

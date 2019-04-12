@@ -1,15 +1,35 @@
 <?php
     $select = \Illuminate\Support\Facades\Session::get('referredSelect');
+    $fac = \App\Facility::where('id','<>',$user->facility_id)
+                ->where('status',1)
+                ->select('facility.id','facility.name')
+                ->orderBy('name','asc')
+                ->get();
+    $facility = Session::get('referred_facility');
 ?>
 <div class="panel panel-jim">
     <div class="panel-heading">
-        <h3 class="panel-title">Search Referred Patients</h3>
+        <h3 class="panel-title">
+            Filter Results
+            <span class="pull-right badge">Result: {{ $data->total() }}</span>
+        </h3>
     </div>
     <div class="panel-body">
         <form method="post" action="{{ url('doctor/referred/search') }}">
             {{ csrf_field() }}
             <div class="form-group">
                 <input type="text" name="keyword" value="{{ \Illuminate\Support\Facades\Session::get('referredKeyword') }}" class="form-control" placeholder="Code, Firstname, Lastname" />
+            </div>
+            <div class="form-group">
+                <input type="text" id="daterange" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="facility">
+                    <option value="">All Facility</option>
+                    @foreach($fac as $f)
+                        <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <select name="type" class="form-control">

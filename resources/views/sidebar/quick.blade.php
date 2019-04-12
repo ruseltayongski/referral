@@ -45,7 +45,7 @@
     </div>
     <div class="panel-body">
         <div class="list-group">
-            <a href="{{ asset('doctor/report') }}" class="list-group-item clearfix">
+            <a href="{{ asset('doctor/report/incoming') }}" class="list-group-item clearfix">
                 Generate Report
                 <span class="pull-right">
                         <i class="fa fa-print"></i>

@@ -209,10 +209,6 @@ class ReportCtrl extends Controller
         if($start > $end)
             return false;
 
-        //$totalDuration = $end->diffInSeconds($start);
-        //$totalDuration = gmdate('H:i:s', $totalDuration);
-        //return $totalDuration;
-
         $end_date='2015-12-05 11:59:29';
         $start_date='2015-11-01 11:58:14';
 

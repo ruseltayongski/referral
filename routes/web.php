@@ -163,8 +163,6 @@ Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfil
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 
-Route::get('doctor/report','ParamCtrl@maintenance');
-
 Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
 
 
@@ -174,6 +172,11 @@ Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
 Route::post('doctor/change/login','doctor\UserCtrl@changeLogin');
 
 Route::get('doctor/verify/{code}','ParamCtrl@verifyCode');
+
+Route::get('/doctor/report/incoming','doctor\ReportCtrl@incoming');
+Route::post('/doctor/report/incoming','doctor\ReportCtrl@filterIncoming');
+Route::get('/doctor/report/outgoing','doctor\ReportCtrl@outgoing');
+Route::post('/doctor/report/outgoing','doctor\ReportCtrl@filterOutgoing');
 
 Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/

@@ -357,5 +357,9 @@ $user = Session::get('auth');
 @include('script.firebase')
 @section('js')
     @include('script.referred')
+
 @endsection
+
+
+
 

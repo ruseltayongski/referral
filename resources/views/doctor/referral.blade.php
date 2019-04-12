@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                         </li>
-                        @elseif($row->status=='accepted')
+                        @elseif($row->status!='rejected' || $row->status!='redirected')
                         <li>
                             <i class="fa fa-user-plus bg-olive"></i>
                             <div class="timeline-item">
@@ -124,7 +124,7 @@
                             <i class="fa fa-user-times bg-maroon"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                <h3 class="timeline-header no-border"><a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
+                                <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
 
                             </div>
 
@@ -163,5 +163,20 @@
 @section('js')
 @include('script.referral')
 @include('script.feedback')
+<script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
+<script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+<script>
+    $('#daterange').daterangepicker({
+        "singleDatePicker": false,
+        "startDate": "{{ $start }}",
+        "endDate": "{{ $end }}"
+    }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+</script>
+@endsection
+
+@section('css')
+    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
 @endsection
 
