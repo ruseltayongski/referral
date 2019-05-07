@@ -246,3 +246,6 @@ Route::get('/mcc/report/incoming','mcc\ReportCtrl@incoming');
 Route::post('/mcc/report/incoming','mcc\ReportCtrl@filterIncoming');
 Route::get('/mcc/report/timeframe','mcc\ReportCtrl@timeframe');
 Route::post('/mcc/report/timeframe','mcc\ReportCtrl@filterTimeframe');
+Route::get('/mcc/track','mcc\ReportCtrl@trackReferral');
+Route::post('/mcc/track','mcc\ReportCtrl@searchTrackReferral');
+

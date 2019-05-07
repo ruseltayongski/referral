@@ -269,4 +269,49 @@ class ReportCtrl extends Controller
         return redirect()->back();
     }
 
+    public function searchTrackReferral(Request $req)
+    {
+        Session::put('referredCode',$req->keyword);
+        return redirect('mcc/track');
+    }
+
+    public function trackReferral()
+    {
+        $code = Session::get('referredCode');
+
+        $data = Tracking::select(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+            'patients.sex',
+            'facility.name as facility_name',
+            'facility.id as facility_id',
+            'patients.id as patient_id'
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->where(function($q){
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','accepted')
+                    ->orwhere('tracking.status','arrived')
+                    ->orwhere('tracking.status','admitted')
+                    ->orwhere('tracking.status','transferred')
+                    ->orwhere('tracking.status','discharged')
+                    ->orwhere('tracking.status','cancelled')
+                    ->orwhere('tracking.status','archived')
+                    ->orwhere('tracking.status','rejected');
+            })
+            ->where('tracking.code',$code)
+            ->orderBy('date_referred','desc')
+            ->paginate(10);
+
+        return view('mcc.tracking',[
+            'title' => 'Track Patients',
+            'data' => $data
+        ]);
+    }
+
 }
