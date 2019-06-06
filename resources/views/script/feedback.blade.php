@@ -37,7 +37,8 @@
 
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
-        var msg = $("#message").val()
+        var msg = $("#message").val();
+        $("#message").val('').attr('placeholder','Sending...');
         $.ajax({
             url: "{{ url('doctor/feedback') }}",
             type: 'post',
@@ -61,6 +62,7 @@
 
                 var objDiv = document.getElementById(code);
                 objDiv.scrollTop = objDiv.scrollHeight;
+                $("#message").val('').attr('placeholder','Type Message...');
             }
         });
     });
