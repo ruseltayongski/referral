@@ -265,7 +265,8 @@
             type: 'POST',
             success: function(data){
                 console.log(data);
-                sendNormalData(data);
+                location.reload();
+                //sendNormalData(data);
             },
             error: function(){
                 $('#serverModal').modal();
