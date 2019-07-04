@@ -20,6 +20,8 @@
     <link href="{{ asset('resources/assets/css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/assets/css/AdminLTE.min.css') }}">
     <!-- bootstrap datepicker -->
+    <link href="{{ asset('resources/plugin/select2/select2.min.css') }}" rel="stylesheet">
+    <!-- SELECT 2 -->
     <link href="{{ asset('resources/plugin/datepicker/datepicker3.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
@@ -251,6 +253,7 @@
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
 <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=1"></script>
+<script src="{{ asset('resources/plugin/select2/select2.min.js') }}?v=1"></script>
 @include('script.firebase')
 @include('script.newreferral')
 @include('script.password')
