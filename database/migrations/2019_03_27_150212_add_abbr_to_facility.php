@@ -13,6 +13,9 @@ class AddAbbrToFacility extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('facility')){
+            return true;
+        }
         Schema::table('facility', function($table) {
             $table->string('abbr')->after('name');
         });

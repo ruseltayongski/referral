@@ -7,6 +7,7 @@ use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
+use App\Issue;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
@@ -992,6 +993,38 @@ class ReferralCtrl extends Controller
                 'status' => 'cancelled'
             ]);
         return redirect()->back();
+    }
+
+    public function issueReferral(Request $req, $tracking_id)
+    {
+        //delete exist
+        Issue::where('tracking_id',$tracking_id)->where('status','outgoing')->delete();
+
+        $issue = $req->get('issue');
+        foreach($issue as $row){
+            $data  = array(
+                "tracking_id" => $tracking_id,
+                "issue" => $row,
+                "status" => 'outgoing'
+            );
+            Issue::create($data);
+        }
+
+        return redirect()->back()->with('issueReferral','Successfully Added Issue!');
+    }
+
+    public function transferReferral(Request $req, $tracking_id){
+        $mode_transportation = $req->mode_transportation;
+        $other_transportation = $req->other_transportation;
+        if($mode_transportation == "5"){
+            $mode_transportation .= "-".$other_transportation;
+        }
+        Tracking::find($tracking_id)->update([
+            "date_transferred" => date('Y-m-d H:i:s'),
+            "mode_transportation" => $mode_transportation
+        ]);
+
+        return redirect()->back()->with('transferReferral','Successfully Transfer!');
     }
 
     public function feedback($code){

@@ -13,6 +13,9 @@ class Devicetoken extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('devicetoken')){
+            return true;
+        }
         Schema::create('devicetoken', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('facility_id');

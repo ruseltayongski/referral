@@ -124,6 +124,8 @@ Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantFor
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
 Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
+Route::post('doctor/referred/issue/{id}','doctor\ReferralCtrl@issueReferral');
+Route::post('doctor/referred/transfer/{id}','doctor\ReferralCtrl@transferReferral');
 Route::post('doctor/referred/search','doctor\ReferralCtrl@searchReferred');
 Route::get('doctor/track/patient','doctor\ReferralCtrl@trackReferral');
 Route::post('doctor/track/patient','doctor\ReferralCtrl@searchTrackReferral');

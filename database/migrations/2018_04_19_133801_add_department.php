@@ -13,6 +13,9 @@ class AddDepartment extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('patient_form')){
+            return true;
+        }
         Schema::table('patient_form', function (Blueprint $table) {
             $table->integer('department_id')->after('referred_to');
         });

@@ -8,6 +8,9 @@ class TableActivity extends Migration
 {
     public function up()
     {
+        if(Schema::hasTable('activity')){
+            return true;
+        }
         Schema::create('activity', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code');

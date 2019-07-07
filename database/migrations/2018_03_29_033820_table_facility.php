@@ -8,6 +8,9 @@ class TableFacility extends Migration
 {
     public function up()
     {
+        if(Schema::hasTable('facility')){
+            return true;
+        }
         Schema::create('facility', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');

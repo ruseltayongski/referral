@@ -13,6 +13,9 @@ class CreateLoginsTable extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('login')){
+            return true;
+        }
         Schema::create('login', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('userId');

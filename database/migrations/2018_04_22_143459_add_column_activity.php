@@ -13,6 +13,9 @@ class AddColumnActivity extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('activity')){
+            return true;
+        }
         Schema::table('activity', function (Blueprint $table) {
             $table->dateTime('date_seen')->after('date_referred');
             $table->integer('referring_md')->after('department_id');
