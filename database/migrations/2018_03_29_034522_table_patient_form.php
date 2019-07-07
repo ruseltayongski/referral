@@ -8,6 +8,9 @@ class TablePatientForm extends Migration
 {
     public function up()
     {
+        if(Schema::hasTable('patient_form')){
+            return true;
+        }
         Schema::create('patient_form', function (Blueprint $table) {
             $table->increments('id');
             $table->string('unique_id',50)->unique();

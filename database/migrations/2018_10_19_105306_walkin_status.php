@@ -13,6 +13,9 @@ class WalkinStatus extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('tracking')){
+            return true;
+        }
         Schema::table('tracking', function (Blueprint $table) {
             $table->string('walkin')->after('type');
         });

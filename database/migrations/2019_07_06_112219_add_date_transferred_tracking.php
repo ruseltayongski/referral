@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeenTable extends Migration
+class AddDateTransferredTracking extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateSeenTable extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('seen')){
+        if(Schema::hasTable('tracking')){
             return true;
         }
-        Schema::create('seen', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('tracking_id');
-            $table->integer('facility_id');
-            $table->integer('user_md');
-            $table->timestamps();
+        Schema::table('tracking', function (Blueprint $table) {
+            $table->dateTime('date_transferred')->after('date_referred');
         });
     }
 
@@ -32,6 +28,6 @@ class CreateSeenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seen');
+        //
     }
 }

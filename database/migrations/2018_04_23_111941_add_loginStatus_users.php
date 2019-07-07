@@ -13,6 +13,9 @@ class AddLoginStatusUsers extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('users')){
+            return true;
+        }
         Schema::table('users', function (Blueprint $table) {
             $table->string('login_status')->after('last_login');
         });

@@ -13,6 +13,9 @@ class AddDepartmentTracking extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('tracking')){
+            return true;
+        }
         Schema::table('tracking', function (Blueprint $table) {
             $table->integer('department_id')->after('referred_to');
         });

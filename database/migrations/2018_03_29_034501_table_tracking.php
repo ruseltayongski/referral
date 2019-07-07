@@ -8,6 +8,9 @@ class TableTracking extends Migration
 {
     public function up()
     {
+        if(Schema::hasTable('tracking')){
+            return true;
+        }
         Schema::create('tracking', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code',50)->unique();

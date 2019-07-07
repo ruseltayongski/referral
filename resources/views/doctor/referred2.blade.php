@@ -316,6 +316,10 @@ $user = Session::get('auth');
                         @endif
                     </a>
                     @endif
+                    @if($step==3 && empty(\App\Tracking::find($row->id)->mode_transportation))
+                        <a href="#transferModal" data-toggle="modal"
+                           data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
+                    @endif
                     @if($step<=4)
                     <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                             data-target="#feedbackModal"
@@ -326,9 +330,11 @@ $user = Session::get('auth');
                         @endif
                     </button>
                     @endif
+                    <a href="#issueModal" data-toggle="modal"
+                       data-id="{{ $row->id }}" data-issue="{{ \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->get() }}" class="btn btn-xs btn-danger btn-issue"><i class="fa fa-exclamation-triangle"></i> Issue and concern <?php $issue_count = \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->count(); ?>{!! $issue_count > 0 ? '<span class="badge bg-red">'.$issue_count.'</span>' : '' !!}</a>
                     @if(!$checkForCancellation)
-                    <a href="#cancelModal" data-toggle="modal"
-                            data-id="{{ $row->id }}" class="btn btn-xs btn-danger btn-cancel"><i class="fa fa-user-times"></i> Cancel</a>
+                        <a href="#cancelModal" data-toggle="modal"
+                           data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                     @endif
                 </div>
             </div>
@@ -353,6 +359,8 @@ $user = Session::get('auth');
     @include('modal.seen')
     @include('modal.cancel')
     @include('modal.feedback')
+    @include('modal.issue')
+    @include('modal.transfer')
 @endsection
 @include('script.firebase')
 
@@ -360,6 +368,55 @@ $user = Session::get('auth');
     @include('script.feedback')
     @include('script.referred')
     <script>
+        @if(session()->has('issueReferral'))
+            Lobibox.notify('success', {
+                title: '',
+                msg: "<?php echo session()->get('issueReferral'); ?>",
+                size: 'mini',
+                rounded: true
+            });
+        @endif
+        @if(session()->has('transferReferral'))
+        Lobibox.notify('success', {
+            title: '',
+            msg: "<?php echo session()->get('transferReferral'); ?>",
+            size: 'mini',
+            rounded: true
+        });
+        @endif
+
+        $('body').on('click','.btn-issue',function(){
+            $(".issue_body").html('');
+            var id = $(this).data('id');
+            var url = "{{ url('doctor/referred/issue') }}/"+id;
+            var issue = $(this).data('issue');
+            if (issue && issue.length) {
+                var input_issue = '';
+                $.each(issue,function($x,$y){
+                    input_issue += '<input class="form-control" name="issue[]" value="'+$y.issue+'" placeholder="Enter the issue here.." required><br>';
+                    $(".issue_body").html(input_issue);
+                });
+            } else {
+                $(".issue_body").html('<input class="form-control" name="issue[]" placeholder="Enter the issue here.." required><br>');
+            }
+            $("#issueReferralForm").attr('action',url);
+        });
+
+        $('body').on('click','.btn-transfer',function(){
+            $(".transportation_body").html('');
+            var id = $(this).data('id');
+            var url = "{{ url('doctor/referred/transfer') }}/"+id;
+            var transportation_all = <?php echo \App\ModeTransportation::get(); ?>;
+            var select_transportation = "<select class='form-control' onchange='addOthers()' name='mode_transportation' id='mode_transportation' >";
+            $.each(transportation_all,function($x,$y){
+                select_transportation += "<option value='"+$y.id+"'>"+$y.transportation+"</option>";
+            });
+            select_transportation += "</select><br>";
+
+            $(".transportation_body").append(select_transportation);
+            $("#transferReferralForm").attr('action',url);
+        });
+
         $(document).ready(function(){
             $('.toggle').toggle();
 

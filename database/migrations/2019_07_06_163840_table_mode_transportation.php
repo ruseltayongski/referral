@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeenTable extends Migration
+class TableModeTransportation extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateSeenTable extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('seen')){
+        if(Schema::hasTable('mode_transportation')){
             return true;
         }
-        Schema::create('seen', function (Blueprint $table) {
+        Schema::create('mode_transportation', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('tracking_id');
-            $table->integer('facility_id');
-            $table->integer('user_md');
+            $table->string('transportation');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateSeenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seen');
+        //
     }
 }

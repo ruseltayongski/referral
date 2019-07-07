@@ -8,6 +8,9 @@ class TablePregnantForm extends Migration
 {
     public function up()
     {
+        if(Schema::hasTable('pregnant_form')){
+            return true;
+        }
         Schema::create('pregnant_form', function (Blueprint $table) {
             $table->increments('id');
             $table->string('unique_id',50)->unique();
