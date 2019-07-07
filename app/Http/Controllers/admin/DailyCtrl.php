@@ -90,6 +90,32 @@ class DailyCtrl extends Controller
         ]);
     }
 
+    public function incoming()
+    {
+        $data = Facility::where('status',1)
+            ->orderBy('name','asc')
+            ->paginate(20);
+
+        return view('admin.report.incoming',
+            [
+                'title' => 'Daily Referral',
+                'data' => $data
+            ]);
+    }
+
+    public function outgoing()
+    {
+        $data = Facility::where('status',1)
+            ->orderBy('name','asc')
+            ->paginate(20);
+
+        return view('admin.report.outgoing',
+            [
+                'title' => 'Daily Referral',
+                'data' => $data
+            ]);
+    }
+
     public function referralFilter(Request $req)
     {
         $range = explode('-',str_replace(' ', '', $req->date));

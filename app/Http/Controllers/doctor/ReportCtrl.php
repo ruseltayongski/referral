@@ -94,6 +94,7 @@ class ReportCtrl extends Controller
 
     public function outgoing()
     {
+
         $user = Session::get('auth');
         $start = Carbon::now()->startOfMonth()->format('m/d/y');
         $end = Carbon::now()->endOfMonth()->format('m/d/y');

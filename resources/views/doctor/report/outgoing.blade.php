@@ -12,12 +12,20 @@
             vertical-align: middle !important;
         }
     </style>
-    <div class="col-md-3">
-        @include('doctor.sidebar.side_outgoing')
-        @include('sidebar.quick')
+    <div class="row">
+        <div class="col-md-4">
+            @include('doctor.sidebar.side_outgoing')
+        </div>
+        <div class="col-md-4">
+            @include('sidebar.quick')
+        </div>
+        <div class="col-md-4">
+            @include('sidebar.quick2')
+        </div>
     </div>
 
-    <div class="col-md-9">
+
+    <div class="col-md-13">
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3>{{ $title }}
@@ -29,28 +37,45 @@
             <div class="box-body">
                 @if(count($data)>0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered">
+                        <table class="table table-striped table-hover table-bordered" width="100px">
                             <tr class="bg-black">
-                                <th class="text-center" rowspan="2">Patient Code</th>
-                                <th class="text-center" rowspan="2">Date<br>Referred</th>
-                                <th class="text-center" colspan="4">Status</th>
-                                <th class="text-center" rowspan="2">No Action</th>
+                                <th class="text-center">Date and Time Referred</th>
+                                <th class="text-center">Date and Time Arrived</th>
+                                <th class="text-center">Patient Code</th>
+                                <th class="text-center">Age / Sex</th>
+                                <th class="text-center">Complete Address</th>
+                                <th class="text-center">Referred To</th>
+                                <th class="text-center">Diagnosis and Impression</th>
+                                <th class="text-center">Referring MD / HCW (Contact No.)</th>
+                                <th class="text-center">Reason for Referral</th>
+                                <th class="text-center">Referred to MD / HCW (Contact No.)</th>
+                                <th class="text-center">Method of Transportation</th>
+                                <th class="text-center">ReCo<br>"Call Done"</th>
+                                <th class="text-center">Acknowledgements<br>Receipt<br>Returned</th>
+                                <th class="text-center">Remarks</th>
                             </tr>
-                            <tr class="bg-black">
-                                <th class="text-center">Seen</th>
-                                <th class="text-center">Accepted</th>
-                                <th class="text-center">Arrived</th>
-                                <th class="text-center">Redirected</th>
-                            </tr>
+                            {{--<tr class="bg-black">--}}
+                                {{--<th class="text-center">Seen</th>--}}
+                                {{--<th class="text-center">Accepted</th>--}}
+                                {{--<th class="text-center">Arrived</th>--}}
+                                {{--<th class="text-center">Redirected</th>--}}
+                            {{--</tr>--}}
                             @foreach($data as $row)
                             <?php
-                                $accepted = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('accepted',$row->code);
-                                $arrived = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('arrived',$row->code);
-                                $rejected = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('rejected',$row->code);
+//                                $accepted = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('accepted',$row->code);
+//                                $arrived = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('arrived',$row->code);
+//                                $rejected = \App\Http\Controllers\doctor\ReportCtrl::getDateAction('rejected',$row->code);
+
+                                $arrived = \App\Http\Controllers\doctor\ReportCtrl::checkStatus($row->date_referred,'arrived',$row->code);
+                                $admitted = \App\Http\Controllers\doctor\ReportCtrl::checkStatus($row->date_referred,'admitted',$row->code);
+                                $discharged = \App\Http\Controllers\doctor\ReportCtrl::checkStatus($row->date_referred,'discharged',$row->code);
+                                $transferred = \App\Http\Controllers\doctor\ReportCtrl::checkStatus($row->date_referred,'transferred',$row->code);
+                                $cancelled = \App\Http\Controllers\doctor\ReportCtrl::checkStatus($row->date_referred,'cancelled',$row->code);
                             ?>
                             <tr>
-                                <td class="text-warning">{{ $row->code }}</td>
-                                <td class="text-muted">{{ date('m/d/y h:ia',strtotime($row->date_referred)) }}</td>
+                                <td class="text-warning text-center">{{ $row->date_referred }}</td>
+                                <td class="text-muted text-center">{{ date('m/d/y h:ia',strtotime($arrived)) }}</td>
+                                <td class="text-center">{{ $row->code }}</td>
                                 <td class="text-right text-danger">
                                     <?php $seen = \App\Http\Controllers\doctor\ReportCtrl::timeDiff($row->date_referred,$row->date_seen); ?>
                                     @if($row->date_referred < $row->date_seen)
@@ -72,11 +97,18 @@
                                         {{ \App\Http\Controllers\doctor\ReportCtrl::timeDiff($row->date_referred,$rejected) }}
                                     @endif
                                 </td>
-                                <td class="text-right text-danger">
+                                <td class="text-danger text-center">
                                     @if($seen=='' && $accepted=='' && $arrived=='' && $rejected=='')
                                         {{ \App\Http\Controllers\doctor\ReportCtrl::timeDiff($row->date_referred,\Carbon\Carbon::now()) }}
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             @endforeach
                         </table>

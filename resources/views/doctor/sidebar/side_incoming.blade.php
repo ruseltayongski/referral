@@ -21,7 +21,7 @@ $department = \Illuminate\Support\Facades\Session::get('report_incoming_departme
             <span class="badge pull-right">Result: {{ $data->total() }}</span>
         </h3>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" style="max-height:200px">
         <form method="post" action="{{ url('doctor/report/incoming') }}">
             {{ csrf_field() }}
             <div class="form-group">
