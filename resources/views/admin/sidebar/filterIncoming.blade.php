@@ -9,10 +9,10 @@ if(!$dateDailyReferral){
     <div class="panel-heading">
         <h3 class="panel-title">Select Date</h3>
     </div>
-    <form method="post" action="{{ url('admin/daily/referral') }}">
+    <form method="post" action="{{ url('admin/report/patient/incoming/') }}">
         {{ csrf_field() }}
         <div class="panel-body">
-            <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateDailyReferral }}" name="date" class="form-control" />
+            <input type="text" id="daterange" max="{{ date('Y-m-d') }}" value="{{ $dateDailyReferral }}" name="date_range" class="form-control" />
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-success btn-block">

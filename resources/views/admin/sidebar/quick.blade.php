@@ -5,7 +5,7 @@
     <?php
     $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
     ?>
-    <div class="panel-body">
+    <div class="panel-body" style="height:157px">
         <div class="list-group">
             <a href="{{ asset('admin/users') }}" class="list-group-item clearfix">
                 Manage Users

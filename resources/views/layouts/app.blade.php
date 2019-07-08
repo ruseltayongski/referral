@@ -198,7 +198,22 @@
                         <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Referral Status</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url('admin/daily/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
-                        <li><a href="{{ url('admin/daily/referral') }}" data-toggle="modal"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referral</a></li>
+                        <li class="dropdown-submenu">
+                            <a class="test" tabindex="-1" href="#"><i class="fa fa-line-chart"></i>&nbsp; Daily Referral</a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="{{ url('admin/daily/referral') }}">Hospital</a></li>
+                                {{--EDITED--}}
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Patient</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a tabindex="-1" href="{{ url('admin/report/patient/incoming') }}">Incoming</a></li>
+                                        <li><a tabindex="-1" href="{{ url('admin/report/patient/outgoing') }}">outgoing</a></li>
+                                    </ul>
+                                </li>
+                                {{--END--}}
+
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
@@ -225,11 +240,31 @@
     </div>
 </nav>
 
-<div class="container">
+{{--<div class="{{in_array(Request::segments()[0].'/'.Request::segments()[1], array('/doctor/report/','/doctor/report/'), true) ? 'container-fluid' : 'container' }}">--}}
+    {{--<div class="loading"></div>--}}
+    {{--@yield('content')--}}
+    {{--<div class="clearfix"></div>--}}
+{{--</div> <!-- /container -->--}}
+
+@if(isset(Request::segments()[2]))
+<div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2], array('daily/referral/incoming','daily/referral/outgoing'), true) ? 'container' : 'container-fluid' }}">
     <div class="loading"></div>
     @yield('content')
     <div class="clearfix"></div>
 </div> <!-- /container -->
+    @else
+    <div class="container">
+        <div class="loading"></div>
+        @yield('content')
+        <div class="clearfix"></div>
+    </div> <!-- /container -->
+@endif
+
+{{--<div class="container">--}}
+    {{--<div class="loading"></div>--}}
+    {{--@yield('content')--}}
+    {{--<div class="clearfix"></div>--}}
+{{--</div> <!-- /container -->--}}
 @include('modal.server')
 @include('modal.password')
 @include('modal.duty')
@@ -237,7 +272,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2018 | Version 1.5</p>
+        <p class="text-center">All Rights Reserved 2019 | Version 1.5</p>
     </div>
 </footer>
 

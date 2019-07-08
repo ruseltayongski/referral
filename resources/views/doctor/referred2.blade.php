@@ -324,7 +324,7 @@ $user = Session::get('auth');
                     <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                             data-target="#feedbackModal"
                             data-code="{{ $row->code }}">
-                        <i class="fa fa-comments"></i> Feedback
+                        <i class="fa fa-comments"></i> ReCo
                         @if($feedback>0)
                             <span class="badge bg-blue">{{ $feedback }}</span>
                         @endif
