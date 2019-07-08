@@ -88,12 +88,7 @@ if(!$end)
                                         echo "<ul class='pull-left'>";
                                         foreach(\App\Feedback::where('id', $row -> id)->get() as $feedback)
                                         {
-                                            if(strlen($feedback -> message) > 30)
-                                                {
-                                                    echo "<li class='text-center pull-left'>";
-                                                    echo e(substr($feedback -> message,0,30));
-                                                    echo "<br><a id='show-more' class='show-more' href='#show-more'><u>...</u></a></li>";
-                                                }
+                                            echo "<li class='pull-left'>$feedback->message</li>";
                                         }
                                         echo "</ul>";
                                         ?>
@@ -103,7 +98,7 @@ if(!$end)
                                     <td>
                                         <?php
                                         echo "<ul class='pull-left'>";
-                                        foreach(\App\Issue::where('tracking_id', $row -> tracking_id) -> where('status', 'incoming')->get() as $issue)
+                                        foreach(\App\Issue::where('tracking_id', $row -> tracking_id) -> where('status', 'outgoing')->get() as $issue)
                                         {
                                             echo "<li class='pull-left'>$issue->issue</li>";
                                         }
