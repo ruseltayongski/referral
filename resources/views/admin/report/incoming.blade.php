@@ -27,11 +27,12 @@ if(!$end)
         }
         .table td, .table th{
             vertical-align: middle !important;
+            font-size: 10pt;
         }
     </style>
     <div class="row">
         <div class="col-md-6">
-            @include('admin.sidebar.filterDailyReferral')
+            @include('admin.sidebar.filterIncoming')
         </div>
         <div class="col-md-6">
             @include('admin.sidebar.quick')
@@ -75,20 +76,25 @@ if(!$end)
                                 <td class="text-center">
                                     {{ (int)$row -> ageInYears }} / {{ $row -> sex }}
                                 </td>
-                                <td class="text-center"> {{ $row -> address }} </td>
-                                <td class="text-center"> {{ $row -> name }} </td>
-                                <td class="text-center"> {{ $row -> diagnosis }}</td>
-                                <td class="text-center"> {{ $row -> referring_md }}</td>
-                                <td class="text-center"> {{ $row -> reason }}</td>
-                                <td class="text-center"> {{ $row -> referred_md }}</td>
-                                <td class="text-center"> {{ $row -> transportation }}</td>
+                                <td class="text-center"> {{ $row->address }} </td>
+                                <td class="text-center"> {{ $row->name }} </td>
+                                <td class="text-center"> {{ $row->diagnosis }}</td>
+                                <td class="text-center"> {{ $row->referring_md }}</td>
+                                <td class="text-center"> {{ $row->reason }}</td>
+                                <td class="text-center"> {{ $row->referred_md }}</td>
+                                <td class="text-center"> {{ $row->transportation }}</td>
                                 <td class="text-center">
                                     {{--EDITED--}}
                                     <?php
                                     echo "<ul class='pull-left'>";
-                                    foreach(\App\Feedback::where('message', $row -> message)->get() as $feedback)
+                                    $count = 0;
+                                    foreach(\App\Feedback::where('message', $row->message)->get() as $feedback)
                                     {
-                                        echo "<li class='pull-left'>$feedback-> message</li>";
+                                        if($count < 3)
+                                        {
+                                            echo "<li class='pull-left'>$feedback->message</li><br>";
+                                        }
+                                        $count++;
                                     }
                                     echo "</ul>";
                                     ?>

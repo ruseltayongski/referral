@@ -55,6 +55,7 @@ Route::get('admin/report/referral','admin\ReportCtrl@referral');
 Route::post('admin/report/referral','admin\ReportCtrl@filterReferral');
 
 Route::get('admin/report/patient/incoming','admin\PatientCtrl@incoming');
+Route::post('admin/report/patient/incoming','admin\PatientCtrl@incomingDateRange');
 Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
 

@@ -31,7 +31,7 @@ if(!$end)
     </style>
     <div class="row">
         <div class="col-md-6">
-            @include('admin.sidebar.filterDailyReferral')
+            @include('admin.sidebar.filterOutgoing')
         </div>
         <div class="col-md-6">
             @include('admin.sidebar.quick')
@@ -86,9 +86,14 @@ if(!$end)
                                         {{--EDITED--}}
                                         <?php
                                         echo "<ul class='pull-left'>";
-                                        foreach(\App\Feedback::where('id', $row -> id)->get() as $feedback)
+                                        $count = 0;
+                                        foreach(\App\Feedback::where('message', $row->message)->get() as $feedback)
                                         {
-                                            echo "<li class='pull-left'>$feedback->message</li>";
+                                            if($count < 3)
+                                            {
+                                                echo "<li class='pull-left'>$feedback->message</li><br>";
+                                            }
+                                            $count++;
                                         }
                                         echo "</ul>";
                                         ?>
