@@ -13,9 +13,9 @@ class AddDateTransferredTracking extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('tracking')){
-            return true;
-        }
+//        if(Schema::hasTable('tracking')){
+//            return true;
+//        }
         Schema::table('tracking', function (Blueprint $table) {
             $table->dateTime('date_transferred')->after('date_referred');
         });

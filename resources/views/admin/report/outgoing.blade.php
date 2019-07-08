@@ -81,10 +81,35 @@ if(!$end)
                                     <td class="text-center"> {{ $row -> referring_md }}</td>
                                     <td class="text-center"> {{ $row -> reason }}</td>
                                     <td class="text-center"> {{ $row -> referred_md }}</td>
+                                    <td class="text-center"> {{ $row -> transportation }}</td>
+                                    <td>
+                                        {{--EDITED--}}
+                                        <?php
+                                        echo "<ul class='pull-left'>";
+                                        foreach(\App\Feedback::where('id', $row -> id)->get() as $feedback)
+                                        {
+                                            if(strlen($feedback -> message) > 30)
+                                                {
+                                                    echo "<li class='text-center pull-left'>";
+                                                    echo e(substr($feedback -> message,0,30));
+                                                    echo "<br><a id='show-more' class='show-more' href='#show-more'><u>...</u></a></li>";
+                                                }
+                                        }
+                                        echo "</ul>";
+                                        ?>
+                                        {{--END--}}
+                                    </td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <?php
+                                        echo "<ul class='pull-left'>";
+                                        foreach(\App\Issue::where('tracking_id', $row -> tracking_id) -> where('status', 'incoming')->get() as $issue)
+                                        {
+                                            echo "<li class='pull-left'>$issue->issue</li>";
+                                        }
+                                        echo "</ul>";
+                                        ?>
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
@@ -111,6 +136,7 @@ if(!$end)
 @section('js')
     <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
     <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+    <script src="{{ url('resources/plugin/Outgoing.js/outgoing.js')}}"></script>
 
     <script>
         <?php

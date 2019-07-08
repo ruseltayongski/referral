@@ -13,9 +13,9 @@ class AddModeTransporationTracking extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('tracking')){
-            return true;
-        }
+//        if(Schema::hasTable('tracking')){
+//            return true;
+//        }
         Schema::table('tracking', function (Blueprint $table) {
             $table->string('mode_transportation')->after('date_seen');
         });

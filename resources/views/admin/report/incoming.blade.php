@@ -70,8 +70,8 @@ if(!$end)
                             @foreach($data as $row)
                             <tr>
                                 <td class="text-warning text-center">{{ $row -> date_referred }}</td>
-                                <td></td>
-                                <td class="text-sucess text-center">{{ $row -> patient_name }}</td>
+                                <td class="text-success text-center">{{ $row -> date_transferred }}</td>
+                                <td class="text-success text-center">{{ $row -> patient_name }}</td>
                                 <td class="text-center">
                                     {{ (int)$row -> ageInYears }} / {{ $row -> sex }}
                                 </td>
@@ -81,10 +81,30 @@ if(!$end)
                                 <td class="text-center"> {{ $row -> referring_md }}</td>
                                 <td class="text-center"> {{ $row -> reason }}</td>
                                 <td class="text-center"> {{ $row -> referred_md }}</td>
+                                <td class="text-center"> {{ $row -> transportation }}</td>
+                                <td class="text-center">
+                                    {{--EDITED--}}
+                                    <?php
+                                    echo "<ul class='pull-left'>";
+                                    foreach(\App\Feedback::where('message', $row -> message)->get() as $feedback)
+                                    {
+                                        echo "<li class='pull-left'>$feedback->message</li>";
+                                    }
+                                    echo "</ul>";
+                                    ?>
+                                    {{--END--}}
+                                </td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    <?php
+                                        echo "<ul class='pull-left'>";
+                                        foreach(\App\Issue::where('tracking_id', $row -> tracking_id) -> where('status', 'incoming')->get() as $issue)
+                                        {
+                                            echo "<li class='pull-left'>$issue->issue</li>";
+                                        }
+                                        echo "</ul>";
+                                    ?>
+                                </td>
                             </tr>
                             @endforeach
                         </table>
