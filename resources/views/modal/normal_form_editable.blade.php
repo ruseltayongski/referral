@@ -122,7 +122,7 @@
                                 Name of referred MD/HCW- Mobile Contact # (ReCo):
                             </div>
                             <div class="col-md-7">
-                                <select name="referred_md" class="referred_md form-control-select select2" style="width: 100%">
+                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
                                     <option value="">Any...</option>
                                 </select>
                             </div>
