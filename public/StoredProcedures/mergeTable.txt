@@ -1,0 +1,32 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mergeTable`()
+BEGIN
+	SELECT
+		t.id,
+		CONCAT(p.lname,", ",p.fname," ",p.mname) as patient_name,
+        DATEDIFF(CURRENT_DATE, STR_TO_DATE(p.dob, '%Y-%m-%d'))/365 AS ageInYears,
+        p.sex,
+        CONCAT(bar.description,"\n", mun.description,"\n", pro.description) as address,
+        pf.diagnosis,
+        pf.reason,
+        pf.referred_md,
+        CONCAT(u.lname,",", u.fname,",", u.mname) as referring_md,
+        mt.transportation,
+        f.name,
+        t.date_transferred,
+        t.date_referred,
+        t.id as tracking_id,
+        t.status
+
+	FROM doh_referral.tracking t
+		left join doh_referral.patients p on p.id = t.patient_id
+        left join doh_referral.patient_form pf on pf.id = t.patient_id
+        left join doh_referral.barangay bar on bar.id = p.brgy
+        left join doh_referral.muncity mun on mun.id = p.muncity
+        left join doh_referral.province pro on pro.id = p.province
+        left join doh_referral.users u on u.id = pf.referring_md
+        left join doh_referral.facility f on f.id = t.referred_to
+        left join doh_referral.mode_transportation mt on mt.id = t.mode_transportation
+
+		where t.status = "accepted" limit 10;
+
+END
