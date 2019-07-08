@@ -88,7 +88,7 @@ if(!$end)
                                     echo "<ul class='pull-left'>";
                                     foreach(\App\Feedback::where('message', $row -> message)->get() as $feedback)
                                     {
-                                        echo "<li class='pull-left'>$feedback->message</li>";
+                                        echo "<li class='pull-left'>$feedback-> message</li>";
                                     }
                                     echo "</ul>";
                                     ?>
