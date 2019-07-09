@@ -85,6 +85,8 @@ if(!$end)
                                 <td class="text-center"> {{ $row->transportation }}</td>
                                 <td class="text-center">
                                     {{--EDITED--}}
+                                    {{--EDITED 2--}}
+                                    {{--EDITED 3--}}
                                     <?php
                                     echo "<ul class='pull-left'>";
                                     $count = 0;
