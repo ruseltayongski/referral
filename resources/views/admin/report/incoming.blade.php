@@ -84,10 +84,6 @@ if(!$end)
                                 <td class="text-center"> {{ $row->referred_md }}</td>
                                 <td class="text-center"> {{ $row->transportation }}</td>
                                 <td class="text-center">
-                                    {{--EDITED--}}
-                                    {{--EDITED 2--}}
-                                    {{--EDITED 3--}}
-                                    {{--EDITED 4--}}
                                     <?php
                                     echo "<ul class='pull-left'>";
                                     $count = 0;
