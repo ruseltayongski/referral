@@ -87,6 +87,7 @@ if(!$end)
                                     {{--EDITED--}}
                                     {{--EDITED 2--}}
                                     {{--EDITED 3--}}
+                                    {{--EDITED 4--}}
                                     <?php
                                     echo "<ul class='pull-left'>";
                                     $count = 0;
