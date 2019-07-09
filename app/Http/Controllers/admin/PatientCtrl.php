@@ -31,7 +31,7 @@ class PatientCtrl extends Controller
         $incomingData = \DB::connection('mysql')->select("call mergeTable()");
         return view('admin.report.incoming',
             [
-                'title' => 'Outgoing Patients',
+                'title' => 'Incoming Patients',
                 'data' => $incomingData
             ]);
     }

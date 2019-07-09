@@ -27,7 +27,7 @@ if(!$end)
         }
         .table td, .table th{
             vertical-align: middle !important;
-            font-size: 10pt;
+            font-size: 8pt;
         }
     </style>
     <div class="row">
@@ -88,7 +88,7 @@ if(!$end)
                                     <?php
                                     echo "<ul class='pull-left'>";
                                     $count = 0;
-                                    foreach(\App\Feedback::where('message', $row->message)->get() as $feedback)
+                                    foreach(\App\Feedback::where('code', $row->code)->get() as $feedback)
                                     {
                                         if($count < 3)
                                         {
@@ -104,7 +104,7 @@ if(!$end)
                                 <td>
                                     <?php
                                         echo "<ul class='pull-left'>";
-                                        foreach(\App\Issue::where('tracking_id', $row -> tracking_id) -> where('status', 'incoming')->get() as $issue)
+                                        foreach(\App\Issue::where('tracking_id', $row->tracking_id)->where('status', 'incoming')->get() as $issue)
                                         {
                                             echo "<li class='pull-left'>$issue->issue</li>";
                                         }

@@ -247,7 +247,7 @@
 {{--</div> <!-- /container -->--}}
 
 @if(isset(Request::segments()[2]))
-<div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2], array('daily/referral/incoming','daily/referral/outgoing'), true) ? 'container' : 'container-fluid' }}">
+<div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing'), true) ? 'container-fluid' : 'container' }}">
     <div class="loading"></div>
     @yield('content')
     <div class="clearfix"></div>
