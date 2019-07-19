@@ -246,7 +246,7 @@
     {{--<div class="clearfix"></div>--}}
 {{--</div> <!-- /container -->--}}
 
-@if(isset(Request::segments()[2]))
+@if(isset(Request::segments()[3]))
 <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing'), true) ? 'container-fluid' : 'container' }}">
     <div class="loading"></div>
     @yield('content')

@@ -16,7 +16,7 @@
                 <form method="post" id="referForm">
                 {{ csrf_field() }}
                 <div class="form-group">
-                    <label style="padding:0px;">REMARKS:</label>
+                    <label style="padding:0px;">REASON FOR REDIRECTION:</label>
                     <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
                 </div>
                 <hr />
