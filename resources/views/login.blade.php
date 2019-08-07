@@ -64,11 +64,53 @@
       </form>        
     </div><!-- /.login-box -->
 
+    <div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                    <h3 style="font-weight: bold" class="text-success">Contact Person:</h3>
+                    <div >
+                        <p class="text-success">
+                            <i class="fa fa-phone-square"></i> For further assistance, please message these following:
+                        <ol type="I" style="color: #2f8030">
+                            <li>Technical</li>
+                            <ol type="A">
+                                <li >Web</li>
+                                <ul>
+                                    <li>Rusel T. Tayong - 09238309990</li>
+                                    <li>Christian Dave L. Tipactipac - 09286039028</li>
+                                </ul>
+                                <li >Server - Can't access in web http://ro7sys.doh.gov.ph/doh/referral/login</li>
+                                <ul>
+                                    <li>Garizaldy B. Epistola - 09338161374</li>
+                                    <li>Reyan M. Sugabo - 09359504269</li>
+                                    <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                </ul>
+                            </ol>
+                            <li>Non - Technical</li>
+                            <ol type="A">
+                                <ul>
+                                    <li class="text-danger">Ronadith Capala Arriesgado - 09952100815 Please reach via message only</li>
+                                    <li class="text-danger">Grace R. Flores - 09328596338 Please reach via message only</li>
+                                </ul>
+                            </ol>
+                            <h3 class="text-center" style="color: #2f8030">Thank you! &#128512;</h3>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- jQuery 2.1.4 -->
     <script src="{{ asset('resources/assets/js/jquery.min.js') }}"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
     <script>
+        $('#notificationModal').modal('show');
         $('.btn-submit').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
         });

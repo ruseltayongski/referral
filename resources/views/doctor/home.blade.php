@@ -23,11 +23,107 @@
     <div class="col-md-3">
         @include('sidebar.quick')
     </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                    <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
+                    <?php
+                    $dateNow = date('Y-m-d');
+                    ?>
+                    @if($dateNow==='2019-07-30')
+                        <div class="alert alert-info">
+                            <p class="text-info" style="font-size:1.3em;text-align: center;">
+                                <strong>There will be a server maintenance TODAY (July 30, 2019) at 1:15PM to 02:00PM. Server optimization!</strong>
+                            </p>
+                        </div>
+                    @endif
+
+                    @if($dateNow >= '2019-07-31' && $dateNow <= '2019-08-31')
+                        <div class="alert alert-info">
+                            <p class="text-info" style="font-size:1.1em;">
+                                <strong><i class="fa fa-info"></i> Version 2.0 was successfully launch</strong><br>
+                                <ol type="I" style="color: #31708f;">
+                                    <li>Other Salient Feactures(Recommended & Suggestion as of June 27,2019)</li>
+                                    <ol type="A">
+                                        <li >Name of Referred MD/HCW</li>
+                                        <ul>
+                                            <li>Instead of browsing (Scrolling up and down) in searching the referred MD / HCW, you can now search the name of the referred MD in the search bar.</li>
+                                        </ul>
+                                        <li >Feedback</li>
+                                        <ul>
+                                            <li>Changed the label from “Feedback” to “ReCo”</li>
+                                        </ul>
+                                        <li >Added Issues and Concern</li>
+                                        <ul>
+                                            <li>Added an optional “Issues and Concern” form, right after referring the patient to a specific MD / HCW</li>
+                                        </ul>
+                                        <li >Added Date and Time Transferred</li>
+                                        <ul>
+                                            <li>Added a “Travel button”, An event where a patient is already dispatched from hospital to another facility, and then timestamped with accurate Time and Date.</li>
+                                        </ul>
+                                        <li >Added Referral Logbook Matrix from the Referral Manual</li>
+                                        <ul>
+                                            <li>Department of Health Region – 7 Monitoring team can now have an overview of the incoming and outgoing patients.</li>
+                                        </ul>
+                                    </ol>
+                                    <li>Vicente Sotto Memorial Medical Center Concern:</li>
+                                    <ol type="A">
+                                        <li >Chat & Feedback</li>
+                                        <ul>
+                                            <li>Fixed bugs in "can't display after sending the message"</li>
+                                        </ul>
+                                        <li >Disposition</li>
+                                        <ul>
+                                            <li>Fixed the "accepted and redirected patients" that labeled ACCEPTED only</li>
+                                        </ul>
+                                    </ol>
+                                </ol>
+                            </p>
+                        </div>
+                    @endif
+                    <div class="alert alert-success ">
+                        <p class="text-success">
+                            <i class="fa fa-phone-square"></i> For further assistance, please message these following:
+                        <ol type="I" style="color: #2f8030">
+                            <li>Technical</li>
+                            <ol type="A">
+                                <li >Web</li>
+                                <ul>
+                                    <li>Rusel T. Tayong - 09238309990</li>
+                                    <li>Christian Dave L. Tipactipac - 09286039028</li>
+                                </ul>
+                                <li >Server - Can't access in web http://ro7sys.doh.gov.ph/doh/referral/login</li>
+                                <ul>
+                                    <li>Garizaldy B. Epistola - 09338161374</li>
+                                    <li>Reyan M. Sugabo - 09359504269</li>
+                                    <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                </ul>
+                            </ol>
+                            <li>Non - Technical</li>
+                            <ol type="A">
+                                <ul>
+                                    <li class="text-danger">Ronadith Capala Arriesgado - 09952100815 Please reach via message only</li>
+                                    <li class="text-danger">Grace R. Flores - 09328596338 Please reach via message only</li>
+                                </ul>
+                            </ol>
+                            <h3 class="text-center" style="color: #2f8030">Thank you! &#128512;</h3>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @section('js')
 @include('script.chart')
 <script>
+    $('#notificationModal').modal('show');
     var accepted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var rejected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var link = "{{ url('chart') }}";
