@@ -107,6 +107,7 @@
                             <ol type="A">
                                 <ul>
                                     <li class="text-danger">Ronadith Capala Arriesgado - 09952100815 Please reach via message only</li>
+                                    <li class="text-danger">Andrei Bacalan - 09396071936 Please reach via message only</li>
                                     <li class="text-danger">Grace R. Flores - 09328596338 Please reach via message only</li>
                                 </ul>
                             </ol>
