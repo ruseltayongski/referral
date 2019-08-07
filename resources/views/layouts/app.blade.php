@@ -207,7 +207,7 @@
                                     <a tabindex="-1" href="#">Patient</a>
                                     <ul class="dropdown-menu">
                                         <li><a tabindex="-1" href="{{ url('admin/report/patient/incoming') }}">Incoming</a></li>
-                                        <li><a tabindex="-1" href="{{ url('admin/report/patient/outgoing') }}">outgoing</a></li>
+                                        <li><a tabindex="-1" href="{{ url('admin/report/patient/outgoing') }}">Outgoing</a></li>
                                     </ul>
                                 </li>
                                 {{--END--}}

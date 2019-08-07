@@ -88,7 +88,7 @@
                                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                                     data-target="#feedbackModal"
                                                     data-code="{{ $row->code }}">
-                                                <i class="fa fa-comments"></i> Feedback
+                                                <i class="fa fa-comments"></i> ReCo
                                                 @if($feedback>0)
                                                     <span class="badge bg-blue">{{ $feedback }}</span>
                                                 @endif
@@ -103,7 +103,7 @@
                             <i class="fa fa-user-plus bg-olive"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was ACCEPTED by <span class="text-success">Dr. {{ $row->action_md }}</span>
+                                <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was {{ $row->status == 'rejected' ? 'redirected' : $row->status }} by <span class="text-success">Dr. {{ $row->action_md }}</span>
                                     @if($step<=4)
                                         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                                 data-target="#feedbackModal"

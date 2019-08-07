@@ -45,9 +45,9 @@ class ReportCtrl extends Controller
         $end_date = Carbon::parse($end)->endOfDay();
 
         $data = Tracking::whereBetween('tracking.date_referred',[$start_date,$end_date])
-                    ->where('tracking.referred_to',$user->facility_id)
-                    ->leftJoin('facility','facility.id','=','tracking.referred_from')
-                    ->select('tracking.*','facility.name as facility');
+            ->where('tracking.referred_to',$user->facility_id)
+            ->leftJoin('facility','facility.id','=','tracking.referred_from')
+            ->select('tracking.*','facility.name as facility');
 
         if($facility)
         {
@@ -60,7 +60,7 @@ class ReportCtrl extends Controller
         }
 
         $data = $data->orderBy('tracking.id','desc')
-                    ->paginate(20);
+            ->paginate(20);
 
         return view('doctor.report.incoming',[
             'title' => 'Incoming Referral Report',
@@ -89,12 +89,12 @@ class ReportCtrl extends Controller
     {
         Session::put('report_outgoing_date',$req->date);
         Session::put('report_outgoing_facility',$req->facility);
+        Session::put('report_outgoing_department',$req->department);
         return redirect()->back();
     }
 
     public function outgoing()
     {
-
         $user = Session::get('auth');
         $start = Carbon::now()->startOfMonth()->format('m/d/y');
         $end = Carbon::now()->endOfMonth()->format('m/d/y');

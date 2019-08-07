@@ -1050,6 +1050,10 @@ class ReferralCtrl extends Controller
         ]);
     }
 
+    public function feedbackAppend(){
+        return view('doctor.feedback_append');
+    }
+
     public function loadFeedback($code)
     {
         $id = Session::get('last_scroll_id');
@@ -1143,14 +1147,18 @@ class ReferralCtrl extends Controller
         $doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
 
-        $msg = "From: Dr. $name\nReferral Code: $req->code\nMessage: $req->message";
+        /*$msg = "From: Dr. $name\nReferral Code: $req->code\nMessage: $req->message";
         $facility_id = Tracking::where('code',$req->code)
                             ->first()
                             ->referred_from;
 
         DeviceTokenCtrl::send('New Feedback/Comment',$msg,$facility_id);
+        return $f->id;*/
 
-        return $f->id;
+        return view('doctor.feedback_append',[
+            "name" => $name,
+            "message" => $req->message
+        ]);
     }
 
     public function notificationFeedback($code,$user_id)

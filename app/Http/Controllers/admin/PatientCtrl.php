@@ -28,7 +28,7 @@ class PatientCtrl extends Controller
     }
     public function incoming()
     {
-        $incomingData = \DB::connection('mysql')->select("call mergeTable()");
+        $incomingData = \DB::connection('mysql')->select("call incomingMonitorPatient()");
         return view('admin.report.incoming',
             [
                 'title' => 'Incoming Patients',
@@ -38,7 +38,7 @@ class PatientCtrl extends Controller
 
     public function outgoing()
     {
-        $outgoingData = \DB::connection('mysql')->select("call mergeTable_outgoing()");
+        $outgoingData = \DB::connection('mysql')->select("call incomingMonitorPatient()");
         return view('admin.report.outgoing',
         [
             'title' => 'Outgoing Patients',

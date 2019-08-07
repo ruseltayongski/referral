@@ -48,6 +48,8 @@
                 code : code
             },
             success: function(data) {
+                //console.log(data);
+                $(".reco-body").append(data);
                 feedbackRef.push({
                     id: data,
                     code: code,
@@ -99,8 +101,9 @@
         var c = data.code;
 
         $("#"+c).append(data.content);
+        var url = "<?php echo asset('referral/doctor/feedback/reply')."/"; ?>"+data.id;
         $.ajax({
-            url: "{{ url('doctor/feedback/reply/') }}/"+data.id,
+            url: url,
             type: 'get',
             success: function(content) {
                 $("#"+c).append(content);
