@@ -199,7 +199,7 @@
                         <li class="divider"></li>
                         <li><a href="{{ url('admin/daily/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
                         <li class="dropdown-submenu">
-                            <a class="test" tabindex="-1" href="#"><i class="fa fa-line-chart"></i>&nbsp; Daily Referral</a>
+                            <a class="test" tabindex="-1" href="#"><i class="fa fa-arrows-h"></i>&nbsp; Daily Referral</a>
                             <ul class="dropdown-menu">
                                 <li><a tabindex="-1" href="{{ url('admin/daily/referral') }}">Hospital</a></li>
                                 {{--EDITED--}}
@@ -212,6 +212,13 @@
                                 </li>
                                 {{--END--}}
 
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#"><i class="fa fa-folder-open-o"></i> Consolidated</a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incoming') }}">Incoming</a></li>
+                                <li><a tabindex="-1" href="{{ url('admin/report/consolidated/outgoing') }}">Outgoing</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -240,19 +247,15 @@
     </div>
 </nav>
 
-{{--<div class="{{in_array(Request::segments()[0].'/'.Request::segments()[1], array('/doctor/report/','/doctor/report/'), true) ? 'container-fluid' : 'container' }}">--}}
-    {{--<div class="loading"></div>--}}
-    {{--@yield('content')--}}
-    {{--<div class="clearfix"></div>--}}
-{{--</div> <!-- /container -->--}}
+
 
 @if(isset(Request::segments()[3]))
-<div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing'), true) ? 'container-fluid' : 'container' }}">
-    <div class="loading"></div>
-    @yield('content')
-    <div class="clearfix"></div>
-</div> <!-- /container -->
-    @else
+    <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing','admin/report/consolidated/incoming'), true) ? 'container-fluid' : 'container' }}">
+        <div class="loading"></div>
+        @yield('content')
+        <div class="clearfix"></div>
+    </div> <!-- /container -->
+@else
     <div class="container">
         <div class="loading"></div>
         @yield('content')
@@ -260,11 +263,6 @@
     </div> <!-- /container -->
 @endif
 
-{{--<div class="container">--}}
-    {{--<div class="loading"></div>--}}
-    {{--@yield('content')--}}
-    {{--<div class="clearfix"></div>--}}
-{{--</div> <!-- /container -->--}}
 @include('modal.server')
 @include('modal.password')
 @include('modal.duty')

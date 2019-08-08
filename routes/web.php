@@ -59,6 +59,11 @@ Route::post('admin/report/patient/incoming','admin\PatientCtrl@incomingDateRange
 Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
 
+//consolidated
+Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
+Route::get('admin/report/consolidated/outgoing','admin\PatientCtrl@consolidatedOutgoing');
+
+
 Route::get('admin/daily/users','admin\DailyCtrl@users');
 Route::post('admin/daily/users','admin\DailyCtrl@usersFilter');
 Route::get('admin/daily/users/export','admin\ExportCtrl@dailyUsers');

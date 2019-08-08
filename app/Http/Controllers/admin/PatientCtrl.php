@@ -46,5 +46,25 @@ class PatientCtrl extends Controller
         ]);
     }
 
+    public function consolidatedIncoming()
+    {
+        $incomingData = \DB::connection('mysql')->select("call consolidatedIncoming()");
+        return view('admin.report.consolidated_incoming',
+            [
+                'title' => 'INCOMING REFERRAL CONSOLIDATION TABLE  (Within Province Wide Health System)',
+                'data' => $incomingData
+            ]);
+    }
+
+    public function consolidatedOutgoing()
+    {
+        $outgoingData = \DB::connection('mysql')->select("call incomingMonitorPatient()");
+        return view('admin.report.consolidated_outgoing',
+            [
+                'title' => 'Outgoing Patients',
+                'data' => $outgoingData
+            ]);
+    }
+
 
 }
