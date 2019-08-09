@@ -72,6 +72,7 @@
                                         <?php
                                             $reason = \App\PatientForm::select("patient_form.reason",\DB::raw("count(patient_form.reason) as count"))
                                                 ->where("patient_form.referred_to","=",$row->id)
+                                                ->where("patient_form.reason","!=","")
                                                 ->groupBy('patient_form.reason')
                                                 ->orderBy("count","desc")
                                                 ->limit(3)
@@ -86,6 +87,7 @@
                                         <?php
                                             $diagnosis = \App\PatientForm::select("patient_form.diagnosis",\DB::raw("count(patient_form.diagnosis) as count"))
                                                 ->where("patient_form.referred_to","=",$row->id)
+                                                ->where("patient_form.diagnosis","!=","")
                                                 ->groupBy('patient_form.diagnosis')
                                                 ->orderBy("count","desc")
                                                 ->limit(3)
