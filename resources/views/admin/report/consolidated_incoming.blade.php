@@ -16,9 +16,9 @@
                     <div class="table-responsive">
                         <div class="alert alert-info">
                             <p style="color: #3c8dbc !important">
-                                <i class="fa fa-info"></i> Facility Number Legend:
+                                <i class="fa fa-info"></i> Legend:
                             </p>
-                            <span class="badge bg-red">Incoming</span> <span class="badge bg-green">Accepted</span> <span class="badge bg-yellow">Seenzoned</span>
+                            <span class="badge bg-red">Incoming</span> <span class="badge bg-green">Accepted</span> <span class="badge bg-yellow">Viewed Only</span>
                         </div>
                         <table class="table table-striped table-hover table-bordered" style="font-size: 8pt">
                             <tr class="bg-black">
@@ -35,11 +35,18 @@
                             @foreach($data as $row)
                                 <?php
                                     $incoming = \App\Tracking::where("referred_to","=",$row->id)->count();
-                                    $accepted = \App\Tracking::where("referred_to","=",$row->id)->where("status","=","accepted")->count();
-                                    $seenzoned = \App\Seen::where("facility_id","=",$row->id)->count();
+                                    $accepted = \App\Activity::where("referred_to","=",$row->id)->where("status","=","accepted")->count();
+                                    $facility_id = $row->id;
+                                    $seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id')")[0]->viewed_only;
                                 ?>
                                 <tr>
-                                    <td >{!! '<span class="badge bg-red">'.$incoming.'</span><span class="badge bg-green">'.$accepted.'</span><span class="badge bg-yellow">'.$seenzoned.'</span><br>'.'<span class="label label-primary">'.$row->name.'</span>';  !!}</td>
+                                    <td >
+                                        <?php
+                                            echo '<span class="label label-primary">'.$row->name.'</span>';
+                                            echo '<br><br>';
+                                            echo '<span class="badge bg-red">'.$incoming.'</span><span class="badge bg-green">'.$accepted.'</span><span class="badge bg-yellow">'.$seenzoned.'</span>';
+                                        ?>
+                                    </td>
                                     <td >
                                         <?php
                                                 $facility = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
@@ -49,7 +56,7 @@
                                                             ->orderBy("count","desc")
                                                             ->get();
                                                 foreach($facility as $fac){
-                                                    echo '<span class="label label-success">'.$fac->name.'<span class="badge bg-maroon">'.$fac->count.'</span></span>';
+                                                    echo '<span class="label label-primary">'.$fac->name.'<span class="badge bg-maroon">'.$fac->count.'</span></span>';
                                                 }
                                          ?>
                                     </td>
@@ -64,7 +71,7 @@
                                                                         ->limit(3)
                                                                         ->get();
                                         foreach($referring as $ref){
-                                            echo '<span class="label label-success">'.$ref->fullname.'<span class="badge bg-maroon">'.$ref->count.'</span></span>';
+                                            echo '<span class="label label-primary">'.$ref->fullname.'<span class="badge bg-maroon">'.$ref->count.'</span></span>';
                                         }
                                         ?>
                                     </td>
@@ -79,7 +86,7 @@
                                                 ->limit(3)
                                                 ->get();
                                             foreach($reason as $rea){
-                                                echo '<span class="label label-success">'.$rea->reason.'<span class="badge bg-maroon">'.$rea->count.'</span></span>';
+                                                echo '<span class="label label-primary">'.$rea->reason.'<span class="badge bg-maroon">'.$rea->count.'</span></span>';
                                                 echo '<br><br>';
                                             }
                                         ?>
@@ -94,7 +101,7 @@
                                                 ->limit(3)
                                                 ->get();
                                             foreach($diagnosis as $dia){
-                                                echo '<span class="label label-success">'.$dia->diagnosis.'<span class="badge bg-maroon">'.$dia->count.'</span></span>';
+                                                echo '<span class="label label-primary">'.$dia->diagnosis.'<span class="badge bg-maroon">'.$dia->count.'</span></span>';
                                                 echo '<br><br>';
                                             }
                                         ?>
@@ -109,7 +116,7 @@
                                             ->orderBy("count","desc")
                                             ->get();
                                         foreach($transportation as $trans){
-                                            echo '<span class="label label-success">'.$trans->transportation.'<span class="badge bg-maroon">'.$trans->count.'</span></span>';
+                                            echo '<span class="label label-primary">'.$trans->transportation.'<span class="badge bg-maroon">'.$trans->count.'</span></span>';
                                         }
                                         ?>
                                     </td>
@@ -123,7 +130,7 @@
                                             ->orderBy("count","desc")
                                             ->get();
                                         foreach($department as $dep){
-                                            echo '<span class="label label-success">'.$dep->description.'<span class="badge bg-maroon">'.$dep->count.'</span></span>';
+                                            echo '<span class="label label-primary">'.$dep->description.'<span class="badge bg-maroon">'.$dep->count.'</span></span>';
                                             echo '<br><br>';
                                         }
                                         ?>
@@ -136,7 +143,7 @@
                                                 ->where("issue.issue","!=","")
                                                 ->get();
                                             foreach($issue as $iss){
-                                                echo '<span class="label label-success">'.$iss->issue.'</span>';
+                                                echo '<span class="label label-primary">'.$iss->issue.'</span>';
                                                 echo '<br><br>';
                                             }
                                         ?>
