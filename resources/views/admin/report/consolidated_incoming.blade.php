@@ -58,7 +58,7 @@
                                             $referring = \App\Tracking::select(\DB::raw("concat('DR. ',users.fname,' ',users.mname,' ',users.lname) as fullname"),\DB::raw("count(tracking.referring_md) as count"))
                                                                         ->leftJoin("users","users.id","=","tracking.referring_md")
                                                                         ->where("tracking.referred_to","=",$row->id)
-                                                                        ->where("fullname","!=","")
+                                                                        ->where(\DB::raw("concat('DR. ',users.fname,' ',users.mname,' ',users.lname) as fullname"),"!=","")
                                                                         ->groupBy("tracking.referring_md")
                                                                         ->orderBy("count","desc")
                                                                         ->limit(3)
