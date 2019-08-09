@@ -7,7 +7,7 @@
             <div class="box-header with-border">
                 <h3>{{ $title }}
                     <small class="pull-right text-success">
-                        {{ date('F d, Y')}} - {{ date('F d, Y')}}
+                        <?php //echo date('F d, Y').' - '.date('F d, Y'); ?>
                     </small>
                 </h3>
             </div>
@@ -78,6 +78,7 @@
                                                 ->get();
                                             foreach($reason as $rea){
                                                 echo '<span class="label label-success">'.$rea->reason.'<span class="badge bg-maroon">'.$rea->count.'</span></span>';
+                                                echo '<br><br>';
                                             }
                                         ?>
                                     </td>
@@ -91,6 +92,7 @@
                                                 ->get();
                                             foreach($diagnosis as $dia){
                                                 echo '<span class="label label-success">'.$dia->diagnosis.'<span class="badge bg-maroon">'.$dia->count.'</span></span>';
+                                                echo '<br><br>';
                                             }
                                         ?>
                                     </td>
