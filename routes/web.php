@@ -61,6 +61,7 @@ Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getA
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
+Route::get('admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
 Route::get('admin/report/consolidated/outgoing','admin\PatientCtrl@consolidatedOutgoing');
 
 
