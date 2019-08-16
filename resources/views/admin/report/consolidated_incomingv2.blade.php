@@ -163,7 +163,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
         <div class="col-md-5">
             <div class="input-group">
                 <input type="text" class="form-control">
@@ -175,7 +175,7 @@
                 </span>
             </div>
         </div>
-    </div><br>
+    </div>
     @foreach($data as $row)
     <?php
         $incoming = \App\Tracking::where("referred_to","=",$row->id)->count();
@@ -230,10 +230,10 @@
                                     </ul>
                                     <div class="tab-content">
                                         <div class="active tab-pane" id="activity">
-                                            <span class="label label-primary">Cebu Provincial Hospital (Danao City)<span class="badge bg-maroon">1212</span></span><br><br>
-                                            <span class="label label-primary">Talisay District Hospital<span class="badge bg-maroon">1141</span></span><br><br>
-                                            <span class="label label-primary">Eversley Childs Sanitarium<span class="badge bg-maroon">813</span></span><br><br>
-                                            <span class="label label-primary">Cebu Provincial Hospital - Bogo City<span class="badge bg-maroon">783</span></span><br><br>
+                                            <label>Cebu Provincial Hospital (Danao City) <span class="badge bg-maroon">1212</span></label><br>
+                                            <label>Talisay District Hospital <span class="badge bg-maroon">1141</span></label><br>
+                                            <label>Eversley Childs Sanitarium <span class="badge bg-maroon">813</span></label><br>
+                                            <label>Cebu Provincial Hospital - Bogo City <span class="badge bg-maroon">783</span></label><br>
                                         </div>
                                         <div class="tab-pane fade" id="timeline">
                                             <span class="label label-primary">Cebu Provincial Hospital (Balamban)<span class="badge bg-maroon">735</span></span><br><br>
