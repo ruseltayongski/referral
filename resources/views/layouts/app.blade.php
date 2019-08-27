@@ -96,7 +96,7 @@
     </div>
     <div class="header" style="background-color:#59ab91;padding:15px;">
         <div class="container">
-            <img src="{{ asset('resources/img/banner.png') }}" class="img-responsive" />
+            <img src="{{ asset('resources/img/referral_2019.png') }}" class="img-responsive" />
         </div>
     </div>
     <div class="container">

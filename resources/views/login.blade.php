@@ -25,43 +25,40 @@
     @endif
 
     <div class="login-box">
-      <div class="login-logo">
-        <img src="{{ asset('resources/img/logo.png') }}" />
-        <br />
-        <a href="{{ url('') }}"><b>Referral</b> System</a>
+        <center>
+            <img src="{{ asset('resources/img/doh.png') }}" style="width: 25%"/><br>
+            <label>Central Visayas Electronic Health Referral System(CVe-HRS)</label>
+        </center>
+          <form role="form" method="POST" action="{{ url('/login') }}" class="form-submit" >
+              {{ csrf_field() }}
+              <div class="login-box-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+                  <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
+                    <input id="username" autocomplete="off" type="text" placeholder="Login ID" autofocus class="form-control" name="username" value="{{ old('username') }}">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    <span class="help-block hide">
 
-      </div><!-- /.login-logo -->
-      <form role="form" method="POST" action="{{ url('/login') }}" class="form-submit" >
-          {{ csrf_field() }}
-          <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>        
-              <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-                <input id="username" autocomplete="off" type="text" placeholder="Login ID" autofocus class="form-control" name="username" value="{{ old('username') }}">
-                <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                <span class="help-block hide">
+                    </span>
+                  </div>
 
-                </span>
-              </div>
+                  <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
+                    <input id="password" type="password" class="form-control" name="password" placeholder="Password">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                  </div>
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <div class="form-group">
 
-              <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
-                <input id="password" type="password" class="form-control" name="password" placeholder="Password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-              </div>
-                <div class="row">
-                    <div class="col-xs-7">
-                        <div class="form-group">
-
-                        </div>
-                    </div><!-- /.col -->
-                    <div class="col-xs-5">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat btn-submit">
-                            <i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In
-                        </button>
-                    </div><!-- /.col -->
-                </div> 
-            </div><!-- /.login-box-body -->
-            
-      </form>        
+                            </div>
+                        </div><!-- /.col -->
+                        <div class="col-xs-5">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat btn-submit">
+                                <i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In
+                            </button>
+                        </div><!-- /.col -->
+                    </div>
+                </div><!-- /.login-box-body -->
+          </form>
     </div><!-- /.login-box -->
 
     <div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
