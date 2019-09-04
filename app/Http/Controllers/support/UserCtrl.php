@@ -15,27 +15,27 @@ class UserCtrl extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('support');
+        //$this->middleware('support');
     }
 
-    public function search(Request $req)
+    /*public function search(Request $req)
     {
         $data = array(
             'keyword' => $req->keyword
         );
         Session::put('searchKeyword',$data);
         return self::index();
-    }
+    }*/ //jimmy code
 
-    public function index()
+    /*public function index()
     {
         $search = Session::get('searchKeyword');
         $user = Session::get('auth');
         $data = User::where('facility_id',$user->facility_id)
-                ->where(function($q){
-                    $q->where('level','doctor')
-                        ->orwhere('level','mcc');
-                });
+            ->where(function($q){
+                $q->where('level','doctor')
+                    ->orwhere('level','mcc');
+            });
         if($search){
             $keyword = $search['keyword'];
             $data = $data->where(function($q) use($keyword){
@@ -48,8 +48,41 @@ class UserCtrl extends Controller
         }
 
         $data = $data
-                ->orderBy('fname','asc')
-                ->paginate(15);
+            ->orderBy('fname','asc')
+            ->paginate(15);
+        $departments = Department::get();
+
+        return view('support.users',[
+            'title' => 'Manage Users',
+            'data' => $data,
+            'departments' => $departments
+        ]);
+    }*/ //JIMMY CODE
+
+    public function index(Request $request)
+    {
+        $search = Session::get('searchKeyword');
+        $user = Session::get('auth');
+        $data = User::where('facility_id',$user->facility_id)
+            ->where(function($q){
+                $q->where('level','doctor')
+                    ->orwhere('level','mcc');
+            });
+
+        if($request->isMethod('post')){
+            $keyword = $search['keyword'];
+            $data = $data->where(function($q) use($keyword){
+                $q->where('fname','like',"%$keyword%")
+                    ->orwhere('mname','like',"%$keyword%")
+                    ->orwhere('lname','like',"%$keyword%")
+                    ->orwhere(DB::raw('concat(fname," ",lname)'),'like',"$keyword")
+                    ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$keyword");
+            });
+        }
+
+        $data = $data
+            ->orderBy('fname','asc')
+            ->paginate(15);
         $departments = Department::get();
 
         return view('support.users',[

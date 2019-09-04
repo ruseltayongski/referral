@@ -21,7 +21,7 @@ if($searchKeyword){
         <div class="box box-success">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <form action="{{ url('support/users/search') }}" method="POST" class="form-inline">
+                    <form action="{{ url('support/users') }}" method="POST" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm" style="margin-bottom: 10px;">
                             <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword }}">

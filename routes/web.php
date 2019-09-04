@@ -79,12 +79,12 @@ Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
 Route::get('support','support\HomeCtrl@index');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
 
-Route::get('support/users','support\UserCtrl@index');
+Route::match(['POST','GET'],'support/users','support\UserCtrl@index');
 Route::get('support/uers/add','support\UserCtrl@create');
 Route::post('support/uers/add','support\UserCtrl@add');
 Route::post('support/users/store','support\UserCtrl@store');
 Route::post('support/users/update','support\UserCtrl@update');
-Route::post('support/users/search','support\UserCtrl@search');
+//Route::post('support/users/search','support\UserCtrl@search'); JIMMY CODE
 
 Route::get('support/users/check_username/{string}','support\UserCtrl@check');
 Route::get('support/users/check_username/update/{string}/{user_id}','support\UserCtrl@checkUpdate');
