@@ -397,7 +397,7 @@ class PatientCtrl extends Controller
             }
         }
         $hospital_name = Facility::find($user->facility_id)->name;
-        DeviceTokenCtrl::send('New Referral','A new referral from '.$hospital_name,$req->referred_facility);
+        //DeviceTokenCtrl::send('New Referral','A new referral from '.$hospital_name,$req->referred_facility);
 
         return array(
             'id' => $tracking_id,

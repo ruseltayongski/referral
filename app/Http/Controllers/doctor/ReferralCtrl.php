@@ -600,7 +600,7 @@ class ReferralCtrl extends Controller
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
         $hosp = Facility::find($user->facility_id)->name;
         $msg = "Referral code $track->code was accepted by Dr. $name of $hosp.";
-        DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);
+        //DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);
 
         return $track_id;
     }
