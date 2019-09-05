@@ -21,10 +21,10 @@ if($searchKeyword){
         <div class="box box-success">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <form action="{{ url('support/users') }}" method="POST" class="form-inline">
+                    <form action="{{ url('admin/users') }}" method="POST" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword }}">
+                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword_value }}">
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>

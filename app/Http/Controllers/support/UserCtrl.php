@@ -9,13 +9,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserCtrl extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        //$this->middleware('support');
+        $this->middleware('support');
     }
 
     /*public function search(Request $req)
@@ -61,16 +62,19 @@ class UserCtrl extends Controller
 
     public function index(Request $request)
     {
-        $search = Session::get('searchKeyword');
         $user = Session::get('auth');
-        $data = User::where('facility_id',$user->facility_id)
-            ->where(function($q){
-                $q->where('level','doctor')
-                    ->orwhere('level','mcc');
-            });
+        $keyword = $request->keyword;
+        if($user->level == 'admin'){
+            $data = new User();
+        } else {
+            $data = User::where('facility_id',$user->facility_id)
+                ->where(function($q){
+                    $q->where('level','doctor')
+                        ->orwhere('level','mcc');
+                });
+        }
 
         if($request->isMethod('post')){
-            $keyword = $search['keyword'];
             $data = $data->where(function($q) use($keyword){
                 $q->where('fname','like',"%$keyword%")
                     ->orwhere('mname','like',"%$keyword%")
@@ -88,7 +92,8 @@ class UserCtrl extends Controller
         return view('support.users',[
             'title' => 'Manage Users',
             'data' => $data,
-            'departments' => $departments
+            'departments' => $departments,
+            'keyword_value' => $keyword
         ]);
     }
 

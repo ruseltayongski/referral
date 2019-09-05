@@ -16,16 +16,32 @@ class UserCtrl extends Controller
         $this->middleware('admin');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::where('level','support')
-            ->orderBy('lname','asc')
-            ->paginate(10);
+        $keyword = $request->keyword;
+        if($request->isMethod('post')){
+            $data = User::
+                where('level','support')
+                ->where(function($q) use($keyword){
+                $q->where('fname','like',"%$keyword%")
+                    ->orwhere('mname','like',"%$keyword%")
+                    ->orwhere('lname','like',"%$keyword%")
+                    ->orwhere(\DB::raw('concat(fname," ",lname)'),'like',"$keyword")
+                    ->orwhere(\DB::raw('concat(lname," ",fname)'),'like',"$keyword");
+            });
+        } else {
+            $data = User::where('level','support');
+        }
+
+        $data = $data->orderBy('lname','asc')
+                ->paginate(10);
+
         $facility = Facility::orderBy('name','asc')->get();
         return view('admin.users',[
             'title' => 'List of Support User',
             'data' => $data,
-            'facility' => $facility
+            'facility' => $facility,
+            'keyword_value' => $keyword
         ]);
     }
 

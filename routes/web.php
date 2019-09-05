@@ -36,7 +36,7 @@ Route::get('admin','admin\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
-Route::get('admin/users','admin\UserCtrl@index');
+Route::match(['GET','POST'],'admin/users','admin\UserCtrl@index');
 Route::post('admin/users/store','admin\UserCtrl@store');
 Route::post('admin/users/update','admin\UserCtrl@update');
 
