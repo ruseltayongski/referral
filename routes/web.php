@@ -61,7 +61,7 @@ Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getA
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
-Route::get('admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
+Route::match(['GET','POST'],'admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
 Route::get('admin/report/consolidated/outgoing','admin\PatientCtrl@consolidatedOutgoing');
 
 
@@ -269,3 +269,5 @@ Route::post('/mcc/track','mcc\ReportCtrl@searchTrackReferral');
 Route::get('feedback/home','FeedbackCtrl@home');
 Route::post('feedback/comment_append','FeedbackCtrl@CommentAppend');
 
+//EXCEL
+Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');

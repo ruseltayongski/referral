@@ -20,7 +20,7 @@ class PatientCtrl extends Controller
 {
     public function incomingDateRange(Request $request)
     {
-        return $date_from = date("Y-m-d",strtotime(explode('-', $request->date_range)[0]));
+        $date_from = date("Y-m-d",strtotime(explode('-', $request->date_range)[0]));
         $date_end = explode('-', $request->date_range)[1];
 
         return \DB::connection('mysql')->select("call mergeTable($date_from,$date_end)");
@@ -56,16 +56,6 @@ class PatientCtrl extends Controller
             ]);
     }
 
-    public function consolidatedIncomingv2()
-    {
-        $incomingData = \DB::connection('mysql')->select("call consolidatedIncoming()");
-        return view('admin.report.consolidated_incomingv2',
-            [
-                'title' => 'INCOMING REFERRAL CONSOLIDATION TABLE  (Within Province Wide Health System)',
-                'data' => $incomingData
-            ]);
-    }
-
     public function consolidatedOutgoing()
     {
         $outgoingData = \DB::connection('mysql')->select("call incomingMonitorPatient()");
@@ -76,5 +66,23 @@ class PatientCtrl extends Controller
             ]);
     }
 
+    public function consolidatedIncomingv2(Request $request)
+    {
+        $date_start = "2018-04-11";
+        $date_end = date('Y-m-d');
+        if($request->isMethod('post') && isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
+        }
+        $incomingData = \DB::connection('mysql')->select("call consolidatedIncoming('$date_start','$date_end')");
+        Session::put('data',$incomingData);
+        return view('admin.report.consolidated_incomingv2',
+        [
+            'title' => 'INCOMING REFERRAL CONSOLIDATION TABLE  (Within Province Wide Health System)',
+            'data' => $incomingData,
+            'date_range_start' => $date_start,
+            'date_range_end' => $date_end
+        ]);
+    }
 
 }
