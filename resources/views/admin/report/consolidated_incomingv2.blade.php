@@ -53,11 +53,11 @@
         <div class="box-body no-padding">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li ><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
-                    <li class="active"><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
+                    <li class="active"><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
+                    <li ><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane" id="incoming{{ $row->id }}">
+                    <div class="active tab-pane" id="incoming{{ $row->id }}">
                         <?php
                             $incoming = $row->count_incoming;
                             $accepted = \App\Activity::where("referred_to","=",$row->id)->where("status","=","accepted")->count();
@@ -264,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="active tab-pane" id="outgoing{{ $row->id }}">
+                    <div class="tab-pane fade" id="outgoing{{ $row->id }}">
                         <?php
                             $outgoing = \DB::connection('mysql')->select("call consolidatedOutgoing('$facility_id','$date_start','$date_end')")[0];
                             $accepted_outgoing = \App\Activity::where("referred_from","=",$row->id)
