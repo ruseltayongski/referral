@@ -53,11 +53,11 @@
         <div class="box-body no-padding">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
-                    <li ><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
+                    <li ><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
+                    <li class="active"><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="active tab-pane" id="incoming{{ $row->id }}">
+                    <div class="tab-pane" id="incoming{{ $row->id }}">
                         <?php
                             $incoming = $row->count_incoming;
                             $accepted = \App\Activity::where("referred_to","=",$row->id)->where("status","=","accepted")->count();
@@ -141,9 +141,9 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p >
                                         <?php
-                                            echo '<span class="label label-primary">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
+                                            echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
-                                        echo '<span class="label label-success">Accepted <span class="badge bg-red" >'.$accepted.'</span></span><br><br><br>';
+                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span><br><br><br>';
                                         ?>
                                     </p>
 
@@ -155,7 +155,7 @@
                                         ?>
                                         @if($row->turnaround_time_accept)
                                             <?php $turnaround_time_accept_incoming[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-info">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_accept.' mins</span>'; ?></span>
+                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_accept.' mins</span>'; ?></span>
                                         @endif
                                         @if($row->turnaround_time_arrived)
                                             <?php $turnaround_time_arrived_incoming[$facility_id] .= ' mins'; ?>
@@ -165,7 +165,7 @@
 
                                     <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
                                     <p>
-                                        <span class="label label-warning">Horizontal <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
+                                        <span class="label label-success">Horizontal <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
                                         <span class="label label-success">Vertical <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
                                     </p>
 
@@ -264,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="outgoing{{ $row->id }}">
+                    <div class="active tab-pane" id="outgoing{{ $row->id }}">
                         <?php
                             $outgoing = \DB::connection('mysql')->select("call consolidatedOutgoing('$facility_id','$date_start','$date_end')")[0];
                             $accepted_outgoing = \App\Activity::where("referred_from","=",$row->id)
@@ -355,26 +355,37 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p>
                                         <?php
-                                            echo '<span class="label label-primary">Outgoing <span class="badge bg-red" >'.$outgoing->count_outgoing.'</span></span>';
+                                            echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing->count_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned_outgoing.'</span></span>';
-                                            echo '<span class="label label-success">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span><br><br><br>';
+                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
+                                            echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.'Under Development'.'</span></span>';
+                                            echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.'Under Development'.'</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
                                     <strong><i class="fa fa-book margin-r-5"></i> Turnaround time</strong>
                                     <p>
+                                        <span class="label label-primary">Viewed Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
+                                        <span class="label label-primary">Viewed Only Redirection<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <?php
                                             $turnaround_time_accept_outgoing1[$facility_id] = $outgoing->turnaround_time_accept_outgoing;
                                             $turnaround_time_arrived_outgoing1[$facility_id] = $outgoing->turnaround_time_arrived_outgoing;
                                         ?>
                                         @if($outgoing->turnaround_time_accept_outgoing)
                                             <?php $turnaround_time_accept_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-info">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_accept_outgoing.' mins</span>'; ?></span><br><br>
+                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_accept_outgoing.' mins</span>'; ?></span>
                                         @endif
+                                        <span class="label label-primary">Redirection <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         @if($outgoing->turnaround_time_arrived_outgoing)
                                             <?php $turnaround_time_arrived_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Arrival <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_arrived_outgoing.'mins</span>'; ?></span>
+                                            <span class="label label-primary">To Transport <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_arrived_outgoing.' mins</span>'; ?></span>
                                         @endif
-                                    </p><br>
+                                    </p><br><br><br><br><br><br><br><br>
+
+                                    <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
+                                    <p>
+                                        <span class="label label-success">Horizontal <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
+                                        <span class="label label-success">Vertical <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-md-8">
