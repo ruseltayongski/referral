@@ -271,3 +271,5 @@ Route::post('feedback/comment_append','FeedbackCtrl@CommentAppend');
 
 //EXCEL
 Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');
+Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
+Route::get('excel/all','ExcelCtrl@ExportExcelAll');

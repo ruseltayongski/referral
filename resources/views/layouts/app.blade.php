@@ -218,13 +218,7 @@
 
                             </ul>
                         </li>
-                        <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#"><i class="fa fa-folder-open-o"></i> Consolidated</a>
-                            <ul class="dropdown-menu">
-                                <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incoming') }}">Incoming</a></li>
-                                <li><a tabindex="-1" href="{{ url('admin/report/consolidated/outgoing') }}">Outgoing</a></li>
-                            </ul>
-                        </li>
+                        <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i> Consolidated</a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
