@@ -66,7 +66,10 @@
 {{--Normal and Pregnant Form--}}
 <script>
 
+var call_count = '';
+var caller = '';
 $('body').on('click','.btn-refer',function () {
+    $(".call_count").tooltip({placement : 'top'});
     $('.loading').show();
     code = $(this).data('code');
     item = $(this).data('item');
@@ -74,6 +77,9 @@ $('body').on('click','.btn-refer',function () {
     type = $(this).data('type');
     form_id = $(this).data('id');
     referred_from = $(this).data('referred_from');
+    call_count = $(this).data('call_count');
+    caller = $(this).data('caller');
+    $(".call_count").tooltip('hide').attr('data-original-title', caller);
 
     console.log(code);
     patient_name = $(item).find('.patient_name').html();
@@ -308,6 +314,8 @@ function getNormalForm()
             $('span.referring_md_contact').html(data.referring_md_contact);
             $('span.referred_md').html(data.md_referred);
             $('span.department_name').html(data.department);
+            if(call_count > 0)
+                $('span.call_count').html(call_count);
         },
         error: function(){
             $('#serverModal').modal();

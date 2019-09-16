@@ -32,7 +32,8 @@
                             $type = ($row->status=='referred' || $row->status=='redirected') ? $type : 'read-section';
                             $icon = ($row->status=='referred' || $row->status=='redirected') ? 'fa-ambulance' : 'fa-eye';
                             $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                            $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
+                            //$date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
+                            $date = date('M d, Y h:i A',strtotime($row->date_referred));
                             $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                             $feedback = \App\Feedback::where('code',$row->code)->count();
                         ?>
@@ -46,7 +47,17 @@
                                 $department = $check_dept->description;
                             }
                             $seen = \App\Seen::where('tracking_id',$row->id)->count();
-
+                            $calls = \App\Activity::select(\DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as dr_caller"))
+                                                    ->Join("users","users.id","=","activity.action_md")
+                                                    ->where('activity.code',$row->code)
+                                                    ->where("activity.status","=","calling")
+                                                    ->get();
+                            $call_count = 0;
+                            $caller = '';
+                            foreach($calls as $call){
+                                $call_count++;
+                                $caller .= strtoupper($call->dr_caller).",\n";
+                            }
                         ?>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
@@ -67,6 +78,8 @@
                                                data-type="{{ $row->type }}"
                                                data-id="{{ $row->id }}"
                                                data-referred_from="{{ $row->referred_from }}"
+                                               data-call_count="{{ $call_count }}"
+                                               data-caller="{{ $caller }}"
                                                data-backdrop="static">
                                                 <i class="fa fa-folder"></i> View Form
                                             </a>
