@@ -66,10 +66,9 @@
 {{--Normal and Pregnant Form--}}
 <script>
 
-var call_count = '';
-var caller = '';
 $('body').on('click','.btn-refer',function () {
-    $(".call_count").tooltip({placement : 'top'});
+    /*$(".call_count").tooltip({placement : 'top'});
+    $(".call_count").tooltip('hide').attr('data-original-title', caller);*/
     $('.loading').show();
     code = $(this).data('code');
     item = $(this).data('item');
@@ -77,9 +76,6 @@ $('body').on('click','.btn-refer',function () {
     type = $(this).data('type');
     form_id = $(this).data('id');
     referred_from = $(this).data('referred_from');
-    call_count = $(this).data('call_count');
-    caller = $(this).data('caller');
-    $(".call_count").tooltip('hide').attr('data-original-title', caller);
 
     console.log(code);
     patient_name = $(item).find('.patient_name').html();
@@ -89,8 +85,8 @@ $('body').on('click','.btn-refer',function () {
     $.ajax({
         url: seenUrl,
         type: "GET",
-        success: function(){
-            console.log(seenUrl);
+        success: function(result){
+            console.log(result);
         },
         error: function(){
             console.log('error');
@@ -314,8 +310,11 @@ function getNormalForm()
             $('span.referring_md_contact').html(data.referring_md_contact);
             $('span.referred_md').html(data.md_referred);
             $('span.department_name').html(data.department);
-            if(call_count > 0)
+            /*if(call_count > 0)
                 $('span.call_count').html(call_count);
+            else
+                $('span.call_count').html('');*/
+
         },
         error: function(){
             $('#serverModal').modal();
@@ -481,6 +480,7 @@ $('body').on('click','.btn-call',function(){
         url: "{{ url('doctor/referral/calling/') }}/" + form_id,
         type: 'GET',
         success: function(data) {
+            console.log(data);
             var callRef = dbRef.ref('Call');
             var call_data = {
                 date: data.date, //can be change to returne date
@@ -501,7 +501,8 @@ $('body').on('click','.btn-call',function(){
                 },300);
             });
         },
-        error: function(){
+        error: function(error){
+            console.log(error);
             $('#serverModal').modal();
         }
     });
@@ -541,6 +542,45 @@ $('body').on('click','.btn-call',function(){
                 content += '</div>';
                 setTimeout(function () {
                     $('#seenBy_section').html(content);
+                },500);
+            },
+            error: function () {
+                $('#serverModal').modal('show');
+            }
+        });
+    });
+
+    $('body').on('click','.btn-caller',function(){
+        var de = '<hr />\n' +
+            '                    LOADING...\n' +
+            '                    <br />\n' +
+            '                    <br />';
+        $('#callerBy_section').html(de);
+        var id = $(this).data('id');
+        var callerUrl = "{{ url('doctor/referral/callerBy/list/') }}/"+id;
+        $.ajax({
+            url: callerUrl,
+            type: "GET",
+            success: function(data){
+                console.log(id);
+                var content = '<div class="list-group">';
+
+                jQuery.each(data, function(i,val){
+                    content += '<a href="#" class="list-group-item clearfix">\n' +
+                        '<span class="title-info">Dr. '+val.user_md+'</span>\n' +
+                        '<br />\n' +
+                        '<small class="text-primary">\n' +
+                        'Time: '+val.date_call+'\n' +
+                        '</small>\n' +
+                        '<br />\n' +
+                        '<small class="text-success">\n' +
+                        'Contact: '+val.contact+'\n' +
+                        '</small>\n' +
+                        '</a>';
+                });
+                content += '</div>';
+                setTimeout(function () {
+                    $('#callerBy_section').html(content);
                 },500);
             },
             error: function () {

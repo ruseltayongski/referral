@@ -15,7 +15,7 @@
     </div>
     <div class="col-md-9">
         <div class="jim-content">
-            <h3 class="page-header">Incoming Patients</h3>
+            <h3 class="page-header">Incoming Patients </h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -47,17 +47,8 @@
                                 $department = $check_dept->description;
                             }
                             $seen = \App\Seen::where('tracking_id',$row->id)->count();
-                            $calls = \App\Activity::select(\DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as dr_caller"))
-                                                    ->Join("users","users.id","=","activity.action_md")
-                                                    ->where('activity.code',$row->code)
-                                                    ->where("activity.status","=","calling")
-                                                    ->get();
-                            $call_count = 0;
-                            $caller = '';
-                            foreach($calls as $call){
-                                $call_count++;
-                                $caller .= strtoupper($call->dr_caller).",\n";
-                            }
+                            $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
+
                         ?>
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
@@ -78,8 +69,6 @@
                                                data-type="{{ $row->type }}"
                                                data-id="{{ $row->id }}"
                                                data-referred_from="{{ $row->referred_from }}"
-                                               data-call_count="{{ $call_count }}"
-                                               data-caller="{{ $caller }}"
                                                data-backdrop="static">
                                                 <i class="fa fa-folder"></i> View Form
                                             </a>
@@ -93,6 +82,17 @@
                                                    class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen
                                                     @if($seen>0)
                                                         <small class="badge bg-green-active">{{ $seen }}</small>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endif
+                                        @if($caller_md > 0)
+                                            <div class="form-group">
+                                                <a href="#callerModal" data-toggle="modal"
+                                                   data-id="{{ $row->id }}"
+                                                   class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
+                                                    @if($caller_md>0)
+                                                        <small class="badge bg-blue-active">{{ $caller_md }}</small>
                                                     @endif
                                                 </a>
                                             </div>
@@ -171,6 +171,7 @@
     @include('modal.accept')
     @include('modal.contact')
     @include('modal.seen')
+    @include('modal.caller')
     @include('modal.feedback')
 @endsection
 @section('js')

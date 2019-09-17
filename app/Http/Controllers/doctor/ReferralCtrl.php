@@ -643,7 +643,7 @@ class ReferralCtrl extends Controller
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
         $hosp = Facility::find($track->referred_to)->name;
         $msg = "Dr. $name of $hosp is requesting a call regarding on $track->code. Please contact this number $doc->contact";
-        DeviceTokenCtrl::send('Requesting a Call',$msg,$track->referred_from);
+        //DeviceTokenCtrl::send('Requesting a Call',$msg,$track->referred_from);
 
         return array(
             'date' => date('M d, Y h:i A',strtotime($date)),
@@ -927,13 +927,13 @@ class ReferralCtrl extends Controller
             'facility_id' => $user->facility_id,
             'user_md' => $user->id
         );
-        $code = Tracking::find($track_id)->code;
+        /*$code = Tracking::find($track_id)->code;
         $facility = Tracking::find($track_id)->referred_from;
         $hospital = Facility::find($user->facility_id)->name;
         $name = User::find($user->id);
         $doctor = ucwords(mb_strtolower($name->fname))." ".ucwords(mb_strtolower($name->lname));
 
-        DeviceTokenCtrl::send('Referral Seen',"Referral code $code seen by Dr. $doctor of $hospital",$facility);
+        DeviceTokenCtrl::send('Referral Seen',"Referral code $code seen by Dr. $doctor of $hospital",$facility);*/
         Seen::create($data);
     }
 
@@ -948,6 +948,22 @@ class ReferralCtrl extends Controller
                 ->where('seen.tracking_id',$track_id)
                 ->orderBy('seen.created_at','desc')
                 ->get();
+        return $data;
+    }
+
+    public function callerByList($track_id)
+    {
+        $data = \App\Tracking::select(
+                    \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
+                    "activity.created_at as date_call",
+                    "users.contact"
+            )
+            ->Join("activity","activity.code","=","tracking.code")
+            ->Join("users","users.id","=","activity.action_md")
+            ->where('tracking.id',$track_id)
+            ->where("activity.status","=","calling")
+            ->get();
+
         return $data;
     }
 
