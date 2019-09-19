@@ -60,9 +60,15 @@
                     <div class="active tab-pane" id="incoming{{ $row->id }}">
                         <?php
                             $incoming = $row->count_incoming;
-                            $accepted = \App\Activity::where("referred_to","=",$row->id)->where("status","=","accepted")->count();
+                            $accepted = \App\Activity::where("referred_to","=",$row->id)
+                                        ->where("status","=","accepted")
+                                        ->where("date_referred",">=",$date_start)
+                                        ->where("date_referred","<=",$date_end)
+                                        ->count();
+                            //$accepted = $row->accepted;
+                            $not_accepted = $incoming - $accepted;
                             $facility_id = $row->id;
-                            $seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id')")[0]->viewed_only;
+                            $seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id','$date_start','$date_end')")[0]->viewed_only;
                             $facility = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
                                 ->leftJoin("facility","facility.id","=","tracking.referred_from")
                                 ->where("tracking.referred_to","=",$row->id)
@@ -143,7 +149,8 @@
                                         <?php
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
-                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span><br><br><br>';
+                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
+                                            echo '<span class="label label-warning">Not Accepted <span class="badge bg-red" >'.$not_accepted.'</span></span><br><br><br>';
                                         ?>
                                     </p>
 

@@ -68,11 +68,11 @@ class PatientCtrl extends Controller
 
     public function consolidatedIncomingv2(Request $request)
     {
-        $date_start = "2018-04-11";
+        $date_start = "2018-04-11 00:00:00";
         $date_end = date('Y-m-d');
         if($request->isMethod('post') && isset($request->date_range)){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         }
         $incomingData = \DB::connection('mysql')->select("call consolidatedIncoming('$date_start','$date_end')");
         Session::put('data',$incomingData);

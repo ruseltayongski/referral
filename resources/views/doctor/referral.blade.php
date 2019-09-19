@@ -38,7 +38,6 @@
                             $feedback = \App\Feedback::where('code',$row->code)->count();
                         ?>
 
-                        @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
                         <?php
                             $department = '"Not specified department"';
                             $check_dept = \App\Department::find($row->department_id);
@@ -48,8 +47,10 @@
                             }
                             $seen = \App\Seen::where('tracking_id',$row->id)->count();
                             $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
-
                         ?>
+
+                        @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
+
                         <li>
                             <i class="fa fa-ambulance bg-blue-active"></i>
                             <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
@@ -118,14 +119,40 @@
                                 <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                 <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was {{ $row->status == 'rejected' ? 'redirected' : $row->status }} by <span class="text-success">Dr. {{ $row->action_md }}</span>
                                     @if($step<=4)
-                                        <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
-                                                data-target="#feedbackModal"
-                                                data-code="{{ $row->code }}">
-                                            <i class="fa fa-comments"></i>
-                                            @if($feedback>0)
-                                                <span class="badge bg-blue">{{ $feedback }}</span>
+                                        <div class="form-inline">
+                                            @if($seen > 0)
+                                                <div class="form-group">
+                                                    <a href="#seenModal" data-toggle="modal"
+                                                       data-id="{{ $row->id }}"
+                                                       class="btn btn-success btn-xs btn-seen"><i class="fa fa-user-md"></i> Seen
+                                                        @if($seen>0)
+                                                            <small class="badge bg-green-active">{{ $seen }}</small>
+                                                        @endif
+                                                    </a>
+                                                </div>
                                             @endif
-                                        </button>
+                                            @if($caller_md > 0)
+                                                <div class="form-group">
+                                                    <a href="#callerModal" data-toggle="modal"
+                                                       data-id="{{ $row->id }}"
+                                                       class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
+                                                        @if($caller_md>0)
+                                                            <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                                        @endif
+                                                    </a>
+                                                </div>
+                                            @endif
+                                            <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                                                    data-target="#feedbackModal"
+                                                    data-code="{{ $row->code }}">
+                                                <i class="fa fa-comments"></i>
+                                                ReCo
+                                                @if($feedback>0)
+                                                    <span class="badge bg-blue">{{ $feedback }}</span>
+                                                @endif
+                                            </button>
+
+                                        </div>
                                     @endif
                                 </h3>
 
@@ -140,7 +167,6 @@
                                 <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
 
                             </div>
-
                         </li>
                         @endif
                         @endforeach
