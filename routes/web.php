@@ -274,3 +274,6 @@ Route::post('feedback/comment_append','FeedbackCtrl@CommentAppend');
 Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');
 Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
+
+//GRAPH
+Route::get("admin/report/graph/incoming","admin\ReportCtrl@graph");

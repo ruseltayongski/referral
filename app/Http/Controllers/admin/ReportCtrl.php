@@ -89,4 +89,8 @@ class ReportCtrl extends Controller
         Session::put('endDateReportReferral',$end);
         return self::referral();
     }
+
+    public function graph(){
+        return view('admin.report.graph');
+    }
 }

@@ -181,10 +181,9 @@
                             <div class="col-md-8">
                                 <div class="nav-tabs-custom">
                                     <ul class="nav nav-tabs">
-                                        <li class="active"><a href="#common_sources{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: green"></i> Common Source Facility</a></li>
-                                        <li><a href="#common_referring{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: blue"></i> Common Referring Doctor <small>(Top 10)</small></a></li>
-                                        <li><a href="#diagnosis{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses <small>(Top 10)</small></a></li>
-                                        <li><a href="#reasons{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: #6e93cd"></i> Reasons <small>(Top 10)</small></a></li>
+                                        <li class="active"><a href="#common_sources{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: green"></i> Referring Facility</a></li>
+                                        <li><a href="#common_referring{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: blue"></i> Referring Doctors <small>(Top 10)</small></a></li>
+                                        <li><a href="#diagnosis_reason{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses & Reasons <small>(Top 10)</small></a></li>
                                         <li><a href="#transportation{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: red"></i> Common Transportation</a></li>
                                         <li><a href="#department{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: lightskyblue"></i> Department</a></li>
                                         <li><a href="#issue{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: orange"></i> Remarks</a></li>
@@ -206,29 +205,35 @@
                                             @endforeach
                                             <?php $referring_doctor_incoming[$facility_id] = $referring_doctor_incoming_concat; ?>
                                         </div>
-                                        <div class="tab-pane fade" id="diagnosis{{ $row->id }}">
-                                            <?php $diagnosis_ref_incoming_concat = ''; ?>
-                                            @if(count($diagnosis_ref) >= 1)
-                                                @foreach($diagnosis_ref as $diagnosis)
-                                                    <?php $diagnosis_ref_incoming_concat .= $diagnosis->diagnosis.'-'.$diagnosis->count."\n"; ?>
-                                                    <label><span class="badge bg-maroon">{{ $diagnosis->count }}</span> {{ $diagnosis->diagnosis }}</label><br>
-                                                @endforeach
-                                            @else
-                                                <h1>Empty Record!</h1>
-                                            @endif
-                                            <?php $diagnosis_ref_incoming[$facility_id] = $diagnosis_ref_incoming_concat; ?>
-                                        </div>
-                                        <div class="tab-pane fade" id="reasons{{ $row->id }}">
-                                            <?php $reason_ref_incoming_concat = ''; ?>
-                                            @if(count($reason_ref) >= 1)
-                                                @foreach($reason_ref as $reason)
-                                                    <?php $reason_ref_incoming_concat .= $reason->reason.'-'.$reason->count."\n"; ?>
-                                                    <label><span class="badge bg-maroon">{{ $reason->count }}</span> {{ $reason->reason }}</label><br>
-                                                @endforeach
-                                            @else
-                                                <h1>Empty Record!</h1>
-                                            @endif
-                                            <?php $reason_ref_incoming[$facility_id] = $reason_ref_incoming_concat; ?>
+                                        <div class="tab-pane fade" id="diagnosis_reason{{ $row->id }}">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h4>Diagnosis</h4>
+                                                    <?php $diagnosis_ref_incoming_concat = ''; ?>
+                                                    @if(count($diagnosis_ref) >= 1)
+                                                        @foreach($diagnosis_ref as $diagnosis)
+                                                            <?php $diagnosis_ref_incoming_concat .= $diagnosis->diagnosis.'-'.$diagnosis->count."\n"; ?>
+                                                            <label><span class="badge bg-maroon">{{ $diagnosis->count }}</span> {{ $diagnosis->diagnosis }}</label><br>
+                                                        @endforeach
+                                                    @else
+                                                        <h1>Empty Record!</h1>
+                                                    @endif
+                                                    <?php $diagnosis_ref_incoming[$facility_id] = $diagnosis_ref_incoming_concat; ?>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h4>Reasons</h4>
+                                                    <?php $reason_ref_incoming_concat = ''; ?>
+                                                    @if(count($reason_ref) >= 1)
+                                                        @foreach($reason_ref as $reason)
+                                                            <?php $reason_ref_incoming_concat .= $reason->reason.'-'.$reason->count."\n"; ?>
+                                                            <label><span class="badge bg-maroon">{{ $reason->count }}</span> {{ $reason->reason }}</label><br>
+                                                        @endforeach
+                                                    @else
+                                                        <h1>Empty Record!</h1>
+                                                    @endif
+                                                    <?php $reason_ref_incoming[$facility_id] = $reason_ref_incoming_concat; ?>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="transportation{{ $row->id }}">
                                             <?php $transport_ref_incoming_concat = ''; ?>
@@ -398,10 +403,9 @@
                             <div class="col-md-8">
                                 <div class="nav-tabs-custom">
                                     <ul class="nav nav-tabs">
-                                        <li class="active"><a href="#referral_hospitals_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: green"></i> Common Referred Facility</a></li>
-                                        <li><a href="#referral_md_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: blue"></i> Common Referred Doctor <small>(Top 10)</small></a></li>
-                                        <li><a href="#diagnosis_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses <small>(Top 10)</small></a></li>
-                                        <li><a href="#reasons_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: #6e93cd"></i> Reasons <small>(Top 10)</small></a></li>
+                                        <li class="active"><a href="#referral_hospitals_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: green"></i> Referred Facility</a></li>
+                                        <li><a href="#referral_md_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: blue"></i> Referred Doctor <small>(Top 10)</small></a></li>
+                                        <li><a href="#diagnosis_reason_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses & Reasons <small>(Top 10)</small></a></li>
                                         <li><a href="#transportation_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: red"></i> Common Transportation</a></li>
                                         <li><a href="#department_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: lightskyblue"></i> Department</a></li>
                                         <li><a href="#issue_outgoing{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: orange"></i> Remarks</a></li>
@@ -423,29 +427,36 @@
                                             @endforeach
                                             <?php $common_referred_doctor_outgoing1[$facility_id] = $common_referred_doctor_outgoing_concat; ?>
                                         </div>
-                                        <div class="tab-pane fade" id="diagnosis_outgoing{{ $row->id }}">
-                                            <?php $diagnosis_ref_outgoing_concat = ''; ?>
-                                            @if(count($diagnosis_ref_outgoing) >= 1)
-                                                @foreach($diagnosis_ref_outgoing as $diagnosis_outgoing)
-                                                    <?php $diagnosis_ref_outgoing_concat .= $diagnosis_outgoing->diagnosis.'-'.$diagnosis_outgoing->count."\n"; ?>
-                                                    <label><span class="badge bg-maroon">{{ $diagnosis_outgoing->count }}</span> {{ $diagnosis_outgoing->diagnosis }}</label><br>
-                                                @endforeach
-                                            @else
-                                                <h1>Empty Record!</h1>
-                                            @endif
-                                            <?php $diagnosis_ref_outgoing1[$facility_id] = $diagnosis_ref_outgoing_concat; ?>
-                                        </div>
-                                        <div class="tab-pane fade" id="reasons_outgoing{{ $row->id }}">
-                                            <?php $reason_ref_outgoing_concat = ''; ?>
-                                            @if(count($reason_ref_outgoing) >= 1)
-                                                @foreach($reason_ref_outgoing as $reason_outgoing)
-                                                    <?php $reason_ref_outgoing_concat .= $reason_outgoing->reason.'-'.$reason_outgoing->count."\n"; ?>
-                                                    <label><span class="badge bg-maroon">{{ $reason_outgoing->count }}</span> {{ $reason_outgoing->reason }}</label><br>
-                                                @endforeach
-                                            @else
-                                                <h1>Empty Record!</h1>
-                                            @endif
-                                            <?php $reason_ref_outgoing1[$facility_id] = $reason_ref_outgoing_concat; ?>
+                                        <div class="tab-pane fade" id="diagnosis_reason_outgoing{{ $row->id }}">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h4>Diagnosis</h4>
+                                                    <?php $diagnosis_ref_outgoing_concat = ''; ?>
+                                                    @if(count($diagnosis_ref_outgoing) >= 1)
+                                                        @foreach($diagnosis_ref_outgoing as $diagnosis_outgoing)
+                                                            <?php $diagnosis_ref_outgoing_concat .= $diagnosis_outgoing->diagnosis.'-'.$diagnosis_outgoing->count."\n"; ?>
+                                                            <label><span class="badge bg-maroon">{{ $diagnosis_outgoing->count }}</span> {{ $diagnosis_outgoing->diagnosis }}</label><br>
+                                                        @endforeach
+                                                    @else
+                                                        <h1>Empty Record!</h1>
+                                                    @endif
+                                                    <?php $diagnosis_ref_outgoing1[$facility_id] = $diagnosis_ref_outgoing_concat; ?>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h4>Reasons</h4>
+                                                    <?php $reason_ref_outgoing_concat = ''; ?>
+                                                    @if(count($reason_ref_outgoing) >= 1)
+                                                        @foreach($reason_ref_outgoing as $reason_outgoing)
+                                                            <?php $reason_ref_outgoing_concat .= $reason_outgoing->reason.'-'.$reason_outgoing->count."\n"; ?>
+                                                            <label><span class="badge bg-maroon">{{ $reason_outgoing->count }}</span> {{ $reason_outgoing->reason }}</label><br>
+                                                        @endforeach
+                                                    @else
+                                                        <h1>Empty Record!</h1>
+                                                    @endif
+                                                    <?php $reason_ref_outgoing1[$facility_id] = $reason_ref_outgoing_concat; ?>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="tab-pane fade" id="transportation_outgoing{{ $row->id }}">
                                             <?php $transport_ref_outgoing_concat = ''; ?>

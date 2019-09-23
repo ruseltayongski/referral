@@ -218,7 +218,8 @@
 
                             </ul>
                         </li>
-                        <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i> Consolidated</a></li>
+                        <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>   Consolidated</a></li>
+                        <li><a tabindex="-1" href="{{ url('admin/report/graph/incoming') }}"><i class="fa fa-bar-chart-o"></i> Graph</a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
@@ -248,7 +249,7 @@
 
 
 @if(isset(Request::segments()[3]))
-    <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing','admin/report/consolidated/incoming'), true) ? 'container-fluid' : 'container' }}">
+    <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing','admin/report/consolidated/incoming','admin/report/graph/incoming'), true) ? 'container-fluid' : 'container' }}">
         <div class="loading"></div>
         @yield('content')
         <div class="clearfix"></div>
