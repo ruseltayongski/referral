@@ -15,7 +15,14 @@ $user = Session::get('auth');
     </div>
     <div class="col-md-9">
         <div class="jim-content">
-            <h3 class="page-header">Incoming Patients </h3>
+            <div class="alert alert-warning">
+                <div class="text-warning">
+                    <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a>
+                </div>
+            </div>
+            <h3 class="page-header">
+                Incoming Patients
+            </h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->

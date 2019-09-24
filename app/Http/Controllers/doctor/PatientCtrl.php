@@ -794,7 +794,11 @@ class PatientCtrl extends Controller
             ->join('facility','facility.id','=','tracking.referred_from')
             ->join('patients','patients.id','=','tracking.patient_id')
             ->where('referred_to',$user->facility_id)
-            ->where('tracking.status','archived');
+            ->where(function($q){
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','seen');
+            })
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,tracking.date_referred,now())"),">",4320);
 
         if($keyword){
             $data = $data->where(function($q) use ($keyword){
@@ -810,7 +814,7 @@ class PatientCtrl extends Controller
             $end = Carbon::parse($end)->endOfDay();
             $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
         }
-        $data = $data->orderBy('date_referred','asc')
+        $data = $data->orderBy('date_referred','desc')
                      ->paginate(15);
 
         return view('doctor.archive',[
