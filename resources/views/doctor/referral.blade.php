@@ -101,11 +101,11 @@ $user = Session::get('auth');
                                                     @endif
                                                     @if($redirected > 0)
                                                         <div class="form-group">
-                                                            <a href="#callerModal" data-toggle="modal"
+                                                            <a href="#" data-toggle="modal"
                                                                data-id="{{ $row->id }}"
-                                                               class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Redirected
-                                                                @if($caller_md>0)
-                                                                    <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                                               class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-chevron-circle-right"></i> Redirected
+                                                                @if($redirected>0)
+                                                                    <small class="badge bg-red-active">{{ $redirected }}</small>
                                                                 @endif
                                                             </a>
                                                         </div>
