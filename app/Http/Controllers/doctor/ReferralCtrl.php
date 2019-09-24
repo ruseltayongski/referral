@@ -955,7 +955,7 @@ class ReferralCtrl extends Controller
     {
         $data = \App\Tracking::select(
                     \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
-                    "activity.created_at as date_call",
+                    DB::raw("DATE_FORMAT(activity.created_at,'%M %d, %Y %h:%i %p') as date_call"),
                     "users.contact"
             )
             ->Join("activity","activity.code","=","tracking.code")
