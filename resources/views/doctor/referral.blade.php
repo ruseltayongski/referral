@@ -47,6 +47,7 @@ $user = Session::get('auth');
                                 }
                                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
+                                $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
                                 ?>
 
                                 @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
@@ -92,6 +93,17 @@ $user = Session::get('auth');
                                                             <a href="#callerModal" data-toggle="modal"
                                                                data-id="{{ $row->id }}"
                                                                class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
+                                                                @if($caller_md>0)
+                                                                    <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                                                @endif
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                    @if($redirected > 0)
+                                                        <div class="form-group">
+                                                            <a href="#callerModal" data-toggle="modal"
+                                                               data-id="{{ $row->id }}"
+                                                               class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Redirected
                                                                 @if($caller_md>0)
                                                                     <small class="badge bg-blue-active">{{ $caller_md }}</small>
                                                                 @endif
@@ -147,6 +159,17 @@ $user = Session::get('auth');
                                                                    class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
                                                                     @if($caller_md>0)
                                                                         <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                                                    @endif
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                        @if($redirected > 0)
+                                                            <div class="form-group">
+                                                                <a href="#" data-toggle="modal"
+                                                                   data-id="{{ $row->id }}"
+                                                                   class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-chevron-circle-right"></i> Redirected
+                                                                    @if($redirected>0)
+                                                                        <small class="badge bg-red-active">{{ $redirected }}</small>
                                                                     @endif
                                                                 </a>
                                                             </div>
