@@ -143,6 +143,7 @@ class ReferralCtrl extends Controller
                 $q->where('status','referred')
                     ->orwhere('status','seen');
             })
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
             ->count();
         return $count;
     }

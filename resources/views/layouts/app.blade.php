@@ -269,7 +269,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved 2019 | Version 2.0</p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 2.0</p>
     </div>
 </footer>
 
