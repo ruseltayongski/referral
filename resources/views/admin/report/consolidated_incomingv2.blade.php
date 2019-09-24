@@ -131,6 +131,9 @@
                                 ->where("issue.issue","!=","")
                                 ->get();
 
+                            $incoming_horizontal = \DB::connection('mysql')->select("call hospitalLevelIncoming('$facility_id','$date_start','$date_end')")[0]->horizontal;
+                            $incoming_vertical = $incoming - $incoming_horizontal;
+
                             $accepted_incoming[$facility_id] = $accepted;
                             $seenzoned_incoming[$facility_id] = $seenzoned;
                         ?>
@@ -154,7 +157,7 @@
                                         ?>
                                     </p>
 
-                                    <strong><i class="fa fa-book margin-r-5"></i> Turnaround time</strong>
+                                    <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
                                     <p>
                                         <?php
                                             $turnaround_time_accept_incoming[$facility_id] = $row->turnaround_time_accept;
@@ -172,8 +175,8 @@
 
                                     <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
                                     <p>
-                                        <span class="label label-success">Horizontal <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
-                                        <span class="label label-success">Vertical <?php echo '<span class="badge bg-red">'.'Under Development</span>'; ?></span>
+                                        <span class="label label-success">Horizontal <?php echo '<span class="badge bg-red">'.$incoming_horizontal.'</span>'; ?></span>
+                                        <span class="label label-success">Vertical <?php echo '<span class="badge bg-red">'.$incoming_vertical.'</span>'; ?></span>
                                     </p>
 
                                 </div>
@@ -370,11 +373,11 @@
                                             echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing->count_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
-                                            echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.'Under Development'.'</span></span>';
-                                            echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.'Under Development'.'</span></span><br><br><br><br><br>';
+                                            echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.'Under Development'.'</span></span>';
+                                            echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.'Under Development'.'</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
-                                    <strong><i class="fa fa-book margin-r-5"></i> Turnaround time</strong>
+                                    <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
                                     <p>
                                         <span class="label label-primary">Viewed Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <span class="label label-primary">Viewed Only Redirection<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>

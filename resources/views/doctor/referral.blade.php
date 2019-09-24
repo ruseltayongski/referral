@@ -112,12 +112,21 @@ $user = Session::get('auth');
                                             </div>
                                         </div>
                                     </li>
-                                @elseif($row->status!='rejected' || $row->status!='redirected')
+                                @elseif($row->status=='rejected')
+                                    <li>
+                                        <i class="fa fa-user-times bg-maroon"></i>
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
+                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
+
+                                        </div>
+                                    </li>
+                                @else
                                     <li>
                                         <i class="fa fa-user-plus bg-olive"></i>
                                         <div class="timeline-item">
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was {{ $row->status == 'rejected' ? 'redirected' : $row->status }} by <span class="text-success">Dr. {{ $row->action_md }}</span>
+                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was {{ $row->status }} by <span class="text-success">Dr. {{ $row->action_md }}</span>
                                                 @if($step<=4)
                                                     <div class="form-inline">
                                                         @if($seen > 0)
@@ -158,15 +167,6 @@ $user = Session::get('auth');
 
                                         </div>
 
-                                    </li>
-                                @elseif($row->status=='rejected')
-                                    <li>
-                                        <i class="fa fa-user-times bg-maroon"></i>
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
-
-                                        </div>
                                     </li>
                                 @endif
                             @endforeach
