@@ -66,7 +66,7 @@ $status = session::get('status');
                             </tr>
                             <tr class="has-group">
                                 <td>Birth Date :</td>
-                                <td><input type="date" name="dob" id="dob" class="form-control" required /> </td>
+                                <td><input type="date" name="dob" id="dob" class="form-control" min="1910-05-11" max="{{ date('Y-m-d') }}" required /> </td>
                             </tr>
                             <tr>
                                 <td>Sex :</td>
