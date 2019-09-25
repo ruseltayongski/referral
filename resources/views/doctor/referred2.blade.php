@@ -286,6 +286,13 @@ $user = Session::get('auth');
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                             </td>
                                         </tr>
+                                    @elseif($act->status=='travel')
+                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                            <td>
+                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was departure by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
+                                            </td>
+                                        </tr>
                                     @endif
                                     <?php $first = 1; ?>
                                 @endforeach
@@ -316,7 +323,7 @@ $user = Session::get('auth');
                         @endif
                     </a>
                     @endif
-                    @if($step==3 && empty(\App\Tracking::find($row->id)->mode_transportation))
+                    @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
                         <a href="#transferModal" data-toggle="modal"
                            data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
                     @endif
@@ -403,7 +410,7 @@ $user = Session::get('auth');
         });
 
         $('body').on('click','.btn-transfer',function(){
-            $(".transportation_body").html('');
+            $(".transportation_body").html(''); //clear data
             var id = $(this).data('id');
             var url = "{{ url('doctor/referred/transfer') }}/"+id;
             var transportation_all = <?php echo \App\ModeTransportation::get(); ?>;

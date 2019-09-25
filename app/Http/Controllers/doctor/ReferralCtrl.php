@@ -125,8 +125,11 @@ class ReferralCtrl extends Controller
         }
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
-        $data = $data->orderBy('date_referred','desc')
+        $data = $data
+                //->orderByRaw("IF( (tracking.status='referred' or tracking.status='seen'), TIMESTAMPDIFF(MINUTE,tracking.date_referred,now()), tracking.id )",'desc')
+                ->orderBy("tracking.date_referred","desc")
                 ->paginate(5);
+
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
@@ -800,7 +803,6 @@ class ReferralCtrl extends Controller
         $new_data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
-            'code' => $track->code,
             'date_referred' => $date,
             'date_arrived' => '',
             'date_seen' => '',
@@ -1036,10 +1038,34 @@ class ReferralCtrl extends Controller
         if($mode_transportation == "5"){
             $mode_transportation .= "-".$other_transportation;
         }
-        Tracking::find($tracking_id)->update([
+
+        $user = Session::get('auth');
+
+        $track = Tracking::find($tracking_id);
+        if($track->status=='travel')
+        {
+            return 'denied';
+        }
+
+        $track->update([
             "date_transferred" => date('Y-m-d H:i:s'),
             "mode_transportation" => $mode_transportation
         ]);
+
+        $data = array(
+            'code' => $track->code,
+            'patient_id' => $track->patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'referred_from' => $track->referred_from,
+            'referred_to' => $user->facility_id,
+            'department_id' => $track->department_id,
+            'referring_md' => $track->referring_md,
+            'action_md' => $user->id,
+            'remarks' => $mode_transportation,
+            'status' => 'travel'
+        );
+
+        Activity::create($data);
 
         return redirect()->back()->with('transferReferral','Successfully Transfer!');
     }
