@@ -641,6 +641,45 @@
             }
         });
     });
+
+    $('body').on('click','.btn-caller',function(){
+        var de = '<hr />\n' +
+            '                    LOADING...\n' +
+            '                    <br />\n' +
+            '                    <br />';
+        $('#callerBy_section').html(de);
+        var id = $(this).data('id');
+        var callerUrl = "{{ url('doctor/referral/callerBy/list/') }}/"+id;
+        $.ajax({
+            url: callerUrl,
+            type: "GET",
+            success: function(data){
+                console.log(id);
+                var content = '<div class="list-group">';
+
+                jQuery.each(data, function(i,val){
+                    content += '<a href="#" class="list-group-item clearfix">\n' +
+                        '<span class="title-info">Dr. '+val.user_md+'</span>\n' +
+                        '<br />\n' +
+                        '<small class="text-primary">\n' +
+                        'Time: '+val.date_call+'\n' +
+                        '</small>\n' +
+                        '<br />\n' +
+                        '<small class="text-success">\n' +
+                        'Contact: '+val.contact+'\n' +
+                        '</small>\n' +
+                        '</a>';
+                });
+                content += '</div>';
+                setTimeout(function () {
+                    $('#callerBy_section').html(content);
+                },500);
+            },
+            error: function () {
+                $('#serverModal').modal('show');
+            }
+        });
+    });
 </script>
 
 

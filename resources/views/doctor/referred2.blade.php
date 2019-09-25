@@ -102,6 +102,7 @@ $user = Session::get('auth');
 
                     $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                     $feedback = \App\Feedback::where('code',$row->code)->count();
+                    $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
             ?>
             <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
                 <div class="panel-heading">
@@ -323,6 +324,15 @@ $user = Session::get('auth');
                         @endif
                     </a>
                     @endif
+                    @if($caller_md > 0)
+                        <a href="#callerModal" data-toggle="modal"
+                           data-id="{{ $row->id }}"
+                           class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
+                            @if($caller_md>0)
+                                <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                            @endif
+                        </a>
+                    @endif
                     @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
                         <a href="#transferModal" data-toggle="modal"
                            data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
@@ -364,6 +374,7 @@ $user = Session::get('auth');
     @include('modal.refer')
     @include('modal.view_form')
     @include('modal.seen')
+    @include('modal.caller')
     @include('modal.cancel')
     @include('modal.feedback')
     @include('modal.issue')
