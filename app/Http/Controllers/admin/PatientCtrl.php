@@ -69,7 +69,7 @@ class PatientCtrl extends Controller
     public function consolidatedIncomingv2(Request $request)
     {
         $date_start = "2018-04-11 00:00:00";
-        $date_end = date('Y-m-d');
+        $date_end = date('Y-m-d').' 23:59:59';
         if($request->isMethod('post') && isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';

@@ -15,20 +15,22 @@ Route::get('/', 'HomeCtrl@index');
 Route::get('logout', function(){
     $user = \Illuminate\Support\Facades\Session::get('auth');
     \Illuminate\Support\Facades\Session::flush();
-    \App\User::where('id',$user->id)
+    if(isset($user)){
+        \App\User::where('id',$user->id)
             ->update([
                 'login_status' => 'logout'
             ]);
-    $logout = date('Y-m-d H:i:s');
-    $logoutId = \App\Login::where('userId',$user->id)
+        $logout = date('Y-m-d H:i:s');
+        $logoutId = \App\Login::where('userId',$user->id)
             ->orderBy('id','desc')
             ->first()
             ->id;
 
-    \App\Login::where('id',$logoutId)
+        \App\Login::where('id',$logoutId)
             ->update([
                 'logout' => $logout
             ]);
+    }
     return redirect('login');
 });
 //ADMIN Page
