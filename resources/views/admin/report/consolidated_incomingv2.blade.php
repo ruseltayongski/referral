@@ -59,23 +59,23 @@
                 <div class="tab-content">
                     <div class="active tab-pane" id="incoming{{ $row->id }}">
                         <?php
-                            //$incoming = $row->count_incoming;
+                            $incoming = $row->count_incoming;
                             $facility_id = $row->id;
-                            $incoming = \DB::connection('mysql')->select("call 0927countIncoming('$facility_id','$date_start','$date_end')")[0]->count_incoming;
+                            /*$incoming = \DB::connection('mysql')->select("call 0927countIncoming('$facility_id','$date_start','$date_end')")[0]->count_incoming;
                             $accepted = \DB::connection('mysql')->select("call 0927acceptedIncoming('$facility_id','$date_start','$date_end')")[0]->accepted_incoming;
-                            $seenzoned = \DB::connection('mysql')->select("call 0927viewedOnlyIncoming('$facility_id','$date_start','$date_end')")[0]->viewed_only;
-                            /*$accepted = \App\Tracking::where("tracking.referred_to","=",$row->id)
+                            $seenzoned = \DB::connection('mysql')->select("call 0927viewedOnlyIncoming('$facility_id','$date_start','$date_end')")[0]->viewed_only;*/
+                            $accepted = \App\Tracking::where("tracking.referred_to","=",$row->id)
                                         ->join("activity","activity.code","=","tracking.code")
                                         ->where("activity.status","=","accepted")
                                         ->where("tracking.date_referred",">=",$date_start)
                                         ->where("tracking.date_referred","<=",$date_end)
-                                        ->count();*/
+                                        ->count();
 
-                            /*if($accepted > $incoming)
-                                $accepted = $incoming;*/
+                            if($accepted > $incoming)
+                                $accepted = $incoming;
 
                             $no_respond = $incoming - $accepted;
-                            /*$seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id','$date_start','$date_end')")[0]->viewed_only;*/
+                            $seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id','$date_start','$date_end')")[0]->viewed_only;
                             $facility = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
                                 ->leftJoin("facility","facility.id","=","tracking.referred_from")
                                 ->where("tracking.referred_to","=",$row->id)
@@ -162,7 +162,7 @@
                                         <?php
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
+                                            //echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
                                             echo '<span class="label label-warning">No Respond <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
                                         ?>
                                     </p>
