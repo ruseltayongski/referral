@@ -279,3 +279,4 @@ Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 
 //GRAPH
 Route::get("admin/report/graph/incoming","admin\ReportCtrl@graph");
+Route::get("admin/report/graph/bar_chart","admin\ReportCtrl@bar_chart");

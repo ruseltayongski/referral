@@ -93,4 +93,8 @@ class ReportCtrl extends Controller
     public function graph(){
         return view('admin.report.graph');
     }
+
+    public function bar_chart(){
+        return view('admin.report.bar_chart');
+    }
 }

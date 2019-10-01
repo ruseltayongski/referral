@@ -55,6 +55,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
                     <li ><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
+                    <li class="pull-right"><strong><div class="text-info">{{ date('F',strtotime($date_range_start))." (".date('Y',strtotime($date_range_start)).") ".' to '.date('F',strtotime($date_range_end))." (".date('Y',strtotime($date_range_end)).")" }}</div></strong></li>
                 </ul>
                 <div class="tab-content">
                     <div class="active tab-pane" id="incoming{{ $row->id }}">
@@ -163,7 +164,8 @@
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
                                             //echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
-                                            echo '<span class="label label-warning">No Respond <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
+                                            //echo '<span class="label label-warning">No Respond <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
+                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
                                         ?>
                                     </p>
 
