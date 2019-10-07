@@ -60,7 +60,21 @@ if(!$daterange){
                                 $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
                                 $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
+
+                                $status = '';
+                                $current = \App\Activity::where('code',$row->code)
+                                    ->orderBy('id','desc')
+                                    ->first();
+                                if($current)
+                                {
+                                    $status = strtoupper($current->status);
+                                }
+
+                                $start = \Carbon\Carbon::parse($row->date_accepted);
+                                $end = \Carbon\Carbon::now();
+                                $diff = $end->diffInHours($start);
                             ?>
+                            @if($status == 'REFERRED')
                             <tr>
                                 <td style="white-space: nowrap;">
                                     <span class="facility" title="{{ $row->name }}">
@@ -85,20 +99,6 @@ if(!$daterange){
                                     </a>
                                 </td>
                                 <td>{{ $row->date_accepted }}</td>
-                                <?php
-                                    $status = '';
-                                    $current = \App\Activity::where('code',$row->code)
-                                        ->orderBy('id','desc')
-                                        ->first();
-                                    if($current)
-                                    {
-                                        $status = strtoupper($current->status);
-                                    }
-
-                                    $start = \Carbon\Carbon::parse($row->date_accepted);
-                                    $end = \Carbon\Carbon::now();
-                                    $diff = $end->diffInHours($start);
-                                ?>
                                 <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                 <td style="white-space: nowrap;">
                                     @if($status=='ACCEPTED' && $diff < 72)
@@ -179,6 +179,7 @@ if(!$daterange){
                                     @endif
                                 </td>
                             </tr>
+                            @endif
                             @endforeach
                             </tbody>
                         </table>
