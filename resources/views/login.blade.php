@@ -83,6 +83,7 @@
                                 <ul>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>Reyan M. Sugabo - 09359504269</li>
+                                    <li>Ryan A. Padilla - 09294771871</li>
                                     <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
                                 </ul>
                             </ol>
