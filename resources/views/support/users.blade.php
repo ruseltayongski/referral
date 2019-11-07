@@ -28,15 +28,9 @@ if($searchKeyword){
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
-                            @if($user->facility_id!=25)
                             <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
                                 <i class="fa fa-user-plus"></i> Add User
                             </a>
-                            @else
-                            <a href="{{ url('support/uers/add') }}" class="btn btn-primary btn-sm btn-flat">
-                                <i class="fa fa-user-plus"></i> Add User
-                            </a>
-                            @endif
                         </div>
                     </form>
                 </div>
