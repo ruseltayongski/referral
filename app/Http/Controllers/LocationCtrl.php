@@ -50,7 +50,7 @@ class LocationCtrl extends Controller
 
         $data['departments'] = User::select('department.id','department.description')
                 ->leftJoin('department','department.id','=','users.department_id')
-                ->where('department.id','!=',null)
+                ->where('users.department_id','!=',0)
                 ->where('users.facility_id',$facility_id)
                 ->groupBy('users.department_id')
                 ->get();
