@@ -118,7 +118,7 @@ class UserCtrl extends Controller
         $facility = Facility::find($req->facility_id);
 
         $data = array(
-            'level' => 'doctor',
+            'level' => $req->level,
             'facility_id' => $user->facility_id,
             'status' => 'active',
             'contact' => $req->contact,
