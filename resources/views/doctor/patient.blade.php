@@ -5,12 +5,29 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .ui-autocomplete
+        {
+            background-color: white;
+            width: 20%;
+            z-index: 1100;
+            max-height: 300px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+        }
+        .ui-menu-item {
+            cursor: pointer;
+        }
+
+    </style>
     <div class="col-md-3">
         @include('sidebar.'.$sidebar)
     </div>
     <div class="col-md-9">
         <div class="jim-content">
             <h3 class="page-header">Patient List</h3>
+            <!--<input type="text" class="form-control" value="" id="search" name="keyword" placeholder="Search ICD10..." style="width: 100%" autofocus/> -->
             @if(count($data))
                 <div class="table-responsive">
                     <table class="table table-striped"  style="white-space:nowrap;">
@@ -120,6 +137,64 @@
 @include('script.firebase')
 @include('script.datetime')
 <script>
+    //custom autocomplete (category selection)
+    /*jQuery(function($) {
+        $.widget("custom.catcomplete", $.ui.autocomplete, {
+            _create: function () {
+                this._super();
+                this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+            },
+            _renderMenu: function (ul, items) {
+                var that = this, currentCategory = "";
+                $.each(items, function (index, item) {
+                    that._renderItemData(ul, item);
+                    return index < 500;
+                });
+            }
+        });
+
+        var icd10 = [];
+        $.each(<?php /*echo json_encode($icd10); */?>, function (x, data) {
+            icd10.push({label: data.description, id: data.id, icd_code: data.code});
+        });
+
+        var icd_code = '';
+        $("#diagnosis").catcomplete({
+            delay: 0,
+            source: icd10,
+            select: function (e, ui) {
+                keyword = ui.item.value;
+                icd_code = ui.item.icd_code;
+                $("#icd_code").val(icd_code);
+                console.log(ui.item);
+            }
+        });
+        $("#diagnosis_walkin").catcomplete({
+            delay: 0,
+            source: icd10,
+            select: function (e, ui) {
+                keyword = ui.item.value;
+                icd_code = ui.item.icd_code;
+                $("#icd_code_walkin").val(icd_code);
+                console.log(ui.item);
+            }
+        });
+
+    });
+
+    function Icd10Checker(data){
+        if(data.val() != icd_code){
+            $("#icd_code").val("");
+        }
+    }
+
+    function Icd10Checker_walkin(data){
+        if(data.val() != icd_code){
+            $("#icd_code_walkin").val("");
+        }
+    }*/
+
+
     $('.select2').select2();
     var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";

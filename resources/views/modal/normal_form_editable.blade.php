@@ -7,7 +7,7 @@
     $myfacility = \App\Facility::find($user->facility_id);
     $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 ?>
-<div class="modal fade" role="dialog" id="normalFormModal">
+<div class="modal fade" role="dialog" id="normalFormModal" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
@@ -83,6 +83,15 @@
                         </td>
                         <td colspan="3">PhilHealth #: <input type="text" class="text-danger form-control phic_id" name="phic_id" /> </td>
                     </tr>
+                    <!--
+                    <tr>
+                        <td colspan="6">
+                            Diagnosis/Impression: <small class="text-primary">(Auto search from ICD10)</small>
+                            <input type="text" value="" id="icd_code" name="icd_code" readonly><br>
+                            <textarea class="form-control" onkeyup="Icd10Checker($(this))" id="diagnosis" rows="4" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
+                        </td>
+                    </tr>
+                    -->
                     <tr>
                         <td colspan="6">
                             Case Summary (pertinent Hx/PE, including meds, labs, course etc.):<br />
@@ -100,7 +109,7 @@
                         <td colspan="6">
                             Diagnosis/Impression:
                             <br />
-                            <textarea class="form-control" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>
+                            <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                         </td>
                     </tr>
                     <tr>

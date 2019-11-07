@@ -88,6 +88,16 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                                 </td>
                                 <td colspan="3">PhilHealth #: <input type="text" class="text-danger form-control phic_id" name="phic_id" /> </td>
                             </tr>
+                            <!--
+                            <tr>
+                                <td colspan="6">
+                                    Diagnosis/Impression: <small class="text-primary">(Auto search from ICD10)</small>
+                                    <input type="text" value="" id="icd_code_walkin" name="icd_code_walkin" readonly><br>
+                                    <textarea class="form-control" onkeyup="Icd10Checker_walkin($(this))" id="diagnosis_walkin" rows="4" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
+                                    <br />
+                                </td>
+                            </tr>
+                            -->
                             <tr>
                                 <td colspan="6">
                                     Case Summary (pertinent Hx/PE, including meds, labs, course etc.):<br />
@@ -105,7 +115,7 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                                 <td colspan="6">
                                     Diagnosis/Impression:
                                     <br />
-                                    <textarea class="form-control" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>
+                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                                 </td>
                             </tr>
                             <tr>

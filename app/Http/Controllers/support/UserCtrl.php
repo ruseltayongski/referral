@@ -69,8 +69,7 @@ class UserCtrl extends Controller
         } else {
             $data = User::where('facility_id',$user->facility_id)
                 ->where(function($q){
-                    $q->where('level','doctor')
-                        ->orwhere('level','mcc');
+                    $q->where('level','doctor');
                 });
         }
 
@@ -118,7 +117,7 @@ class UserCtrl extends Controller
         $facility = Facility::find($req->facility_id);
 
         $data = array(
-            'level' => 'doctor',
+            'level' => $req->level,
             'facility_id' => $user->facility_id,
             'status' => 'active',
             'contact' => $req->contact,

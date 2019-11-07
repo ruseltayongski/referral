@@ -8,6 +8,7 @@ use App\Barangay;
 use App\Facility;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
+use App\Icd10;
 use App\Muncity;
 use App\PatientForm;
 use App\Patients;
@@ -64,29 +65,34 @@ class PatientCtrl extends Controller
 
         $data = array();
 
-        if(isset($keyword) && isset($mun) && (isset($brgy) || isset($others) ) ){
+        if(!empty($keyword) || !empty($mun) || !empty($brgy) || !empty($others)){
             $data = Patients::orderBy('lname','asc');
-            if(isset($brgy)){
+            if(!empty($brgy)){
                 $data = $data->where('brgy',$brgy);
-            }else if(isset($mun) && $mun!='others'){
+            }
+            if(!empty($mun) && $mun!='others'){
                 $data = $data->where('muncity',$mun);
-            }else if(isset($others)){
+            }
+            if(!empty($others)){
                 $data = $data->where('address','like',"%$others%");
             }
 
             $data = $data->where(function($q) use($keyword){
-                $q->where('lname',"$keyword")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),"$keyword");
+                $q->where('lname',"like","%$keyword%")
+                    ->where('fname','like',"%$keyword%")
+                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
             });
 
             $data = $data->paginate(20);
         }
 
+        //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
             'title' => 'Patient List',
             'data' => $data,
             'muncity' => $muncity,
             'source' => $source,
+            //'icd10' => $icd10,
             'sidebar' => 'filter_profile'
         ]);
     }
@@ -329,6 +335,7 @@ class PatientCtrl extends Controller
                 'case_summary' => $req->case_summary,
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
+                //'icd_code' => $req->icd_code,
                 'reason' => $req->reason,
                 'referring_md' => $user->id,
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
@@ -443,6 +450,7 @@ class PatientCtrl extends Controller
                 'case_summary' => $req->case_summary,
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
+                //'icd_code' => $req->icd_code_walkin,
                 'reason' => $req->reason,
                 'referring_md' => 0,
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,

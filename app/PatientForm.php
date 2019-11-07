@@ -19,6 +19,7 @@ class PatientForm extends Model
         'case_summary',
         'reco_summary',
         'diagnosis',
+        'icd_code',
         'reason',
         'referring_md',
         'referred_md'
