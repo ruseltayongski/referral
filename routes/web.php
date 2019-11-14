@@ -39,6 +39,11 @@ Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
 Route::match(['GET','POST'],'admin/users','admin\UserCtrl@index');
+Route::match(['GET','POST'],'admin/facility','admin\FacilityCtrl@index');
+Route::post('admin/facility/add','admin\FacilityCtrl@FacilityAdd');
+Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
+Route::post('admin/facility/delete','admin\FacilityCtrl@FacilityDelete');
+
 Route::post('admin/users/store','admin\UserCtrl@store');
 Route::post('admin/users/update','admin\UserCtrl@update');
 
@@ -210,6 +215,8 @@ Route::get('maintenance',function(){
 Route::get('chart','HomeCtrl@chart');
 //Route::get('uploadcsv','ParamCtrl@upload');
 Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
+Route::get('location/barangay/{province_id}/{muncity_id}','LocationCtrl@getBarangay1');
+Route::get('location/muncity/{province_id}','LocationCtrl@getMuncity');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
 Route::get('list/doctor/{facility_id}/{department_id}','ParamCtrl@getDoctorList');
 

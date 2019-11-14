@@ -19,6 +19,25 @@ class LocationCtrl extends Controller
         return $brgy;
     }
 
+    function getMuncity($province_id)
+    {
+        $muncity = Muncity::where('province_id',$province_id)
+            ->orderBy('description','asc')
+            ->get();
+        return $muncity;
+    }
+
+    function getBarangay1($province_id,$muncity_id)
+    {
+        $brgy = Barangay::
+            where("province_id",$province_id)
+            ->where("muncity_id",$muncity_id)
+            ->orderBy('description','asc')
+            ->get();
+        return $brgy;
+    }
+
+
     static function facilityAddress($facility_id)
     {
         $data['address'] = 'N/A';

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>DOHRO7 Refferal System | Log in</title>
+    <title>DOHRO7 Referral System | Log in</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -112,12 +112,11 @@
         $('#notificationModal').modal('show');
         $('.btn-submit').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
-        });
 
-        $('.form-submit').submit(function(e){
-            e.preventDefault();
-            var username = $(this).find(':input#username').val();
-            var password = $(this).find(':input#password').val();
+            event.preventDefault();
+            var username = $("#username").val();
+            var password = $("#password").val();
+            console.log(username);
             var link = "{{ url('login') }}";
             $.ajax({
                 url: link,
@@ -130,12 +129,13 @@
                 success: function(data){
                     console.log(data);
                     setTimeout(function(){
-                        if(data==='error'){
+                        if(data == "error"){
+                            console.log("error if");
                             $('.has-feedback').addClass('has-error ');
                             $('.help-block').removeClass('hide').html('<strong>These credentials do not match our records.</strong>');
                             $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
 
-                        }else if(data==='denied'){
+                        }else if(data == "denied"){
                             $('.has-feedback').addClass('has-error ');
                             $('.help-block').removeClass('hide').html('<strong>You don\'t have access in this system.</strong>');
                             $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
@@ -143,8 +143,6 @@
                             window.location.href = "{{ url('/') }}/"+data;
                         }
                     },500);
-
-
 
                 },
                 error: function(){
@@ -154,6 +152,10 @@
                 }
             });
         });
+
+        /*$('.form-submit').submit(function(e){
+
+        });*/
     </script>
   </body>
 </html>
