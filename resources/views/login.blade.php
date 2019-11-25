@@ -1,3 +1,6 @@
+<?php
+$dateNow = date('Y-m-d');
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -66,7 +69,41 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
+                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
+                        <div >
+                            <span class="text-info" style="font-size:1.1em;">
+                                <strong><i class="fa fa-info"></i> Version 2.1 was successfully launch</strong><br>
+                                <ol type="I" style="color: #31708f;font-size: 10pt;margin-top: 10px;">
+                                    <li><i><b>Editable Patient</b></i> - Allowing the user to edit misspelled / typo informations</li>
+                                    <li><i><b>Facility Dropdown</b></i> - Allowing the dropdown be search by keyword</li>
+                                    <li><i><b>Outgoing Referral Report</b></i> - Adding the department to be filter</li>
+                                    <li><i><b>Login Lifetime</b></i> - Session will expire in 30 minutes</li>
+                                    <li><i><b>Input Date Range</b></i> - Filter date range UI interface improve</li>
+                                    <li><i><b>Incoming Page</b></i> - UI interface improve and fixed bugs</li>
+                                </ol>
+                            </span>
+                        </div>
+                        <div >
+                            <span class="text-warning" style="font-size:1.1em;">
+                                <strong><i class="fa fa-warning"></i> November 27, 2019</strong><br>
+                                <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
+                                    <li>
+                                        We would like to inform that we will be having server maintenance on Weednesday ,November 27,2019. Down time will be @10:00am to 10:30am. Thank you.
+                                    </li>
+                                    <li>
+                                        Additional announcement. During that tIme we will change the url of ereferral..changes and updates will be posted..thank you.
+                                    </li>
+                                    <li>
+                                        NEW URL for e - referral
+                                    </li>
+                                    <ol>
+                                        <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
+                                        <li><span class="badge bg-maroon">http://203.177.67.125/doh/referral/login</span></li>
+                                    </ol>
+                                </ol>
+                            </span>
+                        </div>
+                    @endif
                     <h3 style="font-weight: bold" class="text-success">Contact Person:</h3>
                     <div >
                         <p class="text-success">

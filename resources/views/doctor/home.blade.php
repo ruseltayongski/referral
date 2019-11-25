@@ -98,6 +98,26 @@
                                 </ol>
                             </span>
                         </div>
+                        <div class="alert alert-warning">
+                            <span class="text-warning" style="font-size:1.1em;">
+                                <strong><i class="fa fa-warning"></i> November 27, 2019</strong><br>
+                                <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
+                                    <li>
+                                        We would like to inform that we will be having server maintenance on Weednesday ,November 27,2019. Down time will be @10:00am to 10:30am. Thank you.
+                                    </li>
+                                    <li>
+                                        Additional announcement. During that tIme we will change the url of ereferral..changes and updates will be posted..thank you.
+                                    </li>
+                                    <li>
+                                        NEW URL for e - referral
+                                    </li>
+                                    <ol>
+                                        <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
+                                        <li><span class="badge bg-maroon">http://203.177.67.125/doh/referral/login</span></li>
+                                    </ol>
+                                </ol>
+                            </span>
+                        </div>
                     @endif
                     <div class="alert alert-success ">
                         <p class="text-success">
@@ -110,7 +130,7 @@
                                     <li>Rusel T. Tayong - 09238309990</li>
                                     <li>Christian Dave L. Tipactipac - 09286039028</li>
                                 </ul>
-                                <li >Server - Can't access in web http://ro7sys.doh.gov.ph/doh/referral/login</li>
+                                <li >Server - Can't access </li>
                                 <ul>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>Reyan M. Sugabo - 09359504269</li>
