@@ -157,6 +157,8 @@ Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');
 Route::get('doctor/patient/info/{id}','doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add','doctor\PatientCtrl@addPatient');
 Route::post('doctor/patient/store','doctor\PatientCtrl@storePatient');
+Route::post('doctor/patient/update','doctor\PatientCtrl@updatePatient');
+Route::post('doctor/patient/update','doctor\PatientCtrl@updatePatient');
 
 Route::post('doctor/patient/refer/walkin/{type}','doctor\PatientCtrl@referPatientWalkin');
 Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');

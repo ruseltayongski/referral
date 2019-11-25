@@ -100,6 +100,7 @@ class ReportCtrl extends Controller
         $end = Carbon::now()->endOfMonth()->format('m/d/y');
         $date = Session::get('report_outgoing_date');
         $facility = Session::get('report_outgoing_facility');
+        $department = Session::get('report_outgoing_department');
 
         if($date)
         {
@@ -117,6 +118,10 @@ class ReportCtrl extends Controller
 
         if($facility){
             $data = $data->where('referred_to',$facility);
+        }
+        if($department)
+        {
+            $data = $data->where('tracking.department_id',$department);
         }
         $data = $data->orderBy('id','desc')
             ->paginate(20);

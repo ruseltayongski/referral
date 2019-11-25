@@ -25,7 +25,7 @@ $department = \Illuminate\Support\Facades\Session::get('report_incoming_departme
         <form method="post" action="{{ url('doctor/report/incoming') }}">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" id="daterange" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+                <input type="text" id="daterange" value="{{ date("m/d/Y",strtotime($start)).' - '.date("m/d/Y",strtotime($end)) }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
                 <select name="facility" class="form-control">

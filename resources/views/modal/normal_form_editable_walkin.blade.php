@@ -24,17 +24,32 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                         <table class="table table-striped">
                             <tr>
                                 <td colspan="6">
-                                    Name of Referring Facility:
-                                    <select name="referring_facility_walkin" class="form-control-select select_facility_walkin" style="padding: 3px" required>
-                                        <option value="">Select Facility...</option>
-                                        @foreach($facilities as $row)
-                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            Name of Referring Facility:
+                                        </div>
+                                        <div class="col-md-9">
+                                            <select name="referring_facility_walkin" class="form-control-select select2 select_facility_walkin" style="width: 100%;" required>
+                                                <option value="">Select Facility...</option>
+                                                @foreach($facilities as $row)
+                                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="6">Address: <span class="text-primary facility_address"></span> </td>
+                                <td colspan="6">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            Address:
+                                        </div>
+                                        <div class="col-md-9">
+                                            <span class="text-primary facility_address"></span>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="3">
@@ -127,16 +142,17 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    Name of referring MD/HCW:
-                                    <span class="text-success"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    Name of referred MD/HCW- Mobile Contact # (ReCo):
-                                    <select name="referred_md" class="referred_md form-control-select" style="padding: 3px">
-                                        <option value="">Any...</option>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Name of referred <br>
+                                            <small class="text-success">MD/HCW- Mobile Contact # (ReCo):</small>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select name="referred_md" class="referred_md select2 form-control-select" style="width: 100%;">
+                                                <option value="">Any...</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </table>

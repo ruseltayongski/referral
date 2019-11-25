@@ -1,5 +1,4 @@
 <?php
-    $search_referral = Session::get('search_referral');
     $user = \Illuminate\Support\Facades\Session::get("auth");
     $dept = \App\Department::leftJoin('users','users.department_id','=','department.id')
                 ->select('department.*')
@@ -22,7 +21,7 @@
                 <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $search_referral['keyword'] }}" name="keyword"/>
             </div>
             <div class="form-group">
-                <input type="text" id="daterange" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+                <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
                 <select class="form-control" name="department">

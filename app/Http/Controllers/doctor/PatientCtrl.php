@@ -21,7 +21,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PatientCtrl extends Controller
 {
@@ -147,6 +149,23 @@ class PatientCtrl extends Controller
         Session::put('profileSearch',$data);
         return redirect('doctor/patient');
         //return redirect()->back()->with('status','added');
+    }
+
+    public function updatePatient(Request $request){
+        $data = Patients::find($request->patient_id);
+        if($request->patient_update_button){
+            $data_update = $request->all();
+            unset($data_update['_token']);
+            unset($data_update['patient_update_button']);
+            unset($data_update['patient_id']);
+            $data->update($data_update);
+            Session::put('patient_update_save',true);
+            Session::put('patient_message','Successfully updated patient');
+            return Redirect::back();
+        }
+        return view('doctor.patient_body',[
+            "data" => $data
+        ]);
     }
 
     public function showPatientProfile($id)
@@ -590,7 +609,36 @@ class PatientCtrl extends Controller
         return $patient->id;
     }
 
-    function accepted()
+    function accepted(Request $request)
+    {
+        $user = Session::get('auth');
+        $keyword = Session::get('keywordAccepted');
+        $start = Session::get('startAcceptedDate');
+        $end = Session::get('endAcceptedDate');
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+        } else {
+            $start = \Carbon\Carbon::now()->startOfYear();
+            $end = \Carbon\Carbon::now()->endOfYear();
+        }
+
+
+        $data = \DB::connection('mysql')->select("call AcceptedFunc('$user->facility_id','$start','$end','$keyword')");
+        $patient_count = count($data);
+        $data = $this->MyPagination($data,15,$request);
+
+        return view('doctor.accepted',[
+            'title' => 'Accepted Patients',
+            'data' => $data,
+            'start' => $start,
+            'end' => $end,
+            'patient_count' => $patient_count
+        ]);
+    }
+
+    function AcceptedJimmy()
     {
         $user = Session::get('auth');
         $keyword = Session::get('keywordAccepted');
@@ -598,21 +646,21 @@ class PatientCtrl extends Controller
         $end = Session::get('endAcceptedDate');
 
         $data = Tracking::select(
-                    'tracking.id',
-                    'tracking.type',
-                    'tracking.code',
-                    'facility.name',
-                    DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-                    DB::raw("DATE_FORMAT(tracking.date_accepted,'%M %d, %Y %h:%i %p') as date_accepted")
-                )
-                ->join('facility','facility.id','=','tracking.referred_from')
-                ->join('patients','patients.id','=','tracking.patient_id')
-                ->where('referred_to',$user->facility_id)
-                ->where(function($q){
-                    $q->where('tracking.status','accepted')
-                        ->orwhere('tracking.status','admitted')
-                        ->orwhere('tracking.status','arrived');
-                });
+            'tracking.id',
+            'tracking.type',
+            'tracking.code',
+            'facility.name',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("DATE_FORMAT(tracking.date_accepted,'%M %d, %Y %h:%i %p') as date_accepted")
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->where('referred_to',$user->facility_id)
+            ->where(function($q){
+                $q->where('tracking.status','accepted')
+                    ->orwhere('tracking.status','admitted')
+                    ->orwhere('tracking.status','arrived');
+            });
         if($keyword){
             $data = $data->where(function($q) use ($keyword){
                 $q->where('patients.fname','like',"%$keyword%")
@@ -629,7 +677,7 @@ class PatientCtrl extends Controller
         }
 
         $data = $data->orderBy('tracking.date_accepted','desc')
-                ->paginate(15);
+            ->paginate(15);
 
         return view('doctor.accepted',[
             'title' => 'Accepted Patients',
@@ -637,14 +685,32 @@ class PatientCtrl extends Controller
         ]);
     }
 
+    public function MyPagination($list,$perPage,Request $request)
+    {
+        // Get current page form url e.x. &page=1
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        // Create a new Laravel collection from the array data
+        $itemCollection = collect($list);
+
+        // Slice the collection to get the items to display in current page
+        $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+
+        // Create our paginator and pass it to the view
+        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
+
+        // set url path for generted links
+        $paginatedItems->setPath($request->url());
+
+        return $paginatedItems;
+    }
+
     public function searchAccepted(Request $req)
     {
         $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $range[0];
+        $end = $range[1];
 
         Session::put('startAcceptedDate',$start);
         Session::put('endAcceptedDate',$end);

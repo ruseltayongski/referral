@@ -2,7 +2,7 @@
     use Illuminate\Support\Facades\Session;
 ?>
 @extends('layouts.app')
-<link href="{{ asset('resources/plugin/daterangepicker_old/daterangepicker-bs3.css') }}" rel="stylesheet">
+
 @section('content')
     <form action="{{ asset('admin/report/consolidated/incomingv2') }}" method="POST">
         {{ csrf_field() }}
@@ -570,9 +570,6 @@
 @endsection
 
 @section('js')
-    <script src="{{ url('resources/plugin/daterangepicker_old/moment.min.js') }}"></script>
-    <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>
-
     <script>
         //Date range picker
         $('#reservation').daterangepicker();

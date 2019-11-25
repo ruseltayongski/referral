@@ -24,9 +24,9 @@
     <!-- SELECT 2 -->
     <link href="{{ asset('resources/plugin/datepicker/datepicker3.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
-
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
+    <link href="{{ asset('resources/plugin/daterangepicker_old/daterangepicker-bs3.css') }}" rel="stylesheet">
 
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <title>
@@ -269,7 +269,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 2.0</p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 2.1</p>
     </div>
 </footer>
 
@@ -290,10 +290,11 @@
 <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=1"></script>
 <script src="{{ asset('resources/plugin/select2/select2.min.js') }}?v=1"></script>
 
-
-
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}?v=1"></script>
+
+<script src="{{ url('resources/plugin/daterangepicker_old/moment.min.js') }}"></script>
+<script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>
 
 @include('script.firebase')
 @include('script.newreferral')

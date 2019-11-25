@@ -1,4 +1,5 @@
 <?php
+$search_referral = Session::get('search_referral');
 $user = Session::get('auth');
 ?>
 @extends('layouts.app')
@@ -15,11 +16,13 @@ $user = Session::get('auth');
     </div>
     <div class="col-md-9">
         <div class="jim-content">
+            @if(count($data) > 0)
             <div class="alert alert-warning">
                 <div class="text-warning">
                     <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a>
                 </div>
             </div>
+            @endif
             <h3 class="page-header">
                 Incoming Patients
             </h3>
@@ -43,9 +46,7 @@ $user = Session::get('auth');
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
                                 $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
-                                ?>
 
-                                <?php
                                 $department = '"Not specified department"';
                                 $check_dept = \App\Department::find($row->department_id);
                                 if($check_dept)
@@ -64,7 +65,17 @@ $user = Session::get('auth');
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                             <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
-                                                <small class="text-bold">{{ $row->code }}</small> <a href="#" class="patient_name">{{ $row->patient_name }}</a> <small class="status">[ {{ $row->sex }}, {{ $row->age }} ]</small> was referred to <span class="text-danger">{{ $department }}</span> by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of <span class="facility">{{ $row->facility_name }}</span>
+                                                <small class="text-bold">
+                                                    {{ $row->code }}
+                                                </small>
+                                                <a href="#" class="patient_name">{{ $row->patient_name }}</a>
+                                                <small class="status">
+                                                    [ {{ $row->sex }}, {{ $row->age }} ]
+                                                </small>
+                                                was referred to
+                                                <span class="text-danger">{{ $department }}</span>
+                                                by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of
+                                                <span class="facility">{{ $row->facility_name }}</span>
                                             </h3>
                                             <div class="timeline-footer">
                                                 <div class="form-inline">
@@ -145,7 +156,15 @@ $user = Session::get('auth');
                                         <i class="fa fa-user-plus bg-olive"></i>
                                         <div class="timeline-item">
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> was {{ $row->status }} by <span class="text-success">Dr. {{ $row->action_md }}</span>
+                                            <h3 class="timeline-header no-border">
+                                                <small class="text-bold">
+                                                    {{ $row->code }}
+                                                </small>
+                                                <a href="#">{{ $row->patient_name }}</a>
+                                                was {{ $row->status }} by
+                                                <span class="text-success">
+                                                    Dr. {{ $row->action_md }}
+                                                </span>
                                                 @if($step<=4)
                                                     <div class="form-inline">
                                                         @if($seen > 0)
@@ -209,6 +228,18 @@ $user = Session::get('auth');
                             <div class="alert alert-warning">
                                 <span class="text-warning">
                                     <i class="fa fa-warning"></i> No referrals!
+                                    <ul>
+                                        <li>Filer List:</li>
+                                        <ul>
+                                            @if(isset($search_referral['keyword']))
+                                            <li>Code - {{ $search_referral['keyword'] }}</li>
+                                            @endif
+                                            <li>Date range - {{ $start.' - '.$end }}</li>
+                                            @if(isset($search_referral['department']))
+                                            <li>Department - {{ \App\Department::find($search_referral['department'])->description }}</li>
+                                            @endif
+                                        </ul>
+                                    </ul>
                                 </span>
                             </div>
                         </div>
@@ -230,11 +261,14 @@ $user = Session::get('auth');
     @include('modal.caller')
     @include('modal.feedback')
 @endsection
+@section('css')
+
+@endsection
+
 @section('js')
     @include('script.referral')
     @include('script.feedback')
-    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
-    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
+
     <script>
         $('#daterange').daterangepicker({
             "singleDatePicker": false,
@@ -246,7 +280,4 @@ $user = Session::get('auth');
     </script>
 @endsection
 
-@section('css')
-    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
-@endsection
 

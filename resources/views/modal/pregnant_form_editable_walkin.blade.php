@@ -39,13 +39,20 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                                 <td>Time</td>
                             </tr>
                             <tr>
-                                <td colspan="4">Facility :
-                                    <select name="referring_facility_walkin" class="form-control-select select_facility_walkin" style="padding: 3px" required>
-                                        <option value="">Select Facility...</option>
-                                        @foreach($facilities as $row)
-                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <td colspan="4">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            Facility :
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select name="referring_facility_walkin" class="form-control-select select2 select_facility_walkin" style="width: 100%" required>
+                                                <option value="">Select Facility...</option>
+                                                @foreach($facilities as $row)
+                                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>

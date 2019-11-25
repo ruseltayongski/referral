@@ -18,13 +18,13 @@
         <form method="post" action="{{ url('doctor/referred/search') }}">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="keyword" value="{{ \Illuminate\Support\Facades\Session::get('referredKeyword') }}" class="form-control" placeholder="Code, Firstname, Lastname" />
+                <input type="text" name="keyword" value="{{ Session::get('referredKeyword') }}" class="form-control" placeholder="Code, Firstname, Lastname" />
             </div>
             <div class="form-group">
-                <input type="text" id="daterange" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+                <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="form-control" name="facility">
+                <select class="form-control select2" name="facility">
                     <option value="">All Facility</option>
                     @foreach($fac as $f)
                         <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>

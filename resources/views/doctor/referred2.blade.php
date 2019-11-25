@@ -449,20 +449,18 @@ $user = Session::get('auth');
         });
     </script>
 
-    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
-    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
     <script>
+        $('.select2').select2();
+
         $('#daterange').daterangepicker({
             "singleDatePicker": false,
             "startDate": "{{ $start }}",
             "endDate": "{{ $end }}"
-        }, function(start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
     </script>
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="{{ url('resources/plugin/daterange/daterangepicker.css') }}" />
+
 @endsection
 

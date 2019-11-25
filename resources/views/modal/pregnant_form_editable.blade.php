@@ -44,20 +44,37 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                Referred to:
-                                <select name="referred_facility" class="form-control-select select_facility" style="padding: 3px" required>
-                                    <option value="">Select Facility...</option>
-                                    @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                                <select name="referred_department" class="form-control-select select_department select_department_pregnant" style="padding: 3px" required>
-                                    <option value="">Select Department...</option>
-                                </select>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        Referred to:
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%" required>
+                                            <option value="">Select Facility...</option>
+                                            @foreach($facilities as $row)
+                                                <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="referred_department" class="form-control-select select_department select_department_pregnant" style="padding: 3px" required>
+                                            <option value="">Select Department...</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4">Address: <span class="text-primary facility_address"></span></td>
+                            <td colspan="4">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        Address:
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-primary facility_address"></span>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                     <div class="col-sm-6">

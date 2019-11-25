@@ -41,7 +41,6 @@
                             </p>
                         </div>
                     @endif
-
                     @if($dateNow >= '2019-07-31' && $dateNow <= '2019-08-31')
                         <div class="alert alert-info">
                             <p class="text-info" style="font-size:1.1em;">
@@ -83,6 +82,20 @@
                                     </ol>
                                 </ol>
                             </p>
+                        </div>
+                    @endif
+                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
+                        <div class="alert alert-info">
+                            <span class="text-info" style="font-size:1.1em;">
+                                <strong><i class="fa fa-info"></i> Version 2.1 was successfully launch</strong><br>
+                                <ol type="I" style="color: #31708f;font-size: 10pt;margin-top: 10px;">
+                                    <li><i><b>Editable Patient</b></i> - Allowing the user to edit misspelled / typo informations</li>
+                                    <li><i><b>Facility Dropdown</b></i> - Allowing the dropdown be search by keyword</li>
+                                    <li><i><b>Outgoing Referral Report</b></i> - Adding the department to be filter</li>
+                                    <li><i><b>Login Lifetime</b></i> - Session will expire in 30 minutes</li>
+                                    <li><i><b>Input Date Range</b></i> - Filter date range UI interface improve</li>
+                                </ol>
+                            </span>
                         </div>
                     @endif
                     <div class="alert alert-success ">

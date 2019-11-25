@@ -398,7 +398,6 @@ class ReferralCtrl extends Controller
             ->where(function($q){
                 $q->where('tracking.status','referred')
                     ->orwhere('tracking.status','seen')
-                    ->orwhere('tracking.status','seen')
                     ->orwhere('tracking.status','accepted')
                     ->orwhere('tracking.status','arrived')
                     ->orwhere('tracking.status','admitted')
@@ -487,6 +486,7 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.status','rejected');
             })
             ->where('tracking.code',$code)
+            ->where('tracking.date_accepted','<>','')
             ->orderBy('date_referred','desc')
             ->paginate(10);
 
@@ -494,6 +494,30 @@ class ReferralCtrl extends Controller
             'title' => 'Track Patients',
             'data' => $data
         ]);
+    }
+
+    static function step_v2($status){
+        $step = 0;
+        if($status == 'referred')
+            $step = 1;
+        elseif($status == 'seen')
+            $step = 2;
+        elseif($status == 'accepted')
+            $step = 3;
+        elseif($status == 'arrived')
+            $step = 4;
+        elseif($status == 'admitted')
+            $step = 5;
+        elseif($status == 'discharged')
+            $step = 6;
+        elseif($status == 'transferred')
+            $step = 6;
+        elseif($status == 'cancelled')
+            $step = 0;
+        elseif($status == 'archived')
+            $step = 4.5;
+
+        return $step;
     }
 
     static function step($code)
@@ -522,7 +546,6 @@ class ReferralCtrl extends Controller
             $step = 4.5;
 
         return $step;
-
     }
 
     static function hasStatus($status,$code)
@@ -600,11 +623,11 @@ class ReferralCtrl extends Controller
         );
         Activity::create($data);
 
-        $doc = User::find($user->id);
+        /*$doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
         $hosp = Facility::find($user->facility_id)->name;
         $msg = "Referral code $track->code was accepted by Dr. $name of $hosp.";
-        //DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);
+        DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);*/
 
         return $track_id;
     }

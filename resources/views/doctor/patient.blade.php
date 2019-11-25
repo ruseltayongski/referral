@@ -27,7 +27,6 @@
     <div class="col-md-9">
         <div class="jim-content">
             <h3 class="page-header">Patient List</h3>
-            <!--<input type="text" class="form-control" value="" id="search" name="keyword" placeholder="Search ICD10..." style="width: 100%" autofocus/> -->
             @if(count($data))
                 <div class="table-responsive">
                     <table class="table table-striped"  style="white-space:nowrap;">
@@ -45,7 +44,15 @@
                         ?>
                         <tr>
                             <td>
-                                {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
+                                <b>
+                                    <a href="#patient_modal"
+                                       data-toggle="modal"
+                                       data-id = "{{ $row->id }}"
+                                       onclick="PatientBody('<?php echo $row->id ?>')"
+                                       class="update_info">
+                                        {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
+                                    </a>
+                                </b>
                             </td>
                             <td>{{ $row->sex }}</td>
                             <td>
@@ -194,6 +201,17 @@
         }
     }*/
 
+    function PatientBody(patient_id){
+        console.log(patient_id);
+        var url = "<?php echo asset('doctor/patient/update'); ?>";
+        var json = {
+            "patient_id" : patient_id,
+            "_token" : "<?php echo csrf_token(); ?>"
+        };
+        $.post(url,json,function(result){
+            $(".patient_body").html(result);
+        });
+    }
 
     $('.select2').select2();
     var referred_facility = 0;
@@ -475,8 +493,21 @@
                 window.location.reload(false);
             },500);
         }
-
     }
+
+    @if(Session::get('patient_update_save'))
+    Lobibox.notify('success', {
+        title: "",
+        msg: "<?php echo Session::get("patient_message"); ?>",
+        size: 'mini',
+        rounded: true
+    });
+    <?php
+    Session::put("patient_update_save",false);
+    Session::put("patient_message",false)
+    ?>
+    @endif
+
 </script>
 @endsection
 

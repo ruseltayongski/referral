@@ -31,13 +31,19 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                            Referred to:
-                            <select name="referred_facility" class="form-control-select select_facility" style="padding: 3px" required>
-                                <option value="">Select Facility...</option>
-                                @foreach($facilities as $row)
-                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Referred to:
+                                </div>
+                                <div class="col-md-9">
+                                    <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%;" required>
+                                        <option value="">Select Facility...</option>
+                                        @foreach($facilities as $row)
+                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </td>
                         <td colspan="3">
                             Department: <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
@@ -46,7 +52,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6">Address: <span class="text-primary facility_address"></span></td>
+                        <td colspan="6">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    Address:
+                                </div>
+                                <div class="col-md-10">
+                                    <span class="text-primary facility_address"></span>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="text-success">{{ date('l F d, Y h:i A') }}</span> </td>
@@ -127,13 +142,16 @@
                     </tr>
                     <tr>
                         <td colspan="6">
-                            <div class="col-md-5">
-                                Name of referred MD/HCW- Mobile Contact # (ReCo):
-                            </div>
-                            <div class="col-md-7">
-                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
-                                    <option value="">Any...</option>
-                                </select>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    Name of referred :<br>
+                                    <small class="text-success">MD/HCW- Mobile Contact # (ReCo)</small>
+                                </div>
+                                <div class="col-md-7">
+                                    <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                        <option value="">Any...</option>
+                                    </select>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -149,5 +167,17 @@
             </div>
             </form>
         </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" role="dialog" id="patient_modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body patient_body">
+                <center>
+                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                </center>
+            </div><!-- /.modal-content -->
+        </div>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
