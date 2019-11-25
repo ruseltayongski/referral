@@ -116,7 +116,7 @@ $user = Session::get('auth');
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="widget-user-header bg-{{ $color }}-active">
                                     <?php
-                                        $name = strtoupper($row->fname." ".$row->mname[0].". ".$row->lname);
+                                        $name = strtoupper($row->fname.". ".$row->lname);
 
                                         $temp = $name;
                                         $count = 0;
