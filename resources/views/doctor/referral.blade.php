@@ -57,167 +57,65 @@ $user = Session::get('auth');
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                                 $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
                                 ?>
-
-                                @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
-
-                                    <li>
-                                        <i class="fa fa-ambulance bg-blue-active"></i>
-                                        <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
-                                            <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                            <h3 class="timeline-header no-border">
-                                                <small class="text-bold">
-                                                    {{ $row->code }}
-                                                </small>
-                                                <a href="#" class="patient_name">{{ $row->patient_name }}</a>
-                                                <small class="status">
-                                                    [ {{ $row->sex }}, {{ $row->age }} ]
-                                                </small>
-                                                was referred to
-                                                <span class="text-danger">{{ $department }}</span>
-                                                by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of
-                                                <span class="facility">{{ $row->facility_name }}</span>
-                                            </h3>
-                                            <div class="timeline-footer">
-                                                <div class="form-inline">
-                                                    @if($user->department_id==$row->department_id || $row->department_id==0)
-                                                        <div class="form-group">
-                                                            <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
-                                                               data-toggle="modal"
-                                                               data-code="{{ $row->code }}"
-                                                               data-item="#item-{{ $row->id }}"
-                                                               data-status="{{ $row->status }}"
-                                                               data-type="{{ $row->type }}"
-                                                               data-id="{{ $row->id }}"
-                                                               data-referred_from="{{ $row->referred_from }}"
-                                                               data-backdrop="static">
-                                                                <i class="fa fa-folder"></i> View Form
-                                                            </a>
-                                                        </div>
-                                                    @endif
-
-                                                    @if($seen > 0)
-                                                        <div class="form-group">
-                                                            <a href="#seenModal" data-toggle="modal"
-                                                               data-id="{{ $row->id }}"
-                                                               class="btn btn-success btn-xs btn-seen col-xs-12"><i class="fa fa-user-md"></i> Seen
-                                                                @if($seen>0)
-                                                                    <small class="badge bg-green-active">{{ $seen }}</small>
-                                                                @endif
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                    @if($caller_md > 0)
-                                                        <div class="form-group">
-                                                            <a href="#callerModal" data-toggle="modal"
-                                                               data-id="{{ $row->id }}"
-                                                               class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
-                                                                @if($caller_md>0)
-                                                                    <small class="badge bg-blue-active">{{ $caller_md }}</small>
-                                                                @endif
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                    @if($redirected > 0)
-                                                        <div class="form-group">
-                                                            <a href="#" data-toggle="modal"
-                                                               data-id="{{ $row->id }}"
-                                                               class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-chevron-circle-right"></i> Redirected
-                                                                @if($redirected>0)
-                                                                    <small class="badge bg-red-active">{{ $redirected }}</small>
-                                                                @endif
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                    @if($step>=2 && $step<=4)
-                                                        <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
-                                                                data-target="#feedbackModal"
-                                                                data-code="{{ $row->code }}">
-                                                            <i class="fa fa-comments"></i> ReCo
-                                                            @if($feedback>0)
-                                                                <span class="badge bg-blue">{{ $feedback }}</span>
-                                                            @endif
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @elseif($row->status=='rejected')
-                                    <li>
-                                        <i class="fa fa-user-times bg-maroon"></i>
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                            <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
-
-                                        </div>
-                                    </li>
-                                @else
-                                    <li>
-                                        <i class="fa fa-user-plus bg-olive"></i>
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                            <h3 class="timeline-header no-border">
-                                                <small class="text-bold">
-                                                    {{ $row->code }}
-                                                </small>
-                                                <a href="#">{{ $row->patient_name }}</a>
-                                                was {{ $row->status }} by
-                                                <span class="text-success">
-                                                    Dr. {{ $row->action_md }}
-                                                </span>
-                                                @if($step<=4)
-                                                    <div class="form-inline">
-                                                        @if($seen > 0)
-                                                            <div class="form-group">
-                                                                <a href="#seenModal" data-toggle="modal"
-                                                                   data-id="{{ $row->id }}"
-                                                                   class="btn btn-success btn-xs btn-seen"><i class="fa fa-user-md"></i> Seen
-                                                                    @if($seen>0)
-                                                                        <small class="badge bg-green-active">{{ $seen }}</small>
-                                                                    @endif
-                                                                </a>
-                                                            </div>
-                                                        @endif
-                                                        @if($caller_md > 0)
-                                                            <div class="form-group">
-                                                                <a href="#callerModal" data-toggle="modal"
-                                                                   data-id="{{ $row->id }}"
-                                                                   class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
-                                                                    @if($caller_md>0)
-                                                                        <small class="badge bg-blue-active">{{ $caller_md }}</small>
-                                                                    @endif
-                                                                </a>
-                                                            </div>
-                                                        @endif
-                                                        @if($redirected > 0)
-                                                            <div class="form-group">
-                                                                <a href="#" data-toggle="modal"
-                                                                   data-id="{{ $row->id }}"
-                                                                   class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-chevron-circle-right"></i> Redirected
-                                                                    @if($redirected>0)
-                                                                        <small class="badge bg-red-active">{{ $redirected }}</small>
-                                                                    @endif
-                                                                </a>
-                                                            </div>
-                                                        @endif
-                                                        <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
-                                                                data-target="#feedbackModal"
-                                                                data-code="{{ $row->code }}">
-                                                            <i class="fa fa-comments"></i>
-                                                            ReCo
-                                                            @if($feedback>0)
-                                                                <span class="badge bg-blue">{{ $feedback }}</span>
-                                                            @endif
-                                                        </button>
-
-                                                    </div>
-                                                @endif
-                                            </h3>
-
-                                        </div>
-
-                                    </li>
+                                <li>
+                                    @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
+                                    <i class="fa fa-ambulance bg-blue-active"></i>
+                                    <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
+                                        <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                        <h3 class="timeline-header no-border">
+                                            <small class="text-bold">
+                                                {{ $row->code }}
+                                            </small>
+                                            <a href="#" class="patient_name">{{ $row->patient_name }}</a>
+                                            <small class="status">
+                                                [ {{ $row->sex }}, {{ $row->age }} ]
+                                            </small>
+                                            was referred to
+                                            <span class="text-danger">{{ $department }}</span>
+                                            by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of
+                                            <span class="facility">{{ $row->facility_name }}</span>
+                                        </h3> <!-- time line for #referred #seen #redirected -->
+                                        @include('doctor.include.timeline_footer')
+                                    </div>
+                                    @elseif($row->status=='rejected')
+                                    <i class="fa fa-user-times bg-maroon"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
+                                        <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
+                                        @include('doctor.include.timeline_footer')
+                                    </div>
+                                    @elseif($row->status=='cancelled')
+                                    <i class="fa fa-ban bg-red"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
+                                        <h3 class="timeline-header no-border">
+                                            <small class="text-bold">
+                                                {{ $row->code }}
+                                            </small>
+                                            <a href="#">{{ $row->patient_name }}</a>
+                                            was <span class="badge bg-red">{{ $row->status }}</span> by
+                                            Dr. {{ $row->referring_md }}
+                                            @include('doctor.include.timeline_footer')
+                                        </h3>
+                                    </div>
+                                    @else
+                                    <i class="fa fa-user-plus bg-olive"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
+                                        <h3 class="timeline-header no-border">
+                                            <small class="text-bold">
+                                                {{ $row->code }}
+                                            </small>
+                                            <a href="#">{{ $row->patient_name }}</a>
+                                            was <span class="badge bg-green">{{ $row->status }}</span> by
+                                            <span class="text-success">
+                                            Dr. {{ $row->referring_md }}
+                                            </span>
+                                            @include('doctor.include.timeline_footer')
+                                        </h3>
+                                    </div>
                                 @endif
+                                </li>
                             @endforeach
                         </ul>
                         <div class="text-center">
