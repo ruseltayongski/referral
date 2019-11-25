@@ -121,7 +121,7 @@ $user = Session::get('auth');
                                         $temp = $name;
                                         $count = 0;
                                         $string = "";
-                                        for($i=0;$i<30;$i++){
+                                        for($i=0;$i<50;$i++){
                                             if(!isset($temp[$i])){
                                                 $temp .= " ";
                                             }
