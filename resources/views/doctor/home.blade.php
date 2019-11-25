@@ -94,6 +94,7 @@
                                     <li><i><b>Outgoing Referral Report</b></i> - Adding the department to be filter</li>
                                     <li><i><b>Login Lifetime</b></i> - Session will expire in 30 minutes</li>
                                     <li><i><b>Input Date Range</b></i> - Filter date range UI interface improve</li>
+                                    <li><i><b>Incoming Page</b></i> - UI interface improve and fixed bugs</li>
                                 </ol>
                             </span>
                         </div>
