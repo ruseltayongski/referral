@@ -97,6 +97,9 @@ $user = Session::get('auth');
         <div class="jim-content" style="background: rgba(255, 255, 255, 0.4)">
             <h3 class="page-header">{{ $title }}</h3>
                 @if(count($data)>0)
+                <?php
+                    //$expense_length = \App\Expense::select(DB::raw("length(description) as char_max"))->orderBy(DB::raw("length(description)"),"desc")->first()->char_max; //count the max character para dile maguba ang info-box-content
+                ?>
                     @foreach($data as $row)
                         <?php
                             $color = 'green';
@@ -113,24 +116,31 @@ $user = Session::get('auth');
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="widget-user-header bg-{{ $color }}-active">
                                     <?php
-                                        $fname = ucwords(mb_strtolower($row->fname));
-                                        $name = ucwords(mb_strtolower($row->lname))." ".$fname[0];
-                                        $facility = $row->facility;
+                                        $name = strtoupper($row->fname." ".$row->mname[0].". ".$row->lname);
+
+                                        $temp = $name;
+                                        $count = 0;
+                                        $string = "";
+                                        for($i=0;$i<30;$i++){
+                                            if(!isset($temp[$i])){
+                                                $temp .= " ";
+                                            }
+                                            if($count != 18){
+                                                $count++;
+                                                $string .= $temp[$i];
+                                            } else {
+                                                $count = 0;
+                                                $string .= "<br>";
+                                            }
+                                        }
                                     ?>
-                                    <h3 class="widget-user-username" style="margin-left: 0px;" title="Dr. {{ $row->fname }} {{ $row->lname }}">
-                                        Dr.
-                                        @if(strlen($name)>16)
-                                            {{ substr($name,0,16) }}...
-                                        @else
-                                            {{ $name }}.
-                                        @endif
-                                    </h3>
-                                    <h5 class="widget-user-desc" style="margin-left: 0px;">{{ $row->abbr }}</h5>
+                                    <span>Dr. {!! $string !!}</span><br>
+                                    &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO FACILITY" }}</small>
                                 </div>
                                 <div class="box-footer no-padding">
                                     <ul class="nav nav-stacked">
                                         <li><a href="#">{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
-                                        <li><a href="#">{{ $row->department }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
+                                        <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
                                         <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
                                     </ul>
                                 </div>
@@ -141,9 +151,9 @@ $user = Session::get('auth');
                 @else
                     <div class="alert-section">
                         <div class="alert alert-warning">
-                                        <span class="text-warning">
-                                            <i class="fa fa-warning"></i> No Online Doctors!
-                                        </span>
+                            <span class="text-warning">
+                                <i class="fa fa-warning"></i> No Online Doctors!
+                            </span>
                         </div>
                     </div>
 
