@@ -98,6 +98,8 @@
                                 </ol>
                             </span>
                         </div>
+                    @endif
+                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-27')
                         <div class="alert alert-warning">
                             <span class="text-warning" style="font-size:1.1em;">
                                 <strong><i class="fa fa-warning"></i> November 27, 2019</strong><br>

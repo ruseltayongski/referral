@@ -70,7 +70,7 @@ $user = Session::get('auth');
                                             <small class="status">
                                                 [ {{ $row->sex }}, {{ $row->age }} ]
                                             </small>
-                                            was referred to
+                                            was <span class="badge bg-blue">referred</span> to
                                             <span class="text-danger">{{ $department }}</span>
                                             by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of
                                             <span class="facility">{{ $row->facility_name }}</span>

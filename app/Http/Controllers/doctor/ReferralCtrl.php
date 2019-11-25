@@ -385,7 +385,7 @@ class ReferralCtrl extends Controller
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+            DB::raw('COALESCE(CONCAT("DR. ",users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
             'patients.sex',
             'facility.name as facility_name',
             'facility.id as facility_id',
