@@ -92,11 +92,13 @@ $dateNow = date('Y-m-d');
                                     <li>
                                         We would like to inform that we will move the server maintenance on Friday, November 29,2019. Down time will be @10:00am to 10:30am. Thank you.
                                     </li>
+                                    <!--
                                     <li>
                                         Additional announcement. During that tIme we will change the url of ereferral..changes and updates will be posted..thank you.
                                     </li>
+                                    -->
                                     <li>
-                                        NEW URL for e - referral
+                                        After the reconfiguration new URL addresses will be the following:
                                     </li>
                                     <ol>
                                         <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
