@@ -90,7 +90,7 @@ $dateNow = date('Y-m-d');
                                 <strong><i class="fa fa-warning"></i> November 27, 2019</strong><br>
                                 <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
                                     <li>
-                                        We would like to inform that we will be having server maintenance on Weednesday ,November 27,2019. Down time will be @10:00am to 10:30am. Thank you.
+                                        We would like to inform that we will move the server maintenance on Friday, November 29,2019. Down time will be @10:00am to 10:30am. Thank you.
                                     </li>
                                     <li>
                                         Additional announcement. During that tIme we will change the url of ereferral..changes and updates will be posted..thank you.
