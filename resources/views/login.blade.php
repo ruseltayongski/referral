@@ -84,21 +84,13 @@ $dateNow = date('Y-m-d');
                             </span>
                         </div>
                     @endif
-                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-29')
+                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
                         <div >
                             <span class="text-warning" style="font-size:1.1em;">
-                                <strong><i class="fa fa-warning"></i> November 27, 2019</strong><br>
+                                <strong><i class="fa fa-warning"></i> Network server was successfully upgrade</strong><br>
                                 <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
                                     <li>
-                                        We would like to inform that we will move the server maintenance on Friday, November 29,2019. Down time will be @10:00am to 10:30am. Thank you.
-                                    </li>
-                                    <!--
-                                    <li>
-                                        Additional announcement. During that tIme we will change the url of ereferral..changes and updates will be posted..thank you.
-                                    </li>
-                                    -->
-                                    <li>
-                                        After the reconfiguration new URL addresses will be the following:
+                                        new URL addresses will be the following:
                                     </li>
                                     <ol>
                                         <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
