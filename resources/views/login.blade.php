@@ -87,7 +87,8 @@ $dateNow = date('Y-m-d');
                     @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
                         <div >
                             <span class="text-warning" style="font-size:1.1em;">
-                                <strong><i class="fa fa-warning"></i> Network server was successfully upgrade</strong><br>
+                                <strong><i class="fa fa-plus"></i> Network server was successfully upgrade</strong><br>
+                                <!--
                                 <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
                                     <li>
                                         new URL addresses will be the following:
@@ -97,6 +98,7 @@ $dateNow = date('Y-m-d');
                                         <li><span class="badge bg-maroon">http://203.177.67.125/doh/referral/login</span></li>
                                     </ol>
                                 </ol>
+                                -->
                             </span>
                         </div>
                     @endif
