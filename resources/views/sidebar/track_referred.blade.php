@@ -6,7 +6,7 @@
         <form method="post" action="{{ url('doctor/track/patient') }}">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="keyword" value="{{ \Illuminate\Support\Facades\Session::get('referredCode') }}" class="form-control" placeholder="Referral Code" />
+                <input type="text" name="referredCode" value="{{ $code }}" class="form-control" placeholder="Referral Code" />
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-default btn-block">

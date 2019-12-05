@@ -148,8 +148,7 @@ Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
 Route::post('doctor/referred/issue/{id}','doctor\ReferralCtrl@issueReferral');
 Route::post('doctor/referred/transfer/{id}','doctor\ReferralCtrl@transferReferral');
 Route::post('doctor/referred/search','doctor\ReferralCtrl@searchReferred');
-Route::get('doctor/track/patient','doctor\ReferralCtrl@trackReferral');
-Route::post('doctor/track/patient','doctor\ReferralCtrl@searchTrackReferral');
+Route::match(["get","post"],'doctor/track/patient','doctor\ReferralCtrl@trackReferral');
 
 Route::get('doctor/patient','doctor\PatientCtrl@index');
 Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');

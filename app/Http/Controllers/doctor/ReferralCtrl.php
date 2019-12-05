@@ -454,12 +454,11 @@ class ReferralCtrl extends Controller
         return redirect('doctor/track/patient');
     }
 
-    public function trackReferral()
+    public function trackReferral(Request $request)
     {
-        $code = Session::get('referredCode');
+        $code = $request->referredCode;
 
         ParamCtrl::lastLogin();
-        $user = Session::get('auth');
         $data = Tracking::select(
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -473,26 +472,14 @@ class ReferralCtrl extends Controller
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_to')
             ->leftJoin('users','users.id','=','tracking.referring_md')
-            ->where(function($q){
-                $q->where('tracking.status','referred')
-                    ->orwhere('tracking.status','seen')
-                    ->orwhere('tracking.status','accepted')
-                    ->orwhere('tracking.status','arrived')
-                    ->orwhere('tracking.status','admitted')
-                    ->orwhere('tracking.status','transferred')
-                    ->orwhere('tracking.status','discharged')
-                    ->orwhere('tracking.status','cancelled')
-                    ->orwhere('tracking.status','archived')
-                    ->orwhere('tracking.status','rejected');
-            })
             ->where('tracking.code',$code)
-            ->where('tracking.date_accepted','<>','')
             ->orderBy('date_referred','desc')
             ->paginate(10);
 
         return view('doctor.tracking',[
             'title' => 'Track Patients',
-            'data' => $data
+            'data' => $data,
+            'code' => $code
         ]);
     }
 

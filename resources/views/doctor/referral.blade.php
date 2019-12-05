@@ -109,7 +109,7 @@ $user = Session::get('auth');
                                             <a href="#">{{ $row->patient_name }}</a>
                                             was <span class="badge bg-green">{{ $row->status }}</span> by
                                             <span class="text-success">
-                                            Dr. {{ $row->referring_md }}
+                                            Dr. {{ $row->action_md }}
                                             </span>
                                             @include('doctor.include.timeline_footer')
                                         </h3>

@@ -6,6 +6,7 @@
     var last_id = 0;
 
     $('.btn-feedback').on('click',function () {
+        console.log("rusel");
         code = $(this).data('code');
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);

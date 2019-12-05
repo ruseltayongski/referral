@@ -337,7 +337,6 @@ $user = Session::get('auth');
                         <a href="#transferModal" data-toggle="modal"
                            data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
                     @endif
-                    @if($step<=4)
                     <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                             data-target="#feedbackModal"
                             data-code="{{ $row->code }}">
@@ -346,7 +345,6 @@ $user = Session::get('auth');
                             <span class="badge bg-blue">{{ $feedback }}</span>
                         @endif
                     </button>
-                    @endif
                     <a href="#issueModal" data-toggle="modal"
                        data-id="{{ $row->id }}" data-issue="{{ \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->get() }}" class="btn btn-xs btn-danger btn-issue"><i class="fa fa-exclamation-triangle"></i> Issue and concern <?php $issue_count = \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->count(); ?>{!! $issue_count > 0 ? '<span class="badge bg-red">'.$issue_count.'</span>' : '' !!}</a>
                     @if(!$checkForCancellation)
