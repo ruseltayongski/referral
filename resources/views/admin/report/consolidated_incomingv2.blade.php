@@ -175,11 +175,11 @@
                                             $turnaround_time_accept_incoming[$facility_id] = $row->turnaround_time_accept;
                                             $turnaround_time_arrived_incoming[$facility_id] = $row->turnaround_time_arrived;
                                         ?>
-                                        @if($row->turnaround_time_accept)
+                                        @if($accepted)
                                             <?php $turnaround_time_accept_incoming[$facility_id] .= ' mins'; ?>
                                             <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_accept.' mins</span>'; ?></span>
                                         @endif
-                                        @if($row->turnaround_time_arrived)
+                                        @if($accepted)
                                             <?php $turnaround_time_arrived_incoming[$facility_id] .= ' mins'; ?>
                                             <span class="label label-primary">Arrival <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_arrived.'mins</span>'; ?></span>
                                         @endif
