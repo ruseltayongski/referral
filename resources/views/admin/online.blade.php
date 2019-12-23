@@ -71,14 +71,11 @@ if(!$dateReportOnline)
                                     {{ ($row->login_status=='login') ? 'On Duty' : 'Off Duty' }}
                                 </td>
                                 <td>
-                                    {{ date('h:i A',strtotime($row->login)) }}
+                                    {{ date('h:i A',strtotime($row->last_login)) }}
                                 </td>
                             </tr>
                             @endforeach
                         </table>
-                        <div class="text-center">
-                            {{ $data->links() }}
-                        </div>
                     </div>
                 @else
                     <div class="alert alert-warning">

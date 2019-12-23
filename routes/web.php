@@ -55,8 +55,8 @@ Route::get('admin/login','admin\UserCtrl@loginAs');
 Route::post('admin/login','admin\UserCtrl@assignLogin');
 Route::get('admin/account/return','ParamCtrl@returnToAdmin');
 
-Route::get('admin/report/online','admin\ReportCtrl@online');
-Route::post('admin/report/online','admin\ReportCtrl@filterOnline');
+Route::get('admin/report/online','admin\ReportCtrl@online1');
+Route::post('admin/report/online','admin\ReportCtrl@filterOnline1');
 
 Route::get('admin/report/referral','admin\ReportCtrl@referral');
 Route::post('admin/report/referral','admin\ReportCtrl@filterReferral');

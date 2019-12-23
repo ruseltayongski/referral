@@ -38,6 +38,7 @@ class ReportCtrl extends Controller
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->where('users.level','!=','admin')
+                ->where('users.username','!=','rtayong_doctor')
                 ->orderBy('users.facility_id','asc')
                 ->orderBy('login.id','desc')
                 ->orderBy('users.lname','asc')
@@ -53,6 +54,30 @@ class ReportCtrl extends Controller
     {
         Session::put('dateReportOnline',$req->date);
         return self::online();
+    }
+
+    public function online1() //12/23/2019 created
+    {
+        $date = Session::get('dateReportOnline');
+        if(!$date){
+            $date = date('Y-m-d');
+        }
+
+        $start = Carbon::parse($date)->startOfDay();
+        $end = Carbon::parse($date)->endOfDay();
+
+        $data = \DB::connection('mysql')->select("call AttendanceFunc('$start','$end')");
+
+        return view('admin.online',[
+            'title' => 'Online Users',
+            'data' => $data
+        ]);
+    }
+
+    public function filterOnline1(Request $req)
+    {
+        Session::put('dateReportOnline',$req->date);
+        return self::online1();
     }
 
     public function referral()
