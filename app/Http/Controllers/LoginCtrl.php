@@ -36,25 +36,17 @@ class LoginCtrl extends Controller
                         ]);
                     $checkLastLogin = self::checkLastLogin($login->id);
 
-                    if(!$checkLastLogin){
-                        $l = new Login();
-                        $l->userId = $login->id;
-                        $l->login = $last_login;
-                        $l->status = 'login';
-                        $l->save();
-                    }
+                    $l = new Login();
+                    $l->userId = $login->id;
+                    $l->login = $last_login;
+                    $l->status = 'login';
+                    $l->save();
 
                     if($checkLastLogin > 0 ){
                         Login::where('id',$checkLastLogin)
-                            ->update([
-                                'logout' => $last_login
-                            ]);
-
-                        $l = new Login();
-                        $l->userId = $login->id;
-                        $l->login = $last_login;
-                        $l->status = 'login';
-                        $l->save();
+                        ->update([
+                            'logout' => $last_login
+                        ]);
                     }
 
                     if($login->level=='doctor'){
