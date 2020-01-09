@@ -8,7 +8,7 @@
         {{ csrf_field() }}
         <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
             <div class="col-md-4">
-                <input type="text" class="form-control" name="date_range" placeholder="Filter your daterange here..." id="reservation">
+                <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="reservation">
             </div>
             <div class="col-md-6">
                 <div class="input-group-btn">
@@ -48,6 +48,7 @@
         $turnaround_time_accept_outgoing1 = [];
         $turnaround_time_arrived_outgoing1 = [];
     ?>
+    @if(count($data) > 0)
     @foreach($data as $row)
     <div class="box box-success">
         <div class="box-body no-padding">
@@ -535,6 +536,21 @@
         </div>
     </div>
     @endforeach
+    @else
+        <div class="alert-section">
+            <div class="alert alert-warning">
+                <span class="text-warning">
+                    <i class="fa fa-warning"></i> No referrals!
+                    <ul>
+                        <li>Filer List:</li>
+                        <ul>
+                            <li>Date range - {{ $date_range_start.' - '.$date_range_end }}</li>
+                        </ul>
+                    </ul>
+                </span>
+            </div>
+        </div>
+    @endif
     <?php
         //INCOMING
         Session::put('accepted_incoming',$accepted_incoming);
