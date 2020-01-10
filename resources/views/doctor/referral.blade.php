@@ -64,7 +64,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                         <h3 class="timeline-header no-border">
                                             <small class="text-bold">
-                                                {{ $row->code }}
+                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </small>
                                             <a href="#" class="patient_name">{{ $row->patient_name }}</a>
                                             <small class="status">
@@ -81,7 +81,12 @@ $user = Session::get('auth');
                                     <i class="fa fa-user-times bg-maroon"></i>
                                     <div class="timeline-item">
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
-                                        <h3 class="timeline-header no-border"><small class="text-bold">{{ $row->code }}</small> <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span></h3>
+                                        <h3 class="timeline-header no-border">
+                                            <small class="text-bold">
+                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                            </small>
+                                            <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
+                                        </h3>
                                         @include('doctor.include.timeline_footer')
                                     </div>
                                     @elseif($row->status=='cancelled')
@@ -90,7 +95,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
                                             <small class="text-bold">
-                                                {{ $row->code }}
+                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </small>
                                             <a href="#">{{ $row->patient_name }}</a>
                                             was <span class="badge bg-red">{{ $row->status }}</span> by
@@ -104,7 +109,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
                                             <small class="text-bold">
-                                                {{ $row->code }}
+                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </small>
                                             <a href="#">{{ $row->patient_name }}</a>
                                             was <span class="badge bg-green">{{ $row->status }}</span> by
