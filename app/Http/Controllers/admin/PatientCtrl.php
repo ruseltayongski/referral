@@ -72,8 +72,8 @@ class PatientCtrl extends Controller
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = Carbon::now()->startOfYear()->format('m/d/Y').' 00:00:00';
-            $date_end = Carbon::now()->endOfYear()->format('m/d/Y').' 23:59:59';
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfYear()->format('Y-m-d').' 23:59:59';
         }
 
         $facility_id = Session::get("auth")->facility_id;
