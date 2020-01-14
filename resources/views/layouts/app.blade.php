@@ -186,6 +186,7 @@
                         </ul>
                     </li>
                     <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li>
+                    <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                     @elseif($user->level=='admin')
                     <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li class="dropdown">
