@@ -132,7 +132,7 @@ class ExcelCtrl extends Controller
             foreach($data as $row){
                 $data = [
                     $row['name'],
-                    $row['count_incoming'],
+                    Session::get('total_outgoing1')[$row['id']],
                     Session::get('seenzoned_outgoing1')[$row['id']],
                     Session::get('accepted_outgoing1')[$row['id']],
                     "Under development this column",
