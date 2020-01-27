@@ -381,7 +381,7 @@
                                 ->where('referred_from',$row->id)
                                 ->count();
 
-                            $total_outgoing1[$facility_id] = $outgoing;
+                            $total_outgoing1[$facility_id] = $outgoing->count_outgoing;
                             $accepted_outgoing1[$facility_id] = $accepted_outgoing;
                             $seenzoned_outgoing1[$facility_id] = $seenzoned_outgoing;
                         ?>
