@@ -96,24 +96,9 @@
                                 ->orderBy("count","desc")
                                 ->limit(10)
                                 ->get();
-                            $diagnosis_ref = \App\Tracking::select("patient_form.diagnosis",\DB::raw("count(patient_form.diagnosis) as count"))
-                                ->leftJoin("patient_form","patient_form.code","=","tracking.code")
-                                ->where("tracking.referred_to","=",$row->id)
-                                ->where("tracking.date_referred",">=",$date_start)
-                                ->where("tracking.date_referred","<=",$date_end)
-                                ->groupBy('patient_form.diagnosis')
-                                ->orderBy("count","desc")
-                                ->limit(10)
-                                ->get();
-                            $reason_ref = \App\Tracking::select("patient_form.reason",\DB::raw("count(patient_form.reason) as count"))
-                                ->leftJoin("patient_form","patient_form.code","=","tracking.code")
-                                ->where("tracking.referred_to","=",$row->id)
-                                ->where("tracking.date_referred",">=",$date_start)
-                                ->where("tracking.date_referred","<=",$date_end)
-                                ->groupBy('patient_form.reason')
-                                ->orderBy("count","desc")
-                                ->limit(10)
-                                ->get();
+                            $diagnosis_ref = \DB::connection('mysql')->select("call diagnosisIncoming('$facility_id','$date_start','$date_end')");
+                            $reason_ref = \DB::connection('mysql')->select("call reasonIncoming('$facility_id','$date_start','$date_end')");
+
                             $transport_ref = \App\Tracking::select("mode_transportation.transportation",\DB::raw("count(mode_transportation.id) as count"))
                                 ->leftJoin("mode_transportation","mode_transportation.id","=","tracking.mode_transportation")
                                 ->where("tracking.referred_to","=",$row->id)
@@ -325,24 +310,10 @@
                                 ->orderBy("count","desc")
                                 ->limit(10)
                                 ->get();
-                            $diagnosis_ref_outgoing = \App\PatientForm::select("patient_form.diagnosis",\DB::raw("count(patient_form.diagnosis) as count"))
-                                ->where("patient_form.referred_to","=",$row->id)
-                                ->where("patient_form.diagnosis","!=","")
-                                ->where("patient_form.time_referred",">=",$date_start)
-                                ->where("patient_form.time_referred","<=",$date_end)
-                                ->groupBy('patient_form.diagnosis')
-                                ->orderBy("count","desc")
-                                ->limit(10)
-                                ->get();
-                            $reason_ref_outgoing = \App\PatientForm::select("patient_form.reason",\DB::raw("count(patient_form.reason) as count"))
-                                ->where("patient_form.referring_facility","=",$row->id)
-                                ->where("patient_form.reason","!=","")
-                                ->where("patient_form.time_referred",">=",$date_start)
-                                ->where("patient_form.time_referred","<=",$date_end)
-                                ->groupBy('patient_form.reason')
-                                ->orderBy("count","desc")
-                                ->limit(10)
-                                ->get();
+
+                            $diagnosis_ref_outgoing = \DB::connection('mysql')->select("call diagnosisOutgoing('$facility_id','$date_start','$date_end')");
+                            $reason_ref_outgoing = \DB::connection('mysql')->select("call reasonOutgoing('$facility_id','$date_start','$date_end')");
+
                             $transport_ref_outgoing = \App\Tracking::select("mode_transportation.transportation",\DB::raw("count(mode_transportation.id) as count"))
                                 ->leftJoin("mode_transportation","mode_transportation.id","=","tracking.mode_transportation")
                                 ->where("tracking.referred_from","=",$row->id)
