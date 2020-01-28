@@ -300,10 +300,13 @@
                                 ->where("date_referred","<=",$date_end)
                                 ->where("status","=","accepted")
                                 ->count();
-                            $seenzoned_outgoing = \DB::connection('mysql')->select("call getViewedOnlyOutgoing('$facility_id','$date_start','$date_end')")[0]->seen_outgoing;
-                            if($accepted_outgoing > $seenzoned_outgoing){
+                            //$seenzoned_outgoing = \DB::connection('mysql')->select("call getViewedOnlyOutgoing('$facility_id','$date_start','$date_end')")[0]->seen_outgoing;
+
+                            $outgoing_no_respond = $outgoing->count_outgoing - $accepted_outgoing;
+
+                            /*if($accepted_outgoing > $seenzoned_outgoing){
                                 $accepted_outgoing = $seenzoned_outgoing;
-                            }
+                            }*/
                             $facility_outgoing = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
                                 ->leftJoin("facility","facility.id","=","tracking.referred_to")
                                 ->where("tracking.referred_from","=",$row->id)
@@ -383,7 +386,7 @@
 
                             $total_outgoing1[$facility_id] = $outgoing->count_outgoing;
                             $accepted_outgoing1[$facility_id] = $accepted_outgoing;
-                            $seenzoned_outgoing1[$facility_id] = $seenzoned_outgoing;
+                            $seenzoned_outgoing1[$facility_id] = $outgoing_no_respond;
                         ?>
                         <div class="row">
                             <div class="col-md-4 ">
@@ -399,8 +402,8 @@
                                     <p>
                                         <?php
                                             echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing->count_outgoing.'</span></span>';
-                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
+                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$outgoing_no_respond.'</span></span>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
                                         ?>
