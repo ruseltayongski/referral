@@ -90,4 +90,38 @@ class PatientCtrl extends Controller
         ]);
     }
 
+    public function NoAction($facility_id,$date_start,$date_end,$type){
+
+        $data = Tracking::select(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+            'patients.sex',
+            'facility.name as facility_name',
+            'facility.id as facility_id',
+            'patients.id as patient_id'
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->where('tracking.'.$type,"=",$facility_id)
+            ->whereBetween('tracking.date_referred',[$date_start,$date_end])
+            ->where(function($q){
+                $q->where('tracking.status','referred')
+                    ->orwhere('tracking.status','cancelled')
+                    ->orwhere('tracking.status','rejected')
+                    ->orwhere('tracking.status','seen')
+                    ->orwhere('tracking.status','transferred')
+                    ->orwhere('tracking.status','archived');
+            })
+            ->orderBy('tracking.date_referred','desc')
+            ->paginate(10);
+
+        return view("admin.report.no_action_view",[
+            'title' => 'Viewed Only',
+            'data' => $data,
+        ]);
+    }
+
 }

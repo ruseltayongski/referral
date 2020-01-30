@@ -69,6 +69,7 @@ Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getA
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
 Route::match(['GET','POST'],'admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
+Route::get('admin/no_action/{facility_id}/{date_start}/{date_end}/{type}','admin\PatientCtrl@NoAction');
 Route::get('admin/report/consolidated/outgoing','admin\PatientCtrl@consolidatedOutgoing');
 
 

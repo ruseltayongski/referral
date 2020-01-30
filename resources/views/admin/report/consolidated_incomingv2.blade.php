@@ -66,17 +66,16 @@
                             /*$incoming = \DB::connection('mysql')->select("call 0927countIncoming('$facility_id','$date_start','$date_end')")[0]->count_incoming;
                             $accepted = \DB::connection('mysql')->select("call 0927acceptedIncoming('$facility_id','$date_start','$date_end')")[0]->accepted_incoming;
                             $seenzoned = \DB::connection('mysql')->select("call 0927viewedOnlyIncoming('$facility_id','$date_start','$date_end')")[0]->viewed_only;*/
-                            $accepted = \App\Tracking::where("tracking.referred_to","=",$row->id)
+                            /*$accepted = \App\Tracking::where("tracking.referred_to","=",$row->id)
                                         ->join("activity","activity.code","=","tracking.code")
                                         ->where("activity.status","=","accepted")
                                         ->where("tracking.date_referred",">=",$date_start)
                                         ->where("tracking.date_referred","<=",$date_end)
-                                        ->count();
+                                        ->count();*/
 
-                            if($accepted > $incoming)
-                                $accepted = $incoming;
+                            $accepted = $row->count_accepted;
+                            $no_respond = $row->count_no_action;
 
-                            $no_respond = $incoming - $accepted;
                             $seenzoned = \DB::connection('mysql')->select("call getViewedOnly('$facility_id','$date_start','$date_end')")[0]->viewed_only;
                             $facility = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
                                 ->leftJoin("facility","facility.id","=","tracking.referred_from")
@@ -151,7 +150,7 @@
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
                                             //echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
                                             //echo '<span class="label label-warning">No Respond <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
-                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
+                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to'.'" target="_blank"><span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
                                         ?>
                                     </p>
 
@@ -279,15 +278,19 @@
                     </div>
                     <div class="tab-pane fade" id="outgoing{{ $row->id }}">
                         <?php
-                            $outgoing = \DB::connection('mysql')->select("call consolidatedOutgoing('$facility_id','$date_start','$date_end')")[0];
-                            $accepted_outgoing = \App\Activity::where("referred_from","=",$row->id)
+                            //$outgoing = \DB::connection('mysql')->select("call consolidatedOutgoing('$facility_id','$date_start','$date_end')")[0];
+                            $outgoing = $row->count_outgoing;
+                            $accepted_outgoing = $row->count_accepted_outgoing;
+                            /*$accepted_outgoing = \App\Activity::where("referred_from","=",$row->id)
                                 ->where("date_referred",">=",$date_start)
                                 ->where("date_referred","<=",$date_end)
                                 ->where("status","=","accepted")
-                                ->count();
+                                ->count();*/
                             //$seenzoned_outgoing = \DB::connection('mysql')->select("call getViewedOnlyOutgoing('$facility_id','$date_start','$date_end')")[0]->seen_outgoing;
 
-                            $outgoing_no_respond = $outgoing->count_outgoing - $accepted_outgoing;
+                            //$outgoing_no_respond = $outgoing->count_outgoing - $accepted_outgoing;
+                            $outgoing_no_respond = $row->count_no_action_outgoing;
+                            //$turn_around_time_accept_outgoing = $row->turnaround_time_accept_outgoing;
 
                             /*if($accepted_outgoing > $seenzoned_outgoing){
                                 $accepted_outgoing = $seenzoned_outgoing;
@@ -355,7 +358,7 @@
                                 ->where('referred_from',$row->id)
                                 ->count();
 
-                            $total_outgoing1[$facility_id] = $outgoing->count_outgoing;
+                            $total_outgoing1[$facility_id] = $outgoing;
                             $accepted_outgoing1[$facility_id] = $accepted_outgoing;
                             $seenzoned_outgoing1[$facility_id] = $outgoing_no_respond;
                         ?>
@@ -372,29 +375,29 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p>
                                         <?php
-                                            echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing->count_outgoing.'</span></span>';
+                                            echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
-                                            echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$outgoing_no_respond.'</span></span>';
+                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_from'.'" target="_blank"><span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
                                     <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
                                     <p>
-                                        <span class="label label-primary">Viewed Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
+                                        <span class="label label-primary">Viewd Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <span class="label label-primary">Viewed Only Redirection<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <?php
-                                            $turnaround_time_accept_outgoing1[$facility_id] = $outgoing->turnaround_time_accept_outgoing;
-                                            $turnaround_time_arrived_outgoing1[$facility_id] = $outgoing->turnaround_time_arrived_outgoing;
+                                            $turnaround_time_accept_outgoing1[$facility_id] = $outgoing;
+                                            $turnaround_time_arrived_outgoing1[$facility_id] = $outgoing;
                                         ?>
-                                        @if($outgoing->turnaround_time_accept_outgoing)
+                                        @if($outgoing)
                                             <?php $turnaround_time_accept_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_accept_outgoing.' mins</span>'; ?></span>
+                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         @endif
                                         <span class="label label-primary">Redirection <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        @if($outgoing->turnaround_time_arrived_outgoing)
+                                        @if($outgoing)
                                             <?php $turnaround_time_arrived_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">To Transport <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$outgoing->turnaround_time_arrived_outgoing.' mins</span>'; ?></span>
+                                            <span class="label label-primary">To Transport <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         @endif
                                     </p><br><br><br><br><br><br><br><br>
 

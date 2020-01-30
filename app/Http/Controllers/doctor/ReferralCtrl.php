@@ -25,7 +25,7 @@ class ReferralCtrl extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('doctor');
+        //$this->middleware('doctor');
     }
 
     public function searchReferral(Request $req)
