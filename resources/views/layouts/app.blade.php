@@ -179,7 +179,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('mcc/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i> Online Doctors</a></li>
+                            <li><a href="{{ url('mcc/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i> Online Department</a></li>
                             <li><a href="{{ url('mcc/report/incoming') }}" data-toggle="modal"><i class="fa fa-line-chart"></i> Incoming Referral</a></li>
                             <li><a href="{{ url('mcc/report/timeframe') }}" data-toggle="modal"><i class="fa fa-calendar"></i> Referral Time Frame</a></li>
                             <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i> Consolidated</a></li>
@@ -204,22 +204,7 @@
                             <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Referral Status</a></li>
                             <li class="divider"></li>
                             <li><a href="{{ url('admin/daily/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
-                            <li class="dropdown-submenu">
-                                <a class="test" tabindex="-1" href="#"><i class="fa fa-arrows-h"></i>&nbsp; Daily Referral</a>
-                                <ul class="dropdown-menu">
-                                    <li><a tabindex="-1" href="{{ url('admin/daily/referral') }}">Hospital</a></li>
-                                    {{--EDITED--}}
-                                    <li class="dropdown-submenu">
-                                        <a tabindex="-1" href="#">Patient</a>
-                                        <ul class="dropdown-menu">
-                                            <li><a tabindex="-1" href="{{ url('admin/report/patient/incoming') }}">Incoming</a></li>
-                                            <li><a tabindex="-1" href="{{ url('admin/report/patient/outgoing') }}">Outgoing</a></li>
-                                        </ul>
-                                    </li>
-                                    {{--END--}}
-
-                                </ul>
-                            </li>
+                            <li><a href="{{ url('admin/daily/referral') }}" data-toggle="modal"><i class="fa fa-building"></i>&nbsp; Daily Hospital</a></li>
                             <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>   Consolidated</a></li>
                             <li><a tabindex="-1" href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i> Graph</a></li>
                         </ul>
