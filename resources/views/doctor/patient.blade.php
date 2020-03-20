@@ -79,7 +79,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($row->sex=='Female' && ($age > 14 && $age < 50))
+                                @if($row->sex=='Female' && ($age >= 10 && $age <= 49))
                                     <a href="#pregnantModal"
                                        data-patient_id = "{{ $row->id }}"
                                        data-toggle="modal"

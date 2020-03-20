@@ -19,7 +19,20 @@ class FacilityCtrl extends Controller
 
     public function index(Request $request)
     {
-        isset($request->page) ? $keyword = Session::get("keyword") : $keyword = $request->keyword;
+        if($request->view_all == 'view_all')
+            $keyword = '';
+        else{
+            if(Session::get("keyword")){
+                if(!empty($request->keyword) && Session::get("keyword") != $request->keyword)
+                    $keyword = $request->keyword;
+                else
+                    $keyword = Session::get("keyword");
+            } else {
+                $keyword = $request->keyword;
+            }
+        }
+
+        Session::put('keyword',$keyword);
 
         $data = Facility::select(
             "facility.id",
@@ -32,12 +45,12 @@ class FacilityCtrl extends Controller
                     "facility.email",
                     "facility.chief_hospital",
                     "facility.level",
-                    "facility.hospital_type"
+                    "facility.hospital_type",
+                    "facility.status"
         ) ->leftJoin("province as prov","prov.id","=","facility.province")
          ->leftJoin("muncity as mun","mun.id","=","facility.muncity")
          ->leftJoin("barangay as bar","bar.id","=","facility.brgy");
 
-        Session::put('keyword',$keyword);
         $data = $data->where('facility.name',"like","%$keyword%");
 
         $data = $data->orderBy('name','asc')
@@ -45,8 +58,7 @@ class FacilityCtrl extends Controller
 
         return view('admin.facility',[
             'title' => 'List of Facility',
-            'data' => $data,
-            'keyword_value' => $keyword
+            'data' => $data
         ]);
     }
 

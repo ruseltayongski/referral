@@ -16,11 +16,14 @@
                     <form action="{{ asset('admin/facility') }}" method="POST" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword_value }}">
+                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ Session::get("keyword") }}">
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
-                            <a href="#facility_modal" data-toggle="modal" class="btn btn-primary btn-sm btn-flat" onclick="FacilityBody('empty')">
+                            <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                                <i class="fa fa-eye"></i> View All
+                            </button>
+                            <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat" onclick="FacilityBody('empty')">
                                 <i class="fa fa-hospital-o"></i> Add Facility
                             </a>
                         </div>
@@ -39,6 +42,7 @@
                                 <th>Chief Hospital</th>
                                 <th>Level</th>
                                 <th>Type</th>
+                                <th>Status</th>
                             </tr>
                             @foreach($data as $row)
                                 <tr>
@@ -68,12 +72,12 @@
                                     <td><small>{{ $row->email }}</small></td>
                                     <td><small>{{ $row->chief_hospital }}</small></td>
                                     <td>
-                                        <?php
-                                            $badge_color = ["","green","blue","purple"];
-                                        ?>
-                                        <span class="badge bg-{{ $badge_color[!empty($row->level) ? $row->level : 0] }}">{{ $row->level }}</span>
+                                        <span class="badge bg-purple">{{ $row->level }}</span>
                                     </td>
                                     <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
+                                    <td>
+                                        <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>

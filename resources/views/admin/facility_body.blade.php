@@ -86,7 +86,8 @@
                         }
                     }
                 ?>
-            >Level 1</option>
+            >Level 1
+            </option>
             <option value="2"
                 <?php
                     if(isset($data->level)){
@@ -95,7 +96,8 @@
                         }
                     }
                 ?>
-            >Level 2</option>
+            >Level 2
+            </option>
             <option value="3"
                 <?php
                     if(isset($data->level)){
@@ -104,7 +106,18 @@
                         }
                     }
                 ?>
-            >Level 3</option>
+            >Level 3
+            </option>
+            <option value="infirmary"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'infirmary'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Infirmary
+            </option>
         </select>
     </div>
     <div class="form-group">
@@ -131,6 +144,13 @@
                     }
                 ?>
             >Private</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Hospital Status:</label>
+        <select class="form-control" name="status">
+            <option value="1" {{ $data->status == 1 ? 'selected' : '' }}>Active</option>
+            <option value="0" {{ $data->status == 0 ? 'selected' : '' }}>Inactive</option>
         </select>
     </div>
     <hr />
