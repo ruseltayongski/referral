@@ -6,6 +6,8 @@ use App\Facility;
 use Illuminate\Http\Request;
 use Excel;
 use Illuminate\Support\Facades\Session;
+use PHPExcel_Settings;
+PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
 
 class ExcelCtrl extends Controller
 {
