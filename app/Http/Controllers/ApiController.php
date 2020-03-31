@@ -126,11 +126,11 @@ class ApiController extends Controller
         return $login->id;
     }
 
-    public function getActivity(Request $request){
+    public function getActivity($offset,$limit,Request $request){
         if($request->count)
             return Activity::count();
 
-        return Activity::get();
+        return Activity::skip($offset)->take($limit)->get();
     }
     public function getBaby(Request $request){
         if($request->count)
@@ -174,11 +174,11 @@ class ApiController extends Controller
 
         return Issue::get();
     }
-    public function getLogin(Request $request){
+    public function getLogin($offset,$limit,Request $request){
         if($request->count)
             return Login::count();
 
-        return Login::get();
+        return Login::skip($offset)->take($limit)->get();
     }
     public function getModeTransportation(Request $request){
         if($request->count)
@@ -192,23 +192,23 @@ class ApiController extends Controller
 
         return Muncity::get();
     }
-    public function getPatientForm(Request $request){
+    public function getPatientForm($offset,$limit,Request $request){
         if($request->count)
             return PatientForm::count();
 
-        return PatientForm::get();
+        return PatientForm::skip($offset)->take($limit)->get();
     }
-    public function getPatients(Request $request){
+    public function getPatients($offset,$limit,Request $request){
         if($request->count)
             return Patients::count();
 
-        return Patients::get();
+        return Patients::skip($offset)->take($limit)->get();
     }
-    public function getPregnantForm(Request $request){
+    public function getPregnantForm($offset,$limit,Request $request){
         if($request->count)
             return PregnantForm::count();
 
-        return PregnantForm::get();
+        return PregnantForm::skip($offset)->take($limit)->get();
     }
     public function getProvince(Request $request){
         if($request->count)
@@ -222,11 +222,11 @@ class ApiController extends Controller
 
         return Seen::get();
     }
-    public function getTracking(Request $request){
+    public function getTracking($offset,$limit,Request $request){
         if($request->count)
             return Tracking::count();
 
-        return Tracking::get();
+        return Tracking::skip($offset)->take($limit)->get();
     }
     public function getUsers(Request $request){
         if($request->count)
