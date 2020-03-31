@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Excel;
 use Illuminate\Support\Facades\Session;
 use PHPExcel_Settings;
-PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
 
 class ExcelCtrl extends Controller
 {
@@ -164,6 +163,7 @@ class ExcelCtrl extends Controller
 
     public function importExcel(Request $request){
         if($request->isMethod('post')) {
+            PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
             $path = $request->file('import_file')->getRealPath();
             return $data = Excel::load($path)->get();
             if($data->count()){
