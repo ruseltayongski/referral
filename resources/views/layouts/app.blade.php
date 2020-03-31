@@ -209,6 +209,7 @@
                             <li><a tabindex="-1" href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i> Graph</a></li>
                         </ul>
                     </li>
+                    <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li>
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
                 <li class="dropdown">

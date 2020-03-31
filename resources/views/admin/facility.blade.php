@@ -9,89 +9,91 @@
             margin-bottom: 10px;
         }
     </style>
-    <div class="col-md-12">
-        <div class="box box-success">
-            <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ asset('admin/facility') }}" method="POST" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-sm" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ Session::get("keyword") }}">
-                            <button type="submit" class="btn btn-success btn-sm btn-flat">
-                                <i class="fa fa-search"></i> Search
-                            </button>
-                            <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
-                                <i class="fa fa-eye"></i> View All
-                            </button>
-                            <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat" onclick="FacilityBody('empty')">
-                                <i class="fa fa-hospital-o"></i> Add Facility
-                            </a>
-                        </div>
-                    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <div class="pull-right">
+                        <form action="{{ asset('admin/facility') }}" method="POST" class="form-inline">
+                            {{ csrf_field() }}
+                            <div class="form-group-sm" style="margin-bottom: 10px;">
+                                <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ Session::get("keyword") }}">
+                                <button type="submit" class="btn btn-success btn-sm btn-flat">
+                                    <i class="fa fa-search"></i> Search
+                                </button>
+                                <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                                    <i class="fa fa-eye"></i> View All
+                                </button>
+                                <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat" onclick="FacilityBody('empty')">
+                                    <i class="fa fa-hospital-o"></i> Add Facility
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <h3>{{ $title }}</h3>
                 </div>
-                <h3>{{ $title }}</h3>
-            </div>
-            <div class="box-body">
-                @if(count($data)>0)
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <tr class="bg-black">
-                                <th>Facility</th>
-                                <th>Contact</th>
-                                <th>Email</th>
-                                <th>Chief Hospital</th>
-                                <th>Level</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                            </tr>
-                            @foreach($data as $row)
-                                <tr>
-                                    <td style="white-space: nowrap;">
-                                        <b>
-                                            <a href="#facility_modal"
-                                               data-toggle="modal"
-                                               data-id = "{{ $row->id }}"
-                                               onclick="FacilityBody('<?php echo $row->id ?>')"
-                                               class="update_info">
-                                                {{ $row->name }}
-                                            </a>
-                                        </b><br>
-                                        <small class="text-success">
-                                            (
-                                                <?php
-                                                    isset($row->muncity) ? $comma_mun = "," : $comma_mun = " ";
-                                                    isset($row->barangay) ? $comma_bar = "," : $comma_bar = " ";
-                                                    !empty($row->address) ? $concat_addr = " - " : $concat_addr = " ";
-
-                                                    echo $row->province.$comma_mun.$row->muncity.$comma_bar.$row->barangay.$concat_addr.$row->address;
-                                                ?>
-                                            )
-                                        </small>
-                                    </td>
-                                    <td><small>{{ $row->contact }}</small></td>
-                                    <td><small>{{ $row->email }}</small></td>
-                                    <td><small>{{ $row->chief_hospital }}</small></td>
-                                    <td>
-                                        <span class="badge bg-purple">{{ $row->level }}</span>
-                                    </td>
-                                    <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
-                                    <td>
-                                        <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
-                                    </td>
+                <div class="box-body">
+                    @if(count($data)>0)
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <tr class="bg-black">
+                                    <th>Facility</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                                    <th>Chief Hospital</th>
+                                    <th>Level</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
                                 </tr>
-                            @endforeach
-                        </table>
-                        <div class="text-center">
-                            {{ $data->links() }}
+                                @foreach($data as $row)
+                                    <tr>
+                                        <td style="white-space: nowrap;">
+                                            <b>
+                                                <a href="#facility_modal"
+                                                   data-toggle="modal"
+                                                   data-id = "{{ $row->id }}"
+                                                   onclick="FacilityBody('<?php echo $row->id ?>')"
+                                                   class="update_info">
+                                                    {{ $row->name }}
+                                                </a>
+                                            </b><br>
+                                            <small class="text-success">
+                                                (
+                                                    <?php
+                                                        isset($row->muncity) ? $comma_mun = "," : $comma_mun = " ";
+                                                        isset($row->barangay) ? $comma_bar = "," : $comma_bar = " ";
+                                                        !empty($row->address) ? $concat_addr = " - " : $concat_addr = " ";
+
+                                                        echo $row->province.$comma_mun.$row->muncity.$comma_bar.$row->barangay.$concat_addr.$row->address;
+                                                    ?>
+                                                )
+                                            </small>
+                                        </td>
+                                        <td><small>{{ $row->contact }}</small></td>
+                                        <td><small>{{ $row->email }}</small></td>
+                                        <td><small>{{ $row->chief_hospital }}</small></td>
+                                        <td>
+                                            <span class="badge bg-purple">{{ $row->level }}</span>
+                                        </td>
+                                        <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
+                                        <td>
+                                            <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                            <div class="text-center">
+                                {{ $data->links() }}
+                            </div>
                         </div>
-                    </div>
-                @else
-                    <div class="alert alert-warning">
-                        <span class="text-warning">
-                            <i class="fa fa-warning"></i> No Facility found!
-                        </span>
-                    </div>
-                @endif
+                    @else
+                        <div class="alert alert-warning">
+                            <span class="text-warning">
+                                <i class="fa fa-warning"></i> No Facility found!
+                            </span>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

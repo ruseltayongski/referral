@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facility;
 use Illuminate\Http\Request;
 use Excel;
 use Illuminate\Support\Facades\Session;
@@ -157,6 +158,25 @@ class ExcelCtrl extends Controller
             }
         });
 
+    }
+
+    public function importExcel(Request $request){
+        if($request->isMethod('post')) {
+            $path = $request->file('import_file')->getRealPath();
+            $data = Excel::load($path)->get();
+            if($data->count()){
+                foreach($data as $row){
+                    $facility = new Facility();
+                    $facility->name = $row->name.' - RHU';
+                    $facility->facility_code = $row->facility_code;
+                    $facility->province;
+                    $facility->save();
+                }
+            }
+            return back()->with('success', 'Successfully import!');
+        }
+
+        return view('admin.excel.import_excel');
     }
 
 }
