@@ -6,7 +6,6 @@ use App\Facility;
 use Illuminate\Http\Request;
 use Excel;
 use Illuminate\Support\Facades\Session;
-use PHPExcel_Settings;
 
 class ExcelCtrl extends Controller
 {
@@ -163,9 +162,9 @@ class ExcelCtrl extends Controller
 
     public function importExcel(Request $request){
         if($request->isMethod('post')) {
-            PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
+            return $request->file('import_file');
             $path = $request->file('import_file')->getRealPath();
-            return $data = Excel::load($path)->get();
+            $data = Excel::load($path)->get();
             if($data->count()){
                 /*foreach($data as $row){
                     $facility = new Facility();
