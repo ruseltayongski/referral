@@ -162,17 +162,15 @@ class ExcelCtrl extends Controller
 
     public function importExcel(Request $request){
         if($request->isMethod('post')) {
-            return $request->file('import_file');
-            $path = $request->file('import_file')->getRealPath();
-            $data = Excel::load($path)->get();
+            $data = Excel::load($request->file('import_file'))->get();
             if($data->count()){
-                /*foreach($data as $row){
+                foreach($data as $row){
                     $facility = new Facility();
                     $facility->name = $row->name.' - RHU';
                     $facility->facility_code = $row->facility_code;
                     $facility->province = $row->province;
                     $facility->save();
-                }*/
+                }
             }
             return back()->with('success', 'Successfully import!');
         }
