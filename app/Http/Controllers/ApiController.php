@@ -2,6 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
+use App\Baby;
+use App\Barangay;
+use App\Department;
+use App\Facility;
+use App\Feedback;
+use App\Icd10;
+use App\Issue;
+use App\ModeTransportation;
+use App\Muncity;
+use App\PatientForm;
+use App\Patients;
+use App\PregnantForm;
+use App\Province;
+use App\Seen;
+use App\Tracking;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -91,7 +107,7 @@ class ApiController extends Controller
         }
     }
 
-    function checkLastLogin($id)
+    public function checkLastLogin($id)
     {
         $start = Carbon::now()->startOfDay();
         $end = Carbon::now()->endOfDay();
@@ -109,5 +125,115 @@ class ApiController extends Controller
 
         return $login->id;
     }
+
+    public function getActivity(Request $request){
+        if($request->count)
+            return Activity::count();
+
+        return Activity::get();
+    }
+    public function getBaby(Request $request){
+        if($request->count)
+            return Baby::count();
+
+        return Baby::get();
+    }
+    public function getBarangay(Request $request){
+        if($request->count)
+            return Barangay::count();
+
+        return Barangay::get();
+    }
+    public function getDepartment(Request $request){
+        if($request->count)
+            return Department::count();
+
+        return Department::get();
+    }
+    public function getFacility(Request $request){
+        if($request->count)
+            return Facility::count();
+
+        return Facility::get();
+    }
+    public function getFeedback(Request $request){
+        if($request->count)
+            return Feedback::count();
+
+        return Feedback::get();
+    }
+    public function getIcd10(Request $request){
+        if($request->count)
+            return Icd10::count();
+
+        return Icd10::get();
+    }
+    public function getIssue(Request $request){
+        if($request->count)
+            return Issue::count();
+
+        return Issue::get();
+    }
+    public function getLogin(Request $request){
+        if($request->count)
+            return Login::count();
+
+        return Login::get();
+    }
+    public function getModeTransportation(Request $request){
+        if($request->count)
+            return ModeTransportation::count();
+
+        return ModeTransportation::get();
+    }
+    public function getMuncity(Request $request){
+        if($request->count)
+            return Muncity::count();
+
+        return Muncity::get();
+    }
+    public function getPatientForm(Request $request){
+        if($request->count)
+            return PatientForm::count();
+
+        return PatientForm::get();
+    }
+    public function getPatients(Request $request){
+        if($request->count)
+            return Patients::count();
+
+        return Patients::get();
+    }
+    public function getPregnantForm(Request $request){
+        if($request->count)
+            return PregnantForm::count();
+
+        return PregnantForm::get();
+    }
+    public function getProvince(Request $request){
+        if($request->count)
+            return Province::count();
+
+        return Province::get();
+    }
+    public function getSeen(Request $request){
+        if($request->count)
+            return Seen::count();
+
+        return Seen::get();
+    }
+    public function getTracking(Request $request){
+        if($request->count)
+            return Tracking::count();
+
+        return Tracking::get();
+    }
+    public function getUsers(Request $request){
+        if($request->count)
+            return User::count();
+
+        return User::get();
+    }
+
 
 }

@@ -315,3 +315,23 @@ Route::get("insert_activity",function(){
 
     return "Successfully Updated!";
 });
+
+//API RUSEL
+Route::get('gbm9Ti6UBpT5K2P5qQ5bD0OMhvxJnYNZ','ApiController@getActivity'); //GET ACTIVITY
+Route::get('bHDMSB83RwoznXAcnnC6aFtqiL1djvJs','ApiController@getBaby'); //GET BABY
+Route::get('xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil','ApiController@getBarangay'); //GET BARANGAY
+Route::get('XO2XFSiDX2PdHyLbq9WNHhA95vy3Fdld','ApiController@getDepartment'); //GET DEPARTMENT
+Route::get('iMkiW5YcHA6D9Gd7BuTteeQPVx4a1UxK','ApiController@getFacility'); //GET FACILITY
+Route::get('Cj7lhsInOGIvKKdpHB3kIhrectxLgTeU','ApiController@getFeedback'); //GET FEEDBACK
+Route::get('wcuoLqAqKQGw6yl9SxX9vZ6ieZzG9HaA','ApiController@getIcd10'); //GET ICD10
+Route::get('nvOGql1zXiEirNkXtPm7udIFsIaxBndB','ApiController@getIssue'); //GET ISSUE
+Route::get('q8d8Jh1KoC4ac6t1ksaGH0J4TcMTmazM','ApiController@getLogin'); //GET LOGIN
+Route::get('Rcha066KNYeBt10dvjgRjPPU04q4b9Ob','ApiController@getModeTransportation'); //GET MODE TRANSPORTATION
+Route::get('J9bXjSR50dZHHEuJ65qOLAWuor4x4Ztn','ApiController@getMuncity'); //GET MUNCITY
+Route::get('DOitGyz7gKVWWJ3IqjYA5ioLc1qbiEei','ApiController@getPatientForm'); //GET PATIENT FORM
+Route::get('WN3woYd8ZlxutRXg2B7Ud1qnEGqx7FSK','ApiController@getPatients'); //GET PATIENTS
+Route::get('Z9tE1ihdu37imqmVTSL3I8qOiotEwIla','ApiController@getPregnantForm'); //GET PREGNANT FORM
+Route::get('3efFgpkQFg56lZGtOp6WzmkXXBsGfPx9','ApiController@getProvince'); //GET PROVINCE
+Route::get('XVup1R4fVdnSnYFvUWSMX5FTmyHkbn5p','ApiController@getSeen'); //GET SEEN
+Route::get('4PXhMnFe3O8wzVg1I3fu4t53W5zjMOqA','ApiController@getTracking'); //GET TRACKING
+Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET USERS
