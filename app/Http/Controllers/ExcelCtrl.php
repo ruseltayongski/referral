@@ -162,7 +162,8 @@ class ExcelCtrl extends Controller
 
     public function importExcel(Request $request){
         if($request->isMethod('post')) {
-            return $path = $request->file('import_file')->getRealPath();
+            $path = $request->file('import_file')->getRealPath();
+            return json_encode($path);
             $data = Excel::load($path)->get();
             if($data->count()){
                 foreach($data as $row){
