@@ -44,10 +44,10 @@ class ReferralCtrl extends Controller
     {
         ParamCtrl::lastLogin();
         $search = Session::get('search_referral');
-        /*$start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfYear()->format('m/d/Y');*/
-        $start = Carbon::now()->startOfMonth()->subMonth()->format('m/d/Y');
-        $end = Carbon::now()->subMonth()->endOfMonth()->format('m/d/Y');
+        $start = Carbon::now()->startOfYear()->format('m/d/Y');
+        $end = Carbon::now()->endOfYear()->format('m/d/Y');
+        /*$start = Carbon::now()->startOfMonth()->subMonth()->format('m/d/Y');
+        $end = Carbon::now()->subMonth()->endOfMonth()->format('m/d/Y');*/
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.*',
