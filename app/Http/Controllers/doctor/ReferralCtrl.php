@@ -44,8 +44,10 @@ class ReferralCtrl extends Controller
     {
         ParamCtrl::lastLogin();
         $search = Session::get('search_referral');
-        $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfYear()->format('m/d/Y');
+        /*$start = Carbon::now()->startOfYear()->format('m/d/Y');
+        $end = Carbon::now()->endOfYear()->format('m/d/Y');*/
+        $start = Carbon::now()->startOfMonth()->subMonth()->format('m/d/Y');
+        $end = Carbon::now()->subMonth()->endOfMonth()->format('m/d/Y');
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.*',
@@ -128,7 +130,7 @@ class ReferralCtrl extends Controller
         $data = $data
                 //->orderByRaw("IF( (tracking.status='referred' or tracking.status='seen'), TIMESTAMPDIFF(MINUTE,tracking.date_referred,now()), tracking.id )",'desc')
                 ->orderBy("tracking.date_referred","desc")
-                ->paginate(1);
+                ->paginate(5);
 
         return view('doctor.referral',[
             'title' => 'Incoming Patients',

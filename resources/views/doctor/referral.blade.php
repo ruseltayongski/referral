@@ -44,7 +44,7 @@ $user = Session::get('auth');
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 //$date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
-                                $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                                //$step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
 
                                 $department = '"Not specified department"';
