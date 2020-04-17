@@ -128,7 +128,7 @@ class ReferralCtrl extends Controller
         $data = $data
                 //->orderByRaw("IF( (tracking.status='referred' or tracking.status='seen'), TIMESTAMPDIFF(MINUTE,tracking.date_referred,now()), tracking.id )",'desc')
                 ->orderBy("tracking.date_referred","desc")
-                ->paginate(5);
+                ->paginate(1);
 
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
