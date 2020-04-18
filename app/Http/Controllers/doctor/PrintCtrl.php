@@ -19,8 +19,6 @@ class PrintCtrl extends Controller
 
     public function printReferral($track_id)
     {
-        ini_set('magic_quotes_runtime', 0);
-
         $data = array();
         $user = Session::get('auth');
         $form_type = Tracking::where('id',$track_id)
