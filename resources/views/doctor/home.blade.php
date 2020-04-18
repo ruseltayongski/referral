@@ -127,6 +127,7 @@
                                 <ul>
                                     <li>Rusel T. Tayong - 09238309990</li>
                                     <li>Christian Dave L. Tipactipac - 09286039028</li>
+                                    <li>Keith Joseph Damandaman - 09293780114</li>
                                 </ul>
                                 <li >Server - Can't access </li>
                                 <ul>
@@ -134,6 +135,7 @@
                                     <li>Reyan M. Sugabo - 09359504269</li>
                                     <li>Ryan A. Padilla - 09294771871</li>
                                     <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
                                 </ul>
                             </ol>
                             <li>Non - Technical</li>
