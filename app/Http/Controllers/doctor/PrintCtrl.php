@@ -19,6 +19,8 @@ class PrintCtrl extends Controller
 
     public function printReferral($track_id)
     {
+        ini_set('magic_quotes_runtime', 0);
+
         $data = array();
         $user = Session::get('auth');
         $form_type = Tracking::where('id',$track_id)
@@ -31,11 +33,6 @@ class PrintCtrl extends Controller
             $form_type = $form_type->type;
         }else{
             return redirect('doctor');
-        }
-
-        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-            $mqr=get_magic_quotes_runtime();
-            set_magic_quotes_runtime(0);
         }
 
         if($form_type=='normal')
