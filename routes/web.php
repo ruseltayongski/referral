@@ -3,13 +3,6 @@ if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-    set_magic_quotes_runtime(0);
-}
-else {
-    ini_set('magic_quotes_runtime', 0);
-}
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
