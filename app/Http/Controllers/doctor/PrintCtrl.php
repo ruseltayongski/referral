@@ -33,6 +33,12 @@ class PrintCtrl extends Controller
             return redirect('doctor');
         }
 
+        if(get_magic_quotes_runtime())
+        {
+            // Deactivate
+            set_magic_quotes_runtime(false);
+        }
+
         if($form_type=='normal')
         {
             $data = ReferralCtrl::normalForm($track_id);
