@@ -33,10 +33,9 @@ class PrintCtrl extends Controller
             return redirect('doctor');
         }
 
-        if(get_magic_quotes_runtime())
-        {
-            // Deactivate
-            set_magic_quotes_runtime(false);
+        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+            $mqr=get_magic_quotes_runtime();
+            set_magic_quotes_runtime(0);
         }
 
         if($form_type=='normal')
