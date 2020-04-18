@@ -1,10 +1,13 @@
 <?php
 if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-
-    ini_set('magic_quotes_runtime', 0);
 }
 
+if(get_magic_quotes_runtime())
+{
+    // Deactivate
+    set_magic_quotes_runtime(false);
+}
 
 /*
 |--------------------------------------------------------------------------
