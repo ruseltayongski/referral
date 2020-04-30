@@ -58,7 +58,7 @@ $status = session::get('status');
                             </tr>
                             <tr>
                                 <td>Middle Name :</td>
-                                <td><input type="text" name="mname" class="mname form-control" /> </td>
+                                <td><input type="text" name="mname" class="mname form-control" required/> </td>
                             </tr>
                             <tr class="has-group">
                                 <td>Last Name :</td>
