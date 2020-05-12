@@ -39,6 +39,13 @@ class HomeCtrl extends Controller
             $startdate = Carbon::parse($date)->startOfMonth();
             $enddate = Carbon::parse($date)->endOfMonth();
 
+            $referred = Tracking::
+                 whereBetween('date_referred',[$startdate,$enddate])
+                ->where('referred_from',$user->facility_id)
+                ->groupBy('code')
+                ->get();
+            $data['referred'][] = count($referred);
+
             $accepted = Activity::where(function($q){
                 $q->where('status','accepted')
                     ->orwhere('status','admitted')
