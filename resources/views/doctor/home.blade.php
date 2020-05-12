@@ -175,6 +175,11 @@
                     // labels: month,
                     datasets: [
                         {
+                            label: 'Referred',
+                            backgroundColor: '#8e9cff',
+                            data: data.referred
+                        },
+                        {
                             label: 'Accepted',
                             backgroundColor: '#26B99A',
                             data: data.accepted
