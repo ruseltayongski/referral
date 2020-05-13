@@ -128,7 +128,7 @@
                             $incoming_vertical = $incoming - $incoming_horizontal;
 
                             $accepted_incoming[$facility_id] = $accepted;
-                            $seenzoned_incoming[$facility_id] = $seenzoned;
+                            $seenzoned_incoming[$facility_id] = $no_respond;
 
                             /*$time_accept_incoming = \App\Tracking::select(\DB::raw('TIMESTAMPDIFF(MINUTE,tra.date_referred,tra.date_accepted) as mins'))
                                                     ->where("referred_to",$row->id)*/

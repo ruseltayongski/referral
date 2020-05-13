@@ -45,8 +45,8 @@ class ExcelCtrl extends Controller
             $headerColumn = [
                 "Name of Facility",
                 "Total Incoming  Referrals",
-                "Total Viewed Only Referrals",
                 "Total Accepted Referrals",
+                "Total Viewed Only Referrals",
                 "Common Sources(Facility)",
                 "Common Referring Doctor HCW/MD (Top 10)",
                 "Average Referral Acceptance Turnaround time ",
@@ -72,8 +72,8 @@ class ExcelCtrl extends Controller
                 $data = [
                     $row['name'],
                     $row['count_incoming'],
-                    Session::get('seenzoned_incoming')[$row['id']],
                     Session::get('accepted_incoming')[$row['id']],
+                    Session::get('seenzoned_incoming')[$row['id']],
                     Session::get('common_source_incoming')[$row['id']],
                     Session::get('referring_doctor_incoming')[$row['id']],
                     Session::get('turnaround_time_accept_incoming')[$row['id']],
@@ -101,8 +101,8 @@ class ExcelCtrl extends Controller
             $headerColumn = [
                 "Name of Facility",
                 "Total Outgoing Referrals",
-                "Total Viewed Only Referrals",
                 "Total Accepted Referrals",
+                "Total Viewed Only Referrals",
                 "Total Archived Referrals",
                 "Total Redirected Referrals",
                 "Common Sources(Facility)",
@@ -134,8 +134,8 @@ class ExcelCtrl extends Controller
                 $data = [
                     $row['name'],
                     Session::get('total_outgoing1')[$row['id']],
-                    Session::get('seenzoned_outgoing1')[$row['id']],
                     Session::get('accepted_outgoing1')[$row['id']],
+                    Session::get('seenzoned_outgoing1')[$row['id']],
                     "Under development this column",
                     "Under development this column",
                     Session::get('common_referred_facility_outgoing1')[$row['id']],
