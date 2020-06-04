@@ -64,13 +64,9 @@ if(!$dateDailyUsers)
                             $it_offline = $log['it_total'] - $log['it_on'];
                         ?>
                         <tr>
-                            <th style="text-align: left;" title="{{ $row->name }}">
-                                @if(strlen($row->name)>25)
-                                    {{ substr($row->name,0,25) }}...
-                                @else
-                                    {{ $row->name }}
-                                @endif
-                            </th>
+                            <td style="text-align: left;" title="{{ $row->name }}">
+                                {{ $row->name }}
+                            </td>
                             <td class="text-center">{{ $log['on'] }}</td>
                             <td class="text-center">{{ $log['off'] }}</td>
                             <td class="text-center">{{ $offline }}</td>
