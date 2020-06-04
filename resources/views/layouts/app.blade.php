@@ -194,7 +194,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; IT Support</a></li>
                             <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
-                            <li><a href="{{ url('admin/referral') }}" data-toggle="modal"><i class="fa fa-file-o"></i>&nbsp; Referral</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
