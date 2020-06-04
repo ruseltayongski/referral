@@ -26,7 +26,7 @@ class DailyCtrl extends Controller
     {
         $facilities = Facility::where('status',1)
             ->orderBy('name','asc')
-            ->paginate(20);
+            ->get();
 
         return view('admin.report.users',[
             'title' => 'Daily Users',
