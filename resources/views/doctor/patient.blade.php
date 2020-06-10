@@ -359,8 +359,8 @@
             type: 'POST',
             success: function(data){
                 console.log(data);
-                location.reload();
-                //sendNormalData(data);
+                //location.reload();
+                sendNormalData(data);
             },
             error: function(){
                 $('#serverModal').modal();
