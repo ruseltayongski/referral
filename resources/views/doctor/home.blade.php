@@ -146,7 +146,7 @@
                                     <li class="text-danger">Grace R. Flores - 09328596338 Please reach via message only</li>
                                 </ul>
                             </ol>
-                            <h3 class="text-center" style="color: #2f8030">Thank you! &#128512;</h3>
+                            <h3 class="text-center" style="color: #2f8030">Thank you!</h3>
                         </ol>
                         </p>
                     </div>
