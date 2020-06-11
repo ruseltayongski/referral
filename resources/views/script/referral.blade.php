@@ -77,7 +77,6 @@ $('body').on('click','.btn-refer',function () {
     form_id = $(this).data('id');
     referred_from = $(this).data('referred_from');
 
-    console.log(code);
     patient_name = $(item).find('.patient_name').html();
     facility = $(item).find('.facility').html();
     var count_referral = $('.count_referral').html();
@@ -86,7 +85,7 @@ $('body').on('click','.btn-refer',function () {
         url: seenUrl,
         type: "GET",
         success: function(result){
-            console.log(result);
+
         },
         error: function(){
             console.log('error');
@@ -519,7 +518,6 @@ $('body').on('click','.btn-call',function(){
             '                    <br />';
         $('#seenBy_section').html(de);
         var id = $(this).data('id');
-        console.log(id);
         var seenUrl = "{{ url('doctor/referral/seenBy/list/') }}/"+id;
         $.ajax({
             url: seenUrl,
