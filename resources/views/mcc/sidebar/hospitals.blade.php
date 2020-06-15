@@ -6,7 +6,7 @@
 ?>
 <div class="panel panel-jim">
     <div class="panel-heading">
-        <h3 class="panel-title">Other Links</h3>
+        <h3 class="panel-title">Online Hospital</h3>
     </div>
 
     <div class="panel-body">
