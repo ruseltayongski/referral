@@ -19,96 +19,93 @@ $user = Session::get('auth');
             font-weight: 300;
         }
     </style>
-    <div class="col-md-3">
-        @include('sidebar.filter_list')
-        @include('sidebar.quick')
-    </div>
-    <div class="col-md-9">
-        <div class="jim-content hide">
-            <h3 class="page-header">{{ $title }}</h3>
-            <div class="row">
-                <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="jim-content hide">
+                <h3 class="page-header">{{ $title }}</h3>
+                <div class="row">
+                    <div class="col-md-12">
 
-                    @if(count($data) > 0)
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <tr class="bg-black">
-                                <th>NAME</th>
-                                <th>FACILITY</th>
-                                <th>CONTACT</th>
-                                <th>STATUS</th>
-                            </tr>
-                            @foreach($data as $row)
-                            <?php
-                                $strMname = strlen($row->mname);
-                                $mname = '';
-                                if($strMname>0){
-                                    $mname = $row->mname[0] .'.';
-                                }
+                        @if(count($data) > 0)
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <tr class="bg-black">
+                                        <th>NAME</th>
+                                        <th>FACILITY</th>
+                                        <th>CONTACT</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                    @foreach($data as $row)
+                                        <?php
+                                        $strMname = strlen($row->mname);
+                                        $mname = '';
+                                        if($strMname>0){
+                                            $mname = $row->mname[0] .'.';
+                                        }
 
-                                $name = "$row->fname $mname $row->lname";
-                                $status = '<strong>ON DUTY</strong>';
-                                $class = 'text-success';
-                                if($row->status=='login_off')
-                                {
-                                    $status = '<em>OFF DUTY</em>';
-                                    $class = 'text-danger';
-                                }
-                            ?>
-                            <tr>
-                                <td class="title-name {{ $class }}">Dr. {{ ucwords(mb_strtolower($name))}}</td>
-                                <td class="text-muted">
-                                    <strong>{{ $row->facility }}</strong>
-                                    @if($row->department)
-                                    <br />
-                                    <small class="text-danger"><em>({{ $row->department }})</em></small>
-                                    @endif
-                                </td>
-                                <td class="text-muted">{{ $row->contact }}</td>
-                                <td class="text-muted {{ $class }}">
-                                    {!! $status !!}
-                                    <br />
-                                    @if($class=='text-success')
-                                    <small class="text-muted">{{ date('h:i A',strtotime($row->login)) }}</small>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </table>
-                        <hr />
-                    </div>
+                                        $name = "$row->fname $mname $row->lname";
+                                        $status = '<strong>ON DUTY</strong>';
+                                        $class = 'text-success';
+                                        if($row->status=='login_off')
+                                        {
+                                            $status = '<em>OFF DUTY</em>';
+                                            $class = 'text-danger';
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td class="title-name {{ $class }}">Dr. {{ ucwords(mb_strtolower($name))}}</td>
+                                            <td class="text-muted">
+                                                <strong>{{ $row->facility }}</strong>
+                                                @if($row->department)
+                                                    <br />
+                                                    <small class="text-danger"><em>({{ $row->department }})</em></small>
+                                                @endif
+                                            </td>
+                                            <td class="text-muted">{{ $row->contact }}</td>
+                                            <td class="text-muted {{ $class }}">
+                                                {!! $status !!}
+                                                <br />
+                                                @if($class=='text-success')
+                                                    <small class="text-muted">{{ date('h:i A',strtotime($row->login)) }}</small>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                                <hr />
+                            </div>
 
-                    @else
-                        <div class="alert-section">
-                            <div class="alert alert-warning">
+                        @else
+                            <div class="alert-section">
+                                <div class="alert alert-warning">
                                 <span class="text-warning">
                                     <i class="fa fa-warning"></i> No Online Doctors!
                                 </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <ul class="timeline">
-                        </ul>
-                    @endif
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div>
+                            <ul class="timeline">
+                            </ul>
+                        @endif
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div>
 
-        <div class="jim-content" style="background: rgba(255, 255, 255, 0.4)">
-            <h3 class="page-header">{{ $title }}</h3>
+            <div class="jim-content" style="background: rgba(255, 255, 255, 0.4)">
+                <h3 class="page-header">{{ $title }}</h3>
                 @if(count($data)>0)
-                <?php
+                    <?php
                     //$expense_length = \App\Expense::select(DB::raw("length(description) as char_max"))->orderBy(DB::raw("length(description)"),"desc")->first()->char_max; //count the max character para dile maguba ang info-box-content
-                ?>
+                    ?>
                     @foreach($data as $row)
                         <?php
-                            $color = 'green';
-                            $status = 'ON DUTY';
-                            if($row->status=='login_off')
-                            {
-                                $status = '<em>OFF DUTY</em>';
-                                $color = 'yellow';
-                            }
+                        $color = 'green';
+                        $status = 'ON DUTY';
+                        if($row->status=='login_off')
+                        {
+                        $status = '<em>OFF DUTY</em>';
+                        $color = 'yellow';
+                        }
                         ?>
                         <div class="col-md-4">
                             <!-- Widget: user widget style 1 -->
@@ -116,23 +113,23 @@ $user = Session::get('auth');
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="widget-user-header bg-{{ $color }}-active">
                                     <?php
-                                        $name = strtoupper($row->fname.". ".$row->lname);
+                                    $name = strtoupper($row->fname.". ".$row->lname);
 
-                                        $temp = $name;
-                                        $count = 0;
-                                        $string = "";
-                                        for($i=0;$i<50;$i++){
-                                            if(!isset($temp[$i])){
-                                                $temp .= " ";
-                                            }
-                                            if($count != 18){
-                                                $count++;
-                                                $string .= $temp[$i];
-                                            } else {
-                                                $count = 0;
-                                                $string .= "<br>";
-                                            }
-                                        }
+                                    $temp = $name;
+                                    $count = 0;
+                                    $string = "";
+                                    for($i=0;$i<50;$i++){
+                                    if(!isset($temp[$i])){
+                                    $temp .= " ";
+                                    }
+                                    if($count != 18){
+                                    $count++;
+                                    $string .= $temp[$i];
+                                    } else {
+                                    $count = 0;
+                                    $string .= "<br>";
+                                    }
+                                    }
                                     ?>
                                     <span>Dr. {!! $string !!}</span><br>
                                     &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO FACILITY" }}</small>
@@ -160,7 +157,11 @@ $user = Session::get('auth');
                     <ul class="timeline">
                     </ul>
                 @endif
-            <div class="clearfix"></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @include('mcc.sidebar.hospitals')
         </div>
     </div>
 @endsection
