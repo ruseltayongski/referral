@@ -11,14 +11,14 @@
 
     <div class="panel-body">
         <div class="list-group">
-            <?php $count_hospital_online = 0; ?>
+            <?php $hospital_online_count = 0; ?>
             @foreach($hospitals as $row)
             <?php
                 $active = \App\Http\Controllers\mcc\HomeCtrl::countOnline($row->id);
                 $class = 'danger';
                 if($active>0){
                     $class = 'success';
-                    $count_hospital_online++;
+                    $hospital_online_count++;
                 }
             ?>
             <a href="{{ asset('mcc/report/users') }}" class="list-group-item clearfix" title="{{ $row->name }}">
@@ -32,10 +32,8 @@
                 </span>
             </a>
             @endforeach
+            <?php Session::put('hospital_online_count',$hospital_online_count); ?>
         </div>
 
     </div>
 </div>
-<script>
-    $(".hospital_online").text("<?php echo $count_hospital_online; ?>");
-</script>

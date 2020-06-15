@@ -100,6 +100,7 @@ $user = Session::get('auth');
 @section('js')
     <script>
         $(".doctor_online").text("<?php echo $doctor_online_count; ?>");
+        $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
     </script>
 @endsection
 
