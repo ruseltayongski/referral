@@ -136,6 +136,7 @@ if($searchKeyword){
                 },500);
             }
         });
+        $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
     </script>
 @endsection
 

@@ -16,12 +16,14 @@
             <?php
                 $active = \App\Http\Controllers\mcc\HomeCtrl::countOnline($row->id);
                 $class = 'danger';
+                $text = '';
                 if($active>0){
                     $class = 'success';
+                    $text = 'text-green';
                     $hospital_online_count++;
                 }
             ?>
-            <a href="{{ asset('mcc/report/users') }}" class="list-group-item clearfix" title="{{ $row->name }}">
+            <a href="{{ asset('mcc/report/users') }}" class="list-group-item clearfix {{ $text }}" title="{{ $row->name }}">
                 @if(strlen($row->name)>28)
                     {{ substr($row->name,0,28) }}...
                 @else
