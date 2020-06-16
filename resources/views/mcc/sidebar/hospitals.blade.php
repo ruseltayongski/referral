@@ -1,7 +1,10 @@
 <?php
-    $hospitals = \App\Facility::orderBy('name','asc')
-        ->where('id','!=',$user->facility_id)
-        ->where('status',1)
+    $hospitals = \App\Facility::
+        select("facility.name","province.description as province")
+        ->leftJoin("province","province.id","=","facility.province")
+        ->where('facility.id','!=',$user->facility_id)
+        ->where('facility.status',1)
+        ->orderBy('facility.name','asc')
         ->get();
 ?>
 <div class="panel panel-jim">
@@ -29,6 +32,7 @@
                 @else
                     {{ $row->name }}
                 @endif
+                <br><small class="text-yellow">({{ $row->province }})</small>
                 <span class="pull-right">
                     <i class="fa fa-circle text-{{ $class }}"></i>
                 </span>
