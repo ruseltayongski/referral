@@ -1,6 +1,6 @@
 <?php
     $hospitals = \App\Facility::
-        select("facility.name","province.description as province")
+        select("facility.id","facility.name","province.description as province")
         ->leftJoin("province","province.id","=","facility.province")
         ->where('facility.id','!=',$user->facility_id)
         ->where('facility.status',1)
