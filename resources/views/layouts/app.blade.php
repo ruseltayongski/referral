@@ -141,7 +141,6 @@
                             <li><a href="{{ url('doctor/report/outgoing') }}"><i class="fa fa-sign-out"></i> Outgoing Referral Report</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                     @elseif($user->level=='support')
                     <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
