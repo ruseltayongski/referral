@@ -23,10 +23,10 @@ $user = Session::get('auth');
         <div class="col-md-8">
             <div class="jim-content" style="background: rgba(255, 255, 255, 0.4)">
                 <h3 class="page-header">{{ $title }} <span class="badge bg-blue doctor_online">0</span></h3>
+                <?php $doctor_online_count = 0; ?>
                 @if(count($data)>0)
                     <?php
                     //$expense_length = \App\Expense::select(DB::raw("length(description) as char_max"))->orderBy(DB::raw("length(description)"),"desc")->first()->char_max; //count the max character para dile maguba ang info-box-content
-                    $doctor_online_count = 0;
                     ?>
                     @foreach($data as $row)
                         <?php
