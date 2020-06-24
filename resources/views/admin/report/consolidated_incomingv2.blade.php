@@ -7,15 +7,15 @@
     <form action="{{ asset('admin/report/consolidated/incomingv2') }}" method="POST">
         {{ csrf_field() }}
         <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
-            <div class="col-md-4">
-                <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="reservation">
-            </div>
             <div class="col-md-6">
-                <div class="input-group-btn">
-                    <button type="submit" class="btn btn-info btn-flat">Filter</button>
-                    <a href="{{ asset('excel/incoming') }}" type="button" name="from_the_start" class="btn btn-warning btn-flat"><i class="fa fa-file-excel-o"></i> Incoming (Excel)</a>
-                    <a href="{{ asset('excel/outgoing') }}" type="button" name="from_the_start" class="btn btn-success btn-flat"><i class="fa fa-file-excel-o"></i> Outgoing (Excel)</a>
-                    <a href="{{ asset('excel/all') }}" type="button" name="from_the_start" class="btn btn-primary btn-flat"><i class="fa fa-file-excel-o"></i> All (Excel)</a>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="reservation">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-info btn-flat">Filter</button>
+                        <a href="{{ asset('excel/incoming') }}" type="button" name="from_the_start" class="btn btn-warning btn-flat"><i class="fa fa-file-excel-o"></i> Incoming (Excel)</a>
+                        <a href="{{ asset('excel/outgoing') }}" type="button" name="from_the_start" class="btn btn-success btn-flat"><i class="fa fa-file-excel-o"></i> Outgoing (Excel)</a>
+                    <!--<a href="{{ asset('excel/all') }}" type="button" name="from_the_start" class="btn btn-primary btn-flat"><i class="fa fa-file-excel-o"></i> All (Excel)</a> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,16 +63,6 @@
                         <?php
                             $incoming = $row->count_incoming;
                             $facility_id = $row->id;
-                            /*$incoming = \DB::connection('mysql')->select("call 0927countIncoming('$facility_id','$date_start','$date_end')")[0]->count_incoming;
-                            $accepted = \DB::connection('mysql')->select("call 0927acceptedIncoming('$facility_id','$date_start','$date_end')")[0]->accepted_incoming;
-                            $seenzoned = \DB::connection('mysql')->select("call 0927viewedOnlyIncoming('$facility_id','$date_start','$date_end')")[0]->viewed_only;*/
-                            /*$accepted = \App\Tracking::where("tracking.referred_to","=",$row->id)
-                                        ->join("activity","activity.code","=","tracking.code")
-                                        ->where("activity.status","=","accepted")
-                                        ->where("tracking.date_referred",">=",$date_start)
-                                        ->where("tracking.date_referred","<=",$date_end)
-                                        ->count();*/
-
                             $accepted = $row->count_accepted;
                             $no_respond = $row->count_no_action;
 
@@ -129,9 +119,6 @@
 
                             $accepted_incoming[$facility_id] = $accepted;
                             $seenzoned_incoming[$facility_id] = $no_respond;
-
-                            /*$time_accept_incoming = \App\Tracking::select(\DB::raw('TIMESTAMPDIFF(MINUTE,tra.date_referred,tra.date_accepted) as mins'))
-                                                    ->where("referred_to",$row->id)*/
                         ?>
                         <div class="row">
                             <div class="col-md-4 ">
@@ -148,8 +135,6 @@
                                         <?php
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            //echo '<span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$seenzoned.'</span></span>';
-                                            //echo '<span class="label label-warning">No Respond <span class="badge bg-red" >'.$no_respond.'</span></span><br><br><br>';
                                             echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to'.'" target="_blank"><span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
                                         ?>
                                     </p>
@@ -192,7 +177,7 @@
                                         <div class="active tab-pane" id="common_sources{{ $row->id }}">
                                             <?php $common_source_incoming_concat = ''; ?>
                                             @foreach($facility as $fac)
-                                                <?php $common_source_incoming_concat .= $fac->name.'-'.$fac->count."\n"; ?>
+                                                <?php $common_source_incoming_concat .= $fac->name.'-'.$fac->count."<br>"; ?>
                                                 <label><span class="badge bg-maroon">{{ $fac->count }}</span> {{ $fac->name }}</label><br>
                                             @endforeach
                                             <?php $common_source_incoming[$facility_id] = $common_source_incoming_concat; ?>
@@ -200,7 +185,7 @@
                                         <div class="tab-pane fade" id="common_referring{{ $row->id }}">
                                             <?php $referring_doctor_incoming_concat = ''; ?>
                                             @foreach($referring_doctor as $referring)
-                                                    <?php $referring_doctor_incoming_concat .= $referring->fullname.'-'.$referring->count."\n"; ?>
+                                                    <?php $referring_doctor_incoming_concat .= $referring->fullname.'-'.$referring->count."<br>"; ?>
                                                 <label><span class="badge bg-maroon">{{ $referring->count }}</span> {{ $referring->fullname }}</label><br>
                                             @endforeach
                                             <?php $referring_doctor_incoming[$facility_id] = $referring_doctor_incoming_concat; ?>
@@ -212,7 +197,7 @@
                                                     <?php $diagnosis_ref_incoming_concat = ''; ?>
                                                     @if(count($diagnosis_ref) >= 1)
                                                         @foreach($diagnosis_ref as $diagnosis)
-                                                            <?php $diagnosis_ref_incoming_concat .= $diagnosis->diagnosis.'-'.$diagnosis->count."\n"; ?>
+                                                            <?php $diagnosis_ref_incoming_concat .= $diagnosis->diagnosis.'-'.$diagnosis->count."<br>"; ?>
                                                             <label><span class="badge bg-maroon">{{ $diagnosis->count }}</span> {{ $diagnosis->diagnosis }}</label><br>
                                                         @endforeach
                                                     @else
@@ -225,7 +210,7 @@
                                                     <?php $reason_ref_incoming_concat = ''; ?>
                                                     @if(count($reason_ref) >= 1)
                                                         @foreach($reason_ref as $reason)
-                                                            <?php $reason_ref_incoming_concat .= $reason->reason.'-'.$reason->count."\n"; ?>
+                                                            <?php $reason_ref_incoming_concat .= $reason->reason.'-'.$reason->count."<br>"; ?>
                                                             <label><span class="badge bg-maroon">{{ $reason->count }}</span> {{ $reason->reason }}</label><br>
                                                         @endforeach
                                                     @else
@@ -239,7 +224,7 @@
                                             <?php $transport_ref_incoming_concat = ''; ?>
                                             @if(count($transport_ref) >= 1)
                                                 @foreach($transport_ref as $transport)
-                                                    <?php $transport_ref_incoming_concat .= $transport->transportation.'-'.$transport->count."\n"; ?>
+                                                    <?php $transport_ref_incoming_concat .= $transport->transportation.'-'.$transport->count."<br>"; ?>
                                                     <label><span class="badge bg-maroon">{{ $transport->count }}</span> {{ $transport->transportation }}</label><br>
                                                 @endforeach
                                             @else
@@ -251,7 +236,7 @@
                                             <?php $department_ref_incoming_concat = ''; ?>
                                             @if(count($department_ref) >= 1)
                                                 @foreach($department_ref as $department)
-                                                    <?php $department_ref_incoming_concat .= $department->description.'-'.$department->count."\n"; ?>
+                                                    <?php $department_ref_incoming_concat .= $department->description.'-'.$department->count."<br>"; ?>
                                                     <label><span class="badge bg-maroon">{{ $department->count }}</span> {{ $department->description }}</label><br>
                                                 @endforeach
                                             @else
@@ -263,7 +248,7 @@
                                             <?php $issue_ref_incoming_concat = ''; ?>
                                             @if(count($issue_ref) >= 1)
                                                 @foreach($issue_ref as $issue)
-                                                    <?php $issue_ref_incoming_concat .= $issue->issue."\n"; ?>
+                                                    <?php $issue_ref_incoming_concat .= $issue->issue."<br>"; ?>
                                                     <label>{{ $issue->issue }}</label><br>
                                                 @endforeach
                                             @else
@@ -278,23 +263,9 @@
                     </div>
                     <div class="tab-pane fade" id="outgoing{{ $row->id }}">
                         <?php
-                            //$outgoing = \DB::connection('mysql')->select("call consolidatedOutgoing('$facility_id','$date_start','$date_end')")[0];
                             $outgoing = $row->count_outgoing;
                             $accepted_outgoing = $row->count_accepted_outgoing;
-                            /*$accepted_outgoing = \App\Activity::where("referred_from","=",$row->id)
-                                ->where("date_referred",">=",$date_start)
-                                ->where("date_referred","<=",$date_end)
-                                ->where("status","=","accepted")
-                                ->count();*/
-                            //$seenzoned_outgoing = \DB::connection('mysql')->select("call getViewedOnlyOutgoing('$facility_id','$date_start','$date_end')")[0]->seen_outgoing;
-
-                            //$outgoing_no_respond = $outgoing->count_outgoing - $accepted_outgoing;
                             $outgoing_no_respond = $row->count_no_action_outgoing;
-                            //$turn_around_time_accept_outgoing = $row->turnaround_time_accept_outgoing;
-
-                            /*if($accepted_outgoing > $seenzoned_outgoing){
-                                $accepted_outgoing = $seenzoned_outgoing;
-                            }*/
                             $facility_outgoing = \App\Tracking::select("facility.name",\DB::raw("count(facility.id) as count"))
                                 ->leftJoin("facility","facility.id","=","tracking.referred_to")
                                 ->where("tracking.referred_from","=",$row->id)
@@ -422,7 +393,7 @@
                                         <div class="active tab-pane" id="referral_hospitals_outgoing{{ $row->id }}">
                                             <?php $common_referred_facility_outgoing_concat = ''; ?>
                                             @foreach($facility_outgoing as $fac_outgoing)
-                                                <?php $common_referred_facility_outgoing_concat .= $fac_outgoing->name.'-'.$fac_outgoing->count."\n"; ?>
+                                                <?php $common_referred_facility_outgoing_concat .= $fac_outgoing->name.'-'.$fac_outgoing->count."<br>"; ?>
                                                 <label><span class="badge bg-maroon">{{ $fac_outgoing->count }}</span> {{ $fac_outgoing->name }}</label><br>
                                             @endforeach
                                             <?php $common_referred_facility_outgoing1[$facility_id] = $common_referred_facility_outgoing_concat; ?>
@@ -430,7 +401,7 @@
                                         <div class="tab-pane fade" id="referral_md_outgoing{{ $row->id }}">
                                             <?php $common_referred_doctor_outgoing_concat = ''; ?>
                                             @foreach($referral_md_outgoing as $ref_md_outgoing)
-                                                <?php $common_referred_doctor_outgoing_concat .= $ref_md_outgoing->fullname.'-'.$ref_md_outgoing->count."\n"; ?>
+                                                <?php $common_referred_doctor_outgoing_concat .= $ref_md_outgoing->fullname.'-'.$ref_md_outgoing->count."<br>"; ?>
                                                 <label><span class="badge bg-maroon">{{ $ref_md_outgoing->count }}</span> {{ $ref_md_outgoing->fullname }}</label><br>
                                             @endforeach
                                             <?php $common_referred_doctor_outgoing1[$facility_id] = $common_referred_doctor_outgoing_concat; ?>
@@ -442,7 +413,7 @@
                                                     <?php $diagnosis_ref_outgoing_concat = ''; ?>
                                                     @if(count($diagnosis_ref_outgoing) >= 1)
                                                         @foreach($diagnosis_ref_outgoing as $diagnosis_outgoing)
-                                                            <?php $diagnosis_ref_outgoing_concat .= $diagnosis_outgoing->diagnosis.'-'.$diagnosis_outgoing->count."\n"; ?>
+                                                            <?php $diagnosis_ref_outgoing_concat .= $diagnosis_outgoing->diagnosis.'-'.$diagnosis_outgoing->count."<br>"; ?>
                                                             <label><span class="badge bg-maroon">{{ $diagnosis_outgoing->count }}</span> {{ $diagnosis_outgoing->diagnosis }}</label><br>
                                                         @endforeach
                                                     @else
@@ -455,7 +426,7 @@
                                                     <?php $reason_ref_outgoing_concat = ''; ?>
                                                     @if(count($reason_ref_outgoing) >= 1)
                                                         @foreach($reason_ref_outgoing as $reason_outgoing)
-                                                            <?php $reason_ref_outgoing_concat .= $reason_outgoing->reason.'-'.$reason_outgoing->count."\n"; ?>
+                                                            <?php $reason_ref_outgoing_concat .= $reason_outgoing->reason.'-'.$reason_outgoing->count."<br>"; ?>
                                                             <label><span class="badge bg-maroon">{{ $reason_outgoing->count }}</span> {{ $reason_outgoing->reason }}</label><br>
                                                         @endforeach
                                                     @else
@@ -470,7 +441,7 @@
                                             <?php $transport_ref_outgoing_concat = ''; ?>
                                             @if(count($transport_ref_outgoing) >= 1)
                                                 @foreach($transport_ref_outgoing as $transport_outgoing)
-                                                    <?php $transport_ref_outgoing_concat .= $transport_outgoing->transportation.'-'.$transport_outgoing->count."\n"; ?>
+                                                    <?php $transport_ref_outgoing_concat .= $transport_outgoing->transportation.'-'.$transport_outgoing->count."<br>"; ?>
                                                     <label><span class="badge bg-maroon">{{ $transport_outgoing->count }}</span> {{ $transport_outgoing->transportation }}</label><br>
                                                 @endforeach
                                             @else
@@ -482,7 +453,7 @@
                                             <?php $department_ref_outgoing_concat = ''; ?>
                                             @if(count($department_ref_outgoing) >= 1)
                                                 @foreach($department_ref_outgoing as $department_outgoing)
-                                                    <?php $department_ref_outgoing_concat .= $department_outgoing->description.'-'.$department_outgoing->count."\n"; ?>
+                                                    <?php $department_ref_outgoing_concat .= $department_outgoing->description.'-'.$department_outgoing->count."<br>"; ?>
                                                     <label><span class="badge bg-maroon">{{ $department_outgoing->count }}</span> {{ $department_outgoing->description }}</label><br>
                                                 @endforeach
                                             @else
@@ -494,7 +465,7 @@
                                             <?php $issue_ref_outgoing_concat = ''; ?>
                                             @if(count($issue_ref_outgoing) >= 1)
                                                 @foreach($issue_ref_outgoing as $issue_outgoing)
-                                                    <?php $issue_ref_outgoing_concat .= $issue_outgoing->issue."\n"; ?>
+                                                    <?php $issue_ref_outgoing_concat .= $issue_outgoing->issue."<br>"; ?>
                                                     <label>{{ $issue_outgoing->issue }}</label><br>
                                                 @endforeach
                                             @else
