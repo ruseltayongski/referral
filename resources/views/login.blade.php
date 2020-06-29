@@ -129,7 +129,7 @@ $dateNow = date('Y-m-d');
                                 <ul>
                                     <li class="text-danger">Ronadith Capala Arriesgado - 09952100815 Please reach via message only</li>
                                     <li class="text-danger">Andrei Bacalan - 09396071936 Please reach via message only</li>
-                                    <li class="text-danger">Grace R. Flores - 09328596338 Please reach via message only</li>
+                                    <li class="text-danger">Gracel R. Flores - 09453816462 Please reach via message only</li>
                                 </ul>
                             </ol>
                             <h3 class="text-center" style="color: #2f8030">Thank you!</h3>
