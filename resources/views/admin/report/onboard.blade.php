@@ -65,8 +65,8 @@
                             <tr class="bg-black">
                                 <th></th>
                                 <th>Facility Name</th>
-                                <th>Login</th>
-                                <th>Logout</th>
+                                <th>Login Time</th>
+                                <th>Logout Time</th>
                                 <th>Number of hours offline</th>
                             </tr>
                             <?php $count = 0; ?>
