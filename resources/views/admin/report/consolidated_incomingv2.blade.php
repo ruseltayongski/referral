@@ -9,7 +9,7 @@
         <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
             <div class="col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="reservation">
+                    <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-info btn-flat">Filter</button>
                         <a href="{{ asset('excel/incoming') }}" type="button" name="from_the_start" class="btn btn-warning btn-flat"><i class="fa fa-file-excel-o"></i> Incoming (Excel)</a>
@@ -51,6 +51,7 @@
     @if(count($data) > 0)
     @foreach($data as $row)
     <div class="box box-success">
+        <h3>{{ $title }}</h3>
         <div class="box-body no-padding">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
@@ -536,7 +537,7 @@
 @section('js')
     <script>
         //Date range picker
-        $('#reservation').daterangepicker();
+        $('#consolidate_date_range').daterangepicker();
     </script>
 
 @endsection

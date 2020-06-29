@@ -155,10 +155,10 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('support/report/users') }}"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
-                            <li><a href="{{ url('support/report/referral') }}"><i class="fa fa-wheelchair"></i>&nbsp; Daily Referrals</a></li>
+                            <li><a href="{{ url('support/report/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
+                            <li><a href="{{ url('support/report/referral') }}"><i class="fa fa-wheelchair"></i>Daily Referrals</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ url('support/report/incoming') }}"><i class="fa fa-ambulance"></i>&nbsp; Incoming Referral
+                            <li><a href="{{ url('support/report/incoming') }}"><i class="fa fa-ambulance"></i>Incoming Referral
                                     @if($count>0)
                                         <span class="badge">
                                         <span class="count_referral">{{ $count }}</span>
@@ -197,13 +197,13 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('admin/report/online') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Online Users</a></li>
-                            <li><a href="{{ url('admin/report/referral') }}" data-toggle="modal"><i class="fa fa-line-chart"></i>&nbsp; Referral Status</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{ url('admin/daily/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; Daily Users</a></li>
-                            <li><a href="{{ url('admin/daily/referral') }}" data-toggle="modal"><i class="fa fa-building"></i>&nbsp; Daily Hospital</a></li>
-                            <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>   Consolidated</a></li>
-                            <li><a tabindex="-1" href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i> Graph</a></li>
+                            <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Online Users</a></li>
+                            <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
+                            <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
+                            <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
+                            <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
+                            <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
+                            <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>On board Facility</a></li>
                         </ul>
                     </li>
                     <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li>

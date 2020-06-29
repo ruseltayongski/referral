@@ -31,6 +31,7 @@ Route::get('logout', function(){
 
         \App\Login::where('id',$logoutId)
             ->update([
+                'status' => 'login_off',
                 'logout' => $logout
             ]);
     }
@@ -339,3 +340,7 @@ Route::get('3efFgpkQFg56lZGtOp6WzmkXXBsGfPx9','ApiController@getProvince'); //GE
 Route::get('XVup1R4fVdnSnYFvUWSMX5FTmyHkbn5p','ApiController@getSeen'); //GET SEEN
 Route::get('4PXhMnFe3O8wzVg1I3fu4t53W5zjMOqA/{offset}/{limit}','ApiController@getTracking'); //GET TRACKING
 Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET USERS
+//
+
+
+Route::match(['GET','POST'],"onboard/facility","admin\ReportCtrl@onboardFacility");
