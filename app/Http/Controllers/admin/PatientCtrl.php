@@ -83,7 +83,7 @@ class PatientCtrl extends Controller
         Session::put('data',$incomingData);
         return view('admin.report.consolidated_incomingv2',
         [
-            'title' => 'INCOMING REFERRAL CONSOLIDATION TABLE  (Within Province Wide Health System)',
+            'title' => 'REFERRAL CONSOLIDATION TABLE (Within Province Wide Health System)',
             'data' => $incomingData,
             'date_range_start' => $date_start,
             'date_range_end' => $date_end
