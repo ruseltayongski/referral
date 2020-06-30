@@ -68,6 +68,7 @@
                                 <th>Login Time</th>
                                 <th>Logout Time</th>
                                 <th>Number of hours offline</th>
+                                <th>Status</th>
                             </tr>
                             <?php $count = 0; ?>
                             @foreach($data as $row)
@@ -78,6 +79,7 @@
                                     <td>{{ $row->login }}</td>
                                     <td>@if($row->logout == '0000-00-00 00:00:00'){{ date('Y-m-d',strtotime($day_date)).' 23:59:59' }}@else{{ $row->logout }}@endif</td>
                                     <td>{{ offlineTime($row->login,$row->logout) }}</td>
+                                    <td>{{ $row->status }}</td>
                                 </tr>
                             @endforeach
                         </table>
