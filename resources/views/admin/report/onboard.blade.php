@@ -70,9 +70,18 @@
                                 <th>Number of hours offline</th>
                                 <th>Status</th>
                             </tr>
-                            <?php $count = 0; ?>
+                            <?php
+                                $count = 0;
+                                $province = [];
+                            ?>
                             @foreach($data as $row)
                                 <?php $count++; ?>
+                                @if(!isset($province[$row->province]))
+                                    <?php $province[$row->province] = true; ?>
+                                <tr>
+                                    <td colspan="6"><strong class="text-green">{{ $row->province }}</strong></td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <td>{{ $count }}</td>
                                     <td>{{ $row->name }}</td>
