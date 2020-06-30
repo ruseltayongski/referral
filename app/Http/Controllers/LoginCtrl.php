@@ -59,6 +59,8 @@ class LoginCtrl extends Controller
                         return 'mcc';
                     }else if($login->level=='admin'){
                         return 'admin';
+                    }else if($login->level=='opav'){
+                        return 'opav';
                     }else{
                         Session::forget('auth');
                         return 'denied';

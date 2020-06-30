@@ -6,6 +6,7 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\Auth;
 use App\Http\Middleware\Chief;
 use App\Http\Middleware\Doctor;
+use App\Http\Middleware\Opav;
 use App\Http\Middleware\RevalidateBackHistory;
 use App\Http\Middleware\Support;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -67,6 +68,7 @@ class Kernel extends HttpKernel
         'doctor' => Doctor::class,
         'chief' => Chief::class,
         'support' => Support::class,
-        'admin' => Admin::class
+        'admin' => Admin::class,
+        'opav' => Opav::class
     ];
 }
