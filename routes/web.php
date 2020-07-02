@@ -345,5 +345,7 @@ Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET U
 //onboard
 Route::match(['GET','POST'],"onboard/facility","admin\ReportCtrl@onboardFacility");
 
-//Opav dashboard
-Route::get('opav','Opav\HomeController@index');
+//EocRegion dashboard
+Route::get('eoc_region','Eoc\HomeController@index');
+Route::get('eoc_region/bed/{facility_id}','Eoc\HomeController@bed');
+Route::post('eoc_region/bed/add','Eoc\HomeController@bedAdd');

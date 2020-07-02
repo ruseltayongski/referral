@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Session;
 
-class Opav
+class EocRegion
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Opav
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
-        if($user->level!='opav')
+        if($user->level!='eoc_region')
         {
             return redirect('/login');
         }
