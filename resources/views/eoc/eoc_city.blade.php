@@ -36,9 +36,25 @@
                                 <tr>
                                     <td></td>
                                     <td>{{ $row->name }}</td>
-                                    <td><strong class="text-blue">{{ $row->capacity }}</strong></td>
-                                    <td><strong class="text-blue">{{ $row->occupied }}</strong></td>
-                                    <td><strong class="text-green">{{ $row->capacity - $row->occupied }}</strong></td>
+                                    <td><strong class="text-blue">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                            @else
+                                            {{ $row->capacity }}
+                                                @endif
+                                        </strong></td>
+                                    <td><strong class="text-blue">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                            @else{{ $row->occupied }}
+                                        @endif</strong></td>
+                                    <td><strong class="text-green">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                            @else
+                                            {{ $row->capacity - $row->occupied }}</strong>
+                                            @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
