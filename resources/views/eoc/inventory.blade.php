@@ -51,7 +51,15 @@ $user = Session::get('auth');
                                     <td>{{ $row->name }}</td>
                                     <td><strong class="text-blue" id="capacity">{{ $row->capacity }}</strong></td>
                                     <td><strong class="text-blue" id="occupied">{{ $row->occupied }}</strong></td>
-                                    <td><strong class="text-green">{{ $row->capacity - $row->occupied }}</strong></td>
+                                    <td>
+                                        <strong class="text-green">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                            @else
+                                            {{ $row->capacity - $row->occupied }}
+                                            @endif
+                                        </strong>
+                                    </td>
                                     @if($user->level == 'support')
                                     <td width="7%"><button class="btn btn-sm btn-success" href="#bed_modal" data-toggle="modal" onclick="inventoryUpdate({{ $row->id }})">Update</button></td>
                                     @endif
