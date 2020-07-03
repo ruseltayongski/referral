@@ -9,11 +9,11 @@
             <label>Description:</label>
             <input type="text" class="form-control" value="{{ $inventory->name }}" disabled>
         </div>
-        @if($inventory->name != 'Patients Waiting for Admission')
         <div class="form-group">
             <label>Capacity:</label>
             <input type="number" class="form-control" value="{{ $inventory->capacity }}" name="capacity" required>
         </div>
+        @if($inventory->name != 'Patients Waiting for Admission')
         <div class="form-group">
             <label>Occupied:</label>
             <input type="number" class="form-control" value="{{ $inventory->occupied }}" name="occupied" required>
