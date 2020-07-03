@@ -61,6 +61,8 @@ class LoginCtrl extends Controller
                         return 'admin';
                     }else if($login->level=='eoc_region'){
                         return 'eoc_region';
+                    }else if($login->level=='eoc_city'){
+                        return 'eoc_city';
                     }else{
                         Session::forget('auth');
                         return 'denied';

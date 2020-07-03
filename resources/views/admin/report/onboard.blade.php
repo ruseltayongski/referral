@@ -40,22 +40,18 @@
             padding: 0px !important;
         }
     </style>
-    <form action="{{ asset('onboard/facility') }}" method="POST">
-        {{ csrf_field() }}
-        <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
-            <div class="col-md-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-info btn-flat">Filter</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
+                <div class="pull-right">
+                    <form action="{{ asset('onboard/facility') }}" method="POST" class="form-inline">
+                        {{ csrf_field() }}
+                        <div class="form-group-sm">
+                            <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
+                            <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        </div>
+                    </form>
+                </div>
                 <h3>{{ $title }}</h3>
             </div>
             <div class="box-body">

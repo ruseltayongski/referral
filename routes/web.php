@@ -349,3 +349,10 @@ Route::match(['GET','POST'],"onboard/facility","admin\ReportCtrl@onboardFacility
 Route::get('eoc_region','Eoc\HomeController@index');
 Route::get('eoc_region/bed/{facility_id}','Eoc\HomeController@bed');
 Route::post('eoc_region/bed/add','Eoc\HomeController@bedAdd');
+
+//EOC CITY
+Route::get('eoc_city','Eoc\HomeController@EocCity');
+
+
+//Inventory
+Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');

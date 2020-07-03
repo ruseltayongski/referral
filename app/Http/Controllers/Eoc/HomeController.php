@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('eoc_region');
+        //$this->middleware('eoc_region');
     }
 
     public function index()
@@ -48,5 +48,19 @@ class HomeController extends Controller
         Session::put('bed',true);
         return Redirect::back();
     }
+
+    public function EocCity(){
+        $facility = Facility::select("facility.*","province.description as province")
+            ->leftJoin("province","province.id","=","facility.province")
+            ->where("facility.province",2)
+            ->where("facility.name","like","%city%")
+            ->where("facility.name","not like","%RHU%")
+            ->get();
+
+        return view('eoc.eoc_city',[
+            "data" => $facility
+        ]);
+    }
+
 
 }
