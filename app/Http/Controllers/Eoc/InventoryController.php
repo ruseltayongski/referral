@@ -64,7 +64,7 @@ class InventoryController extends Controller
             }
         }
 
-        return 'wewe';
+        return 'success!';
     }
 
     public function Inventory($facility_id){
