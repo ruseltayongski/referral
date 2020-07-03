@@ -9,6 +9,7 @@
             <label>Description:</label>
             <input type="text" class="form-control" value="{{ $inventory->name }}" disabled>
         </div>
+        @if($inventory->name == 'Patients Waiting for Admission')
         <div class="form-group">
             <label>Capacity:</label>
             <input type="number" class="form-control" value="{{ $inventory->capacity }}" name="capacity" required>
@@ -17,6 +18,7 @@
             <label>Occupied:</label>
             <input type="number" class="form-control" value="{{ $inventory->occupied }}" name="occupied" required>
         </div>
+        @endif
     </div><!-- /.modal-content -->
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
