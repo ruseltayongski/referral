@@ -342,5 +342,17 @@ Route::get('4PXhMnFe3O8wzVg1I3fu4t53W5zjMOqA/{offset}/{limit}','ApiController@ge
 Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET USERS
 //
 
-
+//onboard
 Route::match(['GET','POST'],"onboard/facility","admin\ReportCtrl@onboardFacility");
+
+//EocRegion dashboard
+Route::get('eoc_region','Eoc\HomeController@index');
+Route::get('eoc_region/bed/{facility_id}','Eoc\HomeController@bed');
+Route::post('eoc_region/bed/add','Eoc\HomeController@bedAdd');
+
+//EOC CITY
+Route::get('eoc_city','Eoc\HomeController@EocCity');
+
+
+//Inventory
+Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
