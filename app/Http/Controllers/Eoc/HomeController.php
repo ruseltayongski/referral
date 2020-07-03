@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Eoc;
 
 use App\Bed;
+use App\Inventory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Facility;
@@ -50,15 +51,19 @@ class HomeController extends Controller
     }
 
     public function EocCity(){
-        $facility = Facility::select("facility.*","province.description as province")
-            ->leftJoin("province","province.id","=","facility.province")
+        $inventory = Inventory::select("inventory.*","facility.name as facility")
+            ->leftJoin("facility","facility.id","=","inventory.facility_id")
             ->where("facility.province",2)
-            ->where("facility.name","like","%city%")
+            ->where("facility.muncity",63)
             ->where("facility.name","not like","%RHU%")
+            ->where("facility.name","not like","%department%")
+            ->where("facility.name","not like","%referred%")
+            ->orderBy("facility.name","asc")
+            ->orderBy("inventory.name","asc")
             ->get();
 
         return view('eoc.eoc_city',[
-            "data" => $facility
+            "inventory" => $inventory
         ]);
     }
 

@@ -7,34 +7,38 @@
                 <h3>Facility List</h3>
             </div>
             <div class="box-body">
-                @if(count($data) > 0)
+                @if(count($inventory) > 0)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
+                            <?php $count=0; ?>
                             <tr class="bg-black">
                                 <th></th>
-                                <th>Facility Name</th>
-                                <th>Level</th>
-                                <th>Hospital Type</th>
-                                <th>Option</th>
+                                <th>Description</th>
+                                <th>Capacity</th>
+                                <th>Occupied</th>
+                                <th>Available</th>
                             </tr>
                             <?php
                             $count = 0;
-                            $province = [];
+                            $facility = [];
                             ?>
-                            @foreach($data as $row)
-                                <?php $count++; ?>
-                                @if(!isset($province[$row->province]))
-                                    <?php $province[$row->province] = true; ?>
+                            @foreach($inventory as $row)
+                                @if(!isset($facility[$row->facility]))
+                                    <?php
+                                        $facility[$row->facility] = true;
+                                        $count++;
+                                    ?>
                                     <tr>
-                                        <td colspan="6"><strong class="text-green">{{ $row->province.' Province' }}</strong></td>
+                                        <td width="3%">{{ $count }}</td>
+                                        <td colspan="5"><strong class="text-green">{{ $row->facility }}</strong></td>
                                     </tr>
                                 @endif
                                 <tr>
-                                    <td>{{ $count }}</td>
+                                    <td></td>
                                     <td>{{ $row->name }}</td>
-                                    <td>{{ $row->level }}</td>
-                                    <td>{{ ucfirst($row->hospital_type) }}</td>
-                                    <td width="7%"><a href="{{ asset('inventory').'/'.$row->id }}" class="btn-xs btn-success"><i class="fa fa-eye"></i> View</a></td>
+                                    <td><strong class="text-blue">{{ $row->capacity }}</strong></td>
+                                    <td><strong class="text-blue">{{ $row->occupied }}</strong></td>
+                                    <td><strong class="text-green">{{ $row->capacity - $row->occupied }}</strong></td>
                                 </tr>
                             @endforeach
                         </table>

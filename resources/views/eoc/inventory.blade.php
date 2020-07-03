@@ -1,3 +1,7 @@
+<?php
+$user = Session::get('auth');
+?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -15,11 +19,11 @@
                             <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
                                 <i class="fa fa-eye"></i> View All
                             </button>
-                            <!--
-                            <a href="#bed_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat">
-                                <i class="fa fa-hospital-o"></i> Add Inventory
+                            @if($user->level != 'support')
+                            <a href="{{ asset('eoc_city') }}" class="btn btn-primary btn-sm btn-flat">
+                                <i class="fa fa-arrow-left"></i> Back
                             </a>
-                            -->
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -35,6 +39,9 @@
                                 <th>Capacity</th>
                                 <th>Occupied</th>
                                 <th>Available</th>
+                                @if($user->level == 'support')
+                                <th>Option</th>
+                                @endif
                             </tr>
                             <?php $count=0; ?>
                             @foreach($inventory as $row)
@@ -42,9 +49,12 @@
                                 <tr >
                                     <td>{{ $count }}</td>
                                     <td>{{ $row->name }}</td>
-                                    <td><a href="#" id="capacity">{{ $row->capacity }}</a></td>
-                                    <td><a href="#" id="occupied">{{ $row->occupied }}</a></td>
-                                    <td>{{ $row->available }}</td>
+                                    <td><strong class="text-blue" id="capacity">{{ $row->capacity }}</strong></td>
+                                    <td><strong class="text-blue" id="occupied">{{ $row->occupied }}</strong></td>
+                                    <td><strong class="text-green">{{ $row->capacity - $row->occupied }}</strong></td>
+                                    @if($user->level == 'support')
+                                    <td width="7%"><button class="btn btn-sm btn-success" href="#bed_modal" data-toggle="modal" onclick="inventoryUpdate({{ $row->id }})">Update</button></td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </table>
@@ -59,20 +69,33 @@
             </div>
         </div>
     </div>
+
+
+    <form method="POST" action="{{ asset('inventory/update/save') }}">
+        <div class="modal fade" role="dialog" id="bed_modal">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content inventory_update">
+                    <center>
+                        <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                    </center>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </form>
     
 
 @endsection
 
 @section('js')
     <script>
-        @if(Session::get('bed'))
+        @if(Session::get('inventory_update'))
         Lobibox.notify('success', {
             title: "",
-            msg: "Successfully added bed!",
+            msg: "Successfully updated inventory!",
             size: 'mini',
             rounded: true
         });
-        <?php Session::put("bed",false); ?>
+        <?php Session::put("inventory_update",false); ?>
         @endif
     </script>
 
@@ -80,11 +103,22 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
     <script>
-        $.fn.editable.defaults.mode = 'popup';
+        /*$.fn.editable.defaults.mode = 'popup';
         $(document).ready(function() {
             $('#capacity').editable();
             $('#occupied').editable();
-        });
+        });*/
+
+        function inventoryUpdate(inventory_id){
+            var json = {
+                "inventory_id" : inventory_id,
+                "_token" : "<?php echo csrf_token()?>"
+            };
+            var url = "<?php echo asset('inventory/update/page') ?>";
+            $.post(url,json,function(result){
+                $(".inventory_update").html(result);
+            })
+        }
     </script>
 @endsection
 
