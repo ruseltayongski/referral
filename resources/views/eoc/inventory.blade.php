@@ -49,8 +49,24 @@ $user = Session::get('auth');
                                 <tr >
                                     <td>{{ $count }}</td>
                                     <td>{{ $row->name }}</td>
-                                    <td><strong class="text-blue" id="capacity">{{ $row->capacity }}</strong></td>
-                                    <td><strong class="text-blue" id="occupied">{{ $row->occupied }}</strong></td>
+                                    <td>
+                                        <strong class="text-blue" id="capacity">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                            @else
+                                            {{ $row->capacity }}
+                                                @endif
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong class="text-blue" id="occupied">
+                                            @if($row->name == 'Patients Waiting for Admission')
+                                                N/A
+                                                @else
+                                            {{ $row->occupied }}
+                                            @endif
+                                        </strong>
+                                    </td>
                                     <td>
                                         <strong class="text-green">
                                             @if($row->name == 'Patients Waiting for Admission')
