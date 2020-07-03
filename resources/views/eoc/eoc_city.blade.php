@@ -37,11 +37,7 @@
                                     <td></td>
                                     <td>{{ $row->name }}</td>
                                     <td><strong class="text-blue">
-                                            @if($row->name == 'Patients Waiting for Admission')
-                                                N/A
-                                            @else
                                             {{ $row->capacity }}
-                                                @endif
                                         </strong></td>
                                     <td><strong class="text-blue">
                                             @if($row->name == 'Patients Waiting for Admission')
