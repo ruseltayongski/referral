@@ -1,18 +1,5 @@
 <?php
 $user = Session::get('auth');
-/*$daterange = \Illuminate\Support\Facades\Session::get('dateAccepted');
-if(!$daterange){
-    $daterange = date('Y-m-d');
-}
-
-$start = \Illuminate\Support\Facades\Session::get('startAcceptedDate');
-$end = \Illuminate\Support\Facades\Session::get('endAcceptedDate');
-if(!$start)
-    $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
-
-if(!$end)
-    $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');*/
-
 $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
 $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 ?>

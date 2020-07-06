@@ -85,7 +85,7 @@ $user = Session::get('auth');
                                         <td>{{ $status }}</td>
                                         <td>{{ strtoupper($row->status) }}</td>
                                         <td>
-                                            <a href="{{ url('doctor/history/'.$row->code) }}" class="btn btn-block btn-success">
+                                            <a href="{{ url('doctor/track/patient?referredCode='.$row->code) }}" class="btn btn-block btn-success">
                                                 <i class="fa fa-stethoscope"></i> Track
                                             </a>
                                         </td>

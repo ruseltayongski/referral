@@ -243,27 +243,27 @@
                     },500);
                 });
 
-            var data = {
-                "to": "/topics/ReferralSystem"+referred_to,
-                "data": {
-                    "subject": "New Referral",
-                    "date": data.date,
-                    "body": patient_name+" was referred to your facility from "+current_facility+"!"
-                }
-            };
-            $.ajax({
-                url: 'https://fcm.googleapis.com/fcm/send',
-                type: 'post',
-                data: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.info(data);
-                }
-            });
+                var data = {
+                    "to": "/topics/ReferralSystem"+referred_to,
+                    "data": {
+                        "subject": "New Referral",
+                        "date": data.date,
+                        "body": patient_name+" was transferred to your facility from "+current_facility+"!"
+                    }
+                };
+                $.ajax({
+                    url: 'https://fcm.googleapis.com/fcm/send',
+                    type: 'post',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.info(data);
+                    }
+                });
             },
             error: function(){
                 $('#serverModal').modal();

@@ -67,8 +67,7 @@
 <script>
 
 $('body').on('click','.btn-refer',function () {
-    /*$(".call_count").tooltip({placement : 'top'});
-    $(".call_count").tooltip('hide').attr('data-original-title', caller);*/
+
     $('.loading').show();
     code = $(this).data('code');
     item = $(this).data('item');

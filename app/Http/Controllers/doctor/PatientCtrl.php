@@ -938,7 +938,7 @@ class PatientCtrl extends Controller
 
     public function history($code)
     {
-        Session::put('referredCode',$code);
+        Session::put('keywordDischarged',$code);
         return redirect('doctor/track/patient');
     }
 }
