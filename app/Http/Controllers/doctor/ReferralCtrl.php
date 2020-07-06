@@ -146,7 +146,8 @@ class ReferralCtrl extends Controller
         $count = Tracking::where('referred_to',$user->facility_id)
             ->where(function($q){
                 $q->where('status','referred')
-                    ->orwhere('status','seen');
+                    ->orwhere('status','seen')
+                    ->orWhere('status','transferred');
             })
             ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
             ->count();
@@ -527,8 +528,6 @@ class ReferralCtrl extends Controller
             $step = 5;
         if(self::hasStatus('discharged',$code))
             $step = 6;
-        if(self::hasStatus('transferred',$code))
-            $step = 6;
         if(self::hasStatus('cancelled',$code))
             $step = 0;
         if(self::hasStatus('archived',$code))
@@ -588,6 +587,7 @@ class ReferralCtrl extends Controller
         $track = Tracking::find($track_id);
         if($track->status=='accepted' || $track->status=='rejected')
         {
+            Session::put('incoming_denied',true);
             return 'denied';
         }
 
@@ -793,12 +793,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        Tracking::where('id',$track_id)
-            ->update([
-                'status' => 'transferred',
-                'action_md' => $user->id
-            ]);
-        $track = Tracking::find($track_id);
+        $track = Tracking::where('id',$track_id)->first();
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -808,7 +803,7 @@ class ReferralCtrl extends Controller
             'department_id' => $req->department,
             'action_md' => $user->id,
             'remarks' => $req->remarks,
-            'status' => $track->status
+            'status' => "transferred"
         );
         $activity = Activity::create($data);
 
@@ -823,10 +818,12 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'remarks' => $track->remarks,
             'referring_md' => $user->id,
-            'status' => 'referred',
+            'status' => 'transferred',
             'type' => $track->type,
             'form_id' => $track->form_id
         );
+        $track->update($new_data);
+
 
         $patient = Patients::select(
                         DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -835,18 +832,18 @@ class ReferralCtrl extends Controller
                     ->where('id',$track->patient_id)
                     ->first();
         $user_md = User::find($user->id);
-        $tracking = Tracking::create($new_data);
+
 
         $form_type = '#normalFormModal';
         if($track->type=='pregnant'){
             $form_type = '#pregnantFormModal';
         }
 
-        $hosp = Facility::find($user->facility_id)->name;
+        /*$hosp = Facility::find($user->facility_id)->name;
         $hospTo = Facility::find($req->facility)->name;
 
         $msg = "$track->code transferred to $hospTo from $hosp.";
-        DeviceTokenCtrl::send('Transferred',$msg,$track->referred_from);
+        DeviceTokenCtrl::send('Transferred',$msg,$track->referred_from);*/
 
         return array(
             'date' => date('M d, Y h:i A',strtotime($date)),
@@ -854,7 +851,7 @@ class ReferralCtrl extends Controller
             'sex' => $patient->sex,
             'action_md' => "$user_md->fname $user_md->mname $user_md->lname",
             'form_type' => $form_type,
-            'track_id' => $tracking->id,
+            'track_id' => $track->id,
             'activity_id' => $activity->id,
             'referred_facility' => $track->referred_to
         );

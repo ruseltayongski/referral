@@ -180,6 +180,14 @@ $user = Session::get('auth');
         }, function(start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
+
+        @if(Session::get('incoming_denied'))
+            Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
+            {
+                msg: "This form was already accepted"
+            });
+            <?php Session::put("incoming_denied",false); ?>
+        @endif
     </script>
 @endsection
 
