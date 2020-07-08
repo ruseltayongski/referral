@@ -46,7 +46,7 @@
                             <p class="text-info" style="font-size:1.1em;">
                                 <strong><i class="fa fa-info"></i> Version 3.0 was successfully launch</strong><br>
                                 <ol type="I" style="color: #31708f;">
-                                    <li>Inventory Modules</li>
+                                    <li>Beta test for inventory modules</li>
                                     <!--
                                     <li>Other Salient Feactures(Recommended & Suggestion as of June 27,2019)</li>
                                     <ol type="A">

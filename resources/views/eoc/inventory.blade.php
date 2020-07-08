@@ -13,17 +13,12 @@ $user = Session::get('auth');
                         {{ csrf_field() }}
                         <div class="form-group-sm" style="margin-bottom: 10px;">
                             <input type="text" class="form-control" name="keyword" placeholder="Search inventory..." value="{{ Session::get("keyword") }}">
-                            <button type="submit" class="btn btn-success btn-sm btn-flat">
+                            <button type="button" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
-                            <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                            <button type="button" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
                                 <i class="fa fa-eye"></i> View All
                             </button>
-                            @if($user->level != 'support')
-                            <a href="{{ asset('eoc_city') }}" class="btn btn-primary btn-sm btn-flat">
-                                <i class="fa fa-arrow-left"></i> Back
-                            </a>
-                            @endif
                         </div>
                     </form>
                 </div>
