@@ -93,4 +93,12 @@ class InventoryController extends Controller
         return Redirect::back();
     }
 
+    public function appendInventory($facility_id){
+        $inventory = Inventory::where("facility_id",$facility_id)->get();
+        return view("eoc.inventory_append",[
+            "inventory" => $inventory,
+            "facility_id" => $facility_id
+        ]);
+    }
+
 }

@@ -41,11 +41,13 @@
                             </p>
                         </div>
                     @endif
-                    @if($dateNow >= '2019-07-31' && $dateNow <= '2019-08-31')
+                    @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
                         <div class="alert alert-info">
                             <p class="text-info" style="font-size:1.1em;">
-                                <strong><i class="fa fa-info"></i> Version 2.0 was successfully launch</strong><br>
+                                <strong><i class="fa fa-info"></i> Version 3.0 was successfully launch</strong><br>
                                 <ol type="I" style="color: #31708f;">
+                                    <li>Inventory Modules</li>
+                                    <!--
                                     <li>Other Salient Feactures(Recommended & Suggestion as of June 27,2019)</li>
                                     <ol type="A">
                                         <li >Name of Referred MD/HCW</li>
@@ -80,6 +82,7 @@
                                             <li>Fixed the "accepted and redirected patients" that labeled ACCEPTED only</li>
                                         </ul>
                                     </ol>
+                                    -->
                                 </ol>
                             </p>
                         </div>

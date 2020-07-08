@@ -27,7 +27,15 @@ $user = Session::get('auth');
                         </div>
                     </form>
                 </div>
-                <h3 class="text-yellow">{{ \App\Facility::find($facility_id)->name }}</h3>
+                <h3>Level of Care Inventory</h3>
+                <h4 class="text-green">{{ \App\Facility::find($facility_id)->name }}</h4>
+                <table class="table table-hover table-bordered" style="width: 35%">
+                    <tr>
+                        <td >No.of {{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$facility_id)->first()->name }} :</td>
+                        <td width="7%"><b class="text-red" style="font-size: 15pt;">{{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$facility_id)->first()->capacity }}</b></td>
+                        <td width="7%"><button class="btn btn-sm btn-success" href="#bed_modal" data-toggle="modal" onclick="inventoryUpdate({{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$facility_id)->first()->id }})">Update</button></td>
+                    </tr>
+                </table>
             </div>
             <div class="box-body">
                 @if(count($inventory) > 0)
@@ -39,13 +47,12 @@ $user = Session::get('auth');
                                 <th>Capacity</th>
                                 <th>Occupied</th>
                                 <th>Available</th>
-                                @if($user->level == 'support')
                                 <th>Option</th>
-                                @endif
                             </tr>
                             <?php $count=0; ?>
                             @foreach($inventory as $row)
                                 <?php $count++; ?>
+                                @if($row->name != 'Patients Waiting for Admission')
                                 <tr >
                                     <td>{{ $count }}</td>
                                     <td>{{ $row->name }}</td>
@@ -56,26 +63,15 @@ $user = Session::get('auth');
                                     </td>
                                     <td>
                                         <strong class="text-blue" id="occupied">
-                                            @if($row->name == 'Patients Waiting for Admission')
-                                                N/A
-                                                @else
                                             {{ $row->occupied }}
-                                            @endif
                                         </strong>
                                     </td>
                                     <td>
-                                        <strong class="text-green">
-                                            @if($row->name == 'Patients Waiting for Admission')
-                                                N/A
-                                            @else
-                                            {{ $row->capacity - $row->occupied }}
-                                            @endif
-                                        </strong>
+                                        {{ $row->capacity - $row->occupied }}
                                     </td>
-                                    @if($user->level == 'support')
                                     <td width="7%"><button class="btn btn-sm btn-success" href="#bed_modal" data-toggle="modal" onclick="inventoryUpdate({{ $row->id }})">Update</button></td>
-                                    @endif
                                 </tr>
+                                @endif
                             @endforeach
                         </table>
                     </div>

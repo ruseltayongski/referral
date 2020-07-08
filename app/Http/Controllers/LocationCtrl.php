@@ -8,6 +8,7 @@ use App\Muncity;
 use App\Province;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LocationCtrl extends Controller
 {
@@ -44,7 +45,7 @@ class LocationCtrl extends Controller
         $data['departments'] = array();
 
         $facility = Facility::select(
-            'barangay.description as brgy',
+                'barangay.description as brgy',
                 'muncity.description as muncity',
                 'province.description as province',
                 'facility.address'
@@ -66,6 +67,7 @@ class LocationCtrl extends Controller
         $address .= ($facility->province) ? $facility->province:null;
 
         $data['address'] = $address;
+        $data['facility_id'] = $facility_id;
 
         $data['departments'] = User::select('department.id','department.description')
                 ->leftJoin('department','department.id','=','users.department_id')
