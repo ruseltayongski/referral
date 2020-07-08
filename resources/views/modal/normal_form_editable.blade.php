@@ -13,7 +13,7 @@
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
             <div class="jim-content">
-                <div style="margin-left: 65%;position: absolute;font-size: 7pt;background-color: white;" class="inventory_body">
+                <div style="margin-left: 58%;margin-top:10%;position: absolute;font-size: 8pt;background-color: white;" class="inventory_body">
 
                 </div>
                 <h4 class="text-green">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM - <small class="text-yellow">Clinical Referral Form</small></h4>
@@ -34,11 +34,11 @@
                         <td colspan="6">Address: <span class="text-success">{{ $facility_address['address'] }}</span> </td>
                     </tr>
                     <tr>
-                        <td width="15%">
+                        <td width="20%">
                             Referred to:
                         </td>
-                        <td>
-                            <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%;" required>
+                        <td width="38%">
+                            <select name="referred_facility" class="select2 select_facility" required>
                                 <option value="">Select Facility...</option>
                                 @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -47,21 +47,57 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="15%">
+                        <td >
                             Department:
                         </td>
                         <td>
-                            <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
-                                <option value="">Select Department...</option>
+                            <select name="referred_department" class="form-control-select select_department select_department_normal" style="width: 100%;" required>
+                                <option value="">Select Option</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td width="15%">
+                        <td >
                             Address:
                         </td>
                         <td>
                             <span class="text-primary facility_address"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            Covid Number:
+                        </td>
+                        <td>
+                            <input type="text" name="covid_number" style="width: 100%;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            Clinical Status
+                        </td>
+                        <td>
+                            <select name="surveillance_category" id="" class="form-control-select" style="width: 100%;">
+                                <option value="">Select option</option>
+                                <option value="asymptomatic">Asymptomatic</option>
+                                <option value="mild">Mild</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Surveillance Category
+                        </td>
+                        <td>
+                            <select name="surveillance_category" id="" class="form-control-select" style="width: 100%;">
+                                <option value="">Select option</option>
+                                <option value="contact_pum">Contact (PUM)</option>
+                                <option value="suspect">Suspect</option>
+                                <option value="probable">Probable</option>
+                                <option value="confirmed">Confirmed</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>

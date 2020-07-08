@@ -118,6 +118,16 @@
                 ?>
             >Infirmary
             </option>
+            <option value="CIU/TTMF"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'CIU/TTMF'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >CIU/TTMF
+            </option>
         </select>
     </div>
     <div class="form-group">

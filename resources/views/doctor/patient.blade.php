@@ -213,7 +213,7 @@
         });
     }
 
-    $('.select2').select2();
+    $(".select2").select2({ width: '100%' });
     var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";
     var referred_facility = '';
