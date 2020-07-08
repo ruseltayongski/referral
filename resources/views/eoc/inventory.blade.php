@@ -24,7 +24,7 @@ $user = Session::get('auth');
                 </div>
                 <h3>Level of Care Inventory</h3>
                 <h4 class="text-green">{{ \App\Facility::find($facility_id)->name }}</h4>
-                <table class="table table-hover table-bordered" style="width: 35%">
+                <table class="table table-hover table-bordered" style="width: 40%">
                     <tr>
                         <td >No.of {{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$facility_id)->first()->name }} :</td>
                         <td width="7%"><b class="text-red" style="font-size: 15pt;">{{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$facility_id)->first()->capacity }}</b></td>
