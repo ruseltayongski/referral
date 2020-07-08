@@ -3,21 +3,13 @@
 @section('content')
     <div class="row col-md-12">
         <div class="box box-success">
-            <div class="box-header with-border">
-                <h3>Facility List</h3>
-            </div>
+            <h3>Levels of Care Inventory</h3>
             <div class="box-body">
                 @if(count($inventory) > 0)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <?php $count=0; ?>
-                            <tr class="bg-black">
-                                <th></th>
-                                <th>Description</th>
-                                <th>Capacity</th>
-                                <th>Occupied</th>
-                                <th>Available</th>
-                            </tr>
+
                             <?php
                             $count = 0;
                             $facility = [];
@@ -32,26 +24,47 @@
                                         <td width="3%">{{ $count }}</td>
                                         <td colspan="5"><strong class="text-green">{{ $row->facility }}</strong></td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-black">
+                                            <strong>
+                                            No.of {{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$row->facility_id)->first()->name }} :
+                                            </strong>
+                                            <b class="text-red" style="font-size: 15pt;">{{ \App\Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$row->facility_id)->first()->capacity }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-black">
+                                        <th ></th>
+                                        <th>Description</th>
+                                        <th>Capacity</th>
+                                        <th>Occupied</th>
+                                        <th>Available</th>
+                                    </tr>
                                 @endif
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $row->name }}</td>
-                                    <td><strong class="text-blue">
-                                            {{ $row->capacity }}
-                                        </strong></td>
-                                    <td><strong class="text-blue">
-                                            @if($row->name == 'Patients Waiting for Admission')
-                                                N/A
-                                            @else{{ $row->occupied }}
-                                        @endif</strong></td>
-                                    <td><strong class="text-green">
-                                            @if($row->name == 'Patients Waiting for Admission')
-                                                N/A
-                                            @else
-                                            {{ $row->capacity - $row->occupied }}</strong>
-                                            @endif
-                                    </td>
-                                </tr>
+                                @if($row->name != 'Patients Waiting for Admission')
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $row->name }}</td>
+                                        <td><strong class="text-blue">
+                                                {{ $row->capacity }}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-blue">
+                                                {{ $row->occupied }}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong class="text-green">
+                                                {{ $row->capacity - $row->occupied }}
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    @if($row->name == 'Regular Covid Beds')
+                                        <tr >
+                                            <td colspan="5"></td>
+                                        </tr>
+                                    @endif
+                                @endif
                             @endforeach
                         </table>
                     </div>

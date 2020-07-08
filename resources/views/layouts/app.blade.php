@@ -141,6 +141,7 @@
                             <li><a href="{{ url('doctor/report/outgoing') }}"><i class="fa fa-sign-out"></i> Outgoing Referral Report</a></li>
                         </ul>
                     </li>
+                    <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory</a></li>
                     @elseif($user->level=='support')
                     <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
@@ -211,7 +212,7 @@
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                     @elseif($user->level=='eoc_region')
                     <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                    @elseif($user->level=='eoc_city')
+                    @elseif($user->level=='eoc_region')
                     <li><a href="{{ url('eoc_city/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 @endif
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
@@ -260,7 +261,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 2.1</p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 3.0</p>
     </div>
 </footer>
 

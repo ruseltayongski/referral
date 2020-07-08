@@ -5,12 +5,18 @@
             <legend><i class="fa fa-plus"></i> Update Inventory</legend>
         </fieldset>
         <input type="hidden" name="inventory_id" value="{{ $inventory->id }}">
+        @if($inventory->name != 'Patients Waiting for Admission')
         <div class="form-group">
             <label>Description:</label>
             <input type="text" class="form-control" value="{{ $inventory->name }}" disabled>
         </div>
+        @endif
         <div class="form-group">
-            <label>Capacity:</label>
+            @if($inventory->name == 'Patients Waiting for Admission')
+                <label>No.of Patients Waiting for Admission</label>
+            @else
+                <label>Capacity:</label>
+            @endif
             <input type="number" class="form-control" value="{{ $inventory->capacity }}" name="capacity" required>
         </div>
         @if($inventory->name != 'Patients Waiting for Admission')

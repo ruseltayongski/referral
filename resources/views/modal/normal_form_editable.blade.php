@@ -6,13 +6,17 @@
         ->orderBy('name','asc')->get();
     $myfacility = \App\Facility::find($user->facility_id);
     $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+    $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
 ?>
 <div class="modal fade" role="dialog" id="normalFormModal" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
             <div class="jim-content">
-                <div class="title-form">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM<br /><small>Clinical Referral Form</small></div>
+                <div style="margin-left: 65%;position: absolute;font-size: 7pt;background-color: white;" class="inventory_body">
+
+                </div>
+                <h4 class="text-green">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM - <small class="text-yellow">Clinical Referral Form</small></h4>
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}
                 <input type="hidden" name="patient_id" class="patient_id" value="" />
@@ -30,42 +34,38 @@
                         <td colspan="6">Address: <span class="text-success">{{ $facility_address['address'] }}</span> </td>
                     </tr>
                     <tr>
-                        <td colspan="3">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Referred to:
-                                </div>
-                                <div class="col-md-9">
-                                    <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%;" required>
-                                        <option value="">Select Facility...</option>
-                                        @foreach($facilities as $row)
-                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                        <td width="15%">
+                            Referred to:
                         </td>
-                        <td colspan="3">
-                            Department: <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
-                                            <option value="">Select Department...</option>
-                                        </select>
+                        <td>
+                            <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%;" required>
+                                <option value="">Select Facility...</option>
+                                @foreach($facilities as $row)
+                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endforeach
+                            </select>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    Address:
-                                </div>
-                                <div class="col-md-10">
-                                    <span class="text-primary facility_address"></span>
-                                </div>
-                            </div>
+                        <td width="15%">
+                            Department:
+                        </td>
+                        <td>
+                            <select name="referred_department" class="form-control-select select_department select_department_normal" style="padding: 3px" required>
+                                <option value="">Select Department...</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            Address:
+                        </td>
+                        <td>
+                            <span class="text-primary facility_address"></span>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="3">Date/Time Referred (ReCo): <span class="text-success">{{ date('l F d, Y h:i A') }}</span> </td>
-                        <td colspan="3">Date/Time Transferred: </td>
                     </tr>
                     <tr>
                         <td colspan="3">Name of Patient: <span class="text-danger patient_name"></span></td>

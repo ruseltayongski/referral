@@ -208,7 +208,7 @@ $user = Session::get('auth');
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                     <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                     </td>
                                                 </tr>

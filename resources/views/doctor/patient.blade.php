@@ -247,7 +247,9 @@
             url: url+'/'+id,
             type: 'GET',
             success: function(data){
-                console.log(data);
+                $.get("<?php echo asset('inventory/append').'/'; ?>"+data.facility_id,function(inventory_body){
+                    $(".inventory_body").html(inventory_body);
+                });
                 $('.facility_address').html(data.address);
 
                 $('.select_department').empty()

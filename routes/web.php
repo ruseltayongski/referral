@@ -359,3 +359,4 @@ Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
 Route::post('inventory/update/page','Eoc\InventoryController@inventoryUpdatePage');
 Route::post('inventory/update/save','Eoc\InventoryController@inventoryUpdateSave');
 Route::get('inventory/facility/insert','Eoc\InventoryController@insertInventory');
+Route::get('inventory/append/{facility_id}','Eoc\InventoryController@appendInventory');
