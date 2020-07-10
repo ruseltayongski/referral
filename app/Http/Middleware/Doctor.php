@@ -17,8 +17,8 @@ class Doctor
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
-        if($user->level!='doctor')
-        {
+
+        if($user->level!='doctor') {
             return redirect('/login');
         }
         return $next($request);

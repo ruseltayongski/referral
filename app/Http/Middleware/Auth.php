@@ -17,8 +17,13 @@ class Auth
     public function handle($request, Closure $next)
     {
         $user = Session::get('auth');
+        $date_now = date("Y-m-d");
+        $check_login_now = \App\Login::where("userId",$user->id)->where("login","like","%$date_now%")->first();
         if(!$user){
             return redirect()->guest('/login');
+        }
+        else if(!$check_login_now){
+            return redirect('/logout');
         }
         return $next($request);
     }
