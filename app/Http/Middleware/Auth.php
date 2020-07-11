@@ -23,7 +23,7 @@ class Auth
             return redirect()->guest('/login');
         }
         else if(!$check_login_now){
-            return redirect('/logout');
+            return redirect('/login_expire');
         }
         return $next($request);
     }

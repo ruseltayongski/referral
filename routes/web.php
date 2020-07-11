@@ -37,6 +37,11 @@ Route::get('logout', function(){
     }
     return redirect('login');
 });
+Route::get('login_expire', function(){
+    \Illuminate\Support\Facades\Session::flush();
+    return redirect('login');
+});
+
 //ADMIN Page
 Route::get('admin','admin\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
