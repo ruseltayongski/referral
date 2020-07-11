@@ -270,16 +270,21 @@ $user = Session::get('auth');
                                                         </td>
                                                     </tr>
                                                 @elseif($act->status=='cancelled')
-                                                <?php
-                                                $doctor = \App\User::find($act->action_md);
-                                                ?>
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        Referral was cancelled by  by <span class="txtDoctor">Dr. {{ $doctor->fname }} {{ $doctor->lname }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
+                                                    <?php $doctor = \App\User::find($act->action_md); ?>
+                                                    <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                        <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                        <td>
+                                                            Referral was cancelled by  by <span class="txtDoctor">Dr. {{ $doctor->fname }} {{ $doctor->lname }}</span>.
+                                                            <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                        </td>
+                                                    </tr>
+                                                @elseif($act->status=='travel')
+                                                    <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                        <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                        <td>
+                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was departure by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
+                                                        </td>
+                                                    </tr>
                                             @endif
                                             <?php $first = 1; ?>
                                         @endforeach
@@ -319,7 +324,7 @@ $user = Session::get('auth');
                                 @endif
                             </a>
                         @endif
-                        @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
+                        @if($step==3 && \App\Activity::where("code",$row->code)->where("status","travel")->first())
                             <a href="#transferModal" data-toggle="modal"
                                data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
                         @endif
