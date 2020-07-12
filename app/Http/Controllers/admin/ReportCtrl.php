@@ -139,4 +139,20 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function onboardFacility(){
+        $data = Facility::
+                    select("facility.name","facility.chief_hospital","facility.contact","facility.hospital_type","province.description as province")
+                    ->leftJoin("province","province.id","=","facility.province")
+                    ->orderBy("facility.province","desc")
+                    ->orderBy("facility.name","asc")
+                    ->get();
+
+        $data = \DB::connection('mysql')->select("call onboard_facility()");
+
+        return view('admin.report.onboard_facility',[
+            'title' => 'ONBOARD FACILITY',
+            "data" => $data
+        ]);
+    }
+
 }
