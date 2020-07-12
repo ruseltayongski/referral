@@ -348,7 +348,7 @@ Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET U
 //
 
 //onboard
-Route::match(['GET','POST'],"onboard/facility","admin\ReportCtrl@onboardFacility");
+Route::match(['GET','POST'],"online/facility","admin\ReportCtrl@onlineFacility");
 
 //EocRegion dashboard
 Route::get('eoc_region','Eoc\HomeController@index');
