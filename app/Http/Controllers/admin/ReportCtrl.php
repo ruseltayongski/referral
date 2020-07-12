@@ -123,17 +123,17 @@ class ReportCtrl extends Controller
         return view('admin.report.bar_chart');
     }
 
-    public function onboardFacility(Request $request){
+    public function onlineFacility(Request $request){
         if($request->isMethod('post') && isset($request->day_date)){
             $day_date = date('Y-m-d',strtotime($request->day_date));
         } else {
             $day_date = date('Y-m-d');
         }
-        $stored_name = "onboard_facility('$day_date')";
+        $stored_name = "online_facility('$day_date')";
         $data = \DB::connection('mysql')->select("call $stored_name");
 
-        return view('admin.report.onboard',[
-            'title' => 'ON BOARD FACILITY',
+        return view('admin.report.online_facility',[
+            'title' => 'ONLINE FACILITY',
             "data" => $data,
             'day_date' => $day_date
         ]);
