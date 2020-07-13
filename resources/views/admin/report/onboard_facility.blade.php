@@ -55,7 +55,7 @@
                                 @endif
                                 <tr class="@if($row->status == 'onboard'){{ 'bg-yellow' }}@endif">
                                     <td>{{ $count }}</td>
-                                    <td>{{ $row->name }}</td>
+                                    <td class="@if($row->transaction == 'no_transaction' && $row->status == 'onboard'){{ 'bg-red' }}@endif">{{ $row->name }}</td>
                                     <td>{{ $row->chief_hospital }}</td>
                                     <td width="10%">{{ $row->contact }}</td>
                                     <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
