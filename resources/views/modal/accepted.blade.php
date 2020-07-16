@@ -98,8 +98,9 @@
                         <br />
                         <select name="clinical_status" id="" class="form-control" >
                             <option value="">Select option</option>
-                            <option value="">Recovered</option>
-                            <option value="">Expired</option>
+                            <option value="asymptomatic">Asymptomatic for at least 3 days</option>
+                            <option value="recovered">Recovered</option>
+                            <option value="expired">Expired</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -107,8 +108,10 @@
                         <br />
                         <select name="surveillance_category" id="" class="form-control" >
                             <option value="">Select option</option>
-                            <option value="">Not an active case</option>
-                            <option value="">Died</option>
+                            <option value="contact_pum">Contact (PUM)</option>
+                            <option value="suspect">Suspect</option>
+                            <option value="probable">Probable</option>
+                            <option value="confirmed">Confirmed</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -81,6 +81,7 @@
                                 <option value="">Select option</option>
                                 <option value="asymptomatic">Asymptomatic</option>
                                 <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
                                 <option value="severe">Severe</option>
                                 <option value="critical">Critical</option>
                             </select>
