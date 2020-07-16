@@ -10,6 +10,8 @@
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>{{ (isset($title)) ? $title : 'Referral System'}}</title>
+    <!-- SELECT 2 -->
+    <link href="{{ asset('resources/plugin/select2/select2.min.css') }}" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('resources/assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('resources/assets/css/bootstrap-theme.min.css') }}" rel="stylesheet">
@@ -20,8 +22,7 @@
     <link href="{{ asset('resources/assets/css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/assets/css/AdminLTE.min.css') }}">
     <!-- bootstrap datepicker -->
-    <link href="{{ asset('resources/plugin/select2/select2.min.css') }}" rel="stylesheet">
-    <!-- SELECT 2 -->
+
     <link href="{{ asset('resources/plugin/datepicker/datepicker3.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
     <!-- bootstrap wysihtml5 - text editor -->
@@ -215,6 +216,7 @@
                     <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     @elseif($user->level=='eoc_city')
                     <li><a href="{{ url('eoc_city/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                    <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-bar-chart-o"></i> Graph</a></li>
                 @endif
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 <li class="dropdown">

@@ -360,7 +360,8 @@ Route::post('eoc_region/bed/add','Eoc\HomeController@bedAdd');
 
 //EOC CITY
 Route::get('eoc_city','Eoc\HomeController@EocCity');
-
+Route::match(['POST','GET'],'eoc_city/graph','Eoc\HomeController@Graph');
+Route::get('eoc_city/excel','ExcelCtrl@EocExcel');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
