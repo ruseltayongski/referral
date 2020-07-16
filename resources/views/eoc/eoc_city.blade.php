@@ -3,13 +3,11 @@
 @section('content')
     <div class="row col-md-12">
         <div class="box box-success">
-            <h3>Levels of Care Inventory</h3>
+            <h3>Levels of Care Inventory <a href="{{ asset('eoc_city/excel') }}" class="btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Extract Excel</a></h3>
             <div class="box-body">
                 @if(count($inventory) > 0)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
-                            <?php $count=0; ?>
-
                             <?php
                             $count = 0;
                             $facility = [];

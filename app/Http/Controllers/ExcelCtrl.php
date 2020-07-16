@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Exports\QueryExport;
@@ -127,6 +128,55 @@ class ExcelCtrl extends Controller
                 </tr>'
             .$table_body.
             '</table>';
+
+        return $display;
+    }
+
+    public function EocExcel(){
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=inventory.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        $title = 'Levels of Care Inventory';
+        $table_body = "";
+
+        $count = 0;
+        $facility = [];
+        foreach(Session::get('inventory') as $row) {
+            if(!isset($facility[$row->facility])){
+                $facility[$row->facility] = true;
+                $count++;
+
+                $table_body .= "<tr>
+                    <td style='background-color:yellow'>$count</td>
+                    <td colspan='4' style='background-color:yellow'><b style='font-size: 17pt;'>$row->facility</b> <br><b> No. of Patients Waiting for Admisstion: </b><b style='color: red;font-size: 15pt;'>".Inventory::where("name","Patients Waiting for Admission")->where("facility_id",$row->facility_id)->first()->capacity."</b></td>
+                </tr>";
+
+                $table_body .= "<tr>
+                    <td style=\"background-color:lightgreen\"></td>
+                    <td style=\"background-color:lightgreen\">Description</td>
+                    <td style=\"background-color:lightgreen\">Capacity</td>
+                    <td style=\"background-color:lightgreen\">Occupied</td>
+                    <td style=\"background-color:lightgreen\">Available</td>
+                </tr>";
+            }
+
+            $available = $row->capacity - $row->occupied;
+            if($row->name != 'Patients Waiting for Admission'){
+                $table_body .= "<tr>
+                    <td></td>
+                    <td >$row->name</td>
+                    <td >$row->capacity</td>
+                    <td >$row->occupied</td>
+                    <td >$available</td>
+                </tr>";
+            }
+
+        }
+
+        $display =
+                '<h1>'.$title.'</h1>'.
+                '<table cellspacing="1" cellpadding="5" border="1">'.$table_body.'</table>';
 
         return $display;
     }

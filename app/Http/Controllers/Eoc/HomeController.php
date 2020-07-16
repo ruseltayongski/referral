@@ -62,8 +62,28 @@ class HomeController extends Controller
             ->orderBy("inventory.name","asc")
             ->get();
 
+        Session::put("inventory",$inventory);
+
         return view('eoc.eoc_city',[
             "inventory" => $inventory
+        ]);
+    }
+
+    public function Graph(Request $request){
+        if($request->isMethod('post') ){
+            Session::put("graph",true);
+            return Redirect::back();
+        }
+
+        $facility = Facility::where("facility.province",2)
+            ->where("facility.muncity",63)
+            ->where("facility.name","not like","%RHU%")
+            ->where("facility.name","not like","%department%")
+            ->where("facility.name","not like","%referred%")
+            ->orderBy("facility.name","asc")
+            ->get();
+        return view("eoc.graph",[
+            "facility" => $facility
         ]);
     }
 

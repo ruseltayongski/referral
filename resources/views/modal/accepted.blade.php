@@ -94,6 +94,24 @@
                         <input type="text" value="{{ date('Y-m-d H:i') }}" class="form-control form_datetime" name="date_time" placeholder="Date/Time Admitted" />
                     </div>
                     <div class="form-group">
+                        <label style="padding: 0px">Clinical Status</label>
+                        <br />
+                        <select name="clinical_status" id="" class="form-control" >
+                            <option value="">Select option</option>
+                            <option value="">Recovered</option>
+                            <option value="">Expired</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="padding: 0px">Surveillance Category</label>
+                        <br />
+                        <select name="surveillance_category" id="" class="form-control" >
+                            <option value="">Select option</option>
+                            <option value="">Not an active case</option>
+                            <option value="">Died</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label style="padding: 0px">Enter Remarks:</label>
                         <br />
                         <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none" required></textarea>
