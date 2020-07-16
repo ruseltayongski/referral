@@ -282,6 +282,7 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
+
 <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=1"></script>
 <script src="{{ asset('resources/plugin/select2/select2.min.js') }}?v=1"></script>
 
@@ -290,6 +291,8 @@
 
 <script src="{{ url('resources/plugin/daterangepicker_old/moment.min.js') }}"></script>
 <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>
+
+<script src="{{ asset('resources/assets/js/jquery.canvasjs.min.js') }}?v=1"></script>
 
 @include('script.firebase')
 @include('script.newreferral')

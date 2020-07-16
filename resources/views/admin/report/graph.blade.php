@@ -19,9 +19,6 @@
 
 @section('js')
 
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-
-
     <script>
         window.onload = function () {
 
