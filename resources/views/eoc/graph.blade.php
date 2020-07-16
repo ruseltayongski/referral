@@ -30,7 +30,6 @@ $user = Session::get('auth');
         </div>
     </div>
 
-
     <form method="POST" action="{{ asset('inventory/update/save') }}">
         <div class="modal fade" role="dialog" id="bed_modal">
             <div class="modal-dialog modal-sm" role="document">
@@ -47,8 +46,6 @@ $user = Session::get('auth');
 @endsection
 
 @section('js')
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-
     <script>
         $('#date_range').daterangepicker();
         $('.select2').select2({
@@ -72,7 +69,18 @@ $user = Session::get('auth');
                 axisY: {
                     title: "line chart past 7 days",
                     suffix: "",
-                    minimum: 10
+                    minimum: 0,
+                    maximum: 100,
+                    interval: 10,
+                    labelFormatter: function(e){
+                        if( e.value == 0 || e.value == 30 || e.value == 70 || e.value == 100 ){
+                            var y_value = e.value+"%";
+                        }
+                        else{
+                            y_value = "";
+                        }
+                        return  y_value;
+                    }
                 },
                 toolTip:{
                     shared:true
@@ -82,6 +90,7 @@ $user = Session::get('auth');
                     verticalAlign: "bottom",
                     horizontalAlign: "center",
                     dockInsidePlotArea: false,
+                    fontSize: 20,
                     itemclick: toogleDataSeries
                 },
                 data: [
@@ -145,13 +154,13 @@ $user = Session::get('auth');
                         color: "#f34a0f",
                         yValueFormatString: "#,##",
                         dataPoints: [
-                            { x: new Date(2020, 5, 1), y: 25 },
-                            { x: new Date(2020, 5, 2), y: 30 },
-                            { x: new Date(2020, 5, 3), y: 32 },
-                            { x: new Date(2020, 5, 4), y: 36 },
-                            { x: new Date(2020, 5, 5), y: 34 },
-                            { x: new Date(2020, 5, 6), y: 40 },
-                            { x: new Date(2020, 5, 7), y: 38 }
+                            { x: new Date(2020, 5, 1), y: 90 },
+                            { x: new Date(2020, 5, 2), y: 80 },
+                            { x: new Date(2020, 5, 3), y: 70 },
+                            { x: new Date(2020, 5, 4), y: 98 },
+                            { x: new Date(2020, 5, 5), y: 95 },
+                            { x: new Date(2020, 5, 6), y: 92 },
+                            { x: new Date(2020, 5, 7), y: 82 }
                         ]
                     }
                 ]
