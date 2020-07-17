@@ -348,6 +348,9 @@ class PatientCtrl extends Controller
                 'referring_facility' => $user->facility_id,
                 'referred_to' => $req->referred_facility,
                 'department_id' => $req->referred_department,
+                'covid_number' => $req->covid_number,
+                'refer_clinical_status' => $req->clinical_status,
+                'refer_sur_category' => $req->sur_category,
                 'time_referred' => date('Y-m-d H:i:s'),
                 'time_transferred' => '',
                 'patient_id' => $patient_id,
@@ -422,8 +425,6 @@ class PatientCtrl extends Controller
                 $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
             }
         }
-        $hospital_name = Facility::find($user->facility_id)->name;
-        //DeviceTokenCtrl::send('New Referral','A new referral from '.$hospital_name,$req->referred_facility);
 
         return array(
             'id' => $tracking_id,

@@ -53,6 +53,15 @@
                         <td colspan="3">PhilHealth #: <span class="phic_id"></span></td>
                     </tr>
                     <tr>
+                        <td colspan="6"><span class="badge bg-red"> New</span> Covid Number: <span class="covid_number"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><span class="badge bg-red"> New</span> Clinical Status: <span class="clinical_status" style="text-transform: capitalize;"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><span class="badge bg-red"> New</span> Surveillance Category: <span class="surveillance_category" style="text-transform: capitalize;"></span></td>
+                    </tr>
+                    <tr>
                         <td colspan="6">
                             Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
                             <br />

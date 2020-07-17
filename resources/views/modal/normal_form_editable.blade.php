@@ -16,7 +16,10 @@
                 <div style="margin-left: 58%;margin-top:10%;position: absolute;font-size: 8pt;background-color: white;" class="inventory_body">
 
                 </div>
-                <h4 class="text-green">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM - <small class="text-yellow">Clinical Referral Form</small></h4>
+                <center>
+                    <h4 class="text-green">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM</h4>
+                    <b style="font-size: 15pt">Clinical Referral Form</b>
+                </center>
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}
                 <input type="hidden" name="patient_id" class="patient_id" value="" />
@@ -77,7 +80,7 @@
                             Clinical Status
                         </td>
                         <td>
-                            <select name="surveillance_category" id="" class="form-control-select" style="width: 100%;">
+                            <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="asymptomatic">Asymptomatic</option>
                                 <option value="mild">Mild</option>
@@ -92,7 +95,7 @@
                             Surveillance Category
                         </td>
                         <td>
-                            <select name="surveillance_category" id="" class="form-control-select" style="width: 100%;">
+                            <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="contact_pum">Contact (PUM)</option>
                                 <option value="suspect">Suspect</option>
