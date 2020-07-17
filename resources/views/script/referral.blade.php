@@ -302,7 +302,11 @@ function getNormalForm()
             $('span.phic_status').html(data.phic_status);
             $('span.phic_id').html(data.phic_id);
 
-            if(data.covid_number){
+            $('span.covid_number').html(data.covid_number);
+            $('span.clinical_status').html(data.refer_clinical_status);
+            $('span.surveillance_category').html(data.refer_sur_category);
+
+            /*if(data.covid_number){
                 $('span.covid_number').parent().removeClass('hide');
                 $('span.covid_number').html(data.covid_number);
             }
@@ -321,7 +325,7 @@ function getNormalForm()
                 $('span.surveillance_category').html(data.refer_sur_category);
             }
             else
-                $('span.surveillance_category').parent().addClass('hide');
+                $('span.surveillance_category').parent().addClass('hide');*/
 
             $('span.case_summary').append(case_summary);
             $('span.reco_summary').html(reco_summary);
