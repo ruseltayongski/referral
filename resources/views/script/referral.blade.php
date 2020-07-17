@@ -301,6 +301,28 @@ function getNormalForm()
             $('span.patient_address').html(patient_address);
             $('span.phic_status').html(data.phic_status);
             $('span.phic_id').html(data.phic_id);
+
+            if(data.covid_number){
+                $('span.covid_number').parent().removeClass('hide');
+                $('span.covid_number').html(data.covid_number);
+            }
+            else
+                $('span.covid_number').parent().addClass('hide');
+
+            if(data.refer_clinical_status){
+                $('span.clinical_status').parent().removeClass('hide');
+                $('span.clinical_status').html(data.refer_clinical_status);
+            }
+            else
+                $('span.clinical_status').parent().addClass('hide');
+
+            if(data.refer_sur_category){
+                $('span.surveillance_category').parent().removeClass('hide');
+                $('span.surveillance_category').html(data.refer_sur_category);
+            }
+            else
+                $('span.surveillance_category').parent().addClass('hide');
+
             $('span.case_summary').append(case_summary);
             $('span.reco_summary').html(reco_summary);
             $('span.diagnosis').html(diagnosis);
