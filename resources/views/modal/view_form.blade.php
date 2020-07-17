@@ -52,6 +52,15 @@ $facility = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id)
                         <td colspan="3">PhilHealth #: <span class="phic_id"></span></td>
                     </tr>
                     <tr>
+                        <td colspan="6"><small class="badge bg-red"> New</small> Covid Number: <span class="covid_number"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><small class="badge bg-red"> New</small> Clinical Status: <span class="clinical_status" style="text-transform: capitalize;"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><small class="badge bg-red"> New</small> Surveillance Category: <span class="surveillance_category" style="text-transform: capitalize;"></span></td>
+                    </tr>
+                    <tr>
                         <td colspan="6">
                             Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
                             <br />
