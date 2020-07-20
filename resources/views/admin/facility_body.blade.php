@@ -128,6 +128,16 @@
                 ?>
             >CIU/TTMF
             </option>
+            <option value="RHU"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'RHU'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >RHU
+            </option>
         </select>
     </div>
     <div class="form-group">

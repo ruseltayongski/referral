@@ -69,6 +69,24 @@ class HomeController extends Controller
         ]);
     }
 
+    public function EocRegion(){
+        $inventory = Inventory::select("inventory.*","facility.name as facility","facility.province as province","facility.id as facility_id")
+            ->leftJoin("facility","facility.id","=","inventory.facility_id")
+            ->where("facility.name","not like","%RHU%")
+            ->where("facility.name","not like","%department%")
+            ->where("facility.name","not like","%referred%")
+            ->orderBy("facility.province","asc")
+            ->orderBy("facility.name","asc")
+            ->orderBy("inventory.name","asc")
+            ->get();
+
+        Session::put("inventory",$inventory);
+
+        return view('eoc.eoc_region',[
+            "inventory" => $inventory
+        ]);
+    }
+
     public function Graph(Request $request){
         if($request->isMethod('post') ){
             Session::put("graph",true);
