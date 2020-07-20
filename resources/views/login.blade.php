@@ -122,11 +122,11 @@ $dateNow = date('Y-m-d');
                                     <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
                                 </ul>
-                                <li >System Implementation/Training </li>
+                                <li >System Implementation/Training <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
                                 <ul>
                                     <li>Ryan A. Padilla - 09294771871</li>
-                                    <li>Rachel Sumalinog - 09484693136</li>
-                                    <li>Kasilyn Lariosa - 09331720608</li>
+                                    <li>Rachel Sumalinog - 09484693136 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
+                                    <li>Kasilyn Lariosa - 09331720608 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
                                 </ul>
                             </ol>
@@ -134,7 +134,7 @@ $dateNow = date('Y-m-d');
                             <ol type="A">
                                 <ul>
                                     <li >Ronadith Capala Arriesgado - 09952100815</li>
-                                    <li >Rolly Villarin - 09952100815</li>
+                                    <li >Rolly Villarin - 09952100815 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
                                     <li >Gracel R. Flores - 09453816462</li>
                                 </ul>
                             </ol>
