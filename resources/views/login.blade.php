@@ -119,17 +119,23 @@ $dateNow = date('Y-m-d');
                                 <ul>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>Reyan M. Sugabo - 09359504269</li>
-                                    <li>Ryan A. Padilla - 09294771871</li>
                                     <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
+                                </ul>
+                                <li >System Implementation/Training </li>
+                                <ul>
+                                    <li>Ryan A. Padilla - 09294771871</li>
+                                    <li>Rachel Sumalinog - 09484693136</li>
+                                    <li>Kasilyn Lariosa - 09331720608</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
                                 </ul>
                             </ol>
                             <li>Non - Technical</li>
                             <ol type="A">
                                 <ul>
-                                    <li class="text-danger">Ronadith Capala Arriesgado - 09952100815 Please reach via message only</li>
-                                    <li class="text-danger">Andrei Bacalan - 09396071936 Please reach via message only</li>
-                                    <li class="text-danger">Gracel R. Flores - 09453816462 Please reach via message only</li>
+                                    <li >Ronadith Capala Arriesgado - 09952100815</li>
+                                    <li >Rolly Villarin - 09952100815</li>
+                                    <li >Gracel R. Flores - 09453816462</li>
                                 </ul>
                             </ol>
                             <h3 class="text-center" style="color: #2f8030">Thank you!</h3>
