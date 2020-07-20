@@ -134,7 +134,7 @@ $dateNow = date('Y-m-d');
                             <ol type="A">
                                 <ul>
                                     <li >Ronadith Capala Arriesgado - 09952100815</li>
-                                    <li >Rolly Villarin - 09952100815 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
+                                    <li >Rolly Villarin - 09173209917 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
                                     <li >Gracel R. Flores - 09453816462</li>
                                 </ul>
                             </ol>
