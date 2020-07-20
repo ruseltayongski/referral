@@ -139,14 +139,24 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onboardFacility(){
-        $data = Facility::
-                    select("facility.name","facility.chief_hospital","facility.contact","facility.hospital_type","province.description as province")
-                    ->leftJoin("province","province.id","=","facility.province")
-                    ->orderBy("facility.province","desc")
-                    ->orderBy("facility.name","asc")
-                    ->get();
+    public function offlineFacility(Request $request){
+        if($request->isMethod('post') && isset($request->day_date)){
+            $day_date = date('Y-m-d',strtotime($request->day_date));
+        } else {
+            $day_date = date('Y-m-d');
+        }
+        //return $day_date;
+        $stored_name = "offline_facility('$day_date')";
+        $data = \DB::connection('mysql')->select("call $stored_name");
 
+        return view('admin.report.offline_facility',[
+            'title' => 'OFFLINE FACILITY',
+            "data" => $data,
+            'day_date' => $day_date
+        ]);
+    }
+
+    public function onboardFacility(){
         $data = \DB::connection('mysql')->select("call onboard_facility()");
 
         return view('admin.report.onboard_facility',[
