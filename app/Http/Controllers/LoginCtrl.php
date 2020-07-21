@@ -63,6 +63,8 @@ class LoginCtrl extends Controller
                         return 'eoc_region';
                     }else if($login->level=='eoc_city'){
                         return 'eoc_city';
+                    } else if($login->level=='opcen'){
+                        return 'opcen';
                     }else{
                         Session::forget('auth');
                         return 'denied';

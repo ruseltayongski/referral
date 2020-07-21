@@ -768,6 +768,18 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
+        $track->update([
+            'status' => 'discharged'
+        ]);
+
+        $patient_form = PatientForm::where('code',$track->code)->first();
+        if($patient_form){
+            $patient_form->update([
+                'dis_clinical_status' => $req->clinical_status,
+                'dis_sur_category' => $req->sur_category
+            ]);
+        }
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -779,11 +791,6 @@ class ReferralCtrl extends Controller
             'status' => 'discharged'
         );
         Activity::create($data);
-
-        Tracking::where('id',$track_id)
-            ->update([
-                'status' => 'discharged'
-            ]);
 
         $hosp = Facility::find($user->facility_id)->name;
         $msg = "$track->code discharged from $hosp.";

@@ -364,6 +364,11 @@ Route::get('eoc_city','Eoc\HomeController@EocCity');
 Route::match(['POST','GET'],'eoc_city/graph','Eoc\HomeController@Graph');
 Route::get('eoc_city/excel','ExcelCtrl@EocExcel');
 
+//OPCEN
+Route::get('opcen','Opcen\OpcenController@Opcen');
+Route::get('opcen/new_client','Opcen\OpcenController@newClient');
+Route::get('opcen/bed/available','Opcen\OpcenController@bedAvailable');
+
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
 Route::get('inventory/append/{facility_id}','Eoc\InventoryController@appendInventory');

@@ -106,7 +106,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Surveillance Category</label>
                         <br />
-                        <select name="surveillance_category" id="" class="form-control" >
+                        <select name="sur_category" id="" class="form-control" >
                             <option value="">Select option</option>
                             <option value="contact_pum">Contact (PUM)</option>
                             <option value="suspect">Suspect</option>
