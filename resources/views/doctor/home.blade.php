@@ -126,13 +126,13 @@
                         <ol type="I" style="color: #2f8030">
                             <li>Technical</li>
                             <ol type="A">
-                                <li >Web</li>
+                                <li >System Error</li>
                                 <ul>
                                     <li>Rusel T. Tayong - 09238309990</li>
                                     <li>Christian Dave L. Tipactipac - 09286039028</li>
                                     <li>Keith Joseph Damandaman - 09293780114</li>
                                 </ul>
-                                <li >Server - Can't access </li>
+                                <li >Server - The request URL not found</li>
                                 <ul>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>Reyan M. Sugabo - 09359504269</li>

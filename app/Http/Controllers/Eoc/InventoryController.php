@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Eoc;
 
 use App\Facility;
 use App\Inventory;
+use App\InventoryLogs;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -88,6 +89,16 @@ class InventoryController extends Controller
         $inventory->capacity = $request->capacity;
         $inventory->occupied = $request->occupied;
         $inventory->save();
+
+        $user = Session::get("auth");
+        $inventory_logs = new InventoryLogs();
+        $inventory_logs->facility_id = $user->facility_id;
+        $inventory_logs->encoded_by = $user->id;
+        $inventory_logs->inventory_id = $inventory->id;
+        $inventory_logs->capacity = $request->capacity;
+        $inventory_logs->occupied = $request->capacity;
+        $inventory_logs->time_created = date('H:i:s');
+        $inventory_logs->save();
 
         Session::put('inventory_update',true);
         return Redirect::back();
