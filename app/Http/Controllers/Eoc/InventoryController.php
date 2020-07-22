@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Redirect;
 
 class InventoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function insertInventory(){
         $facility = Facility::get();
         foreach($facility as $row){
