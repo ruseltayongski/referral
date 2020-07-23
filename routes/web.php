@@ -368,6 +368,10 @@ Route::get('eoc_city/excel','ExcelCtrl@EocExcel');
 Route::get('opcen','Opcen\OpcenController@Opcen');
 Route::get('opcen/new_client','Opcen\OpcenController@newClient');
 Route::get('opcen/bed/available','Opcen\OpcenController@bedAvailable');
+Route::get('opcen/new_call','Opcen\OpcenController@newCall');
+Route::get('opcen/repeat_call','Opcen\OpcenController@repeatCall');
+Route::get('opcen/reason_calling/{reason}','Opcen\OpcenController@reasonCalling');
+Route::get('opcen/availability/service','Opcen\OpcenController@availabilityAndService');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');

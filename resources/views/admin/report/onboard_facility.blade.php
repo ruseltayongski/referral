@@ -9,7 +9,11 @@
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3>{{ $title }}</h3>
+                <strong style="font-size: 15pt">LEGEND:</strong>
+                <ul>
+                    <li><b class="text-yellow">YELLOW - ON BOARD WITH TRANSACTION</b></li>
+                    <li><b class="text-red">RED - ON BOARD BUT NO TRANSACTION</b></li>
+                </ul>
             </div>
             <div class="box-body">
                 @if(count($data) > 0)
