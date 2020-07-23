@@ -49,7 +49,7 @@
                                         <td colspan="5">
                                             <div class="form-group">
                                                 <strong class="text-green">{{ $row->province }} - </strong>
-                                                <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}">310</b> / <span class="{{ 'facility_total'.$row->province_id }}">400</span></span>
+                                                <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'facility_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span>
                                                 <div class="progress sm">
                                                     <div class="progress-bar progress-bar-red facility_progress{{ $row->province_id }}" ></div>
                                                 </div>
