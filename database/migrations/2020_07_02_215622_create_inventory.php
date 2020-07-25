@@ -18,13 +18,13 @@ class CreateInventory extends Migration
         }
         Schema::create('inventory', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('facility_id')->nullabe();
-            $table->integer('encoded_by')->nullabe();
-            $table->string('name')->nullabe();
-            $table->integer('capacity')->nullabe();
-            $table->integer('occupied')->nullabe();
-            $table->integer('available')->nullabe();
-            $table->string('status')->nullabe();
+            $table->integer('facility_id')->nullable();
+            $table->integer('encoded_by')->nullable();
+            $table->string('name')->nullable();
+            $table->integer('capacity')->nullable();
+            $table->integer('occupied')->nullable();
+            $table->integer('available')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
