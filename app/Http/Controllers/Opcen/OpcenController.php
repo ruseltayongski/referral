@@ -31,19 +31,44 @@ class OpcenController extends Controller
 
             $new_call = OpcenClient::where("encoded_by",$user->id)
                 ->where("call_classification","new_call")
-                ->whereBetween('created_at',[$startdate,$enddate])
-                ->get();
-            $data['new_call'][] = count($new_call);
+                ->whereBetween('time_started',[$startdate,$enddate])
+                ->count();
+            $data['new_call'][] = $new_call;
 
             $repeat_call = OpcenClient::where("encoded_by",$user->id)
                 ->where("call_classification","repeat_call")
-                ->whereBetween('created_at',[$startdate,$enddate])
-                ->get();
-            $data['repeat_call'][] = count($repeat_call);
+                ->whereBetween('time_started',[$startdate,$enddate])
+                ->count();
+            $data['repeat_call'][] = $repeat_call;
         }
 
+        $transaction_complete = OpcenClient::where("encoded_by",$user->id)
+            ->where("transaction_complete","!=",null)
+            ->count();
+
+        $transaction_incomplete = OpcenClient::where("encoded_by",$user->id)
+            ->where("transaction_incomplete","!=",null)
+            ->count();
+
+        $inquiry = OpcenClient::where("encoded_by",$user->id)
+            ->where("reason_calling","inquiry")
+            ->count();
+
+        $referral = OpcenClient::where("encoded_by",$user->id)
+            ->where("transaction_incomplete","referral")
+            ->count();
+
+        $others = OpcenClient::where("encoded_by",$user->id)
+            ->where("transaction_incomplete","others")
+            ->count();
+
         return view('opcen.opcen',[
-            "data" => $data
+            "data" => $data,
+            "transaction_complete" => $transaction_complete,
+            "transaction_incomplete" => $transaction_incomplete,
+            "inquiry" => $inquiry,
+            "referral" => $referral,
+            "others" => $others
         ]);
     }
 
