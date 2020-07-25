@@ -225,7 +225,7 @@
                     <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>
                     @elseif($user->level=='opcen')
                         <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                        <li><a href="{{ url('opcen/new_client') }}"><i class="fa fa-street-view"></i> New Client</a></li>
+                        <li><a href="{{ url('opcen/client') }}"><i class="fa fa-street-view"></i> Client</a></li>
                         <li><a href="{{ url('opcen/availability/service') }}"><i class="fa fa-tty"></i> Availability/Services</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Facility <span class="caret"></span></a>

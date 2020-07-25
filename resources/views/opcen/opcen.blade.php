@@ -1,77 +1,54 @@
+<?php
+$error = \Illuminate\Support\Facades\Input::get('error');
+?>
 @extends('layouts.app')
 
 @section('content')
-    <div class="row col-md-12">
-        <div class="box box-success">
-            <div class="box-body">
-                <div class="col-sm-6 col-xs-12">
-                    <div class="info-box bg-yellow">
-                        <span class="info-box-icon"><i class="fa fa-user-md"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Client</span>
-                            <span class="info-box-number countDoctors">1,231</span>
-                            <div class="progress">
-                                <div class="progress-bar profilePercentageBar"></div>
-                            </div>
-                            <span class="progress-description"></span>
-                        </div><!-- /.info-box-content -->
-                    </div>
+    <div class="col-md-12">
+        <div class="jim-content">
+            @if($error)
+                <div class="alert alert-danger">
+                <span class="text-danger">
+                    <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                </span>
                 </div>
-
-                <div class="col-sm-6 col-xs-12">
-                    <div class="info-box bg-aqua">
-                        <span class="info-box-icon"><i class="fa fa-users"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">UNDER DEVELOPMENT</span>
-                            <span class="info-box-number countOnline">1</span>
-                            <div class="progress">
-                                <div class="progress-bar profilePercentageBar"></div>
-                            </div>
-                            <span class="progress-description">
-                  </span>
-                        </div><!-- /.info-box-content -->
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-xs-12">
-                    <div class="info-box bg-red">
-                        <span class="info-box-icon"><i class="fa fa-hospital-o"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">UNDER DEVELOPMENT</span>
-                            <span class="info-box-number countFacility">50</span>
-                            <div class="progress">
-                                <div class="progress-bar profilePercentageBar"></div>
-                            </div>
-                            <span class="progress-description">
-                  </span>
-                        </div><!-- /.info-box-content -->
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-xs-12">
-                    <div class="info-box bg-green">
-                        <span class="info-box-icon"><i class="fa fa-file-o"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">UNDER DEVELOPMENT</span>
-                            <span class="info-box-number countReferral">11,577</span>
-                            <div class="progress">
-                                <div class="progress-bar profilePercentageBar"></div>
-                            </div>
-                            <span class="progress-description">
-                  </span>
-                        </div><!-- /.info-box-content -->
-                    </div>
-                </div>
-
+            @endif
+            <h3 class="page-header">Monthly Activity
+            </h3>
+            <div class="chart">
+                <canvas id="barChart"></canvas>
             </div>
         </div>
     </div>
 
-
-
 @endsection
 
 @section('js')
+    @include('script.chart')
+    <script>
+        var chartdata = {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                // labels: month,
+                datasets: [
+                    {
+                        label: 'New Call',
+                        backgroundColor: '#06bdff',
+                        data: <?php echo json_encode($data["new_call"]); ?>
+                    },
+                    {
+                        label: 'Repeat Call',
+                        backgroundColor: '#ff7c57',
+                        data: <?php echo json_encode($data["repeat_call"]); ?>
+                    }
+                ]
+            }
+        };
 
+
+        var ctx = document.getElementById('barChart').getContext('2d');
+        new Chart(ctx, chartdata);
+    </script>
 @endsection
 
