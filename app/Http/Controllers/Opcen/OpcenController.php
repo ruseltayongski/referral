@@ -55,11 +55,11 @@ class OpcenController extends Controller
             ->count();
 
         $referral = OpcenClient::where("encoded_by",$user->id)
-            ->where("transaction_incomplete","referral")
+            ->where("reason_calling","referral")
             ->count();
 
         $others = OpcenClient::where("encoded_by",$user->id)
-            ->where("transaction_incomplete","others")
+            ->where("reason_calling","others")
             ->count();
 
         return view('opcen.opcen',[
