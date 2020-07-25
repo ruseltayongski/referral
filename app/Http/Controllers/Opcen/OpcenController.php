@@ -193,6 +193,7 @@ class OpcenController extends Controller
         $opcen_client->province_id = $request->province_id;
         $opcen_client->municipality_id = $request->municipality_id;
         $opcen_client->barangay_id = $request->barangay_id;
+        $opcen_client->sitio = $request->sitio;
         $opcen_client->contact_number = $request->contact_number;
         $opcen_client->relationship = $request->relationship;
         $opcen_client->reason_calling = $request->reason_calling;
