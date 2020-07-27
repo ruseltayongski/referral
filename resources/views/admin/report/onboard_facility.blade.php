@@ -151,11 +151,10 @@
                     showInLegend: "true",
                     toolTipContent: "{y}%",
                     legendText: "{label}",
-                    indexLabel: "{label} {y}% in 10 out of 26",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "With Transaction", y: with_transaction1 },
-                        { label: "No Transaction", y: no_transaction1 }
+                        { label: "With Transaction in "+with_transaction1+"% in "+"<?php echo $facility_transaction[1]['with_transaction']; ?> out of <?php echo $facility_onboard[1]; ?>",legendText : "With Transaction", y: with_transaction1 },
+                        { label: "No Transaction in "+no_transaction1+"% in "+"<?php echo $facility_transaction[1]['no_transaction']; ?> out of <?php echo $facility_onboard[1]; ?>",legendText : "No Transaction", y: no_transaction1 }
                     ]
                 }]
             };
@@ -176,11 +175,10 @@
                     showInLegend: "true",
                     toolTipContent: "{y}%",
                     legendText: "{label}",
-                    indexLabel: "{label} {y}% in 10 out of 26",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "With Transaction", y: with_transaction2 },
-                        { label: "No Transaction", y: no_transaction2 }
+                        { label: "With Transaction in "+with_transaction2+"% in "+"<?php echo $facility_transaction[2]['with_transaction']; ?> out of <?php echo $facility_onboard[2]; ?>",legendText : "With Transaction", y: with_transaction2 },
+                        { label: "No Transaction in "+no_transaction2+"% in "+"<?php echo $facility_transaction[2]['no_transaction']; ?> out of <?php echo $facility_onboard[2]; ?>",legendText : "No Transaction", y: no_transaction2 }
                     ]
                 }]
             };
