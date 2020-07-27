@@ -32,15 +32,24 @@
                                 $facility_total[1] = 0;
                                 $facility_onboard[2] = 0;
                                 $facility_total[2] = 0;
+
+                                $hospital_type[1]['government'] = 0;
+                                $hospital_type_total[1]['government'] = 0;
+                                $hospital_type_hospital[2]['government'] = 0;
+                                $hospital_type_total[2]['government'] = 0;
+
                                 $province = [];
                             ?>
                             @foreach($data as $row)
                                 <?php
                                     $count++;
 
-                                    if($row->status == 'onboard')
+                                    if($row->status == 'onboard'){
                                         $facility_onboard[$row->province_id]++;
+                                        $hospital_type[$row->province_id][$row->hospital_type]++;
+                                    }
 
+                                    $hospital_type_total[$row->province_id][$row->hospital_type]++;
                                     $facility_total[$row->province_id]++;
                                 ?>
                                 @if(!isset($province[$row->province]))
@@ -48,10 +57,24 @@
                                     <tr>
                                         <td colspan="5">
                                             <div class="form-group">
-                                                <strong class="text-green">{{ $row->province }} - </strong>
-                                                <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'facility_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span>
+                                                <strong >{{ $row->province }} Overall - </strong>
+                                                <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'facility_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red facility_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-red facility_progress{{ $row->province_id }}" ></div>
+                                                    <div class="progress-bar progress-bar-striped facility_progress{{ $row->province_id }}" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <strong class="text-green">Government Hospital - </strong>
+                                                <span class="progress-number"><b class="{{ 'government_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'government_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red government_percent{{ $row->province_id }}"></b>
+                                                <div class="progress sm" >
+                                                    <div class="progress-bar progress-bar-striped government_hospital_progress{{ $row->province_id }}" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <strong class="text-blue">Private Hospital - </strong>
+                                                <span class="progress-number"><b class="{{ 'private_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'private_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red private_percent{{ $row->province_id }}"></b>
+                                                <div class="progress sm">
+                                                    <div class="progress-bar progress-bar-red private_hospital_progress{{ $row->province_id }}" ></div>
                                                 </div>
                                             </div>
                                         </td>
@@ -90,17 +113,44 @@
         $('#onboard_picker').daterangepicker({
             "singleDatePicker": true
         });
+
         $(".facility_onboard1").html("<?php echo $facility_onboard[1] ?>");
         $(".facility_total1").html("<?php echo $facility_total[1] ?>");
+        var facility_progress1 = Math.round("<?php echo $facility_onboard[1] ?>" / "<?php echo $facility_total[1] ?>" * 100);
+        $('.facility_progress1').css('width',facility_progress1+"%");
+        $('.facility_percent1').html(facility_progress1+"%");
+
+
         $(".facility_onboard2").html("<?php echo $facility_onboard[2] ?>");
         $(".facility_total2").html("<?php echo $facility_total[2] ?>");
-
-        var facility_progress1 = Math.round("<?php echo $facility_onboard[1] ?>" / "<?php echo $facility_total[1] ?>" * 100);
         var facility_progress2 = Math.round("<?php echo $facility_onboard[2] ?>" / "<?php echo $facility_total[2] ?>" * 100);
-
-
-        $('.facility_progress1').css('width',facility_progress1+"%");
         $('.facility_progress2').css('width',facility_progress2+"%");
+        $('.facility_percent2').html(facility_progress2+"%");
+
+        $(".government_hospital1").html("<?php echo $hospital_type[1]['government']; ?>");
+        $(".government_hospital_total1").html("<?php echo $hospital_type_total[1]['government']; ?>");
+        var government_hospital_progress1 = Math.round("<?php echo $hospital_type[1]['government'] ?>" / "<?php echo $hospital_type_total[1]['government'] ?>" * 100);
+        $('.government_hospital_progress1').css('width',government_hospital_progress1+"%");
+        $('.government_percent1').html(government_hospital_progress1+"%");
+
+
+        $(".government_hospital2").html("<?php echo $hospital_type[2]['government']; ?>");
+        $(".government_hospital_total2").html("<?php echo $hospital_type_total[2]['government']; ?>");
+        var government_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['government'] ?>" / "<?php echo $hospital_type_total[2]['government'] ?>" * 100);
+        $('.government_hospital_progress2').css('width',government_hospital_progress2+"%");
+        $('.government_percent2').html(government_hospital_progress2+"%");
+
+        $(".private_hospital1").html("<?php echo $hospital_type[1]['private']; ?>");
+        $(".private_hospital_total1").html("<?php echo $hospital_type_total[1]['private']; ?>");
+        var private_hospital_progress1 = Math.round("<?php echo $hospital_type[1]['private'] ?>" / "<?php echo $hospital_type_total[1]['private'] ?>" * 100);
+        $('.private_hospital_progress1').css('width',private_hospital_progress1+"%");
+        $('.private_percent1').html(private_hospital_progress1+"%");
+
+        $(".private_hospital2").html("<?php echo $hospital_type[2]['private']; ?>");
+        $(".private_hospital_total2").html("<?php echo $hospital_type_total[2]['private']; ?>");
+        var private_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['private'] ?>" / "<?php echo $hospital_type_total[2]['private'] ?>" * 100);
+        $('.private_hospital_progress2').css('width',private_hospital_progress2+"%");
+        $('.private_percent2').html(private_hospital_progress2+"%");
 
     </script>
 @endsection
