@@ -111,10 +111,6 @@
                                             <small>{{ date("F d,Y",strtotime($row->login_at)) }}</small><br>
                                             <i>(<small>{{ date("g:i a",strtotime($row->login_at)) }}</small>)</i>
                                         @endif
-                                        <br>
-                                        {{ $row->transaction }}
-                                        <br>
-                                        {{ $row->status }}
                                     </td>
                                     <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
                                 </tr>
