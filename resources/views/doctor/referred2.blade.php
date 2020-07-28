@@ -63,6 +63,7 @@ $user = Session::get('auth');
                         DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
                         DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
                         'users.contact',
+                        'fac_rejected.name as fac_rejected',
                         'referring_md as referring_md_id'
                     )
                     ->where('activity.code',$row->code)
@@ -80,6 +81,7 @@ $user = Session::get('auth');
                     })
                     ->leftJoin('users','users.id','=','activity.action_md')
                     ->leftJoin('users as u','u.id','=','activity.referring_md')
+                    ->leftJoin('facility as fac_rejected','fac_rejected.id','=','users.facility_id')
                     ->orderBy('id','desc')
                     ->get();
 
@@ -189,7 +191,7 @@ $user = Session::get('auth');
                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                             <td>
-                                                <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
+                                                <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                 <br />
                                                 @if($act->department_id==0 && $user->facility_id==$act->referred_from)
