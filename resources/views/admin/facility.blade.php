@@ -41,8 +41,11 @@
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Chief Hospital</th>
-                                    <th>Level</th>
-                                    <th>Type</th>
+                                    <th>
+                                        Service<br>
+                                        Capability
+                                    </th>
+                                    <th>Ownership</th>
                                     <th>Status</th>
                                 </tr>
                                 @foreach($data as $row)

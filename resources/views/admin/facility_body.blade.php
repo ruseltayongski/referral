@@ -73,10 +73,10 @@
         <input type="text" class="form-control" value="@if(isset($data->chief_hospital)){{ $data->chief_hospital }}@endif" name="chief_hospital" required>
     </div>
     <div class="form-group">
-        <label>Hospital Level:</label>
+        <label>Service Capability:</label>
         <select class="form-control" name="level" >
             @if(!isset($data->level))
-            <option value="">Select Hospital Level</option>
+            <option value="">Select Service Capability</option>
             @endif
             <option value="1"
                 <?php
@@ -141,10 +141,10 @@
         </select>
     </div>
     <div class="form-group">
-        <label>Hospital Type:</label>
+        <label>Ownership:</label>
         <select class="form-control" name="hospital_type">
             @if(!isset($data->hospital_type))
-            <option value="">Select Hospital Type</option>
+            <option value="">Select Ownership</option>
             @endif
             <option value="government"
                 <?php

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\Imports\ExcelImport;
 use App\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -315,16 +316,12 @@ class ExcelCtrl extends Controller
 
     public function importExcel(Request $request){
         if($request->isMethod('post')) {
-            $data = Excel::load($request->file('import_file'))->get();
-            if($data->count()){
-                foreach($data as $row){
-                    $facility = new Facility();
-                    $facility->name = $row->name.' - RHU';
-                    $facility->facility_code = $row->facility_code;
-                    $facility->province = $row->province;
-                    $facility->save();
-                }
+            $import = new ExcelImport();
+            Excel::import($import, request()->file('import_file'));
+            foreach($import->data as $row){
+                return $row;
             }
+
             return back()->with('success', 'Successfully import!');
         }
 
