@@ -15,12 +15,12 @@ class CreateInventoryLogs extends Migration
     {
         Schema::create('inventory_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('facility_id')->nullabe();
-            $table->integer('encoded_by')->nullabe();
-            $table->integer('inventory_id')->nullabe();
-            $table->integer('capacity')->nullabe();
-            $table->integer('occupied')->nullabe();
-            $table->integer('available')->nullabe();
+            $table->integer('facility_id')->nullable();
+            $table->integer('encoded_by')->nullable();
+            $table->integer('inventory_id')->nullable();
+            $table->integer('capacity')->nullable();
+            $table->integer('occupied')->nullable();
+            $table->integer('available')->nullable();
             $table->time('time_created');
             $table->timestamps();
         });
