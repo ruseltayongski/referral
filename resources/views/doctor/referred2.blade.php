@@ -457,6 +457,13 @@ $user = Session::get('auth');
             "startDate": "{{ $start }}",
             "endDate": "{{ $end }}"
         });
+
+        function clearFieldsSidebar(){
+            $("#keyword").val("");
+            $("#facility").select2("val", "");
+            $("#department").val("");
+            $("#option").val("");
+        }
     </script>
 @endsection
 

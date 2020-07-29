@@ -20,13 +20,13 @@
         <form method="post" action="{{ url('doctor/referred/search') }}">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="keyword" value="{{ Session::get('referredKeyword') }}" class="form-control" placeholder="Code, Firstname, Lastname" />
+                <input type="text" name="keyword" id="keyword" value="{{ Session::get('referredKeyword') }}" class="form-control" placeholder="Code, Firstname, Lastname" />
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="form-control select2" name="facility">
+                <select class="form-control select2" name="facility" id="facility">
                     <option value="">All Facility</option>
                     @foreach($fac as $f)
                         <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
@@ -34,7 +34,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control" name="department">
+                <select class="form-control" name="department" id="department">
                     <option value="">All Department</option>
                     @foreach($dept as $d)
                         <option {{ ($department==$d->id) ? 'selected': '' }} value="{{ $d->id }}">{{ $d->description }}</option>
@@ -42,7 +42,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <select name="type" class="form-control">
+                <select name="type" class="form-control" id="option">
                     <option value="">All Transaction</option>
                     <option @if($select=='referred') selected @endif value="referred">Referred</option>
                     <option @if($select=='seen') selected @endif value="seen">Seen</option>
@@ -53,9 +53,12 @@
                     <option @if($select=='cancelled') selected @endif value="cancelled">Cancelled</option>
                 </select>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default btn-block">
-                    <i class="fa fa-search"></i> Search
+            <div class="btn-group">
+                <button type="button" class="btn btn-flat btn-danger" onclick="clearFieldsSidebar()">
+                    <i class="fa fa-eraser"></i> Clear
+                </button>
+                <button type="submit" class="btn btn-flat btn-success">
+                    <i class="fa fa-filter"></i> Filter Result
                 </button>
             </div>
         </form>
