@@ -98,16 +98,9 @@ class ReferralCtrl extends Controller
                     $q->where('tracking.status','referred')
                         ->orwhere('tracking.status','seen');
                 });
-            }else{
+            }elseif($option=='accepted'){
                 $data = $data->where(function($q){
-                    $q->where('tracking.status','accepted')
-                        ->orwhere('tracking.status','arrived')
-                        ->orwhere('tracking.status','admitted')
-                        ->orwhere('tracking.status','discharged')
-                        ->orwhere('tracking.status','transferred')
-                        ->orwhere('tracking.status','rejected')
-                        ->orwhere('tracking.status','archived')
-                        ->orwhere('tracking.status','cancelled');
+                    $q->where('tracking.status','accepted');
                 });
             }
         }else{
