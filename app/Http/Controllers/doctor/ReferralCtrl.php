@@ -371,6 +371,7 @@ class ReferralCtrl extends Controller
         Session::put('referredSelect',$type);
         Session::put('referred_date',$req->date);
         Session::put('referred_facility',$req->facility);
+        Session::put('referred_department',$req->department);
         return redirect('doctor/referred');
     }
 
@@ -380,6 +381,7 @@ class ReferralCtrl extends Controller
         $type = Session::get('referredSelect');
         $date = Session::get('referred_date');
         $facility = Session::get('referred_facility');
+        $department = Session::get('referred_department');
 
 
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
@@ -425,11 +427,15 @@ class ReferralCtrl extends Controller
         if($type){
             $data = $data->where('tracking.status',$type);
         }
-
         if($facility)
         {
             $data = $data->where('tracking.referred_to',$facility);
         }
+        if($facility)
+        {
+            $data = $data->where('tracking.department_id',$department);
+        }
+
 
         if($date)
         {

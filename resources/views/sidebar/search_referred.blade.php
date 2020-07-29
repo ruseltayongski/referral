@@ -1,11 +1,13 @@
 <?php
-    $select = \Illuminate\Support\Facades\Session::get('referredSelect');
+    $select = Session::get('referredSelect');
     $fac = \App\Facility::where('id','<>',$user->facility_id)
                 ->where('status',1)
                 ->select('facility.id','facility.name')
                 ->orderBy('name','asc')
                 ->get();
     $facility = Session::get('referred_facility');
+    $department = Session::get('referred_department');
+    $dept = \App\Department::get();
 ?>
 <div class="panel panel-jim">
     <div class="panel-heading">
@@ -32,8 +34,16 @@
                 </select>
             </div>
             <div class="form-group">
+                <select class="form-control" name="department">
+                    <option value="">All Department</option>
+                    @foreach($dept as $d)
+                        <option {{ ($department==$d->id) ? 'selected': '' }} value="{{ $d->id }}">{{ $d->description }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <select name="type" class="form-control">
-                    <option value="">All</option>
+                    <option value="">All Transaction</option>
                     <option @if($select=='referred') selected @endif value="referred">Referred</option>
                     <option @if($select=='seen') selected @endif value="seen">Seen</option>
                     <option @if($select=='accepted') selected @endif value="accepted">Accepted</option>
