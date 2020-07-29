@@ -34,7 +34,8 @@ class ReferralCtrl extends Controller
             'keyword' => $req->keyword,
             'option' => $req->option,
             'date' => $req->date,
-            'department' => $req->department
+            'department' => $req->department,
+            'facility' => $req->facility
         );
         Session::put('search_referral',$data);
         return self::index();
@@ -77,6 +78,12 @@ class ReferralCtrl extends Controller
         {
             $dept = $search['department'];
             $data = $data->where('tracking.department_id',$dept);
+        }
+
+        if($search['facility'])
+        {
+            $fac = $search['facility'];
+            $data = $data->where('tracking.referred_from',$fac);
         }
 
         if($search['date'])
