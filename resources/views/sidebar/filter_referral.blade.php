@@ -23,13 +23,13 @@
         <form action="{{ url('doctor/referral/') }}" method="POST">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $search_referral['keyword'] }}" name="keyword"/>
+                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $search_referral['keyword'] }}" id="keyword" name="keyword"/>
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="form-control select2" name="facility">
+                <select class="form-control select2" name="facility" id="facility">
                     <option value="">All Facility</option>
                     @foreach($fac as $f)
                         <option {{ ($search_referral['facility']==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
@@ -37,7 +37,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control" name="department">
+                <select class="form-control" name="department" id="department">
                     <option value="">All Department</option>
                     @foreach($dept as $d)
                         <option {{ ($search_referral['department']==$d->id) ? 'selected': '' }} value="{{ $d->id }}">{{ $d->description }}</option>
@@ -45,14 +45,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control" name="option">
+                <select class="form-control" name="option" id="option">
                     <option value="">Select All</option>
                     <option {{ ($search_referral['option']=='referred') ? 'selected': '' }} value="referred">New Referral</option>
                     <option {{ ($search_referral['option']=='accepted') ? 'selected': '' }} value="accepted">Accepted</option>
                 </select>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-block btn-flat btn-success">
+            <div class="btn-group">
+                <button type="button" class="btn btn-flat btn-danger" onclick="clearFieldsSidebar()">
+                    <i class="fa fa-eraser"></i> Clear
+                </button>
+                <button type="submit" class="btn btn-flat btn-success">
                     <i class="fa fa-filter"></i> Filter Result
                 </button>
             </div>

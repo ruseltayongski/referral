@@ -174,6 +174,14 @@ $user = Session::get('auth');
 
     <script>
         $('.select2').select2();
+
+        function clearFieldsSidebar(){
+            $("#keyword").val("");
+            $("#facility").select2("val", "");
+            $("#department").val("");
+            $("#option").val("");
+        }
+
         $('#daterange').daterangepicker({
             "singleDatePicker": false,
             "startDate": "{{ $start }}",
