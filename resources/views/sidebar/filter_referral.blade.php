@@ -1,5 +1,10 @@
 <?php
     $user = \Illuminate\Support\Facades\Session::get("auth");
+    $fac = \App\Facility::where('id','<>',$user->facility_id)
+        ->where('status',1)
+        ->select('facility.id','facility.name')
+        ->orderBy('name','asc')
+        ->get();
     $dept = \App\Department::leftJoin('users','users.department_id','=','department.id')
                 ->select('department.*')
                 ->where('users.department_id','<>','')
@@ -22,6 +27,14 @@
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <select class="form-control select2" name="facility">
+                    <option value="">All Facility</option>
+                    @foreach($fac as $f)
+                        <option {{ ($search_referral['facility']==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <select class="form-control" name="department">

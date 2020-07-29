@@ -173,6 +173,7 @@ $user = Session::get('auth');
     @include('script.feedback')
 
     <script>
+        $('.select2').select2();
         $('#daterange').daterangepicker({
             "singleDatePicker": false,
             "startDate": "{{ $start }}",
