@@ -21,6 +21,7 @@
         </div>
     </form>
     <?php
+        $user = Session::get('auth');
         $date_start = $date_range_start;
         $date_end = $date_range_end;
         $accepted_incoming = [];
@@ -134,9 +135,17 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p >
                                         <?php
+                                            if($user->facility_id == $row->id){
+                                                $viewed_only_href = asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to';
+                                                $viewed_only_target = "_target";
+                                            } else {
+                                                $viewed_only_href = '#';
+                                                $viewed_only_target = "";
+                                            }
+
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to'.'" target="_blank"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
+                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
                                         ?>
                                     </p>
 
@@ -347,16 +356,23 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p>
                                         <?php
+                                            if($user->facility_id == $row->id){
+                                                $viewed_only_href = asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to';
+                                                $viewed_only_target = "_target";
+                                            } else {
+                                                $viewed_only_href = '#';
+                                                $viewed_only_target = "";
+                                            }
                                             echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
-                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_from'.'" target="_blank"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
+                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
                                     <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
                                     <p>
-                                        <span class="label label-primary">Viewd Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
+                                        <span class="label label-primary">Viewed Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <span class="label label-primary">Viewed Only Redirection<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
                                         <?php
                                             $turnaround_time_accept_outgoing1[$facility_id] = $outgoing;
