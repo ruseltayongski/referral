@@ -136,25 +136,25 @@
                                         <?php
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to'.'" target="_blank"><span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
+                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to'.'" target="_blank"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
                                         ?>
                                     </p>
 
                                     <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
                                     <p>
                                         <?php
-                                            $turnaround_time_accept_incoming[$facility_id] = $row->turnaround_time_accept;
-                                            $turnaround_time_arrived_incoming[$facility_id] = $row->turnaround_time_arrived;
+                                            $turnaround_time_accept_incoming[$facility_id] = "UNDER DEVELOPMENT";
+                                            $turnaround_time_arrived_incoming[$facility_id] = "UNDER DEVELOPMENT";
                                         ?>
                                         @if($accepted)
                                             <?php $turnaround_time_accept_incoming[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_accept.' mins</span>'; ?></span>
+                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> UNDER DEVELOPMENT</span>'; ?></span>
                                         @endif
                                         @if($accepted)
                                             <?php $turnaround_time_arrived_incoming[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Arrival <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.$row->turnaround_time_arrived.'mins</span>'; ?></span>
+                                            <span class="label label-primary">Arrival <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> UNDER DEVELOPMENT</span>'; ?></span>
                                         @endif
-                                    </p><br><br>
+                                    </p><br><br><br>
 
                                     <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
                                     <p>
@@ -349,7 +349,7 @@
                                         <?php
                                             echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
-                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_from'.'" target="_blank"><span class="label label-warning">Viewed Only <span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
+                                            echo '<a href="'.asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_from'.'" target="_blank"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
                                         ?>

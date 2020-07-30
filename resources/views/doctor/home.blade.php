@@ -43,6 +43,18 @@
                     @endif
                     @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
                         <div class="alert alert-info">
+                            <span class="text-info" style="font-size:1.1em;">
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 3.1</strong><br>
+                                <ol>
+                                    <li>
+                                        REPORT MENU <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                    </li>
+                                </ol>
+                            </span>
+                        </div>
+                    @endif
+                    @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
+                        <div class="alert alert-info">
                             <blockquote class="text-info" style="font-size:1.1em;">
                                 <strong  style="font-size: 15pt;">ANNOUNCEMENT</strong>
                                 <br><br>

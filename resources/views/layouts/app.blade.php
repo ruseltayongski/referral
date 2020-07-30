@@ -142,7 +142,20 @@
                             <li><a href="{{ url('doctor/report/outgoing') }}"><i class="fa fa-sign-out"></i> Outgoing Referral Report</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory <span class="badge bg-red"> New</span></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="badge bg-red"> New</span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Online Users</a></li>
+                            <li><a href="{{ url('online/facility') }}"><i class="fa fa-hospital-o"></i>Online Facility</a></li>
+                            <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
+                            <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
+                            <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated Report</a></li>
+                            <!--
+                            <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
+                            -->
+                        </ul>
+                    </li>
+                    <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
                     @elseif($user->level=='support')
                     <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
@@ -287,7 +300,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 3.0</p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 3.1</p>
     </div>
 </footer>
 
