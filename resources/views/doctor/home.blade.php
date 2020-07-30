@@ -42,7 +42,7 @@
                         </div>
                     @endif
                     @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
-                        <div class="alert alert-info">
+                        <div class="">
                             <span class="text-info" style="font-size:1.1em;">
                                 <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 3.1</strong><br>
                                 <ol>
@@ -54,10 +54,9 @@
                         </div>
                     @endif
                     @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
-                        <div class="alert alert-info">
-                            <blockquote class="text-info" style="font-size:1.1em;">
-                                <strong  style="font-size: 15pt;">ANNOUNCEMENT</strong>
-                                <br><br>
+                        <br><div class="text-info">
+                            <strong >ANNOUNCEMENT</strong>
+                            <blockquote style="font-size:1.1em;">
                                 Good day everyone!
                                 <br><br>
                                 Please be informed that there will be a new URL/Link for the E-Referral from 203.177.67.126/doh/referral to 124.6.144.166/doh/referral
@@ -104,7 +103,7 @@
                             </span>
                         </div>
                     @endif
-                    <div class="alert alert-success ">
+                    <div class="">
                         <p class="text-success">
                             <i class="fa fa-phone-square"></i> For further assistance, please message these following:
                         <ol type="I" style="color: #2f8030">
