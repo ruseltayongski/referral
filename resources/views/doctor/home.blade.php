@@ -43,48 +43,20 @@
                     @endif
                     @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
                         <div class="alert alert-info">
-                            <p class="text-info" style="font-size:1.1em;">
-                                <strong><i class="fa fa-info"></i> Version 3.0 was successfully launch</strong><br>
-                                <ol type="I" style="color: #31708f;">
-                                    <li>Beta test for inventory modules</li>
-                                    <!--
-                                    <li>Other Salient Feactures(Recommended & Suggestion as of June 27,2019)</li>
-                                    <ol type="A">
-                                        <li >Name of Referred MD/HCW</li>
-                                        <ul>
-                                            <li>Instead of browsing (Scrolling up and down) in searching the referred MD / HCW, you can now search the name of the referred MD in the search bar.</li>
-                                        </ul>
-                                        <li >Feedback</li>
-                                        <ul>
-                                            <li>Changed the label from “Feedback” to “ReCo”</li>
-                                        </ul>
-                                        <li >Added Issues and Concern</li>
-                                        <ul>
-                                            <li>Added an optional “Issues and Concern” form, right after referring the patient to a specific MD / HCW</li>
-                                        </ul>
-                                        <li >Added Date and Time Transferred</li>
-                                        <ul>
-                                            <li>Added a “Travel button”, An event where a patient is already dispatched from hospital to another facility, and then timestamped with accurate Time and Date.</li>
-                                        </ul>
-                                        <li >Added Referral Logbook Matrix from the Referral Manual</li>
-                                        <ul>
-                                            <li>Department of Health Region – 7 Monitoring team can now have an overview of the incoming and outgoing patients.</li>
-                                        </ul>
-                                    </ol>
-                                    <li>Vicente Sotto Memorial Medical Center Concern:</li>
-                                    <ol type="A">
-                                        <li >Chat & Feedback</li>
-                                        <ul>
-                                            <li>Fixed bugs in "can't display after sending the message"</li>
-                                        </ul>
-                                        <li >Disposition</li>
-                                        <ul>
-                                            <li>Fixed the "accepted and redirected patients" that labeled ACCEPTED only</li>
-                                        </ul>
-                                    </ol>
-                                    -->
-                                </ol>
-                            </p>
+                            <blockquote class="text-info" style="font-size:1.1em;">
+                                <strong  style="font-size: 15pt;">ANNOUNCEMENT</strong>
+                                <br><br>
+                                Good day everyone!
+                                <br><br>
+                                Please be informed that there will be a new URL/Link for the E-Referral from 203.177.67.126/doh/referral to 124.6.144.166/doh/referral
+                                <br><br>
+                                The said new URL/Link will be accessible on AUGUST 2, 2020 at 3PM.
+                                And there will be a downtime on AUGUST 2, 2020 at 1PM to 3PM for the configuration of our new URL/Link.
+                                <br><br>
+                                Please be guided accordingly.
+                                <br><br>
+                                Thank you very much and keep safe.
+                            </blockquote>
                         </div>
                     @endif
                     @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')

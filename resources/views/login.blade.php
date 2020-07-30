@@ -84,22 +84,22 @@ $dateNow = date('Y-m-d');
                             </span>
                         </div>
                     @endif
-                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
+                    @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
                         <div >
-                            <span class="text-warning" style="font-size:1.1em;">
-                                <strong><i class="fa fa-plus"></i> Network server was successfully upgrade</strong><br>
-                                <!--
-                                <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
-                                    <li>
-                                        new URL addresses will be the following:
-                                    </li>
-                                    <ol>
-                                        <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
-                                        <li><span class="badge bg-maroon">http://203.177.67.125/doh/referral/login</span></li>
-                                    </ol>
-                                </ol>
-                                -->
-                            </span>
+                            <blockquote class="text-info" style="font-size:1.1em;">
+                                <b style="font-size: 15pt;">ANNOUNCEMENT</b>
+                                <br><br>
+                                Good day everyone!
+                                <br><br>
+                                Please be informed that there will be a new URL/Link for the E-Referral from 203.177.67.126/doh/referral to 124.6.144.166/doh/referral
+                                <br><br>
+                                The said new URL/Link will be accessible on AUGUST 2, 2020 at 3PM.
+                                And there will be a downtime on AUGUST 2, 2020 at 1PM to 3PM for the configuration of our new URL/Link.
+                                <br><br>
+                                Please be guided accordingly.
+                                <br><br>
+                                Thank you very much and keep safe.
+                            </blockquote>
                         </div>
                     @endif
                     <h3 style="font-weight: bold" class="text-success">Contact Person:</h3>
