@@ -145,7 +145,7 @@
 
                                             echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
+                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Not Accepted <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
                                         ?>
                                     </p>
 
@@ -365,7 +365,7 @@
                                             }
                                             echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
-                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Viewed Only <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
+                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Not Accepted <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
                                         ?>
