@@ -18,6 +18,13 @@ use Illuminate\Support\Facades\Session;
 
 class PatientCtrl extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        //$this->middleware('admin');
+        $this->middleware('doctor');
+    }
+
     public function incomingDateRange(Request $request)
     {
         $date_from = date("Y-m-d",strtotime(explode('-', $request->date_range)[0]));
@@ -26,6 +33,7 @@ class PatientCtrl extends Controller
         return \DB::connection('mysql')->select("call mergeTable($date_from,$date_end)");
 
     }
+
     public function incoming()
     {
         $incomingData = \DB::connection('mysql')->select("call incomingMonitorPatient()");
