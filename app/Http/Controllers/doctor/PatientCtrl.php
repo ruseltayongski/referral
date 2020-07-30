@@ -39,7 +39,8 @@ class PatientCtrl extends Controller
             'keyword' => $req->keyword,
             'brgy' => $req->brgy,
             'muncity' => $req->muncity,
-            'others' => $req->others
+            'others' => $req->others,
+            'source' => $req->source
         );
         Session::put('profileSearch',$data);
         return self::index();
@@ -48,7 +49,7 @@ class PatientCtrl extends Controller
     public function index()
     {
         ParamCtrl::lastLogin();
-        $source='referral';
+
         $user = Session::get('auth');
         $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
 
@@ -65,9 +66,12 @@ class PatientCtrl extends Controller
             $others = $session['others'];
         }
 
+        $source='referral';
+
         $data = array();
 
-        if(!empty($keyword) || !empty($mun) || !empty($brgy) || !empty($others)){
+        if(!empty($keyword) || !empty($mun) || !empty($brgy) || !empty($others))
+        {
             $data = Patients::orderBy('lname','asc');
             if(!empty($brgy)){
                 $data = $data->where('brgy',$brgy);
@@ -87,6 +91,7 @@ class PatientCtrl extends Controller
 
             $data = $data->paginate(20);
         }
+
 
         //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
@@ -144,11 +149,11 @@ class PatientCtrl extends Controller
             'keyword' => $req->fname.' '.$req->lname,
             'brgy' => $req->brgy,
             'muncity' => $req->muncity,
-            'others' => ''
+            'others' => '',
+            'source' => 'referral'
         );
         Session::put('profileSearch',$data);
         return redirect('doctor/patient');
-        //return redirect()->back()->with('status','added');
     }
 
     public function updatePatient(Request $request){
@@ -324,7 +329,7 @@ class PatientCtrl extends Controller
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
         $code = date('ymd').'-'.$user_code.'-'.date('His');
         $tracking_id = 0;
-        if($req->source==='tsekap')
+        if($req->source == 'tsekap')
         {
             $patient_id = self::importTsekap($req->patient_id,$req->patient_status,$req->phic_id,$req->phic_status);
         }
