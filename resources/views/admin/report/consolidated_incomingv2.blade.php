@@ -357,7 +357,7 @@
                                     <p>
                                         <?php
                                             if($user->facility_id == $row->id){
-                                                $viewed_only_href = asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to';
+                                                $viewed_only_href = asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_from';
                                                 $viewed_only_target = "_target";
                                             } else {
                                                 $viewed_only_href = '#';
