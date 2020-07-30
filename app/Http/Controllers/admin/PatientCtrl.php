@@ -112,7 +112,6 @@ class PatientCtrl extends Controller
                     ->orwhere('tracking.status','cancelled')
                     ->orwhere('tracking.status','rejected')
                     ->orwhere('tracking.status','seen')
-                    ->orwhere('tracking.status','transferred')
                     ->orwhere('tracking.status','archived');
             })
             ->orderBy('tracking.date_referred','desc')
