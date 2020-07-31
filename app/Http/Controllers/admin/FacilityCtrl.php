@@ -14,7 +14,7 @@ class FacilityCtrl extends Controller
     {
         $this->middleware('auth');
         //$this->middleware('admin');
-        $this->middleware('doctor');
+        //$this->middleware('doctor');
     }
 
 
