@@ -86,15 +86,6 @@
             <?php Session::put("opcen",false); ?>
         @endif
 
-        var urlParams = new URLSearchParams(window.location.search);
-        var query_string = urlParams.get('search') ? urlParams.get('search') : '';
-        $(".pagination").children().each(function(index){
-            var _href = $($(this).children().get(0)).attr('href');
-            $($(this).children().get(0)).attr('href',_href+'&search='+query_string);
-        });
-
-        var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
-        var loading = '<center><img src="'+path_gif+'" alt=""></center>';
         function newCall($call_classification){
             $(".call_classification").html(loading);
             var url = "<?php echo asset('opcen/new_call'); ?>";
@@ -246,10 +237,7 @@
                     }));
             }
         }
-        function refreshPage(){
-            $('.loading').show();
-            window.location.replace("<?php echo asset('opcen/client') ?>");
-        }
+
     </script>
 @endsection
 

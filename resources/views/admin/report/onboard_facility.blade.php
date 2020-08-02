@@ -43,8 +43,18 @@
 
                                 $hospital_type[1]['government'] = 0;
                                 $hospital_type_total[1]['government'] = 0;
+                                $government_transaction[1]['with_transaction'] = 0;
+                                $government_transaction[1]['no_transaction'] = 0;
+
                                 $hospital_type_hospital[2]['government'] = 0;
                                 $hospital_type_total[2]['government'] = 0;
+                                $government_transaction[2]['with_transaction'] = 0;
+                                $government_transaction[2]['no_transaction'] = 0;
+
+                                $private_transaction[1]['with_transaction'] = 0;
+                                $private_transaction[1]['no_transaction'] = 0;
+                                $private_transaction[2]['with_transaction'] = 0;
+                                $private_transaction[2]['no_transaction'] = 0;
 
                                 $province = [];
                             ?>
@@ -57,8 +67,18 @@
                                         $hospital_type[$row->province_id][$row->hospital_type]++;
                                         if($row->transaction == 'transaction'){
                                             $facility_transaction[$row->province_id]['with_transaction']++;
+                                            if($row->hospital_type == 'government'){
+                                                $government_transaction[$row->province_id]['with_transaction']++;
+                                            }elseif($row->hospital_type == 'private'){
+                                                $private_transaction[$row->province_id]['with_transaction']++;
+                                            }
                                         } else {
                                             $facility_transaction[$row->province_id]['no_transaction']++;
+                                            if($row->hospital_type == 'government'){
+                                                $government_transaction[$row->province_id]['no_transaction']++;
+                                            }elseif($row->hospital_type == 'private'){
+                                                $private_transaction[$row->province_id]['no_transaction']++;
+                                            }
                                         }
                                     }
 
@@ -71,7 +91,7 @@
                                         <td colspan="7">
                                             <div class="form-group">
                                                 <b style="color: #ff298e;font-size: 17pt;">{{ $row->province }}</b><br>
-                                                <div id="chartContainer{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
+                                                <div id="chartOverall{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
                                                 <strong class="text-green">Overall - </strong>
                                                 <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'facility_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red facility_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm">
@@ -79,7 +99,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <strong class="text-green">Government Hospital - </strong>
+                                                <div id="chartGovernment{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
+                                                <strong class="text-green">Government Hospital - {{ $hospital_type[$row->province][$row->hospital_type] }}</strong>
                                                 <span class="progress-number"><b class="{{ 'government_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'government_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red government_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm" >
                                                     <div class="progress-bar progress-bar-striped government_hospital_progress{{ $row->province_id }}" ></div>
@@ -137,13 +158,20 @@
 @section('js')
     <script type="text/javascript">
         window.onload = function() {
+            CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+                    "#6762ff",
+                    "#ff686b"
+                ]);
+
             var with_transaction1 = Math.round("<?php echo $facility_transaction[1]['with_transaction']; ?>" / "<?php echo $facility_onboard[1]; ?>" * 100);
             var no_transaction1 = Math.round("<?php echo $facility_transaction[1]['no_transaction']; ?>" / "<?php echo $facility_onboard[1]; ?>" * 100);
             var options1 = {
+                colorSet: "greenShades",
                 exportEnabled: true,
                 animationEnabled: true,
                 title: {
-                    text: ""
+                    text: "Overall"
                 },
                 data: [{
                     type: "pie",
@@ -158,16 +186,17 @@
                     ]
                 }]
             };
-            $("#chartContainer1").CanvasJSChart(options1);
+            $("#chartOverall1").CanvasJSChart(options1);
 
 
             var with_transaction2 = Math.round("<?php echo $facility_transaction[2]['with_transaction']; ?>" / "<?php echo $facility_onboard[2]; ?>" * 100);
             var no_transaction2 = Math.round("<?php echo $facility_transaction[2]['no_transaction']; ?>" / "<?php echo $facility_onboard[2]; ?>" * 100);
             var options2 = {
+                colorSet: "greenShades",
                 exportEnabled: true,
                 animationEnabled: true,
                 title: {
-                    text: ""
+                    text: "Overall"
                 },
                 data: [{
                     type: "pie",
@@ -182,7 +211,60 @@
                     ]
                 }]
             };
-            $("#chartContainer2").CanvasJSChart(options2);
+            $("#chartOverall2").CanvasJSChart(options2);
+
+
+            @if($hospital_type[1]['government'] != 0)
+            var government_with_transaction1 = Math.round("<?php echo $government_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['government']; ?>" * 100);
+            var government_no_transaction1 = Math.round("<?php echo $government_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['government']; ?>" * 100);
+            var government_options1 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Government"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+government_with_transaction1+"% in "+"<?php echo $government_transaction[1]['with_transaction']; ?> out of <?php echo $hospital_type[1]['government']; ?>",legendText : "With Transaction", y: government_with_transaction1 },
+                        { label: "No Transaction in "+government_no_transaction1+"% in "+"<?php echo $government_transaction[1]['no_transaction']; ?> out of <?php echo $hospital_type[1]['government'] ?>",legendText : "No Transaction", y: government_no_transaction1 }
+                    ]
+                }]
+            };
+            $("#chartGovernment1").CanvasJSChart(government_options1);
+            @endif
+
+            @if($hospital_type[2]['government'] != 0)
+            var government_with_transaction2 = Math.round("<?php echo $government_transaction[2]['with_transaction']; ?>" / "<?php echo $hospital_type[2]['government']; ?>" * 100);
+            var government_no_transaction2 = Math.round("<?php echo $government_transaction[2]['no_transaction']; ?>" / "<?php echo $hospital_type[2]['government']; ?>" * 100);
+            var government_options2 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Government"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+government_with_transaction2+"% in "+"<?php echo $government_transaction[2]['with_transaction']; ?> out of <?php echo $hospital_type[2]['government']; ?>",legendText : "With Transaction", y: government_with_transaction2 },
+                        { label: "No Transaction in "+government_no_transaction2+"% in "+"<?php echo $government_transaction[2]['no_transaction']; ?> out of <?php echo $hospital_type[2]['government'] ?>",legendText : "No Transaction", y: government_no_transaction2 }
+                    ]
+                }]
+            };
+            $("#chartGovernment2").CanvasJSChart(government_options2);
+            @endif
 
         }
     </script>
