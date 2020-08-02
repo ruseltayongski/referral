@@ -129,17 +129,16 @@
         }
 
         @if(Session::get('facility'))
-
-        Lobibox.notify('success', {
-            title: "",
-            msg: "<?php echo Session::get("facility_message"); ?>",
-            size: 'mini',
-            rounded: true
-        });
-        <?php
-            Session::put("facility",false);
-            Session::put("facility_message",false)
-        ?>
+            Lobibox.notify('success', {
+                title: "",
+                msg: "<?php echo Session::get("facility_message"); ?>",
+                size: 'mini',
+                rounded: true
+            });
+            <?php
+                Session::put("facility",false);
+                Session::put("facility_message",false)
+            ?>
         @endif
     </script>
 @endsection

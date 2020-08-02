@@ -1,18 +1,18 @@
 <?php $user = Session::get('auth'); ?>
 <script>
-    var proceed,user_id,user_info;
-    $('#addUserForm').on('submit',function(e){
+    var proceed;
+    $('#user_form').on('submit',function(e){
         proceed = 0;
         e.preventDefault();
         $('.loading').show();
         var string = $('.username_1').val();
+        var user_id = $(".user_id").val();
         var link = "{{ url('admin/users/check_username') }}/"+string;
-        console.log(link);
         $.ajax({
             url: link,
             type: "GET",
             success: function(data){
-                if(data==1){
+                if(data==1 && user_id == "no_id"){
                     $('.username-has-error').removeClass('hide');
                 }else{
                     $('.username-has-error').addClass('hide');
@@ -33,7 +33,7 @@
                 }
 
                 if(proceed==2){
-                    $('#addUserForm').ajaxSubmit({
+                    $('#user_form').ajaxSubmit({
                         url:  "{{ url('admin/users/store') }}",
                         type: "POST",
                         success: function(data){
@@ -51,75 +51,20 @@
                 }
             }
         });
-
-
-    });
-
-    $('#updateUserForm').on('submit',function(e){
-        proceed = 0;
-        e.preventDefault();
-        $('.loading').show();
-        var string = $('.username').val();
-        $.ajax({
-            url: "{{ url('admin/users/check_username/update/') }}/"+string+"/"+user_id,
-            type: "GET",
-            success: function(data){
-                if(data==1){
-                    $('.username-has-error').removeClass('hide');
-                }else{
-                    $('.username-has-error').addClass('hide');
-                    proceed += 1;
-                }
-
-
-                var password1 = $('.password_1').val();
-                var password2 = $('.password_2').val();
-
-                if(password1==password2){
-                    proceed += 1;
-                    $('.password-has-error').addClass('hide');
-                    $('.password-has-match').removeClass('hide');
-                }else{
-                    $('.password-has-error').removeClass('hide');
-                    $('.password-has-match').addClass('hide');
-                }
-
-                if(proceed==2){
-                    $('#updateUserForm').ajaxSubmit({
-                        url:  "{{ url('admin/users/update') }}",
-                        type: "POST",
-                        success: function(data){
-                            setTimeout(function(){
-                                window.location.reload(false);
-                            },500);
-                        },
-                        error: function(){
-                            $('#serverModal').modal();
-                        }
-                    });
-                }else{
-                    console.log('dont submit');
-                    $('.loading').hide();
-                }
-                console.log(proceed);
-            }
-        });
-    });
-
-    $('a[href="#addUserModal"]').on('click',function(){
-        $('.btn-add').removeClass('hide');
-        $('.btn-update').addClass('hide');
     });
 
     $('.update_info').on('click',function(){
-        user_id = $(this).data('id');
+        $(".users_body").html(loading);
+
+        var user_id = $(this).data('id');
         $.ajax({
             url: "{{ url('admin/users/info') }}/"+user_id,
             type: "GET",
             success: function(data)
             {
-                user_info = data;
-                updateProfile();
+                setTimeout(function(){
+                    $(".users_body").html(data);
+                },700);
             },
             error: function(){
                 $('#serverModal').modal();
@@ -127,16 +72,23 @@
         });
     });
 
-    function updateProfile() {
-        $('.user_id').val(user_id);
-        $('.fname').val(user_info.fname);
-        $('.mname').val(user_info.mname);
-        $('.lname').val(user_info.lname);
-        $('.contact').val(user_info.contact);
-        $('.email').val(user_info.email);
-        $('.designation').val(user_info.designation);
-        $('.facility_id').val(user_info.facility_id);
-        $('.username').val(user_info.username);
-        $('.status').val(user_info.status);
-    }
+    $('.add_info').on('click',function(){
+        $(".users_body").html(loading);
+
+        var user_id = $(this).data('id');
+        $.ajax({
+            url: "{{ url('admin/users/info') }}/"+user_id,
+            type: "GET",
+            success: function(data)
+            {
+                setTimeout(function(){
+                    $(".users_body").html(data);
+                },700);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
 </script>

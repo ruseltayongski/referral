@@ -19,10 +19,10 @@ class UserCtrl extends Controller
 
     public function index(Request $request)
     {
-        $keyword = $request->keyword;
-        if($request->isMethod('post')){
-            $data = User::
-                where('level','support')
+        $keyword = $request->search;
+        $data = new User();
+        if($keyword){
+            $data = $data
                 ->where(function($q) use($keyword){
                 $q->where('fname','like',"%$keyword%")
                     ->orwhere('mname','like',"%$keyword%")
@@ -30,19 +30,23 @@ class UserCtrl extends Controller
                     ->orwhere(\DB::raw('concat(fname," ",lname)'),'like',"$keyword")
                     ->orwhere(\DB::raw('concat(lname," ",fname)'),'like',"$keyword");
             });
-        } else {
-            $data = User::where('level','support');
         }
 
-        $data = $data->orderBy('lname','asc')
+        $data = $data
+                ->where(function($q){
+                    $q->where("level",'support')
+                        ->orWhere("level","opcen");
+                    })
+                ->orderBy('lname','asc')
                 ->paginate(10);
 
         $facility = Facility::orderBy('name','asc')->get();
+
         return view('admin.users',[
             'title' => 'List of Support User',
             'data' => $data,
             'facility' => $facility,
-            'keyword_value' => $keyword
+            'search' => $keyword
         ]);
     }
 
@@ -71,8 +75,15 @@ class UserCtrl extends Controller
 
     public function info($user_id)
     {
-        return User::find($user_id);
+        $user = User::find($user_id);
+        $facility = Facility::get();
+        return view('admin.users_body',[
+            "user" => $user,
+            "facility" => $facility,
+            "user_id" => $user_id
+        ]);
     }
+
     public function check($string)
     {
         $user = Session::get('auth');
@@ -87,15 +98,12 @@ class UserCtrl extends Controller
 
     public function store(Request $req)
     {
-        $user = Session::get('auth');
-        $match = array(
-            'fname' => $req->fname,
-            'mname' => $req->mname,
-            'lname' => $req->lname
-        );
         $facility = Facility::find($req->facility_id);
         $data = array(
-            'level' => 'support',
+            'fname' => $req->fname,
+            'mname' => $req->mname,
+            'lname' => $req->lname,
+            'level' => $req->level,
             'facility_id' => $req->facility_id,
             'status' => 'active',
             'contact' => $req->contact,
@@ -106,49 +114,14 @@ class UserCtrl extends Controller
             'muncity' => $facility->muncity,
             'province' => $facility->province
         );
-        User::updateOrCreate($match,$data);
-        return 'added';
-    }
-
-    public function update(Request $req)
-    {
-        $facility = Facility::find($req->facility_id);
-        $data = array(
-            'fname' => $req->fname,
-            'mname' => $req->mname,
-            'lname' => $req->lname,
-            'level' => 'support',
-            'contact' => $req->contact,
-            'email' => $req->email,
-            'designation' => $req->designation,
-            'facility_id' => $req->facility_id,
-            'username' => $req->username,
-            'status' => $req->status,
-            'muncity' => $facility->muncity,
-            'province' => $facility->province
-        );
-
-        if ($req->password)
-        {
-            $data['password'] = bcrypt($req->password);
+        if($req->user_id == "no_id"){
+            User::create($data);
+        }
+        else{
+            User::find($req->user_id)->update($data);
         }
 
-
-        User::where('id',$req->user_id)
-            ->update($data);
-        return 'updated';
+        Session::put("manage_user",true);
     }
 
-    public function checkUpdate($string,$user_id)
-    {
-        $user = Session::get('auth');
-        $check = User::where('username',$string)
-            ->where('id','!=',$user->id)
-            ->where('id','!=',$user_id)
-            ->first();
-        if($check){
-            return '1';
-        }
-        return '0';
-    }
 }

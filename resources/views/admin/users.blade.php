@@ -21,15 +21,16 @@ if($searchKeyword){
         <div class="box box-success">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <form action="{{ url('admin/users') }}" method="POST" class="form-inline">
+                    <form action="{{ url('admin/users') }}" method="GET" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword_value }}">
+                            <input type="text" class="form-control" name="search" placeholder="Search name..." value="{{ $search }}">
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
+                            <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             @if($user->facility_id!=25)
-                                <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
+                                <a href="#users_modal" data-toggle="modal" data-id="no_id" class="btn btn-primary btn-sm btn-flat add_info">
                                     <i class="fa fa-user-plus"></i> Add User
                                 </a>
                             @else
@@ -49,7 +50,7 @@ if($searchKeyword){
                             <tr class="bg-black">
                                 <th>Name</th>
                                 <th>Facility</th>
-                                <th>Contact / E-mail</th>
+                                <th>Level</th>
                                 <th>Username</th>
                                 <th>Status</th>
                                 <th>Last Login</th>
@@ -57,11 +58,16 @@ if($searchKeyword){
                             @foreach($data as $row)
                                 <tr>
                                     <td style="white-space: nowrap;">
-                                        <a href="#updateUserModal"
+                                        <a href="#users_modal"
                                            data-toggle="modal"
                                            data-id = "{{ $row->id }}"
                                            class="title-info update_info">
                                            {{ $row->fname }} {{ $row->mname }} {{ $row->lname }}
+                                            <br><i>
+                                                <small class="text-warning">
+                                                    ( {{ $row->email }} )
+                                                </small>
+                                            </i>
                                         </a>
                                     </td>
                                     <td>
@@ -69,10 +75,7 @@ if($searchKeyword){
                                         {{ \App\Facility::find($row->facility_id)->name }}
                                     </td>
                                     <td>
-                                        {{ $row->contact }}<br />
-                                        <small class="text-success">
-                                            ( {{ $row->email }} )
-                                        </small>
+                                        {{ $row->level }}<br />
                                     </td>
                                     <td>
                                         {{ $row->username }}
@@ -98,7 +101,7 @@ if($searchKeyword){
                                 </tr>
                             @endforeach
                         </table>
-                        <div class="text-center">
+                        <div class="pagination">
                             {{ $data->links() }}
                         </div>
                     </div>
@@ -117,5 +120,18 @@ if($searchKeyword){
 @endsection
 @section('js')
     @include('admin.script.users')
+    <script>
+        @if(Session::get('manage_user'))
+            Lobibox.notify('success', {
+                title: "",
+                msg: "Successfully added new account",
+                size: 'mini',
+                rounded: true
+            });
+            <?php
+                Session::put("manage_user",false);
+            ?>
+        @endif
+    </script>
 @endsection
 

@@ -47,7 +47,7 @@ Route::get('admin','admin\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
-Route::match(['GET','POST'],'admin/users','admin\UserCtrl@index');
+Route::get('admin/users','admin\UserCtrl@index');
 Route::match(['GET','POST'],'admin/facility','admin\FacilityCtrl@index');
 Route::post('admin/facility/add','admin\FacilityCtrl@FacilityAdd');
 Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
@@ -58,7 +58,6 @@ Route::post('admin/users/update','admin\UserCtrl@update');
 
 Route::get('admin/users/info/{user_id}','admin\UserCtrl@info');
 Route::get('admin/users/check_username/{string}','admin\UserCtrl@check');
-Route::get('admin/users/check_username/update/{string}/{user_id}','admin\UserCtrl@checkUpdate');
 
 Route::get('admin/login','admin\UserCtrl@loginAs');
 Route::post('admin/login','admin\UserCtrl@assignLogin');

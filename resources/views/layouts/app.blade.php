@@ -203,7 +203,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; IT Support</a></li>
+                            <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; IT Support/OPCEN</a></li>
                             <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
                         </ul>
                     </li>
@@ -327,12 +327,34 @@
 
 <script src="{{ asset('resources/assets/js/jquery.canvasjs.min.js') }}?v=1"></script>
 
+<script>
+    var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
+    var loading = '<center><img src="'+path_gif+'" alt=""></center>';
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var query_string = urlParams.get('search') ? urlParams.get('search') : '';
+    $(".pagination").children().each(function(index){
+        var _href = $($(this).children().get(0)).attr('href');
+        $($(this).children().get(0)).attr('href',_href+'&search='+query_string);
+    });
+
+    function refreshPage(){
+        <?php
+            use Illuminate\Support\Facades\Route;
+            $current_route = Route::getFacadeRoot()->current()->uri();
+        ?>
+        $('.loading').show();
+        window.location.replace("<?php echo asset($current_route) ?>");
+    }
+</script>
+
 @include('script.firebase')
 @include('script.newreferral')
 @include('script.password')
 @include('script.duty')
 @include('script.desktop-notification')
 @include('script.notification')
+
 @yield('js')
 
 </body>
