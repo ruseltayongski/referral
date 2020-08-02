@@ -124,7 +124,7 @@ if($searchKeyword){
         @if(Session::get('manage_user'))
             Lobibox.notify('success', {
                 title: "",
-                msg: "Successfully added new account",
+                msg: "<?php echo Session::get('manage_user'); ?>",
                 size: 'mini',
                 rounded: true
             });

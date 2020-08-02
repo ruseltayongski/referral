@@ -115,13 +115,13 @@ class UserCtrl extends Controller
             'province' => $facility->province
         );
         if($req->user_id == "no_id"){
+            Session::put("manage_user","Successfully added new account");
             User::create($data);
         }
         else{
+            Session::put("manage_user","Successfully updated account");
             User::find($req->user_id)->update($data);
         }
-
-        Session::put("manage_user",true);
     }
 
 }
