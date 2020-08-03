@@ -11,7 +11,7 @@
     <tr>
         <td >
             <small>Time Started</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >{{ $client->time_started }}</b>
+            &nbsp;&nbsp;<b class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</b>
         </td>
         <td>
             <small>Call Classification</small><br>
@@ -103,13 +103,13 @@
         <td >
             <small>Time Ended</small><br>
             &nbsp;&nbsp;<b class="text-yellow" >
-                {{ $client->time_ended }}
+                {{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}
             </b>
         </td>
         <td >
             <small>Time Duration</small><br>
             &nbsp;&nbsp;<b class="text-yellow" >
-                {{ $client->time_duration }}
+                {{ date('H:i:s',strtotime($client->time_duration)) }}
             </b>
         </td>
     </tr>
