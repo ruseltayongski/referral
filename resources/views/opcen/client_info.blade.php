@@ -64,19 +64,19 @@
 @elseif($client->reason_calling == 'referral')
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
-        <td >
+        <td width="25%">
             <small>Patient Data(Name,Age,Gender)</small><br>
             &nbsp;&nbsp;<b class="text-yellow" >{{ $client->reason_patient_data }}</b>
         </td>
-        <td >
+        <td width="25%">
             <small>Chief Complains</small><br>
             &nbsp;&nbsp;<b class="text-yellow">{{ $client->reason_chief_complains }}</b>
         </td>
-        <td >
+        <td width="25%">
             <small>Relationship to patient (Patient, Family & Others)</small><br>
             &nbsp;&nbsp;<b class="text-yellow">{{ $client->relationship }}</b>
         </td>
-        <td >
+        <td width="25%">
             <small>Notes for action taken</small><br>
             &nbsp;&nbsp;<b class="text-yellow">{{ $client->reason_action_taken }}</b>
         </td>
