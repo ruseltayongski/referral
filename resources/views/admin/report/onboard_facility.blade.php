@@ -8,13 +8,6 @@
     </style>
     <div class="row col-md-12">
         <div class="box box-success">
-            <div class="box-header with-border">
-                <strong style="font-size: 15pt">LEGEND:</strong>
-                <ul>
-                    <li><span class="text-yellow">YELLOW - ON BOARD WITH TRANSACTION</span></li>
-                    <li><span class="text-red">RED - ON BOARD BUT NO TRANSACTION</span></li>
-                </ul>
-            </div>
             <div class="box-body">
                 @if(count($data) > 0)
                     <div class="table-responsive">
@@ -107,6 +100,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <div id="chartPrivate{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
                                                 <strong class="text-green">Private Hospital - </strong>
                                                 <span class="progress-number"><b class="{{ 'private_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'private_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red private_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm">
@@ -265,6 +259,60 @@
             };
             $("#chartGovernment2").CanvasJSChart(government_options2);
             @endif
+
+
+            @if($hospital_type[1]['private'] != 0)
+            var private_with_transaction1 = Math.round("<?php echo $private_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['private']; ?>" * 100);
+            var private_no_transaction1 = Math.round("<?php echo $private_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['private']; ?>" * 100);
+            var private_options1 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Private"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+private_with_transaction1+"% in "+"<?php echo $private_transaction[1]['with_transaction']; ?> out of <?php echo $hospital_type[1]['private']; ?>",legendText : "With Transaction", y: private_with_transaction1 },
+                        { label: "No Transaction in "+private_no_transaction1+"% in "+"<?php echo $private_transaction[1]['no_transaction']; ?> out of <?php echo $hospital_type[1]['private'] ?>",legendText : "No Transaction", y: private_no_transaction1 }
+                    ]
+                }]
+            };
+            $("#chartPrivate1").CanvasJSChart(private_options1);
+            @endif
+
+            @if($hospital_type[2]['private'] != 0)
+            var private_with_transaction2 = Math.round("<?php echo $private_transaction[2]['with_transaction']; ?>" / "<?php echo $hospital_type[2]['private']; ?>" * 100);
+            var private_no_transaction2 = Math.round("<?php echo $private_transaction[2]['no_transaction']; ?>" / "<?php echo $hospital_type[2]['private']; ?>" * 100);
+            var private_options2 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Private"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+private_with_transaction2+"% in "+"<?php echo $private_transaction[2]['with_transaction']; ?> out of <?php echo $hospital_type[2]['private']; ?>",legendText : "With Transaction", y: private_with_transaction2 },
+                        { label: "No Transaction in "+private_no_transaction2+"% in "+"<?php echo $private_transaction[2]['no_transaction']; ?> out of <?php echo $hospital_type[2]['private'] ?>",legendText : "No Transaction", y: private_no_transaction2 }
+                    ]
+                }]
+            };
+            $("#chartPrivate2").CanvasJSChart(private_options2);
+            @endif
+
 
         }
     </script>
