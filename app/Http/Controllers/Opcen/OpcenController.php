@@ -209,7 +209,7 @@ class OpcenController extends Controller
         $opcen_client->time_duration = $duration_time->h.':'.$duration_time->i.':'.$duration_time->s;
         $opcen_client->save();
 
-        if($request->reason_notes1){
+        if($request->reason_notes1 || $request->reason_action_taken1){
             $repeat_call = new RepeatCall();
             $repeat_call->reference_number = $request->reference_number;
             $repeat_call->encoded_by = $encoded_by;
