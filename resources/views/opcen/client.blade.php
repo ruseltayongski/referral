@@ -65,7 +65,7 @@
                                         <td>@if($row->call_classification == 'new_call')<span class="text-blue">New Call</span>@else<span class="text-red">Repeat Call</span>@endif</td>
                                         <td>{{ $row->time_started }}</td>
                                         <td>{{ $row->time_ended }}</td>
-                                        <td>{{ $row->time_duration }}</td>
+                                        <td>{{ date('H:i:s',strtotime($row->time_duration)) }}</td>
                                         <td><button type="button" class="btn-xs btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
                                     </tr>
                                 @endforeach
