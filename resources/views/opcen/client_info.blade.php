@@ -10,16 +10,16 @@
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
         <td >
+            <small>Reference Number</small><br>
+            &nbsp;&nbsp;<b class="text-green">{{ $client->reference_number }}</b>
+        </td>
+        <td >
             <small>Time Started</small><br>
             &nbsp;&nbsp;<b class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</b>
         </td>
         <td>
             <small>Call Classification</small><br>
             &nbsp;&nbsp;<b class="<?php if($client->call_classification == 'repeat_call') echo 'text-red'; else echo 'text-blue'; ?>"><?php if($client->call_classification == 'repeat_call') echo 'Repeat Call'; else echo 'New Call'; ?></b>
-        </td>
-        <td >
-            <small>Reference Number</small><br>
-            &nbsp;&nbsp;<b class="text-green">{{ $client->reference_number }}</b>
         </td>
     </tr>
     <tr>

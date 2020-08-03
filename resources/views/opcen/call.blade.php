@@ -10,6 +10,11 @@
     <table class="table table-hover table-bordered" style="width: 100%;">
         <tr>
             <td >
+                <small>Reference Number</small><br>
+                &nbsp;&nbsp;<b class="text-green">{{ $reference_number }}</b>
+                <input type="hidden" name="reference_number" value="{{ $reference_number }}">
+            </td>
+            <td >
                 <small>Time Started</small><br>
                 &nbsp;&nbsp;<b class="text-yellow" id="time_started_text"></b>
                 <input type="hidden" name="time_started" id="time_started">
@@ -18,11 +23,6 @@
                 <small>Call Classification</small><br>
                 &nbsp;&nbsp;<b class="<?php if(isset($client->reference_number)) echo 'text-red'; else echo 'text-blue'; ?>" id="call_classification_text"></b>
                 <input type="hidden" id="call_classification" name="call_classification">
-            </td>
-            <td >
-                <small>Reference Number</small><br>
-                &nbsp;&nbsp;<b class="text-green">{{ $reference_number }}</b>
-                <input type="hidden" name="reference_number" value="{{ $reference_number }}">
             </td>
         </tr>
         <tr>
