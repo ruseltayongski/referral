@@ -24,6 +24,20 @@
     </tr>
     <tr>
         <td >
+            <small>Name</small><br>
+            &nbsp;&nbsp;<b class="text-yellow">{{ $client->name }}</b>
+        </td>
+        <td>
+            <small>Age</small><br>
+            &nbsp;&nbsp;<b class="text-yellow">{{ $client->age }}</b>
+        </td>
+        <td >
+            <small>Gender</small><br>
+            &nbsp;&nbsp;<b class="text-yellow">{{ $client->sex }}</b>
+        </td>
+    </tr>
+    <tr>
+        <td >
             <small>Province</small><br>
             &nbsp;&nbsp;<b class="text-yellow">{{ \App\Province::find($client->province_id)->description }}</b>
         </td>
