@@ -52,11 +52,13 @@
                                     <tr>
                                         <td style="white-space: nowrap;">
                                             <b>
-                                                <a href="#facility_modal"
-                                                   data-toggle="modal"
-                                                   data-id = "{{ $row->id }}"
-                                                   onclick="FacilityBody('<?php echo $row->id ?>')"
-                                                   class="update_info">
+                                                <a
+                                                    href="#facility_modal"
+                                                    data-toggle="modal"
+                                                    data-id = "{{ $row->id }}"
+                                                    onclick="FacilityBody('<?php echo $row->id ?>')"
+                                                    class="update_info"
+                                                >
                                                     {{ $row->name }}
                                                 </a>
                                             </b><br>
@@ -135,10 +137,10 @@
                 size: 'mini',
                 rounded: true
             });
-            <?php
-                Session::put("facility",false);
-                Session::put("facility_message",false)
-            ?>
+        <?php
+            Session::put("facility",false);
+            Session::put("facility_message",false)
+        ?>
         @endif
     </script>
 @endsection
