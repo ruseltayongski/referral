@@ -30,37 +30,30 @@ class OpcenController extends Controller
             $startdate = Carbon::parse($date)->startOfMonth();
             $enddate = Carbon::parse($date)->endOfMonth();
 
-            $new_call = OpcenClient::where("encoded_by",$user->id)
-                ->where("call_classification","new_call")
+            $new_call = OpcenClient::where("call_classification","new_call")
                 ->whereBetween('time_started',[$startdate,$enddate])
                 ->count();
             $data['new_call'][] = $new_call;
 
-            $repeat_call = OpcenClient::where("encoded_by",$user->id)
-                ->where("call_classification","repeat_call")
+            $repeat_call = OpcenClient::where("call_classification","repeat_call")
                 ->whereBetween('time_started',[$startdate,$enddate])
                 ->count();
             $data['repeat_call'][] = $repeat_call;
         }
 
-        $transaction_complete = OpcenClient::where("encoded_by",$user->id)
-            ->where("transaction_complete","!=",null)
+        $transaction_complete = OpcenClient::where("transaction_complete","!=",null)
             ->count();
 
-        $transaction_incomplete = OpcenClient::where("encoded_by",$user->id)
-            ->where("transaction_incomplete","!=",null)
+        $transaction_incomplete = OpcenClient::where("transaction_incomplete","!=",null)
             ->count();
 
-        $inquiry = OpcenClient::where("encoded_by",$user->id)
-            ->where("reason_calling","inquiry")
+        $inquiry = OpcenClient::where("reason_calling","inquiry")
             ->count();
 
-        $referral = OpcenClient::where("encoded_by",$user->id)
-            ->where("reason_calling","referral")
+        $referral = OpcenClient::where("reason_calling","referral")
             ->count();
 
-        $others = OpcenClient::where("encoded_by",$user->id)
-            ->where("reason_calling","others")
+        $others = OpcenClient::where("reason_calling","others")
             ->count();
 
         return view('opcen.opcen',[
@@ -76,8 +69,7 @@ class OpcenController extends Controller
     public function opcenClient(Request $request){
         $seaarch = $request->search;
         $user = Session::get('auth');
-        $client = OpcenClient::where("encoded_by",$user->id)
-            ->where(function($q) use ($seaarch){
+        $client = OpcenClient::where(function($q) use ($seaarch){
                 $q->where('reference_number','like',"%$seaarch%")
                     ->orWhere('name','like',"%$seaarch%");
             })
