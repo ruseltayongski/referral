@@ -2,7 +2,7 @@
 <table class="table table-hover table-bordered">
     <tr>
         <td >
-            <small>@if(Session::get("client")->reason_notes) Previous Notes @endif</small>
+            <small>@if(Session::get("client")->reason_notes) Previous Notes @else Notes @endif</small>
             <textarea name="reason_notes" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_notes) echo 'readonly';?>>{{ Session::get("client")->reason_notes }}</textarea>
         </td>
     </tr>
@@ -16,7 +16,7 @@
     @endif
     <tr>
         <td >
-            <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @endif</small>
+            <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @else Notes for action taken @endif</small>
             <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_notes) echo 'readonly';?>>{{ Session::get("client")->reason_notes }}</textarea>
         </td>
     </tr>
@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td colspan="3">
-                <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @endif</small>
+                <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @else Notes for action taken @endif</small>
                 <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_notes) echo 'readonly';?>>{{ Session::get("client")->reason_notes }}</textarea>
             </td>
         </tr>

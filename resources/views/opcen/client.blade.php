@@ -39,8 +39,29 @@
                             <tbody>
                                 @foreach($client as $row)
                                     <tr>
-                                        <td><span class="color1" >{{ $row->reference_number }}</span></td>
-                                        <td><span class="text-green">{{ $row->name }}</span></td>
+                                        <td>
+                                            <a
+                                                href="#client_modal"
+                                                data-toggle="modal"
+                                                data-id = "{{ $row->id }}"
+                                                onclick="ClientBody('<?php echo $row->id ?>')"
+                                                class="color1 client_info"
+                                            >
+                                                {{ $row->reference_number }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#client_modal"
+                                                data-toggle="modal"
+                                                data-id = "{{ $row->id }}"
+                                                onclick="ClientBody('<?php echo $row->id ?>')"
+                                                class="client_info"
+                                                style="color: #2cb35d"
+                                            >
+                                                {{ $row->name }}
+                                            </a>
+                                        </td>
                                         <td>@if($row->call_classification == 'new_call')<span class="text-blue">New Call</span>@else<span class="text-red">Repeat Call</span>@endif</td>
                                         <td>{{ $row->time_started }}</td>
                                         <td>{{ $row->time_ended }}</td>
@@ -71,6 +92,16 @@
         </center>
     </div><!-- /.modal -->
 
+    <div class="modal fade" role="dialog" id="client_modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body client_modal_body">
+
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 @endsection
 
 @section('js')
@@ -85,6 +116,7 @@
             });
             <?php Session::put("opcen",false); ?>
         @endif
+
 
         function newCall($call_classification){
             $(".call_classification").html(loading);
@@ -101,6 +133,16 @@
                     var d = new Date();
                     $("#time_started").val(d.toLocaleString());
                     $("#time_started_text").html(d.toLocaleString());
+                },700);
+            });
+        }
+
+        function ClientBody($client_id){
+            $(".client_modal_body").html(loading);
+            var url = "<?php echo asset('opcen/client/form').'/'; ?>"+$client_id;
+            $.get(url,function(data){
+                setTimeout(function(){
+                    $(".client_modal_body").html(data);
                 },700);
             });
         }

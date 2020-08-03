@@ -241,5 +241,11 @@ class OpcenController extends Controller
         return Redirect::back();
     }
 
+    function clientInfo($client_id){
+        $client = OpcenClient::find($client_id);
+        return view('opcen.client_info',[
+            "client" => $client
+        ]);
+    }
 
 }
