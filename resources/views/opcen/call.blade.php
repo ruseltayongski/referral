@@ -85,10 +85,6 @@
                 <small>Active contact number:</small>
                 <input type="text" name="contact_number" class="form-control" value="<?php if(isset($client->contact_number)) echo $client->contact_number; ?>">
             </td>
-            <td >
-                <small>Relationship to patient (Patient, Family & Others)</small>
-                <input type="text" name="relationship" class="form-control" value="<?php if(isset($client->relationship)) echo $client->relationship; ?>">
-            </td>
         </tr>
     </table>
     <table class="table table-hover table-bordered">

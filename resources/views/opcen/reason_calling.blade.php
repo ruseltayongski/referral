@@ -24,9 +24,13 @@
                 <small>Chief Complains</small>
                 <textarea name="reason_chief_complains" id="" cols="30" rows="5" class="form-control">{{ Session::get("client")->reason_chief_complains }}</textarea>
             </td>
+            <td >
+                <small>Relationship to patient (Patient, Family & Others)</small>
+                <textarea name="relationship" id="" cols="30" rows="5" class="form-control">{{ Session::get("client")->relationship }}</textarea>
+            </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="3">
                 <small>Notes for action taken</small>
                 <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control">{{ Session::get("client")->reason_action_taken }}</textarea>
             </td>

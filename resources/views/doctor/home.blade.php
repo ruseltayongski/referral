@@ -53,7 +53,7 @@
                             </span>
                         </div>
                     @endif
-                    @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
+                    @if($dateNow >= '2019-07-01' && $dateNow <= '2019-12-30')
                         <br><div class="text-info">
                             <strong >ANNOUNCEMENT</strong>
                             <blockquote style="font-size:1.1em;">
