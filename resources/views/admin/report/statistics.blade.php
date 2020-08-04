@@ -55,7 +55,7 @@
                                     <td width="10%">{{ $row->incoming }}</td>
                                     <td width="10%">{{ $row->accepted }}</td>
                                     <td width="10%">{{ $row->redirected }}</td>
-                                    <td width="10%"></td>
+                                    <td width="10%">{{ $row->seen_only }}</td>
                                 </tr>
                             @endforeach
                         </table>
