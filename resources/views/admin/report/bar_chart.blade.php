@@ -19,168 +19,284 @@
 
 @section('js')
 
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-
-
-    <script type="text/javascript">
+    <script>
         window.onload = function () {
 
-            var chart = new CanvasJS.Chart("chartContainer", {
+            var options = {
                 animationEnabled: true,
+                theme: "light2",
                 title:{
-                    text: "E REFERRAL REPORT IN JANUARY to SEPTEMBER of 2019"
+                    text: "Number of cases"
+                },
+                axisX:{
+                    valueFormatString: "DD MMM"
                 },
                 axisY: {
-                    title: "Medals"
+                    title: "Number of Sales",
+                    suffix: "K",
+                    minimum: 0
                 },
-                legend: {
+                toolTip:{
+                    shared:true
+                },
+                legend:{
                     cursor:"pointer",
-                    itemclick : toggleDataSeries
+                    verticalAlign: "bottom",
+                    horizontalAlign: "center",
+                    dockInsidePlotArea: false,
+                    fontSize: 20,
+                    itemclick: toogleDataSeries
                 },
-                toolTip: {
-                    shared: true,
-                    content: toolTipFormatter
-                },
-                data: [{
-                    type: "bar",
-                    showInLegend: true,
-                    name: "Incoming",
-                    color: "blue",
-                    dataPoints: [
-
-
-                        { y: 18, label: "Cebu Provincial Hospital (Danao City)" },
-                        { y: 17, label: "Eversley Childs Sanitarium" },
-                        { y: 9, label: "Cebu Provincial Hospital (Carcar City)" },
-                        { y: 8, label: "Saint Anthony Mother And Child Hospital" },
-                        { y: 4, label: "Cebu Provincial Hospital - Bogo City" },
-                        { y: 3, label: "Cebu Provincial Hospital (Balamban)" },
-
-                        { y: 69, label: "Talisay District Hospital" },
-                        { y: 4389, label: "Vicente Sotto Memorial Medical Center" },
-                    ]
-                },
+                data: [
                     {
-                        type: "bar",
+                        type: "line",
                         showInLegend: true,
-                        name: "Accepted",
-                        color: "red",
+                        name: "Cases1",
+                        markerType: "square",
+                        xValueFormatString: "DD MMM, YYYY",
+                        color: "#F08080",
+                        yValueFormatString: "#,##0K",
                         dataPoints: [
-
-                            { y: 4, label: "Cebu Provincial Hospital (Danao City)" },
-                            { y: 11, label: "Eversley Childs Sanitarium" },
-                            { y: 8, label: "Cebu Provincial Hospital (Carcar City)" },
-                            { y: 0, label: "Saint Anthony Mother And Child Hospital" },
-                            { y: 4, label: "Cebu Provincial Hospital - Bogo City" },
-                            { y: 0, label: "Cebu Provincial Hospital (Balamban)" },
-
-                            { y: 21, label: "Talisay District Hospital" },
-                            { y: 3763, label: "Vicente Sotto Memorial Medical Center" },
+                            { x: new Date(2017, 10, 1), y: 22 },
+                            { x: new Date(2017, 10, 2), y: 69 },
+                            { x: new Date(2017, 10, 3), y: 45 },
+                            { x: new Date(2017, 10, 4), y: 20 },
+                            { x: new Date(2017, 10, 5), y: 31 },
+                            { x: new Date(2017, 10, 6), y: 65 },
+                            { x: new Date(2017, 10, 7), y: 73 },
+                            { x: new Date(2017, 10, 8), y: 96 },
+                            { x: new Date(2017, 10, 9), y: 84 },
+                            { x: new Date(2017, 10, 10), y: 85 },
+                            { x: new Date(2017, 10, 11), y: 86 },
+                            { x: new Date(2017, 10, 12), y: 92 },
+                            { x: new Date(2017, 10, 13), y: 57 },
+                            { x: new Date(2017, 10, 14), y: 66 },
+                            { x: new Date(2017, 10, 15), y: 99 }
                         ]
                     },
                     {
-                        type: "bar",
+                        type: "line",
                         showInLegend: true,
-                        name: "Outgoing",
-                        color: "green",
+                        name: "Cases2",
+                        yValueFormatString: "#,##0K",
                         dataPoints: [
-
-                            { y: 1033, label: "Cebu Provincial Hospital (Danao City)" },
-                            { y: 489, label: "Eversley Childs Sanitarium" },
-                            { y: 719, label: "Cebu Provincial Hospital (Carcar City)" },
-                            { y: 128, label: "Saint Anthony Mother And Child Hospital" },
-                            { y: 820, label: "Cebu Provincial Hospital - Bogo City" },
-                            { y: 581, label: "Cebu Provincial Hospital (Balamban)" },
-
-                            { y: 716, label: "Talisay District Hospital" },
-                            { y: 31, label: "Vicente Sotto Memorial Medical Center" },
+                            { x: new Date(2017, 10, 1), y: 20 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 71 },
+                            { x: new Date(2017, 10, 4), y: 86 },
+                            { x: new Date(2017, 10, 5), y: 54 },
+                            { x: new Date(2017, 10, 6), y: 95 },
+                            { x: new Date(2017, 10, 7), y: 54 },
+                            { x: new Date(2017, 10, 8), y: 19 },
+                            { x: new Date(2017, 10, 9), y: 65 },
+                            { x: new Date(2017, 10, 10), y: 36 },
+                            { x: new Date(2017, 10, 11), y: 23 },
+                            { x: new Date(2017, 10, 12), y: 27 },
+                            { x: new Date(2017, 10, 13), y: 66 },
+                            { x: new Date(2017, 10, 14), y: 46 },
+                            { x: new Date(2017, 10, 15), y: 64 }
                         ]
-                    }]
-            });
-            chart.render();
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases3",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 20 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 31 },
+                            { x: new Date(2017, 10, 4), y: 46 },
+                            { x: new Date(2017, 10, 5), y: 44 },
+                            { x: new Date(2017, 10, 6), y: 85 },
+                            { x: new Date(2017, 10, 7), y: 84 },
+                            { x: new Date(2017, 10, 8), y: 29 },
+                            { x: new Date(2017, 10, 9), y: 15 },
+                            { x: new Date(2017, 10, 10), y: 26 },
+                            { x: new Date(2017, 10, 11), y: 23 },
+                            { x: new Date(2017, 10, 12), y: 47 },
+                            { x: new Date(2017, 10, 13), y: 36 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 54 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases4",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 87 },
+                            { x: new Date(2017, 10, 3), y: 21 },
+                            { x: new Date(2017, 10, 4), y: 26 },
+                            { x: new Date(2017, 10, 5), y: 14 },
+                            { x: new Date(2017, 10, 6), y: 15 },
+                            { x: new Date(2017, 10, 7), y: 34 },
+                            { x: new Date(2017, 10, 8), y: 79 },
+                            { x: new Date(2017, 10, 9), y: 85 },
+                            { x: new Date(2017, 10, 10), y: 16 },
+                            { x: new Date(2017, 10, 11), y: 13 },
+                            { x: new Date(2017, 10, 12), y: 27 },
+                            { x: new Date(2017, 10, 13), y: 96 },
+                            { x: new Date(2017, 10, 14), y: 26 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases5",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 97 },
+                            { x: new Date(2017, 10, 3), y: 81 },
+                            { x: new Date(2017, 10, 4), y: 56 },
+                            { x: new Date(2017, 10, 5), y: 74 },
+                            { x: new Date(2017, 10, 6), y: 25 },
+                            { x: new Date(2017, 10, 7), y: 14 },
+                            { x: new Date(2017, 10, 8), y: 69 },
+                            { x: new Date(2017, 10, 9), y: 25 },
+                            { x: new Date(2017, 10, 10), y: 86 },
+                            { x: new Date(2017, 10, 11), y: 23 },
+                            { x: new Date(2017, 10, 12), y: 67 },
+                            { x: new Date(2017, 10, 13), y: 96 },
+                            { x: new Date(2017, 10, 14), y: 26 },
+                            { x: new Date(2017, 10, 15), y: 14 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases6",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 20 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 71 },
+                            { x: new Date(2017, 10, 4), y: 96 },
+                            { x: new Date(2017, 10, 5), y: 84 },
+                            { x: new Date(2017, 10, 6), y: 25 },
+                            { x: new Date(2017, 10, 7), y: 14 },
+                            { x: new Date(2017, 10, 8), y: 19 },
+                            { x: new Date(2017, 10, 9), y: 15 },
+                            { x: new Date(2017, 10, 10), y: 26 },
+                            { x: new Date(2017, 10, 11), y: 53 },
+                            { x: new Date(2017, 10, 12), y: 27 },
+                            { x: new Date(2017, 10, 13), y: 26 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases7",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 51 },
+                            { x: new Date(2017, 10, 4), y: 56 },
+                            { x: new Date(2017, 10, 5), y: 54 },
+                            { x: new Date(2017, 10, 6), y: 55 },
+                            { x: new Date(2017, 10, 7), y: 54 },
+                            { x: new Date(2017, 10, 8), y: 69 },
+                            { x: new Date(2017, 10, 9), y: 65 },
+                            { x: new Date(2017, 10, 10), y: 66 },
+                            { x: new Date(2017, 10, 11), y: 63 },
+                            { x: new Date(2017, 10, 12), y: 67 },
+                            { x: new Date(2017, 10, 13), y: 66 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases8",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 51 },
+                            { x: new Date(2017, 10, 4), y: 56 },
+                            { x: new Date(2017, 10, 5), y: 54 },
+                            { x: new Date(2017, 10, 6), y: 55 },
+                            { x: new Date(2017, 10, 7), y: 54 },
+                            { x: new Date(2017, 10, 8), y: 69 },
+                            { x: new Date(2017, 10, 9), y: 65 },
+                            { x: new Date(2017, 10, 10), y: 66 },
+                            { x: new Date(2017, 10, 11), y: 63 },
+                            { x: new Date(2017, 10, 12), y: 67 },
+                            { x: new Date(2017, 10, 13), y: 66 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases9",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 51 },
+                            { x: new Date(2017, 10, 4), y: 56 },
+                            { x: new Date(2017, 10, 5), y: 54 },
+                            { x: new Date(2017, 10, 6), y: 55 },
+                            { x: new Date(2017, 10, 7), y: 54 },
+                            { x: new Date(2017, 10, 8), y: 69 },
+                            { x: new Date(2017, 10, 9), y: 65 },
+                            { x: new Date(2017, 10, 10), y: 66 },
+                            { x: new Date(2017, 10, 11), y: 63 },
+                            { x: new Date(2017, 10, 12), y: 67 },
+                            { x: new Date(2017, 10, 13), y: 66 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    },
+                    {
+                        type: "line",
+                        showInLegend: true,
+                        name: "Cases10",
+                        yValueFormatString: "#,##0K",
+                        dataPoints: [
+                            { x: new Date(2017, 10, 1), y: 60 },
+                            { x: new Date(2017, 10, 2), y: 57 },
+                            { x: new Date(2017, 10, 3), y: 51 },
+                            { x: new Date(2017, 10, 4), y: 56 },
+                            { x: new Date(2017, 10, 5), y: 54 },
+                            { x: new Date(2017, 10, 6), y: 55 },
+                            { x: new Date(2017, 10, 7), y: 54 },
+                            { x: new Date(2017, 10, 8), y: 69 },
+                            { x: new Date(2017, 10, 9), y: 65 },
+                            { x: new Date(2017, 10, 10), y: 66 },
+                            { x: new Date(2017, 10, 11), y: 63 },
+                            { x: new Date(2017, 10, 12), y: 67 },
+                            { x: new Date(2017, 10, 13), y: 66 },
+                            { x: new Date(2017, 10, 14), y: 56 },
+                            { x: new Date(2017, 10, 15), y: 64 }
+                        ]
+                    }
 
-            function toolTipFormatter(e) {
-                var str = "";
-                var total = 0 ;
-                var str3;
-                var str2 ;
-                for (var i = 0; i < e.entries.length; i++){
-                    var str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\">" + e.entries[i].dataSeries.name + "</span>: <strong>"+  e.entries[i].dataPoint.y + "</strong> <br/>" ;
-                    total = e.entries[i].dataPoint.y + total;
-                    str = str.concat(str1);
-                }
-                str2 = "<strong>" + e.entries[0].dataPoint.label + "</strong> <br/>";
-                str3 = "<span style = \"color:Tomato\">Total: </span><strong>" + total + "</strong><br/>";
-                return (str2.concat(str)).concat(str3);
-            }
+                ]
+            };
+            $("#chartContainer").CanvasJSChart(options);
 
-            function toggleDataSeries(e) {
-                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            function toogleDataSeries(e){
+                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                     e.dataSeries.visible = false;
-                }
-                else {
+                } else{
                     e.dataSeries.visible = true;
                 }
-                chart.render();
+                e.chart.render();
             }
 
         }
     </script>
 
-    <script>
-        function ipLookUp () {
-            $.ajax('http://ip-api.com/json')
-                .then(
-                    function success(response) {
-                        console.log('User\'s Location Data is ', response);
-                        console.log('User\'s Country', response.country);
-                        getAddress(response.lat, response.lon)
-                    },
-
-                    function fail(data, status) {
-                        console.log('Request failed.  Returned status of',
-                            status);
-                    }
-                );
-        }
-
-        function getAddress (latitude, longitude) {
-            $.ajax('https://maps.googleapis.com/maps/api/geocode/json?' +
-                'latlng=' + latitude + ',' + longitude + '&key=' +
-                GOOGLE_MAP_KEY)
-                .then(
-                    function success (response) {
-                        console.log('User\'s Address Data is ', response)
-                    },
-                    function fail (status) {
-                        console.log('Request failed.  Returned status of',
-                            status)
-                    }
-                )
-        }
-
-        if ("geolocation" in navigator) {
-            // check if geolocation is supported/enabled on current browser
-            navigator.geolocation.getCurrentPosition(
-                function success(position) {
-                    // for when getting location is a success
-                    console.log('latitude', position.coords.latitude,
-                        'longitude', position.coords.longitude);
-                    getAddress(position.coords.latitude,
-                        position.coords.longitude)
-                },
-                function error(error_message) {
-                    // for when getting location results in an error
-                    console.error('An error has occured while retrieving' +
-                        'location', error_message)
-                    ipLookUp()
-                });
-        } else {
-            // geolocation is not supported
-            // get your location some other way
-            console.log('geolocation is not enabled on this browser')
-            ipLookUp()
-        }
-    </script>
 @endsection
 

@@ -166,4 +166,24 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function statisticsReport(Request $request){
+        if($request->isMethod('post') && isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $stored_name = "statistics_report('$date_start','$date_end')";
+        $data = \DB::connection('mysql')->select("call $stored_name");
+
+        return view('admin.report.statistics',[
+            'title' => 'STATISTICS REPORT',
+            "data" => $data,
+            'date_range_start' => $date_start,
+            'date_range_end' => $date_end
+        ]);
+    }
+
 }

@@ -90,6 +90,7 @@ Route::get('admin/daily/referral/incoming/','admin\DailyCtrl@incoming');
 Route::get('admin/daily/referral/outgoing','admin\DailyCtrl@outgoing');
 Route::post('admin/daily/referral','admin\DailyCtrl@referralFilter');
 Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
+Route::match(['GET','POST'],'admin/statistics','admin\ReportCtrl@statisticsReport');
 
 //SUPPORT Page
 Route::get('support','support\HomeCtrl@index');
