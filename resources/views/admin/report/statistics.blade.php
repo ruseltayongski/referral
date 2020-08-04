@@ -31,6 +31,7 @@
                                 <th>Incoming</th>
                                 <th>Accepted</th>
                                 <th>Redirected</th>
+                                <th>Seen</th>
                                 <th>Seen only</th>
                             </tr>
                             <?php
@@ -56,6 +57,7 @@
                                     <td width="10%">{{ $row->accepted }}</td>
                                     <td width="10%">{{ $row->redirected }}</td>
                                     <td width="10%">{{ $row->seen_only }}</td>
+                                    <th>Under Development</th>
                                 </tr>
                             @endforeach
                         </table>
