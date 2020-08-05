@@ -16,8 +16,8 @@
     @endif
     <tr>
         <td >
-            <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @else Notes for action taken @endif</small>
-            <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_notes) echo 'readonly';?>>{{ Session::get("client")->reason_notes }}</textarea>
+            <small>@if(Session::get("client")->reason_action_taken) Previous Notes for action taken @else Notes for action taken @endif</small>
+            <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_action_taken) echo 'readonly';?>>{{ Session::get("client")->reason_action_taken }}</textarea>
         </td>
     </tr>
     @if(Session::get("client")->reason_action_taken)
@@ -47,8 +47,8 @@
         </tr>
         <tr>
             <td colspan="3">
-                <small>@if(Session::get("client")->reason_notes) Previous Notes for action taken @else Notes for action taken @endif</small>
-                <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_notes) echo 'readonly';?>>{{ Session::get("client")->reason_notes }}</textarea>
+                <small>@if(Session::get("client")->reason_action_taken) Previous Notes for action taken @else Notes for action taken @endif</small>
+                <textarea name="reason_action_taken" id="" cols="30" rows="5" class="form-control" <?php if(Session::get("client")->reason_action_taken) echo 'readonly';?>>{{ Session::get("client")->reason_action_taken }}</textarea>
             </td>
         </tr>
         @if(Session::get("client")->reason_action_taken)
