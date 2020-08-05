@@ -31,8 +31,11 @@
                                 <th>Incoming</th>
                                 <th>Accepted</th>
                                 <th>Redirected</th>
-                                <th>Seen</th>
+                                <!--
+                                <th>Seen Total</th>
+                                -->
                                 <th>Seen only</th>
+                                <th>No Action</th>
                             </tr>
                             <?php
                             $count = 0;
@@ -56,8 +59,13 @@
                                     <td width="10%">{{ $row->incoming }}</td>
                                     <td width="10%">{{ $row->accepted }}</td>
                                     <td width="10%">{{ $row->redirected }}</td>
-                                    <td width="10%">{{ $row->seen_only }}</td>
-                                    <th>Under Development</th>
+                                    <!--
+                                    <td width="10%">{{ $row->seen_total }}</td>
+                                    -->
+                                    <?php $seen_only = $row->seen_total - $row->seen_accepted_redirected; ?>
+                                    <td width="10%">{{ $seen_only }}</td>
+                                    <?php $no_action = $row->incoming - $row->accepted - $seen_only; ?>
+                                    <td width="10%">Under Development</td>
                                 </tr>
                             @endforeach
                         </table>
