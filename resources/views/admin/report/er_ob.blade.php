@@ -65,7 +65,7 @@
                                     </td>
                                     <td width="10%">
                                         <?php
-                                            $accept_percent = ($row->accepted / $row->incoming) * 100;
+                                        $accept_percent = ($row->accepted / $row->incoming) * 100;
                                         ?>
                                         {{ $row->accepted }}
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
@@ -73,15 +73,15 @@
                                     <td width="10%">
                                         {{ $row->redirected }}
                                     </td>
-                                    <!--
+                                <!--
                                     <td width="10%">{{ $row->seen_total }}</td>
                                     -->
                                     <?php $seen_only = $row->seen_total - $row->seen_accepted_redirected; ?>
                                     <td width="10%">
                                         {{ $seen_only }}
                                     </td>
-                                    <?php $no_action = $row->incoming - $row->accepted - $seen_only; ?>
-                                    <!--
+                                <?php $no_action = $row->incoming - $row->accepted - $seen_only; ?>
+                                <!--
                                     <td width="10%">
                                         <small>Under Development</small>
                                         <br>
@@ -112,4 +112,3 @@
         $('#consolidate_date_range').daterangepicker();
     </script>
 @endsection
-
