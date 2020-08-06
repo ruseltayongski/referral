@@ -11,53 +11,53 @@
     <tr>
         <td >
             <small>Reference Number</small><br>
-            &nbsp;&nbsp;<b class="text-green">{{ $client->reference_number }}</b>
+            &nbsp;&nbsp;<span class="text-green">{{ $client->reference_number }}</span>
         </td>
         <td >
             <small>Time Started</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</b>
+            &nbsp;&nbsp;<span class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</span>
         </td>
         <td>
             <small>Call Classification</small><br>
-            &nbsp;&nbsp;<b class="<?php if($client->call_classification == 'repeat_call') echo 'text-red'; else echo 'text-blue'; ?>"><?php if($client->call_classification == 'repeat_call') echo 'Repeat Call'; else echo 'New Call'; ?></b>
+            &nbsp;&nbsp;<span class="<?php if($client->call_classification == 'repeat_call') echo 'text-red'; else echo 'text-blue'; ?>"><?php if($client->call_classification == 'repeat_call') echo 'Repeat Call'; else echo 'New Call'; ?></span>
         </td>
     </tr>
     <tr>
         <td >
             <small>Name</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->name }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->name }}</span>
         </td>
         <td>
             <small>Age</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->age }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->age }}</span>
         </td>
         <td >
             <small>Gender</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->sex }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->sex }}</span>
         </td>
     </tr>
     <tr>
         <td >
             <small>Province</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ \App\Province::find($client->province_id)->description }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Province::find($client->province_id)->description }}</span>
         </td>
         <td>
             <small>Municipality</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ \App\Muncity::find($client->municipality_id)->description }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Muncity::find($client->municipality_id)->description }}</span>
         </td>
         <td >
             <small>Barangay</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ \App\Barangay::find($client->barangay_id)->description }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Barangay::find($client->barangay_id)->description }}</span>
         </td>
     </tr>
     <tr>
         <td >
             <small>Sitio</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->sitio }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->sitio }}</span>
         </td>
         <td>
             <small>Contact Number</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->contact_number }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->contact_number }}</span>
         </td>
     </tr>
 </table>
@@ -67,11 +67,11 @@
     <tr>
         <td width="50%">
             <small>Notes</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >{{ $client->reason_notes }}</b>
+            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_notes }}</span>
         </td>
         <td width="50%">
             <small>Notes for action taken</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->reason_action_taken }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
         </td>
     </tr>
 </table>
@@ -80,19 +80,19 @@
     <tr>
         <td width="25%">
             <small>Patient Data(Name,Age,Gender)</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >{{ $client->reason_patient_data }}</b>
+            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
         </td>
         <td width="25%">
             <small>Chief Complains</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->reason_chief_complains }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
         </td>
         <td width="25%">
             <small>Relationship to patient (Patient, Family & Others)</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->relationship }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->relationship }}</span>
         </td>
         <td width="25%">
             <small>Notes for action taken</small><br>
-            &nbsp;&nbsp;<b class="text-yellow">{{ $client->reason_action_taken }}</b>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
         </td>
     </tr>
 </table>
@@ -103,7 +103,7 @@
     <tr>
         <td >
             <small>Complete</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >
+            &nbsp;&nbsp;<span class="text-yellow" >
                 <?php
                     if($client->transaction_complete == 'concern_address')
                         echo 'Concern Address';
@@ -112,19 +112,19 @@
                     elseif($client->transaction_complete == 'complete_call')
                         echo 'Completed Call';
                 ?>
-            </b>
+            </span>
         </td>
         <td >
             <small>Time Ended</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >
+            &nbsp;&nbsp;<span class="text-yellow" >
                 {{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}
-            </b>
+            </span>
         </td>
         <td >
             <small>Time Duration</small><br>
-            &nbsp;&nbsp;<b class="text-yellow" >
+            &nbsp;&nbsp;<span class="text-yellow" >
                 {{ date('H:i:s',strtotime($client->time_duration)) }}
-            </b>
+            </span>
         </td>
     </tr>
 </table>
@@ -133,7 +133,7 @@
         <tr>
             <td >
                 <small>In Complete</small><br>
-                &nbsp;&nbsp;<b class="text-yellow" >
+                &nbsp;&nbsp;<span class="text-yellow" >
                     <?php
                         if($client->transaction_incomplete == 'drop_call')
                             echo 'Dropped Calls';
@@ -142,7 +142,7 @@
                         elseif($client->transaction_incomplete == 'prank_call')
                             echo 'Prank Calls';
                     ?>
-                </b>
+                </span>
             </td>
         </tr>
     </table>
