@@ -68,11 +68,11 @@ class OpcenController extends Controller
 
     public function opcenClient(Request $request){
         $seaarch = $request->search;
-        $user = Session::get('auth');
         $client = OpcenClient::where(function($q) use ($seaarch){
                 $q->where('reference_number','like',"%$seaarch%")
                     ->orWhere('name','like',"%$seaarch%");
             })
+            ->orderBy("time_started","desc")
             ->paginate(15);
 
         return view('opcen.client',[
@@ -200,34 +200,6 @@ class OpcenController extends Controller
         $opcen_client->time_ended = $time_ended;
         $opcen_client->time_duration = $duration_time->h.':'.$duration_time->i.':'.$duration_time->s;
         $opcen_client->save();
-
-        if($request->reason_notes1 || $request->reason_action_taken1){
-            $repeat_call = new RepeatCall();
-            $repeat_call->reference_number = $request->reference_number;
-            $repeat_call->encoded_by = $encoded_by;
-            $repeat_call->call_classification = $request->call_classification;
-            $repeat_call->reference_number = $request->reference_number;
-            $repeat_call->name = $request->name;
-            $repeat_call->age = $request->age;
-            $repeat_call->sex = $request->sex;
-            $repeat_call->province_id = $request->province_id;
-            $repeat_call->municipality_id = $request->municipality_id;
-            $repeat_call->barangay_id = $request->barangay_id;
-            $repeat_call->sitio = $request->sitio;
-            $repeat_call->contact_number = $request->contact_number;
-            $repeat_call->relationship = $request->relationship;
-            $repeat_call->reason_calling = $request->reason_calling;
-            $repeat_call->reason_notes = $request->reason_notes1;
-            $repeat_call->reason_patient_data = $request->reason_patient_data;
-            $repeat_call->reason_chief_complains = $request->reason_chief_complains;
-            $repeat_call->reason_action_taken = $request->reason_action_taken1;
-            $repeat_call->transaction_complete = $request->transaction_complete;
-            $repeat_call->transaction_incomplete = $request->transaction_incomplete;
-            $repeat_call->time_started = $time_started;
-            $repeat_call->time_ended = $time_ended;
-            $repeat_call->time_duration = $duration_time->h.':'.$duration_time->i.':'.$duration_time->s;
-            $repeat_call->save();
-        }
 
         Session::put('opcen',true);
         return Redirect::back();

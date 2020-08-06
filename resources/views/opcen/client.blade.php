@@ -1,12 +1,10 @@
 @extends('layouts.app')
-
+<style>
+    .font_size{
+        font-size: 13pt;
+    }
+</style>
 @section('content')
-    <style>
-        .color1 {
-            color: #ff8456;
-            font-size: 15pt;
-        }
-    </style>
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header">
@@ -27,9 +25,8 @@
                         <table class="table table-striped">
                             <thead class="bg-gray">
                             <tr>
-                                <th>Reference Number</th>
-                                <th>Name</th>
-                                <th>Call Classification</th>
+                                <th>Client Name</th>
+                                <th>Transacted By</th>
                                 <th>Time Started</th>
                                 <th>Time Ended</th>
                                 <th>Time Duration</th>
@@ -45,28 +42,42 @@
                                                 data-toggle="modal"
                                                 data-id = "{{ $row->id }}"
                                                 onclick="ClientBody('<?php echo $row->id ?>')"
-                                                class="color1 client_info"
+                                                class="client_info"
                                             >
-                                                {{ $row->reference_number }}
+                                                <span class="text-green font_size">{{ $row->name }}</span><br>
+                                                <small class="text-yellow"><i>{{ $row->reference_number }}</i></small>
                                             </a>
                                         </td>
                                         <td>
-                                            <a
-                                                href="#client_modal"
-                                                data-toggle="modal"
-                                                data-id = "{{ $row->id }}"
-                                                onclick="ClientBody('<?php echo $row->id ?>')"
-                                                class="client_info"
-                                                style="color: #2cb35d"
-                                            >
-                                                {{ $row->name }}
-                                            </a>
+                                            <?php
+                                                $transacted_by = \App\User::find($row->encoded_by);
+                                                $transacted_by = $transacted_by->fname.' '.ucfirst($transacted_by->mname[0]).'. '.$transacted_by->lname;
+                                            ?>
+                                            <span class="text-green font_size">{{ $transacted_by }}</span><br>
+                                            @if($row->call_classification == 'new_call')<small class="text-blue">(New Call)</small>@else<small class="text-red">(Repeat Call)</small>@endif
                                         </td>
-                                        <td>@if($row->call_classification == 'new_call')<span class="text-blue">New Call</span>@else<span class="text-red">Repeat Call</span>@endif</td>
-                                        <td>{{ $row->time_started }}</td>
-                                        <td>{{ $row->time_ended }}</td>
-                                        <td>{{ date('H:i:s',strtotime($row->time_duration)) }}</td>
-                                        <td><button type="button" class="btn-xs btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
+                                        <td>
+                                            <span class="text-green font_size">
+                                                {{ date('F d,Y',strtotime($row->time_started)) }}
+                                            </span><br>
+                                            <small class="text-yellow">
+                                                ({{ date('h:i:s A',strtotime($row->time_started)) }})
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <span class="text-green font_size">
+                                                {{ date('F d,Y',strtotime($row->time_ended)) }}
+                                            </span><br>
+                                            <small class="text-yellow">
+                                                ({{ date('h:i:s A',strtotime($row->time_ended)) }})
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <span class="font_size text-blue">
+                                                {{ date('H:i:s',strtotime($row->time_duration)) }}
+                                            </span>
+                                        </td>
+                                        <td width="10%"><button type="button" class="btn-xs btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -116,3 +116,8 @@
         </tr>
     </table>
 </form>
+<script>
+    @if($client->municipality_id && !$client->barangay_id)
+        onChangeMunicipality("<?php echo $client->municipality_id ?>");
+    @endif
+</script>

@@ -13,8 +13,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 </span>
                 </div>
             @endif
-            <h3 class="page-header">Monthly Activity
-            </h3>
+            <h3 class="page-header">Monthly Activity</h3>
             <div class="chart">
                 <canvas id="barChart"></canvas>
             </div>
@@ -22,62 +21,74 @@ $error = \Illuminate\Support\Facades\Input::get('error');
     </div>
     <div class="col-md-3">
         <div class="panel panel-jim">
-            <div class="panel-heading">
-                <h3 class="panel-title">Statistics</h3>
-            </div>
-            <div class="panel-body">
-                <div class="list-group">
-                    <a href="#" class="list-group-item clearfix">
-                        Completed
-                        <span class="pull-right">
-                            <div class="badge">
-                                <span class="count_referral">{{ $transaction_complete }}</span>
-                            </div>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item clearfix">
-                        In Complete
-                        <span class="pull-right">
-                            <div class="badge">
-                                <span class="count_referral">{{ $transaction_incomplete }}</span>
-                            </div>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item clearfix">
-                        Inquiry
-                        <span class="pull-right">
-                            <div class="badge">
-                                <span class="count_referral">{{ $inquiry }}</span>
-                            </div>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item clearfix">
-                        Referrals
-                        <span class="pull-right">
-                            <div class="badge">
-                                <span class="count_referral">{{ $referral }}</span>
-                            </div>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item clearfix">
-                        Others
-                        <span class="pull-right">
-                            <div class="badge">
-                                <span class="count_referral">{{ $others }}</span>
-                            </div>
-                        </span>
-                    </a>
-                </div>
-
-            </div>
+            <div id="reason_calling" style="height: 300px; width: 100%;"></div>
+        </div>
+        <div class="panel panel-jim">
+            <div id="transaction_status" style="height: 300px; width: 100%;"></div>
         </div>
     </div>
-
 
 @endsection
 
 @section('js')
     @include('script.chart')
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            var options1 = {
+                title: {
+                    text: "Reason for calling",
+                    fontFamily: "Arial"
+                },
+                legend: {
+                    horizontalAlign: "center", // "center" , "right"
+                    verticalAlign: "top",  // "top" , "bottom"
+                },
+                animationEnabled: true,
+                data: [{
+                    type: "pie",
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabel: "{label} ({y})",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "Inquiry", y: "{{ $inquiry }}" },
+                        { label: "Referral", y: "{{ $referral }}" },
+                        { label: "Others", y: "{{ $others }}" }
+                    ]
+                }]
+            };
+            $("#reason_calling").CanvasJSChart(options1);
+
+
+            var options = {
+                title: {
+                    text: "Status of Transaction",
+                    fontFamily: "Arial"
+                },
+                legend: {
+                    horizontalAlign: "center", // "center" , "right"
+                    verticalAlign: "top"  // "top" , "bottom"
+                },
+                animationEnabled: true,
+                data: [{
+                    type: "pie",
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabel: "{label} ({y})",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "Complete", y: "{{ $transaction_complete }}" },
+                        { label: "In Complete", y: "{{ $transaction_incomplete }}" }
+                    ]
+                }]
+            };
+            $("#transaction_status").CanvasJSChart(options);
+
+        }
+    </script>
+
     <script>
         var chartdata = {
             type: 'bar',
