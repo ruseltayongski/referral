@@ -45,7 +45,7 @@
                                                 class="client_info"
                                             >
                                                 <span class="text-green font_size">{{ $row->name }}</span><br>
-                                                <small class="text-yellow"><i>{{ $row->reference_number }}</i></small>
+                                                <small class="text-yellow">{{ $row->reference_number }}</small>
                                             </a>
                                         </td>
                                         <td>
