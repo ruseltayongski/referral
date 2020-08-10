@@ -17,8 +17,8 @@
 
                 </div>
                 <center>
-                    <h4 class="text-green">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM</h4>
-                    <b style="font-size: 15pt">Clinical Referral Form</b>
+                    <h4>CENTRAL VISAYAS HEALTH REFERRAL SYSTEM</h4>
+                    <span>Clinical Referral Form</span>
                 </center>
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}

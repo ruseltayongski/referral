@@ -176,10 +176,10 @@ $user = Session::get('auth');
         $('.select2').select2();
 
         function clearFieldsSidebar(){
-            $("#keyword").val("");
-            $("#facility").select2("val", "");
-            $("#department").val("");
-            $("#option").val("");
+            <?php
+                Session::put('search_referral',false)
+            ?>
+            refreshPage();
         }
 
         $('#daterange').daterangepicker({

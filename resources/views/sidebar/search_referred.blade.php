@@ -54,8 +54,8 @@
                 </select>
             </div>
             <div class="btn-group">
-                <button type="button" class="btn btn-flat btn-danger" onclick="clearFieldsSidebar()">
-                    <i class="fa fa-eraser"></i> Clear
+                <button type="button" class="btn btn-flat btn-warning" onclick="clearFieldsSidebar()">
+                    <i class="fa fa-eye"></i> View All
                 </button>
                 <button type="submit" class="btn btn-flat btn-success">
                     <i class="fa fa-filter"></i> Filter Result
