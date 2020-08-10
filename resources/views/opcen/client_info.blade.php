@@ -80,17 +80,21 @@
 @elseif($client->reason_calling == 'referral')
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
-        <td width="33%">
-            <small>Patient Data(Name,Age,Gender)</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
-        </td>
-        <td width="33%">
-            <small>Chief Complains</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
-        </td>
-        <td width="33%">
-            <small style="font-size: 9pt;">Relationship to patient (Patient, Family & Others)</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->relationship }}</span>
+        <td width="100%">
+            <div class="row">
+                <div class="col-md-4">
+                    <small>Patient Data(Name,Age,Gender)</small><br>
+                    &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
+                </div>
+                <div class="col-md-4">
+                    <small>Chief Complains</small><br>
+                    &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
+                </div>
+                <div class="col-md-4">
+                    <small style="font-size: 9pt;">Relationship to patient (Patient, Family & Others)</small><br>
+                    &nbsp;&nbsp;<span class="text-yellow">{{ $client->relationship }}</span>
+                </div>
+            </div>
         </td>
     </tr>
     <tr>
