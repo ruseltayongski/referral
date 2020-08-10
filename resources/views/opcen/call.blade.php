@@ -1,12 +1,5 @@
 <form action="{{ asset('opcen/transaction/end') }}" method="POST" id="form_submit">
     {{ csrf_field() }}
-    <?php
-        if(isset($client->reference_number)){
-            $reference_number = $client->reference_number;
-        } else {
-            $reference_number = date('Y').Session::get('auth')->id.date('mdHis').sha1(time())[6];
-        }
-    ?>
     <table class="table table-hover table-bordered" style="width: 100%;">
         <tr>
             <td >

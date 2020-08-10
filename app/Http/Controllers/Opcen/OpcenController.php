@@ -6,6 +6,7 @@ use App\Barangay;
 use App\Muncity;
 use App\OpcenClient;
 use App\Province;
+use App\ReferenceNumber;
 use App\RepeatCall;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -85,11 +86,20 @@ class OpcenController extends Controller
         return view('opcen.bed_available');
     }
 
+    public function supplyReferenceNumber(){
+        $encoded_by = Session::get('auth')->id;
+        $reference_number = new ReferenceNumber();
+        $reference_number->encoded_by = $encoded_by;
+        $reference_number->save();
+        return $reference_number->id;
+    }
+
     public function newCall(){
         $province = Province::get();
-        Session::put("client",false);
+        Session::put("client",false); //from repeat call so that need to flush session
         return view('opcen.call',[
-            "province" => $province
+            "province" => $province,
+            "reference_number" => str_pad($this->supplyReferenceNumber(), 5, '0', STR_PAD_LEFT)
         ]);
     }
 
@@ -103,7 +113,8 @@ class OpcenController extends Controller
             "province" => $province,
             "municipality" => $municipality,
             "barangay" => $barangay,
-            "client" => $client
+            "client" => $client,
+            "reference_number" => str_pad($this->supplyReferenceNumber(), 5, '0', STR_PAD_LEFT)
         ]);
     }
 
