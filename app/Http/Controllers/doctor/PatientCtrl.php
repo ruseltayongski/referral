@@ -70,8 +70,44 @@ class PatientCtrl extends Controller
 
         $data = array();
 
-        if(!empty($keyword) || !empty($mun) || !empty($brgy) || !empty($others))
+        if(!empty($keyword) || !empty($mun) || !empty($brgy))
         {
+            $tsekap = Profile::orderBy('lname','asc')
+                ->where('barangay_id',$brgy)
+                ->where('muncity_id',$mun)
+                ->where(function($q) use($keyword){
+                    $q->where('lname',"like","%$keyword%")
+                        ->orWhere('fname','like',"%$keyword%")
+                        ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
+                })
+                ->get();
+
+            foreach($tsekap as $req){
+                $unique = array(
+                    $req->fname,
+                    $req->mname,
+                    $req->lname,
+                    date('Ymd',strtotime($req->dob)),
+                    $req->barangay_id
+                );
+                $unique = implode($unique);
+
+                $match = array('unique_id'=>$unique);
+                $data = array(
+                    'phic_status' => ($req->phic_status) ? $req->phic_status: '',
+                    'phic_id' => ($req->phicID) ? $req->phicID: '',
+                    'fname' => ($req->fname) ? $req->fname: '',
+                    'mname' => ($req->mname) ? $req->mname: '',
+                    'lname' => ($req->lname) ? $req->lname: '',
+                    'dob' => ($req->dob) ? $req->dob: '',
+                    'sex' => ($req->sex) ? $req->sex: '',
+                    'muncity' => ($req->muncity_id) ? $req->muncity_id : '',
+                    'province' => ($req->province_id) ? $req->province_id : '',
+                    'brgy' => ($req->barangay_id) ? $req->barangay_id: ''
+                );
+                Patients::updateOrCreate($match,$data);
+            }
+
             $data = Patients::orderBy('lname','asc');
             if(!empty($brgy)){
                 $data = $data->where('brgy',$brgy);
@@ -85,13 +121,12 @@ class PatientCtrl extends Controller
 
             $data = $data->where(function($q) use($keyword){
                 $q->where('lname',"like","%$keyword%")
-                    ->where('fname','like',"%$keyword%")
+                    ->orWhere('fname','like',"%$keyword%")
                     ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
             });
 
             $data = $data->paginate(20);
         }
-
 
         //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
@@ -101,17 +136,6 @@ class PatientCtrl extends Controller
             'source' => $source,
             //'icd10' => $icd10,
             'sidebar' => 'filter_profile'
-        ]);
-    }
-
-    public function addPatient()
-    {
-        $user = Session::get('auth');
-        $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
-        return view('doctor.addPatient',[
-            'title' => 'Add New Patient',
-            'muncity' => $muncity,
-            'method' => 'store'
         ]);
     }
 
@@ -154,6 +178,17 @@ class PatientCtrl extends Controller
         );
         Session::put('profileSearch',$data);
         return redirect('doctor/patient');
+    }
+
+    public function addPatient()
+    {
+        $user = Session::get('auth');
+        $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
+        return view('doctor.addPatient',[
+            'title' => 'Add New Patient',
+            'muncity' => $muncity,
+            'method' => 'store'
+        ]);
     }
 
     public function updatePatient(Request $request){

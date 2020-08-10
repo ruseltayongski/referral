@@ -431,7 +431,7 @@ class ReferralCtrl extends Controller
         {
             $data = $data->where('tracking.referred_to',$facility);
         }
-        if($facility)
+        if($department)
         {
             $data = $data->where('tracking.department_id',$department);
         }

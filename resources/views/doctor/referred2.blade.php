@@ -459,10 +459,14 @@ $user = Session::get('auth');
         });
 
         function clearFieldsSidebar(){
-            $("#keyword").val("");
-            $("#facility").select2("val", "");
-            $("#department").val("");
-            $("#option").val("");
+            <?php
+            Session::put('referredKeyword',false);
+            Session::put('referredSelect',false);
+            Session::put('referred_date',false);
+            Session::put('referred_facility',false);
+            Session::put('referred_department',false);
+            ?>
+            refreshPage();
         }
     </script>
 @endsection
