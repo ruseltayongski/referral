@@ -9,7 +9,7 @@
     </div>
     <div class="form-group">
         <label>Middle Name:</label>
-        <input type="text" class="form-control" value="{{ $user->mname }}" name="mname">
+        <input type="text" class="form-control" value="{{ $user->mname }}" name="mname" required>
     </div>
     <div class="form-group">
         <label>Last Name:</label>
@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label>Email Address <small class="text-muted"><em>(Optional):</em></small></label>
-        <input type="text" class="form-control" name="email" value="{{ $user->email }}">
+        <input type="text" class="form-control" name="email" value="{{ $user->email }}" required>
     </div>
     <hr />
 
