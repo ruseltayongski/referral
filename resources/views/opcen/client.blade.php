@@ -75,7 +75,10 @@
                                         <td>
                                             <span class="font_size text-blue">
                                                 {{ date('H:i:s',strtotime($row->time_duration)) }}
-                                            </span>
+                                            </span><br>
+                                            <small class="text-yellow">
+                                                ({{ ucfirst($row->reason_calling) }})
+                                            </small>
                                         </td>
                                         <td width="10%"><button type="button" class="btn-xs btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
                                     </tr>

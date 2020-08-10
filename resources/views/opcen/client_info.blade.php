@@ -6,7 +6,7 @@
         </button>
     </legend>
 </fieldset>
-<span class="text-blue" style="font-size: 12pt;"><i>Personal Information</i></span>
+<span class="text-blue" style="font-size: 12pt;">Personal Information</span>
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
         <td >
@@ -61,15 +61,17 @@
         </td>
     </tr>
 </table>
-<span class="text-blue" style="font-size: 12pt;"><i>Reason for Calling {{ "- ".ucfirst($client->reason_calling) }}</i></span>
+<span class="text-blue" style="font-size: 12pt;">Reason for Calling {{ "- ".ucfirst($client->reason_calling) }}</span>
 @if($client->reason_calling == 'inquiry' || $client->reason_calling == 'others')
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
-        <td width="50%">
+        <td>
             <small>Notes</small><br>
             &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_notes }}</span>
         </td>
-        <td width="50%">
+    </tr>
+    <tr>
+        <td>
             <small>Notes for action taken</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
         </td>
@@ -78,26 +80,28 @@
 @elseif($client->reason_calling == 'referral')
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
-        <td width="25%">
+        <td width="33%">
             <small>Patient Data(Name,Age,Gender)</small><br>
             &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
         </td>
-        <td width="25%">
+        <td width="33%">
             <small>Chief Complains</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
         </td>
-        <td width="25%">
-            <small>Relationship to patient (Patient, Family & Others)</small><br>
+        <td width="33%">
+            <small style="font-size: 9pt;">Relationship to patient (Patient, Family & Others)</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->relationship }}</span>
         </td>
-        <td width="25%">
+    </tr>
+    <tr>
+        <td width="25%" colspan="3">
             <small>Notes for action taken</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
         </td>
     </tr>
 </table>
 @endif
-<span class="text-blue" style="font-size: 12pt;"><i>Status of transaction</i></span>
+<span class="text-blue" style="font-size: 12pt;">Status of transaction</span>
 @if($client->transaction_complete)
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
