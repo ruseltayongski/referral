@@ -1,7 +1,7 @@
 <input type="hidden" class="user_id" value="{{ $user_id }}" name="user_id">
 <div class="modal-body">
     <fieldset>
-        <legend><i class="fa fa-user-plus"></i> Add User</legend>
+        <legend><i class="fa fa-user-plus"></i> Add Userasdsa</legend>
     </fieldset>
     <div class="form-group">
         <label>First Name:</label>
