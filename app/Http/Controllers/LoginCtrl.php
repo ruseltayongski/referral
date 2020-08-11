@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginCtrl extends Controller
 {
@@ -20,63 +21,64 @@ class LoginCtrl extends Controller
     {
         $login = User::where('username',$req->username)
             ->first();
-        if($login){
+        if($login)
+        {
+            if(Hash::check($req->password,$login->password))
+            {
+                Session::put('auth',$login);
+                $last_login = date('Y-m-d H:i:s');
+                User::where('id',$login->id)
+                    ->update([
+                        'last_login' => $last_login,
+                        'login_status' => 'login'
+                    ]);
+                $checkLastLogin = self::checkLastLogin($login->id);
 
-            if($login->status==='inactive'){
-                return 'inactive';
-            }else{
-                if(Hash::check($req->password,$login->password))
-                {
-                    Session::put('auth',$login);
-                    $last_login = date('Y-m-d H:i:s');
-                    User::where('id',$login->id)
-                        ->update([
-                            'last_login' => $last_login,
-                            'login_status' => 'login'
-                        ]);
-                    $checkLastLogin = self::checkLastLogin($login->id);
+                $l = new Login();
+                $l->userId = $login->id;
+                $l->login = $last_login;
+                $l->status = 'login';
+                $l->save();
 
-                    $l = new Login();
-                    $l->userId = $login->id;
-                    $l->login = $last_login;
-                    $l->status = 'login';
-                    $l->save();
-
-                    if($checkLastLogin > 0 ){
-                        Login::where('id',$checkLastLogin)
+                if($checkLastLogin > 0 ){
+                    Login::where('id',$checkLastLogin)
                         ->update([
                             'logout' => $last_login
                         ]);
-                    }
-
-                    if($login->level=='doctor'){
-                        return 'doctor';
-                    }else if($login->level=='chief'){
-                        return 'chief';
-                    }else if($login->level=='support'){
-                        return 'support';
-                    }else if($login->level=='mcc'){
-                        return 'mcc';
-                    }else if($login->level=='admin'){
-                        return 'admin';
-                    }else if($login->level=='eoc_region'){
-                        return 'eoc_region';
-                    }else if($login->level=='eoc_city'){
-                        return 'eoc_city';
-                    } else if($login->level=='opcen'){
-                        return 'opcen';
-                    }else{
-                        Session::forget('auth');
-                        return 'denied';
-                    }
                 }
-                else
-                {
-                    return 'error';
+
+                if($login->level=='doctor'){
+                    return redirect('doctor');
+                }
+                else if($login->level=='chief'){
+                    return redirect('chief');
+                }
+                else if($login->level=='support'){
+                    return redirect('support');
+                }
+                else if($login->level=='mcc'){
+                    return redirect('mcc');
+                }
+                else if($login->level=='admin'){
+                    return redirect('admin');
+                }
+                else if($login->level=='eoc_region'){
+                    return redirect('eoc_region');
+                }
+                else if($login->level=='eoc_city'){
+                    return redirect('eoc_city');
+                }
+                else if($login->level=='opcen'){
+                    return redirect('opcen');
+                }
+                else{
+                    Session::forget('auth');
+                    return Redirect::back()->with('error','You don\'t have access in this system.')->with('username',$req->username);
                 }
             }
-        }else{
-            return 'error';
+        }
+        else{
+            return Redirect::back()->with('error','These credentials do not match our records')->with('username',$req->username);
         }
     }
 
