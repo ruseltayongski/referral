@@ -15,36 +15,27 @@ $dateNow = date('Y-m-d');
     <link rel="stylesheet" href="{{ asset('resources/assets/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('resources/assets/css/AdminLTE.min.css') }}">
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   </head>
   <body class="hold-transition login-page">
-    @if(Session::has('ok'))
-        <div class="row">
-            <div class="alert alert-success text-center">
-                <strong class="text-center">{{ Session::get('ok') }}</strong>
-            </div>
-        </div>
-    @endif
-
-    <div class="login-box">
+   <div class="login-box">
         <center>
             <img src="{{ asset('resources/img/doh.png') }}" style="width: 25%"/><br>
             <label>Central Visayas Electronic Health Referral System(CVe-HRS)</label>
         </center>
-          <form role="form" method="POST" action="{{ url('/login') }}" class="form-submit" >
+          <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
               {{ csrf_field() }}
               <div class="login-box-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-                  <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-                    <input id="username" autocomplete="off" type="text" placeholder="Login ID" autofocus class="form-control" name="username" value="{{ old('username') }}">
+                  <div class="form-group has-feedback {{ Session::has('error') ? ' has-error' : '' }}">
+                    <input id="username" autocomplete="off" type="text" placeholder="Login ID" autofocus class="form-control" name="username" value="{{ Session::get('username') }}">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                    <span class="help-block hide">
-
+                    <span class="help-block">
+                        @if(Session::has('error'))
+                            <strong>{{ Session::get('error') }}</strong>
+                        @endif
                     </span>
                   </div>
-
-                  <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
+                  <div class="form-group has-feedback ">
                     <input id="password" type="password" class="form-control" name="password" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                   </div>
@@ -153,52 +144,12 @@ $dateNow = date('Y-m-d');
     <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
     <script>
         $('#notificationModal').modal('show');
+
         $('.btn-submit').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
 
-            event.preventDefault();
-            var username = $("#username").val();
-            var password = $("#password").val();
-            console.log(username);
-            var link = "{{ url('login') }}";
-            $.ajax({
-                url: link,
-                type: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    username: username,
-                    password: password
-                },
-                success: function(data){
-                    console.log(data);
-                    setTimeout(function(){
-                        if(data == "error"){
-                            console.log("error if");
-                            $('.has-feedback').addClass('has-error ');
-                            $('.help-block').removeClass('hide').html('<strong>These credentials do not match our records.</strong>');
-                            $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
-
-                        }else if(data == "denied"){
-                            $('.has-feedback').addClass('has-error ');
-                            $('.help-block').removeClass('hide').html('<strong>You don\'t have access in this system.</strong>');
-                            $('.btn-submit').html('<i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In');
-                        }else{
-                            window.location.href = "{{ url('/') }}/"+data;
-                        }
-                    },500);
-
-                },
-                error: function(){
-                    setTimeout(function(){
-                        window.location.reload(false);
-                    },5000);
-                }
-            });
         });
 
-        /*$('.form-submit').submit(function(e){
-
-        });*/
     </script>
   </body>
 </html>
