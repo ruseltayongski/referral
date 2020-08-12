@@ -76,6 +76,9 @@ class LoginCtrl extends Controller
                     return Redirect::back()->with('error','You don\'t have access in this system.')->with('username',$req->username);
                 }
             }
+            else{
+                return Redirect::back()->with('error','These credentials do not match our records')->with('username',$req->username);
+            }
         }
         else{
             return Redirect::back()->with('error','These credentials do not match our records')->with('username',$req->username);
