@@ -143,7 +143,9 @@ $dateNow = date('Y-m-d');
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
     <script>
+        @if(!Session::has("error"))
         $('#notificationModal').modal('show');
+        @endif
 
         $('.btn-submit').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
