@@ -52,24 +52,27 @@
                                 <tr class="">
                                     <td>{{ $count }}</td>
                                     <td >
-                                        {{ $row->name }}
+                                        <span style="font-size: 12pt;">
+                                            {{ $row->name }}
+                                        </span><br>
+                                        <small class="text-yellow">{{ ucfirst($row->hospital_type) }}</small>
                                     </td>
                                     <td width="10%">
-                                        {{ $row->incoming }}
+                                        <span class="text-blue" style="font-size: 15pt">{{ $row->incoming }}</span><br><br>
                                     </td>
                                     <td width="10%">
                                         <?php
                                             $accept_percent = ($row->accepted / $row->incoming) * 100;
                                         ?>
-                                        {{ $row->accepted }}
+                                        <span class="text-blue">{{ $row->accepted }}</span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
                                     </td>
                                     <td width="10%">
-                                        {{ $row->redirected }}
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->redirected }}</span><br><br>
                                     </td>
                                     <?php $seen_only = $row->seen_total - $row->seen_accepted_redirected; ?>
                                     <td width="10%">
-                                        {{ $seen_only }}
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $seen_only }}</span><br><br>
                                     </td>
                                     <?php $no_action = $row->incoming - $row->accepted - $seen_only; ?>
                                 </tr>
