@@ -83,7 +83,7 @@
                                     <tr>
                                         <td colspan="7">
                                             <div class="form-group">
-                                                <b style="color: #ff298e;font-size: 17pt;">{{ $row->province }}</b><br>
+                                                <b style="color: #ff298e;font-size: 17pt;">{{ $row->province }} - as of {{ date('F d, Y') }}</b><br>
                                                 <div id="chartOverall{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
                                                 <strong class="text-green">Overall - </strong>
                                                 <span class="progress-number"><b class="{{ 'facility_onboard'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'facility_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red facility_percent{{ $row->province_id }}"></b>

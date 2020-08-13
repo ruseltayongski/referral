@@ -32,6 +32,7 @@
                                 <th>Accepted</th>
                                 <th>Redirected</th>
                                 <th>Seen only</th>
+                                <th>No Action</th>
                             </tr>
                             <?php
                             $count = 0;
@@ -74,7 +75,10 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $seen_only }}</span><br><br>
                                     </td>
-                                    <?php $no_action = $row->incoming - $row->accepted - $seen_only; ?>
+                                    <?php $no_action = $row->incoming - ($row->accepted + $row->redirected + $seen_only); ?>
+                                    <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $no_action }}</span><br><br>
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
