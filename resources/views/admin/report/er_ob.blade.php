@@ -19,7 +19,7 @@
                         </div>
                     </form>
                 </div>
-                <h3>{{ $title }}</h3>
+                <h3 class="text-blue">{{ $title }} as</h3> <span class="text-blue">{{ date("F d, Y",strtotime($date_range_start)).' to '.date("F d, Y",strtotime($date_range_end)) }}</span>
             </div>
             <div class="box-body">
                 @if(count($data) > 0)
