@@ -11,7 +11,7 @@
         <div class="box box-success">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <form action="{{ asset('offline/facility') }}" method="POST" class="form-inline">
+                    <form action="{{ asset('admin/er_ob') }}" method="POST" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm">
                             <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
