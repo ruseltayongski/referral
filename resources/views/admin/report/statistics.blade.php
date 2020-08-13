@@ -55,7 +55,7 @@
                                         <span style="font-size: 12pt;">
                                             {{ $row->name }}
                                         </span><br>
-                                        <small class="text-yellow">{{ ucfirst($row->hospital_type) }}</small>
+                                        <small class="@if($row->hospital_type == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row->hospital_type) }}</small>
                                     </td>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt">{{ $row->incoming }}</span><br><br>
