@@ -33,7 +33,7 @@
         </td>
         <td >
             <small>Gender</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->sex }}</span>
+            &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->sex) }}</span>
         </td>
     </tr>
     <tr>
