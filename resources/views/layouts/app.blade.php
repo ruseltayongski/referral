@@ -246,7 +246,7 @@
                         <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li>
                         <li><a href="{{ url('opcen/hospital') }}"><i class="fa fa-home"></i> E-referral</a></li>
                         <li><a href="{{ url('opcen/hospital') }}"><i class="fa fa-home"></i> COVID Kaya</a></li>
-                        <li><a href="{{ url('opcen/hospital') }}"><i class="fa fa-home"></i> TTMF Tracker</a></li>
+                        <li><a href="{{ url('chat') }}"><i class="fa fa-home"></i> Chat</a></li>
                 @endif
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 <li class="dropdown">
