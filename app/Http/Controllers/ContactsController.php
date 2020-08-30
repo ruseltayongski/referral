@@ -6,10 +6,16 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Message;
 use App\Events\NewMessage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ContactsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index(){
         return view('chat');
@@ -17,8 +23,46 @@ class ContactsController extends Controller
     
     public function get()
     {
+        $user = Session::get('auth');
+        $picture = asset('resources/img/receiver.png');
         // get all users except the authenticated one
-        $contacts = User::where('username','like','%opcen%')->where('id', '!=', Session::get('auth')->id)->get();
+        if($user->level == 'opcen'){
+            $contacts = User::
+                select(
+                    "users.id",
+                    DB::raw("'$picture' as picture"),
+                    DB::raw("if(
+                            users.level = 'doctor',concat('Dr. ',users.fname,' ',users.lname),concat(users.fname,' ',users.lname)
+                        ) as name"),
+                    "facility.name as facility",
+                    "users.contact"
+                )
+                ->leftJoin("facility","facility.id","=","users.facility_id")
+                ->where('users.id', '!=', Session::get('auth')->id)
+                ->where('users.level','=','opcen')
+                ->orderBy('users.fname','desc')
+                ->get();
+        }
+        elseif($user->level == 'doctor' || $user->level == 'support'){
+            $contacts = User::
+                select(
+                    "users.id",
+                    DB::raw("'$picture' as picture"),
+                    DB::raw("if(
+                        users.level = 'doctor',concat('Dr. ',users.fname,' ',users.lname),concat(users.fname,' ',users.lname)
+                    ) as name"),
+                    "facility.name as facility",
+                    "users.contact"
+                )
+                ->leftJoin("facility","facility.id","=","users.facility_id")
+                ->where('users.id', '!=', Session::get('auth')->id)
+                ->where(function($q){
+                    $q->where('users.level','=','doctor');
+                    $q->orWhere('users.level','=','support');
+                })
+                ->orderBy('users.fname','desc')
+                ->get();
+        }
 
         // get a collection of items where sender_id is the user who sent us a message
         // and messages_count is the number of unread messages we have from him

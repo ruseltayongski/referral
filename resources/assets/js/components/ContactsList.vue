@@ -3,11 +3,12 @@
         <ul>
             <li v-for="contact in sortedContacts" :key="contact.id" @click="selectContact(contact)" :class="{ 'selected': contact == selected }">
                 <div class="avatar">
-                    <img :src="contact.profile_image" :alt="contact.name">
+                    <img :src="contact.picture" :alt="contact.name">
                 </div>
                 <div class="contact">
                     <p class="name">{{ contact.name }}</p>
-                    <p class="email">{{ contact.email }}</p>
+                    <p class="email text-yellow">{{ contact.facility }}</p>
+                    <p class="email">{{ contact.contact }}</p>
                 </div>
                 <span class="unread" v-if="contact.unread">{{ contact.unread }}</span>
             </li>

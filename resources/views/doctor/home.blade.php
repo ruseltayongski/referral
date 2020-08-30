@@ -49,6 +49,9 @@
                                     <li>
                                         REPORT MENU <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
+                                    <li>
+                                        CHAT MENU <small class="badge bg-green" style="font-size: 6pt;"> New</small>
+                                    </li>
                                 </ol>
                             </span>
                         </div>

@@ -23,7 +23,7 @@
             };
         },
         mounted() {
-            console.log('hahahahhaah!');
+            console.log('wwwww!');
             Echo.private(`messages.${this.user.id}`)
                 .listen('NewMessage', (e) => {
                     this.hanleIncoming(e.message);

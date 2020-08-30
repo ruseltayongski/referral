@@ -58052,7 +58052,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         var _this = this;
 
-        console.log('hahahahhaah!');
+        console.log('wwwww!');
         Echo.private('messages.' + this.user.id).listen('NewMessage', function (e) {
             _this.hanleIncoming(e.message);
         });
@@ -58745,6 +58745,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -58804,15 +58805,19 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "avatar" }, [
-              _c("img", {
-                attrs: { src: contact.profile_image, alt: contact.name }
-              })
+              _c("img", { attrs: { src: contact.picture, alt: contact.name } })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "contact" }, [
               _c("p", { staticClass: "name" }, [_vm._v(_vm._s(contact.name))]),
               _vm._v(" "),
-              _c("p", { staticClass: "email" }, [_vm._v(_vm._s(contact.email))])
+              _c("p", { staticClass: "email text-yellow" }, [
+                _vm._v(_vm._s(contact.facility))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "email" }, [
+                _vm._v(_vm._s(contact.contact))
+              ])
             ]),
             _vm._v(" "),
             contact.unread
