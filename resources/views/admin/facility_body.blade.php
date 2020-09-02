@@ -164,10 +164,10 @@
                     }
                 ?>
             >Private</option>
-            <option value="rhu"
+            <option value="RHU"
             <?php
                 if(isset($data->hospital_type)){
-                    if($data->hospital_type == 'rhu'){
+                    if($data->hospital_type == 'RHU'){
                         echo 'selected';
                     }
                 }

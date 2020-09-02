@@ -49,6 +49,11 @@
                                 $private_transaction[2]['with_transaction'] = 0;
                                 $private_transaction[2]['no_transaction'] = 0;
 
+                                $rhu_transaction[1]['with_transaction'] = 0;
+                                $rhu_transaction[1]['no_transaction'] = 0;
+                                $rhu_transaction[2]['with_transaction'] = 0;
+                                $rhu_transaction[2]['no_transaction'] = 0;
+
                                 $province = [];
                             ?>
                             @foreach($data as $row)
@@ -65,12 +70,18 @@
                                             }elseif($row->hospital_type == 'private'){
                                                 $private_transaction[$row->province_id]['with_transaction']++;
                                             }
+                                            elseif($row->hospital_type == 'RHU'){
+                                                $rhu_transaction[$row->province_id]['with_transaction']++;
+                                            }
                                         } else {
                                             $facility_transaction[$row->province_id]['no_transaction']++;
                                             if($row->hospital_type == 'government'){
                                                 $government_transaction[$row->province_id]['no_transaction']++;
                                             }elseif($row->hospital_type == 'private'){
                                                 $private_transaction[$row->province_id]['no_transaction']++;
+                                            }
+                                            elseif($row->hospital_type == 'RHU'){
+                                                $rhu_transaction[$row->province_id]['with_transaction']++;
                                             }
                                         }
                                     }
@@ -105,6 +116,14 @@
                                                 <span class="progress-number"><b class="{{ 'private_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'private_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red private_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm">
                                                     <div class="progress-bar progress-bar-red private_hospital_progress{{ $row->province_id }}" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div id="chartRhu{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
+                                                <strong class="text-green">RHU - </strong>
+                                                <span class="progress-number"><b class="{{ 'rhu_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'rhu_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red rhu_percent{{ $row->province_id }}"></b>
+                                                <div class="progress sm">
+                                                    <div class="progress-bar progress-bar-red rhu_hospital_progress{{ $row->province_id }}" ></div>
                                                 </div>
                                             </div>
                                         </td>
@@ -313,6 +332,59 @@
             $("#chartPrivate2").CanvasJSChart(private_options2);
             @endif
 
+            @if($hospital_type[1]['RHU'] != 0)
+            var rhu_with_transaction1 = Math.round("<?php echo $rhu_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['RHU']; ?>" * 100);
+            var rhu_no_transaction1 = Math.round("<?php echo $rhu_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['RHU']; ?>" * 100);
+            var rhu_options1 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "RHU"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+rhu_with_transaction1+"% in "+"<?php echo $rhu_transaction[1]['with_transaction']; ?> out of <?php echo $hospital_type[1]['RHU']; ?>",legendText : "With Transaction", y: rhu_with_transaction1 },
+                        { label: "No Transaction in "+rhu_no_transaction1+"% in "+"<?php echo $rhu_transaction[1]['no_transaction']; ?> out of <?php echo $hospital_type[1]['RHU'] ?>",legendText : "No Transaction", y: rhu_no_transaction1 }
+                    ]
+                }]
+            };
+            $("#chartRhu1").CanvasJSChart(rhu_options1);
+            @endif
+
+
+            @if($hospital_type[2]['RHU'] != 0)
+            var rhu_with_transaction2 = Math.round("<?php echo $rhu_transaction[2]['with_transaction']; ?>" / "<?php echo $hospital_type[2]['RHU']; ?>" * 100);
+            var rhu_no_transaction2 = Math.round("<?php echo $rhu_transaction[2]['no_transaction']; ?>" / "<?php echo $hospital_type[2]['RHU']; ?>" * 100);
+            var rhu_options2 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "RHU"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+rhu_with_transaction2+"% in "+"<?php echo $rhu_transaction[2]['with_transaction']; ?> out of <?php echo $hospital_type[2]['RHU']; ?>",legendText : "With Transaction", y: rhu_with_transaction2 },
+                        { label: "No Transaction in "+rhu_no_transaction2+"% in "+"<?php echo $rhu_transaction[2]['no_transaction']; ?> out of <?php echo $hospital_type[2]['RHU'] ?>",legendText : "No Transaction", y: rhu_no_transaction2 }
+                    ]
+                }]
+            };
+            $("#chartRhu2").CanvasJSChart(rhu_options2);
+            @endif
+
 
         }
     </script>
@@ -360,6 +432,19 @@
         var private_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['private'] ?>" / "<?php echo $hospital_type_total[2]['private'] ?>" * 100);
         $('.private_hospital_progress2').css('width',private_hospital_progress2+"%");
         $('.private_percent2').html(private_hospital_progress2+"%");
+
+
+        $(".rhu_hospital1").html("<?php echo $hospital_type[1]['RHU']; ?>");
+        $(".rhu_hospital_total1").html("<?php echo $hospital_type_total[1]['RHU']; ?>");
+        var rhu_hospital_progress1 = Math.round("<?php echo $hospital_type[1]['RHU'] ?>" / "<?php echo $hospital_type_total[1]['RHU'] ?>" * 100);
+        $('.rhu_hospital_progress1').css('width',rhu_hospital_progress1+"%");
+        $('.rhu_percent1').html(rhu_hospital_progress1+"%");
+
+        $(".rhu_hospital2").html("<?php echo $hospital_type[2]['RHU']; ?>");
+        $(".rhu_hospital_total2").html("<?php echo $hospital_type_total[2]['RHU']; ?>");
+        var rhu_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['RHU'] ?>" / "<?php echo $hospital_type_total[2]['RHU'] ?>" * 100);
+        $('.rhu_hospital_progress2').css('width',rhu_hospital_progress2+"%");
+        $('.rhu_percent2').html(rhu_hospital_progress2+"%");
 
     </script>
 @endsection
