@@ -147,7 +147,7 @@
                     var d = new Date();
                     $("#time_started").val(d.toLocaleString());
                     $("#time_started_text").html(d.toLocaleString());
-                },700);
+                },500);
             });
         }
 
@@ -157,7 +157,7 @@
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".client_modal_body").html(data);
-                },700);
+                },500);
             });
         }
 
@@ -175,7 +175,7 @@
                     var d = new Date();
                     $("#time_started").val(d.toLocaleString());
                     $("#time_started_text").html(d.toLocaleString());
-                },700);
+                },500);
             });
         }
 
@@ -186,7 +186,7 @@
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".reason_calling").html(data);
-                },700);
+                },500);
             });
         }
 
@@ -196,7 +196,7 @@
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".transaction_status").html(data);
-                },700);
+                },500);
             });
         }
 
@@ -206,7 +206,7 @@
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".transaction_status").html(data);
-                },700);
+                },500);
             });
         }
 
