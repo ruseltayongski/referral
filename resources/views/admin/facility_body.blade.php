@@ -164,6 +164,15 @@
                     }
                 ?>
             >Private</option>
+            <option value="rhu"
+            <?php
+                if(isset($data->hospital_type)){
+                    if($data->hospital_type == 'rhu'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >RHU</option>
         </select>
     </div>
     <div class="form-group">
