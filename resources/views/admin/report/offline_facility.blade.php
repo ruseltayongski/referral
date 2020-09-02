@@ -61,7 +61,21 @@
                                     <td class="@if($row->transaction == 'no_transaction' && $row->status == 'onboard'){{ 'bg-red' }}@endif">{{ $row->name }}</td>
                                     <td>{{ $row->chief_hospital }}</td>
                                     <td width="10%">{{ $row->contact }}</td>
-                                    <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
+                                    <td>
+                                        <span class="
+                                            <?php
+                                                if($row->hospital_type == 'government'){
+                                                    echo 'badge bg-green';
+                                                }
+                                                elseif($row->hospital_type == 'private'){
+                                                    echo 'badge bg-blue';
+                                                }
+                                                elseif($row->hospital_type == 'RHU'){
+                                                    echo 'badge bg-yellow';
+                                                }
+                                                ?>
+                                        ">{{ ucfirst($row->hospital_type) }}</span>
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>

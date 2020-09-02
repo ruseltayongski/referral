@@ -80,7 +80,21 @@
                                         <td>
                                             <span class="badge bg-purple">{{ $row->level }}</span>
                                         </td>
-                                        <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
+                                        <td>
+                                            <span class="
+                                                <?php
+                                                    if($row->hospital_type == 'government'){
+                                                        echo 'badge bg-green';
+                                                    }
+                                                    elseif($row->hospital_type == 'private'){
+                                                        echo 'badge bg-blue';
+                                                    }
+                                                    elseif($row->hospital_type == 'RHU'){
+                                                        echo 'badge bg-yellow';
+                                                    }
+                                                ?>
+                                            ">{{ ucfirst($row->hospital_type) }}</span>
+                                        </td>
                                         <td>
                                             <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
                                         </td>
