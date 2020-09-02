@@ -81,7 +81,7 @@
                                                 $private_transaction[$row->province_id]['no_transaction']++;
                                             }
                                             elseif($row->hospital_type == 'RHU'){
-                                                $rhu_transaction[$row->province_id]['with_transaction']++;
+                                                $rhu_transaction[$row->province_id]['no_transaction']++;
                                             }
                                         }
                                     }
