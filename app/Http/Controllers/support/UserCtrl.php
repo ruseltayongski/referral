@@ -68,9 +68,7 @@ class UserCtrl extends Controller
             $data = new User();
         } else {
             $data = User::where('facility_id',$user->facility_id)
-                ->where(function($q){
-                    $q->where('level','doctor');
-                });
+                ->where('level','doctor');
         }
 
         if($request->isMethod('post')){
