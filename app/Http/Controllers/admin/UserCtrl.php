@@ -27,6 +27,7 @@ class UserCtrl extends Controller
                 $q->where('fname','like',"%$keyword%")
                     ->orwhere('mname','like',"%$keyword%")
                     ->orwhere('lname','like',"%$keyword%")
+                    ->orwhere('username','like',"%$keyword%")
                     ->orwhere(\DB::raw('concat(fname," ",lname)'),'like',"$keyword")
                     ->orwhere(\DB::raw('concat(lname," ",fname)'),'like',"$keyword");
             });

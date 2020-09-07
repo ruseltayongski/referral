@@ -97,7 +97,7 @@ Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::get('support','support\HomeCtrl@index');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
 
-Route::match(['POST','GET'],'support/users','support\UserCtrl@index');
+Route::get('support/users','support\UserCtrl@index');
 Route::get('support/uers/add','support\UserCtrl@create');
 Route::post('support/uers/add','support\UserCtrl@add');
 Route::post('support/users/store','support\UserCtrl@store');

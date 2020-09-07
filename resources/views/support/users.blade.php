@@ -20,21 +20,52 @@ if($searchKeyword){
     <div class="col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ url('support/users') }}" method="POST" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-sm" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ $keyword_value }}">
-                            <button type="submit" class="btn btn-success btn-sm btn-flat">
-                                <i class="fa fa-search"></i> Search
-                            </button>
-                            <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
-                                <i class="fa fa-user-plus"></i> Add User
-                            </a>
-                        </div>
-                    </form>
+                <form action="{{ url('support/users') }}" method="GET" class="form-inline">
+                    {{ csrf_field() }}
+                    <div class="form-group-sm" style="margin-bottom: 10px;">
+                        <input type="text" style="width: 40%;" class="form-control" placeholder="Search name..." name="search" value="{{ $search }}">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <a href="#filter_user" data-toggle="modal" class="btn btn-info btn-sm">
+                            <i class="fa fa-filter"></i> Filter
+                        </a>
+                        <button type="button" class="btn btn-sm btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                        <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm ">
+                            <i class="fa fa-user-plus"></i> Add User
+                        </a>
+                    </div>
+                </form>
+                <div class="modal fade" role="dialog" id="filter_user">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <form method="GET" action="{{ url('support/users') }}">
+                            {{ csrf_field() }}
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Department:</label>
+                                        <select class="form-control" name="department_id" required>
+                                            <option value="">Select Department...</option>
+                                            @foreach($group_by_department as $row)
+                                                <option value="{{ $row->department_id }}">{{ $row->label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-info"></i> Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <h3>{{ $title }}</h3>
+                <h3>
+                    {{ $title }}
+                    @foreach($group_by_department as $row)
+                        <span class="badge bg-blue"> {{ $row->y }}</span> <span style="font-size: 8pt;">{{ $row->label }}</span>
+                    @endforeach
+                </h3>
             </div>
             <div class="box-body">
                 @if(count($data)>0)
@@ -89,7 +120,7 @@ if($searchKeyword){
                         </tr>
                         @endforeach
                     </table>
-                    <div class="text-center">
+                    <div class="pagination">
                         {{ $data->links() }}
                     </div>
                 </div>
