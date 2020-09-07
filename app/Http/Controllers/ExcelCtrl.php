@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\Icd10;
 use App\Imports\ExcelImport;
 use App\Inventory;
 use Illuminate\Http\Request;
@@ -319,7 +320,14 @@ class ExcelCtrl extends Controller
             $import = new ExcelImport();
             Excel::import($import, request()->file('import_file'));
             foreach($import->data as $row){
-                return $row;
+                Icd10::create([
+                    "code" => $row[0],
+                    "description" => $row[1],
+                    "group" => $row[2],
+                    "case_rate" => $row[3],
+                    "professional_fee" => $row[4],
+                    "health_care_institution_fee" => $row[5]
+                ]);
             }
 
             return back()->with('success', 'Successfully import!');
