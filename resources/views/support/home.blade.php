@@ -148,7 +148,7 @@ if($searchKeyword){
                 animationEnabled: true,
                 data: [{
                     type: "pie",
-                    startAngle: 45,
+                    startAngle: 80,
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y})",
