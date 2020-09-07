@@ -19,78 +19,49 @@ class UserCtrl extends Controller
         $this->middleware('support');
     }
 
-    /*public function search(Request $req)
-    {
-        $data = array(
-            'keyword' => $req->keyword
-        );
-        Session::put('searchKeyword',$data);
-        return self::index();
-    }*/ //jimmy code
-
-    /*public function index()
-    {
-        $search = Session::get('searchKeyword');
-        $user = Session::get('auth');
-        $data = User::where('facility_id',$user->facility_id)
-            ->where(function($q){
-                $q->where('level','doctor')
-                    ->orwhere('level','mcc');
-            });
-        if($search){
-            $keyword = $search['keyword'];
-            $data = $data->where(function($q) use($keyword){
-                $q->where('fname','like',"%$keyword%")
-                    ->orwhere('mname','like',"%$keyword%")
-                    ->orwhere('lname','like',"%$keyword%")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),'like',"$keyword")
-                    ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$keyword");
-            });
-        }
-
-        $data = $data
-            ->orderBy('fname','asc')
-            ->paginate(15);
-        $departments = Department::get();
-
-        return view('support.users',[
-            'title' => 'Manage Users',
-            'data' => $data,
-            'departments' => $departments
-        ]);
-    }*/ //JIMMY CODE
-
     public function index(Request $request)
     {
         $user = Session::get('auth');
-        $keyword = $request->keyword;
-        if($user->level == 'admin'){
-            $data = new User();
-        } else {
-            $data = User::where('facility_id',$user->facility_id)
-                ->where('level','doctor');
-        }
+        $search = $request->search;
 
-        if($request->isMethod('post')){
-            $data = $data->where(function($q) use($keyword){
-                $q->where('fname','like',"%$keyword%")
-                    ->orwhere('mname','like',"%$keyword%")
-                    ->orwhere('lname','like',"%$keyword%")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),'like',"$keyword")
-                    ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$keyword");
+        $data = User::where('facility_id',$user->facility_id)
+            ->where('level','doctor')
+            ->where(function($q) use($search){
+                $q->where('fname','like',"%$search%")
+                ->orwhere('mname','like',"%$search%")
+                ->orwhere('lname','like',"%$search%")
+                ->orwhere('username','like',"%$search%")
+                ->orwhere(DB::raw('concat(fname," ",lname)'),'like',"$search")
+                ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$search");
             });
-        }
+
+        if($request->department_id)
+            $data = $data->where("department_id",$request->department_id == 'no_department' ? 0 : $request->department_id);
+
 
         $data = $data
             ->orderBy('fname','asc')
             ->paginate(15);
+
         $departments = Department::get();
+        $group_by_department = User::
+                                select(
+                                        DB::raw("count(users.id) as y"),
+                                        DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"),
+                                        DB::raw("coalesce(department.id,'no_id') as department_id")
+                                    )
+                                    ->leftJoin("department","department.id","=","users.department_id")
+                                    ->where("users.facility_id",$user->facility_id)
+                                    ->where("users.level","doctor")
+                                    ->groupBy("users.department_id")
+                                    ->get();
 
         return view('support.users',[
             'title' => 'Manage Users',
             'data' => $data,
             'departments' => $departments,
-            'keyword_value' => $keyword
+            'search' => $search,
+            "group_by_department" => $group_by_department
         ]);
     }
 
