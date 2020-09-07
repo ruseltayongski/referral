@@ -22,7 +22,7 @@ class ExcelImport implements ToCollection
     public function model(array $row)
     {
         return new Facility([
-            'name' => $row[0]
+            'name' => $row
         ]);
     }
 
