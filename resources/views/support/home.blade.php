@@ -62,8 +62,7 @@ if($searchKeyword){
                             <div class="progress">
                                 <div class="progress-bar profilePercentageBar"></div>
                             </div>
-                            <span class="progress-description">
-                  </span>
+                            <span class="progress-description"></span>
                         </div><!-- /.info-box-content -->
                     </div>
                 </div>
@@ -79,7 +78,9 @@ if($searchKeyword){
         </div>
     </div>
     <div class="col-md-3">
-        @include('support.sidebar.quick')
+        <div class="box box-success">
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        </div>
     </div>
 @endsection
 @section('js')
@@ -119,9 +120,6 @@ if($searchKeyword){
             }
         });
 
-    </script>
-
-    <script>
         var url = "{{ url('support/dashboard/count') }}";
         $.ajax({
            url: url,
@@ -135,6 +133,33 @@ if($searchKeyword){
                },500);
            }
         });
+
+        window.onload = function() {
+
+            var options = {
+                title: {
+                    text: "Users per department",
+                    fontFamily: "Arial"
+                },
+                legend: {
+                    horizontalAlign: "center", // "center" , "right"
+                    verticalAlign: "top"  // "top" , "bottom"
+                },
+                animationEnabled: true,
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabel: "{label} ({y})",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: <?php echo $group_by_department; ?>
+                }]
+            };
+            $("#chartContainer").CanvasJSChart(options);
+
+        }
+
     </script>
 @endsection
 
