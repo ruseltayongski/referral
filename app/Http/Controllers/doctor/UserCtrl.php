@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class UserCtrl extends Controller
 {
@@ -169,4 +170,15 @@ class UserCtrl extends Controller
 
         return $login->id;
     }
+
+    public function setLogoutTime(Request $request){
+        $user = Session::get('auth');
+        $input_time_logout = date('Y-m-d H:i:s',strtotime($request->input_time_logout));
+        Login::where("userId",$user->id)->orderBy("id","desc")->first()->update([
+            "logout" => $input_time_logout
+        ]);
+        Session::put('logout_time',true);
+        return Redirect::back();
+    }
+
 }
