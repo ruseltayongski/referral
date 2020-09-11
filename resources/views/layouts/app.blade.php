@@ -58,31 +58,47 @@
 
 <nav class="navbar navbar-default navbar-static-top">
     <div class="header" style="background-color:#2F4054;padding:10px;">
-        <div class="container">
-            <div class="pull-left">
-                <?php
-                $user = Session::get('auth');
-                $t = '';
-                $dept_desc = '';
-                if($user->level=='doctor')
-                {
-                    $t='Dr.';
-                }else if($user->level=='support'){
-                    $dept_desc = ' / IT Support';
-                }
+        <div>
+            <div class="col-md-4">
+                <div class="pull-left">
+                    <?php
+                    $user = Session::get('auth');
+                    $t = '';
+                    $dept_desc = '';
+                    if($user->level=='doctor')
+                    {
+                        $t='Dr.';
+                    }else if($user->level=='support'){
+                        $dept_desc = ' / IT Support';
+                    }
 
-                if($user->department_id > 0)
-                {
-                    $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
-                }
+                    if($user->department_id > 0)
+                    {
+                        $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
+                    }
 
-                ?>
-                <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
+                    ?>
+                    <span class="title-info">Welcome,</span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <center>
+                    <?php
+                        $user_logs = \App\Login::where("userId",$user->id)->orderBy("id","desc")->first();
+                        $login_time = $user_logs->login;
+                        $user_logs->logout == "0000-00-00 00:00:00" ? $logout_time = explode(' ',$user_logs->login)[0].' 23:59:59' : $logout_time = $user_logs->logout;
+                        $logout_time = date("M d, Y H:i:s",strtotime($logout_time));
+                    ?>
+                    <span class="title-info">Logout Time: </span> <strong class="text-red" id="logout_time"> </strong>&nbsp;
+                    <button href="#setLogoutTime" data-toggle="modal" class="btn btn-xs btn-danger" onclick="openLogoutTime();"><i class="fa clock-o"></i> Set Time to Logout</button>
+                </center>
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
+                </div>
             </div>
 
-            <div class="pull-right">
-                <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
-            </div>
             <div class="clearfix"></div>
         </div>
     </div>
@@ -244,6 +260,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
                         @if($user->level=='doctor')
                             <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>
@@ -335,6 +352,54 @@
         $('.loading').show();
         window.location.replace("<?php echo asset($current_route) ?>");
     }
+
+    function openLogoutTime(){
+        var login_time = "<?php echo date('H:i'); ?>";
+        var logout_time = "<?php echo date('H:i',strtotime($logout_time)); ?>";
+        var input_element = $("#input_time_logout");
+        input_element.attr({
+            "min" : login_time
+        });
+        input_element.val(logout_time);
+    }
+
+    // Set the date we're counting down to
+    var countDownDate = new Date("{{ $logout_time }}").getTime();
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="demo"
+        document.getElementById("logout_time").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+
+        // If the count down is over, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("logout_time").innerHTML = "EXPIRED";
+            window.location.replace("<?php echo asset('/logout') ?>");
+        }
+    }, 1000);
+
+    @if(Session::get('logout_time'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "Successfully set logout time",
+            size: 'mini',
+            rounded: true
+        });
+        <?php Session::put("logout_time",false); ?>
+    @endif
+
 </script>
 
 @include('script.firebase')

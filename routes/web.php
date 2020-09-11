@@ -381,7 +381,6 @@ Route::get('opcen/onchange/province/{province_id}','Opcen\OpcenController@onChan
 Route::get('opcen/onchange/municipality/{municipality_id}','Opcen\OpcenController@onChangeMunicipality');
 Route::post('opcen/transaction/end','Opcen\OpcenController@transactionEnd');
 
-
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
 Route::get('inventory/append/{facility_id}','Eoc\InventoryController@appendInventory');
@@ -389,9 +388,11 @@ Route::post('inventory/update/page','Eoc\InventoryController@inventoryUpdatePage
 Route::post('inventory/update/save','Eoc\InventoryController@inventoryUpdateSave');
 Route::post('inventory/insert','Eoc\InventoryController@insertInventory');
 
-
 //chat
 Route::get('/chat', 'ContactsController@index')->name('home');
 Route::get('/contacts', 'ContactsController@get');
 Route::get('/conversation/{id}', 'ContactsController@getMessagesFor');
 Route::post('/conversation/send', 'ContactsController@send');
+
+//set logout
+Route::post('/logout/set','doctor\UserCtrl@setLogoutTime');
