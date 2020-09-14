@@ -242,14 +242,13 @@
         var id = $(this).val();
         referred_facility = id;
         var url = "{{ url('location/facility/') }}";
-
         $.ajax({
             url: url+'/'+id,
             type: 'GET',
             success: function(data){
-                $.get("<?php echo asset('inventory/append').'/'; ?>"+data.facility_id,function(inventory_body){
+                /*$.get("<?php echo asset('inventory/append').'/'; ?>"+data.facility_id,function(inventory_body){
                     $(".inventory_body").html(inventory_body);
-                });
+                });*/
                 $('.facility_address').html(data.address);
 
                 $('.select_department').empty()
@@ -348,8 +347,7 @@
             }
         });
     });
-</script>
-<script>
+
     $('.normal_form').on('submit',function(e){
         e.preventDefault();
         reason = $('.reason_referral').val();

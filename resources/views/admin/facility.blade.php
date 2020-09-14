@@ -92,6 +92,9 @@
                                                     elseif($row->hospital_type == 'RHU'){
                                                         echo 'badge bg-yellow';
                                                     }
+                                                    elseif($row->hospital_type == 'CIU/TTMF'){
+                                                        echo 'badge bg-purple';
+                                                    }
                                                 ?>
                                             ">{{ ucfirst($row->hospital_type) }}</span>
                                         </td>
