@@ -33,7 +33,7 @@ class UserCtrl extends Controller
     public function index()
     {
         ParamCtrl::lastLogin();
-        $search = Session::get('search_doctor');
+
 
         $start = Carbon::now()->startOfDay();
         $end = Carbon::now()->endOfDay();
@@ -59,21 +59,6 @@ class UserCtrl extends Controller
         $data = $data->join('users','users.id','=','login.userId')
                 ->join('facility','facility.id','=','users.facility_id')
                 ->leftJoin('department','department.id','=','users.department_id');
-
-        if($search['keyword'])
-        {
-            $keyword = $search['keyword'];
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('users.lname',"$keyword")
-                    ->orwhere(DB::raw('concat(users.fname," ",users.lname)'),"$keyword");
-            });
-        }
-
-        if($search['facility_id'])
-        {
-            $facility_id = $search['facility_id'];
-            $data = $data->where('users.facility_id',$facility_id);
-        }
 
         $data = $data
                 ->where('users.level','doctor')
