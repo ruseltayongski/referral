@@ -63,10 +63,9 @@ $user = Session::get('auth');
                                     <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                         <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                         <h3 class="timeline-header no-border">
-                                            <small class="text-bold">
+                                            <strong class="text-bold">
                                                 <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
-                                            </small>
-                                            <a href="#" class="patient_name">{{ $row->patient_name }}</a>
+                                            </strong>
                                             <small class="status">
                                                 [ {{ $row->sex }}, {{ $row->age }} ]
                                             </small>
@@ -82,10 +81,10 @@ $user = Session::get('auth');
                                     <div class="timeline-item">
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
-                                            <small class="text-bold">
+                                            <strong class="text-bold">
                                                 <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
-                                            </small>
-                                            <a href="#">{{ $row->patient_name }}</a> RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
+                                            </strong>
+                                            RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                         </h3>
                                         @include('doctor.include.timeline_footer')
                                     </div>
@@ -94,12 +93,12 @@ $user = Session::get('auth');
                                     <div class="timeline-item">
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
-                                            <small class="text-bold">
+                                            <strong class="text-bold">
                                                 <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
-                                            </small>
-                                            <a href="#">{{ $row->patient_name }}</a>
+                                            </strong>
                                             was <span class="badge bg-red">{{ $row->status }}</span> by
                                             Dr. {{ $row->referring_md }}
+                                            <br><br>
                                             @include('doctor.include.timeline_footer')
                                         </h3>
                                     </div>
@@ -108,14 +107,14 @@ $user = Session::get('auth');
                                     <div class="timeline-item">
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
-                                            <small class="text-bold">
+                                            <strong class="text-bold">
                                                 <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
-                                            </small>
-                                            <a href="#">{{ $row->patient_name }}</a>
+                                            </strong>
                                             was <span class="badge bg-green">{{ $row->status }}</span> by
                                             <span class="text-success">
                                             Dr. {{ $row->action_md }}
                                             </span>
+                                            <br><br>
                                             @include('doctor.include.timeline_footer')
                                         </h3>
                                     </div>
