@@ -67,9 +67,14 @@ class UserCtrl extends Controller
                 ->orderBy('login.id','desc')
                 ->get();
 
+        $date_start = Carbon::now()->startOfDay();
+        $date_end = Carbon::now()->endOfDay();
+        $hospitals = \DB::connection('mysql')->select("call online_facility_view('$date_start','$date_end')");
+
         return view('doctor.list',[
             'title' => 'Online Doctors',
-            'data' => $data
+            'data' => $data,
+            'hospitals' => $hospitals
         ]);
     }
 

@@ -1,12 +1,3 @@
-<?php
-    $hospitals = \App\Facility::
-        select("facility.id","facility.name","province.description as province")
-        ->leftJoin("province","province.id","=","facility.province")
-        ->where('facility.id','!=',$user->facility_id)
-        ->where('facility.status',1)
-        ->orderBy('facility.name','asc')
-        ->get();
-?>
 <div class="panel panel-jim">
     <div class="panel-heading">
         <h3 class="panel-title">Online Hospitals <span class="badge bg-blue hospital_online">0</span></h3>
@@ -17,10 +8,9 @@
             <?php $hospital_online_count = 0; ?>
             @foreach($hospitals as $row)
             <?php
-                $active = \App\Http\Controllers\mcc\HomeCtrl::countOnline($row->id);
                 $class = 'danger';
                 $text = '';
-                if($active>0){
+                if($row->login_status > 0){
                     $class = 'success';
                     $text = 'text-green';
                     $hospital_online_count++;
