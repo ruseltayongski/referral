@@ -12,15 +12,6 @@
                 @if(count($data) > 0)
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
-                            <tr class="bg-black">
-                                <th></th>
-                                <th>Facility Name</th>
-                                <th>Chief Hospital</th>
-                                <th>Contact No</th>
-                                <th>Register At</th>
-                                <th>Login At</th>
-                                <th>Hospital Type</th>
-                            </tr>
                             <?php
                                 $count = 0;
 
@@ -92,7 +83,7 @@
                                 @if(!isset($province[$row->province]))
                                     <?php $province[$row->province] = true; ?>
                                     <tr>
-                                        <td colspan="7">
+                                        <td colspan="9">
                                             <div class="form-group">
                                                 <b style="color: #ff298e;font-size: 17pt;">{{ $row->province }} - as of {{ date('F d, Y') }}</b><br>
                                                 <div id="chartOverall{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
@@ -128,25 +119,63 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <tr class="bg-black">
+                                        <th></th>
+                                        <th>Facility Name</th>
+                                        <th>Chief Hospital</th>
+                                        <th>Contact No</th>
+                                        <th>Registered On</th>
+                                        <th>First Login</th>
+                                        <th>Last Login From</th>
+                                        <th>Last Logout To</th>
+                                        <th>Last Transaction</th>
+                                    </tr>
                                 @endif
                                 <tr class="@if($row->status == 'onboard'){{ 'bg-yellow' }}@endif">
                                     <td>{{ $count }}</td>
-                                    <td class="@if($row->transaction == 'no_transaction' && $row->status == 'onboard'){{ 'bg-red' }}@endif">{{ $row->name }}</td>
+                                    <td class="@if($row->transaction == 'no_transaction' && $row->status == 'onboard'){{ 'bg-red' }}@endif">
+                                        {{ $row->name }}<br>
+                                        <span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span>
+                                    </td>
                                     <td>{{ $row->chief_hospital }}</td>
                                     <td width="10%"><small>{{ $row->contact }}</small></td>
                                     <td >
-                                        <small>{{ date("F d,Y",strtotime($row->register_at)) }}</small><br>
-                                        <i>(<small>{{ date("g:i a",strtotime($row->register_at)) }}</small>)</i>
+                                        <small>{{ date("F d,Y",strtotime($row->registered_on)) }}</small><br>
+                                        <i>(<small>{{ date("g:i a",strtotime($row->registered_on)) }}</small>)</i>
                                     </td>
                                     <td >
-                                        @if($row->login_at == 'not_login')
+                                        @if($row->first_login == 'not_login')
                                             <small>NOT LOGIN</small>
                                         @else
-                                            <small>{{ date("F d,Y",strtotime($row->login_at)) }}</small><br>
-                                            <i>(<small>{{ date("g:i a",strtotime($row->login_at)) }}</small>)</i>
+                                            <small>{{ date("F d,Y",strtotime($row->first_login)) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime($row->first_login)) }}</small>)</i>
                                         @endif
                                     </td>
-                                    <td><span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span></td>
+                                    <td >
+                                        @if($row->last_login_from == 'not_login')
+                                            <small>NOT LOGIN</small>
+                                        @else
+                                            <small>{{ date("F d,Y",strtotime($row->last_login_from)) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime($row->last_login_from)) }}</small>)</i>
+                                        @endif
+                                    </td>
+                                    <td >
+                                        @if($row->last_logout_to == 'not_login' || $row->last_logout_to == '0000-00-00 00:00:00')
+                                            <small>NOT LOGOUT</small>
+                                        @else
+                                            <small>{{ date("F d,Y",strtotime($row->last_logout_to)) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime($row->last_logout_to)) }}</small>)</i>
+                                        @endif
+                                    </td>
+                                    <td >
+                                        @if($row->last_transaction_date == 'no_transaction')
+                                            <small>NO TRANSACTION</small>
+                                        @else
+                                            <small>{{ date("F d,Y",strtotime($row->last_transaction_date)) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime($row->last_transaction_date)) }}</small>)</i>
+                                            <span class="badge bg-green">{{ ucfirst($row->last_transaction_status) }}</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
