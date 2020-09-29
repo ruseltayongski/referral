@@ -17,6 +17,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             <div class="chart">
                 <canvas id="barChart"></canvas>
             </div>
+            <h3 class="page-header">Last 10 days call</h3>
+            <div id="past_days" style="height: 370px; width: 100%;"></div>
         </div>
     </div>
     <div class="col-md-3">
@@ -86,10 +88,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             };
             $("#transaction_status").CanvasJSChart(options);
 
-        }
-    </script>
+        };
 
-    <script>
         var chartdata = {
             type: 'bar',
             data: {
@@ -109,10 +109,55 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 ]
             }
         };
-
-
         var ctx = document.getElementById('barChart').getContext('2d');
         new Chart(ctx, chartdata);
+
+
+        //line chart
+        var dataPoints = [];
+        var options_days = {
+            animationEnabled: true,
+            theme: "light2",
+            title:{
+                text: ""
+            },
+            axisX:{
+                valueFormatString: "DD MMM"
+            },
+            axisY: {
+                title: "",
+                suffix: "",
+                minimum: 0
+            },
+            toolTip:{
+                shared:true
+            },
+            legend:{
+                display: false
+            },
+            data: [{
+                type: "line",
+                showInLegend: true,
+                name: "",
+                markerType: "square",
+                xValueFormatString: "DD MMM, YYYY",
+                color: "#00a65a",
+                yValueFormatString: "call: #,##0",
+                dataPoints: dataPoints
+            }
+            ]
+        };
+
+        $.each(<?php echo json_encode($past_days)?>, function( index, value ) {
+            dataPoints.push({
+                x: new Date(value.date),
+                y: value.value
+            });
+        });
+
+        $("#past_days").CanvasJSChart(options_days);
+
+
     </script>
 @endsection
 
