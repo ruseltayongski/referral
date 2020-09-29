@@ -24,9 +24,21 @@
                 <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control">
             </td>
             <td >
+                <small>Company/Agency Connected</small>
+                <select name="company" id="" class="form-control">
+                    <option value="">Select Option</option>
+                    <option value="nga" <?php if(isset($client->company)){if($client->company == 'nga')echo 'selected';} ?>>NGAs</option>
+                    <option value="ngo" <?php if(isset($client->company)){if($client->company == 'ngo')echo 'selected';} ?>>NGOs</option>
+                    <option value="lgu" <?php if(isset($client->company)){if($client->company == 'lgu')echo 'selected';} ?>>LGU</option>
+                    <option value="etc" <?php if(isset($client->company)){if($client->company == 'etc')echo 'selected';} ?>>ETC.</option>
+                </select>
+            </td>
+            <td >
                 <small>Age</small>
                 <input type="text" name="age" value="<?php if(isset($client->age)) echo $client->age ?>" class="form-control">
             </td>
+        </tr>
+        <tr>
             <td >
                 <small>Gender</small>
                 <select name="sex" id="" class="form-control">
@@ -35,8 +47,6 @@
                     <option value="female" <?php if(isset($client->sex)){if($client->sex == 'female')echo 'selected';} ?>>Female</option>
                 </select>
             </td>
-        </tr>
-        <tr>
             <td >
                 <small>Province</small>
                 <select name="province_id" id="" class="select2" onchange="onChangeProvince($(this).val())">
@@ -57,6 +67,8 @@
                     @endif
                 </select>
             </td>
+        </tr>
+        <tr>
             <td >
                 <small>Barangay</small>
                 <select name="barangay_id" id="barangay" class="select2">
@@ -68,8 +80,6 @@
                     @endif
                 </select>
             </td>
-        </tr>
-        <tr>
             <td >
                 <small>Sitio</small>
                 <input type="text" name="sitio" class="form-control" value="<?php if(isset($client->sitio)) echo $client->sitio; ?>">

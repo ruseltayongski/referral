@@ -24,7 +24,12 @@ class OpcenController extends Controller
         $this->middleware('auth');
     }
     public function opcenDashboard(){
-        $user = Session::get('auth');
+        //for past 10 days
+        $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(10))).' 00:00:00';
+        $date_end = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
+        $past_days = \DB::connection('mysql')->select("call opcen_past_report_call('$date_start','$date_end')");
+        ///
+
         for($i=1; $i<=12; $i++)
         {
             $date = date('Y').'/'.$i.'/01';
@@ -63,7 +68,8 @@ class OpcenController extends Controller
             "transaction_incomplete" => $transaction_incomplete,
             "inquiry" => $inquiry,
             "referral" => $referral,
-            "others" => $others
+            "others" => $others,
+            "past_days" => $past_days
         ]);
     }
 
@@ -192,6 +198,7 @@ class OpcenController extends Controller
         $opcen_client->call_classification = $request->call_classification;
         $opcen_client->reference_number = $request->reference_number;
         $opcen_client->name = $request->name;
+        $opcen_client->company = $request->company;
         $opcen_client->age = $request->age;
         $opcen_client->sex = $request->sex;
         $opcen_client->province_id = $request->province_id;

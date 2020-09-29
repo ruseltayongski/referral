@@ -27,16 +27,32 @@
             <small>Name</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->name }}</span>
         </td>
+        <td >
+            <small>Company/Agency Connected</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">
+                <?php
+                    if($client->company == 'nga')
+                        echo 'NGAs';
+                    elseif($client->company == 'ngo')
+                        echo 'NGOs';
+                    elseif($client->company == 'lgu')
+                        echo 'LGU';
+                    elseif($client->company == 'etc')
+                        echo 'ETC.';
+                ?>
+            </span>
+        </td>
         <td>
             <small>Age</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->age }}</span>
         </td>
+
+    </tr>
+    <tr>
         <td >
             <small>Gender</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->sex) }}</span>
         </td>
-    </tr>
-    <tr>
         <td >
             <small>Province</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ \App\Province::find($client->province_id)->description }}</span>
@@ -45,12 +61,12 @@
             <small>Municipality</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ \App\Muncity::find($client->municipality_id)->description }}</span>
         </td>
+    </tr>
+    <tr>
         <td >
             <small>Barangay</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ \App\Barangay::find($client->barangay_id)->description }}</span>
         </td>
-    </tr>
-    <tr>
         <td >
             <small>Sitio</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->sitio }}</span>
