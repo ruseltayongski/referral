@@ -206,4 +206,14 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function averageUsersOnline(){
+        $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+        $date_end = Carbon::now()->endOfYear()->format('Y-m-d').' 23:59:59';
+
+        $data = \DB::connection('mysql')->select("call average_login_month('$date_start','$date_end')");
+        return view('admin.report.average_users_online',[
+            "data" => $data
+        ]);
+    }
+
 }
