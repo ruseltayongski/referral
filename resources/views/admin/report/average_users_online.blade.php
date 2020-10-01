@@ -53,7 +53,9 @@
                 },
                 data: [
                     {
-                        type: "stackedArea",
+                        type: "line",
+                        markerType: "square",
+                        color: "#00a65a",
                         name: "",
                         xValueFormatString: "MMM YYYY",
                         yValueFormatString: "",
