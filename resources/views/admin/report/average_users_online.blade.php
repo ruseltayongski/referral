@@ -27,6 +27,15 @@
         window.onload = function () {
 
             var dataPoints = [];
+            $.each(<?php echo json_encode($data)?>, function( index, value ) {
+                console.log(value.date);
+                dataPoints.push({
+                    x: new Date(value.date),
+                    y: parseInt(value.value)
+                });
+            });
+
+            console.log(dataPoints);
 
             var options = {
                 animationEnabled: true,
@@ -37,7 +46,7 @@
                     valueFormatString: "",
                     prefix: "",
                     suffix: " users",
-                    title: "Sales"
+                    title: ""
                 },
                 toolTip: {
                     shared: true
@@ -48,32 +57,10 @@
                         name: "",
                         xValueFormatString: "MMM YYYY",
                         yValueFormatString: "",
-                        dataPoints: [
-                            { x: new Date("<?php echo "2020-01-01" ?>"), y: 12 },
-                            { x: new Date("<?php echo "2020-02-01" ?>"), y: 34 },
-                            { x: new Date("<?php echo "2020-03-01" ?>"), y: 45 },
-                            { x: new Date("<?php echo "2020-04-01" ?>"), y: 12 },
-                            { x: new Date("<?php echo "2020-05-01" ?>"), y: 23 },
-                            { x: new Date("<?php echo "2020-06-01" ?>"), y: 66 },
-                            { x: new Date("<?php echo "2020-07-01" ?>"), y: 12 },
-                            { x: new Date("<?php echo "2020-08-01" ?>"), y: 45 },
-                            { x: new Date("<?php echo "2020-09-01" ?>"), y: 42 },
-                            { x: new Date("<?php echo "2020-10-01" ?>"), y: 12 },
-                            { x: new Date("<?php echo "2020-11-01" ?>"), y: 22 },
-                            { x: new Date("<?php echo "2020-12-01" ?>"), y: 22 }
-                        ]
+                        dataPoints: dataPoints
                     }
                 ]
             };
-
-            $.each(<?php echo json_encode($data)?>, function( index, value ) {
-                console.log(value.date);
-                dataPoints.push({
-                    x: new Date(value.date),
-                    y: value.value
-                });
-            });
-
 
             $("#chartContainer").CanvasJSChart(options);
 
