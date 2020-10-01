@@ -92,6 +92,7 @@ Route::post('admin/daily/referral','admin\DailyCtrl@referralFilter');
 Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
 Route::match(['GET','POST'],'admin/statistics','admin\ReportCtrl@statisticsReport');
 Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
+Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
 //SUPPORT Page
 Route::get('support','support\HomeCtrl@index');

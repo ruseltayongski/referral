@@ -47,7 +47,10 @@ if(!$dateReportOnline)
                                 <th>Status</th>
                                 <th>Login</th>
                             </tr>
-                            <?php $h = 0; ?>
+                            <?php
+                                $h = 0;
+                                $count = 0;
+                            ?>
                             @foreach($data as $row)
                             <tr>
                                 <td class="text-warning text-bold">
@@ -57,6 +60,10 @@ if(!$dateReportOnline)
                                     @endif
                                 </td>
                                 <td class="text-success">
+                                    <?php
+                                        $count++;
+                                        echo $count;
+                                    ?>
                                     {{ ucwords(mb_strtolower($row->lname)) }}, {{ ucwords(mb_strtolower($row->fname)) }}
                                 </td>
                                 <td class="text-danger">
