@@ -103,7 +103,9 @@ class HomeCtrl extends Controller
             "referred_past" => $referred_past,
             "accepted_past" => $accepted_past,
             "redirected_past" => $redirected_past,
-            "incoming_statistics" => $incoming_statistics
+            "incoming_statistics" => $incoming_statistics,
+            "date_start" => $date_start,
+            "date_end" => Carbon::now()->format('Y-m-d')
         ]);
     }
 

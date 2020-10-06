@@ -19,7 +19,7 @@
                     <canvas id="barChart"></canvas>
                 </div>
 
-                <h3 class="page-header" style="margin-top: 5%">Incoming Transaction</h3>
+                <h3 class="page-header" style="margin-top: 5%">Incoming Transaction as of <span class="text-primary" style="font-size: 10pt;"><i>{{ date('F d,Y',strtotime($date_start)) }} to {{ date('F d,Y',strtotime($date_end)) }}</i></span></h3>
                 <div class="row" style="margin-top: 3%;">
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
