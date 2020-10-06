@@ -8,6 +8,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class HomeCtrl extends Controller
@@ -19,8 +20,18 @@ class HomeCtrl extends Controller
 
     public function index()
     {
+        $user = Session::get("auth");
+        $group_by_department = User::
+        select(DB::raw("count(users.id) as y"),DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"))
+            ->leftJoin("department","department.id","=","users.department_id")
+            ->where("users.facility_id",$user->facility_id)
+            ->where("users.level","doctor")
+            ->groupBy("users.department_id")
+            ->get();
+
         return view('mcc.home',[
-            'title' => 'Medical Center Chief'
+            'title' => 'Medical Center Chief',
+            "group_by_department" => $group_by_department
         ]);
     }
 

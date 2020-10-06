@@ -193,6 +193,7 @@
                 -->
                 @elseif($user->level=='mcc')
                 <li><a href="{{ url('mcc/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <!--
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -202,6 +203,7 @@
                         <li><a tabindex="-1" href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i> Consolidated</a></li>
                     </ul>
                 </li>
+                -->
                 <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
@@ -223,7 +225,6 @@
                         <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
                         <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
-                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics</a></li>
                         <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>ER OB</a></li>
                         <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                     <!--
@@ -254,6 +255,7 @@
                         <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
                         <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated Report</a></li>
+                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report <span class="badge bg-red"> New</span></a></li>
                     </ul>
                 </li>
                 <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span class="count_referral">{{ $count_chat }}</span> New</span></a></li>
@@ -304,7 +306,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 3.1</p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 4.0</p>
     </div>
 </footer>
 

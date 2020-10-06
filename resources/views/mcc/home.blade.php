@@ -17,7 +17,7 @@ if($searchKeyword){
             margin-bottom: 10px;
         }
     </style>
-    <div class="col-md-8">
+    <div class="col-md-9">
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3>{{ $title }}</h3>
@@ -62,8 +62,7 @@ if($searchKeyword){
                             <div class="progress">
                                 <div class="progress-bar profilePercentageBar"></div>
                             </div>
-                            <span class="progress-description">
-                  </span>
+                            <span class="progress-description"></span>
                         </div><!-- /.info-box-content -->
                     </div>
                 </div>
@@ -78,9 +77,10 @@ if($searchKeyword){
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        @include('mcc.sidebar.links')
-        @include('mcc.sidebar.hospitals')
+    <div class="col-md-3">
+        <div class="box box-success">
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        </div>
     </div>
 @endsection
 @section('js')
@@ -120,9 +120,6 @@ if($searchKeyword){
             }
         });
 
-    </script>
-
-    <script>
         var url = "{{ url('mcc/dashboard/count') }}";
         $.ajax({
             url: url,
@@ -137,6 +134,33 @@ if($searchKeyword){
             }
         });
         $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
+
+
+        window.onload = function() {
+
+            var options = {
+                title: {
+                    text: "Users per department",
+                    fontFamily: "Arial"
+                },
+                legend: {
+                    horizontalAlign: "center", // "center" , "right"
+                    verticalAlign: "top"  // "top" , "bottom"
+                },
+                animationEnabled: true,
+                data: [{
+                    type: "pie",
+                    startAngle: 80,
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabel: "{label} ({y})",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: <?php echo $group_by_department; ?>
+                }]
+            };
+            $("#chartContainer").CanvasJSChart(options);
+        }
+
     </script>
 @endsection
 

@@ -4,196 +4,277 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9">
-        <div class="jim-content">
-            @if($error)
-            <div class="alert alert-danger">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="jim-content">
+                @if($error)
+                    <div class="alert alert-danger">
                 <span class="text-danger">
                     <i class="fa fa-times"></i> Error swtiching account! Please try again.
                 </span>
+                    </div>
+                @endif
+                <h3 class="page-header">Monthly Activity</h3>
+                <div class="chart">
+                    <canvas id="barChart"></canvas>
+                </div>
+
+                <h3 class="page-header" style="margin-top: 5%">Incoming Transaction</h3>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <br>
+                            <h5 class="description-header">{{ $incoming_statistics->incoming }}</h5>
+                            <span class="description-text">Incoming</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <?php
+                                $accept_percent = ($incoming_statistics->accepted / $incoming_statistics->incoming) * 100;
+                            ?>
+                            <span class="description-percentage <?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>"><i class="fa fa-<?php if($accept_percent >= 50) echo 'thumbs-o-up'; else echo 'thumbs-o-down'; ?>"></i> <b>({{ round($accept_percent)."%" }})</b></span>
+                            <h5 class="description-header">{{ $incoming_statistics->accepted }}</h5>
+                            <span class="description-text">Accepted</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <br>
+                            <h5 class="description-header">
+                                <?php
+                                    $seen_only = $incoming_statistics->seen_total - $incoming_statistics->seen_accepted_redirected;
+                                    echo $seen_only;
+                                ?>
+                            </h5>
+                            <span class="description-text">Seen Only</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <br>
+                            <h5 class="description-header">
+                                <?php
+                                    $no_action = $incoming_statistics->incoming - ($incoming_statistics->accepted + $incoming_statistics->redirected + $seen_only);;
+                                    echo $no_action;
+                                ?>
+                            </h5>
+                            <span class="description-text">No Action</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                </div>
+
             </div>
-            @endif
-            <h3 class="page-header">Monthly Activity
-            </h3>
-            <div class="chart">
-                <canvas id="barChart"></canvas>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-success">
+                <div id="user_per_department" style="height: 300px; width: 100%;"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-success">
+                <div id="number_of_transaction" style="height: 300px; width: 100%;"></div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        @include('sidebar.quick')
+
+    <div>
+        <div class="row col-md-12">
+            <div class="jim-content">
+                <h3 class="page-header">Last 15 days transaction</h3>
+                <div id="doctor_past_transaction" style="height: 370px; width: 100%;"></div>
+                <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+            </div>
+        </div>
     </div>
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-                    <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
-                    <?php
-                    $dateNow = date('Y-m-d');
-                    ?>
-                    @if($dateNow==='2019-07-30')
-                        <div class="alert alert-info">
-                            <p class="text-info" style="font-size:1.3em;text-align: center;">
-                                <strong>There will be a server maintenance TODAY (July 30, 2019) at 1:15PM to 02:00PM. Server optimization!</strong>
-                            </p>
-                        </div>
-                    @endif
-                    @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
-                        <div class="">
-                            <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 3.1</strong><br>
-                                <ol>
-                                    <li>
-                                        REPORT MENU <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        CHAT MENU <small class="badge bg-green" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                </ol>
-                            </span>
-                        </div>
-                    @endif
-                    @if($dateNow >= '2019-07-01' && $dateNow <= '2019-12-30')
-                        <br><div class="text-info">
-                            <strong >ANNOUNCEMENT</strong>
-                            <blockquote style="font-size:1.1em;">
-                                Good day everyone!
-                                <br><br>
-                                Please be informed that there will be a new URL/Link for the E-Referral from 203.177.67.126/doh/referral to 124.6.144.166/doh/referral
-                                <br><br>
-                                The said new URL/Link will be accessible on AUGUST 2, 2020 at 3PM.
-                                And there will be a downtime on AUGUST 2, 2020 at 1PM to 3PM for the configuration of our new URL/Link.
-                                <br><br>
-                                Please be guided accordingly.
-                                <br><br>
-                                Thank you very much and keep safe.
-                            </blockquote>
-                        </div>
-                    @endif
-                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
-                        <div class="alert alert-info">
-                            <span class="text-info" style="font-size:1.1em;">
-                                <strong><i class="fa fa-info"></i> Version 2.1 was successfully launch</strong><br>
-                                <ol type="I" style="color: #31708f;font-size: 10pt;margin-top: 10px;">
-                                    <li><i><b>Editable Patient</b></i> - Allowing the user to edit misspelled / typo informations</li>
-                                    <li><i><b>Facility Dropdown</b></i> - Allowing the dropdown be search by keyword</li>
-                                    <li><i><b>Outgoing Referral Report</b></i> - Adding the department to be filter</li>
-                                    <li><i><b>Login Lifetime</b></i> - Session will expire in 30 minutes</li>
-                                    <li><i><b>Input Date Range</b></i> - Filter date range UI interface improve</li>
-                                    <li><i><b>Incoming Page</b></i> - UI interface improve and fixed bugs</li>
-                                </ol>
-                            </span>
-                        </div>
-                    @endif
-                    @if($dateNow >= '2019-11-19' && $dateNow <= '2019-11-30')
-                        <div class="alert alert-warning">
-                            <span class="text-warning" style="font-size:1.1em;">
-                                <strong><i class="fa fa-plus"></i> Network server was successfully upgrade</strong><br>
-                                <!--
-                                <ol type="I" style="color: #f34a0f !important;font-size: 10pt;margin-top: 10px;">
-                                    <li>
-                                        new URL addresses will be the following:
-                                    </li>
-                                    <ol>
-                                        <li><span class="badge bg-maroon">http://122.3.84.178/doh/referral/login</span></li>
-                                        <li><span class="badge bg-maroon">http://203.177.67.125/doh/referral/login</span></li>
-                                    </ol>
-                                </ol>
-                                -->
-                            </span>
-                        </div>
-                    @endif
-                    <div class="">
-                        <p class="text-success">
-                            <i class="fa fa-phone-square"></i> For further assistance, please message these following:
-                        <ol type="I" style="color: #2f8030">
-                            <li>Technical</li>
-                            <ol type="A">
-                                <li >System Error</li>
-                                <ul>
-                                    <li>Rusel T. Tayong - 09238309990</li>
-                                    <li>Christian Dave L. Tipactipac - 09286039028</li>
-                                    <li>Keith Joseph Damandaman - 09293780114</li>
-                                </ul>
-                                <li >Server - The request URL not found</li>
-                                <ul>
-                                    <li>Garizaldy B. Epistola - 09338161374</li>
-                                    <li>Reyan M. Sugabo - 09359504269</li>
-                                    <li>Ryan A. Padilla - 09294771871</li>
-                                    <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
-                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
-                                </ul>
-                                <li >System Implementation/Training <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <ul>
-                                    <li>Ryan A. Padilla - 09294771871</li>
-                                    <li>Rachel Sumalinog - 09484693136 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                    <li>Kasilyn Lariosa - 09331720608 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
-                                </ul>
-                            </ol>
-                            <li>Non - Technical</li>
-                            <ol type="A">
-                                <ul>
-                                    <li >Ronadith Capala Arriesgado - 09952100815</li>
-                                    <li >Rolly Villarin - 09173209917 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                    <li >Gracel R. Flores - 09453816462</li>
-                                </ul>
-                            </ol>
-                            <h3 class="text-center" style="color: #2f8030">Thank you!</h3>
-                        </ol>
-                        </p>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 @endsection
 
 @section('js')
 @include('script.chart')
+@include('modal.announcement')
 <script>
-    $('#notificationModal').modal('show');
-    var accepted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var rejected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var link = "{{ url('chart') }}";
-    $.ajax({
-        url: link,
-        type: "GET",
-        success: function(data){
-            console.log(data)
-            var chartdata = {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    // labels: month,
-                    datasets: [
-                        {
-                            label: 'Referred',
-                            backgroundColor: '#8e9cff',
-                            data: data.referred
-                        },
-                        {
-                            label: 'Accepted',
-                            backgroundColor: '#26B99A',
-                            data: data.accepted
-                        },
-                        {
-                            label: 'Redirected',
-                            backgroundColor: '#03586A',
-                            data: data.rejected
-                        }
-                    ]
+    var doctor_monthly_report = <?php echo json_encode($doctor_monthly_report); ?>;
+    console.log(doctor_monthly_report);
+
+    var chartdata = {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            // labels: month,
+            datasets: [
+                {
+                    label: 'Referred',
+                    backgroundColor: '#8e9cff',
+                    data: doctor_monthly_report.referred
+                },
+                {
+                    label: 'Accepted',
+                    backgroundColor: '#26B99A',
+                    data: doctor_monthly_report.accepted
+                },
+                {
+                    label: 'Redirected',
+                    backgroundColor: '#03586A',
+                    data: doctor_monthly_report.redirected
                 }
-            };
-
-
-            var ctx = document.getElementById('barChart').getContext('2d');
-            new Chart(ctx, chartdata);
+            ]
         }
+    };
+
+    var ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, chartdata);
+
+    var options_user_per_department = {
+        title: {
+            text: "Number of users per department",
+            fontFamily: "Arial"
+        },
+        legend: {
+            horizontalAlign: "center", // "center" , "right"
+            verticalAlign: "top"  // "top" , "bottom"
+        },
+        animationEnabled: true,
+        data: [{
+            type: "pie",
+            startAngle: 80,
+            showInLegend: "true",
+            legendText: "{label}",
+            indexLabel: "{label} ({y})",
+            yValueFormatString:"#,##0.#"%"",
+            dataPoints: <?php echo $group_by_department; ?>
+        }]
+    };
+    $("#user_per_department").CanvasJSChart(options_user_per_department);
+
+    var options_activity = {
+        title: {
+            text: "Number of Activity",
+            fontFamily: "Arial"
+        },
+        legend: {
+            horizontalAlign: "center", // "center" , "right"
+            verticalAlign: "top"  // "top" , "bottom"
+        },
+        animationEnabled: true,
+        data: [{
+            type: "doughnut",
+            startAngle: 80,
+            showInLegend: "true",
+            legendText: "{label}",
+            indexLabel: "{label} ({y})",
+            yValueFormatString:"#,##0.#"%"",
+            dataPoints: [
+                { label: "Referred", y: "<?php echo $incoming_statistics->referred; ?>" },
+                { label: "Accepted", y: "<?php echo $incoming_statistics->accepted; ?>" },
+                { label: "Redirected", y: "<?php echo $incoming_statistics->redirected; ?>" },
+                { label: "Called", y: "<?php echo $incoming_statistics->calling; ?>" },
+                { label: "Arrived", y: "<?php echo $incoming_statistics->arrived; ?>" },
+                { label: "Transferred", y: "<?php echo $incoming_statistics->transferred; ?>" },
+                { label: "Admitted", y: "<?php echo $incoming_statistics->accepted; ?>" },
+                { label: "Discharge", y: "<?php echo $incoming_statistics->discharge; ?>" }
+            ]
+        }]
+    };
+    $("#number_of_transaction").CanvasJSChart(options_activity);
+
+    //line chart
+    var datapoints_referred = [];
+    var datapoints_accepted = [];
+    var datapoints_redirected = [];
+    var options_days = {
+        animationEnabled: true,
+        theme: "light2",
+        title:{
+            text: ""
+        },
+        axisX:{
+            valueFormatString: "DD MMM"
+        },
+        axisY: {
+            title: "",
+            suffix: "",
+            minimum: 0
+        },
+        toolTip:{
+            shared:true
+        },
+        legend:{
+            cursor:"pointer",
+            verticalAlign: "bottom",
+            horizontalAlign: "center",
+            dockInsidePlotArea: false,
+            fontSize: 15,
+            itemclick: toogleDataSeries
+        },
+        data: [
+            {
+                type: "line",
+                showInLegend: true,
+                name: "Referred",
+                markerType: "square",
+                xValueFormatString: "DD MMM, YYYY",
+                yValueFormatString: "#,##",
+                dataPoints: datapoints_referred
+            }
+            ,
+            {
+                type: "line",
+                showInLegend: true,
+                name: "Accepted",
+                markerType: "square",
+                yValueFormatString: "#,##",
+                dataPoints: datapoints_accepted
+            },
+            {
+                type: "line",
+                showInLegend: true,
+                name: "Redirected",
+                markerType: "square",
+                yValueFormatString: "#,##",
+                dataPoints: datapoints_redirected
+            },
+        ]
+    };
+
+    $.each(<?php echo json_encode($referred_past)?>, function( index, value ) {
+        datapoints_referred.push({
+            x: new Date(value.date),
+            y: value.value
+        });
     });
+
+    $.each(<?php echo json_encode($accepted_past)?>, function( index, value ) {
+        datapoints_accepted.push({
+            x: new Date(value.date),
+            y: value.value
+        });
+    });
+
+    $.each(<?php echo json_encode($redirected_past)?>, function( index, value ) {
+        datapoints_redirected.push({
+            x: new Date(value.date),
+            y: value.value
+        });
+    });
+
+    $("#doctor_past_transaction").CanvasJSChart(options_days);
+
+
+    function toogleDataSeries(e){
+        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+        } else{
+            e.dataSeries.visible = true;
+        }
+        e.chart.render();
+    }
 
 </script>
 @endsection
