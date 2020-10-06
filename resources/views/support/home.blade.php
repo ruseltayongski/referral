@@ -84,6 +84,7 @@ if($searchKeyword){
     </div>
 @endsection
 @section('js')
+    @include('modal.announcement')
     @include('script.chart')
     <script>
         var accepted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

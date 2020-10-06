@@ -30,7 +30,7 @@ class HomeCtrl extends Controller
         }
     }
 
-    public function chart()
+    public static function chart()
     {
         $user = Session::get('auth');
         for($i=1; $i<=12; $i++)
