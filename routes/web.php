@@ -95,7 +95,7 @@ Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
 //SUPPORT Page
-Route::get('support','support\HomeCtrl@index');
+Route::get('support','doctor\HomeCtrl@index');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
 
 Route::get('support/users','support\UserCtrl@index');
@@ -276,7 +276,7 @@ Route::get('/fcm/send','FcmCtrl@send');
 Route::get('/doctor/name/{id}','ParamCtrl@getDoctorName');
 
 //MANAGE MCC PAGE
-Route::get('/mcc','mcc\HomeCtrl@index');
+Route::get('/mcc','doctor\HomeCtrl@index');
 Route::get('/mcc/dashboard/count','mcc\HomeCtrl@count');
 Route::get('/mcc/report/online','mcc\ReportCtrl@online');
 Route::post('/mcc/report/online','mcc\ReportCtrl@filterOnline');
