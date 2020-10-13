@@ -16,9 +16,27 @@
                 <div style="margin-left: 58%;margin-top:10%;position: absolute;font-size: 8pt;background-color: white;" class="inventory_body">
 
                 </div>
+                <table cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td class="align"><img src="{{ asset('resources/img/doh.png') }}" width="100"></td>
+                        <td width="90%">
+                            <div class="align small-text">
+                                <center>
+                                    Republic of the Philippines<br>
+                                    DEPARTMENT OF HEALTH<br>
+                                    <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
+                                    Osmeña Boulevard,Sambag II,Cebu City, 6000 Philippines<br>
+                                    Regional Director’s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109<br>
+                                    Official Website: <a href="http://www.ro7.doh.gov.ph" target="_blank">http://www.ro7.doh.gov.ph</a> Email Address: dohro7@gmail.com<br>
+                                </center>
+                            </div>
+                        </td>
+                        <td class="align"><img src="{{ asset('resources/img/f1.jpg') }}" width="100"></td>
+                    </tr>
+                    </tbody>
+                </table>
                 <center>
-                    <b>CENTRAL VISAYAS HEALTH REFERRAL SYSTEM</b><br>
-                    <span style="font-size: 12pt;">Clinical Referral Form</span>
+                    <h2>Clinical Referral Form</h2>
                 </center>
                 <div class="form-group-sm form-inline">
                     {{ csrf_field() }}
@@ -30,37 +48,37 @@
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <small>Name of Referring Facility</small><br>
-                            &nbsp;<span class="text-yellow">{{ $myfacility->name }}</span>
+                            <small class="text-success">Name of Referring Facility</small><br>
+                            &nbsp;<span>{{ $myfacility->name }}</span>
                         </div>
                         <div class="col-md-4">
-                            <small>Address</small><br>
-                            &nbsp;<span class="text-yellow">{{ $facility_address['address'] }}</span>
+                            <small class="text-success">Address</small><br>
+                            &nbsp;<span >{{ $facility_address['address'] }}</span>
                         </div>
                         <div class="col-md-4">
-                            <small>Name of referring MD/HCW</small><br>
-                            &nbsp;<span class="text-yellow">Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <small>Date/Time Referred (ReCo)</small><br>
-                            <span class="text-yellow">{{ date('l F d, Y h:i A') }}</span>
-                        </div>
-                        <div class="col-md-4">
-                            <small>Name of Patient</small><br>
-                            <span class="text-yellow patient_name"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <small>Address</small><br>
-                            <span class="text-yellow patient_address"></span>
+                            <small class="text-success">Name of referring MD/HCW</small><br>
+                            &nbsp;<span >Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <small>Referred to</small> <span class="text-red">*</span><br>
+                            <small class="text-success">Date/Time Referred (ReCo)</small><br>
+                            <span >{{ date('l F d, Y h:i A') }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-success">Name of Patient</small><br>
+                            <span class="patient_name"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-success">Address</small><br>
+                            <span class="patient_address"></span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
                             <select name="referred_facility" class="select2 select_facility" required>
                                 <option value="">Select Facility...</option>
                                 @foreach($facilities as $row)
@@ -69,24 +87,24 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <small>Department</small> <span class="text-red">*</span><br>
+                            <small class="text-success">Department</small> <span class="text-red">*</span><br>
                             <select name="referred_department" class="form-control-select select_department select_department_normal" style="width: 100%;" required>
                                 <option value="">Select Option</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <small>Address</small><br>
+                            <small class="text-success">Address</small><br>
                             <span class="text-yellow facility_address"></span>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <small>Age</small><br>
-                            <span class="text-yellow patient_age"></span>
+                            <small class="text-success">Age</small><br>
+                            <span class="patient_age"></span>
                         </div>
                         <div class="col-md-4">
-                            <small>Sex</small> <span class="text-red">*</span><br>
+                            <small class="text-success">Sex</small> <span class="text-red">*</span><br>
                             <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
                                 <option value="">Select...</option>
                                 <option>Male</option>
@@ -94,7 +112,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <small>Civil Status</small> <span class="text-red">*</span><br>
+                            <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
                             <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
                                 <option value="">Select...</option>
                                 <option>Single</option>
@@ -108,11 +126,11 @@
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <small>Covid Number</small><br>
+                            <small class="text-success">Covid Number</small><br>
                             <input type="text" name="covid_number" style="width: 100%;">
                         </div>
                         <div class="col-md-4">
-                            <small>Clinical Status</small><br>
+                            <small class="text-success">Clinical Status</small><br>
                             <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="asymptomatic">Asymptomatic</option>
@@ -123,7 +141,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <small>Surveillance Category</small><br>
+                            <small class="text-success">Surveillance Category</small><br>
                             <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="contact_pum">Contact (PUM)</option>
@@ -145,27 +163,27 @@
                         -->
                         <tr>
                             <td colspan="6">
-                                Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <span class="text-red">*</span><br />
+                                <span class="text-success">Case Summary (pertinent Hx/PE, including meds, labs, course etc.):</span> <span class="text-red">*</span><br />
                                 <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="6">
-                                Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <span class="text-red">*</span>
+                                <span class="text-success">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):</span> <span class="text-red">*</span>
                                 <br />
                                 <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="6">
-                                Diagnosis/Impression: <span class="text-red">*</span>
+                                <span class="text-success">Diagnosis/Impression:</span> <span class="text-red">*</span>
                                 <br />
                                 <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="6">
-                                Reason for referral: <span class="text-red">*</span>
+                                <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
                                 <br />
                                 <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>
                             </td>
@@ -174,7 +192,7 @@
                             <td colspan="6">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        Name of referred :<br>
+                                        <span class="text-success">Name of referred:</span><br>
                                         <small class="text-success">MD/HCW- Mobile Contact # (ReCo)</small>
                                     </div>
                                     <div class="col-md-7">
