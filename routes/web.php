@@ -43,7 +43,7 @@ Route::get('login_expire', function(){
 });
 
 //ADMIN Page
-Route::get('admin','admin\HomeCtrl@index');
+Route::get('admin','doctor\HomeCtrl@index');
 Route::get('admin/chart','HomeCtrl@adminChart');
 Route::get('admin/dashboard/count','admin\HomeCtrl@count');
 
