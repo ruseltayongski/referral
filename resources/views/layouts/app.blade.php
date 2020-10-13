@@ -225,7 +225,8 @@
                         <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
                         <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
-                        <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>ER OB</a></li>
+                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report</a></li>
+                        <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
                         <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                     <!--
                         <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
@@ -247,6 +248,7 @@
                     <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li>
                     <li><a href="{{ url('opcen/hospital') }}"><i class="fa fa-home"></i> E-referral</a></li>
                 @endif
+                @if($user->level != 'admin')
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="badge bg-red"> New</span><span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -258,6 +260,7 @@
                         <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report <span class="badge bg-red"> New</span></a></li>
                     </ul>
                 </li>
+                @endif
                 <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span class="count_referral">{{ $count_chat }}</span> New</span></a></li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 <li class="dropdown">
