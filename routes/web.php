@@ -397,3 +397,7 @@ Route::post('/conversation/send', 'ContactsController@send');
 
 //set logout
 Route::post('/logout/set','doctor\UserCtrl@setLogoutTime');
+
+//bed tracker
+Route::get('bed/{facility_id}','BedTracker@bed');
+Route::post('bed_update','BedTracker@bedUpdate');
