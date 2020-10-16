@@ -27,7 +27,10 @@
                         <tr>
                             <td>{{ $count }}</td>
                             <td width="15%">{{ $row->code }}</td>
-                            <td>{{ $row->name }}</td>
+                            <td>
+                                {{ $row->name }}<br>
+                                <b class="text-green">{{ $row->contact }}</b>
+                            </td>
                             <td>{{ date("F d,Y g:i a",strtotime($row->date_referred)) }}</td>
                             <td>{{ $row->time_not_accepted }} minutes</td>
                             <td><span class="badge bg-red">Under Development</span></td>
