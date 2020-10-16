@@ -208,6 +208,7 @@
                 <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">

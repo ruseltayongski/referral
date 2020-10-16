@@ -48,4 +48,19 @@ class BedTrackerCtrl extends Controller
 
         return 'success';
     }
+
+    public function bedAdmin(){
+        $facility = Facility::where(function($q){
+                $q->where("hospital_type","government")->orWhere("hospital_type","private");
+            })
+            ->where(function($q){
+                $q->where("province",1)->orWhere("province",2);
+            })
+            ->get();
+
+        return view('bed_tracker.bed_in_admin',[
+            "facility" => $facility
+        ]);
+    }
+
 }
