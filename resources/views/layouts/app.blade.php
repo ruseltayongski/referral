@@ -254,9 +254,9 @@
                 @elseif($user->level=='opcen')
                     <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('opcen/client') }}"><i class="fa fa-street-view"></i> Client</a></li>
-                    <li><a href="{{ url('opcen/availability/service') }}"><i class="fa fa-tty"></i> Availability/Services</a></li>
                     <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li>
-                    <li><a href="{{ url('opcen/hospital') }}"><i class="fa fa-home"></i> E-referral</a></li>
+                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring Team <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
                 @endif
                 @if($user->level != 'admin')
                 <li class="dropdown">
