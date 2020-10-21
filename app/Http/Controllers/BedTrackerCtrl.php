@@ -56,6 +56,8 @@ class BedTrackerCtrl extends Controller
             ->where(function($q){
                 $q->where("province",1)->orWhere("province",2);
             })
+            ->orderBy("province","desc")
+            ->orderBy("name","asc")
             ->get();
 
         return view('bed_tracker.bed_in_admin',[
