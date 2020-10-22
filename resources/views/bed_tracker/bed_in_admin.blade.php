@@ -73,7 +73,7 @@
                                 </tr>
                             @endif
                             <tr>
-                                <td><b class="text-success">{{ $row->name }}</b></td>
+                                <td><span class="text-success">{{ $row->name }}</span></td>
                                 <td><b class="text-success">{{ $row->level }}</b></td>
                                 <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_covidsplitter{{ $row->id }}" >{{ $row->emergency_room_covid }}</a></td>
                                 <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covidsplitter{{ $row->id }}" >{{ $row->icu_covid }}</a></td>
