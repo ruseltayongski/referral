@@ -117,7 +117,7 @@
                                 <li >Gracel R. Flores - 09453816462</li>
                             </ul>
                         </ol>
-                        <h3 class="text-center" style="color: #2f8030">DOH hotline number: 260 9740</h3>
+                        <h3 class="text-center" style="color: #2f8030">DOH HOTLINE 260 9740</h3>
                     </ol>
                     </p>
                 </div>
