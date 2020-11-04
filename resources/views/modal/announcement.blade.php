@@ -99,12 +99,14 @@
                                 <li>Kasilyn Lariosa - 09331720608</li>
                                 <li>Harry John Divina - 09323633961 or 09158411553</li>
                             </ul>
-                            <li >Register Account and Forget Password</li>
+                            <li >
+                                Register Account and Forget Password
+                            </li>
                             <ul>
                                 <li>Buch Angelou Fuentes - 09059553214 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>Jaypee Dingal - 09267313376 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>Amalio Enero Jr - 09101604890 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>John L. Ardiente - 09208658303 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
+                                <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
+                                <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
+                                <li>John L. Ardiente - 260 9740 local(435) - 09208658303 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
                             </ul>
                         </ol>
                         <li>Non - Technical</li>
@@ -115,7 +117,7 @@
                                 <li >Gracel R. Flores - 09453816462</li>
                             </ul>
                         </ol>
-                        <h3 class="text-center" style="color: #2f8030">Thank you!</h3>
+                        <h3 class="text-center" style="color: #2f8030">DOH hotline number: 260 9740</h3>
                     </ol>
                     </p>
                 </div>
