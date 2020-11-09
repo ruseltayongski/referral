@@ -102,9 +102,13 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    <div class="header" style="background-color:#59ab91;padding:15px;">
+    <div class="header" style="background-color:#59ab91;padding:10px;">
         <div class="container">
-            <img src="{{ asset('resources/img/referral_2019.png') }}" class="img-responsive" />
+            @if($user->level == 'opcen')
+                <img src="{{ asset('resources/img/opcen_banner.png') }}" class="img-responsive" />
+            @else
+                <img src="{{ asset('resources/img/referral_banner.png') }}" class="img-responsive" />
+            @endif
         </div>
     </div>
     <div class="container">
