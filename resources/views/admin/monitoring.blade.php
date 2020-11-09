@@ -12,24 +12,30 @@
                 <h3>Referral that not accepted within 30 minutes as {{ date("F d,Y g:i a") }}</h3>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <tr class="bg-black">
-                        <th>Pending No.</th>
-                        <th>Referral Code</th>
+                <table class="table table-striped">
+                    <tr>
+                        <th></th>
                         <th>Referring Facility</th>
+                        <th>Referred To</th>
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Remarks</th>
                     </tr>
                     <?php $count=0; ?>
                     @foreach($pending_activity as $row)
-                        <?php $count++; ?>
                         <tr>
-                            <td>{{ $count }}</td>
-                            <td width="15%">{{ $row->code }}</td>
+                            <td width="5%">
+                                <a href="{{ asset('doctor/track/patient?referredCode=').$row->code }}" class="btn btn-success" target="_blank">
+                                    <i class="fa fa-stethoscope"></i> Track
+                                </a>
+                            </td>
                             <td>
-                                {{ $row->name }}<br>
-                                <b class="text-green">{{ $row->contact }}</b>
+                                {{ $row->referring_facility }}<br>
+                                <b class="text-green">{{ $row->contact_from }}</b>
+                            </td>
+                            <td>
+                                {{ $row->referred_to }}<br>
+                                <b class="text-green">{{ $row->contact_to }}</b>
                             </td>
                             <td>{{ date("F d,Y g:i a",strtotime($row->date_referred)) }}</td>
                             <td>{{ $row->time_not_accepted }} minutes</td>
