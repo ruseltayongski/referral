@@ -402,4 +402,4 @@ Route::post('/logout/set','doctor\UserCtrl@setLogoutTime');
 Route::get('bed/{facility_id}','BedTrackerCtrl@bed');
 Route::post('bed_update','BedTrackerCtrl@bedUpdate');
 Route::get('bed_admin','BedTrackerCtrl@bedAdmin');
-Route::get('monitoring','MonitoringCtrl@monitoring');
+Route::match(['GET','POST'],'monitoring','MonitoringCtrl@monitoring');

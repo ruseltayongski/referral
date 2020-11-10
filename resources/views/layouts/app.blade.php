@@ -111,7 +111,7 @@
             @endif
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid" style="margin-left: 18%;">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -128,7 +128,7 @@
                 ->groupBy('to')
                 ->count();
         ?>
-        <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
+        <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 @if($user->level=='doctor')
                     <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
@@ -257,9 +257,18 @@
                 <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>
                 @elseif($user->level=='opcen')
                     <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                    <li><a href="{{ url('opcen/client') }}"><i class="fa fa-street-view"></i> Client</a></li>
+                    <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call</a></li>
                     <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li>
-                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring Team <small class="badge bg-red"> New</small></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ambulance"></i> E-Referral <span class="badge bg-red"> New</span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                            <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
+                            <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
+                            <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
                 @endif
                 @if($user->level != 'admin')
