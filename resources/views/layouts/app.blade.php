@@ -146,7 +146,7 @@
                             <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring Team <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
                     <!--
                     <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
                      -->

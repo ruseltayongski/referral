@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\MonitoringNotAccepted;
 use Illuminate\Http\Request;
 use App\Facility;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class MonitoringCtrl extends Controller
 {
@@ -17,11 +20,35 @@ class MonitoringCtrl extends Controller
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");
-
-        return view('admin.monitoring',[
+        return view('monitoring.monitoring',[
             "pending_activity" => $pending_activity,
             "date_start" => $date_start,
             "date_end" => $date_end
         ]);
     }
+
+    public function bodyRemark(Request $request){
+        return view('monitoring.monitoring_remark',[
+            "activity_id" => $request->activity_id,
+            "code" => $request->code,
+            "remark_by" => $request->remark_by,
+            "referring_facility" => $request->referring_facility,
+            "referred_to" => $request->referred_to
+        ]);
+    }
+
+    public function addRemark(Request $request){
+        $monitoring_not_accepted = new MonitoringNotAccepted();
+        $monitoring_not_accepted->code = $request->code;
+        $monitoring_not_accepted->remark_by = Session::get('auth')->id;
+        $monitoring_not_accepted->activity_id = $request->activity_id;
+        $monitoring_not_accepted->referring_facility = $request->referring_facility;
+        $monitoring_not_accepted->referred_to = $request->referred_to;
+        $monitoring_not_accepted->remarks = $request->remarks;
+        $monitoring_not_accepted->save();
+
+        Session::put("add_remark",true);
+        return Redirect::back();
+    }
+
 }

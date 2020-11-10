@@ -1,7 +1,4 @@
 <?php
-	$host = "192.168.81.5";
-	$username = "rtayong";
-	$password = "rtayong";
 
 return [
 
@@ -44,11 +41,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => $host,
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'doh_referral', //doh_referral dummy_referral
-            'username' => $username,
-            'password' => $password,
+            'username' => 'root',
+            'password' => '',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -59,11 +56,11 @@ return [
 
         'tsekap' => [
             'driver' => 'mysql',
-            'host' => $host,
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'tsekap_main',
-            'username' => $username,
-            'password' => $password,
+            'username' => 'root',
+            'password' => '',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
