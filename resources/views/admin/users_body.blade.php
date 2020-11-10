@@ -44,6 +44,7 @@
             <option value="">Select options</option>
             <option value="support" <?php if($user->level == "support") echo 'selected'; ?>>IT Support</option>
             <option value="opcen" <?php if($user->level == "opcen") echo 'selected'; ?>>OPCEN</option>
+            <option value="bed_tracker" <?php if($user->level == "bed_tracker") echo 'selected'; ?>>BED TRACKER</option>
         </select>
     </div>
     <hr />

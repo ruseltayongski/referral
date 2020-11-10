@@ -69,7 +69,7 @@
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covid_wait" >{{ $facility->icu_covid_wait }}</a></td>
                         <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_non_wait" >{{ $facility->emergency_room_non_wait }}</a></td>
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_non_wait" >{{ $facility->icu_non_wait }}</a></td>
-                        <td><a href="#" class="text_editable" data-title="Remarks" id="remarks">{{ $facility->remarks }}</a></td>
+                        <td>{{ $facility->remarks }}</td>
                     </tr>
                 </table>
             </div>

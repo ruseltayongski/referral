@@ -36,7 +36,8 @@ class UserCtrl extends Controller
         $data = $data
                 ->where(function($q){
                     $q->where("level",'support')
-                        ->orWhere("level","opcen");
+                        ->orWhere("level","opcen")
+                        ->orWhere("level","bed_tracker");
                     })
                 ->orderBy('lname','asc')
                 ->paginate(10);

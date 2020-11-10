@@ -222,33 +222,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; IT Support/OPCEN</a></li>
+                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed Tracker</a></li>
                         <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Online Users</a></li>
-                        <li><a href="{{ url('online/facility') }}"><i class="fa fa-hospital-o"></i>Online Facility</a></li>
-                        <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
-                        <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
-                        <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
-                        <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
-                        <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
-                        <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
-                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report</a></li>
-                        <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
-                        <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
-                    <!--
-                        <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
-                        -->
                     </ul>
                 </li>
                 <!--
                 <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li>
                 -->
-                <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @elseif($user->level=='eoc_region')
                 <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>
@@ -270,22 +250,34 @@
                     </li>
                     <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
+                @elseif($user->level == 'bed_tracker')
+                    <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                    <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
                 @endif
-                @if($user->level != 'admin')
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="badge bg-red"> New</span><span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Onboard Users</a></li>
+                        <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Online Users</a></li>
                         <li><a href="{{ url('online/facility') }}"><i class="fa fa-hospital-o"></i>Online Facility</a></li>
                         <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
                         <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
-                        <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated Report</a></li>
-                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report <span class="badge bg-red"> New</span></a></li>
+                        <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
+                        <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
+                        <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
+                        <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
+                        <li><a href="{{ url('admin/statistics') }}"><i class="fa fa-certificate"></i>Statistics Report</a></li>
+                        <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
+                        <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
+                    <!--
+                    <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
+                    -->
                     </ul>
                 </li>
-                @endif
                 <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
+                @if($user->level == 'admin')
+                    <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
+                @endif
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
