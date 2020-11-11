@@ -5,16 +5,7 @@
         .editable-empty{
             color: #ff3d3c;
         }
-        /*thead {
-            position: fixed;
-            top: 50px;
-            width: 100%;
-            height: 50px;
-            line-height: 3em;
-            background: #eee;
-            table-layout: fixed;
-            display: table;
-        }*/
+
 
     </style>
     <div class="box box-success">
@@ -31,9 +22,8 @@
                             <th class="success" style="vertical-align: middle;" rowspan="4"><center>Hospital Category</center></th>
                             <th style="background-color: #ffb3b8;" colspan="12"><center>Number of avalable Beds</center></th>
                             <th class="info" colspan="4"><center>Number of Waitlist</center></th>
-                            <th class="bg-pink" style="background-color: #ffb3b8;width: 10%;vertical-align: middle;margin-left: 20px;" rowspan="4"><center>Remarks</center></th>
+                            <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;margin-left: 20px;" rowspan="4"><center>Remarks</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Encoded By</center></th>
-                            <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Last Update</center></th>
                         </tr>
                         <tr>
                             <th class="danger" colspan="6"><center>COVID BEDS</center></th>
@@ -75,7 +65,7 @@
                                 </tr>
                             @endif
                             <tr>
-                                <td width="25%">
+                                <td>
                                     <b class="text-green">{{ $row->name }}</b><br>
                                     <span class="text-yellow">({{ $row->contact }})</span>
                                 </td>
@@ -143,12 +133,10 @@
                                         $created_at = $encoded_by->created_at;
                                         $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
                                         echo $encoded_by;
-                                    ?>
-                                </td>
-                                <td>
+                                    ?><br>
                                     @if($created_at)
-                                    {{ date("F d,Y",strtotime($created_at)) }}<br>
-                                    <small class="text-yellow">({{ date('g:i a',strtotime($created_at)) }})</small>
+                                        <small class="text-blue">{{ date("F d,Y",strtotime($created_at)) }}</small><br>
+                                        <small class="text-yellow">({{ date('g:i a',strtotime($created_at)) }})</small>
                                     @endif
                                 </td>
                             </tr>
