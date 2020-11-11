@@ -23,8 +23,8 @@
                 <h2>Bed Availability as of <span id="time"></span></h2>
             </div>
             <section class="content-area">
-                <div class="table-area table-responsive">
-                    <table class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped" border="1">
                         <thead>
                         <tr>
                             <th class="info" rowspan="4" style="vertical-align: middle;"><center>Name of Hospital</center></th>
@@ -32,6 +32,8 @@
                             <th style="background-color: #ffb3b8;" colspan="12"><center>Number of avalable Beds</center></th>
                             <th class="info" colspan="4"><center>Number of Waitlist</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;width: 10%;vertical-align: middle;margin-left: 20px;" rowspan="4"><center>Remarks</center></th>
+                            <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Encoded By</center></th>
+                            <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Last Update</center></th>
                         </tr>
                         <tr>
                             <th class="danger" colspan="6"><center>COVID BEDS</center></th>
@@ -69,29 +71,85 @@
                             @if(!isset($facility_checker[$row->province]))
                                 <?php $facility_checker[$row->province] = true; ?>
                                 <tr>
-                                    <th style="font-size: 14pt;" colspan="19">{{ strtoupper(\App\Province::find($row->province)->description) }} PROVINCE</th>
+                                    <th style="font-size: 14pt;" colspan="21">{{ strtoupper(\App\Province::find($row->province)->description) }} PROVINCE</th>
                                 </tr>
                             @endif
                             <tr>
-                                <td><span class="text-success">{{ $row->name }}</span></td>
-                                <td><b class="text-success">{{ $row->level }}</b></td>
-                                <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_covidsplitter{{ $row->id }}" >{{ $row->emergency_room_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covidsplitter{{ $row->id }}" >{{ $row->icu_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="COVID Beds" id="beds_covidsplitter{{ $row->id }}" >{{ $row->beds_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Isolation Beds" id="isolation_covidsplitter{{ $row->id }}" >{{ $row->isolation_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Mechanical Ventilators Used" id="mechanical_used_covidsplitter{{ $row->id }}" >{{ $row->mechanical_used_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Mechanical Ventilators Vacant" id="mechanical_vacant_covidsplitter{{ $row->id }}" >{{ $row->mechanical_vacant_covid }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_nonsplitter{{ $row->id }}" >{{ $row->emergency_room_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_nonsplitter{{ $row->id }}" >{{ $row->icu_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="COVID Beds" id="beds_nonsplitter{{ $row->id }}" >{{ $row->beds_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Isolation Beds" id="isolation_nonsplitter{{ $row->id }}">{{ $row->isolation_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Mechanical Ventilators Used" id="mechanical_used_nonsplitter{{ $row->id }}" >{{ $row->mechanical_used_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Mechanical Ventilators None" id="mechanical_vacant_nonsplitter{{ $row->id }}" >{{ $row->mechanical_vacant_non }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_covid_waitsplitter{{ $row->id }}" >{{ $row->emergency_room_covid_wait }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covid_waitsplitter{{ $row->id }}" >{{ $row->icu_covid_wait }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_non_waitsplitter{{ $row->id }}" >{{ $row->emergency_room_non_wait }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_non_waitsplitter{{ $row->id }}" >{{ $row->icu_non_wait }}</a></td>
-                                <td><a href="#" class="text_editable" data-title="Remarks" id="remarkssplitter{{ $row->id }}">{{ $row->remarks }}</a></td>
+                                <td width="25%">
+                                    <b class="text-green">{{ $row->name }}</b><br>
+                                    <span class="text-yellow">({{ $row->contact }})</span>
+                                </td>
+                                <td><span class="text-green">{{ $row->level }}</span></td>
+                                <td>
+                                    {{ $row->emergency_room_covid ? $row->emergency_room_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->icu_covid ? $row->icu_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->beds_covid ? $row->beds_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->isolation_covid ? $row->isolation_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->mechanical_used_covid ? $row->mechanical_used_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->mechanical_vacant_covid ? $row->mechanical_vacant_covid : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->emergency_room_non ? $row->emergency_room_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->icu_non ? $row->icu_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->beds_non ? $row->beds_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->isolation_non ? $row->isolation_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->mechanical_used_non ? $row->mechanical_used_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->mechanical_vacant_non ? $row->mechanical_vacant_non : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->emergency_room_covid_wait ? $row->emergency_room_covid_wait : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->icu_covid_wait ? $row->icu_covid_wait : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->emergency_room_non_wait ? $row->emergency_room_non_wait : 0 }}
+                                </td>
+                                <td>
+                                    {{ $row->icu_non_wait ? $row->icu_non_wait : 0 }}
+                                </td>
+                                <td>
+                                    <a href="#" class="text_editable" data-title="Remarks" id="{{ $row->id }}">{{ $row->remarks }}</a>
+                                </td>
+                                <td>
+                                    <?php
+                                        $encoded_by = \App\BedTracker::
+                                                    select("users.fname","users.mname","users.lname","bed_tracker.created_at")
+                                                    ->leftJoin("users","users.id","=","bed_tracker.encoded_by")
+                                                    ->where("bed_tracker.facility_id","=",$row->id)->orderBy("bed_tracker.created_at","asc")
+                                                    ->where("users.level","!=","opcen")
+                                                    ->first();
+                                        $created_at = $encoded_by->created_at;
+                                        $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
+                                        echo $encoded_by;
+                                    ?>
+                                </td>
+                                <td>
+                                    @if($created_at)
+                                    {{ date("F d,Y",strtotime($created_at)) }}<br>
+                                    <small class="text-yellow">({{ date('g:i a',strtotime($created_at)) }})</small>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -123,7 +181,7 @@
         //editables
         $(".text_editable").each(function(){
             $('#'+this.id).editable({
-                type : this.id == 'remarks' ? 'textarea' : 'text',
+                type : 'textarea',
                 name: 'username',
                 title: $(this).data("title"),
                 emptytext: 'empty',
@@ -131,8 +189,8 @@
                     var url = "<?php echo asset('bed_update'); ?>";
                     var json = {
                         "_token" : "<?php echo csrf_token(); ?>",
-                        "facility_id" : "<?php echo Session::get('user')->facility_id; ?>",
-                        "column" : this.id,
+                        "facility_id" : this.id,
+                        "column" : 'remarks',
                         "value" : newValue
                     };
                     var title = $(this).data("title");
