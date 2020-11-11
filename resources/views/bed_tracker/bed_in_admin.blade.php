@@ -5,8 +5,26 @@
         .editable-empty{
             color: #ff3d3c;
         }
+        .tooltip-ex { /* Container for our tooltip */
+            position: relative;
+            display: inline-block;
+        }
 
+        .tooltip-ex .tooltip-ex-text { /* This is for the tooltip text */
+            visibility: hidden;
+            width: 100px;
+            background-color: #00a65a;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px; /* This defines tooltip text position */
+            position: absolute;
+            z-index: 1;
+        }
 
+        .tooltip-ex:hover .tooltip-ex-text { /* Makes tooltip text visible when text is hovered on */
+            visibility: visible;
+        }
     </style>
     <div class="box box-success">
         <div class="box-body">
@@ -71,52 +89,188 @@
                                 </td>
                                 <td><span class="text-green">{{ $row->level }}</span></td>
                                 <td>
-                                    {{ $row->emergency_room_covid ? $row->emergency_room_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->emergency_room_covid ? $row->emergency_room_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                (Emergency Room (ER))
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->icu_covid ? $row->icu_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->icu_covid ? $row->icu_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                (ICU - Intensive Care Units)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->beds_covid ? $row->beds_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->beds_covid ? $row->beds_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                (COVID Beds)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->isolation_covid ? $row->isolation_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->isolation_covid ? $row->isolation_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                (Isolation Beds)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->mechanical_used_covid ? $row->mechanical_used_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->mechanical_used_covid ? $row->mechanical_used_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                Mechanical Ventilators<br>
+                                                (Used)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->mechanical_vacant_covid ? $row->mechanical_vacant_covid : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->mechanical_vacant_covid ? $row->mechanical_vacant_covid : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                COVID BEDS<br>
+                                                Mechanical Ventilators<br>
+                                                (Used)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->emergency_room_non ? $row->emergency_room_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->emergency_room_non ? $row->emergency_room_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                (Emergency Room (ER))
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->icu_non ? $row->icu_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->icu_non ? $row->icu_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                (ICU - Intensive Care Units)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->beds_non ? $row->beds_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->beds_non ? $row->beds_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                (COVID Beds)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->isolation_non ? $row->isolation_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->isolation_non ? $row->isolation_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                (Isolation Beds)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->mechanical_used_non ? $row->mechanical_used_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->mechanical_used_non ? $row->mechanical_used_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                Mechanical Ventilators
+                                                (Used)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->mechanical_vacant_non ? $row->mechanical_vacant_non : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->mechanical_vacant_non ? $row->mechanical_vacant_non : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Non-COVID BEDS<br>
+                                                Mechanical Ventilators
+                                                (Vacant)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->emergency_room_covid_wait ? $row->emergency_room_covid_wait : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->emergency_room_covid_wait ? $row->emergency_room_covid_wait : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Number of Waitlist<br>
+                                                COVID BEDS
+                                                (Emergency Room (ER))
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->icu_covid_wait ? $row->icu_covid_wait : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->icu_covid_wait ? $row->icu_covid_wait : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Number of Waitlist<br>
+                                                COVID BEDS
+                                                (ICU - Intensive Care Units)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->emergency_room_non_wait ? $row->emergency_room_non_wait : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->emergency_room_non_wait ? $row->emergency_room_non_wait : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Number of Waitlist<br>
+                                                Non-COVID BEDS
+                                                (Emergency Room (ER))
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    {{ $row->icu_non_wait ? $row->icu_non_wait : 0 }}
+                                    <span class="htmlHigh">
+                                        <span class="tooltip-ex">
+                                            <span style="color: black !important;">{{ $row->icu_non_wait ? $row->icu_non_wait : 0 }}</span>
+                                            <span class="tooltip-ex-text">
+                                                Number of Waitlist<br>
+                                                Non-COVID BEDS
+                                                (ICU - Intensive Care Units)
+                                            </span>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
                                     <a href="#" class="text_editable" data-title="Remarks" id="{{ $row->id }}">{{ $row->remarks }}</a>
