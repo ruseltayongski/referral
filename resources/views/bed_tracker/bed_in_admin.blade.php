@@ -138,6 +138,7 @@
                                                     ->leftJoin("users","users.id","=","bed_tracker.encoded_by")
                                                     ->where("bed_tracker.facility_id","=",$row->id)->orderBy("bed_tracker.created_at","asc")
                                                     ->where("users.level","!=","opcen")
+                                                    ->orderBy("bed_tracker.created_at","desc")
                                                     ->first();
                                         $created_at = $encoded_by->created_at;
                                         $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
