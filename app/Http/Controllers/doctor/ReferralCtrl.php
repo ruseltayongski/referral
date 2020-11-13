@@ -130,7 +130,7 @@ class ReferralCtrl extends Controller
         $data = $data
                 //->orderByRaw("IF( (tracking.status='referred' or tracking.status='seen'), TIMESTAMPDIFF(MINUTE,tracking.date_referred,now()), tracking.id )",'desc')
                 ->orderBy("tracking.date_referred","desc")
-                ->paginate(5);
+                ->paginate(15);
 
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
@@ -450,7 +450,7 @@ class ReferralCtrl extends Controller
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
         $data = $data->orderBy('date_referred','desc')
-                    ->paginate(3);
+                    ->paginate(5);
 
         return view('doctor.referred2',[
             'title' => 'Referred Patients',

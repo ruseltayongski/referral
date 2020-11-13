@@ -56,7 +56,9 @@
                                 ?>
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
-                                        <span class="text-red">={{ $monitoring->remarks }}</span><br><br>
+                                        <span class="text-green">={{ $monitoring->remarks }}</span><br>
+                                            <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small>
+                                        <br><br>
                                     @endforeach
                                     @if(Session::get('auth')->level == 'opcen')
                                         <button class="btn btn-sm btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
