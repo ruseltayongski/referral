@@ -273,7 +273,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="#" class="text_editable" data-title="Remarks" id="{{ $row->id }}">{{ $row->remarks }}</a>
+                                    <a href="#" class="@if(Session::get('auth')->level == 'opcen'){{ 'text_editable' }}@endif" data-title="Remarks" id="{{ $row->id }}">{{ $row->remarks }}</a>
                                 </td>
                                 <td>
                                     <?php
