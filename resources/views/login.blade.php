@@ -20,7 +20,9 @@ $dateNow = date('Y-m-d');
    <div class="login-box">
         <center>
             <img src="{{ asset('resources/img/doh.png') }}" style="width: 25%"/><br>
-            <label>Central Visayas Electronic Health Referral System(CVe-HRS)</label>
+            <label>711 DOH CVCHD HealhLine</label><br>
+            <label>Bed Tracker</label><br>
+            <label style="font-size: 9pt;">Central Visayas Electronic Health Referral System(CVe-HRS)</label>
         </center>
           <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
               {{ csrf_field() }}
