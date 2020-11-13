@@ -30,6 +30,11 @@
                                 $facility_transaction[3]['with_transaction'] = 0;
                                 $facility_transaction[3]['no_transaction'] = 0;
 
+                                $facility_onboard[4] = 0;
+                                $facility_total[4] = 0;
+                                $facility_transaction[4]['with_transaction'] = 0;
+                                $facility_transaction[4]['no_transaction'] = 0;
+
                                 $hospital_type[1]['government'] = 0;
                                 $hospital_type_total[1]['government'] = 0;
                                 $government_transaction[1]['with_transaction'] = 0;
@@ -45,12 +50,19 @@
                                 $government_transaction[3]['with_transaction'] = 0;
                                 $government_transaction[3]['no_transaction'] = 0;
 
+                                $hospital_type_hospital[4]['government'] = 0;
+                                $hospital_type_total[4]['government'] = 0;
+                                $government_transaction[4]['with_transaction'] = 0;
+                                $government_transaction[4]['no_transaction'] = 0;
+
                                 $private_transaction[1]['with_transaction'] = 0;
                                 $private_transaction[1]['no_transaction'] = 0;
                                 $private_transaction[2]['with_transaction'] = 0;
                                 $private_transaction[2]['no_transaction'] = 0;
                                 $private_transaction[3]['with_transaction'] = 0;
                                 $private_transaction[3]['no_transaction'] = 0;
+                                $private_transaction[4]['with_transaction'] = 0;
+                                $private_transaction[4]['no_transaction'] = 0;
 
                                 $rhu_transaction[1]['with_transaction'] = 0;
                                 $rhu_transaction[1]['no_transaction'] = 0;
@@ -58,6 +70,8 @@
                                 $rhu_transaction[2]['no_transaction'] = 0;
                                 $rhu_transaction[3]['with_transaction'] = 0;
                                 $rhu_transaction[3]['no_transaction'] = 0;
+                                $rhu_transaction[4]['with_transaction'] = 0;
+                                $rhu_transaction[4]['no_transaction'] = 0;
 
                                 $province = [];
                             ?>
