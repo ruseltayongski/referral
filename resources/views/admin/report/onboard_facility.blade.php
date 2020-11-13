@@ -25,6 +25,11 @@
                                 $facility_transaction[2]['with_transaction'] = 0;
                                 $facility_transaction[2]['no_transaction'] = 0;
 
+                                $facility_onboard[3] = 0;
+                                $facility_total[3] = 0;
+                                $facility_transaction[3]['with_transaction'] = 0;
+                                $facility_transaction[3]['no_transaction'] = 0;
+
                                 $hospital_type[1]['government'] = 0;
                                 $hospital_type_total[1]['government'] = 0;
                                 $government_transaction[1]['with_transaction'] = 0;
@@ -35,15 +40,24 @@
                                 $government_transaction[2]['with_transaction'] = 0;
                                 $government_transaction[2]['no_transaction'] = 0;
 
+                                $hospital_type_hospital[3]['government'] = 0;
+                                $hospital_type_total[3]['government'] = 0;
+                                $government_transaction[3]['with_transaction'] = 0;
+                                $government_transaction[3]['no_transaction'] = 0;
+
                                 $private_transaction[1]['with_transaction'] = 0;
                                 $private_transaction[1]['no_transaction'] = 0;
                                 $private_transaction[2]['with_transaction'] = 0;
                                 $private_transaction[2]['no_transaction'] = 0;
+                                $private_transaction[3]['with_transaction'] = 0;
+                                $private_transaction[3]['no_transaction'] = 0;
 
                                 $rhu_transaction[1]['with_transaction'] = 0;
                                 $rhu_transaction[1]['no_transaction'] = 0;
                                 $rhu_transaction[2]['with_transaction'] = 0;
                                 $rhu_transaction[2]['no_transaction'] = 0;
+                                $rhu_transaction[3]['with_transaction'] = 0;
+                                $rhu_transaction[3]['no_transaction'] = 0;
 
                                 $province = [];
                             ?>
@@ -256,6 +270,55 @@
             $("#chartOverall2").CanvasJSChart(options2);
 
 
+            var with_transaction3 = Math.round("<?php echo $facility_transaction[3]['with_transaction']; ?>" / "<?php echo $facility_onboard[3]; ?>" * 100);
+            var no_transaction3 = Math.round("<?php echo $facility_transaction[3]['no_transaction']; ?>" / "<?php echo $facility_onboard[3]; ?>" * 100);
+            var options3 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Overall"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+with_transaction3+"% in "+"<?php echo $facility_transaction[3]['with_transaction']; ?> out of <?php echo $facility_onboard[3]; ?>",legendText : "With Transaction", y: with_transaction3 },
+                        { label: "No Transaction in "+no_transaction3+"% in "+"<?php echo $facility_transaction[3]['no_transaction']; ?> out of <?php echo $facility_onboard[3]; ?>",legendText : "No Transaction", y: no_transaction3 }
+                    ]
+                }]
+            };
+            $("#chartOverall3").CanvasJSChart(options3);
+
+            var with_transaction4 = Math.round("<?php echo $facility_transaction[4]['with_transaction']; ?>" / "<?php echo $facility_onboard[4]; ?>" * 100);
+            var no_transaction4 = Math.round("<?php echo $facility_transaction[4]['no_transaction']; ?>" / "<?php echo $facility_onboard[4]; ?>" * 100);
+            var options4 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Overall"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+with_transaction4+"% in "+"<?php echo $facility_transaction[4]['with_transaction']; ?> out of <?php echo $facility_onboard[4]; ?>",legendText : "With Transaction", y: with_transaction4 },
+                        { label: "No Transaction in "+no_transaction4+"% in "+"<?php echo $facility_transaction[4]['no_transaction']; ?> out of <?php echo $facility_onboard[4]; ?>",legendText : "No Transaction", y: no_transaction4 }
+                    ]
+                }]
+            };
+            $("#chartOverall4").CanvasJSChart(options4);
+
+
             @if($hospital_type[1]['government'] != 0)
             var government_with_transaction1 = Math.round("<?php echo $government_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['government']; ?>" * 100);
             var government_no_transaction1 = Math.round("<?php echo $government_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['government']; ?>" * 100);
@@ -309,6 +372,58 @@
             @endif
 
 
+            @if($hospital_type[3]['government'] != 0)
+            var government_with_transaction3 = Math.round("<?php echo $government_transaction[3]['with_transaction']; ?>" / "<?php echo $hospital_type[3]['government']; ?>" * 100);
+            var government_no_transaction3 = Math.round("<?php echo $government_transaction[3]['no_transaction']; ?>" / "<?php echo $hospital_type[3]['government']; ?>" * 100);
+            var government_options3 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Government"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+government_with_transaction3+"% in "+"<?php echo $government_transaction[3]['with_transaction']; ?> out of <?php echo $hospital_type[3]['government']; ?>",legendText : "With Transaction", y: government_with_transaction3 },
+                        { label: "No Transaction in "+government_no_transaction3+"% in "+"<?php echo $government_transaction[3]['no_transaction']; ?> out of <?php echo $hospital_type[3]['government'] ?>",legendText : "No Transaction", y: government_no_transaction3 }
+                    ]
+                }]
+            };
+            $("#chartGovernment3").CanvasJSChart(government_options3);
+            @endif
+
+            @if($hospital_type[4]['government'] != 0)
+            var government_with_transaction4 = Math.round("<?php echo $government_transaction[4]['with_transaction']; ?>" / "<?php echo $hospital_type[4]['government']; ?>" * 100);
+            var government_no_transaction4 = Math.round("<?php echo $government_transaction[4]['no_transaction']; ?>" / "<?php echo $hospital_type[4]['government']; ?>" * 100);
+            var government_options4 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Government"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+government_with_transaction4+"% in "+"<?php echo $government_transaction[4]['with_transaction']; ?> out of <?php echo $hospital_type[4]['government']; ?>",legendText : "With Transaction", y: government_with_transaction4 },
+                        { label: "No Transaction in "+government_no_transaction4+"% in "+"<?php echo $government_transaction[4]['no_transaction']; ?> out of <?php echo $hospital_type[4]['government'] ?>",legendText : "No Transaction", y: government_no_transaction4 }
+                    ]
+                }]
+            };
+            $("#chartGovernment4").CanvasJSChart(government_options4);
+            @endif
+
             @if($hospital_type[1]['private'] != 0)
             var private_with_transaction1 = Math.round("<?php echo $private_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['private']; ?>" * 100);
             var private_no_transaction1 = Math.round("<?php echo $private_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['private']; ?>" * 100);
@@ -359,6 +474,59 @@
                 }]
             };
             $("#chartPrivate2").CanvasJSChart(private_options2);
+            @endif
+
+
+            @if($hospital_type[3]['private'] != 0)
+            var private_with_transaction3 = Math.round("<?php echo $private_transaction[3]['with_transaction']; ?>" / "<?php echo $hospital_type[3]['private']; ?>" * 100);
+            var private_no_transaction3 = Math.round("<?php echo $private_transaction[3]['no_transaction']; ?>" / "<?php echo $hospital_type[3]['private']; ?>" * 100);
+            var private_options3 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Private"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+private_with_transaction3+"% in "+"<?php echo $private_transaction[3]['with_transaction']; ?> out of <?php echo $hospital_type[3]['private']; ?>",legendText : "With Transaction", y: private_with_transaction3 },
+                        { label: "No Transaction in "+private_no_transaction3+"% in "+"<?php echo $private_transaction[3]['no_transaction']; ?> out of <?php echo $hospital_type[3]['private'] ?>",legendText : "No Transaction", y: private_no_transaction3 }
+                    ]
+                }]
+            };
+            $("#chartPrivate3").CanvasJSChart(private_options3);
+            @endif
+
+            @if($hospital_type[4]['private'] != 0)
+            var private_with_transaction4 = Math.round("<?php echo $private_transaction[4]['with_transaction']; ?>" / "<?php echo $hospital_type[4]['private']; ?>" * 100);
+            var private_no_transaction4 = Math.round("<?php echo $private_transaction[4]['no_transaction']; ?>" / "<?php echo $hospital_type[4]['private']; ?>" * 100);
+            var private_options4 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Private"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+private_with_transaction4+"% in "+"<?php echo $private_transaction[4]['with_transaction']; ?> out of <?php echo $hospital_type[4]['private']; ?>",legendText : "With Transaction", y: private_with_transaction4 },
+                        { label: "No Transaction in "+private_no_transaction4+"% in "+"<?php echo $private_transaction[4]['no_transaction']; ?> out of <?php echo $hospital_type[4]['private'] ?>",legendText : "No Transaction", y: private_no_transaction4 }
+                    ]
+                }]
+            };
+            $("#chartPrivate4").CanvasJSChart(private_options4);
             @endif
 
             @if($hospital_type[1]['RHU'] != 0)
@@ -415,6 +583,59 @@
             @endif
 
 
+            @if($hospital_type[3]['RHU'] != 0)
+            var rhu_with_transaction3 = Math.round("<?php echo $rhu_transaction[3]['with_transaction']; ?>" / "<?php echo $hospital_type[3]['RHU']; ?>" * 100);
+            var rhu_no_transaction3 = Math.round("<?php echo $rhu_transaction[3]['no_transaction']; ?>" / "<?php echo $hospital_type[3]['RHU']; ?>" * 100);
+            var rhu_options3 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "RHU"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+rhu_with_transaction3+"% in "+"<?php echo $rhu_transaction[3]['with_transaction']; ?> out of <?php echo $hospital_type[3]['RHU']; ?>",legendText : "With Transaction", y: rhu_with_transaction3 },
+                        { label: "No Transaction in "+rhu_no_transaction3+"% in "+"<?php echo $rhu_transaction[3]['no_transaction']; ?> out of <?php echo $hospital_type[3]['RHU'] ?>",legendText : "No Transaction", y: rhu_no_transaction3 }
+                    ]
+                }]
+            };
+            $("#chartRhu3").CanvasJSChart(rhu_options3);
+            @endif
+
+            @if($hospital_type[4]['RHU'] != 0)
+            var rhu_with_transaction4 = Math.round("<?php echo $rhu_transaction[4]['with_transaction']; ?>" / "<?php echo $hospital_type[4]['RHU']; ?>" * 100);
+            var rhu_no_transaction4 = Math.round("<?php echo $rhu_transaction[4]['no_transaction']; ?>" / "<?php echo $hospital_type[4]['RHU']; ?>" * 100);
+            var rhu_options4 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "RHU"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+rhu_with_transaction4+"% in "+"<?php echo $rhu_transaction[4]['with_transaction']; ?> out of <?php echo $hospital_type[4]['RHU']; ?>",legendText : "With Transaction", y: rhu_with_transaction4 },
+                        { label: "No Transaction in "+rhu_no_transaction4+"% in "+"<?php echo $rhu_transaction[4]['no_transaction']; ?> out of <?php echo $hospital_type[4]['RHU'] ?>",legendText : "No Transaction", y: rhu_no_transaction4 }
+                    ]
+                }]
+            };
+            $("#chartRhu4").CanvasJSChart(rhu_options4);
+            @endif
+
+
         }
     </script>
 
@@ -430,12 +651,24 @@
         $('.facility_progress1').css('width',facility_progress1+"%");
         $('.facility_percent1').html(facility_progress1+"%");
 
-
         $(".facility_onboard2").html("<?php echo $facility_onboard[2] ?>");
         $(".facility_total2").html("<?php echo $facility_total[2] ?>");
         var facility_progress2 = Math.round("<?php echo $facility_onboard[2] ?>" / "<?php echo $facility_total[2] ?>" * 100);
         $('.facility_progress2').css('width',facility_progress2+"%");
         $('.facility_percent2').html(facility_progress2+"%");
+
+        $(".facility_onboard3").html("<?php echo $facility_onboard[3] ?>");
+        $(".facility_total3").html("<?php echo $facility_total[3] ?>");
+        var facility_progress3 = Math.round("<?php echo $facility_onboard[3] ?>" / "<?php echo $facility_total[3] ?>" * 100);
+        $('.facility_progress3').css('width',facility_progress3+"%");
+        $('.facility_percent3').html(facility_progress3+"%");
+
+        $(".facility_onboard4").html("<?php echo $facility_onboard[4] ?>");
+        $(".facility_total4").html("<?php echo $facility_total[4] ?>");
+        var facility_progress4 = Math.round("<?php echo $facility_onboard[4] ?>" / "<?php echo $facility_total[4] ?>" * 100);
+        $('.facility_progress4').css('width',facility_progress4+"%");
+        $('.facility_percent4').html(facility_progress4+"%");
+
 
         $(".government_hospital1").html("<?php echo $hospital_type[1]['government']; ?>");
         $(".government_hospital_total1").html("<?php echo $hospital_type_total[1]['government']; ?>");
@@ -450,6 +683,18 @@
         $('.government_hospital_progress2').css('width',government_hospital_progress2+"%");
         $('.government_percent2').html(government_hospital_progress2+"%");
 
+        $(".government_hospital3").html("<?php echo $hospital_type[3]['government']; ?>");
+        $(".government_hospital_total3").html("<?php echo $hospital_type_total[3]['government']; ?>");
+        var government_hospital_progress3 = Math.round("<?php echo $hospital_type[3]['government'] ?>" / "<?php echo $hospital_type_total[3]['government'] ?>" * 100);
+        $('.government_hospital_progress3').css('width',government_hospital_progress3+"%");
+        $('.government_percent3').html(government_hospital_progress3+"%");
+
+        $(".government_hospital4").html("<?php echo $hospital_type[4]['government']; ?>");
+        $(".government_hospital_total4").html("<?php echo $hospital_type_total[4]['government']; ?>");
+        var government_hospital_progress4 = Math.round("<?php echo $hospital_type[4]['government'] ?>" / "<?php echo $hospital_type_total[4]['government'] ?>" * 100);
+        $('.government_hospital_progress4').css('width',government_hospital_progress4+"%");
+        $('.government_percent4').html(government_hospital_progress4+"%");
+
         $(".private_hospital1").html("<?php echo $hospital_type[1]['private']; ?>");
         $(".private_hospital_total1").html("<?php echo $hospital_type_total[1]['private']; ?>");
         var private_hospital_progress1 = Math.round("<?php echo $hospital_type[1]['private'] ?>" / "<?php echo $hospital_type_total[1]['private'] ?>" * 100);
@@ -462,6 +707,17 @@
         $('.private_hospital_progress2').css('width',private_hospital_progress2+"%");
         $('.private_percent2').html(private_hospital_progress2+"%");
 
+        $(".private_hospital3").html("<?php echo $hospital_type[3]['private']; ?>");
+        $(".private_hospital_total3").html("<?php echo $hospital_type_total[3]['private']; ?>");
+        var private_hospital_progress3 = Math.round("<?php echo $hospital_type[3]['private'] ?>" / "<?php echo $hospital_type_total[3]['private'] ?>" * 100);
+        $('.private_hospital_progress3').css('width',private_hospital_progress3+"%");
+        $('.private_percent3').html(private_hospital_progress3+"%");
+
+        $(".private_hospital4").html("<?php echo $hospital_type[4]['private']; ?>");
+        $(".private_hospital_total4").html("<?php echo $hospital_type_total[4]['private']; ?>");
+        var private_hospital_progress4 = Math.round("<?php echo $hospital_type[4]['private'] ?>" / "<?php echo $hospital_type_total[4]['private'] ?>" * 100);
+        $('.private_hospital_progress4').css('width',private_hospital_progress4+"%");
+        $('.private_percent4').html(private_hospital_progress4+"%");
 
         $(".rhu_hospital1").html("<?php echo $hospital_type[1]['RHU']; ?>");
         $(".rhu_hospital_total1").html("<?php echo $hospital_type_total[1]['RHU']; ?>");
@@ -474,6 +730,19 @@
         var rhu_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['RHU'] ?>" / "<?php echo $hospital_type_total[2]['RHU'] ?>" * 100);
         $('.rhu_hospital_progress2').css('width',rhu_hospital_progress2+"%");
         $('.rhu_percent2').html(rhu_hospital_progress2+"%");
+
+        $(".rhu_hospital3").html("<?php echo $hospital_type[3]['RHU']; ?>");
+        $(".rhu_hospital_total3").html("<?php echo $hospital_type_total[3]['RHU']; ?>");
+        var rhu_hospital_progress3 = Math.round("<?php echo $hospital_type[3]['RHU'] ?>" / "<?php echo $hospital_type_total[3]['RHU'] ?>" * 100);
+        $('.rhu_hospital_progress3').css('width',rhu_hospital_progress3+"%");
+        $('.rhu_percent3').html(rhu_hospital_progress3+"%");
+
+
+        $(".rhu_hospital4").html("<?php echo $hospital_type[4]['RHU']; ?>");
+        $(".rhu_hospital_total4").html("<?php echo $hospital_type_total[4]['RHU']; ?>");
+        var rhu_hospital_progress4 = Math.round("<?php echo $hospital_type[4]['RHU'] ?>" / "<?php echo $hospital_type_total[4]['RHU'] ?>" * 100);
+        $('.rhu_hospital_progress4').css('width',rhu_hospital_progress4+"%");
+        $('.rhu_percent4').html(rhu_hospital_progress4+"%");
 
     </script>
 @endsection
