@@ -353,6 +353,15 @@ $user = Session::get('auth');
                         <a href="#cancelModal" data-toggle="modal"
                            data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                     @endif
+                    <?php $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count(); ?>
+                    @if($doh_remarks>0)
+                        <button class="btn btn-xs btn-danger btn-doh" data-toggle="modal"
+                                data-target="#feedbackDOH"
+                                data-code="{{ $row->code }}">
+                            <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
+                            <span class="badge bg-green">{{ $doh_remarks }}</span>
+                        </button>
+                    @endif
                 </div>
             </div>
             @endforeach
