@@ -65,20 +65,6 @@
 
                     </div>
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    <form action="{{ url('doctor/feedback') }}" method="post" id="feedbackForm">
-                        {{ csrf_field() }}
-                        <input type="hidden" id="current_code" name="code" />
-                        <div class="input-group">
-                            <input type="text" name="message" id="message" required placeholder="Type Message ..." class="form-control">
-                            <span class="input-group-btn">
-                        <button type="submit" class="btn btn-success btn-flat">Send</button>
-                      </span>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.box-footer-->
             </div>
             <!--/.direct-chat -->
         </div><!-- /.modal-content -->
