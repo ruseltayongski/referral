@@ -338,6 +338,17 @@ $user = Session::get('auth');
                                 <span class="badge bg-blue">{{ $feedback }}</span>
                             @endif
                         </button>
+                        <?php
+                            $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count();
+                        ?>
+                        <button class="btn btn-xs btn-danger btn-doh" data-toggle="modal"
+                                data-target="#feedbackDOH"
+                                data-code="{{ $row->code }}">
+                                <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
+                                @if($doh_remarks>0)
+                                    <span class="badge bg-green">{{ $doh_remarks }}</span>
+                                @endif
+                        </button>
                     </div>
                 </div>
             @endforeach

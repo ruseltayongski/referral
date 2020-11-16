@@ -8,6 +8,7 @@ use App\Feedback;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Issue;
+use App\MonitoringNotAccepted;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
@@ -1114,6 +1115,14 @@ class ReferralCtrl extends Controller
                 ->get();
 
         return view('doctor.feedback',[
+            'data' => $data->reverse()
+        ]);
+    }
+
+    public function feedbackDOH($code){
+        $data = MonitoringNotAccepted::where("code","=",$code)->get();;
+
+        return view('doctor.feedback_monitoring',[
             'data' => $data->reverse()
         ]);
     }

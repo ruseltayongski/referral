@@ -6,7 +6,7 @@
     var last_id = 0;
 
     $('.btn-feedback').on('click',function () {
-        console.log("rusel");
+        console.log("feedback");
         code = $(this).data('code');
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
@@ -14,6 +14,17 @@
         $("#"+code).html("Loading...");
         $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
         $("#current_code").val(code);
+    });
+
+    $('.btn-doh').on('click',function () {
+        console.log('doh');
+        code = $(this).data('code');
+        $('.feedback_monitoring_code').html(code);
+        $('#message').addClass("message input-"+code+"-{{ $user->id }}");
+        $("#doh_monitoring").html("Loading....");
+        $("#doh_monitoring").load("{{ url('monitoring/feedback/') }}/"+code);
+        $("#current_code").val(code);
+        console.log("{{ url('monitoring/feedback/') }}/"+code);
     });
 
     $('#feedbackModal').on('shown.bs.modal', function (e) {

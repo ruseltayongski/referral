@@ -408,3 +408,4 @@ Route::get('bed_tracker','doctor\HomeCtrl@index');
 Route::match(['GET','POST'],'monitoring','MonitoringCtrl@monitoring');
 Route::post('monitoring/remark','MonitoringCtrl@bodyRemark');
 Route::post('monitoring/add/remark','MonitoringCtrl@addRemark');
+Route::get('monitoring/feedback/{code}','doctor\ReferralCtrl@feedbackDOH');
