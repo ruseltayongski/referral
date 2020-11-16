@@ -56,22 +56,22 @@
                             <th class="info" colspan="2">Mechanical Ventilators</th>
                         </tr>
                         <tr>
-                            <th>Emergency Room (ER)</th>
-                            <th>ICU - Intensive Care Units</th>
-                            <th>COVID Beds</th>
-                            <th>Isolation Beds</th>
-                            <th>Used</th>
-                            <th>Vacant</th>
-                            <th>Emergency Room (ER)</th>
-                            <th>ICU - Intensive Care Units</th>
-                            <th>COVID Beds</th>
-                            <th>Isolation Beds</th>
-                            <th>Used</th>
-                            <th>Vacant</th>
-                            <th>Emergency Room (ER)</th>
-                            <th>ICU - Intensive Care Units</th>
-                            <th>Emergency Room (ER)</th>
-                            <th>ICU - Intensive Care Units</th>
+                            <th><center>Emergency Room (ER)</center></th>
+                            <th><center>ICU - Intensive Care Units</center></th>
+                            <th><center>COVID Beds</center></th>
+                            <th><center>Isolation Beds</center></th>
+                            <th><center>Used</center></th>
+                            <th><center>Vacant</center></th>
+                            <th><center>Emergency Room (ER)</center></th>
+                            <th><center>ICU - Intensive Care Units</center></th>
+                            <th><center>Regular Beds</center></th>
+                            <th><center>Isolation Beds</center></th>
+                            <th><center>Used</center></th>
+                            <th><center>Vacant</center></th>
+                            <th><center>Emergency Room (ER)</center></th>
+                            <th><center>ICU - Intensive Care Units</center></th>
+                            <th><center>Emergency Room (ER)</center></th>
+                            <th><center>ICU - Intensive Care Units</center></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,7 +87,7 @@
                                     <b class="text-green">{{ $row->name }}</b><br>
                                     <span class="text-yellow">({{ $row->contact }})</span>
                                 </td>
-                                <td><span class="text-green">{{ $row->level }}</span></td>
+                                <td><span class="text-green"><center>{{ ucfirst($row->level) }}</center></span></td>
                                 <td>
                                     <span class="htmlHigh">
                                         <span class="tooltip-ex">

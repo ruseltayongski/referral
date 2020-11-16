@@ -5,7 +5,7 @@
         <div class="box-body">
             <div class="box-header with-border">
                 <h3>
-                    Referral that not accepted within 30 minutes as
+                    Referral not accepted within 30 minutes as
                 </h3>
                 <span class="text-blue">({{ date("F d,Y H:i:s",strtotime($date_start)) }} to {{ date("F d,Y H:i:s",strtotime($date_end)) }})</span><br><br>
                 <form action="{{ asset('monitoring') }}" method="POST" class="form-inline">
