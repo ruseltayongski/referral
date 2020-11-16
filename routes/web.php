@@ -369,6 +369,8 @@ Route::get('eoc_city/excel','ExcelCtrl@EocExcel');
 //OPCEN
 Route::get('opcen','Opcen\OpcenController@opcenDashboard');
 Route::get('opcen/client','Opcen\OpcenController@opcenClient');
+Route::get('opcen/client/addendum/body','Opcen\OpcenController@addendumBody');
+Route::post('opcen/client/addendum/post','Opcen\OpcenController@addendumPost');
 Route::get('opcen/client/form/{client_id}','Opcen\OpcenController@clientInfo');
 Route::get('opcen/bed/available','Opcen\OpcenController@bedAvailable');
 Route::get('opcen/new_call','Opcen\OpcenController@newCall');

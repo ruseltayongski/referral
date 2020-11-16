@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Opcen;
 
 use App\Barangay;
+use App\ClientAddendum;
 use App\Muncity;
 use App\OpcenClient;
 use App\Province;
@@ -223,11 +224,28 @@ class OpcenController extends Controller
         return Redirect::back();
     }
 
-    function clientInfo($client_id){
+    public function clientInfo($client_id){
         $client = OpcenClient::find($client_id);
         return view('opcen.client_info',[
             "client" => $client
         ]);
+    }
+
+    public function addendumBody(){
+        return view('opcen.client_addendum');
+    }
+
+    public function addendumPost(Request $request){
+        foreach($request->addendum as $addendum){
+            $client_addendum = new ClientAddendum();
+            $client_addendum->reference_number = $request->reference_number;
+            $client_addendum->client_id = $request->client_id;
+            $client_addendum->encoded_by = Session::get('auth')->id;
+            $client_addendum->notes = $addendum;
+            $client_addendum->save();
+        }
+        Session::put("addendum",true);
+        return Redirect::back();
     }
 
 }

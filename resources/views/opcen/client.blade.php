@@ -46,6 +46,12 @@
                                             >
                                                 <span class="text-green font_size">{{ $row->name }}</span><br>
                                                 <small class="text-yellow">{{ $row->reference_number }}</small>
+                                                <?php
+                                                    $client_addendum = \App\ClientAddendum::where("client_id",$row->id)->count();
+                                                ?>
+                                                @if($client_addendum > 0)
+                                                    <span class="badge bg-yellow">Addendum {{ $client_addendum }}</span>
+                                                @endif
                                             </a>
                                         </td>
                                         <td>
@@ -106,7 +112,7 @@
         </center>
     </div><!-- /.modal -->
 
-    <div class="modal fade" role="dialog" id="client_modal">
+    <div class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" id="client_modal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body client_modal_body">
@@ -129,6 +135,14 @@
                 rounded: true
             });
             <?php Session::put("opcen",false); ?>
+        @elseif(Session::get('addendum'))
+            Lobibox.notify('success', {
+                title: "",
+                msg: "Successfully added addendum!",
+                size: 'mini',
+                rounded: true
+            });
+            <?php Session::put("addendum",false); ?>
         @endif
 
 

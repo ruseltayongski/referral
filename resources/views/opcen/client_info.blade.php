@@ -171,3 +171,29 @@
         </tr>
     </table>
 @endif
+
+<span class="text-blue" style="font-size: 12pt;">Addendum</span>
+<?php $client_addendum = \App\ClientAddendum::where("client_id",$client->id)->get(); ?>
+@foreach($client_addendum as $addendum)
+    <small>Notes</small><br>
+    <textarea id="" cols="30" rows="5" class="form-control" disabled>{{ $addendum->notes }}</textarea>
+@endforeach
+<form action="{{ asset('opcen/client/addendum/post') }}" method="POST">
+    {{ csrf_field() }}
+    <input type="hidden" name="reference_number" value="{{ $client->reference_number }}">
+    <input type="hidden" name="client_id" value="{{ $client->id }}">
+    <div class="addendum_body"></div><br>
+    <button type="button" class="btn btn-primary" onclick="addAddendum()"><i class="fa fa-plus"></i> Add Notes</button>
+    <button type="submit" class="btn btn-success hide" id="addendum_button"><i class="fa fa-send"></i> Submit</button>
+    <button class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+</form>
+
+<script>
+    function addAddendum(){
+        $("#addendum_button").removeClass('hide');
+        var url = "<?php echo asset('opcen/client/addendum/body'); ?>";
+        $.get(url,function(result){
+            $(".addendum_body").append(result).hide().fadeIn();
+        });
+    }
+</script>
