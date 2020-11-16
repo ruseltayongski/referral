@@ -12,13 +12,14 @@
                 <h3>Bed Availability as of <i id="time"></i></h3>
             </div>
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-striped" border="1">
                     <tr>
                         <th class="info" rowspan="4" style="vertical-align: middle;"><center>Name of Hospital</center></th>
                         <th class="success" style="vertical-align: middle;" rowspan="4"><center>Hospital Category</center></th>
                         <th style="background-color: #ffb3b8;" colspan="12"><center>Number of avalable Beds</center></th>
                         <th class="info" colspan="4"><center>Number of Waitlist</center></th>
                         <th class="bg-pink" style="background-color: #ffb3b8;width: 10%;vertical-align: middle;margin-left: 20px;" rowspan="4"><center>Remarks</center></th>
+                        <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Encoded By</center></th>
                     </tr>
                     <tr>
                         <th class="danger" colspan="6"><center>COVID BEDS</center></th>
@@ -70,6 +71,24 @@
                         <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_non_wait" >{{ $facility->emergency_room_non_wait }}</a></td>
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_non_wait" >{{ $facility->icu_non_wait }}</a></td>
                         <td>{{ $facility->remarks }}</td>
+                        <td>
+                            <?php
+                            $encoded_by = \App\BedTracker::
+                            select("bed_tracker.id","users.fname","users.mname","users.lname","bed_tracker.created_at")
+                                ->leftJoin("users","users.id","=","bed_tracker.encoded_by")
+                                ->where("bed_tracker.facility_id","=",$facility->id)
+                                ->where("users.level","!=","opcen")
+                                ->orderBy("bed_tracker.id","desc")
+                                ->first();
+                            $created_at = $encoded_by->created_at;
+                            $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
+                            echo $encoded_by;
+                            ?><br>
+                            @if($created_at)
+                                <small class="text-blue">{{ date("F d,Y",strtotime($created_at)) }}</small><br>
+                                <small class="text-yellow">({{ date('g:i a',strtotime($created_at)) }})</small>
+                            @endif
+                        </td>
                     </tr>
                 </table>
             </div>
