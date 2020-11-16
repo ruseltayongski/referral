@@ -47,7 +47,7 @@
                             <th class="danger" colspan="6"><center>COVID BEDS</center></th>
                             <th class="warning" colspan="6"><center>Non-COVID BEDS</center></th>
                             <th class="danger" colspan="2" rowspan="2" style="vertical-align: middle"><center>COVID BEDS</center></th>
-                            <th class="warning" colspan="2" rowspan="2"><center>Non-COVID BEDS</center></th>
+                            <th class="warning" colspan="2" rowspan="2" style="vertical-align: middle"><center>Non-COVID BEDS</center></th>
                         </tr>
                         <tr>
                             <th class="danger" colspan="4"></th>

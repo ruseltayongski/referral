@@ -25,7 +25,7 @@
                         <th class="danger" colspan="6"><center>COVID BEDS</center></th>
                         <th class="warning" colspan="6"><center>Non-COVID BEDS</center></th>
                         <th class="danger" colspan="2" rowspan="2" style="vertical-align: middle"><center>COVID BEDS</center></th>
-                        <th class="warning" colspan="2" rowspan="2"><center>Non-COVID BEDS</center></th>
+                        <th class="warning" colspan="2" rowspan="2" style="vertical-align: middle"><center>Non-COVID BEDS</center></th>
                     </tr>
                     <tr>
                         <th class="danger" colspan="4"></th>
@@ -34,26 +34,26 @@
                         <th class="info" colspan="2">Mechanical Ventilators</th>
                     </tr>
                     <tr>
-                        <th>Emergency Room (ER)</th>
-                        <th>ICU - Intensive Care Units</th>
-                        <th>COVID Beds</th>
-                        <th>Isolation Beds</th>
-                        <th>Used</th>
-                        <th>Vacant</th>
-                        <th>Emergency Room (ER)</th>
-                        <th>ICU - Intensive Care Units</th>
-                        <th>COVID Beds</th>
-                        <th>Isolation Beds</th>
-                        <th>Used</th>
-                        <th>Vacant</th>
-                        <th>Emergency Room (ER)</th>
-                        <th>ICU - Intensive Care Units</th>
-                        <th>Emergency Room (ER)</th>
-                        <th>ICU - Intensive Care Units</th>
+                        <th><center>Emergency Room (ER)</center></th>
+                        <th><center>ICU - Intensive Care Units</center></th>
+                        <th><center>COVID Beds</center></th>
+                        <th><center>Isolation Beds</center></th>
+                        <th><center>Used</center></th>
+                        <th><center>Vacant</center></th>
+                        <th><center>Emergency Room (ER)</center></th>
+                        <th><center>ICU - Intensive Care Units</center></th>
+                        <th><center>COVID Beds</center></th>
+                        <th><center>Isolation Beds</center></th>
+                        <th><center>Used</center></th>
+                        <th><center>Vacant</center></th>
+                        <th><center>Emergency Room (ER)</center></th>
+                        <th><center>ICU - Intensive Care Units</center></th>
+                        <th><center>Emergency Room (ER)</center></th>
+                        <th><center>ICU - Intensive Care Units</center></th>
                     </tr>
                     <tr>
                         <td><b class="text-success">{{ $facility->name }}</b></td>
-                        <td><b class="text-success">{{ $facility->level }}</b></td>
+                        <td><b class="text-success"><center>{{ ucfirst($facility->level) }}</center></b></td>
                         <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_covid" >{{ $facility->emergency_room_covid }}</a></td>
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covid" >{{ $facility->icu_covid }}</a></td>
                         <td><a href="#" class="text_editable" data-title="COVID Beds" id="beds_covid" >{{ $facility->beds_covid }}</a></td>
