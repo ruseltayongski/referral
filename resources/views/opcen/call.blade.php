@@ -30,10 +30,10 @@
                     <option value="nga" <?php if(isset($client->company)){if($client->company == 'nga')echo 'selected';} ?>>NGAs</option>
                     <option value="ngo" <?php if(isset($client->company)){if($client->company == 'ngo')echo 'selected';} ?>>NGOs</option>
                     <option value="lgu" <?php if(isset($client->company)){if($client->company == 'lgu')echo 'selected';} ?>>LGU</option>
-                    <option value="etc" <?php if(isset($client->company)){if($client->company == 'etc')echo 'selected';} ?>>ETC.</option>
                     @foreach($facility as $fac)
                         <option value="{{ $fac->id }}" <?php if(isset($client->company)){if($client->company == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
                     @endforeach
+                    <option value="etc" <?php if(isset($client->company)){if($client->company == 'etc')echo 'selected';} ?>>ETC.</option>
                 </select>
             </td>
             <td >

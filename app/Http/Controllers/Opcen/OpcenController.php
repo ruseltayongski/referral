@@ -104,7 +104,7 @@ class OpcenController extends Controller
 
     public function newCall(){
         $province = Province::get();
-        $facility = Facility::orderBy("name","asc")->get();
+        $facility = Facility::where("id","!=","63")->orderBy("name","asc")->get();
         Session::put("client",false); //from repeat call so that need to flush session
         return view('opcen.call',[
             "province" => $province,
@@ -118,7 +118,7 @@ class OpcenController extends Controller
         $client = OpcenClient::find($client_id);
         $municipality = Muncity::where("province_id",$client->province_id)->get();
         $barangay = Barangay::where("muncity_id",$client->municipality_id)->get();
-        $facility = Facility::orderBy("name","asc")->get();
+        $facility = Facility::where("id","!=","63")->orderBy("name","asc")->get();
         Session::put("client",$client);
         return view('opcen.call',[
             "province" => $province,
