@@ -42,7 +42,7 @@
                         <th><center>Vacant</center></th>
                         <th><center>Emergency Room (ER)</center></th>
                         <th><center>ICU - Intensive Care Units</center></th>
-                        <th><center>COVID Beds</center></th>
+                        <th><center>Regular Beds</center></th>
                         <th><center>Isolation Beds</center></th>
                         <th><center>Used</center></th>
                         <th><center>Vacant</center></th>

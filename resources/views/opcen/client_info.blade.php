@@ -39,6 +39,12 @@
                         echo 'LGU';
                     elseif($client->company == 'etc')
                         echo 'ETC.';
+                    else{
+                        $facility = \App\Facility::find($client->company);
+                        if($facility)
+                            echo $facility->name;
+                    }
+
                 ?>
             </span>
         </td>

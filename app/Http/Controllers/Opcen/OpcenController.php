@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Opcen;
 
 use App\Barangay;
 use App\ClientAddendum;
+use App\Facility;
 use App\Muncity;
 use App\OpcenClient;
 use App\Province;
@@ -103,9 +104,11 @@ class OpcenController extends Controller
 
     public function newCall(){
         $province = Province::get();
+        $facility = Facility::orderBy("name","asc")->get();
         Session::put("client",false); //from repeat call so that need to flush session
         return view('opcen.call',[
             "province" => $province,
+            "facility" => $facility,
             "reference_number" => str_pad($this->supplyReferenceNumber(), 5, '0', STR_PAD_LEFT)
         ]);
     }
@@ -115,12 +118,14 @@ class OpcenController extends Controller
         $client = OpcenClient::find($client_id);
         $municipality = Muncity::where("province_id",$client->province_id)->get();
         $barangay = Barangay::where("muncity_id",$client->municipality_id)->get();
+        $facility = Facility::orderBy("name","asc")->get();
         Session::put("client",$client);
         return view('opcen.call',[
             "province" => $province,
             "municipality" => $municipality,
             "barangay" => $barangay,
             "client" => $client,
+            "facility" => $facility,
             "reference_number" => str_pad($this->supplyReferenceNumber(), 5, '0', STR_PAD_LEFT)
         ]);
     }
