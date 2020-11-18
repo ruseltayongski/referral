@@ -196,7 +196,7 @@
 <?php $client_addendum = \App\ClientAddendum::where("client_id",$client->id)->get(); ?>
 @foreach($client_addendum as $addendum)
     <small>Notes</small><br>
-    <textarea id="" cols="30" rows="10" class="form-control" disabled>{!! nl2br(e($addendum->note)) !!}</textarea>
+    <textarea id="" cols="30" rows="10" class="form-control" disabled>{!! nl2br(($addendum->note)) !!}</textarea>
 @endforeach
 <form action="{{ asset('opcen/client/addendum/post') }}" method="POST">
     {{ csrf_field() }}
