@@ -4,6 +4,7 @@
         font-size: 13pt;
     }
 </style>
+
 @section('content')
     <div class="row col-md-12">
         <div class="box box-success">
@@ -86,7 +87,7 @@
                                                 ({{ ucfirst($row->reason_calling) }})
                                             </small>
                                         </td>
-                                        <td width="10%"><button type="button" class="btn-xs btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
+                                        <td width="10%"><button type="button" class="btn btn-sm btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -126,7 +127,6 @@
 
 @section('js')
     <script>
-
         @if(Session::get('opcen'))
             Lobibox.notify('success', {
                 title: "",
@@ -144,7 +144,6 @@
             });
             <?php Session::put("addendum",false); ?>
         @endif
-
 
         function newCall($call_classification){
             $(".call_classification").html(loading);
@@ -309,5 +308,7 @@
         }
 
     </script>
+    <link href="{{ asset('resources/plugin//bootstrap4-toggle-master/css/bootstrap4-toggle.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('resources/plugin/bootstrap4-toggle-master/js/bootstrap4-toggle.min.js') }}"></script>
 @endsection
 

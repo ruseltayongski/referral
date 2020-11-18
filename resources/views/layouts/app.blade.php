@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <link href="{{ asset('resources/plugin/daterangepicker_old/daterangepicker-bs3.css') }}" rel="stylesheet">
 
+
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <title>
         @yield('title','Home')
@@ -393,6 +394,7 @@
 <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>
 
 <script src="{{ asset('resources/assets/js/jquery.canvasjs.min.js') }}?v=1"></script>
+
 
 <script>
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";

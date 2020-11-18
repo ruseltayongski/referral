@@ -1,3 +1,9 @@
+<style>
+    input[type=radio] {
+        width: 20%;
+        height: 2em;
+    }
+</style>
 <form action="{{ asset('opcen/transaction/end') }}" method="POST" id="form_submit">
     {{ csrf_field() }}
     <table class="table table-hover table-bordered" style="width: 100%;">
@@ -23,7 +29,7 @@
                 <small>Name</small>
                 <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control">
             </td>
-            <td >
+            <td width="35%">
                 <small>Company/Agency Connected</small>
                 <select name="company" id="" class="select2">
                     <option value="">Select Option</option>
@@ -96,27 +102,46 @@
     <table class="table table-hover table-bordered">
         <tr>
             <th>Reason for calling:
-                <button class="btn-xs btn-info" type="button" onclick="reasonCalling('inquiry')">Inquiry</button>
-                <button class="btn-xs btn-warning" type="button" onclick="reasonCalling('referral')">Referral</button>
-                <button class="btn-xs btn-success" type="button" onclick="reasonCalling('others')">Others</button>
+                <button class="btn btn-info" type="button" onclick="reasonCalling('inquiry')">Inquiry</button>
+                <button class="btn btn-warning" type="button" onclick="reasonCalling('referral')">Referral</button>
+                <button class="btn btn-success" type="button" onclick="reasonCalling('others')">Others</button>
                 <input type="hidden" name="reason_calling" id="reason_calling">
             </th>
         </tr>
     </table>
     <div class="reason_calling"></div>
+
+    <!--
+    <small>Status of transaction:</small>
+    <small>Complete</small><br>
+    <input type="radio" value="concern_address" name="transaction_complete" checked><br>
+    <small>Incomplete</small><br>
+    <input type="radio" value="need_provide" name="transaction_complete">
     <table class="table table-hover table-bordered">
         <tr>
-            <th>Status of transaction:
+            <th>
                 <button class="btn-xs btn-primary" type="button" onclick="transactionComplete()">Complete</button>
-                <button class="btn-xs btn-danger" type="button" onclick="transactionInComplete()">Incomplete</button>
+                <input type="hidden" id="complete_call" name="transaction_complete" value="complete_call">
+                <button class="btn-xs btn-danger" type="button" onclick="transactionInComplete()">Incomplete Call</button>
             </th>
         </tr>
     </table>
+    -->
+
+    <table class="table table-hover table-bordered">
+        <tr>
+            <th>Status of Transaction:
+                <input type="checkbox" id="status_transaction" checked data-toggle="toggle" data-on="Complete" data-off="Incomplete" data-onstyle="success" data-offstyle="danger" data-width="100" >
+            </th>
+        </tr>
+    </table>
+
+
     <div class="transaction_status"></div>
     <table class="table table-hover table-bordered">
         <tr>
             <td >
-                <button class="btn btn-danger" type="submit" onclick="endTransaction($(this))">End Transaction</button>
+                <button class="btn btn-primary" type="submit" onclick="endTransaction($(this))">End Transaction</button>
             </td>
             <th class="pull-right">Time Ended: <input type="text" name="time_ended" id="time_ended" readonly></th>
         </tr>
@@ -126,4 +151,15 @@
     @if($client->municipality_id && !$client->barangay_id)
         onChangeMunicipality("<?php echo $client->municipality_id ?>");
     @endif
+
+
+    $('#status_transaction').change(function() {
+        if(!this.checked)
+            transactionInComplete();
+        else
+            $(".transaction_incomplete").remove();
+    });
+
+    $('#status_transaction').bootstrapToggle()
 </script>
+

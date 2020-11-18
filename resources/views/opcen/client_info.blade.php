@@ -127,7 +127,7 @@
     </tr>
 </table>
 @endif
-<span class="text-blue" style="font-size: 12pt;">Status of transaction</span>
+<span class="text-blue" style="font-size: 12pt;">Status of transaction</span><br>
 @if($client->transaction_complete)
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
@@ -171,14 +171,28 @@
                             echo 'Hung up';
                         elseif($client->transaction_incomplete == 'prank_call')
                             echo 'Prank Calls';
+                        else
+                            echo $client->transaction_incomplete;
                     ?>
                 </span>
+            </td>
+            <td >
+                <small>Time Ended</small><br>
+                &nbsp;&nbsp;<span class="text-yellow" >
+                {{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}
+            </span>
+            </td>
+            <td >
+                <small>Time Duration</small><br>
+                &nbsp;&nbsp;<span class="text-yellow" >
+                {{ date('H:i:s',strtotime($client->time_duration)) }}
+            </span>
             </td>
         </tr>
     </table>
 @endif
 
-<span class="text-blue" style="font-size: 12pt;">Addendum</span>
+<span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
 <?php $client_addendum = \App\ClientAddendum::where("client_id",$client->id)->get(); ?>
 @foreach($client_addendum as $addendum)
     <small>Notes</small><br>

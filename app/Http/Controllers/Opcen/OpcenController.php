@@ -218,8 +218,10 @@ class OpcenController extends Controller
         $opcen_client->reason_patient_data = $request->reason_patient_data;
         $opcen_client->reason_chief_complains = $request->reason_chief_complains;
         $opcen_client->reason_action_taken = $request->reason_action_taken;
-        $opcen_client->transaction_complete = $request->transaction_complete;
-        $opcen_client->transaction_incomplete = $request->transaction_incomplete;
+        if($request->transaction_incomplete)
+            $opcen_client->transaction_incomplete = $request->transaction_incomplete;
+        else
+            $opcen_client->transaction_complete = 'complete_call';
         $opcen_client->time_started = $time_started;
         $opcen_client->time_ended = $time_ended;
         $opcen_client->time_duration = $duration_time->h.':'.$duration_time->i.':'.$duration_time->s;
