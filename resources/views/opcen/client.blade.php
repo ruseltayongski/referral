@@ -20,6 +20,23 @@
                     </div>
                 </form>
             </div>
+            <!--
+            <div class="box-header">
+                <form action="" method="GET">
+                    <div class="input-group input-group-md" style="width: 50%">
+                        <input type="text" class="form-control" placeholder="Reference Number or Name" name="search" value="{{ $search }}">
+                        <span class="input-group-btn">
+                            <span class="row">
+                                <span class="badge bg-yellow">1</span> Completed Call
+                                <span class="badge bg-yellow">2</span> In-Complete Call
+                                <span class="badge bg-yellow">3</span> New Call
+                                <span class="badge bg-yellow">4</span> Repeat Call
+                            </span>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            -->
             <div class="box-body">
                 <div class="call_classification table-responsive">
                     @if(count($client)>0)
