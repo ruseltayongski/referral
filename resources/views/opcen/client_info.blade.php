@@ -83,7 +83,7 @@
         </td>
     </tr>
 </table>
-<span class="text-blue" style="font-size: 12pt;">Reason for Calling {{ "- ".ucfirst($client->reason_calling) }}</span>
+<span class="text-blue" style="font-size: 12pt;">Reason for Calling {{ "- ".ucfirst($client->reason_calling) }}</span><br>
 @if($client->reason_calling == 'inquiry' || $client->reason_calling == 'others')
 <table class="table table-hover table-bordered" style="width: 100%;">
     <tr>
