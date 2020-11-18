@@ -46,6 +46,11 @@
                                                 class="client_info"
                                             >
                                                 <span class="text-green font_size">{{ $row->name }}</span><br>
+                                                @if($row->transaction_complete)
+                                                    <small class="text-blue">Completed Call</small>
+                                                @else
+                                                    <small class="text-red">In-Complete Call</small>
+                                                @endif<br>
                                                 <small class="text-yellow">{{ $row->reference_number }}</small>
                                                 <?php
                                                     $client_addendum = \App\ClientAddendum::where("client_id",$row->id)->count();
@@ -53,6 +58,7 @@
                                                 @if($client_addendum > 0)
                                                     <span class="badge bg-yellow">Addendum {{ $client_addendum }}</span>
                                                 @endif
+                                                <br>
                                             </a>
                                         </td>
                                         <td>
