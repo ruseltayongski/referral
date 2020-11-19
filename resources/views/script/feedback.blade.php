@@ -11,8 +11,16 @@
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
         $('#message').addClass("message input-"+code+"-{{ $user->id }}");
+
         $("#"+code).html("Loading...");
-        $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
+        var url = "<?php echo asset('doctor/feedback').'/'; ?>"+code;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#"+code).html(data);
+                console.log(data);
+            },500);
+        });
+
         $("#current_code").val(code);
     });
 
@@ -20,11 +28,14 @@
         console.log('doh');
         code = $(this).data('code');
         $('.feedback_monitoring_code').html(code);
-        $('#message').addClass("message input-"+code+"-{{ $user->id }}");
         $("#doh_monitoring").html("Loading....");
-        $("#doh_monitoring").load("{{ url('monitoring/feedback/') }}/"+code);
-        $("#current_code").val(code);
-        console.log("{{ url('monitoring/feedback/') }}/"+code);
+        var url = "<?php echo asset('monitoring/feedback').'/'; ?>"+code;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#doh_monitoring").html(data);
+                console.log(data);
+            },500);
+        });
     });
 
     $('#feedbackModal').on('shown.bs.modal', function (e) {
