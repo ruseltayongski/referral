@@ -198,7 +198,7 @@
     <small>Notes</small><br>
     &nbsp;&nbsp;<span class="text-yellow" >
         {!! nl2br($addendum->notes) !!}
-    </span>
+    </span><br>
 @endforeach
 <form action="{{ asset('opcen/client/addendum/post') }}" method="POST">
     {{ csrf_field() }}
