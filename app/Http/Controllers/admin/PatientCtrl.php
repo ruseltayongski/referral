@@ -85,7 +85,8 @@ class PatientCtrl extends Controller
         }
 
         $facility_id = Session::get("auth")->facility_id;
-        Session::get("auth")->level == "mcc" ? $stored_name = "consolidatedIncomingMcc('$date_start','$date_end','$facility_id')" : $stored_name = "consolidatedIncoming('$date_start','$date_end')";
+        //Session::get("auth")->level == "mcc" ? $stored_name = "consolidatedIncomingMcc('$date_start','$date_end','$facility_id')" : $stored_name = "consolidatedIncoming('$date_start','$date_end')";
+        $stored_name = "consolidatedIncomingMcc('$date_start','$date_end','$facility_id')";
         $incomingData = \DB::connection('mysql')->select("call $stored_name");
 
         Session::put('data',$incomingData);
