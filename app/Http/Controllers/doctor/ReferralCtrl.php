@@ -617,7 +617,7 @@ class ReferralCtrl extends Controller
             'department_id' => $track->department_id,
             'referring_md' => $track->referring_md,
             'action_md' => $user->id,
-            'remarks' => $req->remarks,
+            'remarks' => isset($req->remarks) ? $req->remarks : "",
             'status' => $track->status
         );
         Activity::create($data);

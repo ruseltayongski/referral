@@ -119,6 +119,7 @@ $('body').on('submit','#acceptForm',function(e){
             {
                 window.location.reload(false);
             }else{
+                console.log(patient_name);
                 var acceptRef = dbRef.ref('Accept');
                 acceptRef.push({
                     date: getDateReferred(),
@@ -354,6 +355,7 @@ function getPregnantForm()
         type: "GET",
         success: function(record){
             var data = record.form;
+            patient_name = data.woman_name;
             var baby = record.baby;
             var patient_address='';
             patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
