@@ -158,6 +158,7 @@ class PatientCtrl extends Controller
             'fname' => $req->fname,
             'mname' => $req->mname,
             'lname' => $req->lname,
+            'contact' => $req->contact,
             'dob' => $req->dob,
             'sex' => $req->sex,
             'civil_status' => $req->civil_status,

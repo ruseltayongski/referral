@@ -9,7 +9,7 @@
             <input type="text" placeholder="Search Keyword..." class="form-control" name="keyword" required />
         </div>
         <div class="form-group">
-            <select class="form-control muncity filter_muncity" name="muncity" required>
+            <select class="form-control muncity filter_muncity select2" name="muncity" required>
                 <option value="">Select Municipal/City...</option>
                 @foreach($muncity as $m)
                     <option value="{{ $m->id }}">{{ $m->description }}</option>
@@ -18,7 +18,7 @@
             </select>
         </div>
         <div class="form-group barangay_holder">
-            <select class="form-control barangay" name="brgy" required>
+            <select class="form-control barangay select2" name="brgy" required>
                 <option value="">Select Barangay...</option>
             </select>
         </div>

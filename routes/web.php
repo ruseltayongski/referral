@@ -90,7 +90,8 @@ Route::get('admin/daily/referral/incoming/','admin\DailyCtrl@incoming');
 Route::get('admin/daily/referral/outgoing','admin\DailyCtrl@outgoing');
 Route::post('admin/daily/referral','admin\DailyCtrl@referralFilter');
 Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
-Route::match(['GET','POST'],'admin/statistics','admin\ReportCtrl@statisticsReport');
+Route::match(['GET','POST'],'admin/statistics/incoming','admin\ReportCtrl@statisticsReportIncoming');
+Route::match(['GET','POST'],'admin/statistics/outgoing','admin\ReportCtrl@statisticsReportOutgoing');
 Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 

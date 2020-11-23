@@ -52,9 +52,13 @@
                                        class="update_info">
                                         {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
                                     </a>
-                                </b>
+                                </b><br>
+                                <small class="text-success">{{ $row->contact }}</small>
                             </td>
-                            <td>{{ $row->sex }}</td>
+                            <td>
+                                {{ $row->sex }}<br>
+                                <small class="text-success">{{ $row->civil_status }}</small>
+                            </td>
                             <td>
                                 <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
                                 {{ $age }} years old
@@ -264,8 +268,8 @@
 
                 });
             },
-            error: function(){
-                $('#serverModal').modal();
+            error: function(error){
+                //$('#serverModal').modal();
             }
         });
     });

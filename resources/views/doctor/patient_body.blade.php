@@ -45,7 +45,7 @@
         <input type="text" class="form-control" value="@if(isset($data->phic_id)){{ $data->phic_id }}@endif" autofocus name="phic_id">
     </div>
     <div class="form-group">
-        <label>First Name ::</label>
+        <label>First Name:</label>
         <input type="text" class="form-control" value="@if(isset($data->fname)){{ $data->fname }}@endif" name="fname" required>
     </div>
     <div class="form-group">
@@ -53,11 +53,15 @@
         <input type="text" class="form-control" value="@if(isset($data->mname)){{ $data->mname }}@endif" name="mname">
     </div>
     <div class="form-group">
-        <label>Last Name :</label>
+        <label>Last Name:</label>
         <input type="text" class="form-control" value="@if(isset($data->lname)){{ $data->lname }}@endif" name="lname" required>
     </div>
     <div class="form-group">
-        <label>Birth Date :</label>
+        <label>Contact Number:</label>
+        <input type="text" class="form-control" value="@if(isset($data->contact)){{ $data->contact }}@endif" name="contact" required>
+    </div>
+    <div class="form-group">
+        <label>Birth Date:</label>
         <input type="date" class="form-control" value="@if(isset($data->dob)){{ $data->dob }}@endif" min="1910-05-11" max="{{ date('Y-m-d') }}" name="dob" required>
     </div>
     <div class="form-group">

@@ -176,7 +176,13 @@
                         </tr>
                         <tr>
                             <td colspan="6">
-                                <span class="text-success">Diagnosis/Impression:</span> <span class="text-red">*</span>
+                                <span class="text-success">
+                                    @if(Session::get('auth')->level == 'opcen')
+                                        Chief Complaints
+                                    @else
+                                        Diagnosis/Impression:
+                                    @endif
+                                </span> <span class="text-red">*</span>
                                 <br />
                                 <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                             </td>

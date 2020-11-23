@@ -109,7 +109,7 @@
                     &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
                 </div>
                 <div class="col-md-4">
-                    <small>Chief Complains</small><br>
+                    <small>Chief Complaints</small><br>
                     &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
                 </div>
                 <div class="col-md-4">

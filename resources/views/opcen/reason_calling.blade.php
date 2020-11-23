@@ -45,7 +45,7 @@
                     <small>Chief Complains - <b class="text-green"><i>(Previous)</i></b></small>
                     <textarea cols="30" rows="5" class="form-control" disabled>{{ Session::get("client")->reason_chief_complains }}</textarea>
                 @endif
-                <small>Chief Complains</small>
+                <small>Chief Complaints</small>
                 <textarea name="reason_chief_complains" id="" cols="30" rows="5" class="form-control"></textarea>
             </td>
             <td width="34%">

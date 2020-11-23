@@ -65,6 +65,10 @@ $status = session::get('status');
                                 <td><input type="text" name="lname" class="lname form-control" required /> </td>
                             </tr>
                             <tr class="has-group">
+                                <td>Contact Number :</td>
+                                <td><input type="text" name="contact" class="contact form-control" required /> </td>
+                            </tr>
+                            <tr class="has-group">
                                 <td>Birth Date :</td>
                                 <td><input type="date" name="dob" id="dob" class="form-control" min="1910-05-11" max="{{ date('Y-m-d') }}" required /> </td>
                             </tr>
@@ -92,7 +96,7 @@ $status = session::get('status');
                             <tr class="has-group">
                                 <td>Municipality/City :</td>
                                 <td>
-                                    <select class="form-control muncity filter_muncity" name="muncity" required>
+                                    <select class="form-control muncity filter_muncity select2" name="muncity" required>
                                         <option value="">Select Municipal/City...</option>
                                         @foreach($muncity as $m)
                                             <option value="{{ $m->id }}">{{ $m->description }}</option>
@@ -105,7 +109,7 @@ $status = session::get('status');
                             <tr class="has-group barangay_holder">
                                 <td>Barangay :</td>
                                 <td>
-                                    <select class="form-control barangay" name="brgy" required>
+                                    <select class="form-control barangay select2" name="brgy" required>
                                         <option value="">Select Barangay...</option>
                                     </select>
                                 </td>
@@ -143,6 +147,7 @@ $status = session::get('status');
 @section('js')
 @include('script.filterMuncity')
 <script>
+    $(".select2").select2({ width: '100%' });
     $('.select_phic').on('change',function(){
         var status = $(this).val();
         if(status!='None'){
