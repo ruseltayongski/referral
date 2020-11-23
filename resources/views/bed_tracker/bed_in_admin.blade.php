@@ -273,7 +273,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="#" class="@if(Session::get('auth')->level == 'opcen'){{ 'text_editable' }}@endif" data-title="Remarks" id="{{ $row->id }}">{{ $row->remarks }}</a>
+                                    <span>{{ $row->remarks }}</span>
                                 </td>
                                 <td>
                                     <?php
@@ -285,7 +285,7 @@
                                                     ->orderBy("bed_tracker.id","desc")
                                                     ->first();
                                         $created_at = $encoded_by->created_at;
-                                        $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
+                                        $encoded_by = ucfirst($encoded_by->fname).' '.strtoupper($encoded_by->mname[0]).'. '.ucfirst($encoded_by->lname);
                                         echo $encoded_by;
                                     ?><br>
                                     @if($created_at)

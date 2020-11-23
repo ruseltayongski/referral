@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use App\BedTracker;
 use Illuminate\Support\Facades\Session;
@@ -46,7 +47,12 @@ class BedTrackerCtrl extends Controller
         $bed_tracker->remarks = $facility->remarks;
         $bed_tracker->save();
 
-        return 'success';
+        $user = Session::get('auth');
+        $data["encoded_by"] = ucfirst($user->fname).' '.ucfirst($user->mname[0]).'. '.ucfirst($user->lname);
+        $data["encoded_date"] = date("F d,Y");
+        $data["encoded_time"] = "(".date("g:i a").")";
+
+        return $data;
     }
 
     public function bedAdmin(){

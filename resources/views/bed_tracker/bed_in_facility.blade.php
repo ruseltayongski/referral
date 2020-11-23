@@ -70,7 +70,7 @@
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_covid_wait" >{{ $facility->icu_covid_wait }}</a></td>
                         <td><a href="#" class="text_editable" data-title="Emergency Room (ER)" id="emergency_room_non_wait" >{{ $facility->emergency_room_non_wait }}</a></td>
                         <td><a href="#" class="text_editable" data-title="ICU - Intensive Care Units" id="icu_non_wait" >{{ $facility->icu_non_wait }}</a></td>
-                        <td>{{ $facility->remarks }}</td>
+                        <td><a href="#" class="text_editable" data-title="Remarks" id="remarks" >{{ $facility->remarks }}</a></td>
                         <td>
                             <?php
                             $encoded_by = \App\BedTracker::
@@ -81,12 +81,12 @@
                                 ->orderBy("bed_tracker.id","desc")
                                 ->first();
                             $created_at = $encoded_by->created_at;
-                            $encoded_by = $encoded_by->fname.' '.$encoded_by->mname[0].'. '.$encoded_by->lname;
-                            echo $encoded_by;
+                            $encoded_by = ucfirst($encoded_by->fname).' '.strtoupper($encoded_by->mname[0]).'. '.ucfirst($encoded_by->lname);
+                            echo "<span id='encoded_by'>".$encoded_by."</span>";
                             ?><br>
                             @if($created_at)
-                                <small class="text-blue">{{ date("F d,Y",strtotime($created_at)) }}</small><br>
-                                <small class="text-yellow">({{ date('g:i a',strtotime($created_at)) }})</small>
+                                <small class="text-blue" id="encoded_date">{{ date("F d,Y",strtotime($created_at)) }}</small><br>
+                                <small class="text-yellow" id="encoded_time">({{ date('g:i a',strtotime($created_at)) }})</small>
                             @endif
                         </td>
                     </tr>
@@ -131,7 +131,9 @@
                     };
                     var title = $(this).data("title");
                     $.post(url,json,function(result){
-                        console.log(result);
+                        $("#encoded_by").html(result.encoded_by);
+                        $("#encoded_date").html(result.encoded_date);
+                        $("#encoded_time").html(result.encoded_time);
                         Lobibox.notify('success', {
                             title: "",
                             msg: title+" saved!",
