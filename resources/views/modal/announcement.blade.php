@@ -18,16 +18,13 @@
                 @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.0</strong><br>
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.2</strong><br>
                                 <ol>
                                     <li>
-                                        STATISTICS REPORT <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        BED TRACKER <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        CHAT MENU <small class="badge bg-green" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        IMPROVED DASHBOARD <small class="badge bg-green" style="font-size: 6pt;"> New</small>
+                                        E-REFERRAL Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
@@ -75,51 +72,67 @@
                     </span>
                 </div>
                 <div >
-                    <p class="text-success">
+                    <div class="text-success">
                         <i class="fa fa-phone-square"></i> For further assistance, please message these following:
-                    <ol type="I" style="color: #2f8030">
-                        <li>Technical</li>
-                        <ol type="A">
-                            <li >System Error</li>
-                            <ul>
-                                <li>Rusel T. Tayong - 09238309990</li>
-                                <li>Keith Joseph Damandaman - 09293780114</li>
-                            </ul>
-                            <li >Server - The request URL not found</li>
-                            <ul>
-                                <li>Garizaldy B. Epistola - 09338161374</li>
-                                <li>Reyan M. Sugabo - 09359504269</li>
-                                <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
-                                <li>Harry John Divina - 09323633961 or 09158411553</li>
-                            </ul>
-                            <li >System Implementation/Training</li>
-                            <ul>
-                                <li>Ryan A. Padilla - 09294771871</li>
-                                <li>Rachel Sumalinog - 09484693136</li>
-                                <li>Kasilyn Lariosa - 09331720608</li>
-                                <li>Harry John Divina - 09323633961 or 09158411553</li>
-                            </ul>
-                            <li >
-                                Register Account and Forget Password
-                            </li>
-                            <ul>
-                                <li>Buch Angelou Fuentes - 09059553214 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                                <li>John L. Ardiente - 260 9740 local(435) - 09208658303 <small class="badge bg-red" style="font-size: 6pt;"> New</small></li>
-                            </ul>
+                        <ol type="I" style="color: #2f8030">
+                            <li>Technical</li>
+                            <ol type="A">
+                                <li >System Error</li>
+                                <ul>
+                                    <li>Rusel T. Tayong - 09238309990</li>
+                                    <li>Keith Joseph Damandaman - 09293780114</li>
+                                </ul>
+                                <li >Server - The request URL not found</li>
+                                <ul>
+                                    <li>Garizaldy B. Epistola - 09338161374</li>
+                                    <li>Reyan M. Sugabo - 09359504269</li>
+                                    <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
+                                </ul>
+                                <li >System Implementation/Training</li>
+                                <ul>
+                                    <li>Ryan A. Padilla - 09294771871</li>
+                                    <li>Rachel Sumalinog - 09484693136</li>
+                                    <li>Kasilyn Lariosa - 09331720608</li>
+                                    <li>Harry John Divina - 09323633961 or 09158411553</li>
+                                </ul>
+                                <li >
+                                    Register Account and Forget Password
+                                </li>
+                                <ul>
+                                    <li>Buch Angelou Fuentes - 09059553214 </li>
+                                    <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
+                                    <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 </li>
+                                    <li>John L. Ardiente - 260 9740 local(435) - 09208658303 </li>
+                                </ul>
+                            </ol>
+                            <li>Non - Technical</li>
+                            <ol type="A">
+                                <ul>
+                                    <li >Ronadith Capala Arriesgado - 09952100815</li>
+                                    <li >Rolly Villarin - 09173209917 </li>
+                                    <li >Gracel R. Flores - 09453816462</li>
+                                </ul>
+                            </ol>
                         </ol>
-                        <li>Non - Technical</li>
-                        <ol type="A">
+                    </div>
+                </div>
+                <div class="text-danger">
+                    <div style="font-size:1.1em;">
+                        <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine <strong>411 6900</strong>
+                        <ul>
+                            <li>LOCAL</li>
                             <ul>
-                                <li >Ronadith Capala Arriesgado - 09952100815</li>
-                                <li >Rolly Villarin - 09173209917 </li>
-                                <li >Gracel R. Flores - 09453816462</li>
+                                <li>001</li>
+                                <li>002</li>
+                                <li>003</li>
+                                <li>004</li>
+                                <li>005</li>
+                                <li>006</li>
+                                <li>007</li>
                             </ul>
-                        </ol>
-                        <h3 class="text-center" style="color: #2f8030">DOH HOTLINE 260 9740</h3>
-                    </ol>
-                    </p>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
