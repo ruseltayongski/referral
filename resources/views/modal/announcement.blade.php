@@ -119,19 +119,18 @@
                 </div>
                 <div class="text-danger">
                     <div style="font-size:1.1em;">
-                        <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine <strong>411 6900</strong>
+                        <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine <strong>(032)411-6900</strong>
+                        <!--
                         <ul>
-                            <li>LOCAL</li>
-                            <ul>
-                                <li>001</li>
-                                <li>002</li>
-                                <li>003</li>
-                                <li>004</li>
-                                <li>005</li>
-                                <li>006</li>
-                                <li>007</li>
-                            </ul>
+                            <li>001</li>
+                            <li>002</li>
+                            <li>003</li>
+                            <li>004</li>
+                            <li>005</li>
+                            <li>006</li>
+                            <li>007</li>
                         </ul>
+                        -->
                     </div>
                 </div>
             </div>
