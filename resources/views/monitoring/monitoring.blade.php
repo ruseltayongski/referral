@@ -44,7 +44,16 @@
                             </td>
                             <td width="23%;">
                                 {{ $row->referred_to }}<br>
-                                <span class="text-blue">{{ $row->referred_department }}</span><br>
+                                <?php
+                                    if($row->patient_normal_id){
+                                        $referred_department = $row->referred_department_normal;
+                                        $department_color = "blue";
+                                    } else {
+                                        $referred_department = $row->referred_department_pregnant." - Pregnant";
+                                        $department_color = "red";
+                                    }
+                                ?>
+                                <span class="text-{{ $department_color }}">{{ $referred_department }}</span><br>
                                 <span class="text-green">{{ $row->contact_to }}</span>
                             </td>
                             <td width="13%">

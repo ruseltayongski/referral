@@ -183,8 +183,6 @@ class ReferralCtrl extends Controller
 
     static function normalForm($id)
     {
-        $user = Session::get('auth');
-
         $form = PatientForm::select(
                     //'patient_form.*',
                     'patient_form.code as code',
