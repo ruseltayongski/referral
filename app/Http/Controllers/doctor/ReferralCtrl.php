@@ -396,7 +396,8 @@ class ReferralCtrl extends Controller
             'patients.sex',
             'facility.name as facility_name',
             'facility.id as facility_id',
-            'patients.id as patient_id'
+            'patients.id as patient_id',
+            'patients.contact'
         )
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_to')
@@ -478,7 +479,8 @@ class ReferralCtrl extends Controller
             'patients.sex',
             'facility.name as facility_name',
             'facility.id as facility_id',
-            'patients.id as patient_id'
+            'patients.id as patient_id',
+            'patients.contact'
         )
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_to')
@@ -1117,13 +1119,6 @@ class ReferralCtrl extends Controller
         ]);
     }
 
-    public function feedbackDOH($code){
-        $data = MonitoringNotAccepted::where("code","=",$code)->get();;
-
-        return view('doctor.feedback_monitoring',[
-            'data' => $data->reverse()
-        ]);
-    }
 
     public function feedbackAppend(){
         return view('doctor.feedback_append');

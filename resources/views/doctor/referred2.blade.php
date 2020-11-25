@@ -110,6 +110,10 @@ $user = Session::get('auth');
                 <div class="panel-heading">
                     <span class="txtTitle"><i class="fa fa-wheelchair"></i> {{ ucwords(strtolower($row->patient_name)) }} <small class="txtSub">[ {{ $row->sex }}, {{ $row->age }} ] from {{ $patient_address }}. </small></span>
                     <br />
+                    @if($row->contact)
+                        Patient Contact Number: <strong class="text-primary">{{ $row->contact }}</strong>
+                        <br />
+                    @endif
                     Referred by: <span class="txtDoctor" href="#">{{ $row->referring_md }}</span>
                     <br />
                     Patient Code: <span class="txtCode">{{ $row->code }}</span>

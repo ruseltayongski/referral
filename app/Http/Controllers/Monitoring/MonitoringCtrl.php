@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Monitoring;
 
 use App\MonitoringNotAccepted;
 use Illuminate\Http\Request;
 use App\Facility;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -49,6 +50,14 @@ class MonitoringCtrl extends Controller
 
         Session::put("add_remark",true);
         return Redirect::back();
+    }
+
+    public function feedbackDOH($code){
+        $data = MonitoringNotAccepted::where("code","=",$code)->orderBy("id","asc")->get();;
+
+        return view('doctor.feedback_monitoring',[
+            'data' => $data
+        ]);
     }
 
 }

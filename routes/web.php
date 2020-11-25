@@ -408,7 +408,7 @@ Route::get('bed_admin','BedTrackerCtrl@bedAdmin');
 Route::get('bed_tracker','doctor\HomeCtrl@index');
 
 //monitoring
-Route::match(['GET','POST'],'monitoring','MonitoringCtrl@monitoring');
-Route::post('monitoring/remark','MonitoringCtrl@bodyRemark');
-Route::post('monitoring/add/remark','MonitoringCtrl@addRemark');
-Route::get('monitoring/feedback/{code}','doctor\ReferralCtrl@feedbackDOH');
+Route::match(['GET','POST'],'monitoring','Monitoring\MonitoringCtrl@monitoring');
+Route::post('monitoring/remark','Monitoring\MonitoringCtrl@bodyRemark');
+Route::post('monitoring/add/remark','Monitoring\MonitoringCtrl@addRemark');
+Route::get('monitoring/feedback/{code}','Monitoring\MonitoringCtrl@feedbackDOH');
