@@ -12,7 +12,7 @@
                     {{ csrf_field() }}
                     <div class="form-group-sm">
                         <input type="text" class="form-control active" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range" autocomplete="off">
-                        <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        <button type="submit" class="btn-sm btn-info btn-flat" onclick="loadPage();"><i class="fa fa-search"></i> Filter</button>
                     </div>
                 </form>
             </div>
@@ -39,10 +39,12 @@
                             </td>
                             <td width="23%;">
                                 {{ $row->referring_facility }}<br>
+                                <span class="text-blue">{{ $row->referring_department }}</span><br>
                                 <span class="text-green">{{ $row->contact_from }}</span>
                             </td>
                             <td width="23%;">
                                 {{ $row->referred_to }}<br>
+                                <span class="text-blue">{{ $row->referred_department }}</span><br>
                                 <span class="text-green">{{ $row->contact_to }}</span>
                             </td>
                             <td width="13%">

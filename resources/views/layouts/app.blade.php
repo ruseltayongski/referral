@@ -336,7 +336,7 @@
                             <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-Referral Monitoring <small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
                 @elseif($user->level == 'bed_tracker')
                     <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
@@ -393,7 +393,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 4.0</p>
+        <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 4.2</p>
     </div>
 </footer>
 
@@ -442,6 +442,10 @@
         ?>
         $('.loading').show();
         window.location.replace("<?php echo asset($current_route) ?>");
+    }
+
+    function loadPage(){
+        $('.loading').show();
     }
 
     function openLogoutTime(){
