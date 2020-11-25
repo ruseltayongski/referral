@@ -20,23 +20,21 @@
                 <table class="table table-striped table-responsive">
                     <tr>
                         <th></th>
-                        <th></th>
+                        <th>Patient Contact No.</th>
                         <th>Referring Facility</th>
                         <th>Referred To</th>
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Remarks</th>
                     </tr>
-                    <?php $count=0; ?>
                     @foreach($pending_activity as $row)
-                        <?php $count++; ?>
                         <tr>
-                            <td width="2%" style="vertical-align:top;" class="align-baseline"><span class="text-yellow">{{ $count }}</span></td>
                             <td width="5%" style="vertical-align:top">
                                 <a href="{{ asset('doctor/track/patient?referredCode=').$row->code }}" class="btn btn-sm btn-success" target="_blank">
                                     <i class="fa fa-stethoscope"></i> Track
                                 </a>
                             </td>
+                            <td class="text-blue">{{ $row->contact }}</td>
                             <td width="23%;">
                                 {{ $row->referring_facility }}<br>
                                 <span class="text-blue">{{ $row->referring_department }}</span><br>
