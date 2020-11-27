@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\Province;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use App\BedTracker;
@@ -12,7 +13,6 @@ class BedTrackerCtrl extends Controller
 {
     public function bed($facility_id){
         $facility = Facility::find($facility_id);
-
         return view('bed_tracker.bed_in_facility',[
             "facility" => $facility
         ]);
@@ -55,17 +55,36 @@ class BedTrackerCtrl extends Controller
         return $data;
     }
 
-    public function bedAdmin(){
+    public function bedAdmin(Request $request){
+
+        $province_select = $request->province;
+        $facility_select = $request->facility;
+
         $facility = Facility::where(function($q){
                 $q->where("hospital_type","government")->orWhere("hospital_type","private");
             })
             ->orderBy("province","asc")
-            ->orderBy("name","asc")
-            ->get();
+            ->orderBy("name","asc");
+
+        if($province_select)
+            $facility = $facility->where("province",$province_select);
+        if($facility_select)
+            $facility = $facility->where("id",$facility_select);
+
+        $facility = $facility->get();
+
+        $province = Province::get();
 
         return view('bed_tracker.bed_in_admin',[
-            "facility" => $facility
+            "facility" => $facility,
+            "province" => $province,
+            "province_select" => $province_select,
+            "facility_select" => $facility_select
         ]);
+    }
+
+    public function selectFacility($province_id){
+        return Facility::select("id","name")->where("province",$province_id)->orderBy("name","asc")->get();
     }
 
 }

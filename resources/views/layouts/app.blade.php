@@ -423,8 +423,9 @@
 
 <script src="{{ asset('resources/assets/js/jquery.canvasjs.min.js') }}?v=1"></script>
 
-
 <script>
+    $(".select2").select2({ width: '100%' });
+
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
     var loading = '<center><img src="'+path_gif+'" alt=""></center>';
 
@@ -446,6 +447,7 @@
 
     function loadPage(){
         $('.loading').show();
+        console.log("asdasd");
     }
 
     function openLogoutTime(){

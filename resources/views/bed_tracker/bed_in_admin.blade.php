@@ -31,6 +31,29 @@
             <div class="box-header with-border">
                 <h2>Bed Availability as of <span id="time"></span></h2>
             </div>
+            <form action="" method="GET">
+                <div class="row" style="width: 70%">
+                    <div class="col-md-4">
+                        <select name="province" class="form-control" onchange="onChangeProvince($(this).val())">
+                            <option value="">Select All Province</option>
+                            @foreach($province as $pro)
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="facility" id="facility" class="select2">
+                            <option value="{{ $facility_select }}">Select All Facility</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-search" onclick="loadPage()"></i> Search</button>
+                            <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                        </span>
+                    </div>
+                </div>
+            </form><br>
             <section class="content-area">
                 <div class="table-responsive">
                     <table class="table table-striped" border="1">
@@ -349,6 +372,48 @@
                 }
             });
         });
+
+        @if($province_select)
+        onChangeProvince("<?php echo $province_select; ?>");
+        @endif
+        function onChangeProvince($province_id){
+            $('.loading').show();
+            if($province_id){
+                var url = "{{ url('bed_tracker/select/facility') }}";
+                $.ajax({
+                    url: url+'/'+$province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility").select2("val", "");
+                        $('#facility').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select All Facility'
+                            }));
+                        var facility_select = "<?php echo $facility_select; ?>";
+                        jQuery.each(data, function(i,val){
+                            $('#facility').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('#facility option[value="'+facility_select+'"]').attr("selected", "selected");
+                        $('.loading').hide();
+                    },
+                    error: function(){
+                        $('#serverModal').modal();
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility").select2("val", "");
+                $('#facility').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
+        }
     </script>
 @endsection
 

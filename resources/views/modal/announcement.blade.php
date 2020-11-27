@@ -67,7 +67,7 @@
                         <strong><i class="fa fa-wifi"></i> Central Visayas Electronic Health Referral System(CVe-HRS) URL</strong><br>
                         <ol>
                             <li>http://122.3.84.178/doh/referral/login</li>
-                            <li>http://124.6.144.166/doh/referral/login</li>
+                            <li>http://222.127.126.36/doh/referral/login</li>
                         </ol>
                     </span>
                 </div>

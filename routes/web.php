@@ -406,6 +406,7 @@ Route::get('bed/{facility_id}','BedTrackerCtrl@bed');
 Route::post('bed_update','BedTrackerCtrl@bedUpdate');
 Route::get('bed_admin','BedTrackerCtrl@bedAdmin');
 Route::get('bed_tracker','doctor\HomeCtrl@index');
+Route::get('bed_tracker/select/facility/{province_id}','BedTrackerCtrl@selectFacility');
 
 //monitoring
 Route::match(['GET','POST'],'monitoring','Monitoring\MonitoringCtrl@monitoring');
