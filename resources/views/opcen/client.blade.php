@@ -1,42 +1,88 @@
 @extends('layouts.app')
-<style>
-    .font_size{
-        font-size: 13pt;
-    }
-</style>
 
 @section('content')
+
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header">
-                <form action="" method="GET">
+                <form action="{{ asset('opcen/client') }}" method="GET">
+                    {{ csrf_field() }}
                     <div class="input-group input-group-md" style="width: 50%">
-                        <input type="text" class="form-control" placeholder="Reference Number or Name" name="search" value="{{ $search }}">
+                        <input type="text" class="form-control" style="width: 100%" placeholder="Reference Number or Name" name="search" value="{{ $search }}">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-success"><i class="fa fa-search"></i> Search</button>
+                            <input type="text" class="form-control" style="width: 100%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             <button type="button" class="btn btn-primary" onclick="newCall('new_call')"><i class="fa fa-phone-square"></i> New Call</button>
                         </span>
                     </div>
                 </form>
             </div>
-            <!--
-            <div class="box-header">
-                <form action="" method="GET">
-                    <div class="input-group input-group-md" style="width: 50%">
-                        <input type="text" class="form-control" placeholder="Reference Number or Name" name="search" value="{{ $search }}">
-                        <span class="input-group-btn">
-                            <span class="row">
-                                <span class="badge bg-yellow">1</span> Completed Call
-                                <span class="badge bg-yellow">2</span> In-Complete Call
-                                <span class="badge bg-yellow">3</span> New Call
-                                <span class="badge bg-yellow">4</span> Repeat Call
-                            </span>
-                        </span>
+            <div class="row" style="padding-left: 1%;padding-right: 1%">
+                <div class="col-lg-3">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>{{ $call_total }}</h3>
+
+                            <p>Total Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                </form>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>{{ $call_new }}</h3>
+
+                            <p>New Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>{{ $call_repeat }}</h3>
+
+                            <p>Repeat Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>{{ $no_classification }}</h3>
+
+                            <p>No Classification</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
             </div>
-            -->
+
+            <div style="padding: 1%;">
+                <span class="badge bg-green">{{ $call_inquiry }}</span> Inquiry
+                <span class="badge bg-green">{{ $call_referral }}</span> Referral
+                <span class="badge bg-green">{{ $call_others }}</span> Others
+                <span class="badge bg-green">{{ $no_reason_for_calling }}</span> No Reason for Calling
+                <span class="badge bg-yellow">{{ $call_complete }}</span> Completed Call
+                <span class="badge bg-yellow">{{ $call_incomplete }}</span> In-Complete Call
+                <span class="badge bg-yellow">{{ $no_transaction }}</span> No Transaction
+            </div>
+
             <div class="box-body">
                 <div class="call_classification table-responsive">
                     @if(count($client)>0)
@@ -167,6 +213,8 @@
             });
             <?php Session::put("addendum",false); ?>
         @endif
+
+        $('#date_range').daterangepicker();
 
         function newCall($call_classification){
             $(".call_classification").html(loading);

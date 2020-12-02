@@ -84,7 +84,13 @@ class BedTrackerCtrl extends Controller
     }
 
     public function selectFacility($province_id){
-        return Facility::select("id","name")->where("province",$province_id)->orderBy("name","asc")->get();
+        return Facility::select("id","name")
+                ->where("province",$province_id)
+                ->where(function($q){
+                    $q->where("hospital_type","government")->orWhere("hospital_type","private");
+                })
+                ->orderBy("name","asc")
+                ->get();
     }
 
 }

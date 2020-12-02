@@ -9,24 +9,87 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             @if($error)
                 <div class="alert alert-danger">
                 <span class="text-danger">
-                    <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                    <i class="fa fa-times"></i> Error switching account! Please try again.
                 </span>
                 </div>
             @endif
+            <h3 class="page-header">Dashboard</h3>
+            <div class="row" style="padding-left: 1%;padding-right: 1%">
+                <div class="col-lg-3">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>{{ $call_total }}</h3>
+
+                            <p>Total Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>{{ $call_new }}</h3>
+
+                            <p>New Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>{{ $call_repeat }}</h3>
+
+                            <p>Repeat Call</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>{{ $no_classification }}</h3>
+
+                            <p>No Classification</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-call"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
             <h3 class="page-header">Monthly Activity</h3>
             <div class="chart">
                 <canvas id="barChart"></canvas>
             </div>
-            <h3 class="page-header">Last 10 days call</h3>
-            <div id="past_days" style="height: 370px; width: 100%;"></div>
         </div>
     </div>
+
+
     <div class="col-md-3">
         <div class="panel panel-jim">
-            <div id="reason_calling" style="height: 300px; width: 100%;"></div>
+            <div id="reason_calling" style="height: 340px; width: 100%;"></div>
         </div>
         <div class="panel panel-jim">
-            <div id="transaction_status" style="height: 300px; width: 100%;"></div>
+            <div id="transaction_status" style="height: 340px; width: 100%;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="jim-content">
+            <h3 class="page-header">Last 15 days call</h3>
+            <div id="past_days" style="height: 370px; width: 100%;"></div>
         </div>
     </div>
 

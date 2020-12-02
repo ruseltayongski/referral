@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-md-4">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-success"><i class="fa fa-search" onclick="loadPage()"></i> Search</button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-filter" onclick="loadPage()"></i> Filter</button>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                         </span>
                     </div>

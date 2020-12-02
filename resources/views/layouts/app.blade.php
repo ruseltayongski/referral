@@ -15,6 +15,11 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('resources/assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('resources/assets/css/bootstrap-theme.min.css') }}" rel="stylesheet">
+
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ asset('resources/plugin/Ionicons/css/ionicons.min.css') }}">
+
+    <!-- Font awesome -->
     <link href="{{ asset('resources/assets/css/font-awesome.min.css') }}" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="{{ asset('resources/assets/css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
@@ -381,7 +386,9 @@
 @else
     <div class="container" id="container">
         <div class="loading"></div>
-        @yield('content')
+        <div class="row">
+            @yield('content')
+        </div>
         <div class="clearfix"></div>
     </div> <!-- /container -->
 @endif
@@ -430,10 +437,11 @@
     var loading = '<center><img src="'+path_gif+'" alt=""></center>';
 
     var urlParams = new URLSearchParams(window.location.search);
-    var query_string = urlParams.get('search') ? urlParams.get('search') : '';
+    var query_string_search = urlParams.get('search') ? urlParams.get('search') : '';
+    var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
-        $($(this).children().get(0)).attr('href',_href+'&search='+query_string);
+        $($(this).children().get(0)).attr('href',_href+'&search='+query_string_search+'&date_range='+query_string_date_range);
     });
 
     function refreshPage(){
