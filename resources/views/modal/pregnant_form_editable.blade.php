@@ -11,6 +11,7 @@
         <div class="modal-content">
             <form method="POST" class="form-submit pregnant_form">
             <div class="jim-content">
+                @include('include.header_form')
                 <div class="title-form">BEmONC/ CEmONC REFERRAL FORM</div>
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}
@@ -31,16 +32,16 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <span class="text-success">Name Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
+                                Name of referring MD/HCW: <span class="text-success">Name Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </td>
                             <td>Arrival Date</td>
                             <td>Time</td>
                         </tr>
                         <tr>
-                            <td colspan="4">Facility <span class="text-success">{{ $myfacility->name }}</span> </td>
+                            <td colspan="4">Referring Facility: <span class="text-success">{{ $myfacility->name }}</span> </td>
                         </tr>
                         <tr>
-                            <td colspan="4">Accompanied by the Health Worker: <input type="text" class="form-control" name="health_worker" style="width: 100%;" placeholder="Name of Health Worker"/> </td>
+                            <td colspan="4">Accompanied by the Health Worker: <input type="text" class="form-control" name="health_worker" style="width: 50%;" placeholder="Name of Health Worker"/> </td>
                         </tr>
                         <tr>
                             <td colspan="4">
@@ -57,7 +58,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <select name="referred_department" class="form-control-select select_department select_department_pregnant" style="padding: 3px" required>
+                                        <select name="referred_department" class="form-control select_department select_department_pregnant" required>
                                             <option value="">Select Department...</option>
                                         </select>
                                     </div>
@@ -77,121 +78,153 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="col-sm-6">
-                        <table class="table bg-warning">
-                            <tr class="bg-gray">
-                                <th colspan="4">WOMAN</th>
-                            </tr>
-                            <tr>
-                                <td colspan="3">Name: <span class="text-danger patient_name"></span></td>
-                                <td>Age: <span class="text-danger patient_age"></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Address: <span class="text-danger patient_address"></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    Main Reason for Referral
-                                    <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
-                                    <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
-                                    <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                    <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Major Findings (Clinica and BP,Temp,Lab)
-                                <br />
-                                <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
-                                </td>
-                            </tr>
-                            <tr class="bg-gray">
-                                <td colspan="4">Treatments Give Time</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Before Referral
-                                    <br />
-                                    <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
-                                    <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">During Transport
-                                    <br />
-                                    <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
-                                    <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
-                                    <br />
-                                    <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea>
-                                </td>
-                            </tr>
-                        </table>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small >Covid Number</small><br>
+                            <input type="text" name="covid_number" style="width: 100%;">
+                        </div>
+                        <div class="col-md-4">
+                            <small >Clinical Status</small><br>
+                            <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <option value="">Select option</option>
+                                <option value="asymptomatic">Asymptomatic</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <small >Surveillance Category</small><br>
+                            <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <option value="">Select option</option>
+                                <option value="contact_pum">Contact (PUM)</option>
+                                <option value="suspect">Suspect</option>
+                                <option value="probable">Probable</option>
+                                <option value="confirmed">Confirmed</option>
+                            </select>
+                        </div>
                     </div>
+                    <br>
 
-                    <div class="col-sm-6">
-                        <table class="table bg-warning">
-                            <tr class="bg-gray">
-                                <th colspan="4">BABY</th>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Name :<br />
-                                    <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" /><br />
-                                    <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" /><br />
-                                    <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" />
-                                </td>
-                                <td style="vertical-align: top !important;">Date and Hour of Birth:
-                                <br />
-                                    <input type="text" class="form-control  form_datetime" style="width: 100%" name="baby_dob" placeholder="Date/Time" /><br />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Birth Weight: <input type="text" class="form-control" style="width: 100%" name="baby_weight" placeholder="kg or lbs" /><br /></td>
-                                <td>Gestational Age: <input type="text" class="form-control" style="width: 100%" name="baby_gestational_age" placeholder="age" /><br /></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    Main Reason for Referral
-                                    <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
-                                    <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Major Findings (Clinica and BP,Temp,Lab)
-                                    <br />
-                                    <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Last (Breast) Feed (Time): <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" /><br /></td>
-                            </tr>
-                            <tr class="bg-gray">
-                                <td colspan="4">Treatments Give Time</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Before Referral
-                                    <br />
-                                    <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
-                                    <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">During Transport
-                                    <br />
-                                    <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
-                                    <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
-                                    <br />
-                                    <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea>
-                                </td>
-                            </tr>
-                        </table>
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <table class="table bg-warning">
+                                <tr class="bg-gray">
+                                    <th colspan="4">WOMAN</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Name: <span class="text-danger patient_name"></span></td>
+                                    <td>Age: <span class="text-danger patient_age"></span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Address: <span class="text-danger patient_address"></span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        Main Reason for Referral
+                                        <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
+                                        <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Major Findings (Clinical and BP,Temp,Lab)
+                                        <br />
+                                        <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray">
+                                    <td colspan="4">Treatments Give Time</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Before Referral
+                                        <br />
+                                        <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">During Transport
+                                        <br />
+                                        <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
+                                        <br />
+                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <table class="table bg-warning">
+                                <tr class="bg-gray">
+                                    <th colspan="4">BABY</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Name :<br />
+                                        <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" /><br />
+                                        <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" /><br />
+                                        <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" />
+                                    </td>
+                                    <td style="vertical-align: top !important;">Date and Hour of Birth:
+                                        <br />
+                                        <input type="text" class="form-control  form_datetime" style="width: 100%" name="baby_dob" placeholder="Date/Time" /><br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Birth Weight: <input type="text" class="form-control" style="width: 100%" name="baby_weight" placeholder="kg or lbs" /><br /></td>
+                                    <td>Gestational Age: <input type="text" class="form-control" style="width: 100%" name="baby_gestational_age" placeholder="age" /><br /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        Main Reason for Referral
+                                        <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                        <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                        <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                        <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Major Findings (Clinica and BP,Temp,Lab)
+                                        <br />
+                                        <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Last (Breast) Feed (Time): <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" /><br /></td>
+                                </tr>
+                                <tr class="bg-gray">
+                                    <td colspan="4">Treatments Give Time</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Before Referral
+                                        <br />
+                                        <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">During Transport
+                                        <br />
+                                        <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
+                                        <br />
+                                        <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <table class="table table-striped col-sm-6"></table>

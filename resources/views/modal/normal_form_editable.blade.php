@@ -16,25 +16,7 @@
                 <div style="margin-left: 58%;margin-top:10%;position: absolute;font-size: 8pt;background-color: white;" class="inventory_body">
 
                 </div>
-                <table cellpadding="0" cellspacing="0">
-                    <tbody><tr>
-                        <td class="align"><img src="{{ asset('resources/img/doh.png') }}" width="100"></td>
-                        <td width="90%">
-                            <div class="align small-text">
-                                <center>
-                                    Republic of the Philippines<br>
-                                    DEPARTMENT OF HEALTH<br>
-                                    <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
-                                    Osmeña Boulevard,Sambag II,Cebu City, 6000 Philippines<br>
-                                    Regional Director’s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109<br>
-                                    Official Website: <a href="http://www.ro7.doh.gov.ph" target="_blank">http://www.ro7.doh.gov.ph</a> Email Address: dohro7@gmail.com<br>
-                                </center>
-                            </div>
-                        </td>
-                        <td class="align"><img src="{{ asset('resources/img/f1.jpg') }}" width="100"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                @include('include.header_form')
                 <center>
                     <h2>Clinical Referral Form</h2>
                 </center>

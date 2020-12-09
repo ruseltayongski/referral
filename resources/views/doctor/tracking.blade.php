@@ -370,7 +370,7 @@ $user = Session::get('auth');
     </div>
 
     @include('modal.accept')
-    @include('modal.view_form')
+    @include('modal.accept_reject')
     @include('modal.seen')
     @include('modal.caller')
     @include('modal.feedback')

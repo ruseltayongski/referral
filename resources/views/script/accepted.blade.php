@@ -270,10 +270,7 @@
             }
         });
     });
-</script>
 
-{{--VIEW FORM--}}
-<script>
     $('.view_form').on('click',function(){
         $('.loading').show();
         code = $(this).data('code');
@@ -289,6 +286,7 @@
             getPregnantForm();
         }
     });
+
     function getNormalForm()
     {
         console.log("{{ url('doctor/referral/data/normal') }}/"+id);
@@ -370,14 +368,19 @@
                 $('span.referring_md').html(data.md_referring);
                 $('span.referring_md_contact').html(data.referring_md_contact);
                 $('span.referred_md').html(data.md_referred);
+
+                $('span.covid_number').html(data.covid_number);
+                $('span.clinical_status').html(data.refer_clinical_status);
+                $('span.surveillance_category').html(data.refer_sur_category);
+
                 $('.loading').hide();
             },
             error: function(){
                 $('#serverModal').modal();
                 $('.loading').hide();
             }
-
         });
+
     }
 
     function getPregnantForm()
@@ -389,6 +392,7 @@
                 console.log(record);
                 var print_url = "{{ url('doctor/print/form/') }}/"+id;
                 $('.btn-refer-pregnant').attr('href',print_url);
+                $('.button_option').hide();
                 var data = record.form;
                 var baby = record.baby;
                 var patient_address='';
@@ -474,6 +478,11 @@
                     $('span.baby_transport_given_time').html(baby.baby_transport_given_time);
                     $('span.baby_information_given').html(baby_information_given);
                 }
+
+                $('span.covid_number').html(data.covid_number);
+                $('span.clinical_status').html(data.refer_clinical_status);
+                $('span.surveillance_category').html(data.refer_sur_category);
+
                 $('.loading').hide();
             },
             error: function(){

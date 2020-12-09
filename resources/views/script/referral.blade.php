@@ -341,6 +341,9 @@ function getNormalForm()
             else
                 $('span.call_count').html('');*/
 
+            var print_url = "{{ url('doctor/print/form/') }}/"+data.tracking_id;
+            $('.btn-refer-normal').attr('href',print_url);
+
         },
         error: function(){
             $('#serverModal').modal();
@@ -416,8 +419,16 @@ function getPregnantForm()
             $('span.woman_transport_given_time').html(data.woman_transport_given_time);
             $('span.woman_information_given').html(woman_information_given);
 
-            if(baby){
+            $('span.covid_number').html(data.covid_number);
+            $('span.clinical_status').html(data.refer_clinical_status);
+            $('span.surveillance_category').html(data.refer_sur_category);
 
+            var print_url = "{{ url('doctor/print/form/') }}/"+data.tracking_id;
+            $('.btn-refer-pregnant').attr('href',print_url);
+            console.log(data);
+
+            if(baby)
+            {
                 $('span.baby_name').html(baby.baby_name);
                 $('span.baby_dob').html(baby.baby_dob);
                 $('span.weight').html(baby.weight);

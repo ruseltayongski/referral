@@ -416,6 +416,7 @@
             success: function(data){
                 var print_url = "{{ url('doctor/print/form/') }}/"+id;
                 $('.btn-refer-normal').attr('href',print_url);
+                $('.button_option').hide();
                 patient_name = data.patient_name;
                 referring_name = data.referring_name;
 
@@ -532,6 +533,7 @@
             success: function(record){
                 var print_url = "{{ url('doctor/print/form/') }}/"+id;
                 $('.btn-refer-pregnant').attr('href',print_url);
+                $('.button_option').hide();
                 console.log(record);
                 var data = record.form;
                 var baby = record.baby;
@@ -601,6 +603,10 @@
                 $('span.woman_during_transport').html(data.woman_during_transport);
                 $('span.woman_transport_given_time').html(data.woman_transport_given_time);
                 $('span.woman_information_given').html(woman_information_given);
+
+                $('span.covid_number').html(data.covid_number);
+                $('span.clinical_status').html(data.refer_clinical_status);
+                $('span.surveillance_category').html(data.refer_sur_category);
 
                 if(baby){
 

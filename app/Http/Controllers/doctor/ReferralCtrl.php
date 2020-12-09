@@ -184,7 +184,7 @@ class ReferralCtrl extends Controller
     static function normalForm($id)
     {
         $form = PatientForm::select(
-                    //'patient_form.*',
+                    DB::raw("'$id' as tracking_id"),
                     'patient_form.code as code',
                     DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
                     DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -243,8 +243,8 @@ class ReferralCtrl extends Controller
 
     static function pregnantForm($id)
     {
-        $user = Session::get('auth');
         $form = PregnantForm::select(
+                DB::raw("'$id' as tracking_id"),
                 'pregnant_form.patient_baby_id',
                 'pregnant_form.code',
                 'pregnant_form.record_no',
@@ -276,7 +276,10 @@ class ReferralCtrl extends Controller
                 'facility.contact as referring_contact',
                 'ff.contact as referred_contact',
                 'users.contact as referring_md_contact',
-                'department.description as department'
+                'department.description as department',
+                'pregnant_form.covid_number',
+                'pregnant_form.refer_clinical_status',
+                'pregnant_form.refer_sur_category'
             )
             ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
             ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
@@ -782,6 +785,14 @@ class ReferralCtrl extends Controller
         $patient_form = PatientForm::where('code',$track->code)->first();
         if($patient_form){
             $patient_form->update([
+                'dis_clinical_status' => $req->clinical_status,
+                'dis_sur_category' => $req->sur_category
+            ]);
+        }
+
+        $pregnant_form = PregnantForm::where('code',$track->code)->first();
+        if($pregnant_form){
+            $pregnant_form->update([
                 'dis_clinical_status' => $req->clinical_status,
                 'dis_sur_category' => $req->sur_category
             ]);

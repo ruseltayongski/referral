@@ -35,46 +35,46 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                 <div class="col-md-12">
                     <!-- The time line -->
                     @if(count($data)>0)
-                    <div class="hide info alert alert-success">
+                        <div class="hide info alert alert-success">
                         <span class="text-success">
                             <i class="fa fa-check"></i> <span class="message"></span>
                         </span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead class="bg-gray">
-                            <tr>
-                                <th>Referring Facility</th>
-                                <th>Patient Name/Code</th>
-                                <th>Date Accepted</th>
-                                <th>Current Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($data as $row)
-                            <?php
-                                $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                                $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
-                                //$step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
-                                $step = \App\Http\Controllers\doctor\ReferralCtrl::step_v2($row->status);
-                                $feedback = \App\Feedback::where('code',$row->code)->count();
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="bg-gray">
+                                <tr>
+                                    <th>Referring Facility</th>
+                                    <th>Patient Name/Code</th>
+                                    <th>Date Accepted</th>
+                                    <th>Current Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($data as $row)
+                                    <?php
+                                    $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                                    $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
+                                    //$step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                                    $step = \App\Http\Controllers\doctor\ReferralCtrl::step_v2($row->status);
+                                    $feedback = \App\Feedback::where('code',$row->code)->count();
 
-                                $status = '';
-                                $current = \App\Activity::where('code',$row->code)
-                                    ->orderBy('id','desc')
-                                    ->first();
-                                if($current)
-                                {
-                                    $status = strtoupper($current->status);
-                                }
+                                    $status = '';
+                                    $current = \App\Activity::where('code',$row->code)
+                                        ->orderBy('id','desc')
+                                        ->first();
+                                    if($current)
+                                    {
+                                        $status = strtoupper($current->status);
+                                    }
 
-                                $start = \Carbon\Carbon::parse($row->date_accepted);
-                                $end = \Carbon\Carbon::now();
-                                $diff = $end->diffInHours($start);
-                            ?>
-                            <tr>
-                                <td style="white-space: nowrap;">
+                                    $start = \Carbon\Carbon::parse($row->date_accepted);
+                                    $end = \Carbon\Carbon::now();
+                                    $diff = $end->diffInHours($start);
+                                    ?>
+                                    <tr>
+                                        <td style="white-space: nowrap;">
                                     <span class="facility" title="{{ $row->name }}">
                                     @if(strlen($row->name)>25)
                                             {{ substr($row->name,0,25) }}...
@@ -82,147 +82,147 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                             {{ $row->name }}
                                         @endif
                                     </span>
-                                    <br />
-                                    <span class="text-muted">{{ $type }}</span>
-                                </td>
-                                <td>
-                                    <a href="{{ $modal }}" class="view_form"
-                                       data-toggle="modal"
-                                       data-type="{{ $row->type }}"
-                                       data-id="{{ $row->id }}"
-                                       data-code="{{ $row->code }}">
-                                        <span class="text-primary">{{ $row->patient_name }}</span>
-                                        <br />
-                                        <small class="text-warning">{{ $row->code }}</small>
-                                    </a>
-                                </td>
-                                <td>{{ $row->date_accepted }}</td>
-                                <td class="activity_{{ $row->code }}">{{ $status }}</td>
-                                <td style="white-space: nowrap;">
-                                    @if( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff < 72)
-                                        <button class="btn btn-sm btn-primary btn-action"
-                                                title="Patient Arrived"
+                                            <br />
+                                            <span class="text-muted">{{ $type }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ $modal }}" class="view_form"
+                                               data-toggle="modal"
+                                               data-type="{{ $row->type }}"
+                                               data-id="{{ $row->id }}"
+                                               data-code="{{ $row->code }}">
+                                                <span class="text-primary">{{ $row->patient_name }}</span>
+                                                <br />
+                                                <small class="text-warning">{{ $row->code }}</small>
+                                            </a>
+                                        </td>
+                                        <td>{{ $row->date_accepted }}</td>
+                                        <td class="activity_{{ $row->code }}">{{ $status }}</td>
+                                        <td style="white-space: nowrap;">
+                                            @if( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff < 72)
+                                                <button class="btn btn-sm btn-primary btn-action"
+                                                        title="Patient Arrived"
 
-                                                data-toggle="modal"
-                                                data-toggle="tooltip"
-                                                data-target="#arriveModal"
-                                                data-track_id="{{ $row->id }}"
-                                                data-patient_name="{{ $row->patient_name }}"
-                                                data-code="{{ $row->code}}">
-                                            <i class="fa fa-wheelchair"></i>
-                                        </button>
-                                    @elseif( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff >= 72)
-                                        <button class="btn btn-sm btn-danger btn-action"
-                                                title="Patient Didn't Arrive"
+                                                        data-toggle="modal"
+                                                        data-toggle="tooltip"
+                                                        data-target="#arriveModal"
+                                                        data-track_id="{{ $row->id }}"
+                                                        data-patient_name="{{ $row->patient_name }}"
+                                                        data-code="{{ $row->code}}">
+                                                    <i class="fa fa-wheelchair"></i>
+                                                </button>
+                                            @elseif( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff >= 72)
+                                                <button class="btn btn-sm btn-danger btn-action"
+                                                        title="Patient Didn't Arrive"
 
-                                                data-toggle="modal"
-                                                data-toggle="tooltip"
-                                                data-target="#archiveModal"
-                                                data-track_id="{{ $row->id }}"
-                                                data-patient_name="{{ $row->patient_name }}"
-                                                data-code="{{ $row->code}}">
-                                            <i class="fa fa-wheelchair"></i>
-                                        </button>
-                                    @endif
+                                                        data-toggle="modal"
+                                                        data-toggle="tooltip"
+                                                        data-target="#archiveModal"
+                                                        data-track_id="{{ $row->id }}"
+                                                        data-patient_name="{{ $row->patient_name }}"
+                                                        data-code="{{ $row->code}}">
+                                                    <i class="fa fa-wheelchair"></i>
+                                                </button>
+                                            @endif
 
-                                    @if($status=='ARRIVED' || $status=='ADMITTED')
-                                        @if($status != 'ADMITTED')
-                                            <button class="btn btn-sm btn-info btn-action"
-                                                    title="Patient Admitted"
+                                            @if($status=='ARRIVED' || $status=='ADMITTED')
+                                                @if($status != 'ADMITTED')
+                                                    <button class="btn btn-sm btn-info btn-action"
+                                                            title="Patient Admitted"
 
-                                                    data-toggle="modal"
-                                                    data-toggle="tooltip"
-                                                    data-target="#admitModal"
-                                                    data-track_id="{{ $row->id }}"
-                                                    data-patient_name="{{ $row->patient_name }}"
-                                                    data-code="{{ $row->code}}">
-                                                <i class="fa fa-stethoscope"></i>
-                                            </button>
-                                        @endif
+                                                            data-toggle="modal"
+                                                            data-toggle="tooltip"
+                                                            data-target="#admitModal"
+                                                            data-track_id="{{ $row->id }}"
+                                                            data-patient_name="{{ $row->patient_name }}"
+                                                            data-code="{{ $row->code}}">
+                                                        <i class="fa fa-stethoscope"></i>
+                                                    </button>
+                                                @endif
 
-                                        <button class="btn btn-sm btn-warning btn-action"
-                                                title="Patient Discharged"
+                                                <button class="btn btn-sm btn-warning btn-action"
+                                                        title="Patient Discharged"
 
-                                                data-toggle="modal"
-                                                data-toggle="tooltip"
-                                                data-target="#dischargeModal"
-                                                data-track_id="{{ $row->id }}"
-                                                data-patient_name="{{ $row->patient_name }}"
-                                                data-code="{{ $row->code}}">
-                                            <i class="fa fa-wheelchair-alt"></i>
-                                        </button>
+                                                        data-toggle="modal"
+                                                        data-toggle="tooltip"
+                                                        data-target="#dischargeModal"
+                                                        data-track_id="{{ $row->id }}"
+                                                        data-patient_name="{{ $row->patient_name }}"
+                                                        data-code="{{ $row->code}}">
+                                                    <i class="fa fa-wheelchair-alt"></i>
+                                                </button>
 
-                                        <button class="btn btn-sm btn-success btn-action btn-transfer"
-                                                title="Refer Patient"
+                                                <button class="btn btn-sm btn-success btn-action btn-transfer"
+                                                        title="Refer Patient"
 
-                                                data-toggle="modal"
-                                                data-toggle="tooltip"
-                                                data-target="#referAcceptFormModal"
-                                                data-track_id="{{ $row->id }}"
-                                                data-patient_name="{{ $row->patient_name }}"
-                                                data-code="{{ $row->code}}">
-                                            <i class="fa fa-ambulance"></i>
-                                        </button>
-                                    @endif
+                                                        data-toggle="modal"
+                                                        data-toggle="tooltip"
+                                                        data-target="#referAcceptFormModal"
+                                                        data-track_id="{{ $row->id }}"
+                                                        data-patient_name="{{ $row->patient_name }}"
+                                                        data-code="{{ $row->code}}">
+                                                    <i class="fa fa-ambulance"></i>
+                                                </button>
+                                            @endif
 
-                                    @if($step<=4)
-                                        <button class="btn btn-sm btn-info btn-feedback" data-toggle="modal"
-                                                data-target="#feedbackModal"
-                                                data-code="{{ $row->code }}">
-                                            <i class="fa fa-comments"> {{ $feedback }}</i>
+                                            @if($step<=4)
+                                                <button class="btn btn-sm btn-info btn-feedback" data-toggle="modal"
+                                                        data-target="#feedbackModal"
+                                                        data-code="{{ $row->code }}">
+                                                    <i class="fa fa-comments"> {{ $feedback }}</i>
 
-                                        </button>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                        <div class="text-center">
-                            {{ $data->links() }}
+                                                </button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <div class="text-center">
+                                {{ $data->links() }}
+                            </div>
                         </div>
-                    </div>
-                    <table class="table table-striped">
-                        <caption>LEGENDS:</caption>
-                        <tr>
-                            <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
-                            <td>Patient Arrived</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right" width="60px"><button class="btn btn-sm btn-danger"><i class="fa fa-wheelchair"></i></button></td>
-                            <td>Patient Didn't Arrive</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>
-                            <td>Patient Admitted</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right" width="60px"><button class="btn btn-sm btn-warning"><i class="fa fa-wheelchair-alt"></i> </button></td>
-                            <td>Patient Discharged</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right" width="60px"><button class="btn btn-sm btn-success"><i class="fa fa-ambulance"></i></button></td>
-                            <td>Refer Patient</td>
-                        </tr>
-                    </table>
+                        <table class="table table-striped">
+                            <caption>LEGENDS:</caption>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
+                                <td>Patient Arrived</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn btn-sm btn-danger"><i class="fa fa-wheelchair"></i></button></td>
+                                <td>Patient Didn't Arrive</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn btn-sm btn-info"><i class="fa fa-stethoscope"></i> </button></td>
+                                <td>Patient Admitted</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn btn-sm btn-warning"><i class="fa fa-wheelchair-alt"></i> </button></td>
+                                <td>Patient Discharged</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn btn-sm btn-success"><i class="fa fa-ambulance"></i></button></td>
+                                <td>Refer Patient</td>
+                            </tr>
+                        </table>
                     @else
-                    <div class="alert alert-warning">
+                        <div class="alert alert-warning">
                         <span class="text-warning">
                             <i class="fa fa-warning"></i> No data found!
                         </span>
-                    </div>
+                        </div>
                     @endif
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div>
 
     </div>
-@include('modal.refer')
-@include('modal.accepted')
-@include('modal.view_form')
-@include('modal.feedback')
+    @include('modal.refer')
+    @include('modal.accepted')
+    @include('modal.accept_reject')
+    @include('modal.feedback')
 @endsection
-@include('script.firebase')
+{{--@include('script.firebase')--}}
 @section('js')
 
     <script>
@@ -230,9 +230,9 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-@include('script.datetime')
-@include('script.accepted')
-@include('script.feedback')
+    @include('script.datetime')
+    @include('script.accepted')
+    @include('script.feedback')
 
     <script>
         $('#daterange').daterangepicker({

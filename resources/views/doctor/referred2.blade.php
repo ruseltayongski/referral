@@ -385,7 +385,7 @@ $user = Session::get('auth');
 
     @include('modal.accept')
     @include('modal.refer')
-    @include('modal.view_form')
+    @include('modal.accept_reject')
     @include('modal.seen')
     @include('modal.caller')
     @include('modal.cancel')

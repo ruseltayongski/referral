@@ -110,9 +110,9 @@ $user = Session::get('auth');
         </div>
 
     </div>
-    @include('modal.view_form')
+    @include('modal.accept_reject')
 @endsection
-@include('script.firebase')
+{{--@include('script.firebase')--}}
 @section('js')
     <script>
         $(document).ready(function(){
