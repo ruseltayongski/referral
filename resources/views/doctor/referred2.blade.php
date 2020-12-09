@@ -272,6 +272,13 @@ $user = Session::get('auth');
                                             <td>
                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                <?php
+                                                    ($row->type=='normal') ? $covid_discharge = \App\PatientForm::where("code",$act->code)->first() : $covid_discharge = \App\PregnantForm::where("code",$act->code)->first();
+                                                ?>
+                                                @if($covid_discharge->dis_clinical_status or $covid_discharge->dis_sur_category)
+                                                <span class="remarks">Clinical Status: <b>{{ ucfirst($covid_discharge->dis_clinical_status) }}</b></span>
+                                                <span class="remarks">Surveillance Category: <b>{{ ucfirst($covid_discharge->dis_sur_category) }}</b></span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @elseif($act->status=='archived')

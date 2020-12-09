@@ -19,7 +19,8 @@ $user = Session::get('auth');
             @if(count($data) > 0)
             <div class="alert alert-warning">
                 <div class="text-warning">
-                    <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a>
+                    <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a><br>
+                    <i class="fa fa-warning"></i> Referrals that are not accepted within 30 minutes will get a call from 711 DOH CVCHD HealthLine
                 </div>
             </div>
             @endif
