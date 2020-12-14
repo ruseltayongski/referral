@@ -61,7 +61,7 @@
                         <tr>
                             <th class="info" rowspan="4" style="vertical-align: middle;"><center>Name of Hospital</center></th>
                             <th class="success" style="vertical-align: middle;" rowspan="4"><center>Hospital Category</center></th>
-                            <th style="background-color: #ffb3b8;" colspan="12"><center>Number of avalable Beds</center></th>
+                            <th style="background-color: #ffb3b8;" colspan="12"><center>Number of available Beds</center></th>
                             <th class="info" colspan="4"><center>Number of Waitlist</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;margin-left: 20px;" rowspan="4"><center>Remarks</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;" rowspan="4"><center>Account Login</center></th>
