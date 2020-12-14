@@ -494,7 +494,8 @@ function getPregnantForm()
 
 {{--when call button is click--}}
 <script>
-$('body').on('click','.btn-call',function(){
+$('body').on('click','.btn_call_request',function(){
+    console.log("btn_call_request");
     $('.referring_contact').html(referring_contact);
     $('.referring_md_contact').html(referring_md_contact);
 
