@@ -67,7 +67,6 @@
 <script>
 
 $('body').on('click','.btn-refer',function () {
-
     $('.loading').show();
     code = $(this).data('code');
     item = $(this).data('item');
@@ -91,13 +90,19 @@ $('body').on('click','.btn-refer',function () {
         }
     });
 
-    if(status=='referred' || status=='redirected'){
+    /*if(status=='referred' || status=='redirected'){
         seenMessage();
     }else{
         setTimeout(function () {
             $('.loading').hide();
         },500)
-    }
+    }*/ //murag wala nay gamit pero ako lang ge comment kay basen unya og gamit diay hehe
+
+    setTimeout(function () {
+        $('.loading').hide();
+    },500)
+
+
     if(type=='normal'){
         form_type = '#normalFormModal';
         getNormalForm();
@@ -106,6 +111,40 @@ $('body').on('click','.btn-refer',function () {
         getPregnantForm();
     }
 });
+
+function seenMessage()
+{
+    console.log("btn-seen");
+    $(item).removeClass('pregnant-section normal-section').addClass('read-section');
+    $(item).find('.icon').removeClass('fa-ambulance').addClass('fa-eye');
+    var curr_date = "{{ date('M d, Y h:i A') }}";
+    $(item).find('.date_activity').html(curr_date);
+
+    $.ajax({
+        url: "{{ url('doctor/referral/seen') }}/"+form_id,
+        type: "GET",
+        success: function(activity_id){
+            var seenRef = dbRef.ref('Seen');
+            seenRef.push({
+                date: getDateReferred(),
+                item: form_id,
+                activity_id: activity_id,
+                code: code
+            });
+
+            seenRef.on('child_added',function(data){
+                setTimeout(function(){
+                    seenRef.child(data.key).remove();
+                    $('.loading').hide();
+                },500);
+            });
+        },
+        error: function(){
+            $('#serverModal').modal();
+        }
+    });
+}
+
 $('body').on('submit','#acceptForm',function(e){
     e.preventDefault();
     $('.loading').show();
@@ -208,38 +247,6 @@ function getDateReferred()
 
     val +=" "+hours+":"+min+" "+mid;
     return val;
-}
-
-function seenMessage()
-{
-    $(item).removeClass('pregnant-section normal-section').addClass('read-section');
-    $(item).find('.icon').removeClass('fa-ambulance').addClass('fa-eye');
-    var curr_date = "{{ date('M d, Y h:i A') }}";
-    $(item).find('.date_activity').html(curr_date);
-
-    $.ajax({
-        url: "{{ url('doctor/referral/seen') }}/"+form_id,
-        type: "GET",
-        success: function(activity_id){
-            var seenRef = dbRef.ref('Seen');
-            seenRef.push({
-                date: getDateReferred(),
-                item: form_id,
-                activity_id: activity_id,
-                code: code
-            });
-
-            seenRef.on('child_added',function(data){
-                setTimeout(function(){
-                    seenRef.child(data.key).remove();
-                    $('.loading').hide();
-                },500);
-            });
-        },
-        error: function(){
-            $('#serverModal').modal();
-        }
-    });
 }
 
 function getNormalForm()
