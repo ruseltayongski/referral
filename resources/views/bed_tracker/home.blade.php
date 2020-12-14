@@ -253,7 +253,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     name: "Emergency Room (ER)",
                     markerType: "square",
                     xValueFormatString: "DD MMM, YYYY",
-                    yValueFormatString: "#,##",
                     dataPoints: emergency_room_covid
                 }
                 ,
@@ -262,7 +261,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     showInLegend: true,
                     name: "ICU - Intensive Care Units",
                     markerType: "square",
-                    yValueFormatString: "#,##",
                     dataPoints: icu_covid
                 },
                 {
@@ -270,7 +268,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     showInLegend: true,
                     name: "COVID Beds",
                     markerType: "square",
-                    yValueFormatString: "#,##",
                     dataPoints: beds_covid
                 },
                 {
@@ -278,7 +275,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     showInLegend: true,
                     name: "Isolation Beds",
                     markerType: "square",
-                    yValueFormatString: "#,##",
                     dataPoints: isolation_covid
                 }
             ]

@@ -50,7 +50,6 @@ class BedTrackerCtrl extends Controller
 
         $date_start_past = date('Y-m-d',strtotime(Carbon::now()->subDays(15))).' 00:00:00';
         $date_end_past = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
-        //return $referred_past = DB::connection('mysql')->select("call doctor_past_transaction('$date_start_past','$date_end_past','$user->facility_id','referred','$user->level')");
         $emergency_room_covid = DB::connection('mysql')->select("call bed_past_transaction('$date_start_past','$date_end_past','$user->facility_id','emergency_room_covid','$user->level')");
         $icu_covid = DB::connection('mysql')->select("call bed_past_transaction('$date_start_past','$date_end_past','$user->facility_id','icu_covid','$user->level')");
         $beds_covid = DB::connection('mysql')->select("call bed_past_transaction('$date_start_past','$date_end_past','$user->facility_id','beds_covid','$user->level')");
