@@ -967,6 +967,9 @@ class ReferralCtrl extends Controller
             'facility_id' => $user->facility_id,
             'user_md' => $user->id
         );
+        Tracking::find($track_id)->update([
+           "date_seen" => date("Y-m-d H:i:s")
+        ]);
         /*$code = Tracking::find($track_id)->code;
         $facility = Tracking::find($track_id)->referred_from;
         $hospital = Facility::find($user->facility_id)->name;
