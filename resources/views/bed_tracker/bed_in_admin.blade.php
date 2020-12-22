@@ -207,7 +207,7 @@
                                             <span style="color: black !important;">{{ $row->beds_non ? $row->beds_non : 0 }}</span>
                                             <span class="tooltip-ex-text">
                                                 Non-COVID BEDS<br>
-                                                (COVID Beds)
+                                                (Regular Beds)
                                             </span>
                                         </span>
                                     </span>
