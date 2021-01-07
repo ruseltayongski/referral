@@ -15,7 +15,7 @@
                         </p>
                     </div>
                 @endif
-                @if($dateNow >= '2020-07-01' && $dateNow <= '2020-12-30')
+                @if($dateNow >= '2020-07-01' && $dateNow <= '2021-12-30')
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
                                 <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.2</strong><br>
