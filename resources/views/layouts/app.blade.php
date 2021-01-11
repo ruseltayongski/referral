@@ -319,9 +319,7 @@
                 -->
                     </ul>
                 </li>
-                <!--
                 <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li>
-                -->
                 @elseif($user->level=='eoc_region')
                 <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>

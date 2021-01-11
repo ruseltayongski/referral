@@ -320,14 +320,30 @@ class ExcelCtrl extends Controller
             $import = new ExcelImport();
             Excel::import($import, request()->file('import_file'));
             foreach($import->data as $row){
-                Icd10::create([
-                    "code" => $row[0],
-                    "description" => $row[1],
-                    "group" => $row[2],
-                    "case_rate" => $row[3],
-                    "professional_fee" => $row[4],
-                    "health_care_institution_fee" => $row[5]
-                ]);
+                if(
+                    !(
+                        $row[0] == "code" &&
+                        $row[1] == "description" &&
+                        $row[2] == "group" &&
+                        $row[3] == "case_rate" &&
+                        $row[4] == "professional_fee" &&
+                        $row[5] == "health_care_fee" &&
+                        $row[6] == "source"
+                    )
+                ){
+                    if(!Icd10::where("code",$row[0])->first()){
+                        Icd10::create([
+                            "code" => $row[0],
+                            "description" => $row[1],
+                            "group" => $row[2],
+                            "case_rate" => $row[3],
+                            "professional_fee" => $row[4],
+                            "health_care_fee" => $row[5],
+                            "source" => $row[6]
+                        ]);
+                    }
+                }
+
             }
 
             return back()->with('success', 'Successfully import!');
