@@ -313,7 +313,16 @@ $user = Session::get('auth');
                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                             <td>
-                                                Referral was cancelled by <span class="txtDoctor">Dr. {{ $doctor->fname }} {{ $doctor->lname }}</span>.
+                                                Referral was cancelled by
+                                                <span class="txtDoctor">
+                                                    <?php
+                                                    if($old_facility_id == 63)
+                                                        $cancel_doctor = $doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                    else
+                                                        $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                    ?>
+                                                    {{ $cancel_doctor }}
+                                                </span>.
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                             </td>
                                         </tr>
