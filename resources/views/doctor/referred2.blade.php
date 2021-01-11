@@ -319,7 +319,7 @@ $user = Session::get('auth');
                                                     if($old_facility_id == 63)
                                                         $cancel_doctor = $doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
                                                     else
-                                                        $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                        $cancel_doctor = 'Drsss. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
                                                     ?>
                                                     {{ $cancel_doctor }}
                                                 </span>.
