@@ -70,7 +70,7 @@ $user = Session::get('auth');
                                             </small>
                                             was <span class="badge bg-blue">referred</span> to
                                             <span class="text-danger">{{ $department }}</span>
-                                            by <span class="text-warning">Dr. {{ $row->referring_md }}</span> of
+                                            by <span class="text-warning">{{ $row->referring_md }}</span> of
                                             <span class="facility">{{ $row->facility_name }}</span>
                                         </h3> <!-- time line for #referred #seen #redirected -->
                                         @include('doctor.include.timeline_footer')
@@ -96,7 +96,7 @@ $user = Session::get('auth');
                                                 <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </strong>
                                             was <span class="badge bg-red">{{ $row->status }}</span> by
-                                            Dr. {{ $row->referring_md }}
+                                            {{ $row->referring_md }}
                                             <br><br>
                                             @include('doctor.include.timeline_footer')
                                         </h3>

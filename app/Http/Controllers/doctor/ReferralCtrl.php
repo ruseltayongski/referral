@@ -57,7 +57,9 @@ class ReferralCtrl extends Controller
                     DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
                     'patients.sex',
                     'facility.name as facility_name',
-                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+                    DB::raw('CONCAT(
+                        if(tracking.referred_from = 63,"","Dr. "),
+                    users.fname," ",users.mname," ",users.lname) as referring_md'),
                     DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md')
                 )
                 ->join('patients','patients.id','=','tracking.patient_id')
