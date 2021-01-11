@@ -70,7 +70,7 @@
                                         <br><br>
                                     @endforeach
                                     @if(Session::get('auth')->level == 'opcen')
-                                        <button class="btn btn-sm btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
+                                        <button class="btn btn-sm btn-info" href="#add_remark" data-toggle="modal" onclick="addRemark(
                                                 '<?php echo $row->activity_id; ?>',
                                                 '<?php echo $row->code; ?>',
                                                 '<?php echo $row->referring_facility_id ?>',
