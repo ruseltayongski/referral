@@ -17,7 +17,10 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <div class="title-form">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM<br /><small>Clinical Referral Form</small></div>
+                @include('include.header_form')
+                <center>
+                    <h2>Clinical Referral Form</h2>
+                </center>
                 <table class="table table-striped">
                     <tr>
                         <td colspan="6">Name of Referring Facility: <span class="referring_name"></span></td>
@@ -123,6 +126,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="jim-content">
+                @include('include.header_form')
                 <div class="title-form">BEmONC/ CEmONC REFERRAL FORM</div>
                 <table class="table table-striped">
                     <tr>

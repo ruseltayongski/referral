@@ -114,7 +114,16 @@ $user = Session::get('auth');
                         Patient Contact Number: <strong class="text-primary">{{ $row->contact }}</strong>
                         <br />
                     @endif
-                    Referred by: <span class="txtDoctor" href="#">{{ $row->referring_md }}</span>
+                    Referred by:
+                    <span class="txtDoctor" href="#">
+                        <?php
+                            if($row->referred_from == 63)
+                                $referring_md = $row->referring_md;
+                            else
+                                $referring_md = "Dr. ".$row->referring_md;
+                        ?>
+                        {{ $referring_md }}
+                    </span>
                     <br />
                     Patient Code: <span class="txtCode">{{ $row->code }}</span>
                 </div>
@@ -175,7 +184,9 @@ $user = Session::get('auth');
                                 @foreach($activities as $act)
                                     <?php
                                         $act_name = \App\Patients::find($act->patient_id);
-                                        $old_facility = \App\Facility::find($act->referred_from)->name;
+                                        $old_facility_data = \App\Facility::find($act->referred_from);
+                                        $old_facility = $old_facility_data->name;
+                                        $old_facility_id = $old_facility_data->id;
                                         if($act->status=='transferred' || $act->status=='redirected'|| $act->status=='referred' || $act->status=='calling'){
                                             $act_icon = 'fa-ambulance';
                                         }
@@ -210,7 +221,13 @@ $user = Session::get('auth');
                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                             <td>
                                                 @if($act->referring_md_id!=0)
-                                                    <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">Dr. {{ $act->referring_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                    <?php
+                                                        if($old_facility_id == 63)
+                                                            $referred_md = $act->referring_md;
+                                                        else
+                                                            $referred_md = 'Dr. '.$act->referring_md;
+                                                    ?>
+                                                    <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                 @else
                                                     <strong>Walk-In Patient:</strong> <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
                                                 @endif

@@ -212,7 +212,9 @@ class ReferralCtrl extends Controller
                     'ff.name as referred_name',
                     DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
                     DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
-                    DB::raw('CONCAT("Dr. ",users.fname," ",users.mname," ",users.lname) as md_referring'),
+                    DB::raw('CONCAT(
+                            if(tracking.referred_from = 63,"","Dr. ")
+                    ,users.fname," ",users.mname," ",users.lname) as md_referring'),
                     DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname) as md_referred'),
                     'facility.contact as referring_contact',
                     'ff.contact as referred_contact',
@@ -250,7 +252,9 @@ class ReferralCtrl extends Controller
                 'pregnant_form.record_no',
                 DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
                 DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
-                DB::raw('CONCAT("Dr. ",users.fname," ",users.mname," ",users.lname) as md_referring'),
+                DB::raw('CONCAT(
+                    if(tracking.referred_from = 63,"","Dr. ")
+                ,users.fname," ",users.mname," ",users.lname) as md_referring'),
                 'facility.name as referring_facility',
                 'b.description as facility_brgy',
                 'm.description as facility_muncity',
@@ -395,7 +399,7 @@ class ReferralCtrl extends Controller
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-            DB::raw('COALESCE(CONCAT("DR. ",users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
+            DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
             'patients.sex',
             'facility.name as facility_name',
             'facility.id as facility_id',

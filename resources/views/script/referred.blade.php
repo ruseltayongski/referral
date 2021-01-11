@@ -692,7 +692,7 @@
 
                 jQuery.each(data, function(i,val){
                     content += '<a href="#" class="list-group-item clearfix">\n' +
-                        '<span class="title-info">Dr. '+val.user_md+'</span>\n' +
+                        '<span class="title-info">'+val.user_md+'</span>\n' +
                         '<br />\n' +
                         '<small class="text-primary">\n' +
                         'Time: '+val.date_call+'\n' +

@@ -57,14 +57,38 @@
                 </select>
             </td>
             <td >
+                <small>Region</small>
+                <select name="province_id" id="" class="select2" onchange="onChangeProvince($(this).val())">
+                    <option value="">Select Option</option>
+                    <option value="region_7" <?php if(isset($client->region)){if($client->region == 'region_7')echo 'selected';} ?>>Region 7</option>
+                    <option value="ncr" <?php if(isset($client->region)){if($client->region == 'ncr')echo 'selected';} ?>>NCR</option>
+                    <option value="car" <?php if(isset($client->region)){if($client->region == 'car')echo 'selected';} ?>>CAR</option>
+                    <option value="region_1" <?php if(isset($client->region)){if($client->region == 'region_1')echo 'selected';} ?>>Region 1</option>
+                    <option value="region_2" <?php if(isset($client->region)){if($client->region == 'region_2')echo 'selected';} ?>>Region 2</option>
+                    <option value="region_3" <?php if(isset($client->region)){if($client->region == 'region_3')echo 'selected';} ?>>Region 3</option>
+                    <option value="region_4" <?php if(isset($client->region)){if($client->region == 'region_4')echo 'selected';} ?>>Region 4</option>
+                    <option value="region_5" <?php if(isset($client->region)){if($client->region == 'region_5')echo 'selected';} ?>>Region 5</option>
+                    <option value="region_6" <?php if(isset($client->region)){if($client->region == 'region_6')echo 'selected';} ?>>Region 6</option>
+                    <option value="region_8" <?php if(isset($client->region)){if($client->region == 'region_8')echo 'selected';} ?>>Region 8</option>
+                    <option value="region_9" <?php if(isset($client->region)){if($client->region == 'region_9')echo 'selected';} ?>>Region 9</option>
+                    <option value="region_10" <?php if(isset($client->region)){if($client->region == 'region_10')echo 'selected';} ?>>Region 10</option>
+                    <option value="region_11" <?php if(isset($client->region)){if($client->region == 'region_11')echo 'selected';} ?>>Region 11</option>
+                    <option value="region_12" <?php if(isset($client->region)){if($client->region == 'region_12')echo 'selected';} ?>>Region 12</option>
+                    <option value="region_13" <?php if(isset($client->region)){if($client->region == 'region_13')echo 'selected';} ?>>Region 14</option>
+                    <option value="barmm" <?php if(isset($client->region)){if($client->region == '')echo 'barmm';} ?>>BARMM</option>
+                </select>
+            </td>
+            <td >
                 <small>Province</small>
                 <select name="province_id" id="" class="select2" onchange="onChangeProvince($(this).val())">
                     <option value="">Select Option</option>
                     @foreach($province as $row)
-                    <option value="{{ $row->id }}" <?php if(isset($client->province_id)){if($client->province_id == $row->id)echo 'selected';} ?>>{{ $row->description }}</option>
+                        <option value="{{ $row->id }}" <?php if(isset($client->province_id)){if($client->province_id == $row->id)echo 'selected';} ?>>{{ $row->description }}</option>
                     @endforeach
                 </select>
             </td>
+        </tr>
+        <tr>
             <td >
                 <small>Municipality:</small>
                 <select name="municipality_id" id="municipality" class="select2" onchange="onChangeMunicipality($(this).val())">
@@ -76,8 +100,6 @@
                     @endif
                 </select>
             </td>
-        </tr>
-        <tr>
             <td >
                 <small>Barangay</small>
                 <select name="barangay_id" id="barangay" class="select2">
@@ -93,7 +115,9 @@
                 <small>Sitio</small>
                 <input type="text" name="sitio" class="form-control" value="<?php if(isset($client->sitio)) echo $client->sitio; ?>">
             </td>
-            <td >
+        </tr>
+        <tr>
+            <td>
                 <small>Active contact number:</small>
                 <input type="text" name="contact_number" class="form-control" value="<?php if(isset($client->contact_number)) echo $client->contact_number; ?>">
             </td>
