@@ -316,10 +316,10 @@ $user = Session::get('auth');
                                                 Referral was cancelled by
                                                 <span class="txtDoctor">
                                                     <?php
-                                                    if($old_facility_id == 63)
+                                                    if($doctor->facility_id == 63)
                                                         $cancel_doctor = $doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
                                                     else
-                                                        $cancel_doctor = 'Drsss. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                        $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
                                                     ?>
                                                     {{ $cancel_doctor }}
                                                 </span>.

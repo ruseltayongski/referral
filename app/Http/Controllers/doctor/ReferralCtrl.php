@@ -457,7 +457,7 @@ class ReferralCtrl extends Controller
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
         $data = $data->orderBy('date_referred','desc')
-                    ->paginate(5);
+                    ->paginate(10);
 
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
