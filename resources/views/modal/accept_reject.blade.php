@@ -138,7 +138,7 @@
                         <td colspan="2">Referred Date: <span class="referred_date"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="2">Name: <span class="md_referring"></span></td>
+                        <td colspan="2">Referring Name: <span class="md_referring"></span></td>
                         <td colspan="2">Arrival Date: </td>
                     </tr>
                     <tr>
