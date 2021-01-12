@@ -191,8 +191,8 @@
                                         @if($row->last_logout_to == 'not_login')
                                             <small>NOT LOGOUT</small>
                                         @elseif($row->last_logout_to == '0000-00-00 00:00:00')
-                                            <small>{{ date("F d,Y",strtotime($row->last_login_from." 23:59:59")) }}</small><br>
-                                            <i>(<small>{{ date("g:i a",strtotime($row->last_login_from." 23:59:59")) }}</small>)</i>
+                                            <small>{{ date("F d,Y",strtotime(explode(" ",$row->last_login_from)[0]." 23:59:59")) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime(explode(" ",$row->last_login_from)[0]." 23:59:59")) }}</small>)</i>
                                         @else
                                             <small>{{ date("F d,Y",strtotime($row->last_logout_to)) }}</small><br>
                                             <i>(<small>{{ date("g:i a",strtotime($row->last_logout_to)) }}</small>)</i>
