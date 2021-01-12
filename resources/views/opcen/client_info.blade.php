@@ -60,23 +60,88 @@
             &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->sex) }}</span>
         </td>
         <td >
-            <small>Province</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Province::find($client->province_id)->description }}</span>
+            <small>Region</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">
+                <?php
+                    if($client->region == 'region_7')
+                        echo 'Region 7';
+                    elseif($client->region == 'ncr')
+                        echo 'NCR';
+                    elseif($client->region == 'car')
+                        echo 'CAR';
+                    elseif($client->region == 'region_1')
+                        echo 'Region 1';
+                    elseif($client->region == 'region_2')
+                        echo 'Region 2';
+                    elseif($client->region == 'region_3')
+                        echo 'Region 3';
+                    elseif($client->region == 'region_4')
+                        echo 'Region 4';
+                    elseif($client->region == 'region_5')
+                        echo 'Region 5';
+                    elseif($client->region == 'region_6')
+                        echo 'Region 6';
+                    elseif($client->region == 'region_7')
+                        echo 'Region 7';
+                    elseif($client->region == 'region_8')
+                        echo 'Region 8';
+                    elseif($client->region == 'region_9')
+                        echo 'Region 9';
+                    elseif($client->region == 'region_10')
+                        echo 'Region 10';
+                    elseif($client->region == 'region_11')
+                        echo 'Region 11';
+                    elseif($client->region == 'region_12')
+                        echo 'Region 12';
+                    elseif($client->region == 'region_13')
+                        echo 'Region 13';
+                    elseif($client->region == 'barmm')
+                        echo 'BARMM';
+                ?>
+            </span>
         </td>
-        <td>
-            <small>Municipality</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Muncity::find($client->municipality_id)->description }}</span>
+        <td >
+            <small>Province</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">
+                <?php
+                    if($province = \App\Province::find($client->province_id)->description)
+                        echo $province;
+                    else
+                        echo $client->province_id;
+                ?>
+            </span>
         </td>
     </tr>
     <tr>
+        <td>
+            <small>Municipality</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">
+                <?php
+                    if($municipality = \App\Muncity::find($client->municipality_id)->description)
+                        echo $municipality;
+                    else
+                        echo $client->municipality_id;
+                ?>
+            </span>
+        </td>
         <td >
             <small>Barangay</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ \App\Barangay::find($client->barangay_id)->description }}</span>
+            &nbsp;&nbsp;<span class="text-yellow">
+                {{ \App\Barangay::find($client->barangay_id)->description }}
+                <?php
+                    if($barangay = \App\Barangay::find($client->barangay_id)->description)
+                        echo $barangay;
+                    else
+                        echo $client->barangay_id;
+                ?>
+            </span>
         </td>
         <td >
             <small>Sitio</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->sitio }}</span>
         </td>
+    </tr>
+    <tr>
         <td>
             <small>Contact Number</small><br>
             &nbsp;&nbsp;<span class="text-yellow">{{ $client->contact_number }}</span>

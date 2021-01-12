@@ -58,7 +58,7 @@
             </td>
             <td >
                 <small>Region</small>
-                <select name="province_id" id="" class="select2" onchange="onChangeProvince($(this).val())">
+                <select name="region" id="" class="select2" onchange="onChangeRegion($(this).val())">
                     <option value="">Select Option</option>
                     <option value="region_7" <?php if(isset($client->region)){if($client->region == 'region_7')echo 'selected';} ?>>Region 7</option>
                     <option value="ncr" <?php if(isset($client->region)){if($client->region == 'ncr')echo 'selected';} ?>>NCR</option>
@@ -80,36 +80,42 @@
             </td>
             <td >
                 <small>Province</small>
-                <select name="province_id" id="" class="select2" onchange="onChangeProvince($(this).val())">
-                    <option value="">Select Option</option>
-                    @foreach($province as $row)
-                        <option value="{{ $row->id }}" <?php if(isset($client->province_id)){if($client->province_id == $row->id)echo 'selected';} ?>>{{ $row->description }}</option>
-                    @endforeach
-                </select>
+                <div class="province_body">
+                    <select name='province_id' id='' class='select2' onchange='onChangeProvince($(this).val())'>
+                        <option value=''>Select Option</option>
+                        @foreach($province as $row)
+                            <option value='{{ $row->id }}' <?php if(isset($client->province_id)){if($client->province_id == $row->id)echo 'selected';} ?>>{{ $row->description }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </td>
         </tr>
         <tr>
             <td >
                 <small>Municipality:</small>
-                <select name="municipality_id" id="municipality" class="select2" onchange="onChangeMunicipality($(this).val())">
-                    @if(isset($client->municipality_id))
-                        <option value="">Select Option</option>
-                        @foreach($municipality as $mun)
-                            <option value="{{ $mun->id }}" <?php if($client->municipality_id == $mun->id) echo 'selected'; ?>>{{ $mun->description }}</option>
-                        @endforeach
-                    @endif
-                </select>
+                <div class="municipality_body">
+                    <select name='municipality_id' id='municipality' class='select2' onchange='onChangeMunicipality($(this).val())'>
+                        @if(isset($client->municipality_id))
+                            <option value=''>Select Option</option>
+                            @foreach($municipality as $mun)
+                                <option value='{{ $mun->id }}' <?php if($client->municipality_id == $mun->id) echo 'selected'; ?>>{{ $mun->description }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </td>
             <td >
                 <small>Barangay</small>
-                <select name="barangay_id" id="barangay" class="select2">
-                    @if(isset($client->barangay_id))
-                        <option value="">Select Option</option>
-                        @foreach($barangay as $bar)
-                            <option value="{{ $bar->id }}" <?php if($client->barangay_id == $bar->id) echo 'selected'; ?>>{{ $bar->description }}</option>
-                        @endforeach
-                    @endif
-                </select>
+                <div class="barangay_body">
+                    <select name="barangay_id" id="barangay" class="select2">
+                        @if(isset($client->barangay_id))
+                            <option value="">Select Option</option>
+                            @foreach($barangay as $bar)
+                                <option value="{{ $bar->id }}" <?php if($client->barangay_id == $bar->id) echo 'selected'; ?>>{{ $bar->description }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </td>
             <td >
                 <small>Sitio</small>
@@ -184,6 +190,44 @@
             $(".transaction_incomplete").remove();
     });
 
-    $('#status_transaction').bootstrapToggle()
+    $('#status_transaction').bootstrapToggle();
+
+    function onChangeRegion($region){
+        if($region == 'region_7'){
+
+            $(".province_body").html("<select name='province_id' id='' class='select2' onchange='onChangeProvince($(this).val())'>\n" +
+                "                        <option value=''>Select Option</option>\n" +
+                "                        @foreach($province as $row)\n" +
+                "                            <option value='{{ $row->id }}' <?php if (isset($client->province_id)) {
+                    if ($client->province_id == $row->id) echo 'selected';
+                } ?>>{{ $row->description }}</option>\n" +
+                "                        @endforeach\n" +
+                "                    </select>");
+
+            $(".municipality_body").html("<select name='municipality_id' id='municipality' class='select2' onchange='onChangeMunicipality($(this).val())'>\n" +
+                "                        @if(isset($client->municipality_id))\n" +
+                "                            <option value=''>Select Option</option>\n" +
+                "                            @foreach($municipality as $mun)\n" +
+                "                                <option value='{{ $mun->id }}' <?php if ($client->municipality_id == $mun->id) echo 'selected'; ?>>{{ $mun->description }}</option>\n" +
+                "                            @endforeach\n" +
+                "                        @endif\n" +
+                "                    </select>");
+
+            $(".barangay_body").html("<select name=\"barangay_id\" id=\"barangay\" class=\"select2\">\n" +
+                "                        @if(isset($client->barangay_id))\n" +
+                "                            <option value=\"\">Select Option</option>\n" +
+                "                            @foreach($barangay as $bar)\n" +
+                "                                <option value=\"{{ $bar->id }}\" <?php if ($client->barangay_id == $bar->id) echo 'selected'; ?>>{{ $bar->description }}</option>\n" +
+                "                            @endforeach\n" +
+                "                        @endif\n" +
+                "                    </select>");
+        }
+        else {
+            $(".province_body").html("<input type='text' class='form-control' name='province_id'>");
+            $(".municipality_body").html("<input type='text' class='form-control' name='municipality_id'>");
+            $(".barangay_body").html("<input type='text' class='form-control' name='barangay_id'>");
+        }
+        $(".select2").select2({ width: '100%' });
+    }
 </script>
 

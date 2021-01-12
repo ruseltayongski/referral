@@ -325,6 +325,7 @@ class OpcenController extends Controller
         $opcen_client->company = $request->company;
         $opcen_client->age = $request->age;
         $opcen_client->sex = $request->sex;
+        $opcen_client->region = $request->region;
         $opcen_client->province_id = $request->province_id;
         $opcen_client->municipality_id = $request->municipality_id;
         $opcen_client->barangay_id = $request->barangay_id;
