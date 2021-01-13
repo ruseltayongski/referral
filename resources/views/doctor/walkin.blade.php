@@ -56,14 +56,34 @@
                                 <small class="text-yellow">({{ date('g:i a',strtotime($row->date_referred)) }})</small>
                             </td>
                             <td>
-                                @if($user_level == 'admin')
-                                <button class="btn btn-sm btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
-                                        '<?php echo $row->activity_id; ?>',
-                                        '<?php echo $row->code; ?>',
-                                        '<?php echo $row->referring_facility_id ?>',
-                                        '<?php echo $row->referred_to_id ?>'
-                                        )"
-                                ><i class="fa fa-sticky-note"></i> Add remark</button>
+                                <?php
+                                $monitoring_not_accepted = \App\MonitoringNotAccepted::where("code","=",$row->code)->get();
+                                ?>
+                                @if(count($monitoring_not_accepted) > 0)
+                                    @foreach($monitoring_not_accepted as $monitoring)
+                                        <span class="text-green">={{ $monitoring->remarks }}</span><br>
+                                        <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small>
+                                        <br><br>
+                                    @endforeach
+                                    @if($user_level == 'admin')
+                                        <button class="btn btn-sm btn-info" href="#add_remark" data-toggle="modal" onclick="addRemark(
+                                                '<?php echo $row->activity_id; ?>',
+                                                '<?php echo $row->code; ?>',
+                                                '<?php echo $row->referring_facility_id ?>',
+                                                '<?php echo $row->referred_to_id ?>'
+                                                )"
+                                        ><i class="fa fa-sticky-note"></i> Add more remark</button>
+                                    @endif
+                                @else
+                                    @if($user_level == 'admin')
+                                        <button class="btn btn-sm btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
+                                                '<?php echo $row->activity_id; ?>',
+                                                '<?php echo $row->code; ?>',
+                                                '<?php echo $row->referring_facility_id ?>',
+                                                '<?php echo $row->referred_to_id ?>'
+                                                )"
+                                        ><i class="fa fa-sticky-note"></i> Add remark</button>
+                                    @endif
                                 @endif
                             </td>
                         </tr>
@@ -90,6 +110,34 @@
     <script>
         //Date range picker
         $('#consolidate_date_range').daterangepicker();
+
+        @if(Session::get('add_remark'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "Successfully added ramark!",
+            size: 'mini',
+            rounded: true
+        });
+        <?php Session::put("add_remark",false); ?>
+        @endif
+
+        function addRemark(activity_id,code,referring_facility,referred_to){
+            $(".monitoring_remark").html(loading);
+            var json = {
+                "_token" : "<?php echo csrf_token()?>",
+                "activity_id" : activity_id,
+                "code" : code,
+                "referring_facility" : referring_facility,
+                "referred_to" : referred_to
+            };
+            console.log(json);
+            var url = "<?php echo asset('monitoring/remark') ?>";
+            $.post(url,json,function(result){
+                setTimeout(function(){
+                    $(".monitoring_remark").html(result);
+                },500);
+            })
+        }
     </script>
 @endsection
 
