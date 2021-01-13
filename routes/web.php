@@ -413,3 +413,6 @@ Route::match(['GET','POST'],'monitoring','Monitoring\MonitoringCtrl@monitoring')
 Route::post('monitoring/remark','Monitoring\MonitoringCtrl@bodyRemark');
 Route::post('monitoring/add/remark','Monitoring\MonitoringCtrl@addRemark');
 Route::get('monitoring/feedback/{code}','Monitoring\MonitoringCtrl@feedbackDOH');
+
+//walkin
+Route::match(['GET','POST'],'patient/walkin','doctor\PatientCtrl@walkinPatient');

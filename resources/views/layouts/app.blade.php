@@ -149,6 +149,7 @@
                             <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-ambulance"></i> Discharged/Transfered Patients</a></li>
                             <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                             <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
+                            <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients <small class="badge bg-red"> New</small></a></li>
                             <li class="divider"></li>
                             <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                             <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
@@ -297,6 +298,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed Tracker</a></li>
                         <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
+                        <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients <small class="badge bg-red"> New</small></a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -398,7 +400,7 @@
 @include('modal.incoming')
 <footer class="footer">
     <div class="container">
-        <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 4.2</p>
+        <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 4.3</p>
     </div>
 </footer>
 

@@ -18,13 +18,16 @@
                 @if($dateNow >= '2020-07-01' && $dateNow <= '2021-12-30')
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.2</strong><br>
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.3</strong><br>
                                 <ol>
                                     <li>
                                         BED TRACKER <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        E-REFERRAL Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        REFERRAL Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                    </li>
+                                    <li>
+                                        WALK-IN Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
