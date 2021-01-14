@@ -80,59 +80,48 @@
                             <li>Technical</li>
                             <ol type="A">
                                 <li >System Error</li>
-                                <ul>
+                                <ol>
                                     <li>Rusel T. Tayong - 09238309990</li>
                                     <li>Keith Joseph Damandaman - 09293780114</li>
-                                </ul>
+                                </ol>
                                 <li >Server - The request URL not found</li>
-                                <ul>
+                                <ol>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>Reyan M. Sugabo - 09359504269</li>
                                     <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
-                                </ul>
+                                </ol>
                                 <li >System Implementation/Training</li>
-                                <ul>
+                                <ol>
                                     <li>Ryan A. Padilla - 09294771871</li>
                                     <li>Rachel Sumalinog - 09484693136</li>
                                     <li>Kasilyn Lariosa - 09331720608</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
-                                </ul>
+                                </ol>
                                 <li >
                                     Register Account and Forget Password
                                 </li>
-                                <ul>
+                                <ol>
                                     <li>Buch Angelou Fuentes - 09059553214 </li>
                                     <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
                                     <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 </li>
                                     <li>John L. Ardiente - 260 9740 local(435) - 09208658303 </li>
-                                </ul>
+                                </ol>
                             </ol>
                             <li>Non - Technical</li>
                             <ol type="A">
-                                <ul>
+                                <ol>
                                     <li >Ronadith Capala Arriesgado - 09952100815</li>
                                     <li >Rolly Villarin - 09173209917 </li>
                                     <li >Gracel R. Flores - 09453816462</li>
-                                </ul>
+                                    </ul>
+                                </ol>
                             </ol>
-                        </ol>
                     </div>
                 </div>
                 <div class="text-danger">
                     <div style="font-size:1.1em;">
                         <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine <strong>(032)411-6900</strong>
-                        <!--
-                        <ul>
-                            <li>001</li>
-                            <li>002</li>
-                            <li>003</li>
-                            <li>004</li>
-                            <li>005</li>
-                            <li>006</li>
-                            <li>007</li>
-                        </ul>
-                        -->
                     </div>
                 </div>
             </div>
