@@ -29,7 +29,7 @@
     <div class="box box-success">
         <div class="box-body">
             <div class="box-header with-border">
-                <h2>Bed Occupancy Status as of <span id="time"></span></h2>
+                <h2>Bed Availability Status as of <span id="time"></span></h2>
             </div>
             <form action="" method="GET">
                 <div class="row" style="width: 70%">
