@@ -34,7 +34,7 @@ $facilities = \App\Facility::select('id','name')
                         <tr class="has-group">
                             <td>Facility :</td>
                             <td>
-                                <select class="form-control" name="facility_id" required>
+                                <select class="form-control select2" name="facility_id" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $f)
                                     <option value="{{ $f->id }}">{{ $f->name }}</option>
@@ -72,5 +72,6 @@ $facilities = \App\Facility::select('id','name')
     </div>
 @endsection
 @section('js')
+
 @endsection
 

@@ -72,7 +72,7 @@ class UserCtrl extends Controller
         Session::put('auth',$user);
         Session::put('admin',true);
 
-        return redirect('/');
+        return redirect($user->level);
     }
 
     public function info($user_id)
