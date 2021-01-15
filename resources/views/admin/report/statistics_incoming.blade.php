@@ -77,7 +77,7 @@
                                     </td>
                                     <?php $no_action = $row->incoming - ($row->accepted + $row->redirected + $seen_only); ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $no_action }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $no_action < 0 ? 0 : $no_action }}</span><br><br>
                                     </td>
                                 </tr>
                             @endforeach
