@@ -21,7 +21,7 @@
                                 <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.3</strong><br>
                                 <ol>
                                     <li>
-                                        BED TRACKER <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        BED OCCUPANCY STATUS <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
                                         REFERRAL Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>

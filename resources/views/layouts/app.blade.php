@@ -159,7 +159,7 @@
                     <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
                      -->
-                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -292,11 +292,11 @@
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-REFERRAL Monitoring <small class="badge bg-red"> New</small></a></li>
-                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed Tracker</a></li>
+                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
                         <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
                         <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients <small class="badge bg-red"> New</small></a></li>
                     </ul>
@@ -342,10 +342,10 @@
                         </ul>
                     </li>
                     <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-Referral Monitoring <small class="badge bg-red"> New</small></a></li>
-                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                 @elseif($user->level == 'bed_tracker')
                     <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                    <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Bed Tracker <small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Bed Occupancy Status<small class="badge bg-red"> New</small></a></li>
                 @endif
                 <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>

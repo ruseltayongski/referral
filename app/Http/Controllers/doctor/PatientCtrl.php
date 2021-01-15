@@ -989,12 +989,12 @@ class PatientCtrl extends Controller
 
     public function walkinPatient(Request $request){
         $user = Session::get('auth');
-        if($request->isMethod('post') && isset($request->date_range)){
+        if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = date('Y-m-d').' 00:00:00';
-            $date_end = date('Y-m-d').' 23:59:59';
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
         $walkin_patient = \DB::connection('mysql')->select("call walkin('$date_start','$date_end','$user->level','$user->facility_id')");
