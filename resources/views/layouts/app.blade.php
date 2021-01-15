@@ -136,7 +136,7 @@
                 ->groupBy('to')
                 ->count();
         ?>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
             <ul class="nav navbar-nav">
                 @if($user->level=='doctor')
                     <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
@@ -149,17 +149,14 @@
                             <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-ambulance"></i> Discharged/Transfered Patients</a></li>
                             <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                             <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
-                            <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients <small class="badge bg-red"> New</small></a></li>
                             <li class="divider"></li>
                             <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                             <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                         </ul>
                     </li>
                     <!--
-                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> DOH-Monitoring <small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
                      -->
-                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -183,7 +180,6 @@
                             <!--
                             <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
                             <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
-                            <li><a href="{{ url('admin/daily/referral') }}"><i class="fa fa-building"></i>Daily Hospital</a></li>
                             -->
                             <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
                             <li><a href="{{ url('admin/statistics/incoming') }}"><i class="fa fa-certificate"></i>Statistics Report Incoming</a></li>
@@ -197,7 +193,6 @@
                     </li>
                 @elseif($user->level=='support')
                 <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-REFERRAL Monitoring <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
                 <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li>
                 <!--
@@ -254,7 +249,6 @@
                 </li>
                 @elseif($user->level=='mcc')
                 <li><a href="{{ url('mcc/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-REFERRAL Monitoring <small class="badge bg-red"> New</small></a></li>
                 <!--
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
@@ -291,14 +285,11 @@
                 </li>
                 @elseif($user->level=='admin')
                 <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-REFERRAL Monitoring <small class="badge bg-red"> New</small></a></li>
-                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
                         <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
-                        <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients <small class="badge bg-red"> New</small></a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -341,17 +332,19 @@
                             <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url('monitoring') }}"><i class="fa fa-line-chart"></i> E-Referral Monitoring <small class="badge bg-red"> New</small></a></li>
-                    <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Occupancy Status <small class="badge bg-red"> New</small></a></li>
                 @elseif($user->level == 'bed_tracker')
-                    <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Bed Occupancy Status<small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 @endif
-                <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
-                <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 @if($user->level == 'admin')
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
+                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Availability Status <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NOT ACCEPTED within 30 minutes <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issue and Concern <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
+                <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">

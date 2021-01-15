@@ -997,7 +997,7 @@ class PatientCtrl extends Controller
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
-        $walkin_patient = \DB::connection('mysql')->select("call walkin('$date_start','$date_end','$user->level','$user->facility_id')");
+        $walkin_patient = \DB::connection('mysql')->select("call walkin('$date_start','$date_end','$user->facility_id')");
         return view('doctor.walkin',[
             "walkin_patient" => $walkin_patient,
             "user_level" => $user->level,

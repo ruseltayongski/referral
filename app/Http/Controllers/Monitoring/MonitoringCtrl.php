@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Monitoring;
 
 use App\MonitoringNotAccepted;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Facility;
 use Illuminate\Routing\Controller;
@@ -12,12 +13,12 @@ use Illuminate\Support\Facades\Session;
 class MonitoringCtrl extends Controller
 {
     public function monitoring(Request $request){
-        if($request->isMethod('post') && isset($request->date_range)){
+        if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = date('Y-m-d').' 00:00:00';
-            $date_end = date('Y-m-d').' 23:59:59';
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");

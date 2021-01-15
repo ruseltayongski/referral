@@ -1060,24 +1060,6 @@ class ReferralCtrl extends Controller
         return redirect()->back();
     }
 
-    public function issueReferral(Request $req, $tracking_id)
-    {
-        //delete exist
-        Issue::where('tracking_id',$tracking_id)->where('status','outgoing')->delete();
-
-        $issue = $req->get('issue');
-        foreach($issue as $row){
-            $data  = array(
-                "tracking_id" => $tracking_id,
-                "issue" => $row,
-                "status" => 'outgoing'
-            );
-            Issue::create($data);
-        }
-
-        return redirect()->back()->with('issueReferral','Successfully Added Issue!');
-    }
-
     public function transferReferral(Request $req, $tracking_id){
         $mode_transportation = $req->mode_transportation;
         $other_transportation = $req->other_transportation;
@@ -1272,4 +1254,42 @@ class ReferralCtrl extends Controller
         }
         return 0;
     }
+
+    public function issueReferral(Request $req, $tracking_id)
+    {
+        //delete exist
+        Issue::where('tracking_id',$tracking_id)->where('status','outgoing')->delete();
+
+        $issue = $req->get('issue');
+        foreach($issue as $row){
+            $data  = array(
+                "tracking_id" => $tracking_id,
+                "issue" => $row,
+                "status" => 'outgoing'
+            );
+            Issue::create($data);
+        }
+
+        return redirect()->back()->with('issueReferral','Successfully Added Issue!');
+    }
+
+
+    public function getIssue(Request $request){
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $issue = \DB::connection('mysql')->select("call issue('$date_start','$date_end')");
+        return view('doctor.issue',[
+            "issue" => $issue,
+            "date_start" => $date_start,
+            "date_end" => $date_end
+        ]);
+    }
+
+
 }

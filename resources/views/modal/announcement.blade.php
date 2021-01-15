@@ -24,10 +24,13 @@
                                         BED OCCUPANCY STATUS <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        REFERRAL Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        NOT ACCEPTED within 30 minutes <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
                                         WALK-IN Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                    </li>
+                                    <li>
+                                        Issue and Concern <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
