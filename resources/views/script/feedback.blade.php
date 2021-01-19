@@ -37,21 +37,6 @@
         });
     });
 
-    $('.btn-issue').on('click',function () {
-        console.log('issue');
-        var code = $(this).data('code');
-        var tracking_id = $(this).data('tracking_id');
-        var referred_from = $(this).data('referred_from');
-        $('.issue_concern_code').html(code);
-        $("#issue_and_concern_body").html("Loading....");
-        var url = "<?php echo asset('issue/concern').'/'; ?>"+tracking_id+"/"+referred_from;
-        $.get(url,function(data){
-            setTimeout(function(){
-                $("#issue_and_concern_body").html(data);
-            },500);
-        });
-    });
-
     $('#feedbackModal').on('shown.bs.modal', function (e) {
         var objDiv = document.getElementById(code);
 
@@ -102,6 +87,56 @@
                 var objDiv = document.getElementById(code);
                 objDiv.scrollTop = objDiv.scrollHeight;
                 $("#message").val('').attr('placeholder','Type Message...');
+            }
+        });
+    });
+
+    $('body').on('click','.btn-issue-referred',function(){
+        var code = $(this).data('code');
+        var tracking_id = $(this).data('tracking_id');
+        var referred_from = $(this).data('referred_from');
+        $('.issue_concern_code').html(code);
+        $('#issue_tracking_id').val(tracking_id);
+        $("#issue_and_concern_body").html("Loading....");
+        var url = "<?php echo asset('issue/concern').'/'; ?>"+tracking_id+"/"+referred_from;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#issue_and_concern_body").html(data);
+            },500);
+        });
+    });
+
+    $('.btn-issue-incoming').on('click',function () {
+        console.log('issue');
+        $(".issue_footer").remove();
+        var code = $(this).data('code');
+        var tracking_id = $(this).data('tracking_id');
+        var referred_from = $(this).data('referred_from');
+        $('.issue_concern_code').html(code);
+        $("#issue_and_concern_body").html("Loading....");
+        var url = "<?php echo asset('issue/concern').'/'; ?>"+tracking_id+"/"+referred_from;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#issue_and_concern_body").html(data);
+            },500);
+        });
+    });
+
+    $('#sendIssue').submit(function (e) {
+        e.preventDefault();
+        var issue_message = $("#issue_message").val();
+        $("#issue_message").val('').attr('placeholder','Sending...');
+        $.ajax({
+            url: "{{ url('issue/concern/submit') }}",
+            type: 'post',
+            data: {
+                _token : "{{ csrf_token() }}",
+                issue: issue_message,
+                tracking_id : $("#issue_tracking_id").val()
+            },
+            success: function(data) {
+                $("#issue_and_concern_body").append(data);
+                $("#message").val('').attr('placeholder','Type a message for your issue and concern regarding your referral..');
             }
         });
     });

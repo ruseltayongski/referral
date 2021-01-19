@@ -417,6 +417,6 @@ Route::get('monitoring/feedback/{code}','Monitoring\MonitoringCtrl@feedbackDOH')
 Route::match(['GET','POST'],'patient/walkin','doctor\PatientCtrl@walkinPatient');
 
 //issue and concern
-Route::post('doctor/referred/issue/{id}','doctor\ReferralCtrl@issueReferral');
-Route::match(['GET','POST'],'issue/concern','doctor\ReferralCtrl@getIssue');
+Route::post('issue/concern/submit','Monitoring\MonitoringCtrl@issueSubmit');
+Route::match(['GET','POST'],'issue/concern','Monitoring\MonitoringCtrl@getIssue');
 Route::get('issue/concern/{tracking_id}/{referred_from}','Monitoring\MonitoringCtrl@IssueAndConcern');

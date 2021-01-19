@@ -384,19 +384,29 @@ $user = Session::get('auth');
                             <span class="badge bg-blue">{{ $feedback }}</span>
                         @endif
                     </button>
-                    <a href="#issueModal" data-toggle="modal" data-id="{{ $row->id }}" data-issue="{{ \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->get() }}" class="btn btn-xs btn-danger btn-issue"><i class="fa fa-exclamation-triangle"></i> Issue and concern <?php $issue_count = \App\Issue::where('tracking_id',$row->id)->where('status','outgoing')->count(); ?>{!! $issue_count > 0 ? '<span class="badge bg-red">'.$issue_count.'</span>' : '' !!}</a>
-                    @if(!$checkForCancellation)
-                        <a href="#cancelModal" data-toggle="modal"
-                           data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
-                    @endif
+                    <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
+                    <button class="btn btn-xs btn-danger btn-issue-referred" data-toggle="modal"
+                            data-target="#IssueAndConcern"
+                            data-code="{{ $row->code }}"
+                            data-referred_from="{{ $row->referred_from }}"
+                            data-tracking_id="{{ $row->id }}">
+                        <i class="fa fa fa-exclamation-triangle"></i> Issue and Concern
+                        @if($issue_and_concern>0)
+                        <span class="badge bg-red">{{ $issue_and_concern }}</span>
+                        @endif
+                    </button>
                     <?php $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count(); ?>
                     @if($doh_remarks>0)
-                        <button class="btn btn-xs btn-danger btn-doh" data-toggle="modal"
+                        <button class="btn btn-xs btn-doh" data-toggle="modal" style="background-color: #dd7556;color: white"
                                 data-target="#feedbackDOH"
                                 data-code="{{ $row->code }}">
                             <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
                             <span class="badge bg-green">{{ $doh_remarks }}</span>
                         </button>
+                    @endif
+                    @if(!$checkForCancellation)
+                        <a href="#cancelModal" data-toggle="modal"
+                           data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                     @endif
                 </div>
             </div>
@@ -422,7 +432,6 @@ $user = Session::get('auth');
     @include('modal.caller')
     @include('modal.cancel')
     @include('modal.feedback')
-    @include('modal.issue')
     @include('modal.transfer')
 @endsection
 @include('script.firebase')
@@ -447,23 +456,6 @@ $user = Session::get('auth');
             rounded: true
         });
         @endif
-
-        $('body').on('click','.btn-issue',function(){
-            $(".issue_body").html('');
-            var id = $(this).data('id');
-            var url = "{{ url('doctor/referred/issue') }}/"+id;
-            var issue = $(this).data('issue');
-            if (issue && issue.length) {
-                var input_issue = '';
-                $.each(issue,function($x,$y){
-                    input_issue += '<input class="form-control" name="issue[]" value="'+$y.issue+'" placeholder="Enter the issue here.." required><br>';
-                    $(".issue_body").html(input_issue);
-                });
-            } else {
-                $(".issue_body").html('<input class="form-control" name="issue[]" placeholder="Enter the issue here.." required><br>');
-            }
-            $("#issueReferralForm").attr('action',url);
-        });
 
         $('body').on('click','.btn-transfer',function(){
             $(".transportation_body").html(''); //clear data

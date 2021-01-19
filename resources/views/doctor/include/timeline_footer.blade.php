@@ -68,7 +68,7 @@
         @endif
         <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
         @if($issue_and_concern>0)
-            <button class="btn btn-xs btn-danger btn-issue" data-toggle="modal"
+            <button class="btn btn-xs btn-danger btn-issue-incoming" data-toggle="modal"
                     data-target="#IssueAndConcern"
                     data-code="{{ $row->code }}"
                     data-referred_from="{{ $row->referred_from }}"

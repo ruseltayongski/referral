@@ -82,8 +82,22 @@
 
                     </div>
                 </div>
+
+                <div class="box-footer issue_footer">
+                    <form action="{{ url('doctor/feedback') }}" method="post" id="sendIssue">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="issue_tracking_id" />
+                        <div class="input-group">
+                            <textarea id="issue_message" rows="3" required placeholder="Type a message for your issue and concern regarding your referral.." class="form-control"></textarea>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-success btn-lg">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-footer-->
             </div>
-            <!--/.direct-chat -->
+
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
