@@ -3,13 +3,13 @@
         @foreach($data as $row)
             <div class="direct-chat-msg left">
                 <div class="direct-chat-info clearfix">
-                    <span class="direct-chat-name pull-left">DOH MONITORING</span>
+                    <span class="direct-chat-name pull-left">{{ $facility->name }}</span>
                     <small class="direct-chat-timestamp pull-left text-yellow" style="margin-left: 3%;">{{ date('d M h:i a',strtotime($row->created_at)) }}</small>
                 </div>
                 <!-- /.direct-chat-info -->
-                <img class="direct-chat-img" title="{{ $row->remark_by }}" src="{{ url('resources/img/doh.png') }}" alt="Message User Image"><!-- /.direct-chat-img -->
+                <img class="direct-chat-img" src="{{ $facility->picture ? url('resources/hospital_logo'.'/'.$facility->picture) : url('resources/img/doh.png') }}" alt="Message User Image"><!-- /.direct-chat-img -->
                 <div class="direct-chat-text">
-                    {!! nl2br($row->remarks) !!}
+                    {!! nl2br($row->issue) !!}
                 </div>
                 <!-- /.direct-chat-text -->
             </div>

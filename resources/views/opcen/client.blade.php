@@ -105,7 +105,7 @@
                                                 href="#client_modal"
                                                 data-toggle="modal"
                                                 data-id = "{{ $row->id }}"
-                                                onclick="ClientBody('<?php echo $row->id ?>')"
+                                                onclick="ClientBody('<?php echo $row->id ?>',$(this))"
                                                 class="client_info"
                                             >
                                                 <span class="text-green font_size">{{ $row->name }}</span><br>
@@ -235,7 +235,9 @@
             });
         }
 
-        function ClientBody($client_id){
+        function ClientBody($client_id,data){
+            $("a").css("background-color","");
+            data.css("background-color","yellow");
             $(".client_modal_body").html(loading);
             var url = "<?php echo asset('opcen/client/form').'/'; ?>"+$client_id;
             $.get(url,function(data){

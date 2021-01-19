@@ -33,7 +33,21 @@
         $.get(url,function(data){
             setTimeout(function(){
                 $("#doh_monitoring").html(data);
-                console.log(data);
+            },500);
+        });
+    });
+
+    $('.btn-issue').on('click',function () {
+        console.log('issue');
+        var code = $(this).data('code');
+        var tracking_id = $(this).data('tracking_id');
+        var referred_from = $(this).data('referred_from');
+        $('.issue_concern_code').html(code);
+        $("#issue_and_concern_body").html("Loading....");
+        var url = "<?php echo asset('issue/concern').'/'; ?>"+tracking_id+"/"+referred_from;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#issue_and_concern_body").html(data);
             },500);
         });
     });

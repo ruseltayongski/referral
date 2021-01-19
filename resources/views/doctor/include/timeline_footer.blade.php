@@ -59,11 +59,22 @@
         </button>
         <?php $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count(); ?>
         @if($doh_remarks>0)
-            <button class="btn btn-xs btn-danger btn-doh" data-toggle="modal"
+            <button class="btn btn-xs btn btn-doh" data-toggle="modal" style="background-color: #dd7556;color: white"
                     data-target="#feedbackDOH"
                     data-code="{{ $row->code }}">
                 <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
                 <span class="badge bg-green">{{ $doh_remarks }}</span>
+            </button>
+        @endif
+        <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
+        @if($issue_and_concern>0)
+            <button class="btn btn-xs btn-danger btn-issue" data-toggle="modal"
+                    data-target="#IssueAndConcern"
+                    data-code="{{ $row->code }}"
+                    data-referred_from="{{ $row->referred_from }}"
+                    data-tracking_id="{{ $row->id }}">
+                <i class="fa fa fa-exclamation-triangle"></i> Issue and Concern
+                <span class="badge bg-red">{{ $issue_and_concern }}</span>
             </button>
         @endif
 

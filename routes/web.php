@@ -419,3 +419,4 @@ Route::match(['GET','POST'],'patient/walkin','doctor\PatientCtrl@walkinPatient')
 //issue and concern
 Route::post('doctor/referred/issue/{id}','doctor\ReferralCtrl@issueReferral');
 Route::match(['GET','POST'],'issue/concern','doctor\ReferralCtrl@getIssue');
+Route::get('issue/concern/{tracking_id}/{referred_from}','Monitoring\MonitoringCtrl@IssueAndConcern');

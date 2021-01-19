@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Monitoring;
 
+use App\Issue;
 use App\MonitoringNotAccepted;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -58,6 +59,15 @@ class MonitoringCtrl extends Controller
 
         return view('doctor.feedback_monitoring',[
             'data' => $data
+        ]);
+    }
+
+    public function IssueAndConcern($tracking_id,$referred_from){
+        $facility = Facility::find($referred_from);
+        $data = Issue::where("tracking_id","=",$tracking_id)->orderBy("id","asc")->get();
+        return view('issue.issue',[
+            'data' => $data,
+            'facility' => $facility
         ]);
     }
 
