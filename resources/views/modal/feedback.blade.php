@@ -28,9 +28,9 @@
                         {{ csrf_field() }}
                         <input type="hidden" id="current_code" name="code" />
                         <div class="input-group">
-                            <input type="text" name="message" id="message" required placeholder="Type Message ..." class="form-control">
+                            <textarea name="message" id="message" rows="2" required placeholder="Type Message ..." class="form-control"></textarea>
                             <span class="input-group-btn">
-                        <button type="submit" class="btn btn-success btn-flat">Send</button>
+                        <button type="submit" class="btn btn-success btn-lg">Send</button>
                       </span>
                         </div>
                     </form>
