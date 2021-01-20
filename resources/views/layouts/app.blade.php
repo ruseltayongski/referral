@@ -443,8 +443,8 @@
     var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
-        if(_href)
-            var res = _href.replace("http://","https://");
+        /*if(_href)
+            var res = _href.replace("http://","https://");*/
 
         $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range);
     });
