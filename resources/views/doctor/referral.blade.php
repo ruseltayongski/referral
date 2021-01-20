@@ -63,7 +63,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                         <h3 class="timeline-header no-border">
                                             <strong class="text-bold">
-                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </strong>
                                             <small class="status">
                                                 [ {{ $row->sex }}, {{ $row->age }} ]
@@ -81,7 +81,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
                                             <strong class="text-bold">
-                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </strong>
                                             RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                         </h3>
@@ -93,7 +93,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
                                             <strong class="text-bold">
-                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </strong>
                                             was <span class="badge bg-red">{{ $row->status }}</span> by
                                             {{ $row->referring_md }}
@@ -107,7 +107,7 @@ $user = Session::get('auth');
                                         <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                         <h3 class="timeline-header no-border">
                                             <strong class="text-bold">
-                                                <a href="{{ asset("doctor/track/patient")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
                                             </strong>
                                             was <span class="badge bg-green">{{ $row->status }}</span> by
                                             <span class="text-success">

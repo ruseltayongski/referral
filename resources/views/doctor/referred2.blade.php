@@ -47,7 +47,11 @@ $user = Session::get('auth');
         }
     </style>
     <div class="col-md-3">
-        @include('sidebar.search_referred')
+        @if($referredCode)
+            @include('sidebar.track_referred')
+        @else
+            @include('sidebar.search_referred')
+        @endif
         @include('sidebar.quick')
     </div>
     <div class="col-md-9">

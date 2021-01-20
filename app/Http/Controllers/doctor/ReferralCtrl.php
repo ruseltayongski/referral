@@ -383,8 +383,9 @@ class ReferralCtrl extends Controller
         return redirect('doctor/referred');
     }
 
-    public function referred()
+    public function referred(Request $request)
     {
+        ParamCtrl::lastLogin();
         $keyword = Session::get('referredKeyword');
         $type = Session::get('referredSelect');
         $date = Session::get('referred_date');
@@ -395,84 +396,101 @@ class ReferralCtrl extends Controller
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfYear()->format('m/d/Y');
 
-        ParamCtrl::lastLogin();
-        $user = Session::get('auth');
-        $data = Tracking::select(
-            'tracking.*',
-            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-            DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
-            'patients.sex',
-            'facility.name as facility_name',
-            'facility.id as facility_id',
-            'patients.id as patient_id',
-            'patients.contact'
-        )
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->join('facility','facility.id','=','tracking.referred_to')
-            ->leftJoin('users','users.id','=','tracking.referring_md')
-            ->where('referred_from',$user->facility_id)
-            ->where(function($q){
-                $q->where('tracking.status','referred')
-                    ->orwhere('tracking.status','seen')
-                    ->orwhere('tracking.status','accepted')
-                    ->orwhere('tracking.status','arrived')
-                    ->orwhere('tracking.status','admitted')
-                    ->orwhere('tracking.status','transferred')
-                    ->orwhere('tracking.status','discharged')
-                    ->orwhere('tracking.status','cancelled')
-                    ->orwhere('tracking.status','archived')
-                    ->orwhere('tracking.status','rejected');
-            });
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                        $q->where('patients.fname','like',"%$keyword%")
-                            ->orwhere('patients.mname','like',"%$keyword%")
-                            ->orwhere('patients.lname','like',"%$keyword%")
-                            ->orwhere('tracking.code','like',"%$keyword%");
+        if($request->referredCode){
+            ParamCtrl::lastLogin();
+            $data = Tracking::select(
+                'tracking.*',
+                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+                DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as referring_md'),
+                'patients.sex',
+                'facility.name as facility_name',
+                'facility.id as facility_id',
+                'patients.id as patient_id',
+                'patients.contact'
+            )
+                ->join('patients','patients.id','=','tracking.patient_id')
+                ->join('facility','facility.id','=','tracking.referred_to')
+                ->leftJoin('users','users.id','=','tracking.referring_md')
+                ->where('tracking.code',$request->referredCode)
+                ->orderBy('date_referred','desc')
+                ->paginate(10);
+
+        } else {
+            $user = Session::get('auth');
+            $data = Tracking::select(
+                'tracking.*',
+                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+                DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
+                'patients.sex',
+                'facility.name as facility_name',
+                'facility.id as facility_id',
+                'patients.id as patient_id',
+                'patients.contact'
+            )
+                ->join('patients','patients.id','=','tracking.patient_id')
+                ->join('facility','facility.id','=','tracking.referred_to')
+                ->leftJoin('users','users.id','=','tracking.referring_md')
+                ->where('referred_from',$user->facility_id)
+                ->where(function($q){
+                    $q->where('tracking.status','referred')
+                        ->orwhere('tracking.status','seen')
+                        ->orwhere('tracking.status','accepted')
+                        ->orwhere('tracking.status','arrived')
+                        ->orwhere('tracking.status','admitted')
+                        ->orwhere('tracking.status','transferred')
+                        ->orwhere('tracking.status','discharged')
+                        ->orwhere('tracking.status','cancelled')
+                        ->orwhere('tracking.status','archived')
+                        ->orwhere('tracking.status','rejected');
                 });
+            if($keyword){
+                $data = $data->where(function($q) use ($keyword){
+                    $q->where('patients.fname','like',"%$keyword%")
+                        ->orwhere('patients.mname','like',"%$keyword%")
+                        ->orwhere('patients.lname','like',"%$keyword%")
+                        ->orwhere('tracking.code','like',"%$keyword%");
+                });
+            }
+
+            if($type){
+                $data = $data->where('tracking.status',$type);
+            }
+            if($facility)
+            {
+                $data = $data->where('tracking.referred_to',$facility);
+            }
+            if($department)
+            {
+                $data = $data->where('tracking.department_id',$department);
+            }
+
+
+            if($date)
+            {
+                $range = explode('-',str_replace(' ', '', $date));
+                $start = $range[0];
+                $end = $range[1];
+            }
+
+            $start_date = Carbon::parse($start)->startOfDay();
+            $end_date = Carbon::parse($end)->endOfDay();
+
+            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
+
+            $data = $data->orderBy('date_referred','desc')
+                ->paginate(10);
         }
 
-        if($type){
-            $data = $data->where('tracking.status',$type);
-        }
-        if($facility)
-        {
-            $data = $data->where('tracking.referred_to',$facility);
-        }
-        if($department)
-        {
-            $data = $data->where('tracking.department_id',$department);
-        }
-
-
-        if($date)
-        {
-            $range = explode('-',str_replace(' ', '', $date));
-            $start = $range[0];
-            $end = $range[1];
-        }
-
-        $start_date = Carbon::parse($start)->startOfDay();
-        $end_date = Carbon::parse($end)->endOfDay();
-
-        $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
-
-        $data = $data->orderBy('date_referred','desc')
-                    ->paginate(10);
 
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
             'data' => $data,
             'start' => $start,
-            'end' => $end
+            'end' => $end,
+            'referredCode' => $request->referredCode
         ]);
-    }
-
-    public function searchTrackReferral(Request $req)
-    {
-        Session::put('referredCode',$req->keyword);
-        return redirect('doctor/track/patient');
     }
 
     public function trackReferral(Request $request)
@@ -503,6 +521,12 @@ class ReferralCtrl extends Controller
             'data' => $data,
             'code' => $code
         ]);
+    }
+
+    public function searchTrackReferral(Request $req)
+    {
+        Session::put('referredCode',$req->keyword);
+        return redirect('doctor/referred');
     }
 
     static function step_v2($status){

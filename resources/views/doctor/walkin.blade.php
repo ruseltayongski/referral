@@ -28,7 +28,7 @@
                     @foreach($walkin_patient as $row)
                         <tr>
                             <td width="5%" style="vertical-align:top">
-                                <a href="{{ asset('doctor/track/patient?referredCode=').$row->code }}" class="btn btn-sm btn-success" target="_blank">
+                                <a href="{{ asset('doctor/referred?referredCode=').$row->code }}" class="btn btn-sm btn-success" target="_blank">
                                     <i class="fa fa-stethoscope"></i> Track
                                 </a>
                             </td>

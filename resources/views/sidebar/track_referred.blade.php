@@ -3,10 +3,10 @@
         <h3 class="panel-title">Track Patients</h3>
     </div>
     <div class="panel-body">
-        <form method="post" action="{{ url('doctor/track/patient') }}">
+        <form method="post" action="{{ url('doctor/referred') }}">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="referredCode" value="{{ $code }}" class="form-control" placeholder="Referral Code" />
+                <input type="text" name="referredCode" value="{{ $referredCode }}" class="form-control" placeholder="Referral Code" />
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-default btn-block">

@@ -150,7 +150,7 @@
                             <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                             <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                            <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                             <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                         </ul>
                     </li>
@@ -329,7 +329,7 @@
                             <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                             <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
                             <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
-                            <li><a href="{{ url('doctor/track/patient') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                            <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                         </ul>
                     </li>
                 @elseif($user->level == 'bed_tracker')

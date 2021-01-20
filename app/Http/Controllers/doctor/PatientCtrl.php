@@ -984,7 +984,7 @@ class PatientCtrl extends Controller
     public function history($code)
     {
         Session::put('keywordDischarged',$code);
-        return redirect('doctor/track/patient');
+        return redirect('doctor/referred');
     }
 
     public function walkinPatient(Request $request){
