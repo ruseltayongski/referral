@@ -342,7 +342,7 @@
                 <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Availability Status <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NOT ACCEPTED within 30 minutes <small class="badge bg-red"> New</small></a></li>
-                <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issue and Concern <small class="badge bg-red"> New</small></a></li>
+                <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issues and Concerns <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
                 <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
                 <li class="dropdown">

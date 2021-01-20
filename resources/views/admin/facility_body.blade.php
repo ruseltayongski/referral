@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
         <label>Municipality:</label>
-        <select class="form-control select_muncity" name="muncity" required>
+        <select class="form-control select_muncity select2" name="muncity" required>
             @if(isset($data->muncity))
                 @foreach(\App\Muncity::where("province_id",$data->province)->get() as $row)
                     <option value="{{ $row->id }}" <?php if($data->muncity == $row->id)echo 'selected'; ?> >{{ $row->description }}</option>
@@ -46,7 +46,7 @@
     </div>
     <div class="form-group">
         <label>Barangay:</label>
-        <select class="form-control select_barangay" name="brgy" required>
+        <select class="form-control select_barangay select2" name="brgy" required>
             @if(isset($data->brgy))
                 @foreach(\App\Barangay::where("province_id",$data->province)->where("muncity_id",$data->muncity)->get() as $row)
                     <option value="{{ $row->id }}" <?php if($data->brgy == $row->id)echo 'selected'; ?> >{{ $row->description }}</option>
@@ -128,6 +128,16 @@
                 ?>
             >RHU
             </option>
+            <option value="primary_care_facility"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'primary_care_facility'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Primary Care Facility
+            </option>
         </select>
     </div>
     <div class="form-group">
@@ -173,6 +183,16 @@
                 ?>
             >CIU/TTMF
             </option>
+            <option value="birthing_home"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'birthing_home'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Birthing Home
+            </option>
         </select>
     </div>
     <div class="form-group">
@@ -195,6 +215,8 @@
 </form>
 
 <script>
+    $(".select2").select2({ width: '100%' });
+
     $('.select_province').on('change',function(){
         var province_id = $(this).val();
         var url = "{{ url('location/muncity/') }}";

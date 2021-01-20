@@ -55,7 +55,7 @@ class FacilityCtrl extends Controller
         $data = $data->where('facility.name',"like","%$keyword%");
 
         $data = $data->orderBy('name','asc')
-            ->paginate(10);
+            ->paginate(20);
 
         return view('admin.facility',[
             'title' => 'List of Facility',
