@@ -95,6 +95,11 @@
         var code = $(this).data('code');
         var tracking_id = $(this).data('tracking_id');
         var referred_from = $(this).data('referred_from');
+        var user_facility_id = "<?php echo \Illuminate\Support\Facades\Session::get('auth')->facility_id; ?>";
+
+        if(user_facility_id != referred_from)
+            $(".issue_footer").remove();
+
         $('.issue_concern_code').html(code);
         $('#issue_tracking_id').val(tracking_id);
         $("#issue_and_concern_body").html("Loading....");

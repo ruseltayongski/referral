@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="box-footer issue_footer">
-                    <form action="{{ url('doctor/feedback') }}" method="post" id="sendIssue">
+                    <form action="" method="post" id="sendIssue">
                         {{ csrf_field() }}
                         <input type="hidden" id="issue_tracking_id" />
                         <div class="input-group">

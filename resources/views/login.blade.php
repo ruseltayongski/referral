@@ -65,7 +65,6 @@ $dateNow = date('Y-m-d');
            @include('modal.announcement')
        @endif
     <script>
-        alert("test only!");
         $('.btn-submit').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
 
