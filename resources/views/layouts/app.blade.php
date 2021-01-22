@@ -290,7 +290,6 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                         <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
-                        <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                         <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                     </ul>
                 </li>
@@ -337,7 +336,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                             <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
-                            <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                             <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                         </ul>
                     </li>
@@ -443,8 +441,8 @@
     var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
-        /*if(_href)
-            var res = _href.replace("http://","https://");*/
+        if(_href)
+            var res = _href.replace("http://","https://");
 
         $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range);
     });

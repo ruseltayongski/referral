@@ -683,6 +683,26 @@ class PatientCtrl extends Controller
         ]);
     }
 
+    public function MyPagination($list,$perPage,Request $request)
+    {
+        // Get current page form url e.x. &page=1
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        // Create a new Laravel collection from the array data
+        $itemCollection = collect($list);
+
+        // Slice the collection to get the items to display in current page
+        $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
+
+        // Create our paginator and pass it to the view
+        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
+
+        // set url path for generted links
+        $paginatedItems->setPath($request->url());
+
+        return $paginatedItems;
+    }
+
     function AcceptedJimmy()
     {
         $user = Session::get('auth');
@@ -728,26 +748,6 @@ class PatientCtrl extends Controller
             'title' => 'Accepted Patients',
             'data' => $data
         ]);
-    }
-
-    public function MyPagination($list,$perPage,Request $request)
-    {
-        // Get current page form url e.x. &page=1
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-
-        // Create a new Laravel collection from the array data
-        $itemCollection = collect($list);
-
-        // Slice the collection to get the items to display in current page
-        $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
-
-        // Create our paginator and pass it to the view
-        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
-
-        // set url path for generted links
-        $paginatedItems->setPath($request->url());
-
-        return $paginatedItems;
     }
 
     public function searchAccepted(Request $req)
