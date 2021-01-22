@@ -340,7 +340,7 @@
                         </ul>
                     </li>
                 @elseif($user->level == 'bed_tracker')
-                    <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Bed Occupancy Status<small class="badge bg-red"> New</small></a></li>
+                    <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Update Bed<small class="badge bg-red"> New</small></a></li>
                     <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 @endif
                 @if($user->level == 'admin')
