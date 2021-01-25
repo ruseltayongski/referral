@@ -62,6 +62,8 @@
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
                                         <span class="text-green">={{ $monitoring->remarks }}</span><br>
+                                        <?php $remark_by = \App\User::find($monitoring->remark_by); ?>
+                                        Remark By: <small class="text-red">{{ $remark_by->fname.' '.$remark_by->mname.' '.$remark_by->lname }}</small><br>
                                         <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small>
                                         <br><br>
                                     @endforeach
