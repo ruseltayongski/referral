@@ -64,8 +64,12 @@
                                 <?php
                                     $monitoring_not_accepted = \App\MonitoringNotAccepted::where("code","=",$row->code)->get();
                                 ?>
+                                @if($row->redirected_count)
                                 <span>Redirected by referred facility:</span> <small class="text-red"><span class="badge bg-red">{{ $row->redirected_count }}</span></small><br>
+                                @endif
+                                @if($row->transferred_count)
                                 <span>Transferred by referred facility:</span> <small class="text-red"><span class="badge bg-yellow">{{ $row->transferred_count }}</span></small><br>
+                                @endif
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
                                         <span class="text-green">={{ $monitoring->remarks }}</span><br>
