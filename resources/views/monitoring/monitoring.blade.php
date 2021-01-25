@@ -19,28 +19,29 @@
             <div class="table-responsive">
                 <table class="table table-striped table-responsive">
                     <tr>
-                        <th></th>
-                        <th>Patient Contact No.</th>
+                        <th width="13%">Patient Code</th>
+                        <th>Patient Contact Number</th>
                         <th>Referring Facility</th>
                         <th>Referred To</th>
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
-                        <th>Remarks</th>
+                        <th width="20%">Remarks</th>
                     </tr>
                     @foreach($pending_activity as $row)
-                        <tr>
-                            <td width="5%" style="vertical-align:top">
-                                <a href="{{ asset('doctor/referred?referredCode=').$row->code }}" class="btn btn-sm btn-success" target="_blank">
-                                    <i class="fa fa-stethoscope"></i> Track
-                                </a>
+                        <tr class="">
+                            <td >
+                                <strong class="text-bold" style="font-size: 15pt">
+                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->code }}</a>
+                                </strong><br>
+                                <small class="text-warning"><i>Click the code to track the referral</i></small>
                             </td>
-                            <td class="text-blue">{{ $row->contact }}</td>
-                            <td width="23%;">
+                            <td>{{ $row->patient_contact }}</td>
+                            <td >
                                 {{ $row->referring_facility }}<br>
                                 <span class="text-blue">{{ $row->referring_department }}</span><br>
                                 <span class="text-green">{{ $row->contact_from }}</span>
                             </td>
-                            <td width="23%;">
+                            <td >
                                 {{ $row->referred_to }}<br>
                                 <?php
                                     if($row->patient_normal_id){
@@ -54,7 +55,7 @@
                                 <span class="text-{{ $department_color }}">{{ $referred_department }}</span><br>
                                 <span class="text-green">{{ $row->contact_to }}</span>
                             </td>
-                            <td width="13%">
+                            <td >
                                 {{ date("F d,Y",strtotime($row->date_referred)) }}<br>
                                 <small class="text-yellow">({{ date('g:i a',strtotime($row->date_referred)) }})</small>
                             </td>
@@ -63,6 +64,8 @@
                                 <?php
                                     $monitoring_not_accepted = \App\MonitoringNotAccepted::where("code","=",$row->code)->get();
                                 ?>
+                                <span>Redirected by referred facility:</span> <small class="text-red"><span class="badge bg-red">{{ $row->redirected_count }}</span></small><br>
+                                <span>Transferred by referred facility:</span> <small class="text-red"><span class="badge bg-yellow">{{ $row->transferred_count }}</span></small><br>
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
                                         <span class="text-green">={{ $monitoring->remarks }}</span><br>
@@ -70,7 +73,7 @@
                                         <br><br>
                                     @endforeach
                                     @if(Session::get('auth')->level == 'opcen')
-                                        <button class="btn btn-sm btn-info" href="#add_remark" data-toggle="modal" onclick="addRemark(
+                                        <button class="btn btn-xs btn-info" href="#add_remark" data-toggle="modal" onclick="addRemark(
                                                 '<?php echo $row->activity_id; ?>',
                                                 '<?php echo $row->code; ?>',
                                                 '<?php echo $row->referring_facility_id ?>',
@@ -80,7 +83,7 @@
                                     @endif
                                 @else
                                     @if(Session::get('auth')->level == 'opcen')
-                                            <button class="btn btn-sm btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
+                                            <button class="btn btn-xs btn-primary" href="#add_remark" data-toggle="modal" onclick="addRemark(
                                                     '<?php echo $row->activity_id; ?>',
                                                     '<?php echo $row->code; ?>',
                                                     '<?php echo $row->referring_facility_id ?>',
@@ -114,6 +117,8 @@
     <script>
         //Date range picker
         $('#consolidate_date_range').daterangepicker();
+        $("#container").removeClass("container");
+        $("#container").addClass("container-fluid");
 
         @if(Session::get('add_remark'))
         Lobibox.notify('success', {

@@ -30,7 +30,7 @@
             <div class="form-group">
                 <a href="#callerModal" data-toggle="modal"
                    data-id="{{ $row->id }}"
-                   class="btn btn-primary btn-xs btn-caller col-xs-12"><i class="fa fa-phone"></i> Caller
+                   class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
                     @if($caller_md>0)
                         <small class="badge bg-blue-active">{{ $caller_md }}</small>
                     @endif
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <a href="#" data-toggle="modal"
                    data-id="{{ $row->id }}"
-                   class="btn btn-danger btn-xs btn-caller col-xs-12"><i class="fa fa-chevron-circle-right"></i> Redirected
+                   class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
                     @if($redirected>0)
                         <small class="badge bg-red-active">{{ $redirected }}</small>
                     @endif

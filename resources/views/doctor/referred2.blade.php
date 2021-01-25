@@ -109,6 +109,7 @@ $user = Session::get('auth');
                     $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                     $feedback = \App\Feedback::where('code',$row->code)->count();
                     $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
+                    $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
             ?>
             <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
                 <div class="panel-heading">
@@ -407,6 +408,15 @@ $user = Session::get('auth');
                             <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
                             <span class="badge bg-green">{{ $doh_remarks }}</span>
                         </button>
+                    @endif
+                    @if($redirected > 0)
+                        <a href="#" data-toggle="modal"
+                           data-id="{{ $row->id }}"
+                           class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
+                            @if($redirected>0)
+                                <small class="badge bg-red-active">{{ $redirected }}</small>
+                            @endif
+                        </a>
                     @endif
                     @if(!$checkForCancellation)
                         <a href="#cancelModal" data-toggle="modal"

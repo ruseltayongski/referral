@@ -153,7 +153,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                                 </button>
 
                                                 <button class="btn btn-sm btn-success btn-action btn-transfer"
-                                                        title="Refer Patient"
+                                                        title="Transfer Patient"
 
                                                         data-toggle="modal"
                                                         data-toggle="tooltip"
@@ -202,7 +202,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                             </tr>
                             <tr>
                                 <td class="text-right" width="60px"><button class="btn btn-sm btn-success"><i class="fa fa-ambulance"></i></button></td>
-                                <td>Refer Patient</td>
+                                <td>Transfer Patient</td>
                             </tr>
                         </table>
                     @else

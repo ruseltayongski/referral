@@ -68,7 +68,7 @@ class MonitoringCtrl extends Controller
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
             $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+            $date_end = date('Y-m-d').' 23:59:59';
         }
 
         $issue = \DB::connection('mysql')->select("call issue('$date_start','$date_end')");
