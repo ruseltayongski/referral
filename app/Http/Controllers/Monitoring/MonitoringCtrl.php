@@ -18,8 +18,8 @@ class MonitoringCtrl extends Controller
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(7))).' 00:00:00';
+            $date_end = date('Y-m-d').' 23:59:59';
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");
