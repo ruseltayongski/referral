@@ -13,7 +13,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-        <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
+        <button type="submit" class="btn btn-success btn-sm" onclick="loadPage()"><i class="fa fa-check"></i> Save</button>
     </div>
 </form>
 

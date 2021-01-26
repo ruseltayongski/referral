@@ -459,7 +459,6 @@
 
     function loadPage(){
         $('.loading').show();
-        console.log("asdasd");
     }
 
     function openLogoutTime(){
