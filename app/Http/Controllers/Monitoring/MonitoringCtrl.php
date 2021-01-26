@@ -18,7 +18,7 @@ class MonitoringCtrl extends Controller
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(7))).' 00:00:00';
+            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(3))).' 00:00:00';
             $date_end = date('Y-m-d').' 23:59:59';
         }
 
