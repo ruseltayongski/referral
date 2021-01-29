@@ -138,7 +138,7 @@
         ?>
         <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
             <ul class="nav navbar-nav">
-                @if($user->level=='doctor')
+                @if($user->level=='doctor' || $user->level=='midwife')
                     <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
@@ -357,7 +357,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
-                        @if($user->level=='doctor')
+                        @if($user->level=='doctor' || $user->level=='midwife')
                             <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>
                             <li class="divider"></li>
                             <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i> Switch User</a></li>

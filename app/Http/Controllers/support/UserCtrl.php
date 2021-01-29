@@ -25,7 +25,10 @@ class UserCtrl extends Controller
         $search = $request->search;
 
         $data = User::where('facility_id',$user->facility_id)
-            ->where('level','doctor')
+            ->where(function($q) use($search){
+                $q->where("users.level","doctor")
+                    ->orWhere("users.level","midwife");
+            })
             ->where(function($q) use($search){
                 $q->where('fname','like',"%$search%")
                 ->orwhere('mname','like',"%$search%")
@@ -52,7 +55,10 @@ class UserCtrl extends Controller
                                     )
                                     ->leftJoin("department","department.id","=","users.department_id")
                                     ->where("users.facility_id",$user->facility_id)
-                                    ->where("users.level","doctor")
+                                    ->where(function($q) use($search){
+                                        $q->where("users.level","doctor")
+                                        ->orWhere("users.level","midwife");
+                                    })
                                     ->groupBy("users.department_id")
                                     ->get();
 

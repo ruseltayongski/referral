@@ -58,7 +58,7 @@ class ReferralCtrl extends Controller
                     'patients.sex',
                     'facility.name as facility_name',
                     DB::raw('CONCAT(
-                        if(tracking.referred_from = 63,"","Dr. "),
+                        if(users.level="doctor","Dr. ",""),
                     users.fname," ",users.mname," ",users.lname) as referring_md'),
                     DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md')
                 )
@@ -215,7 +215,7 @@ class ReferralCtrl extends Controller
                     DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
                     DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
                     DB::raw('CONCAT(
-                            if(tracking.referred_from = 63,"","Dr. ")
+                            if(users.level="doctor","Dr. ","")
                     ,users.fname," ",users.mname," ",users.lname) as md_referring'),
                     DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname) as md_referred'),
                     'facility.contact as referring_contact',
@@ -255,7 +255,7 @@ class ReferralCtrl extends Controller
                 DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
                 DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
                 DB::raw('CONCAT(
-                    if(tracking.referred_from = 63,"","Dr. ")
+                    if(users.level="doctor","Dr. ","")
                 ,users.fname," ",users.mname," ",users.lname) as md_referring'),
                 'facility.name as referring_facility',
                 'b.description as facility_brgy',
@@ -407,7 +407,8 @@ class ReferralCtrl extends Controller
                 'facility.name as facility_name',
                 'facility.id as facility_id',
                 'patients.id as patient_id',
-                'patients.contact'
+                'patients.contact',
+                'users.level as user_level'
             )
                 ->join('patients','patients.id','=','tracking.patient_id')
                 ->join('facility','facility.id','=','tracking.referred_to')
@@ -427,7 +428,8 @@ class ReferralCtrl extends Controller
                 'facility.name as facility_name',
                 'facility.id as facility_id',
                 'patients.id as patient_id',
-                'patients.contact'
+                'patients.contact',
+                'users.level as user_level'
             )
                 ->join('patients','patients.id','=','tracking.patient_id')
                 ->join('facility','facility.id','=','tracking.referred_to')

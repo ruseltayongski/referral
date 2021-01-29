@@ -122,10 +122,11 @@ $user = Session::get('auth');
                     Referred by:
                     <span class="txtDoctor" href="#">
                         <?php
-                            if($row->referred_from == 63)
-                                $referring_md = $row->referring_md;
-                            else
+                            if($row->user_level == 'doctor'){
                                 $referring_md = "Dr. ".$row->referring_md;
+                            } else{
+                                $referring_md = $row->referring_md;
+                            }
                         ?>
                         {{ $referring_md }}
                     </span>

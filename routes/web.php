@@ -420,3 +420,6 @@ Route::match(['GET','POST'],'patient/walkin','doctor\PatientCtrl@walkinPatient')
 Route::post('issue/concern/submit','Monitoring\MonitoringCtrl@issueSubmit');
 Route::match(['GET','POST'],'issue/concern','Monitoring\MonitoringCtrl@getIssue');
 Route::get('issue/concern/{tracking_id}/{referred_from}','Monitoring\MonitoringCtrl@IssueAndConcern');
+
+//midwife
+Route::get('midwife','doctor\HomeCtrl@index');

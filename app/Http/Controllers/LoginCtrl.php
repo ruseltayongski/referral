@@ -74,6 +74,8 @@ class LoginCtrl extends Controller
                 else if($login->level=='bed_tracker'){
                     return redirect('bed_tracker');
                 }
+                else if($login->level=='midwife')
+                    return redirect('midwife');
                 else{
                     Session::forget('auth');
                     return Redirect::back()->with('error','You don\'t have access in this system.')->with('username',$req->username);

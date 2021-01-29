@@ -86,7 +86,14 @@ if($searchKeyword){
                                    data-toggle="modal"
                                    data-id = "{{ $row->id }}"
                                    class="title-info update_info">
-                                Dr. {{ $row->fname }} {{ $row->mname }} {{ $row->lname }}
+                                <?php
+                                    if($row->level == 'doctor')
+                                        $abre = "Dr. ";
+                                    else
+                                        $abre = "";
+
+                                    echo $abre.$row->fname.' '.$row->mname.' '.$row->lname;
+                                ?>
                                 </a>
                             </td>
                             <td>

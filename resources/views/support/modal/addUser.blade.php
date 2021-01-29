@@ -51,7 +51,9 @@
                     <div class="form-group">
                         <label>Level:</label>
                         <select class="form-control level" name="level" required>
+                            <option value="">Select Option</option>
                             <option value="doctor">Doctor</option>
+                            <option value="midwife">Midwife</option>
                             <!-- <option value="mcc">Medical Center Chief</option> -->
                         </select>
                     </div>
@@ -145,8 +147,10 @@
                     <div class="form-group">
                         <label>Level:</label>
                         <select class="form-control level" name="level" required>
+                            <option value="">Select Option</option>
                             <option value="doctor">Doctor</option>
-                            <option value="mcc">Medical Center Chief</option>
+                            <option value="midwife">Midwife</option>
+                            <!-- <option value="mcc">Medical Center Chief</option> -->
                         </select>
                     </div>
                     <hr />
