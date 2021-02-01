@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Facility;
 use App\Login;
+use App\Province;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
@@ -163,6 +164,13 @@ class ReportCtrl extends Controller
         return view('admin.report.onboard_facility',[
             'title' => 'ONBOARD FACILITY',
             "data" => $data
+        ]);
+    }
+
+    public function onboardUsers(){
+        $onboard_users = \DB::connection('mysql')->select("call onboard_users()");
+        return view('admin.report.onboard_users',[
+            "onboard_users" => $onboard_users
         ]);
     }
 

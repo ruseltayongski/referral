@@ -355,6 +355,7 @@ Route::match(['GET','POST'],"offline/facility","admin\ReportCtrl@offlineFacility
 
 //onboard facility
 Route::get("onboard/facility","admin\ReportCtrl@onboardFacility");
+Route::get("onboard/users","admin\ReportCtrl@onboardUsers");
 
 //EocRegion dashboard
 Route::get('eoc_region','Eoc\HomeController@EocRegion');
