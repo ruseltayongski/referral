@@ -55,66 +55,58 @@
                 </div>
             </form><br>
             <section class="content-area">
-                <div class="table-responsive" style="font-size: 6pt;">
-                    <table class="table table-striped" border="1">
-                        <thead>
+                <div style="font-size: 6pt;" class="table-responsive">
+                    <table class="table table-striped table-fixed-header" border="1">
+                        <thead class='header'>
                         <tr >
                             <th rowspan="4" class="info" style="vertical-align: middle;border: black;"><center>Name of Hospital</center></th>
                             <th class="success" style="vertical-align: middle;border: black" rowspan="4"><center>Hospital Category</center></th>
-                            <th style="background-color: rgb(251, 233, 218);border-top: black;" colspan="28"><center>Number of Available Beds</center></th>
+                            <th style="background-color: rgb(251, 233, 218);border-top: black;" colspan="20"><center>Number of Available Beds</center></th>
                             <th style="border-top: black;" class="info" colspan="4"><center>Number of Waitlist</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;width: 10%;vertical-align: middle;margin-left: 20px;border-top: black" rowspan="4"><center>Remarks</center></th>
                             <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;border-top: black;" rowspan="4"><center>Encoded By</center></th>
                         </tr>
                         <tr>
-                            <th colspan="12" class="danger"><center>COVID BEDS</center></th>
+                            <th colspan="8" class="danger"><center>COVID BEDS</center></th>
                             <th class="info" colspan="2"><center>Mechanical Ventilators</center></th>
-                            <th class="warning" colspan="12"><center>Non-COVID BEDS</center></th>
+                            <th class="warning" colspan="8"><center>Non-COVID BEDS</center></th>
                             <th class="info" colspan="2"><center>Mechanical Ventilators</center></th>
                             <th class="danger" colspan="2" rowspan="2" style="vertical-align: middle"><center>COVID BEDS</center></th>
                             <th class="warning" colspan="2" rowspan="2" style="vertical-align: middle"><center>Non-COVID BEDS</center></th>
                         </tr>
                         <tr>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>COVID Beds</center></th>
-                            <th colspan="3" class="success"><center>Isolation Beds</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>COVID Beds</center></th>
+                            <th colspan="2" class="success"><center>Isolation Beds</center></th>
                             <th class="info"><center>Used</center></th>
                             <th class="info"><center>Vacant</center></th>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
-                            <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Regular Beds</center></th>
-                            <th colspan="3" class="success"><center>Isolation Beds</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
+                            <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Regular Beds</center></th>
+                            <th colspan="2" class="success"><center>Isolation Beds</center></th>
                             <th class="info"><center>Used</center></th>
                             <th class="info"><center>Vacant</center></th>
                         </tr>
                         <tr>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th class="success">Vacant</th>
                             <th class="success">Occupied</th>
-                            <th class="success">Total</th>
                             <th class="info"></th>
                             <th class="info"></th>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                             <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                            <th style="background-color: rgb(252, 233, 219);">Total</th>
                             <th class="success">Vacant</th>
                             <th class="success">Occupied</th>
-                            <th class="success">Total</th>
                             <th class="info"></th>
                             <th class="info"></th>
                             <th class="danger"><center>Emergency Room (ER)</center></th>
@@ -162,17 +154,6 @@
                                 <td>
                                     <span class="htmlHigh">
                                         <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->emergency_room_covid ? $row->emergency_room_covid : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                COVID BEDS<br>
-                                                (Emergency Room (ER)) Total
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
                                             <span style="color: black !important;">{{ $row->icu_covid_vacant ? $row->icu_covid_vacant : 0 }}</span>
                                             <span class="tooltip-ex-text">
                                                 COVID BEDS<br>
@@ -188,17 +169,6 @@
                                             <span class="tooltip-ex-text">
                                                 COVID BEDS<br>
                                                 (ICU - Intensive Care Units) Occupied
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->icu_covid ? $row->icu_covid : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                COVID BEDS<br>
-                                                (ICU - Intensive Care Units) Total
                                             </span>
                                         </span>
                                     </span>
@@ -228,17 +198,6 @@
                                 <td>
                                     <span class="htmlHigh">
                                         <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->beds_covid ? $row->beds_covid : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                COVID BEDS<br>
-                                                (COVID Beds) Total
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
                                             <span style="color: black !important;">{{ $row->isolation_covid_vacant ? $row->isolation_covid_vacant : 0 }}</span>
                                             <span class="tooltip-ex-text">
                                                 COVID BEDS<br>
@@ -254,17 +213,6 @@
                                             <span class="tooltip-ex-text">
                                                 COVID BEDS<br>
                                                 (Isolation Beds) Occupied
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->isolation_covid ? $row->isolation_covid : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                COVID BEDS<br>
-                                                (Isolation Beds) Total
                                             </span>
                                         </span>
                                     </span>
@@ -318,17 +266,6 @@
                                 <td>
                                     <span class="htmlHigh">
                                         <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->emergency_room_non ? $row->emergency_room_non : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                Non-COVID BEDS<br>
-                                                (Emergency Room (ER)) Total
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
                                             <span style="color: black !important;">{{ $row->icu_non_vacant ? $row->icu_non_vacant : 0 }}</span>
                                             <span class="tooltip-ex-text">
                                                 Non-COVID BEDS<br>
@@ -344,17 +281,6 @@
                                             <span class="tooltip-ex-text">
                                                 Non-COVID BEDS<br>
                                                 (ICU - Intensive Care Units) Occupied
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->icu_non ? $row->icu_non : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                Non-COVID BEDS<br>
-                                                (ICU - Intensive Care Units) Total
                                             </span>
                                         </span>
                                     </span>
@@ -384,17 +310,6 @@
                                 <td>
                                     <span class="htmlHigh">
                                         <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->beds_non ? $row->beds_non : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                Non-COVID BEDS<br>
-                                                (Regular Beds) Total
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
                                             <span style="color: black !important;">{{ $row->isolation_non_vacant ? $row->isolation_non_vacant : 0 }}</span>
                                             <span class="tooltip-ex-text">
                                                 Non-COVID BEDS<br>
@@ -410,17 +325,6 @@
                                             <span class="tooltip-ex-text">
                                                 Non-COVID BEDS<br>
                                                 (Isolation Beds) Occupied
-                                            </span>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="htmlHigh">
-                                        <span class="tooltip-ex">
-                                            <span style="color: black !important;">{{ $row->isolation_non ? $row->isolation_non : 0 }}</span>
-                                            <span class="tooltip-ex-text">
-                                                Non-COVID BEDS<br>
-                                                (Isolation Beds) Total
                                             </span>
                                         </span>
                                     </span>
@@ -532,6 +436,13 @@
 
 @section('js')
     <script src="{{ asset('resources/plugin/bootstrap3-editable/js/bootstrap-editable.min.js') }}"></script>
+
+    <script language='javascript' type='text/javascript'>
+        $(document).ready(function(){
+            $('.table-fixed-header').fixedHeader();
+        });
+    </script>
+
     <script>
         $("#container").removeClass("container");
         $("#container").addClass("container-fluid");

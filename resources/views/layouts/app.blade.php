@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <link href="{{ asset('resources/plugin/daterangepicker_old/daterangepicker-bs3.css') }}" rel="stylesheet">
 
+    <link href="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.css') }}" rel="stylesheet">
 
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <title>
@@ -54,6 +55,25 @@
             left:0px;
             z-index:999999999;
             display: none;
+        }
+
+        #myBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: rgba(38, 125, 61, 0.92);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        #myBtn:hover {
+            background-color: #555;
         }
     </style>
 </head>
@@ -415,6 +435,8 @@
 @include('modal.duty')
 @include('modal.login')
 @include('modal.incoming')
+
+<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Go Top</button>
 <footer class="footer">
     <div class="container">
         <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 4.3</p>
@@ -446,6 +468,9 @@
 <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>
 
 <script src="{{ asset('resources/assets/js/jquery.canvasjs.min.js') }}?v=1"></script>
+
+<!-- TABLE-HEADER-FIXED -->
+<script src="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.js') }}"></script>
 
 <script>
     $(".select2").select2({ width: '100%' });
@@ -524,6 +549,28 @@
         });
         <?php Session::put("logout_time",false); ?>
     @endif
+
+
+    //Get the button
+    var mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        $('body,html').animate({
+            scrollTop : 0 // Scroll to top of body
+        }, 500);
+    }
 
 </script>
 

@@ -13,63 +13,56 @@
             </div>
             <div class="table-responsive" style="font-size: 6pt;">
                 <table class="table table-hover table-striped" border="1">
+                    <thead>
                     <tr >
-                        <th rowspan="4" class="info" style="vertical-align: middle;border: black;"><center>Name of Hospital</center></th>
-                        <th class="success" style="vertical-align: middle;border: black" rowspan="4"><center>Hospital Category</center></th>
-                        <th style="background-color: rgb(251, 233, 218);border-top: black;" colspan="28"><center>Number of Available Beds</center></th>
+                        <th rowspan="4" class="bg-info" style="vertical-align: middle;border-right: black"><center>Name of Hospital</center></th>
+                        <th class="bg-success" style="vertical-align: middle;border-left: black" rowspan="4"><center>Hospital Category</center></th>
+                        <th style="background-color: rgb(251, 233, 218);border-top: black;" colspan="20"><center>Number of Available Beds</center></th>
                         <th style="border-top: black;" class="info" colspan="4"><center>Number of Waitlist</center></th>
                         <th class="bg-pink" style="background-color: #ffb3b8;width: 10%;vertical-align: middle;margin-left: 20px;border-top: black" rowspan="4"><center>Remarks</center></th>
                         <th class="bg-pink" style="background-color: #ffb3b8;vertical-align: middle;border-top: black;" rowspan="4"><center>Encoded By</center></th>
                     </tr>
                     <tr>
-                        <th colspan="12" class="danger"><center>COVID BEDS</center></th>
+                        <th colspan="8" class="danger"><center>COVID BEDS</center></th>
                         <th class="info" colspan="2"><center>Mechanical Ventilators</center></th>
-                        <th class="warning" colspan="12"><center>Non-COVID BEDS</center></th>
+                        <th class="warning" colspan="8"><center>Non-COVID BEDS</center></th>
                         <th class="info" colspan="2"><center>Mechanical Ventilators</center></th>
                         <th class="danger" colspan="2" rowspan="2" style="vertical-align: middle"><center>COVID BEDS</center></th>
                         <th class="warning" colspan="2" rowspan="2" style="vertical-align: middle"><center>Non-COVID BEDS</center></th>
                     </tr>
                     <tr>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>COVID Beds</center></th>
-                        <th colspan="3" class="success"><center>Isolation Beds</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>COVID Beds</center></th>
+                        <th colspan="2" class="success"><center>Isolation Beds</center></th>
                         <th class="info"><center>Used</center></th>
                         <th class="info"><center>Vacant</center></th>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
-                        <th colspan="3" style="background-color: rgb(252, 233, 219);"><center>Regular Beds</center></th>
-                        <th colspan="3" class="success"><center>Isolation Beds</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Emergency Room (ER)</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>ICU - Intensive Care Units</center></th>
+                        <th colspan="2" style="background-color: rgb(252, 233, 219);"><center>Regular Beds</center></th>
+                        <th colspan="2" class="success"><center>Isolation Beds</center></th>
                         <th class="info"><center>Used</center></th>
                         <th class="info"><center>Vacant</center></th>
                     </tr>
                     <tr>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th class="success">Vacant</th>
                         <th class="success">Occupied</th>
-                        <th class="success">Total</th>
                         <th class="info"></th>
                         <th class="info"></th>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th style="background-color: rgb(252, 233, 219);">Vacant</th>
                         <th style="background-color: rgb(252, 233, 219);">Occupied</th>
-                        <th style="background-color: rgb(252, 233, 219);">Total</th>
                         <th class="success">Vacant</th>
                         <th class="success">Occupied</th>
-                        <th class="success">Total</th>
                         <th class="info"></th>
                         <th class="info"></th>
                         <th class="danger"><center>Emergency Room (ER)</center></th>
@@ -77,33 +70,26 @@
                         <th class="warning"><center>Emergency Room (ER)</center></th>
                         <th class="warning"><center>ICU - Intensive Care Units</center></th>
                     </tr>
+                    </thead>
                     <tr>
                         <td><b class="text-success">{{ $facility->name }}</b></td>
                         <td><b class="text-success"><center>{{ ucfirst($facility->level) }}</center></b></td>
                         <td><a href="#" class="text_editable" id="emergency_room_covid_vacant" >{{ $facility->emergency_room_covid_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="emergency_room_covid_occupied" >{{ $facility->emergency_room_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_covid" >{{ $facility->emergency_room_covid }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_covid" >{{ $facility->icu_covid }}</a></td>
                         <td><a href="#" class="text_editable" id="icu_covid_vacant" >{{ $facility->icu_covid_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="icu_covid_occupied" >{{ $facility->icu_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_covid" >{{ $facility->beds_covid }}</a></td>
                         <td><a href="#" class="text_editable" id="beds_covid_vacant" >{{ $facility->beds_covid_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="beds_covid_occupied" >{{ $facility->beds_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_covid" >{{ $facility->isolation_covid }}</a></td>
                         <td><a href="#" class="text_editable" id="isolation_covid_vacant" >{{ $facility->isolation_covid_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="isolation_covid_occupied" >{{ $facility->isolation_covid_occupied }}</a></td>
                         <td><a href="#" class="text_editable" id="mechanical_used_covid" >{{ $facility->mechanical_used_covid }}</a></td>
                         <td><a href="#" class="text_editable" id="mechanical_vacant_covid" >{{ $facility->mechanical_vacant_covid }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_non" >{{ $facility->emergency_room_non }}</a></td>
                         <td><a href="#" class="text_editable" id="emergency_room_non_vacant" >{{ $facility->emergency_room_non_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="emergency_room_non_occupied" >{{ $facility->emergency_room_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_non" >{{ $facility->icu_non }}</a></td>
                         <td><a href="#" class="text_editable" id="icu_non_vacant" >{{ $facility->icu_non_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="icu_non_occupied" >{{ $facility->icu_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_non" >{{ $facility->beds_non }}</a></td>
                         <td><a href="#" class="text_editable" id="beds_non_vacant" >{{ $facility->beds_non_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="beds_non_occupied" >{{ $facility->beds_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_non">{{ $facility->isolation_non }}</a></td>
                         <td><a href="#" class="text_editable" id="isolation_non_vacant">{{ $facility->isolation_non_vacant }}</a></td>
                         <td><a href="#" class="text_editable" id="isolation_non_occupied">{{ $facility->isolation_non_occupied }}</a></td>
                         <td><a href="#" class="text_editable" id="mechanical_used_non" >{{ $facility->mechanical_used_non }}</a></td>
