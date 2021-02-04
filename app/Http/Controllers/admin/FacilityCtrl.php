@@ -37,17 +37,18 @@ class FacilityCtrl extends Controller
 
         $data = Facility::select(
             "facility.id",
-                    "facility.name",
-                    "facility.address",
-                    "prov.description as province",
-                    "mun.description as muncity",
-                    "bar.description as barangay",
-                    "facility.contact",
-                    "facility.email",
-                    "facility.chief_hospital",
-                    "facility.level",
-                    "facility.hospital_type",
-                    "facility.status"
+            'facility.facility_code',
+            "facility.name",
+            "facility.address",
+            "prov.description as province",
+            "mun.description as muncity",
+            "bar.description as barangay",
+            "facility.contact",
+            "facility.email",
+            "facility.chief_hospital",
+            "facility.level",
+            "facility.hospital_type",
+            "facility.status"
         ) ->leftJoin("province as prov","prov.id","=","facility.province")
          ->leftJoin("muncity as mun","mun.id","=","facility.muncity")
          ->leftJoin("barangay as bar","bar.id","=","facility.brgy");

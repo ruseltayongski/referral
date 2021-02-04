@@ -10,6 +10,10 @@
         <input type="text" class="form-control" value="@if(isset($data->name)){{ $data->name }}@endif" autofocus name="name" required>
     </div>
     <div class="form-group">
+        <label>Facility Code:</label>
+        <input type="text" class="form-control" value="@if(isset($data->facility_code)){{ $data->facility_code }}@endif" name="facility_code">
+    </div>
+    <div class="form-group">
         <label>Abbr:</label>
         <input type="text" class="form-control" value="@if(isset($data->abbr)){{ $data->abbr }}@endif" name="abbr">
     </div>

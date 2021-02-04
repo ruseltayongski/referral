@@ -27,7 +27,8 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <tr class="bg-black">
-                            <th>Facility</th>
+                            <th>Facility Name</th>
+                            <th>Facility Code</th>
                             <th>Contact</th>
                             <th>Email</th>
                             <th>Chief Hospital</th>
@@ -63,6 +64,9 @@
                                         ?>
                                         )
                                     </small>
+                                </td>
+                                <td>
+                                    <b class="text-green">{{ $row->facility_code }}</b>
                                 </td>
                                 <td><small>{{ $row->contact }}</small></td>
                                 <td><small>{{ $row->email }}</small></td>
