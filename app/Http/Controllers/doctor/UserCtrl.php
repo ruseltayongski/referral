@@ -43,6 +43,7 @@ class UserCtrl extends Controller
             'users.fname as fname',
             'users.lname as lname',
             'users.mname as mname',
+            'users.level as level',
             'users.contact',
             'facility.name as facility',
             'facility.abbr as abbr',
@@ -61,7 +62,6 @@ class UserCtrl extends Controller
                 ->leftJoin('department','department.id','=','users.department_id');
 
         $data = $data
-                ->where('users.level','doctor')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->orderBy('login.id','desc')

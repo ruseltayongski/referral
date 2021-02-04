@@ -169,6 +169,15 @@
                                 <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                             </td>
                         </tr>
+                        <!--
+                        <tr>
+                            <td colspan="6">
+                                <a class="btn btn-block btn-social btn-google" data-toggle="modal" data-target="#modal-default">
+                                    <i class="fa fa-calendar-plus-o"></i> Click here for ICD-10
+                                </a>
+                            </td>
+                        </tr>
+                        -->
                         <tr>
                             <td colspan="6">
                                 <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
@@ -216,3 +225,51 @@
         </div>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Search ICD-10 by keyword</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-lg">
+                    <input type="text" id="icd10_keyword" class="form-control">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Go!</button>
+                    </span>
+                </div><br>
+                <div class="icd_body"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    function searchICD10(){
+        $(".icd_body").html(loading);
+        var url = "<?php echo asset('icd/search'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "icd_keyword" : $("#icd10_keyword").val()
+        };
+        $.post(url,json,function(result){
+            setTimeout(function(){
+                if($("#icd10_keyword").val()){
+                    $(".icd_body").html(result);
+                } else {
+                    $(".icd_body").html("");
+                }
+
+            },500);
+        });
+    }
+</script>
