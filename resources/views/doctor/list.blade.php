@@ -64,7 +64,7 @@ $user = Session::get('auth');
                                     }
                                     ?>
                                     <small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! $string !!}</small><br>
-                                    &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO FACILITY" }}</small>
+                                    &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
                                 </div>
                                 <div class="box-footer no-padding">
                                     <ul class="nav nav-stacked">
