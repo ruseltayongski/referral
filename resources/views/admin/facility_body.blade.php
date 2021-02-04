@@ -1,12 +1,12 @@
 <form method="POST" action="{{ asset('admin/facility/add') }}">
     {{ csrf_field() }}
     <fieldset>
-        <legend><i class="fa fa-plus"></i> Add Facility</legend>
+        <legend><i class="fa fa-hospital-o"></i> Facility</legend>
     </fieldset>
     <input type="hidden" value="@if(isset($data->id)){{ $data->id }}@endif" name="id">
     <input type="hidden" value="1" name="status">
     <div class="form-group">
-        <label>Facility name:</label>
+        <label>Facility Name:</label>
         <input type="text" class="form-control" value="@if(isset($data->name)){{ $data->name }}@endif" autofocus name="name" required>
     </div>
     <div class="form-group">

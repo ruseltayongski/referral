@@ -54,7 +54,10 @@ Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
 Route::post('admin/facility/delete','admin\FacilityCtrl@FacilityDelete');
 
 //PROVINCE
-
+Route::match(['GET','POST'],'admin/province','admin\FacilityCtrl@provinceView');
+Route::post('admin/province/add','admin\FacilityCtrl@ProvinceAdd');
+Route::post('admin/province/body','admin\FacilityCtrl@ProvinceBody');
+Route::post('admin/province/delete','admin\FacilityCtrl@ProvinceDelete');
 //MUNICIPALITY
 
 //BARANGAY
