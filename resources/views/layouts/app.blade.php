@@ -334,6 +334,9 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
                         <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
+                        <li><a href="{{ url('admin/province') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
+                        <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Municipality</a></li>
+                        <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Barangay</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

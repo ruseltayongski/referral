@@ -53,6 +53,13 @@ Route::post('admin/facility/add','admin\FacilityCtrl@FacilityAdd');
 Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
 Route::post('admin/facility/delete','admin\FacilityCtrl@FacilityDelete');
 
+//PROVINCE
+
+//MUNICIPALITY
+
+//BARANGAY
+
+
 Route::post('admin/users/store','admin\UserCtrl@store');
 Route::post('admin/users/update','admin\UserCtrl@update');
 

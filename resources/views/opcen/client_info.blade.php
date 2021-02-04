@@ -160,7 +160,7 @@
     <tr>
         <td>
             <small>Notes for action taken</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
+            &nbsp;&nbsp;<span class="text-yellow">{!! $client->reason_action_taken !!}</span>
         </td>
     </tr>
 </table>
