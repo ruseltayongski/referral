@@ -169,6 +169,7 @@
                                 <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
                             </td>
                         </tr>
+                        <!--
                         <tr>
                             <td colspan="6">
                                 <a class="btn btn-block btn-social btn-google" data-toggle="modal" data-target="#modal-default">
@@ -176,6 +177,7 @@
                                 </a>
                             </td>
                         </tr>
+                        -->
                         <tr>
                             <td colspan="6">
                                 <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
