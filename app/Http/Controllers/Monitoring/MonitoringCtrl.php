@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Monitoring;
 
 use App\Issue;
 use App\MonitoringNotAccepted;
+use App\OfflineFacilityRemark;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Facility;
@@ -38,6 +39,26 @@ class MonitoringCtrl extends Controller
             "referring_facility" => $request->referring_facility,
             "referred_to" => $request->referred_to
         ]);
+    }
+
+    public function offlineRemarkBody(Request $request){
+        return view('admin.report.offline_remark_body',[
+            "facility_id" => $request->facility_id
+        ]);
+    }
+
+    public function offlineRemarkAdd(Request $request){
+        $facility_id = $request->facility_id;
+        $remark_by = Session::get('auth')->id;
+        $remarks = $request->remarks;
+        $offline_facility_remarks = new OfflineFacilityRemark();
+        $offline_facility_remarks->facility_id = $facility_id;
+        $offline_facility_remarks->remark_by = $remark_by;
+        $offline_facility_remarks->remarks = $remarks;
+        $offline_facility_remarks->save();
+
+        Session::put("add_offline_remark",true);
+        return Redirect::back();
     }
 
     public function addRemark(Request $request){

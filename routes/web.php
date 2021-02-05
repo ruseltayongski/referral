@@ -361,7 +361,11 @@ Route::get('IMG7uSgZBKB9jW6KhMT8N4QAV2Ia5PUL','ApiController@getUsers'); //GET U
 
 //online facility
 Route::match(['GET','POST'],"online/facility","admin\ReportCtrl@onlineFacility");
+
+//offline facility
 Route::match(['GET','POST'],"offline/facility","admin\ReportCtrl@offlineFacility");
+Route::post('offline/facility/remark','Monitoring\MonitoringCtrl@offlineRemarkBody');
+Route::post('offline/facility/remark/add','Monitoring\MonitoringCtrl@offlineRemarkAdd');
 
 //onboard facility
 Route::get("onboard/facility","admin\ReportCtrl@onboardFacility");
