@@ -22,7 +22,7 @@
             <td>{{ $row->source }}</td>
             <td>
                 <div class="custom-control custom-checkbox checkbox-xl">
-                    <input type="checkbox" class="custom-control-input" checked="">
+                    <input type="checkbox" class="custom-control-input">
                 </div>
             </td>
         </tr>
