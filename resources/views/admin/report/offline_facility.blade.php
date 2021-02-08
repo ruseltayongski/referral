@@ -28,7 +28,7 @@
                             <?php
                             $it_name = $row->fname.' '.$row->mname.' '.$row->lname;
                             $date_now = date('Y-m-d');
-                            $call_count = \App\OfflineFacilityRemark::where("remark_by",$row->id)->where("created_at","like","%$date_now%")->count();
+                            $call_count = \App\OfflineFacilityRemark::where("remark_by",$row->id)->count();
                             ?>
                             <span class="badge bg-blue"> {{ $call_count }}</span> <span style="font-size: 8pt;">{{ $it_name }}</span>
                         @endforeach
@@ -48,7 +48,7 @@
                                     <th>Chief Hospital</th>
                                     <th>Contact No</th>
                                     <th>Hospital Type</th>
-                                    <th>Remarks</th>
+                                    <th width="30%">Remarks</th>
                                 </tr>
                             </thead>
 
