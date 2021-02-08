@@ -26,7 +26,7 @@
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Issue and Concern</th>
-                        <th width="20%">Remarks</th>
+                        <th width="20%">Action</th>
                     </tr>
                     @foreach($pending_activity as $row)
                         <tr class="">
@@ -92,7 +92,7 @@
                                                 '<?php echo $row->referring_facility_id ?>',
                                                 '<?php echo $row->referred_to_id ?>'
                                                 )"
-                                        ><i class="fa fa-sticky-note"></i> Add more remark</button>
+                                        ><i class="fa fa-sticky-note"></i> Add more action</button>
                                     @endif
                                 @else
                                     @if(Session::get('auth')->level == 'opcen')
@@ -102,7 +102,7 @@
                                                     '<?php echo $row->referring_facility_id ?>',
                                                     '<?php echo $row->referred_to_id ?>'
                                                     )"
-                                            ><i class="fa fa-sticky-note"></i> Add remark</button>
+                                            ><i class="fa fa-sticky-note"></i> Add action</button>
                                     @endif
                                 @endif
                             </td>
