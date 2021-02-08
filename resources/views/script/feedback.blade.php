@@ -17,19 +17,21 @@
         $.get(url,function(data){
             setTimeout(function(){
                 $("#"+code).html(data);
+                scrolldownFeedback(code);
             },500);
         });
 
         $("#current_code").val(code);
     });
 
-    $('#feedbackModal').on('shown.bs.modal', function (e) {
+    function scrolldownFeedback(code){
         var objDiv = document.getElementById(code);
 
         setTimeout(function () {
             objDiv.scrollTop = objDiv.scrollHeight;
         },500);
-    });
+    }
+
 
     function reloadMessage() {
         $("#message").val('').focus();
@@ -37,10 +39,7 @@
         $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
         $("#current_code").val(code);
 
-        var objDiv = document.getElementById(code);
-        setTimeout(function () {
-            objDiv.scrollTop = objDiv.scrollHeight;
-        },500);
+        scrolldownFeedback(code);
     }
 
     $('.btn-doh').on('click',function () {
