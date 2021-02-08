@@ -99,8 +99,7 @@
                                     </td>
                                     <td>
                                         <?php
-                                            $date_now = date('Y-m-d');
-                                            $offline_facility_remark = \App\OfflineFacilityRemark::where("facility_id",$row->facility_id)->where("created_at","like","%$date_now%")->get();
+                                            $offline_facility_remark = \App\OfflineFacilityRemark::where("facility_id",$row->facility_id)->where("created_at","like","%$day_date%")->get();
                                         ?>
                                         @if(count($offline_facility_remark) > 0)
                                             @foreach($offline_facility_remark as $offline_remark)
