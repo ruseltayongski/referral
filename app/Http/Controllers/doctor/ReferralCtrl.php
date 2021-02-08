@@ -1138,12 +1138,11 @@ class ReferralCtrl extends Controller
                 ->leftJoin('users','users.id','=','feedback.sender')
                 ->leftJoin('facility','facility.id','=','users.facility_id')
                 ->where('code',$code)
-                ->latest('feedback.id')
-                ->take(5)
+                ->orderBy("id","asc")
                 ->get();
 
         return view('doctor.feedback',[
-            'data' => $data->reverse()
+            'data' => $data
         ]);
     }
 

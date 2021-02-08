@@ -17,24 +17,10 @@
         $.get(url,function(data){
             setTimeout(function(){
                 $("#"+code).html(data);
-                console.log(data);
             },500);
         });
 
         $("#current_code").val(code);
-    });
-
-    $('.btn-doh').on('click',function () {
-        console.log('doh');
-        code = $(this).data('code');
-        $('.feedback_monitoring_code').html(code);
-        $("#doh_monitoring").html("Loading....");
-        var url = "<?php echo asset('monitoring/feedback').'/'; ?>"+code;
-        $.get(url,function(data){
-            setTimeout(function(){
-                $("#doh_monitoring").html(data);
-            },500);
-        });
     });
 
     $('#feedbackModal').on('shown.bs.modal', function (e) {
@@ -56,6 +42,19 @@
             objDiv.scrollTop = objDiv.scrollHeight;
         },500);
     }
+
+    $('.btn-doh').on('click',function () {
+        console.log('doh');
+        code = $(this).data('code');
+        $('.feedback_monitoring_code').html(code);
+        $("#doh_monitoring").html("Loading....");
+        var url = "<?php echo asset('monitoring/feedback').'/'; ?>"+code;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#doh_monitoring").html(data);
+            },500);
+        });
+    });
 
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
