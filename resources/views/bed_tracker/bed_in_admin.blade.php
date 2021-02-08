@@ -402,9 +402,9 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span>{{ $row->remarks }}</span>
+                                    <span style="font-size: 10pt;">{{ $row->remarks }}</span>
                                 </td>
-                                <td>
+                                <td style="font-size: 10pt;">
                                     <?php
                                         $encoded_by = \App\BedTracker::
                                                     select("bed_tracker.id","users.fname","users.mname","users.lname","bed_tracker.created_at")
