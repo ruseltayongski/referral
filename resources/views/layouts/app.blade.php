@@ -214,6 +214,7 @@
                             <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
                             <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
                             <li><a href="{{ url('onboard/users') }}"><i class="fa fa-ambulance"></i>Onboard Users <span class="badge bg-red"> New</span></a></li>
+                            <li><a href="{{ url('weekly/report') }}"><i class="fa fa-calendar-check-o"></i>Weekly Report Login<span class="badge bg-red"> New</span></a></li>
                             <!--
                             <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
                             <li><a href="{{ url('admin/daily/users') }}"><i class="fa fa-users"></i>Daily Users</a></li>
@@ -345,6 +346,7 @@
                         <li><a href="{{ url('admin/report/online') }}"><i class="fa fa-users"></i>Online Users</a></li>
                         <li><a href="{{ url('online/facility') }}"><i class="fa fa-hospital-o"></i>Online Facility</a></li>
                         <li><a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a></li>
+                        <li><a href="{{ url('weekly/report') }}"><i class="fa fa-calendar-check-o"></i>Weekly Report Login</a></li>
                         <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
                         <li><a href="{{ url('onboard/users') }}"><i class="fa fa-ambulance"></i>Onboard Users</a></li>
                         <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>

@@ -152,9 +152,30 @@ class ReportCtrl extends Controller
         $data = \DB::connection('mysql')->select("call $stored_name");
 
         return view('admin.report.offline_facility',[
-            'title' => 'OFFLINE FACILITY',
+            'title' => 'Offline Facility',
             "data" => $data,
             'day_date' => $day_date
+        ]);
+    }
+
+    public function weeklyReport(Request $request){
+        if($request->isMethod('post') && isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
+        } else {
+            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(6)));
+            $date_end = date('Y-m-d');
+        }
+
+        $facility = \DB::connection('mysql')->select("call weekly_report()");
+        $generate_weeks = \DB::connection('mysql')->select("call generate_weeks('$date_start','$date_end')");
+
+        return view('admin.report.offline_facility_weekly',[
+            'title' => 'Weekly Report Login',
+            'facility' => $facility,
+            'generate_weeks' => $generate_weeks,
+            'date_start' => $date_start,
+            'date_end' => $date_end
         ]);
     }
 
