@@ -42,11 +42,24 @@
                                 @if(!isset($province[$row->province]))
                                     <?php $province[$row->province] = true; ?>
                                     <tr>
-                                        <td colspan="8"><strong class="text-info" style="font-size: 20pt;">{{ $row->province }}</strong></td>
+                                        <td colspan="8">
+                                            <strong class="text-info" style="font-size: 20pt;">{{ $row->province }}</strong>
+                                        </td>
                                     </tr>
                                 @endif
                                 <tr>
-                                    <td><strong>{{ $row->name }}</strong></td>
+                                    <td>
+                                        <strong style="font-size: 12pt;">{{ $row->name }}</strong><br>
+                                        @if($row->hospital_type == 'birthing_home')
+                                            <strong style="color: darkgoldenrod;font-size: 8pt;">Birthing Home</strong>
+                                        @elseif($row->hospital_type == 'government')
+                                            <strong class="text-green" style="font-size: 8pt;">Government</strong>
+                                        @elseif($row->hospital_type == 'private')
+                                            <strong class="text-blue" style="font-size: 8pt;">Private</strong>
+                                        @elseif($row->hospital_type == 'RHU')
+                                            <strong class="text-red" style="font-size: 8pt;">RHU</strong>
+                                        @endif
+                                    </td>
                                     @foreach($generate_weeks as $per_day)
                                         <?php
                                             $check_online = \DB::connection('mysql')->select("call check_online_facility('$row->facility_id','$per_day->per_day')")[0]->check_online
