@@ -61,7 +61,7 @@
                                 <small class="text-yellow">({{ date('g:i a',strtotime($row->date_referred)) }})</small>
                             </td>
                             <td><span class="text-green" style="font-size: 15pt;">{{ $row->time_not_accepted }}</span><br> minutes</td>
-                            <td>
+                            <td width="20%">
                                 <?php
                                     $issue_and_concern = \App\Issue::where("tracking_id",$row->tracking_id)->get();
                                 ?>
@@ -69,7 +69,7 @@
                                     <strong class="text-red">=> {{ $issue->issue }}</strong><br><br>
                                 @endforeach
                             </td>
-                            <td>
+                            <td width="20%">
                                 <?php
                                     $monitoring_not_accepted = \App\MonitoringNotAccepted::where("code","=",$row->code)->get();
                                 ?>
