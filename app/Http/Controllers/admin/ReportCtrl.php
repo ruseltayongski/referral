@@ -171,7 +171,7 @@ class ReportCtrl extends Controller
         $generate_weeks = \DB::connection('mysql')->select("call generate_weeks('$date_start','$date_end')");
 
         return view('admin.report.offline_facility_weekly',[
-            'title' => 'Weekly Report Login',
+            'title' => 'Login Status',
             'facility' => $facility,
             'generate_weeks' => $generate_weeks,
             'date_start' => $date_start,

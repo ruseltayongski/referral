@@ -36,7 +36,7 @@
                                         Onboard Users <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        Weekly Report Login <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        Login Status <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
