@@ -42,23 +42,27 @@
     <div class="row col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ asset('weekly/report') }}" method="POST" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-sm">
-                            <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" placeholder="Filter your date here..." id="consolidate_date_range">
-                            <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                        </div>
-                    </form>
-                </div>
                 <h1>{{ $title }}</h1>
+                <form action="{{ asset('weekly/report') }}" method="POST" class="form-inline">
+                    {{ csrf_field() }}
+                    <div class="form-group-sm">
+                        <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" placeholder="Filter your date here..." id="consolidate_date_range">
+                        <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                    </div>
+                </form><br>
                 <strong>Legend:</strong>
-                <table>
+                <table >
                     <tr>
                         <td style="font-size: 15pt;" >
                             <i class="fa fa-check text-green"></i>
                         </td>
                         <td>&nbsp;&nbsp;Whole day online</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15pt;" class="bg-danger">
+                            <i class="fa fa-check text-green"></i>
+                        </td>
+                        <td>&nbsp;&nbsp;Online but went offline for about 30 minutes or more</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15pt;">
@@ -71,18 +75,19 @@
             <div class="box-body">
                 @if(count($facility) > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-fixed-header">
+                        <table class="table table-striped table-fixed-header" style="font-size: 7pt;">
                             <thead class='header'>
                                 <tr>
                                     <th style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);vertical-align: middle;">Facility Name</th>
                                     @foreach($generate_weeks as $per_day)
                                         <td style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);">
-                                            {{ date('l', strtotime($per_day->per_day)) }}<br>
-                                            <small style="font-size: 7pt;">(<i>{{ date('F d,Y',strtotime($per_day->per_day)) }}</i>)</small>
+                                            {{ date('D', strtotime($per_day->per_day)) }}<br>
+                                            <small style="font-size: 7pt;"><i>{{ date('M d,y',strtotime($per_day->per_day)) }}</i></small>
                                         </td>
                                     @endforeach
-                                    <th style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);vertical-align: middle;">Online</th>
+                                    <th style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);vertical-align: middle;">Whole<br>day<br>online</th>
                                     <th style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);vertical-align: middle;">Offline</th>
+                                    <th style="background-color: rgb(31, 73, 125);color: rgb(255, 192, 50);vertical-align: middle;">Offline >= 30</th>
                                 </tr>
                             </thead>
                             <?php
@@ -90,50 +95,67 @@
                             ?>
                             @foreach($facility as $row)
                                 <?php
-                                $online_count = 0;
+                                $whole_day_online = 0;
+                                $went_day_minutes_30 = 0;
                                 $offline_count = 0;
+                                $went_minutes_30 = 0;
                                 ?>
                                 @if(!isset($province[$row->province]))
                                     <?php $province[$row->province] = true; ?>
                                     <tr>
-                                        <td colspan="8">
+                                        <td colspan="9">
                                             <strong class="text-info" style="font-size: 20pt;">{{ $row->province }}</strong>
                                         </td>
                                     </tr>
                                 @endif
                                 <tr>
                                     <td>
-                                        <strong style="font-size: 12pt;">{{ $row->name }}</strong><br>
+                                        <strong>{{ $row->name }}</strong><br>
                                         @if($row->hospital_type == 'birthing_home')
-                                            <strong style="color: darkgoldenrod;font-size: 8pt;">Birthing Home</strong>
+                                            <strong style="color: darkgoldenrod;">Birthing Home</strong>
                                         @elseif($row->hospital_type == 'government')
-                                            <strong class="text-green" style="font-size: 8pt;">Government</strong>
+                                            <strong class="text-green" >Government</strong>
                                         @elseif($row->hospital_type == 'private')
-                                            <strong class="text-blue" style="font-size: 8pt;">Private</strong>
+                                            <strong class="text-blue" >Private</strong>
                                         @elseif($row->hospital_type == 'RHU')
-                                            <strong class="text-red" style="font-size: 8pt;">RHU</strong>
+                                            <strong class="text-red" >RHU</strong>
                                         @endif
                                     </td>
                                     @foreach($generate_weeks as $per_day)
                                         <?php
                                             $check_online = \DB::connection('mysql')->select("call check_online_facility('$row->facility_id','$per_day->per_day')")[0];
                                             $offline_time = offlineTime($check_online->login,$check_online->logout);
+                                            $offline_time = explode(":",$offline_time);
+                                            $hours = $offline_time[0];
+                                            $minutes = $offline_time[1];
                                         ?>
                                         @if($check_online->check_online)
-                                            <?php $online_count++ ?>
-                                            <td style="font-size: 17pt;">
+                                            @if($minutes >= 30 || $hours > 0)
+                                                <?php
+                                                    $went_minutes_30++;
+                                                    $went_day_minutes_30++;
+                                                    $display_online = "bg-danger";
+                                                ?>
+                                            @else
+                                                <?php
+                                                    $display_online = "";
+                                                    $whole_day_online++;
+                                                ?>
+                                            @endif
+                                            <td style="font-size: 10pt;" class="{{ $display_online }}">
                                                 <span style="content: '\2713'" class="text-green">&#10003;</span>
-                                                <b style="font-size: 7pt" class="text-red">{{ $offline_time }}</b>
+                                                <b style="font-size: 7pt" class="text-red">{{ $hours }}:{{ $minutes }}</b>
                                             </td>
                                         @else
                                             <?php $offline_count++; ?>
-                                            <td style="font-size: 17pt;">
+                                            <td style="font-size: 15pt;">
                                                 <span style="content: '\00d7'" class="text-red">&#215;</span>
                                             </td>
                                         @endif
                                     @endforeach
-                                    <td><span style="font-size: 15pt;" class="text-green">{{ $online_count }}</span></td>
+                                    <td><span style="font-size: 15pt;" class="text-green">{{ $whole_day_online }}</span></td>
                                     <td><span style="font-size: 15pt;" class="text-red">{{ $offline_count }}</span></td>
+                                    <td><span style="font-size: 15pt;" class="text-orange">{{ $went_minutes_30 }}</span></td>
                                 </tr>
                             @endforeach
                         </table>
@@ -157,6 +179,8 @@
 
 @section('js')
     <script>
+        $("#container").removeClass("container");
+        $("#container").addClass("container-fluid");
         $(document).ready(function(){
             $('.table-fixed-header').fixedHeader();
         });

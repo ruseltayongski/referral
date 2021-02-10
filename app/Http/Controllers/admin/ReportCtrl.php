@@ -163,7 +163,7 @@ class ReportCtrl extends Controller
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
         } else {
-            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(6)));
+            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(31)));
             $date_end = date('Y-m-d');
         }
 
