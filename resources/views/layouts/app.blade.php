@@ -82,7 +82,7 @@
 
 <!-- Fixed navbar -->
 
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default fixed-top">
     <div class="header" style="background-color:#2F4054;padding:10px;">
         <div>
             <div class="col-md-4">
