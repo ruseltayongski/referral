@@ -333,11 +333,17 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/users') }}" data-toggle="modal"><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
-                        <li><a href="{{ url('admin/facility') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
-                        <li><a href="{{ url('admin/province') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
-                        <li><a href="{{ url('admin/municipality') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Municipality</a></li>
-                        <li><a href="{{ url('admin/barangay') }}" data-toggle="modal"><i class="fa fa-hospital-o"></i>&nbsp; Barangay</a></li>
+                        <li><a href="{{ url('admin/users') }}" ><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
+                        <li><a href="{{ url('admin/facility') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
+                        <li><a href="{{ url('admin/province') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
+                        <li class="dropdown-submenu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp; Municipality</span></a>
+                            <ul class="dropdown-menu">
+                                @foreach(\App\Province::get() as $prov)
+                                    <li><a href="{{ asset('admin/municipality').'/'.$prov->id }}">{{ $prov->description }}</a></li>
+                                @endforeach
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -488,8 +494,10 @@
     var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
-        if(_href)
-            var res = _href.replace("http://","https://");
+        var res = _href;
+
+        if(_href && !_href.includes("localhost"))
+            res = _href.replace("http://","https://");
 
         $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range);
     });

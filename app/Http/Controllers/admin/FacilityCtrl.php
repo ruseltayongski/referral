@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Facility;
+use App\Muncity;
 use App\Province;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -95,7 +96,7 @@ class FacilityCtrl extends Controller
         return Redirect::back();
     }
 
-    public function provinceView(Request $request){
+    public function ProvinceView(Request $request){
         if($request->view_all == 'view_all')
             $keyword = '';
         else{
@@ -147,6 +148,67 @@ class FacilityCtrl extends Controller
         Province::find($request->province_id)->delete();
         Session::put('province_message','Deleted province');
         Session::put('province',true);
+        return Redirect::back();
+    }
+
+    public function MunicipalityView(Request $request,$province_id){
+        if($request->view_all == 'view_all')
+            $keyword = '';
+        else{
+            if(Session::get("keyword")){
+                if(!empty($request->keyword) && Session::get("keyword") != $request->keyword)
+                    $keyword = $request->keyword;
+                else
+                    $keyword = Session::get("keyword");
+            } else {
+                $keyword = $request->keyword;
+            }
+        }
+
+        Session::put('keyword',$keyword);
+
+        $data = Muncity::where('description',"like","%$keyword%")
+            ->where("province_id",$province_id)
+            ->paginate(20);
+
+        return view('admin.municipality.municipality',[
+            'title' => 'List of Municipality',
+            'province_name' => Province::find($province_id)->description,
+            'province_id' => $province_id,
+            'data' => $data
+        ]);
+    }
+
+    public function MunicipalityBody(Request $request){
+        $muncity = Muncity::where("id",$request->muncity_id)->where("province_id",$request->province_id)->first();
+        $province = Province::find($request->province_id);
+        return view('admin.municipality.municipality_body',[
+            "muncity" => $muncity,
+            "province_name" => $province->description,
+            "province_id" => $request->province_id
+        ]);
+    }
+
+    public function MunicipalityAdd(Request $request){
+        $data = $request->all();
+        unset($data['_token']);
+
+        if(isset($request->id)){
+            Muncity::find($request->id)->update($data);
+            Session::put('municipality_message','Successfully updated municipality');
+        } else {
+            Muncity::create($data);
+            Session::put('municipality_message','Successfully added municipality');
+        }
+
+        Session::put('municipality',true);
+        return Redirect::back();
+    }
+
+    public function MunicipalityDelete(Request $request){
+        Muncity::find($request->muncity_id)->delete();
+        Session::put('municipality_message','Deleted municipality');
+        Session::put('municipality',true);
         return Redirect::back();
     }
 

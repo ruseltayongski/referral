@@ -23,7 +23,7 @@ if($searchKeyword){
                 <div class="pull-right">
                     <form action="{{ url('admin/users') }}" method="GET" class="form-inline">
                         {{ csrf_field() }}
-                        <div class="form-group-sm" style="margin-bottom: 10px;">
+                        <div class="form-group-lg" style="margin-bottom: 10px;">
                             <input type="text" class="form-control" name="search" placeholder="Search name..." value="{{ $search }}">
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
