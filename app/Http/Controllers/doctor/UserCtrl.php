@@ -72,7 +72,7 @@ class UserCtrl extends Controller
         $hospitals = \DB::connection('mysql')->select("call online_facility_view('$date_start','$date_end')");
 
         return view('doctor.list',[
-            'title' => 'Online Doctors',
+            'title' => 'Online Users',
             'data' => $data,
             'hospitals' => $hospitals
         ]);
