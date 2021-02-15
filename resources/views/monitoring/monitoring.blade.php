@@ -17,7 +17,7 @@
                 </form>
             </div>
             <div class="table-responsive">
-                <table class="table table-striped table-responsive">
+                <table class="table table-striped table-hover table-responsive">
                     <tr>
                         <th width="13%">Patient Code</th>
                         <th>Patient Contact Number</th>
