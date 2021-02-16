@@ -59,11 +59,15 @@ Route::post('admin/province/add','admin\FacilityCtrl@ProvinceAdd');
 Route::post('admin/province/body','admin\FacilityCtrl@ProvinceBody');
 Route::post('admin/province/delete','admin\FacilityCtrl@ProvinceDelete');
 //MUNICIPALITY
-Route::match(['GET','POST'],'admin/municipality/{province_code}','admin\FacilityCtrl@MunicipalityView');
+Route::match(['GET','POST'],'admin/municipality/{province_id}','admin\FacilityCtrl@MunicipalityView');
 Route::post('admin/municipality/crud/add','admin\FacilityCtrl@MunicipalityAdd');
 Route::post('admin/municipality/crud/body','admin\FacilityCtrl@MunicipalityBody');
 Route::post('admin/municipality/crud/delete','admin\FacilityCtrl@MunicipalityDelete');
 //BARANGAY
+Route::match(['GET','POST'],'admin/barangay/{province_id}/{muncity_id}','admin\FacilityCtrl@BarangayView');
+Route::post('admin/barangay/data/crud/add','admin\FacilityCtrl@BarangayAdd');
+Route::post('admin/barangay/data/crud/body','admin\FacilityCtrl@BarangayBody');
+Route::post('admin/barangay/data/crud/delete','admin\FacilityCtrl@BarangayDelete');
 
 
 Route::post('admin/users/store','admin\UserCtrl@store');

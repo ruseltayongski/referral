@@ -77,6 +77,27 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" role="dialog" id="barangay_delete">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="{{ asset('admin/barangay/data/crud/delete') }}" method="POST">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="barangay_id" class="barangay_id">
+                    <div class="alert alert-danger">
+                        <label for="" class="text-danger">Are you sure you want to delete this barangay?</label>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-check"></i> Yes</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 
 
