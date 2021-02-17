@@ -157,17 +157,17 @@ class FacilityCtrl extends Controller
         if($request->view_all == 'view_all')
             $keyword = '';
         else{
-            if(Session::get("keyword")){
-                if(!empty($request->keyword) && Session::get("keyword") != $request->keyword)
-                    $keyword = $request->keyword;
+            if(Session::get("keyword_muncity")){
+                if(!empty($request->keyword_muncity) && Session::get("keyword_muncity") != $request->keyword_muncity)
+                    $keyword = $request->keyword_muncity;
                 else
-                    $keyword = Session::get("keyword");
+                    $keyword = Session::get("keyword_muncity");
             } else {
-                $keyword = $request->keyword;
+                $keyword = $request->keyword_muncity;
             }
         }
 
-        Session::put('keyword',$keyword);
+        Session::put('keyword_muncity',$keyword);
 
         $data = Muncity::where('description',"like","%$keyword%")
             ->where("province_id",$province_id)
@@ -221,10 +221,10 @@ class FacilityCtrl extends Controller
             $keyword = '';
         else{
             if(Session::get("keyword_barangay")){
-                if(!empty($request->keyword_barangay) && Session::get("keyword") != $request->keyword_barangay)
+                if(!empty($request->keyword_barangay) && Session::get("keyword_barangay") != $request->keyword_barangay)
                     $keyword = $request->keyword_barangay;
                 else
-                    $keyword = Session::get("keyword");
+                    $keyword = Session::get("keyword_barangay");
             } else {
                 $keyword = $request->keyword_barangay;
             }

@@ -7,7 +7,7 @@
                 <form action="{{ asset('admin/municipality').'/'.$province_id }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group-lg" style="margin-bottom: 10px;">
-                        <input type="text" class="form-control" name="keyword" placeholder="Search municipality..." value="{{ Session::get("keyword") }}">
+                        <input type="text" class="form-control" name="keyword_muncity" placeholder="Search municipality..." value="{{ Session::get("keyword_muncity") }}">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
@@ -63,7 +63,7 @@
             @else
                 <div class="alert alert-warning">
                     <span class="text-warning">
-                        <i class="fa fa-warning"></i> No Province found!
+                        <i class="fa fa-warning"></i> No Municipality found!
                     </span>
                 </div>
             @endif

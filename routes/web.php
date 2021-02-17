@@ -450,3 +450,6 @@ Route::get('midwife','doctor\HomeCtrl@index');
 //ICD 10
 Route::post('icd/search','icd\IcdController@icdSearch');
 Route::get('icd/get','icd\IcdController@index');
+
+//xnynap
+Route::post('telemedicine/sync/tsekap','ApiController@telemedicineToPatient');

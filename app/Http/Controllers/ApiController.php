@@ -235,5 +235,41 @@ class ApiController extends Controller
         return User::get();
     }
 
+    public function telemedicineToPatient(Request $req){
+        $province = Province::where("province_code",$req->province)->first()->id;
+        $muncity = Muncity::where("muncity_code",$req->muncity)->first()->id;
+        $barangay = Barangay::where("barangay_code",$req->barangay)->first()->id;
+
+        $unique = array(
+            $req->fname,
+            $req->mname,
+            $req->lname,
+            date('Ymd',strtotime($req->dob)),
+            $barangay
+        );
+        $unique = implode($unique);
+
+        if(!$patient = Patients::where("unique_id",$unique)->first())
+            $patient = new Patients();
+
+        $patient->unique_id = $unique;
+        $patient->phic_status = $req->phic_status;
+        $patient->phic_id = ($req->phicID) ? $req->phicID: '';
+        $patient->fname = $req->fname;
+        $patient->mname = $req->mname;
+        $patient->lname = $req->lname;
+        $patient->contact = $req->contact;
+        $patient->dob = $req->dob;
+        $patient->sex = $req->sex;
+        $patient->civil_status = $req->civil_status;
+        $patient->province = $province;
+        $patient->muncity = $muncity;
+        $patient->brgy = $barangay;
+        $patient->save();
+
+
+        return $patient->id;
+    }
+
 
 }
