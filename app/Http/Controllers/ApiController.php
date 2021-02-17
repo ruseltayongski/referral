@@ -236,9 +236,14 @@ class ApiController extends Controller
     }
 
     public function telemedicineToPatient(Request $req){
-        $province = Province::where("province_code",$req->province)->first()->id;
-        $muncity = Muncity::where("muncity_code",$req->muncity)->first()->id;
-        $barangay = Barangay::where("barangay_code",$req->barangay)->first()->id;
+        if(!$province = Province::where("province_code",$req->province)->first()->id)
+            return 'Invalid Province Code';
+
+        if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first()->id)
+            return 'Invalid Municipality Code';
+
+        if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first()->id)
+            return 'Invalid Barangay Code';
 
         $unique = array(
             $req->fname,
@@ -265,6 +270,7 @@ class ApiController extends Controller
         $patient->province = $province;
         $patient->muncity = $muncity;
         $patient->brgy = $barangay;
+        $patient->source = "telemedicine";
         $patient->save();
 
 
