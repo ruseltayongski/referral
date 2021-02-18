@@ -21,21 +21,20 @@ function getMinutes($time){
         @foreach($client as $row)
             <tr>
                 <td>
-                    <span class="text-green font_size">{{ $row->name }}</span><br>
-                    @if($row->call_classification == 'new_call')<small class="text-blue">(New Call)</small>@else<small class="text-red">(Repeat Call)</small>@endif
+                    <span class="text-green font_size">{{ $row->name }}</span>
                 </td>
                 <td>
                     <?php
                     $transacted_by = \App\User::find($row->encoded_by);
                     $transacted_by = $transacted_by->fname.' '.ucfirst($transacted_by->mname[0]).'. '.$transacted_by->lname;
                     ?>
-                    <span class="text-green font_size">{{ $transacted_by }}</span><br>
+                    <span class="text-green font_size">{{ $transacted_by }}</span>
                     @if($row->call_classification == 'new_call')<small class="text-blue">(New Call)</small>@else<small class="text-red">(Repeat Call)</small>@endif
                 </td>
                 <td>
                     <span class="text-green font_size">
                         {{ date('F d,Y',strtotime($row->time_started)) }}
-                    </span><br>
+                    </span>
                     <small class="text-yellow">
                         ({{ date('h:i:s A',strtotime($row->time_started)) }})
                     </small>
@@ -43,7 +42,7 @@ function getMinutes($time){
                 <td>
                     <span class="text-green font_size">
                         {{ date('F d,Y',strtotime($row->time_ended)) }}
-                    </span><br>
+                    </span>
                     <small class="text-yellow">
                         ({{ date('h:i:s A',strtotime($row->time_ended)) }})
                     </small>
