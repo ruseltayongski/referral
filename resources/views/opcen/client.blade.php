@@ -12,6 +12,7 @@
                         <span class="input-group-btn">
                             <input type="text" class="form-control" style="width: 100%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
                             <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
+                            <button type="button" class="btn btn-danger" onclick="newCall('new_call')"><i class="fa fa-file-excel-o"></i> Export Excel</button>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             <button type="button" class="btn btn-primary" onclick="newCall('new_call')"><i class="fa fa-phone-square"></i> New Call</button>
                         </span>

@@ -103,6 +103,7 @@
                                 <ol>
                                     <li>Rachel Sumalinog - 09484693136</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
+                                    <li>Ann Ermac - 09988449332</li>
                                 </ol>
                                 <li >
                                     Register Account and Forget Password
@@ -122,7 +123,6 @@
                                     <li >Dr. Jera C. Armendarez - 09178243162</li>
                                     <li >Jane Michelle E. Raagas - 09173100611 </li>
                                     <li >Grace E. Petalcorin - 09673259481</li>
-                                    <li >Ann Ermac - 09988449332</li>
                                 </ol>
                             </ol>
                         </ol>
