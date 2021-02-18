@@ -236,6 +236,7 @@ class ApiController extends Controller
     }
 
     public function telemedicineToPatient(Request $req){
+        return $req->all();
         if(!$province = Province::where("province_code",$req->province)->first()->id)
             return 'Invalid Province Code';
 

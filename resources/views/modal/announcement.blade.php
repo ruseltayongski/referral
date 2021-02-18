@@ -91,7 +91,6 @@
                                 <li >System Error</li>
                                 <ol>
                                     <li>Rusel T. Tayong - 09238309990</li>
-                                    <li>Keith Joseph Damandaman - 09293780114</li>
                                 </ol>
                                 <li >Server - The request URL not found</li>
                                 <ol>
@@ -102,28 +101,28 @@
                                 </ol>
                                 <li >System Implementation/Training</li>
                                 <ol>
-                                    <li>Ryan A. Padilla - 09294771871</li>
                                     <li>Rachel Sumalinog - 09484693136</li>
-                                    <li>Kasilyn Lariosa - 09331720608</li>
                                     <li>Harry John Divina - 09323633961 or 09158411553</li>
                                 </ol>
                                 <li >
                                     Register Account and Forget Password
                                 </li>
                                 <ol>
-                                    <li>Buch Angelou Fuentes - 09059553214 </li>
                                     <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
                                     <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 </li>
                                     <li>John L. Ardiente - 260 9740 local(435) - 09208658303 </li>
+                                    <li>Rogemar Sumalinog - 09380784037 </li>
+                                    <li>Remwel Sanchez - 09310605532 </li>
+                                    <li>Jonaden Dela Cerna - 09068482000 </li>
                                 </ol>
                             </ol>
                             <li>Non - Technical</li>
                             <ol type="A">
                                 <ol>
-                                    <li >Ronadith Capala Arriesgado - 09952100815</li>
-                                    <li >Rolly Villarin - 09173209917 </li>
-                                    <li >Gracel R. Flores - 09453816462</li>
-                                    </ul>
+                                    <li >Dr. Jera C. Armendarez - 09178243162</li>
+                                    <li >Jane Michelle E. Raagas - 09173100611 </li>
+                                    <li >Grace E. Petalcorin - 09673259481</li>
+                                    <li >Ann Ermac - 09988449332</li>
                                 </ol>
                             </ol>
                         </ol>
