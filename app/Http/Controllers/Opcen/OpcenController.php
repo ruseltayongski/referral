@@ -99,8 +99,10 @@ class OpcenController extends Controller
                     ->orWhere('name','like',"%$search%");
             })
             ->whereBetween("time_started",[$date_start,$date_end])
-            ->orderBy("time_started","desc")
-            ->paginate(15);
+            ->orderBy("time_started","desc");
+        $client_call = $client->get();
+        Session::put("client_call",$client_call);
+        $client = $client->paginate(15);
 
         $call_total = OpcenClient::where(function($q) use ($search){
             $q->where('reference_number','like',"%$search%")
@@ -372,6 +374,18 @@ class OpcenController extends Controller
         }
         Session::put("addendum",true);
         return Redirect::back();
+    }
+
+    public function exportClientCall(){
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=client_call.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $client = Session::get("client_call");
+        return view('opcen.export_call',[
+            "client" => $client
+        ]);
     }
 
 }

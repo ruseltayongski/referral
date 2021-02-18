@@ -406,6 +406,7 @@ Route::get('opcen/transaction/incomplete','Opcen\OpcenController@transactionInCo
 Route::get('opcen/onchange/province/{province_id}','Opcen\OpcenController@onChangeProvince');
 Route::get('opcen/onchange/municipality/{municipality_id}','Opcen\OpcenController@onChangeMunicipality');
 Route::post('opcen/transaction/end','Opcen\OpcenController@transactionEnd');
+Route::get('export/client/call','Opcen\OpcenController@exportClientCall');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
