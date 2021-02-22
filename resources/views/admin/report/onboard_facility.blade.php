@@ -73,6 +73,15 @@
                                 $rhu_transaction[4]['with_transaction'] = 0;
                                 $rhu_transaction[4]['no_transaction'] = 0;
 
+                                $birthing_transaction[1]['with_transaction'] = 0;
+                                $birthing_transaction[1]['no_transaction'] = 0;
+                                $birthing_transaction[2]['with_transaction'] = 0;
+                                $birthing_transaction[2]['no_transaction'] = 0;
+                                $birthing_transaction[3]['with_transaction'] = 0;
+                                $birthing_transaction[3]['no_transaction'] = 0;
+                                $birthing_transaction[4]['with_transaction'] = 0;
+                                $birthing_transaction[4]['no_transaction'] = 0;
+
                                 $province = [];
                             ?>
                             @foreach($data as $row)
@@ -92,6 +101,9 @@
                                             elseif($row->hospital_type == 'RHU'){
                                                 $rhu_transaction[$row->province_id]['with_transaction']++;
                                             }
+                                            elseif($row->hospital_type == 'birthing_home'){
+                                                $birthing_transaction[$row->province_id]['with_transaction']++;
+                                            }
                                         } else {
                                             $facility_transaction[$row->province_id]['no_transaction']++;
                                             if($row->hospital_type == 'government'){
@@ -101,6 +113,9 @@
                                             }
                                             elseif($row->hospital_type == 'RHU'){
                                                 $rhu_transaction[$row->province_id]['no_transaction']++;
+                                            }
+                                            elseif($row->hospital_type == 'birthing_home'){
+                                                $birthing_transaction[$row->province_id]['no_transaction']++;
                                             }
                                         }
                                     }
@@ -143,6 +158,14 @@
                                                 <span class="progress-number"><b class="{{ 'rhu_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'rhu_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red rhu_percent{{ $row->province_id }}"></b>
                                                 <div class="progress sm">
                                                     <div class="progress-bar progress-bar-red rhu_hospital_progress{{ $row->province_id }}" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div id="chartBirthing{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
+                                                <strong class="text-green">BIRTHING HOME - </strong>
+                                                <span class="progress-number"><b class="{{ 'birthing_hospital'.$row->province_id }}"></b> <small class="text-blue">(ON BOARD)</small> / <b class="{{ 'birthing_hospital_total'.$row->province_id }}"></b> <small class="text-blue">(REGISTER)</small></span> = <b class="text-red birthing_percent{{ $row->province_id }}"></b>
+                                                <div class="progress sm">
+                                                    <div class="progress-bar progress-bar-red birthing_hospital_progress{{ $row->province_id }}" ></div>
                                                 </div>
                                             </div>
                                         </td>
@@ -653,6 +676,112 @@
             @endif
 
 
+
+            @if($hospital_type[1]['birthing_home'] != 0)
+            var birthing_with_transaction1 = Math.round("<?php echo $birthing_transaction[1]['with_transaction']; ?>" / "<?php echo $hospital_type[1]['birthing_home']; ?>" * 100);
+            var birthing_no_transaction1 = Math.round("<?php echo $birthing_transaction[1]['no_transaction']; ?>" / "<?php echo $hospital_type[1]['birthing_home']; ?>" * 100);
+            var birthing_options1 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "BIRTHING HOME"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+birthing_with_transaction1+"% in "+"<?php echo $birthing_transaction[1]['with_transaction']; ?> out of <?php echo $hospital_type[1]['birthing_home']; ?>",legendText : "With Transaction", y: birthing_with_transaction1 },
+                        { label: "No Transaction in "+birthing_no_transaction1+"% in "+"<?php echo $birthing_transaction[1]['no_transaction']; ?> out of <?php echo $hospital_type[1]['birthing_home'] ?>",legendText : "No Transaction", y: birthing_no_transaction1 }
+                    ]
+                }]
+            };
+            $("#chartBirthing1").CanvasJSChart(birthing_options1);
+            @endif
+
+
+            @if($hospital_type[2]['birthing_home'] != 0)
+            var birthing_with_transaction2 = Math.round("<?php echo $birthing_transaction[2]['with_transaction']; ?>" / "<?php echo $hospital_type[2]['birthing_home']; ?>" * 100);
+            var birthing_no_transaction2 = Math.round("<?php echo $birthing_transaction[2]['no_transaction']; ?>" / "<?php echo $hospital_type[2]['birthing_home']; ?>" * 100);
+            var birthing_options2 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "BIRTHING HOME"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+birthing_with_transaction2+"% in "+"<?php echo $birthing_transaction[2]['with_transaction']; ?> out of <?php echo $hospital_type[2]['birthing_home']; ?>",legendText : "With Transaction", y: birthing_with_transaction2 },
+                        { label: "No Transaction in "+birthing_no_transaction2+"% in "+"<?php echo $birthing_transaction[2]['no_transaction']; ?> out of <?php echo $hospital_type[2]['birthing_home'] ?>",legendText : "No Transaction", y: birthing_no_transaction2 }
+                    ]
+                }]
+            };
+            $("#chartBirthing2").CanvasJSChart(birthing_options2);
+            @endif
+
+
+            @if($hospital_type[3]['birthing_home'] != 0)
+            var birthing_with_transaction3 = Math.round("<?php echo $birthing_transaction[3]['with_transaction']; ?>" / "<?php echo $hospital_type[3]['birthing_home']; ?>" * 100);
+            var birthing_no_transaction3 = Math.round("<?php echo $birthing_transaction[3]['no_transaction']; ?>" / "<?php echo $hospital_type[3]['birthing_home']; ?>" * 100);
+            var birthing_options3 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "BIRTHING HOME"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+birthing_with_transaction3+"% in "+"<?php echo $birthing_transaction[3]['with_transaction']; ?> out of <?php echo $hospital_type[3]['birthing_home']; ?>",legendText : "With Transaction", y: birthing_with_transaction3 },
+                        { label: "No Transaction in "+birthing_no_transaction3+"% in "+"<?php echo $birthing_transaction[3]['no_transaction']; ?> out of <?php echo $hospital_type[3]['birthing_home'] ?>",legendText : "No Transaction", y: birthing_no_transaction3 }
+                    ]
+                }]
+            };
+            $("#chartBirthing3").CanvasJSChart(birthing_options3);
+            @endif
+
+            @if($hospital_type[4]['birthing_home'] != 0)
+            var birthing_with_transaction4 = Math.round("<?php echo $birthing_transaction[4]['with_transaction']; ?>" / "<?php echo $hospital_type[4]['birthing_home']; ?>" * 100);
+            var birthing_no_transaction4 = Math.round("<?php echo $birthing_transaction[4]['no_transaction']; ?>" / "<?php echo $hospital_type[4]['birthing_home']; ?>" * 100);
+            var birthing_options4 = {
+                colorSet: "greenShades",
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "BIRTHING HOME"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    toolTipContent: "{y}%",
+                    legendText: "{label}",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "With Transaction in "+birthing_with_transaction4+"% in "+"<?php echo $birthing_transaction[4]['with_transaction']; ?> out of <?php echo $hospital_type[4]['birthing_home']; ?>",legendText : "With Transaction", y: birthing_with_transaction4 },
+                        { label: "No Transaction in "+birthing_no_transaction4+"% in "+"<?php echo $birthing_transaction[4]['no_transaction']; ?> out of <?php echo $hospital_type[4]['birthing_home'] ?>",legendText : "No Transaction", y: birthing_no_transaction4 }
+                    ]
+                }]
+            };
+            $("#chartBirthing4").CanvasJSChart(birthing_options4);
+            @endif
         }
     </script>
 
@@ -760,6 +889,32 @@
         var rhu_hospital_progress4 = Math.round("<?php echo $hospital_type[4]['RHU'] ?>" / "<?php echo $hospital_type_total[4]['RHU'] ?>" * 100);
         $('.rhu_hospital_progress4').css('width',rhu_hospital_progress4+"%");
         $('.rhu_percent4').html(rhu_hospital_progress4+"%");
+
+
+        $(".birthing_hospital1").html("<?php echo $hospital_type[1]['birthing_home']; ?>");
+        $(".birthing_hospital_total1").html("<?php echo $hospital_type_total[1]['birthing_home']; ?>");
+        var birthing_hospital_progress1 = Math.round("<?php echo $hospital_type[1]['birthing_home'] ?>" / "<?php echo $hospital_type_total[1]['birthing_home'] ?>" * 100);
+        $('.birthing_hospital_progress1').css('width',birthing_hospital_progress1+"%");
+        $('.birthing_percent1').html(birthing_hospital_progress1+"%");
+
+        $(".birthing_hospital2").html("<?php echo $hospital_type[2]['birthing_home']; ?>");
+        $(".birthing_hospital_total2").html("<?php echo $hospital_type_total[2]['birthing_home']; ?>");
+        var birthing_hospital_progress2 = Math.round("<?php echo $hospital_type[2]['birthing_home'] ?>" / "<?php echo $hospital_type_total[2]['birthing_home'] ?>" * 100);
+        $('.birthing_hospital_progress2').css('width',birthing_hospital_progress2+"%");
+        $('.birthing_percent2').html(birthing_hospital_progress2+"%");
+
+        $(".birthing_hospital3").html("<?php echo $hospital_type[3]['birthing_home']; ?>");
+        $(".birthing_hospital_total3").html("<?php echo $hospital_type_total[3]['birthing_home']; ?>");
+        var birthing_hospital_progress3 = Math.round("<?php echo $hospital_type[3]['birthing_home'] ?>" / "<?php echo $hospital_type_total[3]['birthing_home'] ?>" * 100);
+        $('.birthing_hospital_progress3').css('width',birthing_hospital_progress3+"%");
+        $('.birthing_percent3').html(birthing_hospital_progress3+"%");
+
+
+        $(".birthing_hospital4").html("<?php echo $hospital_type[4]['birthing_home']; ?>");
+        $(".birthing_hospital_total4").html("<?php echo $hospital_type_total[4]['birthing_home']; ?>");
+        var birthing_hospital_progress4 = Math.round("<?php echo $hospital_type[4]['birthing_home'] ?>" / "<?php echo $hospital_type_total[4]['birthing_home'] ?>" * 100);
+        $('.birthing_hospital_progress4').css('width',birthing_hospital_progress4+"%");
+        $('.birthing_percent4').html(birthing_hospital_progress4+"%");
 
     </script>
 @endsection

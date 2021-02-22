@@ -113,7 +113,7 @@
                                     <li>Amalio Enero Jr - 260 9740 local(438) - 09101604890 </li>
                                     <li>John L. Ardiente - 260 9740 local(435) - 09208658303 </li>
                                     <li>Rogemar Sumalinog - 09380784037 </li>
-                                    <li>Remwel Sanchez - 09310605532 </li>
+                                    <li>Remwel Sanchez - 09067334425 </li>
                                     <li>Jonaden Dela Cerna - 09068482000 </li>
                                 </ol>
                             </ol>
