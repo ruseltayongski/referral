@@ -7,10 +7,10 @@
             <div class="box-header">
                 <form action="{{ asset('opcen/client') }}" method="GET">
                     {{ csrf_field() }}
-                    <div class="input-group input-group-md" style="width: 50%">
+                    <div class="input-group input-group-md" style="width: 70%">
                         <input type="text" class="form-control" style="width: 100%" placeholder="Reference Number or Name" name="search" value="{{ $search }}">
                         <span class="input-group-btn">
-                            <input type="text" class="form-control" style="width: 100%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
                             <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
                             <a href="{{ asset('export/client/call') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
