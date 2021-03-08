@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Opcen;
 
 use App\Barangay;
 use App\ClientAddendum;
+use App\Department;
 use App\Facility;
+use App\ItCall;
+use App\MonitoringNotAccepted;
 use App\Muncity;
 use App\OpcenClient;
 use App\Province;
@@ -386,6 +389,74 @@ class OpcenController extends Controller
         return view('opcen.export_call',[
             "client" => $client
         ]);
+    }
+
+
+    public function itClient(Request $request){
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $search = $request->search;
+        $client = ItCall::where(function($q) use ($search){
+                $q->where('name','like',"%$search%");
+            })
+            ->whereBetween("time_started",[$date_start,$date_end])
+            ->orderBy("time_started","desc");
+        $client_call = $client->get();
+        Session::put("client_call",$client_call);
+        $client = $client->paginate(15);
+
+        $call_total = ItCall::where(function($q) use ($search){
+                $q->where('name','like',"%$search%");
+            })
+            ->whereBetween("time_started",[$date_start,$date_end])
+            ->count();
+
+
+
+        return view('it.client',[
+            "client" => $client,
+            "search" =>$search,
+            'date_range_start' => $date_start,
+            'date_range_end' => $date_end,
+            "call_total" => $call_total
+        ]);
+    }
+
+    public function itNewCall(){
+        $province = Province::get();
+        $facility = Facility::where("id","!=","63")->orderBy("name","asc")->get();
+        $department = Department::get();
+        Session::put("client",false); //from repeat call so that need to flush session
+        return view('it.call',[
+            "province" => $province,
+            "facility" => $facility,
+            "department" => $department
+        ]);
+    }
+
+    public function itReasonCalling($reason){
+        return view('it.reason_calling',[
+            "reason" => $reason,
+        ]);
+    }
+
+    public function itTransactionInComplete(){
+        return view('it.transaction_incomplete');
+    }
+
+    public function itWalkinCode($patient_code){
+        $walkin_action = MonitoringNotAccepted::where("code",$patient_code)->get();
+
+        if(count($walkin_action) <= 0)
+            return "not_found";
+
+        Session::put("walkin_action",$walkin_action);
     }
 
 }

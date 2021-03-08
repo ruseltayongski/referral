@@ -329,7 +329,13 @@
                         <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-phone"></i> Call <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call Center</a></li>
+                        <li><a href="{{ url('it/client') }}"><i class="fa fa-phone"></i> IT</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">

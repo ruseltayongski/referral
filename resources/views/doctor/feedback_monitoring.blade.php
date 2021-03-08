@@ -3,7 +3,7 @@
         @foreach($data as $row)
             <div class="direct-chat-msg left">
                 <div class="direct-chat-info clearfix">
-                    <span class="direct-chat-name pull-left">DOH MONITORING</span>
+                    <span class="direct-chat-name pull-left">711 DOH CVCHD HealthLine</span>
                     <small class="direct-chat-timestamp pull-left text-yellow" style="margin-left: 3%;">{{ date('d M h:i a',strtotime($row->created_at)) }}</small>
                 </div>
                 <!-- /.direct-chat-info -->

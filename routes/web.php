@@ -215,7 +215,6 @@ Route::get('doctor/history/{code}','doctor\PatientCtrl@history');
 Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfile');
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
-
 Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
 
 
@@ -407,6 +406,13 @@ Route::get('opcen/onchange/province/{province_id}','Opcen\OpcenController@onChan
 Route::get('opcen/onchange/municipality/{municipality_id}','Opcen\OpcenController@onChangeMunicipality');
 Route::post('opcen/transaction/end','Opcen\OpcenController@transactionEnd');
 Route::get('export/client/call','Opcen\OpcenController@exportClientCall');
+
+//IT CLIENT
+Route::get('it/client','Opcen\OpcenController@itClient');
+Route::get('it/new_call','Opcen\OpcenController@itNewCall');
+Route::get('it/reason_calling/{reason}','Opcen\OpcenController@itReasonCalling');
+Route::get('it/transaction/incomplete','Opcen\OpcenController@itTransactionInComplete');
+Route::get('it/search/{patient_code}','Opcen\OpcenController@itWalkinCode');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');
