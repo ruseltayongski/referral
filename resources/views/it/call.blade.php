@@ -81,8 +81,8 @@
             <td>
                 <button class="btn btn-warning" type="button" onclick="reasonCalling('offline')">Offline Facility</button>
                 <button class="btn btn-info" type="button" onclick="reasonCalling('support')">Tech Support</button>
-                <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-success" type="button">Walk-In Patient</a>
-                <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-danger" type="button">Issue and Concern</a>
+                <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-success" type="button" onclick="reasonCalling1('walkin')">Walk-In Patient</a>
+                <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-danger" type="button" onclick="reasonCalling1('issue')">Issue and Concern</a>
                 <input type="hidden" name="reason_calling" id="reason_calling">
             </td>
         </tr>

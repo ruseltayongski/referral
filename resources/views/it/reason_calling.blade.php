@@ -43,9 +43,15 @@
             </tr>
         </table>
     </div>
-@elseif($reason == 'walkin')
+@elseif($reason == 'walkin' || $reason == 'issue')
+    @if($reason == 'walkin')
+        <h1 class="text-blue">Walk-In Action</h1>
+    @else
+        <h1 class="text-red">Issue and Concern</h1>
+    @endif
+
     <div style="padding-right: 3%;padding-left: 3%;">
-        @foreach(\Illuminate\Support\Facades\Session::get('walkin_action') as $action)
+        @foreach(\Illuminate\Support\Facades\Session::get('it_reason_call') as $action)
             <?php
             $remark_by = \App\User::find($action->remark_by);
             ?>
@@ -77,29 +83,6 @@
         </tbody>
     </table>
     <button class="btn btn-sm btn-primary pull-right" type="button" style="margin-bottom: 3%" onclick="addWalkinAction();"><i class="fa fa-plus"></i> Add more action</button>
-@else
-    <table class="table">
-        <tr>
-            <td width="10%">
-                <small class="pull-right text-green">
-                    Notes:
-                </small>
-            </td>
-            <td>
-                <textarea name="reason_notes" id="" rows="5" class="form-control"></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <small class="pull-right text-green">
-                    Action Taken:
-                </small>
-            </td>
-            <td>
-                <textarea name="reason_notes" id="" rows="5" class="form-control"></textarea>
-            </td>
-        </tr>
-    </table>
 @endif
 <script>
     $(".select2").select2({ width: '100%' });

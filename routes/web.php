@@ -412,7 +412,7 @@ Route::get('it/client','Opcen\OpcenController@itClient');
 Route::get('it/new_call','Opcen\OpcenController@itNewCall');
 Route::get('it/reason_calling/{reason}','Opcen\OpcenController@itReasonCalling');
 Route::get('it/transaction/incomplete','Opcen\OpcenController@itTransactionInComplete');
-Route::get('it/search/{patient_code}','Opcen\OpcenController@itWalkinCode');
+Route::get('it/search/{patient_code}','Opcen\OpcenController@itCallReasonSearch');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');

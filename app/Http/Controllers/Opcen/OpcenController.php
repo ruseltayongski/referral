@@ -450,13 +450,13 @@ class OpcenController extends Controller
         return view('it.transaction_incomplete');
     }
 
-    public function itWalkinCode($patient_code){
-        $walkin_action = MonitoringNotAccepted::where("code",$patient_code)->get();
+    public function itCallReasonSearch($patient_code){
+        $reason_action = MonitoringNotAccepted::where("code",$patient_code)->get();
 
-        if(count($walkin_action) <= 0)
+        if(count($reason_action) <= 0)
             return "not_found";
 
-        Session::put("walkin_action",$walkin_action);
+        Session::put("it_reason_call",$reason_action);
     }
 
 }

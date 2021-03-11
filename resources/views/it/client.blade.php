@@ -127,8 +127,11 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <small class="text-green">Patient Code</small>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     <input type="text" class="form-control" id="patient_code_id"><br>
-                    <button type="button" class="btn btn-block btn-primary btn-lg" onclick="searchWalkinAction()"><i class="fa fa-search"></i> Verify</button>
+                    <button type="button" class="btn btn-block btn-primary btn-lg" onclick="searchAction()"><i class="fa fa-search"></i> Verify</button>
                 </div><!-- /.modal-content -->
             </div>
         </div><!-- /.modal-dialog -->
@@ -207,15 +210,19 @@
             });
         }
 
-        function reasonCalling($reason){
-            $("#reason_calling").val($reason);
+        function reasonCalling(reason){
+            $("#reason_calling").val(reason);
             $(".reason_calling").html(loading);
-            var url = "<?php echo asset('it/reason_calling').'/'; ?>"+$reason;
+            var url = "<?php echo asset('it/reason_calling').'/'; ?>"+reason;
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".reason_calling").html(data);
                 },500);
             });
+        }
+
+        function reasonCalling1(reason){
+            $("#reason_calling").val(reason);
         }
 
         function transactionComplete(){
@@ -322,8 +329,16 @@
             }
         }
 
-        function searchWalkinAction(){
+        function searchAction(){
             var patient_code = $("#patient_code_id").val();
+            if(!patient_code){
+                Lobibox.alert("error",
+                {
+                    msg: "Please enter the patient code!"
+                });
+                return false;
+            }
+
             $("#patient_code").val(patient_code);
             var url = "<?php echo url('it/search').'/'; ?>"+patient_code;
 
@@ -336,7 +351,9 @@
                 }
                 else{
                     $('#patient_code_dialog').modal('toggle');
-                    reasonCalling('walkin');
+                    var reason = $("#reason_calling").val();
+                    console.log(reason);
+                    reasonCalling(reason);
                 }
             })
         }
