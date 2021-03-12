@@ -57,7 +57,7 @@
                             </td>
                             <td>
                                 <?php
-                                $monitoring_not_accepted = \App\Monitoring::where("code","=",$row->code)->get();
+                                $monitoring_not_accepted = \App\Monitoring::where("code","=",$row->code)->orderBy("created_at","desc")->get();
                                 ?>
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
