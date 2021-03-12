@@ -214,6 +214,7 @@
         }
 
         function reasonCalling1(reason){
+            console.log(reason);
             $("#reason_calling").val(reason);
         } //it will used because theres a modal
 

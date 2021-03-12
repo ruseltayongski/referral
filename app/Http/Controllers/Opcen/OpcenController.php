@@ -493,15 +493,18 @@ class OpcenController extends Controller
                 $it_offline_reason = new ItOfflineReason();
                 $it_offline_reason->encoded_by = $encoded_by;
                 $it_offline_reason->it_call_id = $it_call->id;
-                $it_offline_reason->encoded_by = $encoded_by;
                 $it_offline_reason->remarks = $offline_reason;
                 $it_offline_reason->save();
             }
         }
-        elseif($request->offline_reason == 'walkin'){
+        elseif($request->reason_calling == 'walkin'){
             $walkin = new Monitoring();
             $walkin->code = $request->patient_code;
             $walkin->remark_by = $encoded_by;
+            $walkin->notes = $request->notes;
+            $walkin->remarks = $request->action;
+            $walkin->status = "walkin";
+            $walkin->save();
         }
 
         Session::put('it_call',true);
