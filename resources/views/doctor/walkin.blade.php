@@ -57,16 +57,38 @@
                             </td>
                             <td>
                                 <?php
-                                $monitoring_not_accepted = \App\MonitoringNotAccepted::where("code","=",$row->code)->get();
+                                $monitoring_not_accepted = \App\Monitoring::where("code","=",$row->code)->where("status","walkin")->get();
                                 ?>
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
-                                        <span class="text-green">={{ $monitoring->remarks }}</span><br>
-                                        <?php $remark_by = \App\User::find($monitoring->remark_by); ?>
-                                        Remark By: <small class="text-red">{{ $remark_by->fname.' '.$remark_by->mname.' '.$remark_by->lname }}</small><br>
-                                        <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small><br>
-                                        status: <small class="text-red">{{ $monitoring->status }}</small><br>
-                                        <br><br>
+                                        <?php
+                                        $remark_by = \App\User::find($monitoring->remark_by);
+                                        ?>
+                                        <div class="tab-pane active" id="timeline">
+                                            <!-- The timeline -->
+                                            <ul class="timeline timeline-inverse">
+                                                <!-- timeline time label -->
+                                                <li class="time-label">
+                                                    <span class="bg-blue">
+                                                      {{ date('F d, Y',strtotime($monitoring->created_at)) }}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-phone bg-aqua"></i>
+                                                    <div class="timeline-item">
+                                                        <h3 class="timeline-header no-border"><a href="#">{{ $remark_by->fname }} {{ $remark_by->mname[0] }}. {{ $remark_by->lname }}</a>
+                                                            <small class="text-warning">({{ date('H:i',strtotime($monitoring->created_at)) }})</small><br>
+                                                            <small style="margin-left: 2%">
+                                                                <span class="text-warning">Notes:</span> {{ $monitoring->notes }}
+                                                            </small><br>
+                                                            <small style="margin-left: 2%">
+                                                                <span class="text-warning">Action Taken:</span> {{ $monitoring->remarks }}
+                                                            </small>
+                                                        </h3>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     @endforeach
                                     @if($user_level == 'admin')
                                         <button class="btn btn-sm btn-info" href="#add_remark" data-toggle="modal" onclick="addRemark(

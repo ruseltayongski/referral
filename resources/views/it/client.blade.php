@@ -21,9 +21,9 @@
             </div>
 
             <div class="box-body">
-                <div class="call_classification table-responsive">
+                <div class="call_classification">
                     @if(count($client)>0)
-                        <table class="table table-striped">
+                        <table class="table table-striped table-responsive">
                             <thead class="bg-gray">
                             <tr>
                                 <th>Client Name</th>
@@ -141,22 +141,14 @@
 
 @section('js')
     <script>
-        @if(Session::get('opcen'))
+        @if(Session::get('it_call'))
             Lobibox.notify('success', {
                 title: "",
-                msg: "New client saved!",
+                msg: "New call saved!",
                 size: 'mini',
                 rounded: true
             });
-            <?php Session::put("opcen",false); ?>
-        @elseif(Session::get('addendum'))
-            Lobibox.notify('success', {
-                title: "",
-                msg: "Successfully added addendum!",
-                size: 'mini',
-                rounded: true
-            });
-            <?php Session::put("addendum",false); ?>
+            <?php Session::put("it_call",false); ?>
         @endif
 
         $('#date_range').daterangepicker();
@@ -223,7 +215,7 @@
 
         function reasonCalling1(reason){
             $("#reason_calling").val(reason);
-        }
+        } //it will used because theres a modal
 
         function transactionComplete(){
             $(".transaction_status").html(loading);
@@ -255,6 +247,7 @@
         function endTransaction($element){
             var d = new Date();
             $("#time_ended").val(d.toLocaleString());
+            $("#time_ended_text").html(d.toLocaleString());
 
             $($element).prop('disabled', true);
             $('.loading').show();
@@ -340,7 +333,8 @@
             }
 
             $("#patient_code").val(patient_code);
-            var url = "<?php echo url('it/search').'/'; ?>"+patient_code;
+            var reason = $("#reason_calling").val();
+            var url = "<?php echo url('it/search').'/'; ?>"+patient_code+"/"+reason;
 
             $.get(url,function(result){
                 if(result == 'not_found'){
@@ -351,8 +345,6 @@
                 }
                 else{
                     $('#patient_code_dialog').modal('toggle');
-                    var reason = $("#reason_calling").val();
-                    console.log(reason);
                     reasonCalling(reason);
                 }
             })

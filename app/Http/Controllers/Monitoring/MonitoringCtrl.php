@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Monitoring;
 
 use App\Issue;
-use App\MonitoringNotAccepted;
+use App\Monitoring;
 use App\OfflineFacilityRemark;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -62,7 +62,7 @@ class MonitoringCtrl extends Controller
     }
 
     public function addRemark(Request $request){
-        $monitoring_not_accepted = new MonitoringNotAccepted();
+        $monitoring_not_accepted = new Monitoring();
         $monitoring_not_accepted->code = $request->code;
         $monitoring_not_accepted->remark_by = Session::get('auth')->id;
         $monitoring_not_accepted->activity_id = $request->activity_id;
@@ -76,7 +76,7 @@ class MonitoringCtrl extends Controller
     }
 
     public function feedbackDOH($code){
-        $data = MonitoringNotAccepted::where("code","=",$code)->orderBy("id","asc")->get();;
+        $data = Monitoring::where("code","=",$code)->orderBy("id","asc")->get();;
 
         return view('doctor.feedback_monitoring',[
             'data' => $data

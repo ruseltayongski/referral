@@ -8,7 +8,7 @@ use App\Feedback;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Issue;
-use App\MonitoringNotAccepted;
+use App\Monitoring;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;

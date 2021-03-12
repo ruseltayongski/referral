@@ -4,7 +4,7 @@
         height: 2em;
     }
 </style>
-<form action="{{ asset('it/transaction/end') }}" method="POST" id="form_submit">
+<form action="{{ asset('it/call/saved') }}" method="POST" id="form_submit">
     {{ csrf_field() }}
     <input type="hidden" name="patient_code" id="patient_code" class="form-control" value="<?php if(isset($client->code)) echo $client->code; ?>">
     <table class="table table-hover table-bordered" style="width: 100%;">
@@ -16,7 +16,7 @@
             </td>
             <td >
                 <small>Time Ended</small><br>
-                &nbsp;&nbsp;<b class="text-yellow" id="time_started_text"></b>
+                &nbsp;&nbsp;<b class="text-yellow" id="time_ended_text"></b>
                 <input type="hidden" name="time_ended" id="time_ended">
             </td>
             <td>
@@ -25,40 +25,40 @@
                 <input type="hidden" id="call_classification" name="call_classification">
             </td>
         </tr>
-        <tr>
-            <td >
-                <small>Name</small>
-                <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control">
-            </td>
-            <td >
-                <small>Facility Name</small>
-                <select name="facility_name" id="" class="select2">
-                    <option value="">Select Option</option>
-                    @foreach($facility as $fac)
-                        <option value="{{ $fac->id }}" <?php if(isset($client->company)){if($client->company == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td >
-                <small>Department</small>
-                <input type="text" name="department" value="<?php if(isset($client->department)) echo $client->department ?>" class="form-control">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <small>Designation:</small>
-                <input type="text" name="designation" class="form-control" value="<?php if(isset($client->designation)) echo $client->designation; ?>">
-            </td>
-            <td>
-                <small>Active contact number:</small>
-                <input type="text" name="contact_no" class="form-control" value="<?php if(isset($client->contact_no)) echo $client->contact_no; ?>">
-            </td>
-            <td>
-                <small>Email Address:</small>
-                <input type="text" name="email" class="form-control" value="<?php if(isset($client->email)) echo $client->email; ?>">
-            </td>
-        </tr>
     </table>
+    <div class="row">
+        <div class="col-md-4">
+            <small>Name</small>
+            <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <small>Facility Name</small>
+            <select name="facility_id" id="" class="select2">
+                <option value="">Select Option</option>
+                @foreach($facility as $fac)
+                    <option value="{{ $fac->id }}" <?php if(isset($client->company)){if($client->company == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4">
+            <small>Department</small>
+            <input type="text" name="department" value="<?php if(isset($client->department)) echo $client->department ?>" class="form-control">
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-md-4">
+            <small>Designation:</small>
+            <input type="text" name="designation" class="form-control" value="<?php if(isset($client->designation)) echo $client->designation; ?>">
+        </div>
+        <div class="col-md-4">
+            <small>Active contact number:</small>
+            <input type="text" name="contact_no" class="form-control" value="<?php if(isset($client->contact_no)) echo $client->contact_no; ?>">
+        </div>
+        <div class="col-md-4">
+            <small>Email Address:</small>
+            <input type="text" name="email" class="form-control" value="<?php if(isset($client->email)) echo $client->email; ?>">
+        </div>
+    </div><br>
     <table class="table table-hover table-bordered">
         <tr>
             <td width="15%;">
@@ -67,7 +67,8 @@
                 </span>
             </td>
             <td>
-                <input type="checkbox" id="type_call" checked data-toggle="toggle" data-on="Incoming" data-off="Outgoing" data-onstyle="primary" data-offstyle="warning" data-width="100" >
+                <input type="hidden" name="type_call" id="type_call" value="outgoing">
+                <input type="checkbox" id="type_call_toggle" checked data-toggle="toggle" data-on="Outgoing" data-off="Incoming" data-onstyle="primary" data-offstyle="warning" data-width="100" >
             </td>
         </tr>
     </table>
@@ -118,7 +119,6 @@
         onChangeMunicipality("<?php echo $client->municipality_id ?>");
     @endif
 
-
     $('#status_transaction').change(function() {
         if(!this.checked)
             transactionInComplete();
@@ -126,7 +126,16 @@
             $(".transaction_incomplete").remove();
     });
 
-    $('#type_call').bootstrapToggle();
+    $('#type_call_toggle').change(function() {
+        if(this.checked)
+            $("#type_call").val("outgoing");
+        else
+            $("#type_call").val("incoming");
+    });
+
+
+    $('#type_call_toggle').bootstrapToggle();
+
     $('#status_transaction').bootstrapToggle();
 
     function onChangeRegion($region){

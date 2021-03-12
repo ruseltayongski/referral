@@ -343,7 +343,7 @@ $user = Session::get('auth');
                             @endif
                         </button>
                         <?php
-                            $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count();
+                            $doh_remarks = \App\Monitoring::where("code","=",$row->code)->count();
                         ?>
                         @if($doh_remarks>0)
                             <button class="btn btn-xs btn-danger btn-doh" data-toggle="modal"

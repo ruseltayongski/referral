@@ -400,6 +400,7 @@
                 @if($user->level == 'admin')
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
                 @endif
+                <li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Availability Status <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring <small class="badge bg-red"> New</small></a></li>
                 <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NOT ACCEPTED within 30 minutes <small class="badge bg-red"> New</small></a></li>

@@ -401,7 +401,7 @@ $user = Session::get('auth');
                         <span class="badge bg-red">{{ $issue_and_concern }}</span>
                         @endif
                     </button>
-                    <?php $doh_remarks = \App\MonitoringNotAccepted::where("code","=",$row->code)->count(); ?>
+                    <?php $doh_remarks = \App\Monitoring::where("code","=",$row->code)->count(); ?>
                     @if($doh_remarks>0)
                         <button class="btn btn-xs btn-doh" data-toggle="modal" style="background-color: #dd7556;color: white"
                                 data-target="#feedbackDOH"

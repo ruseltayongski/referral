@@ -7,12 +7,14 @@ use App\ClientAddendum;
 use App\Department;
 use App\Facility;
 use App\ItCall;
-use App\MonitoringNotAccepted;
+use App\ItOfflineReason;
+use App\Monitoring;
 use App\Muncity;
 use App\OpcenClient;
 use App\Province;
 use App\ReferenceNumber;
 use App\RepeatCall;
+use App\Tracking;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Inventory;
@@ -417,8 +419,6 @@ class OpcenController extends Controller
             ->whereBetween("time_started",[$date_start,$date_end])
             ->count();
 
-
-
         return view('it.client',[
             "client" => $client,
             "search" =>$search,
@@ -450,13 +450,64 @@ class OpcenController extends Controller
         return view('it.transaction_incomplete');
     }
 
-    public function itCallReasonSearch($patient_code){
-        $reason_action = MonitoringNotAccepted::where("code",$patient_code)->get();
-
-        if(count($reason_action) <= 0)
+    public function itCallReasonSearch($patient_code,$reason){
+        if(Tracking::where("code",$patient_code)->first()){
+            $reason_action = Monitoring::where("code",$patient_code)->where("status",$reason)->orderBy("created_at","desc")->get();
+            Session::put("it_reason_call",$reason_action);
+        } else {
             return "not_found";
-
-        Session::put("it_reason_call",$reason_action);
+        }
     }
+
+    public function itCallSaved(Request $request){
+        $encoded_by = Session::get('auth')->id;
+        $time_started = date("Y-m-d H:i:s",strtotime($request->time_started));
+        $time_ended = date("Y-m-d H:i:s",strtotime($request->time_ended));
+        $start_date = new DateTime($time_started);
+        $time_duration = $start_date->diff(new DateTime($time_ended));
+
+        $it_call = new ItCall();
+        $it_call->encoded_by = $encoded_by;
+        $it_call->name = $request->name;
+        $it_call->facility_id = $request->facility_id;
+        $it_call->code = $request->patient_code;
+        $it_call->department = $request->department;
+        $it_call->designation = $request->designation;
+        $it_call->contact_no = $request->contact_no;
+        $it_call->email = $request->email;
+        $it_call->type_call = $request->type_call;
+        $it_call->call_classification = $request->call_classification;
+        $it_call->reason_calling = $request->reason_calling;
+        $it_call->reason_others = $request->reason_others;
+        $it_call->notes = $request->notes;
+        $it_call->action = $request->action;
+        $it_call->transaction_complete = !$request->transaction_incomplete ? "Yes" : "";
+        $it_call->transaction_incomplete = $request->transaction_incomplete ? $request->transaction_incomplete : "";
+        $it_call->time_started = $time_started;
+        $it_call->time_ended = $time_ended;
+        $it_call->time_duration = $time_duration->h.':'.$time_duration->i.':'.$time_duration->s;
+        $it_call->save();
+
+        if(count($request->offline_reason) > 0 && $request->reason_calling == 'offline'){
+            foreach($request->offline_reason as $offline_reason){
+                $it_offline_reason = new ItOfflineReason();
+                $it_offline_reason->encoded_by = $encoded_by;
+                $it_offline_reason->it_call_id = $it_call->id;
+                $it_offline_reason->encoded_by = $encoded_by;
+                $it_offline_reason->remarks = $offline_reason;
+                $it_offline_reason->save();
+            }
+        }
+        elseif($request->offline_reason == 'walkin'){
+            $walkin = new Monitoring();
+            $walkin->code = $request->patient_code;
+            $walkin->remark_by = $encoded_by;
+        }
+
+        Session::put('it_call',true);
+        return Redirect::back();
+
+    }
+
 
 }

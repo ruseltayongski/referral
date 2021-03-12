@@ -27,8 +27,9 @@ class CreateItCall extends Migration
             $table->string('type_call')->nullable();
             $table->string('call_classification')->nullable();
             $table->text('reason_calling')->nullable();
-            $table->text('reason_notes')->nullable();
-            $table->text('reason_action_taken')->nullable();
+            $table->text('reason_others')->nullable();
+            $table->text('notes')->nullable();
+            $table->text('action')->nullable();
 
             $table->text('transaction_complete')->nullable();
             $table->string('transaction_incomplete')->nullable();
