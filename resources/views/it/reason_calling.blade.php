@@ -30,7 +30,7 @@
                     <small class="text-green">
                         Others
                     </small>
-                    <input type="text" name="reason_others" class="form-control">
+                    <textarea name="reason_others" rows="1" class="form-control"></textarea>
                 </td>
             </tr>
             <tr>

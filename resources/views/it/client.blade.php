@@ -246,13 +246,29 @@
         }
 
         function endTransaction($element){
-            var d = new Date();
-            $("#time_ended").val(d.toLocaleString());
-            $("#time_ended_text").html(d.toLocaleString());
+            var valid = true;
+            $(':input[required]:visible').each(function() {
+                if ($(this).is(':invalid') || !$(this).val()){
+                    valid = false;
+                }
+            });
 
-            $($element).prop('disabled', true);
-            $('.loading').show();
-            $("#form_submit").submit();
+            if(valid){
+                var d = new Date();
+                $("#time_ended").val(d.toLocaleString());
+                $("#time_ended_text").html(d.toLocaleString());
+
+                $($element).prop('disabled', true);
+                $('.loading').show();
+                $("#form_submit").submit();
+            }
+            else{
+                /*Lobibox.alert("error",
+                {
+                    msg: "Error please fill all fields!"
+                });*/
+                return false;
+            }
         }
 
         function onChangeProvince($province_id){

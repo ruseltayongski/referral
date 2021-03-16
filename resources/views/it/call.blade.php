@@ -29,11 +29,11 @@
     <div class="row">
         <div class="col-md-4">
             <small>Name</small>
-            <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control">
+            <input type="text" name="name" value="<?php if(isset($client->name)) echo $client->name ?>" class="form-control" required>
         </div>
         <div class="col-md-4">
             <small>Facility Name</small>
-            <select name="facility_id" id="" class="select2">
+            <select name="facility_id" id="" class="select2" required>
                 <option value="">Select Option</option>
                 @foreach($facility as $fac)
                     <option value="{{ $fac->id }}" <?php if(isset($client->company)){if($client->company == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
@@ -42,21 +42,21 @@
         </div>
         <div class="col-md-4">
             <small>Department</small>
-            <input type="text" name="department" value="<?php if(isset($client->department)) echo $client->department ?>" class="form-control">
+            <input type="text" name="department" value="<?php if(isset($client->department)) echo $client->department ?>" class="form-control" required>
         </div>
     </div><br>
     <div class="row">
         <div class="col-md-4">
             <small>Designation:</small>
-            <input type="text" name="designation" class="form-control" value="<?php if(isset($client->designation)) echo $client->designation; ?>">
+            <input type="text" name="designation" class="form-control" value="<?php if(isset($client->designation)) echo $client->designation; ?>" required>
         </div>
         <div class="col-md-4">
             <small>Active contact number:</small>
-            <input type="text" name="contact_no" class="form-control" value="<?php if(isset($client->contact_no)) echo $client->contact_no; ?>">
+            <input type="text" name="contact_no" class="form-control" value="<?php if(isset($client->contact_no)) echo $client->contact_no; ?>" required>
         </div>
         <div class="col-md-4">
             <small>Email Address:</small>
-            <input type="text" name="email" class="form-control" value="<?php if(isset($client->email)) echo $client->email; ?>">
+            <input type="text" name="email" class="form-control" value="<?php if(isset($client->email)) echo $client->email; ?>" required>
         </div>
     </div><br>
     <table class="table table-hover table-bordered">
@@ -84,7 +84,7 @@
                 <button class="btn btn-info" type="button" onclick="reasonCalling('support')">Tech Support</button>
                 <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-success" type="button" onclick="reasonCalling1('walkin')">Walk-In Patient</a>
                 <a href="#patient_code_dialog" data-toggle="modal" class="btn btn-danger" type="button" onclick="reasonCalling1('issue')">Issue and Concern</a>
-                <input type="text" name="reason_calling" id="reason_calling">
+                <input type="hidden" name="reason_calling" id="reason_calling">
             </td>
         </tr>
     </table>

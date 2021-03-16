@@ -459,7 +459,8 @@ class OpcenController extends Controller
         }
     }
 
-    public function itCallSaved(Request $request){
+    public function itCallSaved(Request $request)
+    {
         $encoded_by = Session::get('auth')->id;
         $time_started = date("Y-m-d H:i:s",strtotime($request->time_started));
         $time_ended = date("Y-m-d H:i:s",strtotime($request->time_ended));
@@ -497,19 +498,18 @@ class OpcenController extends Controller
                 $it_offline_reason->save();
             }
         }
-        elseif($request->reason_calling == 'walkin'){
+        elseif($request->reason_calling == 'walkin' || $request->reason_calling == 'issue'){
             $walkin = new Monitoring();
             $walkin->code = $request->patient_code;
             $walkin->remark_by = $encoded_by;
             $walkin->notes = $request->notes;
             $walkin->remarks = $request->action;
-            $walkin->status = "walkin";
+            $walkin->status = $request->reason_calling;
             $walkin->save();
         }
 
         Session::put('it_call',true);
         return Redirect::back();
-
     }
 
 
