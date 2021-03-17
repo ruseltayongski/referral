@@ -414,6 +414,11 @@ Route::get('it/reason_calling/{reason}','Opcen\OpcenController@itReasonCalling')
 Route::get('it/transaction/incomplete','Opcen\OpcenController@itTransactionInComplete');
 Route::get('it/search/{patient_code}/{reason}','Opcen\OpcenController@itCallReasonSearch');
 Route::post('it/call/saved','Opcen\OpcenController@itCallSaved');
+Route::get('it/client/form/{client_id}','Opcen\OpcenController@itCallInfo');
+Route::post('it/client/addendum/post','Opcen\OpcenController@itAddendum');
+Route::get('it/repeat_call/{client_id}','Opcen\OpcenController@itRepeatCall');
+Route::get('it/client/call','Opcen\OpcenController@exportItCall');
+Route::get('export/it/call','Opcen\OpcenController@exportItCall');
 
 //Inventory
 Route::get('inventory/{facility_id}','Eoc\InventoryController@Inventory');

@@ -15,6 +15,7 @@ function getMinutes($time){
             <th>Time Ended</th>
             <th>Time Duration</th>
             <th>Reason for Calling</th>
+            <th>Walk-In</th>
         </tr>
         </thead>
         <tbody>
@@ -56,6 +57,18 @@ function getMinutes($time){
                     <small class="text-yellow">
                         ({{ ucfirst($row->reason_calling) }})
                     </small>
+                </td>
+                <td>
+                    <?php
+                        $walkin_client = \App\Monitoring::where("code",$row->code)->where("status","walkin")->get();
+                        $count = 0;
+                    ?>
+                    @foreach($walkin_client as $walkin)
+                        <?php
+                            $count++;
+                        ?>
+                        {{ $count }}.) {{ $walkin->notes }}<br>
+                    @endforeach
                 </td>
             </tr>
         @endforeach

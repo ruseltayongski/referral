@@ -5,14 +5,14 @@
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header">
-                <form action="{{ asset('it_call') }}" method="GET">
+                <form action="{{ asset('it/client') }}" method="GET">
                     {{ csrf_field() }}
                     <div class="input-group input-group-md" style="width: 70%">
                         <input type="text" class="form-control" style="width: 100%" placeholder="Search name..." name="search" value="{{ $search }}">
                         <span class="input-group-btn">
                             <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
                             <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
-                            <a href="{{ asset('export/client/call') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
+                            <a href="{{ asset('export/it/call') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             <button type="button" class="btn btn-primary" onclick="newCall('new_call')"><i class="fa fa-phone-square"></i> New Call</button>
                         </span>
@@ -50,7 +50,14 @@
                                                     <small class="text-blue">Completed Call</small>
                                                 @else
                                                     <small class="text-red">In-Complete Call</small>
-                                                @endif<br>
+                                                @endif
+                                                <br>
+                                                <?php
+                                                $it_addendum = \App\ItAddendum::where("client_id",$row->id)->count();
+                                                ?>
+                                                @if($it_addendum > 0)
+                                                    <span class="badge bg-yellow">Addendum {{ $it_addendum }}</span>
+                                                @endif
                                                 <br>
                                             </a>
                                         </td>
@@ -149,6 +156,14 @@
                 rounded: true
             });
             <?php Session::put("it_call",false); ?>
+        @elseif(Session::get('it_addendum'))
+            Lobibox.notify('success', {
+                title: "",
+                msg: "Successfully added addendum!",
+                size: 'mini',
+                rounded: true
+            });
+            <?php Session::put("it_addendum",false); ?>
         @endif
 
         $('#date_range').daterangepicker();
@@ -176,7 +191,7 @@
             $("a").css("background-color","");
             data.css("background-color","yellow");
             $(".client_modal_body").html(loading);
-            var url = "<?php echo asset('opcen/client/form').'/'; ?>"+$client_id;
+            var url = "<?php echo asset('it/client/form').'/'; ?>"+$client_id;
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".client_modal_body").html(data);
@@ -186,7 +201,7 @@
 
         function repeatCall($client_id,$call_classification){
             $(".call_classification").html(loading);
-            var url = "<?php echo asset('opcen/repeat_call').'/'; ?>"+$client_id;
+            var url = "<?php echo asset('it/repeat_call').'/'; ?>"+$client_id;
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".call_classification").html(data);

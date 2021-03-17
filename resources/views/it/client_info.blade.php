@@ -6,266 +6,206 @@
         </button>
     </legend>
 </fieldset>
-<span class="text-blue" style="font-size: 12pt;">Personal Information</span>
-<table class="table table-hover table-bordered" style="width: 100%;">
-    <tr>
-        <td >
-            <small>Reference Number</small><br>
-            &nbsp;&nbsp;<span class="text-green">{{ $client->reference_number }}</span>
-        </td>
-        <td >
-            <small>Time Started</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</span>
-        </td>
-        <td>
-            <small>Call Classification</small><br>
-            &nbsp;&nbsp;<span class="<?php if($client->call_classification == 'repeat_call') echo 'text-red'; else echo 'text-blue'; ?>"><?php if($client->call_classification == 'repeat_call') echo 'Repeat Call'; else echo 'New Call'; ?></span>
-        </td>
-    </tr>
-    <tr>
-        <td >
-            <small>Name</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->name }}</span>
-        </td>
-        <td >
-            <small>Company/Agency Connected</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">
-                <?php
-                    if($client->company == 'nga')
-                        echo 'NGAs';
-                    elseif($client->company == 'ngo')
-                        echo 'NGOs';
-                    elseif($client->company == 'lgu')
-                        echo 'LGU';
-                    elseif($client->company == 'etc')
-                        echo 'ETC.';
-                    else{
-                        $facility = \App\Facility::find($client->company);
-                        if($facility)
-                            echo $facility->name;
-                    }
+<h4 class="text-blue"><i class="fa fa-phone-square"></i> Call Classification</h4>
+<div>
+    <span class="label label-success" style="margin-left: 5%;margin-top: -1%">
+        <?php
+            if($client->call_classification == 'new_call')
+                echo "New Call";
+            else
+                echo "Repeat Call";
+            ?>
+    </span>
+</div><br>
+<h4 class="text-blue"><i class="fa fa-user"></i> Personal Information</h4>
+<div class="row" style="padding: 1%;margin-top: -1%;">
+    <div class="col-md-4">
+        <small>Time Started</small><br>
+        &nbsp;&nbsp;<span class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_started)) }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Time Ended</small><br>
+        &nbsp;&nbsp;<span class="text-yellow" >{{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Time Duration</small><br>
+        &nbsp;&nbsp;<span class="text-yellow" >
+            {{ date('H:i:s',strtotime($client->time_duration)) }}
+        </span>
+    </div>
+</div>
+<div class="row" style="padding: 1%;">
+    <div class="col-md-4">
+        <small>Name</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->name }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Facility Name</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">
+            <?php
+                $facility = \App\Facility::find($client->facility_id);
+                if($facility)
+                    echo $facility->name;
+            ?>
+        </span>
+    </div>
+    <div class="col-md-4">
+        <small>Department</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->department }}</span>
+    </div>
+</div>
+<div class="row" style="padding: 1%">
+    <div class="col-md-4">
+        <small>Designation</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->designation }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Active contact number:</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->contact_no }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Email Address:</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->email }}</span>
+    </div>
+</div>
+<div class="row" style="padding: 1%">
+    <div class="col-md-4">
+        <small>Reason for Calling</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->reason_calling) }}</span>
+    </div>
+    <div class="col-md-4">
+        <small>Type of Call:</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->type_call) }}</span>
+    </div>
+    @if($client->transaction_complete == "Yes")
+        <div class="col-md-4">
+            <small>Transaction Complete:</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">Yes</span>
+        </div>
+    @elseif($client->transaction_incomplete)
+        <div class="col-md-4">
+            <small>Transaction In-Complete:</small><br>
+            &nbsp;&nbsp;<span class="text-yellow">{{ $client->transaction_incomplete }}</span>
+        </div>
+    @endif
+</div>
 
-                ?>
-            </span>
-        </td>
-        <td>
-            <small>Age</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->age }}</span>
-        </td>
-
-    </tr>
-    <tr>
-        <td >
-            <small>Gender</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ ucfirst($client->sex) }}</span>
-        </td>
-        <td >
-            <small>Region</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">
+@if($client->reason_calling == "walkin" || $client->reason_calling == "issue")
+    <?php $it_reason_call = \App\Monitoring::where("code",$client->code)->where("status",$client->reason_calling)->get(); ?>
+    @if(count($it_reason_call) > 0)
+        @if($client->reason_calling == 'walkin')
+            <h4 class="text-blue"><i class="fa fa-phone"></i> Walk-In Call History</h4>
+        @else
+            <h4 class="text-red">Issue and Concern Call History</h4>
+        @endif
+        <div style="padding-right: 3%;padding-left: 3%;">
+            @foreach($it_reason_call as $action)
                 <?php
-                    if($client->region == 'region_7')
-                        echo 'Region 7';
-                    elseif($client->region == 'ncr')
-                        echo 'NCR';
-                    elseif($client->region == 'car')
-                        echo 'CAR';
-                    elseif($client->region == 'region_1')
-                        echo 'Region 1';
-                    elseif($client->region == 'region_2')
-                        echo 'Region 2';
-                    elseif($client->region == 'region_3')
-                        echo 'Region 3';
-                    elseif($client->region == 'region_4')
-                        echo 'Region 4';
-                    elseif($client->region == 'region_5')
-                        echo 'Region 5';
-                    elseif($client->region == 'region_6')
-                        echo 'Region 6';
-                    elseif($client->region == 'region_7')
-                        echo 'Region 7';
-                    elseif($client->region == 'region_8')
-                        echo 'Region 8';
-                    elseif($client->region == 'region_9')
-                        echo 'Region 9';
-                    elseif($client->region == 'region_10')
-                        echo 'Region 10';
-                    elseif($client->region == 'region_11')
-                        echo 'Region 11';
-                    elseif($client->region == 'region_12')
-                        echo 'Region 12';
-                    elseif($client->region == 'region_13')
-                        echo 'Region 13';
-                    elseif($client->region == 'barmm')
-                        echo 'BARMM';
+                $remark_by = \App\User::find($action->remark_by);
                 ?>
-            </span>
-        </td>
-        <td >
-            <small>Province</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">
-                <?php
-                    if($province = \App\Province::find($client->province_id)->description)
-                        echo $province;
-                    else
-                        echo $client->province_id;
-                ?>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <small>Municipality</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">
-                <?php
-                    if($municipality = \App\Muncity::find($client->municipality_id)->description)
-                        echo $municipality;
-                    else
-                        echo $client->municipality_id;
-                ?>
-            </span>
-        </td>
-        <td >
-            <small>Barangay</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">
-                {{ \App\Barangay::find($client->barangay_id)->description }}
-                <?php
-                    if($barangay = \App\Barangay::find($client->barangay_id)->description)
-                        echo $barangay;
-                    else
-                        echo $client->barangay_id;
-                ?>
-            </span>
-        </td>
-        <td >
-            <small>Sitio</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->sitio }}</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <small>Contact Number</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->contact_number }}</span>
-        </td>
-    </tr>
-</table>
-<span class="text-blue" style="font-size: 12pt;">Reason for Calling {{ "- ".ucfirst($client->reason_calling) }}</span><br>
-@if($client->reason_calling == 'inquiry' || $client->reason_calling == 'others')
-<table class="table table-hover table-bordered" style="width: 100%;">
-    <tr>
-        <td>
-            <small>Notes</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_notes }}</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <small>Notes for action taken</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{!! $client->reason_action_taken !!}</span>
-        </td>
-    </tr>
-</table>
-@elseif($client->reason_calling == 'referral')
-<table class="table table-hover table-bordered" style="width: 100%;">
-    <tr>
-        <td width="100%">
-            <div class="row">
-                <div class="col-md-4">
-                    <small>Patient Data(Name,Age,Gender)</small><br>
-                    &nbsp;&nbsp;<span class="text-yellow" >{{ $client->reason_patient_data }}</span>
+                <div class="tab-pane active" id="timeline">
+                    <!-- The timeline -->
+                    <ul class="timeline timeline-inverse">
+                        <!-- timeline time label -->
+                        <li class="time-label">
+                    <span class="bg-blue">
+                      {{ date('F d, Y',strtotime($action->created_at)) }}
+                    </span>
+                        </li>
+                        <li>
+                            <i class="fa fa-phone bg-aqua"></i>
+                            <div class="timeline-item">
+                                <h3 class="timeline-header no-border"><a href="#">{{ $remark_by->fname }} {{ $remark_by->lname }}</a>
+                                    <small class="text-warning">({{ date('H:i',strtotime($action->created_at)) }})</small><br>
+                                    <small style="margin-left: 2%">
+                                        <span class="text-warning">Notes:</span> {{ $action->notes }}
+                                    </small><br>
+                                    <small style="margin-left: 2%">
+                                        <span class="text-warning">Action Taken:</span> {{ $action->remarks }}
+                                    </small>
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-4">
-                    <small>Chief Complaints</small><br>
-                    &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_chief_complains }}</span>
-                </div>
-                <div class="col-md-4">
-                    <small style="font-size: 9pt;">Relationship to patient (Patient, Family & Others)</small><br>
-                    &nbsp;&nbsp;<span class="text-yellow">{{ $client->relationship }}</span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td width="25%" colspan="3">
-            <small>Notes for action taken</small><br>
-            &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_action_taken }}</span>
-        </td>
-    </tr>
-</table>
-@endif
-<span class="text-blue" style="font-size: 12pt;">Status of transaction</span><br>
-@if($client->transaction_complete)
-<table class="table table-hover table-bordered" style="width: 100%;">
-    <tr>
-        <td >
-            <small>Complete</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >
-                <?php
-                    if($client->transaction_complete == 'concern_address')
-                        echo 'Concern Address';
-                    elseif($client->transaction_complete == 'need_provide')
-                        echo 'Need Provided';
-                    elseif($client->transaction_complete == 'complete_call')
-                        echo 'Completed Call';
-                ?>
-            </span>
-        </td>
-        <td >
-            <small>Time Ended</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >
-                {{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}
-            </span>
-        </td>
-        <td >
-            <small>Time Duration</small><br>
-            &nbsp;&nbsp;<span class="text-yellow" >
-                {{ date('H:i:s',strtotime($client->time_duration)) }}
-            </span>
-        </td>
-    </tr>
-</table>
-@elseif($client->transaction_incomplete)
-    <table class="table table-hover table-bordered" style="width: 100%;">
-        <tr>
-            <td >
-                <small>In Complete</small><br>
-                &nbsp;&nbsp;<span class="text-yellow" >
+            @endforeach
+        </div>
+    @endif
+@elseif($client->reason_calling == 'offline')
+    <?php
+        $it_offline_reason = \App\ItOfflineReason::where("it_call_id",$client->id)->get();
+    ?>
+    <h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
+    @foreach($it_offline_reason as $offline)
+    <div class="tab-pane active" id="timeline">
+        <!-- The timeline -->
+        <ul class="timeline timeline-inverse">
+            <li>
+                <i class="fa fa-power-off bg-aqua"></i>
+                <div class="timeline-item">
                     <?php
-                        if($client->transaction_incomplete == 'drop_call')
-                            echo 'Dropped Calls';
-                        elseif($client->transaction_incomplete == 'hung_up')
-                            echo 'Hung up';
-                        elseif($client->transaction_incomplete == 'prank_call')
-                            echo 'Prank Calls';
-                        else
-                            echo $client->transaction_incomplete;
+                        if($offline->remarks == "1")
+                            echo "Unstable Internet Connection";
+                        elseif($offline->remarks == "2")
+                            echo "No Point Person";
+                        elseif($offline->remarks == "3")
+                            echo "Facility is under maintenance";
+                        elseif($offline->remarks == "4")
+                            echo "Lack of Manpower";
+                        elseif($offline->remarks == "5")
+                            echo "No Internet Connection";
+                        elseif($offline->remarks == "6")
+                            echo "Lack of knowledge on how to use the system";
+                        elseif($offline->remarks == "7")
+                            echo "Lack of Computer Equipment";
+                        elseif($offline->remarks == "8")
+                            echo "Requesting for retraining";
+                        elseif($offline->remarks == "9")
+                            echo "Limited Doctor on duty";
+                        elseif($offline->remarks == "10")
+                            echo "No one answer, phone just ringing";
+                        elseif($offline->remarks == "11")
+                            echo "Phone no. cannot be reach";
+                        elseif($offline->remarks == "12")
+                            echo "Facility is under renovation";
+                        elseif($offline->remarks == "13")
+                            echo "Hang-up call";
+                        elseif($offline->remarks == "14")
+                            echo "No trained personnel";
+                        elseif($offline->remarks == "15")
+                            echo "No User account";
+                        elseif($offline->remarks == "16")
+                            echo "No idea about CVeHRS";
+                        elseif($offline->remarks == "17")
+                            echo "Log in only if they have referral";
                     ?>
-                </span>
-            </td>
-            <td >
-                <small>Time Ended</small><br>
-                &nbsp;&nbsp;<span class="text-yellow" >
-                {{ date('F d, Y H:i:s',strtotime($client->time_ended)) }}
-            </span>
-            </td>
-            <td >
-                <small>Time Duration</small><br>
-                &nbsp;&nbsp;<span class="text-yellow" >
-                {{ date('H:i:s',strtotime($client->time_duration)) }}
-            </span>
-            </td>
-        </tr>
-    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    @endforeach
+@elseif($client->reason_calling == 'support')
+    <div class="row" style="padding: 1%">
+        <div class="col-md-4">
+            <small>Notes</small><br>
+            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->notes }}</span>
+        </div>
+        <div class="col-md-4">
+            <small>Action Taken</small><br>
+            &nbsp;&nbsp;<span class="text-yellow" >{{ $client->action }}</span>
+        </div>
+    </div>
 @endif
 
 <span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
-<?php $client_addendum = \App\ClientAddendum::where("client_id",$client->id)->get(); ?>
+<?php $client_addendum = \App\ItAddendum::where("client_id",$client->id)->get(); ?>
 @foreach($client_addendum as $addendum)
     <small>Notes</small><br>
     &nbsp;&nbsp;<span class="text-yellow" >
         {!! nl2br($addendum->notes) !!}
     </span><br>
 @endforeach
-<form action="{{ asset('opcen/client/addendum/post') }}" method="POST">
+<form action="{{ asset('it/client/addendum/post') }}" method="POST">
     {{ csrf_field() }}
     <input type="hidden" name="reference_number" value="{{ $client->reference_number }}">
     <input type="hidden" name="client_id" value="{{ $client->id }}">
@@ -278,9 +218,9 @@
 <script>
     function addAddendum(){
         $("#addendum_button").removeClass('hide');
-        var url = "<?php echo asset('opcen/client/addendum/body'); ?>";
-        $.get(url,function(result){
-            $(".addendum_body").append(result).hide().fadeIn();
-        });
+        $(".addendum_body").append(
+            "<small>Notes</small><br>\n" +
+            "<textarea name=\"addendum[]\" id=\"\" cols=\"30\" rows=\"5\" class=\"form-control\" required></textarea>"
+        ).hide().fadeIn();
     }
 </script>

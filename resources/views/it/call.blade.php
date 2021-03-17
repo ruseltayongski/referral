@@ -36,7 +36,7 @@
             <select name="facility_id" id="" class="select2" required>
                 <option value="">Select Option</option>
                 @foreach($facility as $fac)
-                    <option value="{{ $fac->id }}" <?php if(isset($client->company)){if($client->company == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
+                    <option value="{{ $fac->id }}" <?php if(isset($client->facility_id)){if($client->facility_id == $fac->id)echo 'selected';} ?>>{{ $fac->name }}</option>
                 @endforeach
             </select>
         </div>

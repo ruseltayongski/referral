@@ -6,6 +6,7 @@ use App\Barangay;
 use App\ClientAddendum;
 use App\Department;
 use App\Facility;
+use App\ItAddendum;
 use App\ItCall;
 use App\ItOfflineReason;
 use App\Monitoring;
@@ -409,8 +410,9 @@ class OpcenController extends Controller
             })
             ->whereBetween("time_started",[$date_start,$date_end])
             ->orderBy("time_started","desc");
+
         $client_call = $client->get();
-        Session::put("client_call",$client_call);
+        Session::put("it_call_excel",$client_call);
         $client = $client->paginate(15);
 
         $call_total = ItCall::where(function($q) use ($search){
@@ -510,6 +512,47 @@ class OpcenController extends Controller
 
         Session::put('it_call',true);
         return Redirect::back();
+    }
+
+    public function itCallInfo($client_id){
+        $client = ItCall::find($client_id);
+
+        return view("it.client_info",[
+            "client" => $client
+        ]);
+    }
+
+    public function itAddendum(Request $request){
+        foreach($request->addendum as $addendum){
+            $client_addendum = new ItAddendum();
+            $client_addendum->client_id = $request->client_id;
+            $client_addendum->encoded_by = Session::get('auth')->id;
+            $client_addendum->notes = $addendum;
+            $client_addendum->save();
+        }
+        Session::put("it_addendum",true);
+        return Redirect::back();
+    }
+
+    public function itRepeatCall($client_id){
+        $client = ItCall::find($client_id);
+        $facility = Facility::get();
+        return view("it.call",[
+            "client" => $client,
+            "facility" => $facility
+        ]);
+    }
+
+    public function exportItCall(){
+        /*header("Content-Type: application/xls");
+        header("Content-Disposition: attachment;filename=it_call.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");*/
+
+        $client = Session::get("it_call_excel");
+        return view('it.export_call',[
+            "client" => $client
+        ]);
     }
 
 
