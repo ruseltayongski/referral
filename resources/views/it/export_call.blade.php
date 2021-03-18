@@ -26,7 +26,7 @@ function getMinutes($time){
         @foreach($client as $row)
             <tr>
                 <td>{{ \App\Facility::find($row->facility_id)->name }}</td>
-                <td>{{ $row->contact_no }}</td>
+                <td>{{ "contact:".$row->contact_no }}</td>
                 <td>
                     <span class="text-green font_size">{{ $row->name }}</span>
                 </td>
