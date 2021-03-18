@@ -544,10 +544,10 @@ class OpcenController extends Controller
     }
 
     public function exportItCall(){
-        /*header("Content-Type: application/xls");
+        header("Content-Type: application/xls");
         header("Content-Disposition: attachment;filename=it_call.xls");
         header("Pragma: no-cache");
-        header("Expires: 0");*/
+        header("Expires: 0");
 
         $client = Session::get("it_call_excel");
         return view('it.export_call',[
