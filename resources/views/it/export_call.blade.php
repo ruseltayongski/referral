@@ -9,7 +9,11 @@ function getMinutes($time){
     <table class="table table-striped">
         <thead class="bg-gray">
         <tr>
+            <th>Facility Name</th>
+            <th>Contact No</th>
             <th>Client Name</th>
+            <th>Department</th>
+            <th>Email Address</th>
             <th>Transacted By</th>
             <th>Time Started</th>
             <th>Time Ended</th>
@@ -21,6 +25,8 @@ function getMinutes($time){
         <tbody>
         @foreach($client as $row)
             <tr>
+                <td>{{ \App\Facility::find($row->facility_id)->name }}</td>
+                <td>{{ $row->contact_no }}</td>
                 <td>
                     <span class="text-green font_size">{{ $row->name }}</span>
                 </td>
@@ -32,6 +38,8 @@ function getMinutes($time){
                     <span class="text-green font_size">{{ $transacted_by }}</span>
                     @if($row->call_classification == 'new_call')<small class="text-blue">(New Call)</small>@else<small class="text-red">(Repeat Call)</small>@endif
                 </td>
+                <td>{{ $row->department }}</td>
+                <td>{{ $row->email }}</td>
                 <td>
                     <span class="text-green font_size">
                         {{ date('F d,Y',strtotime($row->time_started)) }}
