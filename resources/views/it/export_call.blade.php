@@ -12,9 +12,9 @@ function getMinutes($time){
             <th>Facility Name</th>
             <th>Contact No</th>
             <th>Client Name</th>
+            <th>Transacted By</th>
             <th>Department</th>
             <th>Email Address</th>
-            <th>Transacted By</th>
             <th>Time Started</th>
             <th>Time Ended</th>
             <th>Time Duration</th>
