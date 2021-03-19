@@ -211,14 +211,17 @@
     </div>
 @endif
 
-<br><span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
-<?php $client_addendum = \App\ItAddendum::where("client_id",$client->id)->get(); ?>
-@foreach($client_addendum as $addendum)
-    <small>Notes</small><br>
-    &nbsp;&nbsp;<span class="text-yellow" >
+<div class="col-md-12">
+    <span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
+    <?php $client_addendum = \App\ItAddendum::where("client_id",$client->id)->get(); ?>
+    @foreach($client_addendum as $addendum)
+        <small>Notes</small><br>
+        &nbsp;&nbsp;<span class="text-yellow" >
         {!! nl2br($addendum->notes) !!}
     </span><br>
-@endforeach
+    @endforeach
+</div>
+
 <form action="{{ asset('it/client/addendum/post') }}" method="POST">
     {{ csrf_field() }}
     <input type="hidden" name="reference_number" value="{{ $client->reference_number }}">
