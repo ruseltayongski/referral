@@ -228,7 +228,7 @@
         <form action="{{ asset('it/client/addendum/post') }}" method="POST">
             {{ csrf_field() }}
             <input type="hidden" name="client_id" value="{{ $client->id }}">
-            <div class="addendum_body"></div><br>
+            <br><div class="addendum_body"></div><br>
             <button type="button" class="btn btn-primary" onclick="addAddendum()"><i class="fa fa-plus"></i> Add Notes</button>
             <button type="submit" class="btn btn-success hide" id="addendum_button"><i class="fa fa-send"></i> Submit</button>
             <button class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
