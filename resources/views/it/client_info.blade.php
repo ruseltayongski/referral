@@ -224,9 +224,9 @@
             @endforeach
         </div>
 
+        <br><br>
         <form action="{{ asset('it/client/addendum/post') }}" method="POST">
             {{ csrf_field() }}
-            <input type="hidden" name="reference_number" value="{{ $client->reference_number }}">
             <input type="hidden" name="client_id" value="{{ $client->id }}">
             <div class="addendum_body"></div><br>
             <button type="button" class="btn btn-primary" onclick="addAddendum()"><i class="fa fa-plus"></i> Add Notes</button>
