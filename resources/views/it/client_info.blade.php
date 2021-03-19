@@ -147,7 +147,7 @@
     <?php
         $it_offline_reason = \App\ItOfflineReason::where("it_call_id",$client->id)->get();
     ?>
-    <div class="col-md-12" style="margin-top: 1%;">
+    <br><br><div class="col-md-12">
         <h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
         @foreach($it_offline_reason as $offline)
             <div class="tab-pane active" id="timeline">
