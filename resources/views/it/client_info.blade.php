@@ -147,55 +147,57 @@
     <?php
         $it_offline_reason = \App\ItOfflineReason::where("it_call_id",$client->id)->get();
     ?>
-    <br><br><br><h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
-    @foreach($it_offline_reason as $offline)
-    <div class="tab-pane active" id="timeline">
-        <!-- The timeline -->
-        <ul class="timeline timeline-inverse">
-            <li>
-                <i class="fa fa-power-off bg-aqua"></i>
-                <div class="timeline-item">
-                    <?php
-                        if($offline->remarks == "1")
-                            echo "Unstable Internet Connection";
-                        elseif($offline->remarks == "2")
-                            echo "No Point Person";
-                        elseif($offline->remarks == "3")
-                            echo "Facility is under maintenance";
-                        elseif($offline->remarks == "4")
-                            echo "Lack of Manpower";
-                        elseif($offline->remarks == "5")
-                            echo "No Internet Connection";
-                        elseif($offline->remarks == "6")
-                            echo "Lack of knowledge on how to use the system";
-                        elseif($offline->remarks == "7")
-                            echo "Lack of Computer Equipment";
-                        elseif($offline->remarks == "8")
-                            echo "Requesting for retraining";
-                        elseif($offline->remarks == "9")
-                            echo "Limited Doctor on duty";
-                        elseif($offline->remarks == "10")
-                            echo "No one answer, phone just ringing";
-                        elseif($offline->remarks == "11")
-                            echo "Phone no. cannot be reach";
-                        elseif($offline->remarks == "12")
-                            echo "Facility is under renovation";
-                        elseif($offline->remarks == "13")
-                            echo "Hang-up call";
-                        elseif($offline->remarks == "14")
-                            echo "No trained personnel";
-                        elseif($offline->remarks == "15")
-                            echo "No User account";
-                        elseif($offline->remarks == "16")
-                            echo "No idea about CVeHRS";
-                        elseif($offline->remarks == "17")
-                            echo "Log in only if they have referral";
-                    ?>
-                </div>
-            </li>
-        </ul>
+    <div class="col-md-12" style="margin-top: 1%;">
+        <h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
+        @foreach($it_offline_reason as $offline)
+            <div class="tab-pane active" id="timeline">
+                <!-- The timeline -->
+                <ul class="timeline timeline-inverse">
+                    <li>
+                        <i class="fa fa-power-off bg-aqua"></i>
+                        <div class="timeline-item">
+                            <?php
+                            if($offline->remarks == "1")
+                                echo "Unstable Internet Connection";
+                            elseif($offline->remarks == "2")
+                                echo "No Point Person";
+                            elseif($offline->remarks == "3")
+                                echo "Facility is under maintenance";
+                            elseif($offline->remarks == "4")
+                                echo "Lack of Manpower";
+                            elseif($offline->remarks == "5")
+                                echo "No Internet Connection";
+                            elseif($offline->remarks == "6")
+                                echo "Lack of knowledge on how to use the system";
+                            elseif($offline->remarks == "7")
+                                echo "Lack of Computer Equipment";
+                            elseif($offline->remarks == "8")
+                                echo "Requesting for retraining";
+                            elseif($offline->remarks == "9")
+                                echo "Limited Doctor on duty";
+                            elseif($offline->remarks == "10")
+                                echo "No one answer, phone just ringing";
+                            elseif($offline->remarks == "11")
+                                echo "Phone no. cannot be reach";
+                            elseif($offline->remarks == "12")
+                                echo "Facility is under renovation";
+                            elseif($offline->remarks == "13")
+                                echo "Hang-up call";
+                            elseif($offline->remarks == "14")
+                                echo "No trained personnel";
+                            elseif($offline->remarks == "15")
+                                echo "No User account";
+                            elseif($offline->remarks == "16")
+                                echo "No idea about CVeHRS";
+                            elseif($offline->remarks == "17")
+                                echo "Log in only if they have referral";
+                            ?>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        @endforeach
     </div>
-    @endforeach
 @elseif($client->reason_calling == 'support')
     <div class="row" style="padding: 1%">
         <div class="col-md-4">
