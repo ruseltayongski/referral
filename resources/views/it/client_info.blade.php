@@ -132,10 +132,22 @@
         </div>
     @endif
 @elseif($client->reason_calling == 'offline')
+    @if($client->reason_others)
+        <div class="col-md-4">
+        <small>Reason Others</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->reason_others }}</span>
+        </div>
+    @endif
+    @if($client->action)
+        <div class="col-md-4">
+        <small>Action Taken</small><br>
+        &nbsp;&nbsp;<span class="text-yellow">{{ $client->action }}</span>
+        </div>
+    @endif
     <?php
         $it_offline_reason = \App\ItOfflineReason::where("it_call_id",$client->id)->get();
     ?>
-    <h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
+    <br><br><br><h4 class="text-blue"><i class="fa fa-power-off"></i> Offline Reason</h4>
     @foreach($it_offline_reason as $offline)
     <div class="tab-pane active" id="timeline">
         <!-- The timeline -->
