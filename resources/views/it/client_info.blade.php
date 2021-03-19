@@ -211,7 +211,7 @@
     </div>
 @endif
 
-<span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
+<br><span class="text-blue" style="font-size: 12pt;">Addendum</span><br>
 <?php $client_addendum = \App\ItAddendum::where("client_id",$client->id)->get(); ?>
 @foreach($client_addendum as $addendum)
     <small>Notes</small><br>
