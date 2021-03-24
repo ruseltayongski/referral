@@ -73,11 +73,11 @@
                                     </td>
                                     <?php $seen_only = $row->seen_total - $row->seen_accepted_redirected; ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $seen_only }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $seen_only <= 0 ? 0 : $seen_only }}</span><br><br>
                                     </td>
                                     <?php $no_action = $row->incoming - ($row->accepted + $row->redirected + $seen_only); ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $no_action < 0 ? 0 : $no_action }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $no_action <= 0 ? 0 : $no_action }}</span><br><br>
                                     </td>
                                 </tr>
                             @endforeach
