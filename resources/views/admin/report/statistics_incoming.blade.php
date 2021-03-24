@@ -32,7 +32,7 @@
                                 <th>Accepted</th>
                                 <th>Redirected</th>
                                 <th>Seen only</th>
-                                <th>No Action</th>
+                                <th>Not Seen</th>
                             </tr>
                             <?php
                             $count = 0;
