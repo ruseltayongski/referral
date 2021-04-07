@@ -34,6 +34,7 @@ class CreateVaccine extends Migration
             $table->string('aef1_qty','100' )->nullable();
             $table->string('deferred','100' )->nullable();
             $table->string('refused','100' )->nullable();
+            $table->string('wastage','100' )->nullable();
             $table->string('percent_coverage','100' )->nullable();
             $table->string('consumption_rate','100' )->nullable();
             $table->string('remaining_unvaccinated','100' )->nullable();

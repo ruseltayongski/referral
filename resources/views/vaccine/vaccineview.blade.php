@@ -90,7 +90,7 @@
                                     <th>Province</th>
                                     <th>Municipality</th>
                                     <th>Facility</th>
-                                    <th>No. of eligible population A1.1-A1.7</th>
+                                    <th>No. of eligible population</th>
                                     <th>Ownership</th>
                                     <th>No. of Vaccine Allocated</th>
                                     <th>Date of Delivery</th>
@@ -102,6 +102,7 @@
                                     <th>AEFI Qty</th>
                                     <th>Deferred</th>
                                     <th>Refused</th>
+                                    <th>Wastage</th>
                                     <th>Percentage Coverage</th>
                                     <th>Consumption Rate</th>
                                     <th>Remaining Unvaccinated</th>
@@ -249,6 +250,9 @@
                                         </td>
                                         <td>
                                             {{ $row->refused }}
+                                        </td>
+                                        <td>
+                                            {{ $row->wastage }}
                                         </td>
                                         <td>
                                             {{ number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2) }}%

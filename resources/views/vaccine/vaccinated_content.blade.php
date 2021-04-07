@@ -17,12 +17,12 @@
     <div class="row">
        <div class="col-md-4">
            <small>Type of Vaccine</small>
-           <select name="typeof_vaccine" id="" class="select2" required>
+           <select name="typeof_vaccine" id="typeof_vaccine" class="select2" required>
                <option value="">Select Option</option>
                <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-               <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?>>Moderna</option>
-               <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
+               <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
+               <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
            </select>
        </div>
         <div class="col-md-4">
@@ -44,7 +44,7 @@
             </select>
         </div>
         <div class="col-md-4">
-            <small>Sub-Priority</small>
+            <small>Sub-Priority A1.1-A1.7 </small>
             <input type="text" name="sub_priority" value="<?php if(isset($vaccine->sub_priority)) echo $vaccine->sub_priority ?>" class="form-control">
         </div>
     </div>
@@ -86,16 +86,20 @@
     <br>
     <div class="row">
         <div class="col-md-4">
-            <small>No. of Eligble Population A1.1-A1.7 </small>
+            <small>No. of Eligble Population</small>
             <input type="text" name="no_eli_pop" value="<?php if(isset($vaccine->no_eli_pop)) echo $vaccine->no_eli_pop ?>" class="form-control">
         </div>
         <div class="col-md-4">
             <small>Ownership</small>
-            <input type="text" name="ownership" value="<?php if(isset($vaccine->ownership)) echo $vaccine->ownership ?>" class="form-control">
+            <select name="ownership" id="" class="select2">
+                <option value="" readonly>Select Option</option>
+                <option value="Government" <?php if(isset($vaccine->ownership)){if($vaccine->ownership == 'Government')echo 'selected';} ?>>Government</option>
+                <option value="Private"<?php if(isset($vaccine->ownership)){if($vaccine->ownership == 'Private')echo 'selected';} ?> >Private</option>
+            </select>
         </div>
         <div class="col-md-4">
             <small>No. of Vaccine Allocated</small>
-            <input type="text" name="nvac_allocated" value="<?php if(isset($vaccine->nvac_allocated)) echo $vaccine->nvac_allocated ?>" class="form-control">
+            <input type="text" name="nvac_allocated" id="nvac_allocated" onkeyup="getTarget($(this).val())" value="<?php if(isset($vaccine->nvac_allocated)) echo $vaccine->nvac_allocated ?>" class="form-control">
         </div>
     </div>
     <br>
@@ -117,19 +121,12 @@
     <div class="row">
         <div class="col-md-4">
             <small>Target Dose Per Day</small>
-            <input type="text" name="tgtdoseper_day" value="<?php if(isset($vaccine->tgtdoseper_day)) echo $vaccine->tgtdoseper_day ?>" class="form-control">
+            <input type="text" name="tgtdoseper_day" id="tgtdoseper_day" value="<?php if(isset($vaccine->tgtdoseper_day)) echo $vaccine->tgtdoseper_day ?>" class="form-control" readonly>
         </div>
         <div class="col-md-4">
             <small>No. of Vaccinated</small>
             <input type="text" name="numof_vaccinated" value="<?php if(isset($vaccine->numof_vaccinated)) echo $vaccine->numof_vaccinated ?>" class="form-control">
         </div>
-        <div class="col-md-4">
-            <small>% Coverage A1.1-A1.7</small>
-            <input type="text" name="percent_coverage" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
-        </div>
-    </div>
-    <br>
-    <div class="row">
         <div class="col-md-4">
             <small>AEF1</small>
             <b style="margin-left:10%" class="text-green display_aefi hide"></b>
@@ -140,6 +137,9 @@
                 <option value="Serious"<?php if(isset($vaccine->aef1)){if($vaccine->aef1 == 'Serious')echo 'selected';} ?> >Serious</option>
             </select>
         </div>
+    </div>
+    <br>
+    <div class="row">
         <div class="col-md-4">
             <small>Deferred</small>
             <input type="text" name="deferred" value="<?php if(isset($vaccine->deferred)) echo $vaccine->deferred ?>" class="form-control">
@@ -147,6 +147,10 @@
         <div class="col-md-4">
             <small>Refused</small>
             <input type="text" name="refused" value="<?php if(isset($vaccine->refused)) echo $vaccine->refused ?>" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <small>Wastage</small>
+            <input type="text" name="wastage" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
         </div>
     </div>
     <br>
@@ -241,6 +245,19 @@
                     value: '',
                     text : 'Select Option'
                 }));
+        }
+    }
+
+    function getTarget(vaccine_allocated) {
+        var typeof_vaccine = $('#typeof_vaccine').val();
+        var target = 0;
+        if(typeof_vaccine == 'Sinovac'){
+            target = (vaccine_allocated/2) / 5;
+            $('#tgtdoseper_day').val(target);
+        }
+        else if (typeof_vaccine == 'Astrazeneca'){
+            target = (vaccine_allocated/2);
+            $('#tgtdoseper_day').val(target);
         }
     }
 

@@ -16,7 +16,50 @@ class VaccineController extends Controller
 {
     public function index()
     {
-        return view("vaccine.dashboard");
+        //for past 10 days
+        $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(15))).' 00:00:00';
+        $date_end = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
+        //$past_days = \DB::connection('mysql')->select("call vaccine_past_report_call('$date_start','$date_end')");
+        ///
+        for($i=1; $i<=12; $i++)
+        {
+            $date = date('Y').'/'.$i.'/01';
+            $startdate = Carbon::parse($date)->startOfMonth();
+            $enddate = Carbon::parse($date)->endOfMonth();
+
+            $sinovac = Vaccines::where("typeof_vaccine","Sinovac")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->count();
+            $data['sinovac'][] = $sinovac;
+
+            $astrazeneca = Vaccines::where("typeof_vaccine","Astrazeneca")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->count();
+            $data['astrazeneca'][] = $astrazeneca;
+
+            $moderna = Vaccines::where("typeof_vaccine","Moderna")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->count();
+            $data['moderna'][] = $moderna;
+
+            $pfizer = Vaccines::where("typeof_vaccine","Pfizer")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->count();
+            $data['pfizer'][] = $pfizer;
+        }
+
+        $sinovac_count = Vaccines::where("typeof_vaccine","Sinovac")->count();
+        $astrazeneca_count = Vaccines::where("typeof_vaccine","Astrazenca")->count();
+        $moderna_count = Vaccines::where("typeof_vaccine","Moderna")->count();
+        $pfizer_count = Vaccines::where("typeof_vaccine","Pfizer")->count();
+
+        return view("vaccine.dashboard",[
+            "data" => $data,
+            "sinovac_count" => $sinovac_count,
+            "astrazeneca_count" => $astrazeneca_count,
+            "moderna_count" => $moderna_count,
+            "pfizer_count" => $pfizer_count
+        ]);
     }
 
     public function vaccineView(Request $request)
@@ -40,11 +83,13 @@ class VaccineController extends Controller
         Session::put("vaccine",$vaccine->get());
         $vaccine = $vaccine->paginate(15);
         $province = Province::get();
+
+
         return view("vaccine.vaccineview", [
             "vaccine" => $vaccine,
-            "date_range_start"=>$date_start,
-            "date_range_end"=>$date_end,
-            "province" =>$province,
+            "date_range_start" => $date_start,
+            "date_range_end" => $date_end,
+            "province" => $province
         ]);
 
     }
@@ -87,7 +132,7 @@ class VaccineController extends Controller
         $vaccine->aef1_qty = $request->aef_qty;
         $vaccine->deferred = $request->deferred;
         $vaccine->refused = $request->refused;
-        $vaccine->percent_coverage = $request->percent_coverage;
+        $vaccine->wastage= $request->wastage;
         $vaccine->save();
 
         Session::put('vaccine_saved', true);
@@ -139,7 +184,7 @@ class VaccineController extends Controller
         $vaccine->aef1_qty = $request->aef_qty;
         $vaccine->deferred = $request->deferred;
         $vaccine->refused = $request->refused;
-        $vaccine->percent_coverage = $request->percent_coverage;
+        $vaccine->wastage = $request->wastage;
         $vaccine->save();
 
         Session::put('vaccine_update', true);

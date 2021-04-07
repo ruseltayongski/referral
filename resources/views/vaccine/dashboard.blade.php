@@ -14,38 +14,12 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 </div>
             @endif
             <h3 class="page-header">Dashboard</h3>
-            <div class="row" style="padding-left: 1%;padding-right: 1%">
+            <div class="row" style="padding-left: 1%;padding-right: 1%; ">
                 <div class="col-lg-3">
-                    <div class="small-box bg-aqua">
+                    <div class="small-box bg-red">
                         <div class="inner">
-                            <h3>Sinovac</h3>
-                            <p style="font-size:13pt" class="sinovac_count"></p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-medkit"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>Astrazeneca</h3>
-
-                            <p style="font-size:13pt" class="astrazeneca_count"></p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion ion-medkit"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>Moderna</h3>
-
-                            <p style="font-size:13pt" class="moderna_count"></p>
+                            <h3 style="font-size: 20pt;">Sinovac</h3>
+                            <p style="font-size:13pt" >{{ $sinovac_count }}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -54,14 +28,37 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="small-box bg-red">
+                    <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>Pfizer</h3>
-
-                            <p style="font-size:13pt" class="pfizer_count"></p>
+                            <h3 style="font-size: 20pt;">Astrazeneca</h3>
+                            <p style="font-size:13pt" >{{ $astrazeneca_count }}</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-android-walk"></i>
+                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3 style="font-size: 20pt;">Moderna</h3>
+                            <p style="font-size:13pt" >{{ $moderna_count }}</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3 style="font-size: 20pt;">Pfizer</h3>
+                            <p style="font-size:13pt" >{{ $pfizer_count }}</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
@@ -159,14 +156,24 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 // labels: month,
                 datasets: [
                     {
-                        label: 'New Call',
-                        backgroundColor: '#06bdff',
-                        data: <?php echo json_encode($data["new_call"]); ?>
+                        label: 'Sinovac',
+                        backgroundColor: '#dd4b39',
+                        data: <?php echo json_encode($data["sinovac"]); ?>
                     },
                     {
-                        label: 'Repeat Call',
-                        backgroundColor: '#ff7c57',
-                        data: <?php echo json_encode($data["repeat_call"]); ?>
+                        label: 'Astrazeneca',
+                        backgroundColor: '#f39c12',
+                        data: <?php echo json_encode($data["astrazeneca"]); ?>
+                    },
+                    {
+                        label: 'Moderna',
+                        backgroundColor: '#00a65a',
+                        data: <?php echo json_encode($data["moderna"]); ?>
+                    },
+                    {
+                        label: 'Pfizer',
+                        backgroundColor: '#00c0ef',
+                        data: <?php echo json_encode($data["pfizer"]); ?>
                     }
                 ]
             }
