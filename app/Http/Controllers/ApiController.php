@@ -330,6 +330,7 @@ class ApiController extends Controller
         $patient->province_id = $req->province;
         $patient->muncity_id = $req->muncity;
         $patient->barangay_id = $req->barangay;
+        $patient->dengvaxia = "no";
         return $patient;
     }
 
