@@ -121,7 +121,9 @@
             </div>
             <div class="col-md-4">
                 <div class="pull-right">
-                    <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
+                    @if($user->level != 'vaccine')
+                        <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
+                    @endif
                 </div>
             </div>
 
@@ -134,6 +136,8 @@
                 <img src="{{ asset('resources/img/opcen_banner1.png') }}" class="img-responsive" />
             @elseif($user->level == 'bed_tracker')
                 <img src="{{ asset('resources/img/bed_banner.png') }}" class="img-responsive" />
+            @elseif($user->level == 'vaccine')
+                <img src="{{ asset('resources/img/vaccine_banner.png') }}" class="img-responsive" />
             @else
                 <img src="{{ asset('resources/img/referral_banner.png') }}" class="img-responsive" />
             @endif
