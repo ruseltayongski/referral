@@ -18,9 +18,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <div class="col-lg-3">
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3>15032</h3>
-
-                            <p>Sinovac</p>
+                            <h3>Sinovac</h3>
+                            <p style="font-size:13pt" class="sinovac_count"></p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-medkit"></i>
@@ -31,9 +30,9 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <div class="col-lg-3">
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>16234</h3>
+                            <h3>Astrazeneca</h3>
 
-                            <p>Astrazeneca</p>
+                            <p style="font-size:13pt" class="astrazeneca_count"></p>
                         </div>
                         <div class="icon">
                             <i class="ion ion ion-medkit"></i>
@@ -44,9 +43,9 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <div class="col-lg-3">
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>1523</h3>
+                            <h3>Moderna</h3>
 
-                            <p>Health Worker</p>
+                            <p style="font-size:13pt" class="moderna_count"></p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -57,9 +56,9 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <div class="col-lg-3">
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3>1235</h3>
+                            <h3>Pfizer</h3>
 
-                            <p>Senior Citizen</p>
+                            <p style="font-size:13pt" class="pfizer_count"></p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-android-walk"></i>

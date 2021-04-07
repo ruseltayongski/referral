@@ -15,6 +15,7 @@ use App\Muncity;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
+use App\Profile;
 use App\Province;
 use App\Seen;
 use App\Tracking;
@@ -254,27 +255,82 @@ class ApiController extends Controller
         );
         $unique = implode($unique);
 
-        if(!$patient = Patients::where("unique_id",$unique)->first())
-            $patient = new Patients();
+        if(!$patient = Profile::where("unique_id",$unique)->first())
+            $patient = new Profile();
 
         $patient->unique_id = $unique;
-        $patient->phic_status = $req->phic_status;
-        $patient->phic_id = ($req->phicID) ? $req->phicID: '';
+        $patient->phicID = ($req->phicID) ? $req->phicID: '';
         $patient->fname = $req->fname;
         $patient->mname = $req->mname;
         $patient->lname = $req->lname;
-        $patient->contact = $req->contact;
         $patient->dob = $req->dob;
         $patient->sex = $req->sex;
-        $patient->civil_status = $req->civil_status;
-        $patient->province = $province;
-        $patient->muncity = $muncity;
-        $patient->brgy = $barangay;
-        $patient->source = "telemedicine";
+        $patient->province_id = $province;
+        $patient->muncity_id = $muncity;
+        $patient->barangay_id = $barangay;
+        $patient->dengvaxia = "telemedicine";
         $patient->save();
 
+        if($patient->income == "1")
+            $patient->income = "Less than 7,890";
+        elseif($patient->income == "2")
+            $patient->income = "Between 7,890 to 15,780";
+        elseif($patient->income == "3")
+            $patient->income = "Between 15,780 to 31,560";
+        elseif($patient->income == "4")
+            $patient->income = "Between 31,560 to 78,900";
+        elseif($patient->income == "5")
+            $patient->income = "Between 78,900 to 118,350";
+        elseif($patient->income == "6")
+            $patient->income = "Between 118,350 to 157,800";
+        elseif($patient->income == "7")
+            $patient->income = "At least 157,800";
 
-        return $patient->id;
+
+        if($patient->unmet == "1")
+            $patient->unmet = "Women of Reproductive Age who wants to limit/space but no access to Family Planning Method.";
+        elseif($patient->unmet == "2")
+            $patient->unmet = "Couples and individuals who are fecund and sexually active and report not wanting any more children or wanting to delay the next pregnancy but are not using any Family Planning Method.";
+        elseif($patient->unmet == "3")
+            $patient->unmet = "Currently using Family Planning Method but in inappropriate way thus leading to pregnancy.";
+
+        if($patient->water == "1")
+            $patient->water = "Farthest user is not more than 250m from point source";
+        elseif($patient->water == "2")
+            $patient->water = "Farthest user is not more than 25m from communal faucet";
+        elseif($patient->water == "3")
+            $patient->water = "It has service connection from system.";
+
+        if($patient->toilet == "non")
+            $patient->toilet = "Farthest user is not more than 250m from point source";
+        elseif($patient->toilet == "comm")
+            $patient->toilet = "Farthest user is not more than 25m from communal faucet";
+        elseif($patient->toilet == "indi")
+            $patient->toilet = "It has service connection from system.";
+
+        if($patient->education == "non")
+            $patient->education = "No Education";
+        elseif($patient->education == "elem")
+            $patient->education = "Elementary Level";
+        elseif($patient->education == "elem_grad")
+            $patient->education = "Elementary Graduate";
+        elseif($patient->education == "high")
+            $patient->education = "High School Level";
+        elseif($patient->education == "high_grad")
+            $patient->education = "High School Graduate";
+        elseif($patient->education == "college")
+            $patient->education = "College Level";
+        elseif($patient->education == "college_grad")
+            $patient->education = "College Graduate";
+        elseif($patient->education == "vocational")
+            $patient->education = "Vocational Course";
+        elseif($patient->education == "master")
+            $patient->education = "Masteral Degree";
+
+        $patient->province_id = $req->province;
+        $patient->muncity_id = $req->muncity;
+        $patient->barangay_id = $req->barangay;
+        return $patient;
     }
 
 

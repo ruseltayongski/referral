@@ -4,8 +4,16 @@
         height: 2em;
     }
 </style>
-<form action="{{ asset('vaccine/saved') }}" method="POST" id="form_submit" autocomplete="off">
+<form action="<?php
+    if(isset($vaccine->typeof_vaccine)){
+        echo asset('vaccine/update');
+    }
+    else{
+        echo asset('vaccine/saved');
+    }
+?>" method="POST" id="form_submit" autocomplete="off">
     {{ csrf_field() }}
+    <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
     <div class="row">
        <div class="col-md-4">
            <small>Type of Vaccine</small>
@@ -44,10 +52,10 @@
     <div class="row">
         <div class="col-md-4">
             <small>Province</small>
-            <select name="province_id" id="province_id" class="select2" onchange="onChangeProvince($(this))">
+            <select name="province_id" id="province_id" class="select2" onchange="onChangeProvince($(this).val())">
                 <option value="">Select Option</option>
                 @foreach($province as $row)
-                <option value="{{ $row->id }}">{{ $row->description }}</option>
+                    <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
                 @endforeach
             </select>
         </div>
@@ -55,15 +63,22 @@
             <small>Municipality</small>
             <select name="muncity_id" id="municipality" class="select2">
                 <option value="">Select Option</option>
+                @if(isset($vaccine->muncity_id))
+                    @foreach($muncity as $row)
+                        <option value="{{ $row->id }}"  <?php if(isset($vaccine->muncity_id)){if($vaccine->muncity_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
         <div class="col-md-4">
             <small>Facility</small>
-            <select name="facility_id" id="" class="select2">
+            <select name="facility_id" id="facility" class="select2">
                 <option value="">Select Option</option>
-                @foreach($facility as $row)
-                    <option value="{{ $row->id }}">{{ $row->name }}</option>
-                @endforeach
+                @if(isset($vaccine->province_id))
+                    @foreach($facility as $row)
+                        <option value="{{ $row->id }}"  <?php if(isset($vaccine->facility_id)){if($vaccine->facility_id == $row->id)echo 'selected';} ?> >{{ $row->name }}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
 
@@ -135,7 +150,16 @@
         </div>
     </div>
     <br>
-    <button type="submit" class="btn btn-block btn-success btn-lg"><i class="fa fa-send"></i> Submit</button>
+    <div class="pull-right">
+        <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+        @if(isset($vaccine->typeof_vaccine))
+            <button type="submit" class="btn btn-warning btn-md"><i class="fa fa-send"></i> Update</button>
+            @else
+            <button type="submit" class="btn btn-success btn-md"><i class="fa fa-send"></i> Submit</button>
+        @endif
+    </div>
+    <br>
+    <br>
 </form>
 <script>
     $("#date_picker").daterangepicker({
@@ -163,10 +187,10 @@
     }
 
     function onChangeProvince($province_id){
-        if($province_id.val()){
+        if($province_id){
             var url = "{{ url('opcen/onchange/province') }}";
             $.ajax({
-                url: url+'/'+$province_id.val(),
+                url: url+'/'+$province_id,
                 type: 'GET',
                 success: function(data){
                     $("#municipality").select2("val", "");
@@ -184,6 +208,30 @@
                 },
                 error: function(){
                     $('#serverModal').modal();
+                }
+            });
+
+            var url = "{{ url('vaccine/onchange/facility') }}";
+            $.ajax({
+                url: url+'/'+$province_id,
+                type: 'GET',
+                success: function(data){
+                    console.log(data);
+                    $("#facility").select2("val", "");
+                    $('#facility').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Select Option'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('#facility').append($('<option>', {
+                            value: val.id,
+                            text : val.name
+                        }));
+                    });
+                },
+                error: function(e){
+                    alert(e.message)
                 }
             });
         } else {

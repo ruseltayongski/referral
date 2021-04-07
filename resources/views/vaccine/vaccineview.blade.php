@@ -11,8 +11,8 @@
                         <input type="text" class="form-control" style="width: 100%" placeholder="Search ownership" name="search" value="{{ $search }}">
                         <span class="input-group-btn">
                             <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
-                            <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
-                            <a href="{{ asset('export/client/call') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
+                            <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
+                            <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
                         </span>
@@ -93,8 +93,8 @@
                                     <th>Second Dose</th>
                                     <th>Target Dose Per Day</th>
                                     <th>No. of Vaccinated</th>
-                                    <th>Mild</th>
-                                    <th>Serious</th>
+                                    <th>AEFI</th>
+                                    <th>AEFI Qty</th>
                                     <th>Deferred</th>
                                     <th>Refused</th>
                                     <th>Percentage Coverage</th>
@@ -246,11 +246,11 @@
                                             {{ $row->refused }}
                                         </td>
                                         <td>
-                                            {{ ($row->numof_vaccinated/$row->no_eli_pop) * 100 }}%
+                                            {{ number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2) }}%
 
                                         </td>
                                         <td>
-                                            {{ $row->numof_vaccinated * 100 /$row->nvac_allocated }}
+                                            {{ number_format(($row->numof_vaccinated * 100) /$row->nvac_allocated,2) }}
                                         </td>
                                         <td>
                                             {{ $row->no_eli_pop - $row->numof_vaccinated }}
@@ -335,12 +335,22 @@
             <?php
             Session::put('vaccine_saved',false);
             ?>
+            Lobibox.notify('success', {
+                size: 'mini',
+                rounded: true,
+                msg: 'Your vaccination record is successfully saved!'
+            });
+        @endif
 
-        Lobibox.notify('success', {
-            size: 'mini',
-            rounded: true,
-            msg: 'Your vaccination record is successfully saved!'
-        });
+        @if(Session::get("vaccine_update"))
+            <?php
+            Session::put('vaccine_update',false);
+            ?>
+            Lobibox.notify('warning', {
+                size: 'mini',
+                rounded: true,
+                msg: 'Your vaccination record is successfully updated!'
+            });
         @endif
 
         $('.sinovac_count').html("<?php echo $sinovac_count; ?>");
@@ -348,6 +358,7 @@
         $('.moderna_count').html("<?php echo $moderna_count; ?>");
         $('.pfizer_count').html("<?php echo $pfizer_count; ?>");
 
+        $('#date_range').daterangepicker();
 
     </script>
 
