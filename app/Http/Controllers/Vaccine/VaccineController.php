@@ -32,18 +32,19 @@ class VaccineController extends Controller
 
         $vaccine = Vaccines::
                     where(function($q) use ($search){
-                        $q->where('ownership','like',"%$search%");
+                        $q->where('province_id','like',"%$search%");
                     })
-                    ->whereBetween('first_dose',[$date_start,$date_end])
+                    ->whereBetween('dateof_del',[$date_start,$date_end])
                     ->orderBy('id', 'desc');
 
         Session::put("vaccine",$vaccine->get());
         $vaccine = $vaccine->paginate(15);
-
+        $province = Province::get();
         return view("vaccine.vaccineview", [
             "vaccine" => $vaccine,
             "date_range_start"=>$date_start,
             "date_range_end"=>$date_end,
+            "province" =>$province,
         ]);
 
     }
@@ -74,8 +75,10 @@ class VaccineController extends Controller
         $vaccine->no_eli_pop = $request->no_eli_pop;
         $vaccine->ownership = $request->ownership;
         $vaccine->nvac_allocated = $request->nvac_allocated;
-        $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
-        $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
+        if($request->first_dose)
+             $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
+        if($request->second_dose)
+             $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
         $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
         $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;
@@ -120,8 +123,14 @@ class VaccineController extends Controller
         $vaccine->no_eli_pop = $request->no_eli_pop;
         $vaccine->ownership = $request->ownership;
         $vaccine->nvac_allocated = $request->nvac_allocated;
-        $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
-        $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
+        if($request->first_dose)
+            $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
+        else
+            $vaccine->first_dose = null;
+        if($request->second_dose)
+            $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
+        else
+            $vaccine->second_dose = null;
         $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
         $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;

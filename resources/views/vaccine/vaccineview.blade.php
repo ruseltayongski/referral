@@ -7,11 +7,16 @@
             <div class="box-header">
                 <form action="{{ asset('vaccine/vaccineview') }}" method="GET">
                     {{ csrf_field() }}
-                    <div class="input-group input-group-md" style="width: 70%">
-                        <input type="text" class="form-control" style="width: 100%" placeholder="Search ownership" name="search" value="{{ $search }}">
+                    <div class="input-group input-group-md" style="width: 40%">
+                        <select name="search" class="select2">
+                            <option value="">Select Option</option>
+                            @foreach($province as $row)
+                                <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                            @endforeach
+                        </select>
                         <span class="input-group-btn">
                             <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
-                            <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
+                            <button type="submit" class="btn btn-success" onclick="load"><i class="fa fa-filter"></i> Filter</button>
                             <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
@@ -250,10 +255,10 @@
 
                                         </td>
                                         <td>
-                                            {{ number_format(($row->numof_vaccinated * 100) /$row->nvac_allocated,2) }}
+                                            {{ number_format(($row->numof_vaccinated/$row->nvac_allocated) * 100, 2) }}
                                         </td>
                                         <td>
-                                            {{ $row->no_eli_pop - $row->numof_vaccinated }}
+                                            {{ $row->no_eli_pop - $row->numof_vaccinated - $row->refused }}
                                         </td>
                                     </tr>
                                 @endforeach

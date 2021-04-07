@@ -102,7 +102,7 @@
     <div class="row">
         <div class="col-md-4">
             <small>Date of Delivery</small>
-            <input type="text" id="date_picker2" name="dateof_del" value="<?php if(isset($vaccine->dateof_del)) echo $vaccine->dateof_del ?>" class="form-control">
+            <input type="text" id="date_picker2" name="dateof_del" value="<?php if(isset($vaccine->dateof_del)) echo $vaccine->dateof_del ?>" class="form-control" required>
         </div>
         <div class="col-md-4">
             <small>Fist Dose</small>
