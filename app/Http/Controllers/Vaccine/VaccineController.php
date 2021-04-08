@@ -134,7 +134,7 @@ class VaccineController extends Controller
         $vaccine->deferred = $request->deferred;
         $vaccine->refused = $request->refused;
         $vaccine->wastage= $request->wastage;
-        $vaccine->numof_vaccinated2 = $request->numof_vaccinated;
+        $vaccine->numof_vaccinated2 = $request->numof_vaccinated2;
         if($request->dateof_del2)
             $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
         $vaccine->aefi2 = $request->aefi2;
@@ -195,7 +195,7 @@ class VaccineController extends Controller
         $vaccine->refused = $request->refused;
         $vaccine->wastage = $request->wastage;
         $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
-        $vaccine->numof_vaccinated2 = $request->numof_vaccinated;
+        $vaccine->numof_vaccinated2 = $request->numof_vaccinated2;
         $vaccine->aefi2 = $request->aefi2;
         $vaccine->aefi_qty2 = $request->aefi_qty2;
         $vaccine->deferred2 = $request->deferred2;

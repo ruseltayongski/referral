@@ -309,6 +309,7 @@
         }
     }
 
+
     function getTarget(vaccine_allocated) {
         var typeof_vaccine = $('#typeof_vaccine').val();
         var target = 0;
@@ -317,7 +318,7 @@
             $('#tgtdoseper_day').val(target);
         }
         else if (typeof_vaccine == 'Astrazeneca'){
-            target = (vaccine_allocated/2);
+            target = (vaccine_allocated/5);
             $('#tgtdoseper_day').val(target);
         }
     }

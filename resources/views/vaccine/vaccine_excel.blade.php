@@ -7,18 +7,26 @@
         <th>Province</th>
         <th>Municipality</th>
         <th>Facility</th>
-        <th>No. of eligible population A1.1-A1.7</th>
+        <th>No. of eligible population</th>
         <th>Ownership</th>
         <th>No. of Vaccine Allocated</th>
+        <th>Target Dose </th>
         <th>Date of Delivery</th>
-        <th>First Dose</th>
-        <th>Second Dose</th>
-        <th>Target Dose Per Day</th>
-        <th>No. of Vaccinated</th>
+        <th >First Dose</th>
+        <th>Number of Vaccinated</th>
         <th>AEFI</th>
         <th>AEFI Qty</th>
         <th>Deferred</th>
         <th>Refused</th>
+        <th>Wastage</th>
+        <th>Date of Delivery 2</th>
+        <th >Second Dose</th>
+        <th>Number of Vaccinated 2</th>
+        <th>AEFI 2 </th>
+        <th>AEFI Qty 2</th>
+        <th>Deferred 2</th>
+        <th>Refused 2</th>
+        <th>Wastage 2</th>
         <th>Percentage Coverage</th>
         <th>Consumption Rate</th>
         <th>Remaining Unvaccinated</th>
@@ -68,10 +76,7 @@
                 elseif($row->priority =='etc'){
                     echo "ETC.";
                 }
-
-
                 ?>
-
             </td>
             <td>
                 <?php
@@ -109,6 +114,9 @@
                 {{ $row->nvac_allocated }}
             </td>
             <td>
+                {{ $row->tgtdoseper_day }}
+            </td>
+            <td>
                 @if($row->dateof_del)
                     {{ date('F j, Y',strtotime($row->dateof_del)) }}
                 @else
@@ -123,6 +131,31 @@
                 @endif
             </td>
             <td>
+                {{ $row->numof_vaccinated }}
+            </td>
+            <td>
+                {{ $row->aefi }}
+            </td>
+            <td>
+                {{ $row->aefi_qty }}
+            </td>
+            <td>
+                {{ $row->deferred }}
+            </td>
+            <td>
+                {{ $row->refused }}
+            </td>
+            <td>
+                {{ $row->wastage }}
+            </td>
+            <td>
+                @if($row->dateof_del2)
+                    {{ date('F j, Y',strtotime($row->dateof_del2)) }}
+                @else
+                    <span class="label label-danger">Pending</span>
+                @endif
+            </td>
+            <td>
                 @if($row->second_dose)
                     {{ date('F j, Y',strtotime($row->second_dose)) }}
                 @else
@@ -130,22 +163,22 @@
                 @endif
             </td>
             <td>
-                {{ $row->tgtdoseper_day }}
+                {{ $row->numof_vaccinated2 }}
             </td>
             <td>
-                {{ $row->numof_vaccinated }}
+                {{ $row->aefi2 }}
             </td>
             <td>
-                {{ $row->aef1 }}
+                {{ $row->aefi_qty2 }}
             </td>
             <td>
-                {{ $row->aef1_qty }}
+                {{ $row->deferred2 }}
             </td>
             <td>
-                {{ $row->deferred }}
+                {{ $row->refused2 }}
             </td>
             <td>
-                {{ $row->refused }}
+                {{ $row->wastage2 }}
             </td>
             <td>
                 {{ number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2) }}%

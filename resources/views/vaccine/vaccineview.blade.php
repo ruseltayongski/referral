@@ -7,21 +7,47 @@
             <div class="box-header">
                 <form action="{{ asset('vaccine/vaccineview') }}" method="GET">
                     {{ csrf_field() }}
-                    <div class="input-group input-group-md" style="width: 40%">
-                        <select name="search" class="select2">
-                            <option value="">Select Option</option>
-                            @foreach($province as $row)
-                                <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
-                            @endforeach
-                        </select>
-                        <span class="input-group-btn">
-                            <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
-                            <button type="submit" class="btn btn-success" onclick="load"><i class="fa fa-filter"></i> Filter</button>
-                            <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
-                            <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
-                            <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
-                        </span>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2" required>
+                                    <option value="">Select Option</option>
+                                    <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
+                                    <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
+                                    <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
+                                    <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="province_id_filter" id="province_id_filter" class="select2" onchange="onChangeProvinceFilter($(this).val())">
+                                    <option value="">Select Option</option>
+                                    @foreach($province as $row)
+                                        <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="muncity_id_filter" id="municipality_filter" class="select2">
+                                    <option value="">Select Option</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            </div>
+                        </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                                 <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-success" onclick="load"><i class="fa fa-filter"></i> Filter</button>
+                                    <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
+                                    <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                                    <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
+                                </span>
+                        </div>
+                    </div>
+
+
                 </form>
             </div>
             <div class="row" style="padding-left: 1%;padding-right: 1%">
@@ -84,13 +110,13 @@
                         <td style="font-size: 15pt;">
                             <i class="fa fa-circle text-green"></i>
                         </td>
-                        <td>&nbsp;&nbsp;First Batch</td>
+                        <td>&nbsp;&nbsp;First Dose</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15pt;">
                             <i class="fa fa-circle text-yellow"></i>
                         </td>
-                        <td>&nbsp;&nbsp;Second Batch</td>
+                        <td>&nbsp;&nbsp;Second Dose</td>
                     </tr>
                     </tbody>
                 </table>
@@ -113,9 +139,9 @@
                                     <th style="width:7%;">Date of Delivery</th>
                                     <th style="width:7%;">Dose</th>
                                     <th>Target Dose <br>Per Day</th>
-                                    <th>Total # <br>of Vaccinated</th>
+                                    <th>Number <br>of Vaccinated</th>
                                     <th>AEFI</th>
-                                    <th>Total <br>AEFI Qty</th>
+                                    <th>AEFI Qty</th>
                                     <th>Total Deferred</th>
                                     <th>Total Refused</th>
                                     <th>Total Wastage</th>
@@ -188,10 +214,7 @@
                                             elseif($row->priority =='etc'){
                                                 echo "ETC.";
                                             }
-
-
                                             ?>
-
                                         </td>
                                         <td>
                                             <?php
@@ -256,33 +279,80 @@
                                             {{ $row->tgtdoseper_day }}
                                         </td>
                                         <td>
-                                            {{ $row->numof_vaccinated + $row->numof_vaccinated2 }}
+                                            <div style="width:20%;">
+                                                <p class="text-green">{{ $row->numof_vaccinated }}</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->numof_vaccinated2 }}</p>
+                                                <p>{{ $row->numof_vaccinated + $row->numof_vaccinated2 }}</p>
+                                            </div>
                                         </td>
                                         <td>
                                             <p class="text-green">{{ $row->aefi }}</p>
-                                            <p class="text-red">{{ $row->aefi2 }}</p>
+                                            <p class="text-yellow">{{ $row->aefi2 }}</p>
                                         </td>
                                         <td>
-                                            {{ $row->aefi_qty + $row->aefi2_qty }}
-                                        </td>
-                                        <td>
-                                            {{ $row->deferred + $row -> deferred2}}
-                                        </td>
-                                        <td>
-                                            {{ $row->refused + $row->refused2 }}
-                                        </td>
-                                        <td>
-                                            {{ $row->wastage + $row->wastage2 }}
-                                        </td>
-                                        <td>
-                                            {{ number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2) }}%
+                                            <div style="width:40%;">
+                                                <p class="text-green">{{ $row->aefi_qty }}</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->aefi_qty2 }}</p>
+                                                <p> {{ $row->aefi_qty + $row->aefi_qty2 }}</p>
+                                            </div>
 
                                         </td>
                                         <td>
-                                            {{ number_format(($row->numof_vaccinated/$row->nvac_allocated) * 100, 2) }}
+                                            <div style="width:30%;">
+                                                <p class="text-green">{{ $row->deferred }}</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->deferred2 }}</p>
+                                                <p> {{ $row->deferred + $row -> deferred2}}</p>
+                                            </div>
                                         </td>
                                         <td>
-                                            {{ $row->no_eli_pop - $row->numof_vaccinated - $row->refused }}
+                                            <div style="width:30%;">
+                                                <p class="text-green">{{ $row->refused }}</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->refused2 }}</p>
+                                                <p>{{ $row->refused + $row->refused2 }}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="width:30%;">
+                                                <p class="text-green">{{ $row->wastage }}</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->wastage2 }}</p>
+                                                <p>{{ $row->wastage + $row->wastage2 }}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                $percentage_coverage1 = number_format(($row->numof_vaccinated1/$row->no_eli_pop) * 100, 2);
+                                                $percentage_coverage2 = number_format(($row->numof_vaccinated2/$row->no_eli_pop) * 100, 2);
+                                                $percentage_coverage_final = $percentage_coverage1 + $percentage_coverage2;
+                                            ?>
+                                            <div style="width:40%;">
+                                                <p class="text-green">{{ $percentage_coverage1 }}%</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $percentage_coverage2 }}%</p>
+                                                <p>{{ $percentage_coverage_final }}%</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                $consumption_rate1 = number_format(($row->numof_vaccinated1/$row->nvac_allocated) * 100, 2);
+                                                $consumption_rate2 = number_format(($row->numof_vaccinated2/$row->nvac_allocated) * 100, 2);
+                                                $consumption_rate_final = $consumption_rate1 + $consumption_rate2;
+                                            ?>
+                                            <div style="width:40%;">
+                                                <p class="text-green">{{ $consumption_rate1 }}%</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $consumption_rate2 }}%</p>
+                                                <p>{{ $consumption_rate_final }}%</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                $remaining1 = $row->no_eli_pop - $row->numof_vaccinated - $row->refused;
+                                                $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused;
+                                                $remaining_final = $remaining1 + $remaining2;
+                                            ?>
+                                            <div style="width:40%;">
+                                                <p class="text-green">{{ $remaining1 }}%</p>
+                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $remaining2 }}%</p>
+                                                <p>{{ $remaining_final }}%</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -358,6 +428,44 @@
                     $(".select2").select2({ width: '100%' });
                 },500);
             });
+        }
+
+        function onChangeProvinceFilter($province_id){
+            $('.loading').show();
+            if($province_id){
+                var url = "{{ url('opcen/onchange/province') }}";
+                $.ajax({
+                    url: url+'/'+$province_id,
+                    type: 'GET',
+                    success: function(data){
+                        console.log(data);
+                        $("#municipality_filter").select2("val", "");
+                        $('#municipality_filter').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select Option'
+                            }));
+                        jQuery.each(data, function(i,val){
+                            $('#municipality_filter').append($('<option>', {
+                                value: val.id,
+                                text : val.description
+                            }));
+                            $('.loading').hide();
+                        });
+                    },
+                    error: function(){
+                        $('#serverModal').modal();
+                    }
+                });
+
+            } else {
+                $("#municipality_filter").select2("val", "");
+                $('#municipality_filter').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Option'
+                    }));
+            }
         }
 
         @if(Session::get("vaccine_saved"))
