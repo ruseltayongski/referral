@@ -105,55 +105,94 @@
     <br>
     <div class="row">
         <div class="col-md-4">
-            <small>Date of Delivery</small>
-            <input type="text" id="date_picker2" name="dateof_del" value="<?php if(isset($vaccine->dateof_del)) echo $vaccine->dateof_del ?>" class="form-control" required>
-        </div>
-        <div class="col-md-4">
-            <small>Fist Dose</small>
-            <input type="text" id="date_picker" name="first_dose" value="<?php if(isset($vaccine->first_dose)) echo $vaccine->first_dose ?>" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <small>Second Dose</small>
-            <input type="text" id="date_picker1" name="second_dose" value="<?php if(isset($vaccine->second_dose)) echo $vaccine->second_dose ?>" class="form-control">
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-4">
             <small>Target Dose Per Day</small>
             <input type="text" name="tgtdoseper_day" id="tgtdoseper_day" value="<?php if(isset($vaccine->tgtdoseper_day)) echo $vaccine->tgtdoseper_day ?>" class="form-control" readonly>
         </div>
-        <div class="col-md-4">
-            <small>No. of Vaccinated</small>
-            <input type="text" name="numof_vaccinated" value="<?php if(isset($vaccine->numof_vaccinated)) echo $vaccine->numof_vaccinated ?>" class="form-control">
+    </div>
+    <hr style="height:1px;border-width:0;color:gray;background-color:gray">
+    <h4 style="color:green">First Dose</h4>
+    <div class="row">
+        <div class="col-md-3">
+            <small>Date of Delivery</small>
+            <input type="text" id="date_picker2" name="dateof_del" value="<?php if(isset($vaccine->dateof_del)) echo date('m/d/Y',strtotime($vaccine->dateof_del)) ?>" class="form-control" required>
         </div>
-        <div class="col-md-4">
-            <small>AEF1</small>
+        <div class="col-md-3">
+            <small>Date of Fist Dose</small>
+            <input type="text" id="date_picker" name="first_dose" value="<?php if(isset($vaccine->first_dose)) echo date('m/d/Y',strtotime($vaccine->first_dose)) ?>" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <small>No. of Vaccinated</small>
+            <input type="text" name="numof_vaccinated" value="" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <small>AEFI</small>
             <b style="margin-left:10%" class="text-green display_aefi hide"></b>
-            <input type="hidden" id="aef_qty" name="aef_qty">
-            <select name="aef1" id="" class="select2" onchange="aef1_qty($(this))">
+            <input type="hidden" id="aefi_qty" name="aefi_qty">
+            <select name="aefi" id="" class="select2" onchange="aefi_qtyFunc1($(this))">
                 <option value="" readonly>Select Option</option>
-                <option value="Mild" <?php if(isset($vaccine->aef1)){if($vaccine->aef1 == 'Mild')echo 'selected';} ?>>Mild</option>
-                <option value="Serious"<?php if(isset($vaccine->aef1)){if($vaccine->aef1 == 'Serious')echo 'selected';} ?> >Serious</option>
+                <option value="Mild" <?php if(isset($vaccine->aefi)){if($vaccine->aefi == 'Mild')echo 'selected';} ?>>Mild</option>
+                <option value="Serious"<?php if(isset($vaccine->aefi)){if($vaccine->aefi == 'Serious')echo 'selected';} ?> >Serious</option>
             </select>
         </div>
+            <div class="col-md-3">
+            <br>
+                <small>Deferred</small>
+                <input type="text" name="deferred" value="<?php if(isset($vaccine->deferred)) echo $vaccine->deferred ?>" class="form-control">
+            </div>
+            <div class="col-md-3">
+            <br>
+                <small>Refused</small>
+                <input type="text" name="refused" value="<?php if(isset($vaccine->refused)) echo $vaccine->refused ?>" class="form-control">
+            </div>
+            <div class="col-md-3">
+            <br>
+                <small>Wastage</small>
+                <input type="text" name="wastage" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
+            </div>
+        <br>
     </div>
-    <br>
+    <hr style="height:1px;border-width:0;color:gray;background-color:gray">
+    <h4 style="color:green;">Second Dose</h4>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <small>Date of Delivery</small>
+            <input type="text" id="date_picker3" name="dateof_del2" value="<?php if(isset($vaccine->dateof_del2)) echo date('m/d/Y',strtotime($vaccine->dateof_del2)) ?>" class="form-control" >
+        </div>
+        <div class="col-md-3">
+            <small>Date of Second Dose</small>
+            <input type="text" id="date_picker4" name="second_dose" value="<?php if(isset($vaccine->second_dose))echo date('m/d/Y',strtotime($vaccine->second_dose)) ?>" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <small>No. of Vaccinated</small>
+            <input type="text" name="numof_vaccinated2" value="" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <small>AEFI</small>
+            <b style="margin-left:10%" class="text-green display_aefi2 hide"></b>
+            <input type="hidden" id="aefi_qty2" name="aefi_qty2">
+            <select name="aefi2" id="" class="select2" onchange="aefi_qtyFunc2($(this))">
+                <option value="" readonly>Select Option</option>
+                <option value="Mild" <?php if(isset($vaccine->aefi2)){if($vaccine->aefi2 == 'Mild')echo 'selected';} ?>>Mild</option>
+                <option value="Serious"<?php if(isset($vaccine->aefi2)){if($vaccine->aefi2 == 'Serious')echo 'selected';} ?> >Serious</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <br>
             <small>Deferred</small>
-            <input type="text" name="deferred" value="<?php if(isset($vaccine->deferred)) echo $vaccine->deferred ?>" class="form-control">
+            <input type="text" name="deferred2" value="<?php if(isset($vaccine->deferred)) echo $vaccine->deferred ?>" class="form-control">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <br>
             <small>Refused</small>
-            <input type="text" name="refused" value="<?php if(isset($vaccine->refused)) echo $vaccine->refused ?>" class="form-control">
+            <input type="text" name="refused2" value="<?php if(isset($vaccine->refused)) echo $vaccine->refused ?>" class="form-control">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <br>
             <small>Wastage</small>
-            <input type="text" name="wastage" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
+            <input type="text" name="wastage2" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
         </div>
+        <br>
     </div>
-    <br>
     <div class="pull-right">
         <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
         @if(isset($vaccine->typeof_vaccine))
@@ -175,22 +214,43 @@
     $("#date_picker2").daterangepicker({
         "singleDatePicker":true
     });
+    $("#date_picker3").daterangepicker({
+        "singleDatePicker":true
+    });
+    $("#date_picker4").daterangepicker({
+        "singleDatePicker":true
+    });
 
-    function aef1_qty(aef1_value) {
+    function aefi_qtyFunc1(aefi_value) {
         Lobibox.prompt('text',
             {
-                title: 'How many AEFI '+aef1_value.val()+"?",
+                title: 'How many AEFI '+aefi_value.val()+"?",
                 callback: function ($this, type, ev) {
                     if($('.lobibox-input').val()) {
                         $('.display_aefi').removeClass('hide');
-                        $('.display_aefi').html(aef1_value.val()+":"+($('.lobibox-input').val()));
-                        $('#aef_qty').val($('.lobibox-input').val());
+                        $('.display_aefi').html(aefi_value.val()+":"+($('.lobibox-input').val()));
+                        $('#aefi_qty').val($('.lobibox-input').val());
+                    }
+                }
+            });
+    }
+
+    function aefi_qtyFunc2(aef2_value) {
+        Lobibox.prompt('text',
+            {
+                title: 'How many AEFI '+aef2_value.val()+"?",
+                callback: function ($this, type, ev) {
+                    if($('.lobibox-input').val()) {
+                        $('.display_aefi2').removeClass('hide');
+                        $('.display_aefi2').html(aef2_value.val()+":"+($('.lobibox-input').val()));
+                        $('#aefi_qty2').val($('.lobibox-input').val());
                     }
                 }
             });
     }
 
     function onChangeProvince($province_id){
+        $('.loading').show();
         if($province_id){
             var url = "{{ url('opcen/onchange/province') }}";
             $.ajax({
@@ -208,6 +268,7 @@
                             value: val.id,
                             text : val.description
                         }));
+                        $('.loading').hide();
                     });
                 },
                 error: function(){

@@ -49,7 +49,7 @@ class VaccineController extends Controller
         }
 
         $sinovac_count = Vaccines::where("typeof_vaccine","Sinovac")->count();
-        $astrazeneca_count = Vaccines::where("typeof_vaccine","Astrazenca")->count();
+        $astrazeneca_count = Vaccines::where("typeof_vaccine","Astrazeneca")->count();
         $moderna_count = Vaccines::where("typeof_vaccine","Moderna")->count();
         $pfizer_count = Vaccines::where("typeof_vaccine","Pfizer")->count();
 
@@ -124,15 +124,24 @@ class VaccineController extends Controller
              $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
         if($request->second_dose)
              $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
-        $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
+        if($request->dateof_del)
+             $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
         $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->aef1 = $request->aef1;
-        $vaccine->aef1_qty = $request->aef_qty;
+        $vaccine->aefi = $request->aefi;
+        $vaccine->aefi_qty = $request->aefi_qty;
         $vaccine->deferred = $request->deferred;
         $vaccine->refused = $request->refused;
         $vaccine->wastage= $request->wastage;
+        $vaccine->numof_vaccinated2 = $request->numof_vaccinated;
+        if($request->dateof_del2)
+            $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
+        $vaccine->aefi2 = $request->aefi2;
+        $vaccine->aefi_qty2 = $request->aefi_qty2;
+        $vaccine->deferred2 = $request->deferred2;
+        $vaccine->refused2 = $request->refused2;
+        $vaccine->wastage2= $request->wastage2;
         $vaccine->save();
 
         Session::put('vaccine_saved', true);
@@ -180,11 +189,18 @@ class VaccineController extends Controller
         $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;
         $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->aef1 = $request->aef1;
-        $vaccine->aef1_qty = $request->aef_qty;
+        $vaccine->aefi = $request->aefi;
+        $vaccine->aefi_qty = $request->aefi_qty;
         $vaccine->deferred = $request->deferred;
         $vaccine->refused = $request->refused;
         $vaccine->wastage = $request->wastage;
+        $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
+        $vaccine->numof_vaccinated2 = $request->numof_vaccinated;
+        $vaccine->aefi2 = $request->aefi2;
+        $vaccine->aefi_qty2 = $request->aefi_qty2;
+        $vaccine->deferred2 = $request->deferred2;
+        $vaccine->refused2 = $request->refused2;
+        $vaccine->wastage2= $request->wastage2;
         $vaccine->save();
 
         Session::put('vaccine_update', true);

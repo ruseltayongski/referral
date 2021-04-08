@@ -75,7 +75,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
     <div class="col-md-3">
         <div class="panel panel-jim">
-            <div id="reason_calling" style="height: 340px; width: 100%;"></div>
+            <div id="typeof_vaccine" style="height: 340px; width: 100%;"></div>
         </div>
         <div class="panel panel-jim">
             <div id="transaction_status" style="height: 340px; width: 100%;"></div>
@@ -99,7 +99,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
             var options1 = {
                 title: {
-                    text: "Reason for calling",
+                    text: "Type of Vaccine",
                     fontFamily: "Arial"
                 },
                 legend: {
@@ -114,18 +114,18 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     indexLabel: "{label} ({y})",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "Inquiry", y: "{{ $inquiry }}" },
-                        { label: "Referral", y: "{{ $referral }}" },
+                        { label: "Sinovac", y: "{{ $inquiry }}" },
+                        { label: "Astrazeneca", y: "{{ $referral }}" },
                         { label: "Others", y: "{{ $others }}" }
                     ]
                 }]
             };
-            $("#reason_calling").CanvasJSChart(options1);
+            $("#typeof_vaccine").CanvasJSChart(options1);
 
 
             var options = {
                 title: {
-                    text: "Status of Transaction",
+                    text: "Priority",
                     fontFamily: "Arial"
                 },
                 legend: {

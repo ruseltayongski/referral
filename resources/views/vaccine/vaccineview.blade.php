@@ -78,6 +78,23 @@
                 </div>
             </div>
             <div class="box-body">
+                <strong>Legend:</strong>
+                <table>
+                    <tbody><tr>
+                        <td style="font-size: 15pt;">
+                            <i class="fa fa-circle text-green"></i>
+                        </td>
+                        <td>&nbsp;&nbsp;First Batch</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15pt;">
+                            <i class="fa fa-circle text-yellow"></i>
+                        </td>
+                        <td>&nbsp;&nbsp;Second Batch</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
                 <div class="">
                     @if(count($vaccine)>0)
                         <div class="table-responsive">
@@ -93,16 +110,15 @@
                                     <th>No. of eligible population</th>
                                     <th>Ownership</th>
                                     <th>No. of Vaccine Allocated</th>
-                                    <th>Date of Delivery</th>
-                                    <th>First Dose</th>
-                                    <th>Second Dose</th>
-                                    <th>Target Dose Per Day</th>
-                                    <th>No. of Vaccinated</th>
+                                    <th style="width:7%;">Date of Delivery</th>
+                                    <th style="width:7%;">Dose</th>
+                                    <th>Target Dose <br>Per Day</th>
+                                    <th>Total # <br>of Vaccinated</th>
                                     <th>AEFI</th>
-                                    <th>AEFI Qty</th>
-                                    <th>Deferred</th>
-                                    <th>Refused</th>
-                                    <th>Wastage</th>
+                                    <th>Total <br>AEFI Qty</th>
+                                    <th>Total Deferred</th>
+                                    <th>Total Refused</th>
+                                    <th>Total Wastage</th>
                                     <th>Percentage Coverage</th>
                                     <th>Consumption Rate</th>
                                     <th>Remaining Unvaccinated</th>
@@ -214,45 +230,49 @@
                                         </td>
                                         <td>
                                             @if($row->dateof_del)
-                                            {{ date('F j, Y',strtotime($row->dateof_del)) }}
-                                                @else
-                                                <span class="label label-danger">Pending</span>
-                                                @endif
-                                        </td>
-                                        <td>
-                                            @if($row->first_dose)
-                                                {{ date('F j, Y',strtotime($row->first_dose)) }}
+                                                <p class="text-green">{{ date('F j, Y',strtotime($row->dateof_del)) }}</p>
                                             @else
-                                                <span class="label label-danger">Pending</span>
+                                                <p class="text-green">Pending </p>
+                                            @endif
+                                            @if($row->dateof_del2)
+                                                <p class="text-yellow">{{ date('F j, Y',strtotime($row->dateof_del2)) }}</p>
+                                            @else
+                                                <p class="text-yellow">Pending </p>
                                             @endif
                                         </td>
                                         <td>
-                                            @if($row->second_dose)
-                                                {{ date('F j, Y',strtotime($row->second_dose)) }}
+                                            @if($row->first_dose)
+                                                <p class="text-green"> {{ date('F j, Y',strtotime($row->first_dose)) }}</p>
                                             @else
-                                                <span class="label label-danger">Pending</span>
+                                                <p class="text-green">Pending </p>
+                                            @endif
+                                            @if($row->second_dose)
+                                                <p class="text-yellow">{{ date('F j, Y',strtotime($row->second_dose)) }} </p>
+                                            @else
+                                                <p class="text-yellow">Pending </p>
                                             @endif
                                         </td>
                                         <td>
                                             {{ $row->tgtdoseper_day }}
                                         </td>
                                         <td>
-                                            {{ $row->numof_vaccinated }}
+                                            {{ $row->numof_vaccinated + $row->numof_vaccinated2 }}
                                         </td>
                                         <td>
-                                            {{ $row->aef1 }}
+                                            <p class="text-green">{{ $row->aefi }}</p>
+                                            <p class="text-red">{{ $row->aefi2 }}</p>
                                         </td>
                                         <td>
-                                            {{ $row->aef1_qty }}
+                                            {{ $row->aefi_qty + $row->aefi2_qty }}
                                         </td>
                                         <td>
-                                            {{ $row->deferred }}
+                                            {{ $row->deferred + $row -> deferred2}}
                                         </td>
                                         <td>
-                                            {{ $row->refused }}
+                                            {{ $row->refused + $row->refused2 }}
                                         </td>
                                         <td>
-                                            {{ $row->wastage }}
+                                            {{ $row->wastage + $row->wastage2 }}
                                         </td>
                                         <td>
                                             {{ number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2) }}%
@@ -296,7 +316,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel"><i class="fa fa-eyedropper"></i> Vaccine Information</h3>
+                    <h3 id="myModalLabel"><i class="fa fa-medkit" style="color:green"></i> Vaccine Information</h3>
                 </div>
                 <div class="modal-body vaccinated_content">
 
