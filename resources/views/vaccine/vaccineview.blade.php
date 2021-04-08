@@ -156,6 +156,7 @@
                                 $astrazeneca_count =0;
                                 $moderna_count =0;
                                 $pfizer_count =0;
+                                $number_eligible_pop_total = 0;
                                 ?>
                                 @foreach($vaccine as $row)
                                    <?php
@@ -171,6 +172,7 @@
                                    elseif ($row->typeof_vaccine == 'Pfizer'){
                                        $pfizer_count++;
                                    }
+                                   $number_eligible_pop_total += $row->no_eli_pop;
                                    ?>
                                     <tr>
                                         <td>
@@ -281,8 +283,7 @@
                                         <td>
                                             <div style="width:20%;">
                                                 <p class="text-green">{{ $row->numof_vaccinated }}</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->numof_vaccinated2 }}</p>
-                                                <p>{{ $row->numof_vaccinated + $row->numof_vaccinated2 }}</p>
+                                                <p class="text-yellow">{{ $row->numof_vaccinated2 }}</p>
                                             </div>
                                         </td>
                                         <td>
@@ -292,66 +293,55 @@
                                         <td>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $row->aefi_qty }}</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->aefi_qty2 }}</p>
-                                                <p> {{ $row->aefi_qty + $row->aefi_qty2 }}</p>
+                                                <p class="text-yellow">{{ $row->aefi_qty2 }}</p>
                                             </div>
-
                                         </td>
                                         <td>
                                             <div style="width:30%;">
                                                 <p class="text-green">{{ $row->deferred }}</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->deferred2 }}</p>
-                                                <p> {{ $row->deferred + $row -> deferred2}}</p>
+                                                <p class="text-yellow" >{{ $row->deferred2 }}</p>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:30%;">
                                                 <p class="text-green">{{ $row->refused }}</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->refused2 }}</p>
-                                                <p>{{ $row->refused + $row->refused2 }}</p>
+                                                <p class="text-yellow">{{ $row->refused2 }}</p>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:30%;">
                                                 <p class="text-green">{{ $row->wastage }}</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $row->wastage2 }}</p>
-                                                <p>{{ $row->wastage + $row->wastage2 }}</p>
+                                                <p class="text-yellow">{{ $row->wastage2 }}</p>
                                             </div>
                                         </td>
                                         <td>
                                             <?php
                                                 $percentage_coverage1 = number_format(($row->numof_vaccinated1/$row->no_eli_pop) * 100, 2);
                                                 $percentage_coverage2 = number_format(($row->numof_vaccinated2/$row->no_eli_pop) * 100, 2);
-                                                $percentage_coverage_final = $percentage_coverage1 + $percentage_coverage2;
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $percentage_coverage1 }}%</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $percentage_coverage2 }}%</p>
-                                                <p>{{ $percentage_coverage_final }}%</p>
+                                                <p class="text-yellow">{{ $percentage_coverage2 }}%</p>
                                             </div>
                                         </td>
                                         <td>
                                             <?php
                                                 $consumption_rate1 = number_format(($row->numof_vaccinated1/$row->nvac_allocated) * 100, 2);
                                                 $consumption_rate2 = number_format(($row->numof_vaccinated2/$row->nvac_allocated) * 100, 2);
-                                                $consumption_rate_final = $consumption_rate1 + $consumption_rate2;
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $consumption_rate1 }}%</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $consumption_rate2 }}%</p>
-                                                <p>{{ $consumption_rate_final }}%</p>
+                                                <p class="text-yellow">{{ $consumption_rate2 }}%</p>
                                             </div>
                                         </td>
                                         <td>
                                             <?php
                                                 $remaining1 = $row->no_eli_pop - $row->numof_vaccinated - $row->refused;
                                                 $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused;
-                                                $remaining_final = $remaining1 + $remaining2;
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $remaining1 }}%</p>
-                                                <p class="text-yellow" style="border-bottom: 1px solid black;">{{ $remaining2 }}%</p>
-                                                <p>{{ $remaining_final }}%</p>
+                                                <p class="text-yellow">{{ $remaining2 }}%</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -371,6 +361,115 @@
                         </div>
                     @endif
                 </div>
+
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-3 col-xs-6">
+                            <div class="description-block border-right">
+                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i></span>
+                                <h5 class="description-header">{{ number_format($number_eligible_pop_total) }}</h5>
+                                <span class="description-text">TOTAL NUMBER OF ELIGIBLE POPULATION</span>
+                            </div>
+                            <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-3 col-xs-6">
+                            <div class="description-block border-right">
+                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> </span>
+                                <h5 class="description-header">10,390.90</h5>
+                                <span class="description-text">TOTAL NUMBER OF VACCINE ALLOCATED </span>
+                            </div>
+                            <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-3 col-xs-6">
+                            <div class="description-block border-right">
+                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
+                                <h5 class="description-header">24,813.53</h5>
+                                <span class="description-text">TOTAL NUMBER OF VACCINATED (SECOND DOSE)</span>
+                            </div>
+                            <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-3 col-xs-6">
+                            <div class="description-block">
+                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
+                                <h5 class="description-header">1200</h5>
+                                <span class="description-text">TOTAL AEFI</span>
+                            </div>
+                            <!-- /.description-block -->
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
+                            <h5 class="description-header">35,210.43</h5>
+                            <span class="description-text">TOTAL AEFI QTY</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> </span>
+                            <h5 class="description-header">10,390.90</h5>
+                            <span class="description-text">TOTAL NUMBER OF DEFERRED </span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
+                            <h5 class="description-header">24,813.53</h5>
+                            <span class="description-text">TOTAL NUMBER OF REFUSED</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
+                            <h5 class="description-header">1200</h5>
+                            <span class="description-text">TOTAL NUMBER OF WASTAGE</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
+                            <h5 class="description-header">1200</h5>
+                            <span class="description-text">TOTAL NUMBER OF PERCENTAGE COVERAGE</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
+                            <h5 class="description-header">1200</h5>
+                            <span class="description-text">TOTAL NUMBER OF CONSUMPTION RATE</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
+                            <h5 class="description-header">1200</h5>
+                            <span class="description-text">TOTAL NUMBER OF REMAINING UNVACCINATED</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+
             </div>
         </div>
     </div>
