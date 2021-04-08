@@ -122,7 +122,7 @@
         </div>
         <div class="col-md-3">
             <small>No. of Vaccinated</small>
-            <input type="text" name="numof_vaccinated" value="" class="form-control">
+            <input type="text" name="numof_vaccinated" value="<?php if(isset($vaccine->numof_vaccinated)) echo $vaccine->numof_vaccinated ?>" class="form-control">
         </div>
         <div class="col-md-3">
             <small>AEFI</small>
@@ -147,7 +147,7 @@
             <div class="col-md-3">
             <br>
                 <small>Wastage</small>
-                <input type="text" name="wastage" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
+                <input type="text" name="wastage" value="<?php if(isset($vaccine->wastage)) echo $vaccine->wastage?>" class="form-control">
             </div>
         <br>
     </div>
@@ -164,7 +164,7 @@
         </div>
         <div class="col-md-3">
             <small>No. of Vaccinated</small>
-            <input type="text" name="numof_vaccinated2" value="" class="form-control">
+            <input type="text" name="numof_vaccinated2" value="<?php if(isset($vaccine->numof_vaccinated2)) echo $vaccine->numof_vaccinated2 ?>" class="form-control">
         </div>
         <div class="col-md-3">
             <small>AEFI</small>
@@ -189,7 +189,7 @@
         <div class="col-md-3">
             <br>
             <small>Wastage</small>
-            <input type="text" name="wastage2" value="<?php if(isset($vaccine->percent_coverage)) echo $vaccine->percent_coverage?>" class="form-control">
+            <input type="text" name="wastage2" value="<?php if(isset($vaccine->wastage2)) echo $vaccine->wastage2?>" class="form-control">
         </div>
         <br>
     </div>
