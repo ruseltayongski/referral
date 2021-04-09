@@ -9,6 +9,7 @@ use App\Vaccines;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -83,13 +84,83 @@ class VaccineController extends Controller
         Session::put("vaccine",$vaccine->get());
         $vaccine = $vaccine->paginate(15);
         $province = Province::get();
+        $no_eli_pop = Vaccines::select(DB::raw("sum(no_eli_pop) as no_eli_pop"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->no_eli_pop;
+        $numof_vaccine_allocated = Vaccines::select(DB::raw("sum(nvac_allocated) as nvac_allocated"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->nvac_allocated;
 
+        $numof_vaccinated_first = Vaccines::select(DB::raw("sum(numof_vaccinated) as numof_vaccinated"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->numof_vaccinated;
+        $numof_vaccinated_second = Vaccines::select(DB::raw("sum(numof_vaccinated2) as numof_vaccinated2"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->numof_vaccinated2;
+        $aefi_qty_first = Vaccines::select(DB::raw("sum(aefi_qty) as aefi_qty"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->aefi_qty;
+        $aefi_qty_second = Vaccines::select(DB::raw("sum(aefi_qty2) as aefi_qty2"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->aefi_qty2;
+        $targetdose_perday = Vaccines::select(DB::raw("sum(tgtdoseper_day) as tgtdoseper_day"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->tgtdoseper_day;
+        $total_deferred_first = Vaccines::select(DB::raw("sum(deferred) as deferred"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->deferred;
+        $total_deferred_second = Vaccines::select(DB::raw("sum(deferred2) as deferred2"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->deferred2;
+        $total_refused_first = Vaccines::select(DB::raw("sum(refused) as refused"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->refused;
+        $total_refused_second = Vaccines::select(DB::raw("sum(refused2) as refused2"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->refused2;
+        $total_wastage_first = Vaccines::select(DB::raw("sum(wastage) as wastage"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->wastage;
+        $total_wastage_second = Vaccines::select(DB::raw("sum(wastage2) as wastage2"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->wastage2;
+        /*$totalpercent_coverage_first = Vaccines::select(DB::raw("(sum((numof_vaccinated+no_eli_pop) * 100 )) as percent_coverage"))
+                                ->whereBetween('dateof_del',[$date_start,$date_end])
+                                ->first()
+                                ->percent_coverage;*/
 
         return view("vaccine.vaccineview", [
             "vaccine" => $vaccine,
             "date_range_start" => $date_start,
             "date_range_end" => $date_end,
-            "province" => $province
+            "province" => $province,
+            "number_eligible_pop_total" => $no_eli_pop,
+            "numof_vaccinated_total_first" => $numof_vaccinated_first,
+            "numof_vaccinated_total_second" => $numof_vaccinated_second,
+            "numof_vaccine_allocated" => $numof_vaccine_allocated,
+            "aefi_qty_first" => $aefi_qty_first,
+            "aefi_qty_second" => $aefi_qty_second,
+            "targetdose_perday" => $targetdose_perday,
+            "total_deferred_first" => $total_deferred_first,
+            "total_deferred_second" => $total_deferred_second,
+            "total_refused_first" => $total_refused_first,
+            "total_refused_second" => $total_refused_second,
+            "total_wastage_first" => $total_wastage_first,
+            "total_wastage_second" => $total_wastage_second
+
         ]);
 
     }

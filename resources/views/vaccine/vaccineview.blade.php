@@ -7,11 +7,11 @@
             <div class="box-header">
                 <form action="{{ asset('vaccine/vaccineview') }}" method="GET">
                     {{ csrf_field() }}
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-3">
                                 <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2" required>
-                                    <option value="">Select Option</option>
+                                    <option value="">Select Type of Vaccine</option>
                                     <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                     <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
                                     <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-md-3">
                                 <select name="province_id_filter" id="province_id_filter" class="select2" onchange="onChangeProvinceFilter($(this).val())">
-                                    <option value="">Select Option</option>
+                                    <option value="">Select Province</option>
                                     @foreach($province as $row)
                                         <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
                                     @endforeach
@@ -28,22 +28,41 @@
                             </div>
                             <div class="col-md-3">
                                 <select name="muncity_id_filter" id="municipality_filter" class="select2">
-                                    <option value="">Select Option</option>
+                                    <option value="">Select Municipality</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                                <select name="priority" id="" class="select2">
+                                    <option value="">Select Priority</option>
+                                    <option value="frontline_health_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'frontline_health_workers')echo 'selected';} ?>>Frontline Health Workers</option>
+                                    <option value="indigent_senior_citizens" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'indigent_senior_citizens')echo 'selected';} ?>>Senior Citizens</option>
+                                    <option value="remaining_indigent_population" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_indigent_population')echo 'selected';} ?> disabled>Remaining Indigent Population</option>
+                                    <option value="uniform_personnel" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'uniform_personnel')echo 'selected';} ?> disabled>Uniform Personnel</option>
+                                    <option value="teachers_school_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'teachers_school_workers')echo 'selected';} ?> disabled>Teachers & School Workers</option>
+                                    <option value="all_government_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'all_government_workers')echo 'selected';} ?> disabled>All Government Workers (National & Local)</option>
+                                    <option value="essential_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'essential_workers')echo 'selected';} ?> disabled>Essential Workers</option>
+                                    <option value="socio_demographic" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'socio_demographic')echo 'selected';} ?> disabled>Socio-demographic groups & significant higher risk other than senior citizen and indigent population (e.g.PDL,PWD,IP,Filipinos living in high-density areas)</option>
+                                    <option value="ofw" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >OFW's</option>
+                                    <option value="remaining_workforce" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_workforce')echo 'selected';} ?> disabled>Other remaining workforce</option>
+                                    <option value="remaining_filipino_citizen" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_filipino_citizen')echo 'selected';} ?> disabled>Remaining Filipino Citizen</option>
+                                    <option value="etc" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'etc')echo 'selected';} ?> disabled >ETC.</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            </div>
+                            <div class="col-md-9">
                                  <span class="input-group-btn">
                                     <button type="submit" class="btn btn-success" onclick="load"><i class="fa fa-filter"></i> Filter</button>
                                     <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                                     <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                                     <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
                                 </span>
+                            </div>
                         </div>
                     </div>
 
@@ -152,11 +171,10 @@
                                 </thead>
                                 <tbody>
                                 <?php
-                                $sinovac_count = 0;
-                                $astrazeneca_count =0;
-                                $moderna_count =0;
-                                $pfizer_count =0;
-                                $number_eligible_pop_total = 0;
+                                    $sinovac_count = 0;
+                                    $astrazeneca_count =0;
+                                    $moderna_count =0;
+                                    $pfizer_count =0;
                                 ?>
                                 @foreach($vaccine as $row)
                                    <?php
@@ -172,7 +190,6 @@
                                    elseif ($row->typeof_vaccine == 'Pfizer'){
                                        $pfizer_count++;
                                    }
-                                   $number_eligible_pop_total += $row->no_eli_pop;
                                    ?>
                                     <tr>
                                         <td>
@@ -316,7 +333,7 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $percentage_coverage1 = number_format(($row->numof_vaccinated1/$row->no_eli_pop) * 100, 2);
+                                                $percentage_coverage1 = number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2);
                                                 $percentage_coverage2 = number_format(($row->numof_vaccinated2/$row->no_eli_pop) * 100, 2);
                                             ?>
                                             <div style="width:40%;">
@@ -326,7 +343,7 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $consumption_rate1 = number_format(($row->numof_vaccinated1/$row->nvac_allocated) * 100, 2);
+                                                $consumption_rate1 = number_format(($row->numof_vaccinated/$row->nvac_allocated) * 100, 2);
                                                 $consumption_rate2 = number_format(($row->numof_vaccinated2/$row->nvac_allocated) * 100, 2);
                                             ?>
                                             <div style="width:40%;">
@@ -337,11 +354,11 @@
                                         <td>
                                             <?php
                                                 $remaining1 = $row->no_eli_pop - $row->numof_vaccinated - $row->refused;
-                                                $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused;
+                                                $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused2;
                                             ?>
                                             <div style="width:40%;">
-                                                <p class="text-green">{{ $remaining1 }}%</p>
-                                                <p class="text-yellow">{{ $remaining2 }}%</p>
+                                                <p class="text-green">{{ $remaining1 }}</p>
+                                                <p class="text-yellow">{{ $remaining2 }}</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -368,34 +385,34 @@
                             <div class="description-block border-right">
                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i></span>
                                 <h5 class="description-header">{{ number_format($number_eligible_pop_total) }}</h5>
-                                <span class="description-text">TOTAL NUMBER OF ELIGIBLE POPULATION</span>
+                                <span class="description-text">TOTAL ELIGIBLE POPULATION</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-3 col-xs-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> </span>
-                                <h5 class="description-header">10,390.90</h5>
-                                <span class="description-text">TOTAL NUMBER OF VACCINE ALLOCATED </span>
+                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i></span>
+                                <h5 class="description-header">{{ number_format($numof_vaccine_allocated) }}</h5>
+                                <span class="description-text">TOTAL VACCINE ALLOCATED</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-3 col-xs-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
-                                <h5 class="description-header">24,813.53</h5>
-                                <span class="description-text">TOTAL NUMBER OF VACCINATED (SECOND DOSE)</span>
+                                <span class="description-header">{{ number_format($numof_vaccinated_total_first + $numof_vaccinated_total_second) }}</span>
+                                <h5 class="description-header"><span class="text-green">{{ number_format($numof_vaccinated_total_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format($numof_vaccinated_total_second) }}</span></h5>
+                                <span class="description-text">TOTAL VACCINATED</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-3 col-xs-6">
-                            <div class="description-block">
-                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
-                                <h5 class="description-header">1200</h5>
-                                <span class="description-text">TOTAL AEFI</span>
+                            <div class="description-block border-right">
+                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i></span>
+                                <h5 class="description-header">{{ number_format($targetdose_perday) }}</h5>
+                                <span class="description-text">TOTAL TARGET DOSE PER DAY</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
@@ -406,63 +423,63 @@
                 <div class="row">
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
-                            <h5 class="description-header">35,210.43</h5>
-                            <span class="description-text">TOTAL AEFI QTY</span>
+                            <span class="description-header">{{ number_format($aefi_qty_first + $aefi_qty_second) }}</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format($aefi_qty_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format($aefi_qty_second) }}</span></h5>
+                            <span class="description-text">TOTAL AEFI QUANTITY</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> </span>
-                            <h5 class="description-header">10,390.90</h5>
-                            <span class="description-text">TOTAL NUMBER OF DEFERRED </span>
+                            <span class="description-header">{{ number_format($total_deferred_first + $total_deferred_second) }}</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format($total_deferred_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format($total_deferred_second) }}</span></h5>
+                            <span class="description-text">TOTAL DEFERRED</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> </span>
-                            <h5 class="description-header">24,813.53</h5>
-                            <span class="description-text">TOTAL NUMBER OF REFUSED</span>
+                            <span class="description-header">{{ number_format($total_refused_first + $total_refused_second) }}</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format($total_refused_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format($total_refused_second) }}</span></h5>
+                            <span class="description-text">TOTAL REFUSED</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block">
-                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
-                            <h5 class="description-header">1200</h5>
-                            <span class="description-text">TOTAL NUMBER OF WASTAGE</span>
+                            <span class="description-header">{{ number_format($total_wastage_first + $total_wastage_second) }}</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format($total_wastage_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format($total_wastage_second) }}</span></h5>
+                            <span class="description-text">TOTAL WASTAGE</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block">
-                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
-                            <h5 class="description-header">1200</h5>
-                            <span class="description-text">TOTAL NUMBER OF PERCENTAGE COVERAGE</span>
+                            <span class="description-header">{{ number_format(($numof_vaccinated_total_first + $numof_vaccinated_total_second) / $number_eligible_pop_total * 100, 2) }}%</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format( ($numof_vaccinated_total_first) / $number_eligible_pop_total * 100,2) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format( ($numof_vaccinated_total_second) / $number_eligible_pop_total * 100,2) }}%</span></h5>
+                            <span class="description-text">TOTAL PERCENT COVERAGE</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block">
-                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
-                            <h5 class="description-header">1200</h5>
-                            <span class="description-text">TOTAL NUMBER OF CONSUMPTION RATE</span>
+                            <span class="description-header">{{ number_format(($numof_vaccinated_total_first + $numof_vaccinated_total_second) / ($numof_vaccine_allocated) * 100,2)}}%</span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format( ($numof_vaccinated_total_first) / $numof_vaccine_allocated  * 100, 2) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format( ($numof_vaccinated_total_second) / $numof_vaccine_allocated  * 100, 2) }}%</span></h5>
+                            <span class="description-text">TOTAL CONSUMPTION RATE</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block">
-                            <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> </span>
-                            <h5 class="description-header">1200</h5>
-                            <span class="description-text">TOTAL NUMBER OF REMAINING UNVACCINATED</span>
+                            <span class="description-percentage text-green"><i class="fa fa-caret-up"></i></span>
+                            <h5 class="description-header"><span class="text-green">{{ number_format($number_eligible_pop_total - $numof_vaccinated_total_first - $total_refused_first ) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format( ($number_eligible_pop_total - $numof_vaccinated_total_second - $total_refused_second)) }}</span></h5>
+                            <span class="description-text">TOTAL REMAINING UNVACCINATED</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
