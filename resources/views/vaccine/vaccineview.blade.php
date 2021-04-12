@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header">
@@ -10,7 +9,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-3">
-                                <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2" required>
+                                <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
                                     <option value="">Select Type of Vaccine</option>
                                     <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                     <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
@@ -27,8 +26,13 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select name="muncity_id_filter" id="municipality_filter" class="select2">
+                                <select name="municipality_filter" id="municipality_filter" class="select2">
                                     <option value="">Select Municipality</option>
+                                    @if(isset($vaccine->muncity_id))
+                                        @foreach($muncity as $row)
+                                            <option value="{{ $row->id }}"  <?php if(isset($vaccine->muncity_id)){if($vaccine->muncity_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -147,16 +151,14 @@
                                 <thead class="bg-gray">
                                 <tr>
                                     <th>Type of Vaccine</th>
-                                    <th>Priority</th>
-                                    <th>Encoded by</th>
-                                    <th>Province</th>
                                     <th>Municipality</th>
+                                    <th>Priority</th>
+                                    <th>Province</th>
                                     <th>Facility</th>
                                     <th>No. of eligible population</th>
                                     <th>Ownership</th>
                                     <th>No. of Vaccine Allocated</th>
                                     <th style="width:7%;">Date of Delivery</th>
-                                    <th style="width:7%;">Dose</th>
                                     <th>Target Dose <br>Per Day</th>
                                     <th>Number <br>of Vaccinated</th>
                                     <th>AEFI</th>
@@ -167,36 +169,43 @@
                                     <th>Percentage Coverage</th>
                                     <th>Consumption Rate</th>
                                     <th>Remaining Unvaccinated</th>
+                                    <th>Encoded by</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
-                                    $sinovac_count = 0;
-                                    $astrazeneca_count =0;
-                                    $moderna_count =0;
-                                    $pfizer_count =0;
+                                $sinovac_count = 0;
+                                $astrazeneca_count =0;
+                                $moderna_count =0;
+                                $pfizer_count =0;
                                 ?>
                                 @foreach($vaccine as $row)
-                                   <?php
-                                   if($row->typeof_vaccine == 'Sinovac'){
-                                       $sinovac_count++;
-                                   }
-                                   elseif ($row->typeof_vaccine == 'Astrazeneca'){
-                                       $astrazeneca_count++;
-                                   }
-                                   elseif ($row->typeof_vaccine == 'Moderna'){
-                                       $moderna_count++;
-                                   }
-                                   elseif ($row->typeof_vaccine == 'Pfizer'){
-                                       $pfizer_count++;
-                                   }
-                                   ?>
+                                    <?php
+                                    if($row->typeof_vaccine == 'Sinovac'){
+                                        $sinovac_count++;
+                                    }
+                                    elseif ($row->typeof_vaccine == 'Astrazeneca'){
+                                        $astrazeneca_count++;
+                                    }
+                                    elseif ($row->typeof_vaccine == 'Moderna'){
+                                        $moderna_count++;
+                                    }
+                                    elseif ($row->typeof_vaccine == 'Pfizer'){
+                                        $pfizer_count++;
+                                    }
+                                    ?>
                                     <tr>
                                         <td>
                                             <b class="text-blue" style="font-size:11pt;cursor: pointer;" onclick="updateVaccinatedView('<?php echo $row->id; ?>',$(this))">{{ $row->typeof_vaccine }}</b>
                                         </td>
                                         <td>
                                             <?php
+                                            $municipality = \App\Muncity::find($row->muncity_id);
+                                            ?>
+                                            <b class="text-green" style="font-size:11pt;cursor: pointer;" onclick="muncityVaccinated('<?php echo $row->id; ?>',$(this))">{{ $municipality->description }}</b>
+                                        </td>
+                                        <td>
+                                          <b> <?php
                                             if($row->priority =='frontline_health_workers'){
                                                 echo 'Frontline Health Workers';
                                             }
@@ -234,26 +243,13 @@
                                                 echo "ETC.";
                                             }
                                             ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            $transacted_by = \App\User::find($row->encoded_by);
-                                            $transacted_by = $transacted_by->fname.' '.ucfirst($transacted_by->mname[0]).'. '.$transacted_by->lname;
-                                            ?>
-                                            <span>{{ $transacted_by }}</span><br>
-
+                                          </b>
                                         </td>
                                         <td>
                                             <?php
                                             $province = \App\Province::find($row->province_id);
                                             ?>
                                             <span>{{ $province->description }}</span><br>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            $municipality = \App\Muncity::find($row->muncity_id);
-                                            ?>
-                                            <span>{{ $municipality->description }}</span><br>
                                         </td>
                                         <td>
                                             <?php
@@ -281,18 +277,7 @@
                                             @else
                                                 <p class="text-yellow">Pending </p>
                                             @endif
-                                        </td>
-                                        <td>
-                                            @if($row->first_dose)
-                                                <p class="text-green"> {{ date('F j, Y',strtotime($row->first_dose)) }}</p>
-                                            @else
-                                                <p class="text-green">Pending </p>
-                                            @endif
-                                            @if($row->second_dose)
-                                                <p class="text-yellow">{{ date('F j, Y',strtotime($row->second_dose)) }} </p>
-                                            @else
-                                                <p class="text-yellow">Pending </p>
-                                            @endif
+                                         <a href="#" onclick="addNewDelivery('<?php echo $row->id; ?>',$(this))" id="workAdd"><i class="fa fa-user-plus"></i> Add New Delivery</a>
                                         </td>
                                         <td>
                                             {{ $row->tgtdoseper_day }}
@@ -333,8 +318,8 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $percentage_coverage1 = number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2);
-                                                $percentage_coverage2 = number_format(($row->numof_vaccinated2/$row->no_eli_pop) * 100, 2);
+                                            $percentage_coverage1 = number_format(($row->numof_vaccinated/$row->no_eli_pop) * 100, 2);
+                                            $percentage_coverage2 = number_format(($row->numof_vaccinated2/$row->no_eli_pop) * 100, 2);
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $percentage_coverage1 }}%</p>
@@ -343,8 +328,8 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $consumption_rate1 = number_format(($row->numof_vaccinated/$row->nvac_allocated) * 100, 2);
-                                                $consumption_rate2 = number_format(($row->numof_vaccinated2/$row->nvac_allocated) * 100, 2);
+                                            $consumption_rate1 = number_format(($row->numof_vaccinated/$row->nvac_allocated) * 100, 2);
+                                            $consumption_rate2 = number_format(($row->numof_vaccinated2/$row->nvac_allocated) * 100, 2);
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $consumption_rate1 }}%</p>
@@ -353,13 +338,21 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $remaining1 = $row->no_eli_pop - $row->numof_vaccinated - $row->refused;
-                                                $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused2;
+                                            $remaining1 = $row->no_eli_pop - $row->numof_vaccinated - $row->refused;
+                                            $remaining2 = $row->no_eli_pop - $row->numof_vaccinated2- $row->refused2;
                                             ?>
                                             <div style="width:40%;">
                                                 <p class="text-green">{{ $remaining1 }}</p>
                                                 <p class="text-yellow">{{ $remaining2 }}</p>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $transacted_by = \App\User::find($row->encoded_by);
+                                            $transacted_by = $transacted_by->fname.' '.ucfirst($transacted_by->mname[0]).'. '.$transacted_by->lname;
+                                            ?>
+                                            <span>{{ $transacted_by }}</span><br>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -487,7 +480,6 @@
                 <!-- /.row -->
             </div>
 
-            </div>
         </div>
     </div>
 
@@ -511,12 +503,44 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+
+    <div class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel"><i class="fa fa-location-arrow" style="color:green"></i> Alicia</h3>
+                </div>
+                <div class="modal-body vaccinated_content_municipality">
+
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" id="dateof_delivery_modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body dateof_delivery_content">
+
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 @endsection
 
 @section('js')
     <script>
         $("#container").removeClass("container");
         $("#container").addClass("container-fluid");
+
+        $("#dateof_delivery_picker1").daterangepicker({
+            "singleDatePicker":true
+        });
+        $("#dateof_delivery_picker2").daterangepicker({
+            "singleDatePicker":true
+        });
 
         function newVaccinated(){
             $("#vaccine_modal").modal('show');
@@ -526,6 +550,20 @@
             $.get(url,function(data){
                 setTimeout(function(){
                     $(".vaccinated_content").html(data);
+                    $(".select2").select2({ width: '100%' });
+                },500);
+            });
+        }
+
+        function muncityVaccinated(vaccine_id,data){
+            $("#vaccine_modal_municipality").modal('show');
+            $(".vaccinated_content_municipality").html(loading);
+            $("b").css("background-color","");
+            data.css("background-color","yellow");
+            var url = "<?php echo asset('vaccine/vaccinated/municipality/content').'/'; ?>"+vaccine_id;
+            $.get(url,function(data){
+                setTimeout(function(){
+                    $(".vaccinated_content_municipality").html(data);
                     $(".select2").select2({ width: '100%' });
                 },500);
             });
@@ -545,6 +583,22 @@
                 },500);
             });
         }
+
+        function addNewDelivery(vaccine_id,data){
+            event.preventDefault();
+            $("#dateof_delivery_modal").modal('show');
+            $(".dateof_delivery_content").html(loading);
+            $("b").css("background-color","");
+            data.css("background-color","yellow");
+            var url = "<?php echo asset('vaccine/new_delivery').'/'; ?>"+vaccine_id;
+            $.get(url,function(data){
+                setTimeout(function(){
+                    $(".dateof_delivery_content").html(data);
+                    $(".select2").select2({ width: '100%' });
+                },500);
+            });
+        }
+
 
         function onChangeProvinceFilter($province_id){
             $('.loading').show();
@@ -585,25 +639,25 @@
         }
 
         @if(Session::get("vaccine_saved"))
-            <?php
-            Session::put('vaccine_saved',false);
-            ?>
-            Lobibox.notify('success', {
-                size: 'mini',
-                rounded: true,
-                msg: 'Your vaccination record is successfully saved!'
-            });
+        <?php
+        Session::put('vaccine_saved',false);
+        ?>
+        Lobibox.notify('success', {
+            size: 'mini',
+            rounded: true,
+            msg: 'Your vaccination record is successfully saved!'
+        });
         @endif
 
         @if(Session::get("vaccine_update"))
-            <?php
-            Session::put('vaccine_update',false);
-            ?>
-            Lobibox.notify('warning', {
-                size: 'mini',
-                rounded: true,
-                msg: 'Your vaccination record is successfully updated!'
-            });
+        <?php
+        Session::put('vaccine_update',false);
+        ?>
+        Lobibox.notify('warning', {
+            size: 'mini',
+            rounded: true,
+            msg: 'Your vaccination record is successfully updated!'
+        });
         @endif
 
         $('.sinovac_count').html("<?php echo $sinovac_count; ?>");

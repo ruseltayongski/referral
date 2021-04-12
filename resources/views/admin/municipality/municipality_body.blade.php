@@ -17,6 +17,14 @@
         <label>Municipality Code:</label>
         <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code">
     </div>
+    <div class="form-group">
+        <label>Frontline Health Workers:</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code">
+    </div>
+    <div class="form-group">
+        <label>Senior Citizens</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code">
+    </div>
     <hr />
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

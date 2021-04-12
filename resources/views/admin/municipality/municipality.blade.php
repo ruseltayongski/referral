@@ -31,6 +31,7 @@
                             <th>Municipality Name</th>
                             <th>Municipality Code</th>
                             <th>Frontline Health Workers</th>
+                            <th>Señior Citizens</th>
                             <th width="5%;">Option</th>
                         </tr>
                         @foreach($data as $row)
@@ -50,7 +51,10 @@
                                     <b class="text-green">{{ $row->muncity_code }}</b>
                                 </td>
                                 <td>
-                                    <p><a href="#" class="text_editable" id="frontline_health_workers{{ $row->id }}" style="font-size: 10pt;">{{ $row->frontline_health_workers }}</a></p>
+                                    <p>{{ $row->frontline_health_workers }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $row->senior_citizen }}</p>
                                 </td>
                                 <td>
                                     <a href="{{ asset('admin/barangay').'/'.$province_id.'/'.$row->id }}" class="btn btn-block btn-social btn-instagram">
@@ -77,43 +81,9 @@
     @include('admin.modal.facility_modal')
 @endsection
 @section('js')
-    <script src="{{ asset('resources/plugin/bootstrap3-editable/js/bootstrap-editable.min.js') }}"></script>
     <script>
         <?php $user = Session::get('auth'); ?>
 
-
-        //turn to inline mode
-        $.fn.editable.defaults.mode = 'popup';
-        //editables
-        $(".text_editable").each(function(){
-            $('#'+this.id).editable({
-                type : this.id == 'remarks' ? 'textarea' : 'text',
-                name: 'username',
-                title: $(this).data("title"),
-                emptytext: 'empty',
-                success: function(response, newValue) {
-                    /*var url = "<?php echo asset('bed_update'); ?>";
-                    var json = {
-                        "_token" : "<?php echo csrf_token(); ?>",
-                        "facility_id" : "<?php echo $facility->id; ?>",
-                        "column" : this.id,
-                        "value" : newValue
-                    };
-                    var title = $(this).data("title");
-                    $.post(url,json,function(result){
-                        $("#encoded_by").html(result.encoded_by);
-                        $("#encoded_date").html(result.encoded_date);
-                        $("#encoded_time").html(result.encoded_time);
-                        Lobibox.notify('success', {
-                            title: "",
-                            msg: title+" saved!",
-                            size: 'mini',
-                            rounded: true
-                        });
-                    });*/
-                }
-            });
-        });
 
         function MunicipalityBody(province_id,muncity_id){
             var json;

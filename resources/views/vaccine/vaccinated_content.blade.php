@@ -5,26 +5,26 @@
     }
 </style>
 <form action="<?php
-    if(isset($vaccine->typeof_vaccine)){
-        echo asset('vaccine/update');
-    }
-    else{
-        echo asset('vaccine/saved');
-    }
+if(isset($vaccine->typeof_vaccine)){
+    echo asset('vaccine/update');
+}
+else{
+    echo asset('vaccine/saved');
+}
 ?>" method="POST" id="form_submit" autocomplete="off">
     {{ csrf_field() }}
     <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
     <div class="row">
-       <div class="col-md-4">
-           <small>Type of Vaccine</small>
-           <select name="typeof_vaccine" id="typeof_vaccine" class="select2" required>
-               <option value="">Select Option</option>
-               <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
-               <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-               <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
-               <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
-           </select>
-       </div>
+        <div class="col-md-4">
+            <small>Type of Vaccine</small>
+            <select name="typeof_vaccine" id="typeof_vaccine" class="select2" required>
+                <option value="">Select Option</option>
+                <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
+                <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
+                <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
+                <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+            </select>
+        </div>
         <div class="col-md-4">
             <small>Priority</small>
             <select name="priority" id="" class="select2">
@@ -108,7 +108,18 @@
             <small>Target Dose Per Day</small>
             <input type="text" name="tgtdoseper_day" id="tgtdoseper_day" value="<?php if(isset($vaccine->tgtdoseper_day)) echo $vaccine->tgtdoseper_day ?>" class="form-control" readonly>
         </div>
+        <div class="col-md-4">
+            <small class="text-green">Date of Delivery</small>
+            <input type="text" id="date_picker2" name="dateof_del" value="<?php if(isset($vaccine->dateof_del)) echo date('m/d/Y',strtotime($vaccine->dateof_del)) ?>" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <small class="text-yellow">Date of Delivery</small>
+            <input type="text" id="date_picker3" name="dateof_del2" value="<?php if(isset($vaccine->dateof_del2)) echo date('m/d/Y',strtotime($vaccine->dateof_del2)) ?>" class="form-control" >
+        </div>
     </div>
+    <br>
+    <br>
+<!--
     <hr style="height:1px;border-width:0;color:gray;background-color:gray">
     <h4 style="color:green">First Dose</h4>
     <div class="row">
@@ -126,7 +137,15 @@
         </div>
         <div class="col-md-3">
             <small>AEFI</small>
-            <b style="margin-left:10%" class="text-green display_aefi hide"></b>
+            <?php
+$display_aefi_property = "hide";
+$aefi_qty = "";
+if(isset($vaccine->aefi)){
+    $display_aefi_property = "";
+    $aefi_qty = $vaccine->aefi." : ".$vaccine->aefi_qty;
+}
+?>
+        <b style="margin-left:10%" class="text-green display_aefi {{ $display_aefi_property }}">{{ $aefi_qty }}</b>
             <input type="hidden" id="aefi_qty" name="aefi_qty">
             <select name="aefi" id="" class="select2" onchange="aefi_qtyFunc1($(this))">
                 <option value="" readonly>Select Option</option>
@@ -152,7 +171,7 @@
         <br>
     </div>
     <hr style="height:1px;border-width:0;color:gray;background-color:gray">
-    <h4 style="color:green;">Second Dose</h4>
+    <h4 style="color:orange;">Second Dose</h4>
     <div class="row">
         <div class="col-md-3">
             <small>Date of Delivery</small>
@@ -168,7 +187,15 @@
         </div>
         <div class="col-md-3">
             <small>AEFI</small>
-            <b style="margin-left:10%" class="text-green display_aefi2 hide"></b>
+            <?php
+$display_aefi2_property = "hide";
+$aefi_qty2 = "";
+if(isset($vaccine->aefi2)){
+    $display_aefi2_property = "";
+    $aefi_qty2 = $vaccine->aefi2." : ".$vaccine->aefi_qty2;
+}
+?>
+        <b style="margin-left:10%" class="text-orange display_aefi2 {{ $display_aefi2_property }}">{{ $aefi_qty2 }}</b>
             <input type="hidden" id="aefi_qty2" name="aefi_qty2">
             <select name="aefi2" id="" class="select2" onchange="aefi_qtyFunc2($(this))">
                 <option value="" readonly>Select Option</option>
@@ -193,11 +220,12 @@
         </div>
         <br>
     </div>
+    -->
     <div class="pull-right">
         <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
         @if(isset($vaccine->typeof_vaccine))
             <button type="submit" class="btn btn-warning btn-md"><i class="fa fa-send"></i> Update</button>
-            @else
+        @else
             <button type="submit" class="btn btn-success btn-md"><i class="fa fa-send"></i> Submit</button>
         @endif
     </div>
@@ -206,7 +234,7 @@
 </form>
 <script>
     $("#date_picker").daterangepicker({
-       "singleDatePicker":true
+        "singleDatePicker":true
     });
     $("#date_picker1").daterangepicker({
         "singleDatePicker":true
