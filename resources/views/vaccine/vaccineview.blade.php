@@ -268,14 +268,14 @@
                                         </td>
                                         <td>
                                             @if($row->dateof_del)
-                                                <p class="text-green">{{ date('F j, Y',strtotime($row->dateof_del)) }}</p>
+                                                <p class="text-white bg-green">{{ date('F j, Y',strtotime($row->dateof_del)) }}</p>
                                             @else
-                                                <p class="text-green">Pending </p>
+                                                <p class="text-white bg-green">Pending </p>
                                             @endif
                                             @if($row->dateof_del2)
-                                                <p class="text-yellow">{{ date('F j, Y',strtotime($row->dateof_del2)) }}</p>
+                                                <p class="text-white bg-yellow">{{ date('F j, Y',strtotime($row->dateof_del2)) }}</p>
                                             @else
-                                                <p class="text-yellow">Pending </p>
+                                                <p class="text-white bg-yellow">Pending </p>
                                             @endif
                                          <a href="#" onclick="addNewDelivery('<?php echo $row->id; ?>',$(this))" id="workAdd"><i class="fa fa-user-plus"></i> Add New Delivery</a>
                                         </td>

@@ -19,11 +19,12 @@ else{
         <thead class="bg-gray">
         <tr>
             <th>Dose Date</th>
-            <th>Total Vaccinated</th>
-            <th>Total AEFI</th>
-            <th>Total Refused</th>
-            <th>Total Deferred</th>
-            <th>Total Wastage</th>
+            <th>Number of Vaccinated</th>
+            <th>Mild</th>
+            <th>Serious</th>
+            <th>Refused</th>
+            <th>Deferred</th>
+            <th>Wastage</th>
 
         </tr>
         </thead>
