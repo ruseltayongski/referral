@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vaccine;
 use App\Facility;
 use App\Muncity;
 use App\Province;
+use App\VaccineAccomplished;
 use App\Vaccines;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -178,24 +179,43 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccinatedContentMunicipality($id)
+    public function vaccinatedContentMunicipality($province_id,$muncity_id)
     {
-        $province = Province::get();
-        $vaccine = Vaccines::find($id);
-        $muncity = Muncity::where('province_id', $vaccine->province_id)->get();
-        $facility = Facility::where('province', $vaccine->province_id)->get();
-
         return view("vaccine.vaccine_content_municipality", [
-            "province" => $province,
-            "muncity" => $muncity,
-            "facility" => $facility,
-            "vaccine" => $vaccine,
+            "province_id" => $province_id,
+            "muncity_id" => $muncity_id
         ]);
     }
 
     public function vaccineSaved(Request $request)
     {
-        $vaccine = new Vaccines();
+        $user_id = Session::get('auth')->id;
+        $count = 0;
+        foreach ($request->typeof_vaccine as $row){
+            $vaccine = new VaccineAccomplished();
+            $vaccine->encoded_by = $user_id;
+            $vaccine->province_id = $request->province_id;
+            $vaccine->muncity_id = $request->muncity_id;
+            $vaccine->typeof_vaccine = $request->typeof_vaccine[$count];
+            $vaccine->priority = $request->priority[$count];
+            $vaccine->date_first = $request->date_first[$count];
+            $vaccine->date_second = $request->date_second[$count];
+            $vaccine->vaccinated_first = $request->vaccinated_first[$count];
+            $vaccine->vaccinated_second = $request->vaccinated_second[$count];
+            $vaccine->mild_first = $request->mild_first[$count];
+            $vaccine->mild_second = $request->mild_second[$count];
+            $vaccine->serious_first = $request->serious_first[$count];
+            $vaccine->serious_second = $request->serious_second[$count];
+            $vaccine->refused_first = $request->refused_first[$count];
+            $vaccine->refused_second = $request->refused_second[$count];
+            $vaccine->deferred_first = $request->deferred_first[$count];
+            $vaccine->deferred_second = $request->deferred_second[$count];
+            $vaccine->wastage_first = $request->wastage_first[$count];
+            $vaccine->wastage_second = $request->wastage_second[$count];
+            $vaccine->save();
+            $count++;
+        }
+        /*$vaccine = new Vaccines();
         $vaccine->encoded_by = Session::get('auth')->id;
         $vaccine->facility_id = $request->facility_id;
         $vaccine->typeof_vaccine = $request->typeof_vaccine;
@@ -228,7 +248,7 @@ class VaccineController extends Controller
         $vaccine->deferred2 = $request->deferred2;
         $vaccine->refused2 = $request->refused2;
         $vaccine->wastage2= $request->wastage2;
-        $vaccine->save();
+        $vaccine->save();*/
 
         Session::put('vaccine_saved', true);
 
@@ -312,9 +332,11 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccineTbodyContent($count=null){
+    public function vaccineTbodyContent($count=null,$province_id,$muncity_id){
         return view('vaccine.tbody_content',[
-            "count" => $count
+            "count" => $count,
+            "province_id" => $province_id,
+            "muncity_id" => $muncity_id
         ]);
     }
 

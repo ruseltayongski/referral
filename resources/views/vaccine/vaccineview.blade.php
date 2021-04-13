@@ -151,15 +151,9 @@
                                 <thead class="bg-gray">
                                 <tr>
                                     <th>Type of Vaccine</th>
-                                    <th>Municipality</th>
-                                    <th>Priority</th>
                                     <th>Province</th>
-                                    <th>Facility</th>
                                     <th>No. of eligible population</th>
-                                    <th>Ownership</th>
                                     <th>No. of Vaccine Allocated</th>
-                                    <th style="width:7%;">Date of Delivery</th>
-                                    <th>Target Dose <br>Per Day</th>
                                     <th>Number <br>of Vaccinated</th>
                                     <th>AEFI</th>
                                     <th>AEFI Qty</th>

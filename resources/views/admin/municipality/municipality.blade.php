@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        @media (min-width: 1200px) {
+            .modal_w {
+                width: 70%;
+            }
+        }
+
+    </style>
     <div class="box box-primary">
         <div class="box-header with-border">
             <div class="pull-right">
@@ -28,39 +36,70 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <tr class="bg-black">
-                            <th>Municipality Name</th>
-                            <th>Municipality Code</th>
-                            <th>Frontline Health Workers</th>
-                            <th>Señior Citizens</th>
-                            <th width="5%;">Option</th>
+                            <th>Municipality</th>
+                            <th>Eligible Population</th>
+                            <th>Total Vaccine Allocated</th>
+                            <th>Start Date</th>
+                            <th>Priority</th>
+                            <th>Vaccine</th>
+                            <th>Vaccinated</th>
+                            <th>AEFI</th>
+                            <th>Deferred</th>
+                            <th>Refused</th>
+                            <th>Wastage</th>
+                            <th>% Coverage</th>
+                            <th>Consumption Rate</th>
+                            <th>Remaining Unvaccinated</th>
                         </tr>
                         @foreach($data as $row)
                             <tr>
                                 <td style="white-space: nowrap;">
                                     <b>
-                                        <a
-                                            href="#facility_modal"
-                                            data-toggle="modal"
-                                            onclick="MunicipalityBody('<?php echo $province_id; ?>','<?php echo $row->id; ?>')"
-                                        >
+                                        <a  class="text-green" style="font-size:11pt;cursor: pointer;" onclick="muncityVaccinated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>',$(this))">
                                             {{ $row->description }}
                                         </a>
                                     </b>
                                 </td>
-                                <td>
-                                    <b class="text-green">{{ $row->muncity_code }}</b>
-                                </td>
-                                <td>
-                                    <p>{{ $row->frontline_health_workers }}</p>
-                                </td>
-                                <td>
-                                    <p>{{ $row->senior_citizen }}</p>
-                                </td>
-                                <td>
-                                    <a href="{{ asset('admin/barangay').'/'.$province_id.'/'.$row->id }}" class="btn btn-block btn-social btn-instagram">
-                                        <i class="fa fa-dropbox"></i> Show Barangay
+                                <td style="white-space: nowrap;">
+                                    <a
+                                            href="#facility_modal"
+                                            data-toggle="modal"
+                                            onclick="MunicipalityBody('<?php echo $province_id; ?>','<?php echo $row->id; ?>')"
+                                    >
+                                        @if($row->frontline_health_workers || $row->senior_citizens)
+                                            {{ $row->frontline_health_workers + $row->senior_citizens }}
+                                        @else
+                                            empty
+                                        @endif
                                     </a>
                                 </td>
+                                <td>
+                                    <p>{{ $row->vaccine_allocated }}</p>
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+
                             </tr>
                         @endforeach
                     </table>
@@ -78,12 +117,42 @@
         </div>
     </div>
 
+
+    <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
+        <div class="modal-dialog modal-lg modal_w" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel"><i class="fa fa-location-arrow" style="color:green"></i> Alicia</h3>
+                </div>
+                <div class="modal-body vaccinated_content_municipality">
+
+                </div><!-- /.modal-content -->
+            </div>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     @include('admin.modal.facility_modal')
 @endsection
 @section('js')
     <script>
         <?php $user = Session::get('auth'); ?>
+        $("#container").removeClass("container");
+        $("#container").addClass("container-fluid");
 
+        function muncityVaccinated(province_id,muncity_id,data){
+            $("#vaccine_modal_municipality").modal('show');
+            $(".vaccinated_content_municipality").html(loading);
+            $("b").css("background-color","");
+            data.css("background-color","yellow");
+            var url = "<?php echo asset('vaccine/vaccinated/municipality/content').'/'; ?>"+province_id+"/"+muncity_id;
+            $.get(url,function(data){
+                setTimeout(function(){
+                    $(".vaccinated_content_municipality").html(data);
+                    $(".select2").select2({ width: '100%' });
+                },500);
+            });
+        }
 
         function MunicipalityBody(province_id,muncity_id){
             var json;
