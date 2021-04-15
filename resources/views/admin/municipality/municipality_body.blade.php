@@ -11,11 +11,11 @@
     </div>
     <div class="form-group">
         <label>Municipality Name:</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->description)){{ $muncity->description }}@endif" autofocus name="description" required>
+        <input type="text" class="form-control" value="@if(isset($muncity->description)){{ $muncity->description }}@endif" autofocus name="description" readonly>
     </div>
     <div class="form-group">
         <label>Municipality Code:</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code">
+        <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code" readonly>
     </div>
     <div class="form-group">
         <label>Frontline Health Workers:</label>
@@ -26,10 +26,13 @@
         <input type="text" class="form-control" value="@if(isset($muncity->senior_citizens)){{ $muncity->senior_citizens }}@endif" name="senior_citizens">
     </div>
     <div class="form-group">
-        <label>Total Vaccine Allocated </label>
-        <input type="text" class="form-control" value="@if(isset($muncity->vaccine_allocated)){{ $muncity->vaccine_allocated}}@endif" name="vaccine_allocated">
+        <label>Sinovac Allocated</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->sinovac_allocated)){{ $muncity->sinovac_allocated}}@endif" name="sinovac_allocated">
     </div>
-
+    <div class="form-group">
+        <label>Astrazeneca Allocated</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->astrazeneca_allocated)){{ $muncity->astrazeneca_allocated}}@endif" name="astrazeneca_allocated">
+    </div>
     <hr />
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

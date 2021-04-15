@@ -74,7 +74,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <p>{{ $row->vaccine_allocated }}</p>
+                                    <p>{{ $row->sinovac_allocated + $row->astrazeneca_allocated }}</p>
                                 </td>
                                 <td>
 
@@ -118,6 +118,8 @@
     </div>
 
 
+
+
     <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
         <div class="modal-dialog modal-lg modal_w" role="document">
             <div class="modal-content">
@@ -127,6 +129,7 @@
             </div>
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
 
     @include('admin.modal.facility_modal')
 @endsection
@@ -185,6 +188,17 @@
         Session::put("municipality",false);
         Session::put("municipality_message",false)
         ?>
+        @endif
+
+        @if(Session::get("vaccine_saved"))
+        <?php
+        Session::put('vaccine_saved',false);
+        ?>
+        Lobibox.notify('success', {
+            size: 'mini',
+            rounded: true,
+            msg: 'Your vaccination record is successfully saved!'
+        });
         @endif
     </script>
 @endsection

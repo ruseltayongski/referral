@@ -477,9 +477,13 @@ Route::get('vaccine/update_view/{id}','Vaccine\VaccineController@vaccineUpdateVi
 Route::post('vaccine/update','Vaccine\VaccineController@vaccineUpdate');
 Route::get('vaccine/onchange/facility/{province_id}','Vaccine\VaccineController@getFacility');
 Route::get('vaccine/export/excel','Vaccine\VaccineController@exportExcel');
-Route::get('vaccine/tbody/content/{count}/{province_id}/{muncity_id}','Vaccine\VaccineController@vaccineTbodyContent');
 Route::get('vaccine/new_delivery/{id}','Vaccine\VaccineController@vaccineNewDelivery');
 Route::post('vaccine/new_delivery/saved','Vaccine\VaccineController@vaccineNewDeliverySaved');
+Route::get('vaccine/no_eli_pop/{muncity_id}/{priority}','Vaccine\VaccineController@getEliPop');
+Route::get('vaccine/allocated/{muncity_id}/{typeof_vaccine}','Vaccine\VaccineController@getVaccineAllocated');
+
+
+
 
 
 

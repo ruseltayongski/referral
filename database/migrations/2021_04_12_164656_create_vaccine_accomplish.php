@@ -19,6 +19,7 @@ class CreateVaccineAccomplish extends Migration
             $table->integer('vaccine_id')->nullable();
             $table->integer('province_id')->nullable();
             $table->integer('muncity_id')->nullable();
+            $table->integer('facility_id')->nullable();
             $table->dateTime('daily_accomplishment')->nullable();
             $table->string('typeof_vaccine','100' )->nullable();
             $table->string('priority','100' )->nullable();
@@ -36,6 +37,9 @@ class CreateVaccineAccomplish extends Migration
             $table->string('deferred_second')->nullable();
             $table->string('wastage_first')->nullable();
             $table->string('wastage_second')->nullable();
+            $table->string('no_eli_pop')->nullable();
+            $table->string('vaccine_allocated')->nullable();
+
             $table->timestamps();
         });
     }

@@ -449,7 +449,7 @@
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block">
                             <span class="description-header">{{ number_format(($numof_vaccinated_total_first + $numof_vaccinated_total_second) / $number_eligible_pop_total * 100, 2) }}%</span>
-                            <h5 class="description-header"><span class="text-green">{{ number_format( ($numof_vaccinated_total_first) / $number_eligible_pop_total * 100,2) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow">{{ number_format( ($numof_vaccinated_total_second) / $number_eligible_pop_total * 100,2) }}%</span></h5>
+                            <h5 class="description-header"><span class="text-red">{{ number_format( ($numof_vaccinated_total_first) / $number_eligible_pop_total * 100,2) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue">{{ number_format( ($numof_vaccinated_total_second) / $number_eligible_pop_total * 100,2) }}%</span></h5>
                             <span class="description-text">TOTAL PERCENT COVERAGE</span>
                         </div>
                         <!-- /.description-block -->
@@ -633,17 +633,6 @@
                     }));
             }
         }
-
-        @if(Session::get("vaccine_saved"))
-        <?php
-        Session::put('vaccine_saved',false);
-        ?>
-        Lobibox.notify('success', {
-            size: 'mini',
-            rounded: true,
-            msg: 'Your vaccination record is successfully saved!'
-        });
-        @endif
 
         @if(Session::get("vaccine_update"))
         <?php
