@@ -26,7 +26,7 @@
 
                 </tr>
             </thead>
-            <tbody class="tbody_content">
+            <tbody id="tbody_content_vaccine">
                 @if(count($vaccine_accomplishment)>0)
                     @foreach($vaccine_accomplishment as $vaccine)
                         <tr style="background-color: #59ab91">
@@ -145,7 +145,7 @@
             console.log(data);
             setTimeout(function(){
                 $('.loading').hide();
-                $('.tbody_content').append(data);
+                $('#tbody_content_vaccine').append(data);
                 $(".select2").select2({ width: '100%' });
             },200);
         });
