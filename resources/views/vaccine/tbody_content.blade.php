@@ -1,4 +1,3 @@
-
 <tr style="background-color: #59ab91">
     <input type="hidden" name="province_id" value="{{ $province_id }}">
     <input type="hidden" name="muncity_id" value="{{ $muncity_id }}">
@@ -77,11 +76,3 @@
 <tr>
     <td colspan="9"><hr></td>
 </tr>
-<script>
-    $("#date_picker"+"{{ $count }}").daterangepicker({
-        "singleDatePicker":true
-    });
-    $("#date_picker2"+"{{ $count }}").daterangepicker({
-        "singleDatePicker":true
-    });
-</script>
