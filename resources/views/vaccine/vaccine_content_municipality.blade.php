@@ -224,11 +224,12 @@
 <script>
     var count = 0;
     function addTbodyContent(province_id,muncity_id) {
+        count++;
         $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
             '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
             '    <input type="hidden" name="muncity_id" value="'+muncity_id+'" >\n' +
             '    <td style="width: 15%">\n' +
-            '        <input type="text" id="date_picker{{ $count }}" name="date_first[]" class="form-control" required>\n' +
+            '        <input type="text" id="date_picker'+count+'" name="date_first[]" class="form-control" required>\n' +
             '    </td>\n' +
             '    <td style="width: 15%" rowspan="2">\n' +
             '        <select name="typeof_vaccine[]" id="typeof_vaccine" class="select2" required>\n' +
@@ -277,7 +278,7 @@
             '</tr>\n' +
             '<tr style="background-color: #f39c12">\n' +
             '    <td>\n' +
-            '        <input type="text" id="date_picker2{{ $count }}" name="date_second[]"  class="form-control">\n' +
+            '        <input type="text" id="date_picker2'+count+'" name="date_second[]"  class="form-control">\n' +
             '    </td>\n' +
             '    <td>\n' +
             '        <input type="text" name="vaccinated_second[]" class="form-control">\n' +
@@ -311,8 +312,6 @@
         });
 
         $(".select2").select2({ width: '100%' });
-
-        count++;
     }
 
 </script>
