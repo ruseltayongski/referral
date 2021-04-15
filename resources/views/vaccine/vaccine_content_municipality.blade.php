@@ -26,113 +26,23 @@
 
                 </tr>
             </thead>
-            @if(count($vaccine_accomplishment)>0)
-                @foreach($vaccine_accomplishment as $vaccine)
-                    <tr style="background-color: #59ab91">
-                        <input type="hidden" name="province_id" value="{{ $province_id }}">
-                        <input type="hidden" name="muncity_id" value="{{ $muncity_id }}">
-                        <td style="width: 15%">
-                            <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="daily_accomplishment" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
-                        </td>
-                        <td style="width: 15%" rowspan="2">
-                            <select name="typeof_vaccine[]" id="typeof_vaccine" class="select2" required>
-                                <option value="">Select Option</option>
-                                <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
-                                <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                                <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
-                                <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
-                            </select>
-                        </td>
-                        <td style="width: 15%" rowspan="2">
-                            <select name="priority[]" id="" class="select2" >
-                                <option value="">Select Priority</option>
-                                <option value="frontline_health_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'frontline_health_workers')echo 'selected';} ?>>Frontline Health Workers</option>
-                                <option value="indigent_senior_citizens" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'indigent_senior_citizens')echo 'selected';} ?>>Senior Citizens</option>
-                                <option value="remaining_indigent_population" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_indigent_population')echo 'selected';} ?> disabled>Remaining Indigent Population</option>
-                                <option value="uniform_personnel" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'uniform_personnel')echo 'selected';} ?> disabled>Uniform Personnel</option>
-                                <option value="teachers_school_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'teachers_school_workers')echo 'selected';} ?> disabled>Teachers & School Workers</option>
-                                <option value="all_government_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'all_government_workers')echo 'selected';} ?> disabled>All Government Workers (National & Local)</option>
-                                <option value="essential_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'essential_workers')echo 'selected';} ?> disabled>Essential Workers</option>
-                                <option value="socio_demographic" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'socio_demographic')echo 'selected';} ?> disabled>Socio-demographic groups & significant higher risk other than senior citizen and indigent population (e.g.PDL,PWD,IP,Filipinos living in high-density areas)</option>
-                                <option value="ofw" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >OFW's</option>
-                                <option value="remaining_workforce" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_workforce')echo 'selected';} ?> disabled>Other remaining workforce</option>
-                                <option value="remaining_filipino_citizen" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_filipino_citizen')echo 'selected';} ?> disabled>Remaining Filipino Citizen</option>
-                                <option value="etc" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'etc')echo 'selected';} ?> disabled >ETC.</option>
-                            </select>
-                        </td>
-                        <td style="width: 5%">
-                            <input type="text" name="vaccinated_first[]"  value="<?php if(isset($vaccine->vaccinated_first)) echo $vaccine->vaccinated_first ?>" class="form-control">
-                        </td>
-                        <td style="width: 5%">
-                            <input type="text" name="mild_first[]" value="" class="form-control">
-                        </td>
-                        <td style="width: 5%">
-                            <input type="text" name="serious_first[]" value="" class="form-control">
-                        </td>
-                        <td style="width: 10%">
-                            <input type="text" name="refused_first[]" value="<?php if(isset($vaccine->refused_first)) echo $vaccine->refused_first ?>" class="form-control">
-                        </td>
-                        <td style="width: 10%">
-                            <input type="text" name="deferred_first[]" value="<?php if(isset($vaccine->deferred_first)) echo $vaccine->deferred_first ?>" class="form-control">
-                        </td>
-                        <td style="width: 10%">
-                            <input type="text" name="wastage_first[]" value="<?php if(isset($vaccine->wastage_first)) echo $vaccine->wastage_first?>" class="form-control">
-                        </td>
-                    </tr>
-                    <tr style="background-color: #f39c12">
-                        <td>
-                            <input type="text" id="date_picker2{{ $vaccine->id.$vaccine->encoded_by }}" name="[]" value="<?php if(isset($vaccine->dateof_del)) echo date('m/d/Y',strtotime($vaccine->dateof_del)) ?>" class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" name="vaccinated_second[]" value="<?php if(isset($vaccine->vaccinated_second)) echo $vaccine->vaccinated_second ?>" class="form-control">
-                        </td>
-                        <td style="width: 5%">
-                            <input type="text" name="mild_second[]" value="" class="form-control">
-                        </td>
-                        <td style="width: 5%">
-                            <input type="text" name="serious_second[]" value="" class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" name="refused_second[]" value="<?php if(isset($vaccine->refused_second)) echo $vaccine->refused_second ?>" class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" name="deferred_second[]" value="<?php if(isset($vaccine->deferred_second)) echo $vaccine->deferred_second ?>" class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" name="wastage_second[]" value="<?php if(isset($vaccine->wastage_second)) echo $vaccine->wastage_second?>" class="form-control">
-                        </td>
 
-                    </tr>
-                    <tr>
-                        <td colspan="8"><hr></td>
-                    </tr>
-                    <script>
-                        $("#date_picker"+"{{ $vaccine->id.$vaccine->encoded_by }}").daterangepicker({
-                            "singleDatePicker":true
-                        });
-                        $("#date_picker2"+"{{ $vaccine->id.$vaccine->encoded_by }}").daterangepicker({
-                            "singleDatePicker":true
-                        });
-                    </script>
-                @endforeach
-            @endif
-            @include("vaccine.tbody_content")
             <tbody id="tbody_content_vaccine">
 
             </tbody>
-        <tr>
-            <td colspan="9">
-                <a href="#" onclick="addTbodyContent('<?php echo $province_id; ?>','<?php echo $muncity_id; ?>')" class="pull-right red" id="workAdd"><i class="fa fa-user-plus"></i> Add Daily Accomplishment</a>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="9">
-                <div class="pull-right">
-                    <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                    <button type="submit" class="btn btn-success btn-md"><i class="fa fa-send"></i> Submit</button>
-                </div>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="9">
+                    <a href="#" onclick="addTbodyContent('<?php echo $province_id; ?>','<?php echo $muncity_id; ?>')" class="pull-right red" id="workAdd"><i class="fa fa-user-plus"></i> Add Daily Accomplishment</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" class="btn btn-success btn-md"><i class="fa fa-send"></i> Submit</button>
+                    </div>
+                </td>
+            </tr>
     </table>
 </form>
 
