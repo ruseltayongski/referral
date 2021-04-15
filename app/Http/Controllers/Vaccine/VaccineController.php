@@ -190,6 +190,7 @@ class VaccineController extends Controller
 
     public function vaccineSaved(Request $request)
     {
+        VaccineAccomplished::where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->delete();
         $user_id = Session::get('auth')->id;
         $count = 0;
         foreach ($request->typeof_vaccine as $row){
