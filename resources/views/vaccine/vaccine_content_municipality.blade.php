@@ -11,7 +11,7 @@
         {{ csrf_field() }}
         <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
         <br>
-        <table class="table table-striped" style="font-size: 8pt">
+        <table class="table" style="font-size: 8pt">
             <thead class="bg-gray">
                 <tr>
                     <th>Dose Date</th>
