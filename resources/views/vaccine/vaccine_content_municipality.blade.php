@@ -48,7 +48,7 @@
 
 <script>
     var count = 0;
-    function addTbodyContent(province_id,muncity_id) {
+    function addTbodyContent1(province_id,muncity_id) {
         count++;
         $('.loading').show();
         var url = "<?php echo asset('vaccine/tbody/content'); ?>"+"/"+count+"/"+province_id+"/"+muncity_id;
@@ -56,38 +56,43 @@
             console.log(data);
             setTimeout(function(){
                 $('.loading').hide();
-                $('#tbody_content_vaccine').append("<tr>\n" +
-                    "   <td>\n" +
-                    "       Hello World\n" +
-                    "   </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "    <td>\n" +
-                    "        Hello World\n" +
-                    "    </td>\n" +
-                    "</tr>");
+                $('#tbody_content_vaccine').append(data);
                 $(".select2").select2({ width: '100%' });
             },200);
         });
+    }
+
+    function addTbodyContent(province_id,muncity_id) {
+        $('#tbody_content_vaccine').append("<tr>\n" +
+            "   <td>\n" +
+            "       Hello World\n" +
+            "   </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "    <td>\n" +
+            "        Hello World\n" +
+            "    </td>\n" +
+            "</tr>");
+        $(".select2").select2({ width: '100%' });
     }
 
 </script>
