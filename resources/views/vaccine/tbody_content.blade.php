@@ -76,3 +76,11 @@
 <tr>
     <td colspan="9"><hr></td>
 </tr>
+<script>
+    $("#date_picker"+"{{ $count }}").daterangepicker({
+        "singleDatePicker":true
+    });
+    $("#date_picker2"+"{{ $count }}").daterangepicker({
+        "singleDatePicker":true
+    });
+</script>

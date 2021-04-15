@@ -142,8 +142,8 @@
         $('.loading').show();
         var url = "<?php echo asset('vaccine/tbody/content'); ?>"+"/"+count+"/"+province_id+"/"+muncity_id;
         $.get(url,function(data){
-            $('.tbody_content').append(data);
             $('.loading').hide();
+            $('.tbody_content').html(data);
             $(".select2").select2({ width: '100%' });
         });
     }
