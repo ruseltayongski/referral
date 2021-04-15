@@ -143,7 +143,6 @@
             data.css("background-color","yellow");
             var url = "<?php echo asset('vaccine/vaccinated/municipality/content').'/'; ?>"+province_id+"/"+muncity_id;
             $.get(url,function(data){
-                console.log(data);
                 setTimeout(function(){
                     $(".vaccinated_content_municipality").html(data);
                     $(".select2").select2({ width: '100%' });
