@@ -180,10 +180,11 @@ class VaccineController extends Controller
     }
 
     public function vaccinatedContentMunicipality($province_id,$muncity_id)
-    {
+    {    $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$muncity_id)->orderBy('id','asc')->get();
         return view("vaccine.vaccine_content_municipality", [
             "province_id" => $province_id,
-            "muncity_id" => $muncity_id
+            "muncity_id" => $muncity_id,
+            "vaccine_accomplishment" => $vaccine_accomplishment
         ]);
     }
 
@@ -198,8 +199,10 @@ class VaccineController extends Controller
             $vaccine->muncity_id = $request->muncity_id;
             $vaccine->typeof_vaccine = $request->typeof_vaccine[$count];
             $vaccine->priority = $request->priority[$count];
-            $vaccine->date_first = $request->date_first[$count];
-            $vaccine->date_second = $request->date_second[$count];
+            if($request->date_first[$count])
+                $vaccine->date_first = date("Y-m-d H:m:i", strtotime($request->date_first[$count]));
+            if($request->date_second[$count])
+                $vaccine->date_second = date("Y-m-d H:m:i", strtotime($request->date_second[$count]));
             $vaccine->vaccinated_first = $request->vaccinated_first[$count];
             $vaccine->vaccinated_second = $request->vaccinated_second[$count];
             $vaccine->mild_first = $request->mild_first[$count];
@@ -332,11 +335,13 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccineTbodyContent($count=null,$province_id,$muncity_id){
+    public function vaccineTbodyContent($count=null,$province_id,$muncity_id)
+    {
         return view('vaccine.tbody_content',[
             "count" => $count,
             "province_id" => $province_id,
-            "muncity_id" => $muncity_id
+            "muncity_id" => $muncity_id,
+
         ]);
     }
 

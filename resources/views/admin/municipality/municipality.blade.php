@@ -121,10 +121,6 @@
     <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
         <div class="modal-dialog modal-lg modal_w" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel"><i class="fa fa-location-arrow" style="color:green"></i> Alicia</h3>
-                </div>
                 <div class="modal-body vaccinated_content_municipality">
 
                 </div><!-- /.modal-content -->
@@ -143,10 +139,11 @@
         function muncityVaccinated(province_id,muncity_id,data){
             $("#vaccine_modal_municipality").modal('show');
             $(".vaccinated_content_municipality").html(loading);
-            $("b").css("background-color","");
+            $("a").css("background-color","");
             data.css("background-color","yellow");
             var url = "<?php echo asset('vaccine/vaccinated/municipality/content').'/'; ?>"+province_id+"/"+muncity_id;
             $.get(url,function(data){
+                console.log(data);
                 setTimeout(function(){
                     $(".vaccinated_content_municipality").html(data);
                     $(".select2").select2({ width: '100%' });
