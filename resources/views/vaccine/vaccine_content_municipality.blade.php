@@ -210,7 +210,7 @@
     </table>
 </form>
 
-<table border="1">
+<table  class="table table-striped" >
     <tr>
         <th>Total Eligible Population</th>
         <th>Total Vaccine Allocated</th>
@@ -226,25 +226,181 @@
     </tr>
     <tr>
         <td>
-            <b class="description-header"><span class="text-green bg-green"><span style="color: white;padding: 2%;">{{ $front_line_health_workers }}</span></span></b>
+            <span class="label label-danger"></span>
         </td>
         <td>
-            {{ $sinovac_allocated }}
+            <span class="label label-danger">{{ $sinovac_allocated }}</span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
+        </td>
+        <td>
+            <span class="label label-danger">{{ $front_line_health_workers }}</span>
+        </td>
+        <td>
+            <span class="label label-danger"></span>
         </td>
     </tr>
     <tr>
         <td>
-            <b><span class="bg-yellow"><span style="color: white;padding: 2%;">{{ $senior_citizen }}</span></span></b>
+           <span class="label label-primary"></span>
         </td>
-        <td>{{ $astrazeneca_allocated }}</td>
+        <td>
+            <span class="label label-primary">{{ $astrazeneca_allocated }}</span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
+        <td>
+            <span class="label label-primary">{{ $senior_citizen }}</span>
+        </td>
+        <td>
+            <span class="label label-primary"></span>
+        </td>
     </tr>
     <tr>
-        <td colspan="2">
-            <b>{{ $front_line_health_workers+$senior_citizen }}</b>
+        <td>
+           <span class="label label-success">{{ $front_line_health_workers }}</span>
+        </td>
+        <td>
+            <span class="label label-success"></span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_vaccinated_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_mild_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_serious_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_deferred_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_refused_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ number_format($total_wastage_first) }}</span>
+        </td>
+        <td>
+            <span class="label label-success">{{ $senior_citizen }}</span>
+        </td>
+        <td>
+            <span class="label label-success"></span>
+        </td>
+        <td>
+            <span class="label label-success">{{ $senior_citizen }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="label label-warning">{{ $senior_citizen }}</span>
+        </td>
+        <td>
+            <span class="label label-warning"></span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_vaccinated_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_mild_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_serious_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_deferred_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_refused_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ number_format($total_wastage_second) }}</span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ $front_line_health_workers+$senior_citizen }}</span>
+        </td>
+        <td>
+            <span class="label label-warning"></span>
+        </td>
+        <td>
+            <span class="label label-warning">{{ $front_line_health_workers+$senior_citizen }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b style="margin-left:2%">{{ $front_line_health_workers+$senior_citizen }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ $sinovac_allocated+$astrazeneca_allocated }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ number_format($total_vaccinated_first + $total_vaccinated_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ number_format($total_mild_first + $total_mild_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ number_format($total_serious_first + $total_serious_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ number_format($total_deferred_first + $total_deferred_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ number_format($total_refused_first + $total_refused_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{  number_format($total_wastage_first + $total_wastage_second) }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ $front_line_health_workers+$senior_citizen }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ $front_line_health_workers+$senior_citizen }}</b>
+        </td>
+        <td>
+            <b style="margin-left:2%">{{ $front_line_health_workers+$senior_citizen }}</b>
         </td>
     </tr>
 </table>
-
+<!--
 <div class="row">
     <div class="col-sm-3 col-xs-6">
         <div class="description-block border-right">
@@ -252,7 +408,6 @@
             <h5 class="description-header"><span class="text-green total_vaccinated_first">{{ number_format($total_vaccinated_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_vaccinated_second">{{ number_format($total_vaccinated_second) }}</span></h5>
             <span class="description-text">TOTAL VACCINATED</span>
         </div>
-        <!-- /.description-block -->
     </div>
     <div class="col-sm-3 col-xs-6">
         <div class="description-block border-right">
@@ -260,7 +415,6 @@
             <h5 class="description-header"><span class="text-green total_mild_first" >{{ number_format($total_mild_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_mild_second">{{ number_format($total_mild_second) }}</span></h5>
             <span class="description-text">TOTAL MILD QUANTITY</span>
         </div>
-        <!-- /.description-block -->
     </div>
     <div class="col-sm-3 col-xs-6">
         <div class="description-block border-right">
@@ -268,36 +422,31 @@
             <h5 class="description-header"><span class="text-green total_serious_first">{{ number_format($total_serious_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_serious_second">{{ number_format($total_serious_second) }}</span></h5>
             <span class="description-text">TOTAL SERIOUS QUANTITY</span>
         </div>
-        <!-- /.description-block -->
     </div>
-    <!-- /.col -->
     <div class="col-sm-3 col-xs-6">
         <div class="description-block border-right">
             <span class="description-header total_deferred">{{ number_format($total_deferred_first + $total_deferred_second) }}</span>
             <h5 class="description-header"><span class="text-green total_deferred_first">{{ number_format($total_deferred_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_deferred_second">{{ number_format($total_deferred_second) }}</span></h5>
             <span class="description-text">TOTAL DEFERRED</span>
         </div>
-        <!-- /.description-block -->
     </div>
 </div>
 <div class="row">
-    <!-- /.col -->
+
     <div class="col-sm-3 col-xs-6">
         <div class="description-block border-right">
             <span class="description-header total_refused">{{ number_format($total_refused_first + $total_refused_second) }}</span>
             <h5 class="description-header"><span class="text-green total_refused_first">{{ number_format($total_refused_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_refused_second">{{ number_format($total_refused_second) }}</span></h5>
             <span class="description-text">TOTAL REFUSED</span>
         </div>
-        <!-- /.description-block -->
     </div>
-    <!-- /.col -->
+
     <div class="col-sm-3 col-xs-6">
         <div class="description-block">
             <span class="description-header total_wastage">{{ number_format($total_wastage_first + $total_wastage_second) }}</span>
             <h5 class="description-header"><span class="text-green total_wastage_first">{{ number_format($total_wastage_first) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_wastage_second">{{ number_format($total_wastage_second) }}</span></h5>
             <span class="description-text">TOTAL WASTAGE</span>
         </div>
-        <!-- /.description-block -->
     </div>
     <div class="col-sm-3 col-xs-6">
         <div class="description-block">
@@ -305,7 +454,6 @@
             <h5 class="description-header"><span class="text-green total_remainingunvaccinated_first bg-green"><span style="color: white;padding: 2%;">{{ $front_line_health_workers }}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bg-yellow total_remainingunvaccinated_second"><span style="color: white;padding: 2%;">{{ $senior_citizen }}</span></span></h5>
             <span class="description-text">TOTAL ELIGIBLE POPULATION</span>
         </div>
-        <!-- /.description-block -->
     </div>
     <div class="col-sm-3 col-xs-6">
         <div class="description-block">
@@ -313,7 +461,6 @@
             <h5 class="description-header"><span class="text-green total_remainingunvaccinated_first bg-red"><span style="color: white;padding: 2%;">{{ $sinovac_allocated }}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bg-blue total_remainingunvaccinated_second"><span style="color: white;padding: 2%;">{{ $astrazeneca_allocated }}</span></span></h5>
             <span class="description-text">TOTAL VACCINE ALLOCATED</span>
         </div>
-        <!-- /.description-block -->
     </div>
 </div>
 <div class="row">
@@ -323,27 +470,22 @@
             <h5 class="description-header"><span class="text-green total_remainingunvaccinated_first">{{ number_format($total_eli_pop - $total_vaccinated_first - $total_refused_first ) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow total_remainingunvaccinated_second">{{ number_format( ($total_eli_pop - $numof_vaccinated_total_second - $total_refused_second)) }}</span></h5>
             <span class="description-text">TOTAL REMAINING UNVACCINATED</span>
         </div>
-        <!-- /.description-block -->
     </div>
-    <!-- /.col -->
     <div class="col-sm-4 col-xs-6">
         <div class="description-block">
             <span class="description-header">{{ $front_line_health_workers+$senior_citizen }}</span>
             <h5 class="description-header"><span class="text-green total_remainingunvaccinated_first bg-green"><span style="color: white;padding: 2%;">{{ $front_line_health_workers }}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bg-yellow total_remainingunvaccinated_second"><span style="color: white;padding: 2%;">{{ $senior_citizen }}</span></span></h5>
             <span class="description-text">TOTAL CONSUMPTION RATE</span>
         </div>
-        <!-- /.description-block -->
     </div>
-    <!-- /.col -->
     <div class="col-sm-4 col-xs-6">
         <div class="description-block">
             <span class="description-header total_percent_coverage">{{ number_format(($total_percent_coverage_first + $otal_percent_coverage_second) / $total_eli_pop * 100, 2) }}%</span>
             <h5 class="description-header"><span style="color:white; padding: 0.5%;" class="bg-red total_percentcoverage_first">{{ number_format($total_percent_coverage_first,2) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span  style="color:white; padding: 0.5%;" class="bg-blue total_percentcoverage_second">{{ number_format($total_percent_coverage_second,2) }}%</span></h5>
             <span class="description-text">TOTAL PERCENT COVERAGE</span>
         </div>
-        <!-- /.description-block -->
     </div>
-</div>
+</div> -->
 
 
 <script>

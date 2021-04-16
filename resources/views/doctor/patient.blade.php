@@ -103,7 +103,7 @@
                                        data-patient_id = "{{ $row->id }}"
                                        data-backdrop="static"
                                        data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info">
+                                       class="btn btn-primary btn-xs profile_info hide">
                                         <i class="fa fa-stethoscope"></i>
                                         Refer
                                     </a>
@@ -322,6 +322,7 @@
         });
     });
 
+    $('.profile_info').removeClass('hide');
     $('.profile_info').on('click',function(){
         patient_id = $(this).data('patient_id');
         $.ajax({
