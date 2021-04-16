@@ -87,14 +87,14 @@
                                     <a href="#pregnantModal"
                                        data-patient_id = "{{ $row->id }}"
                                        data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info">
+                                       class="btn btn-primary btn-xs profile_info hide">
                                         <i class="fa fa-stethoscope"></i>
                                         Refer
                                     </a>
                                     <a href="#pregnantModalWalkIn"
                                        data-patient_id = "{{ $row->id }}"
                                        data-toggle="modal"
-                                       class="btn btn-warning btn-xs profile_info">
+                                       class="btn btn-warning btn-xs profile_info hide">
                                         <i class="fa fa-ambulance"></i>
                                         Walk-In
                                     </a>
@@ -111,7 +111,7 @@
                                        data-patient_id = "{{ $row->id }}"
                                        data-backdrop="static"
                                        data-toggle="modal"
-                                       class="btn btn-warning btn-xs profile_info">
+                                       class="btn btn-warning btn-xs profile_info hide">
                                         <i class="fa fa-ambulance"></i>
                                         Walk-In
                                     </a>
