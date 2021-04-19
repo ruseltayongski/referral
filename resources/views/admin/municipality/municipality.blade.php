@@ -2,9 +2,9 @@
 
 @section('content')
     <style>
-        @media (min-width: 1200px) {
+        @media (min-width: 0px) {
             .modal_w {
-                width: 70%;
+                width: 98%;
             }
         }
 
@@ -116,9 +116,6 @@
             @endif
         </div>
     </div>
-
-
-
 
     <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
         <div class="modal-dialog modal-lg modal_w" role="document">

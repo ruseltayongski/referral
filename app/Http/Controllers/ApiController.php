@@ -334,5 +334,47 @@ class ApiController extends Controller
         return $patient;
     }
 
+    public function apiReferPatient(Request $req)
+    {
+        if(!$province = Province::where("province_code",$req->province)->first()->id)
+            return 'Invalid Province Code';
+
+        if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first()->id)
+            return 'Invalid Municipality Code';
+
+        if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first()->id)
+            return 'Invalid Barangay Code';
+
+        $unique = array(
+            $req->fname,
+            $req->mname,
+            $req->lname,
+            date('Ymd',strtotime($req->dob)),
+            $req->brgy
+        );
+        $unique = implode($unique);
+
+
+        if(!$patient = Patients::where("unique_id",$unique)->first())
+            $patient = new Patients();
+
+        $patient->unique_id = $unique;
+        $patient->phic_id = $req->phic_id;
+        $patient->fname = $req->fname;
+        $patient->mname = $req->mname;
+        $patient->lname = $req->lname;
+        $patient->contact = $req->contact;
+        $patient->dob = $req->dob;
+        $patient->sex = $req->sex;
+        $patient->civil_status = $req->civil_status;
+        $patient->muncity = $req->muncity;
+        $patient->province = $req->province;
+        $patient->brgy = $req->barangay;
+        $patient->save();
+
+
+        return $patient;
+    }
+
 
 }

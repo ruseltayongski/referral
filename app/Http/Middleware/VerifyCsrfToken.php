@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'login',
-        'telemedicine/sync/tsekap'
+        'telemedicine/sync/tsekap',
+        'api/refer/patient'
     ];
 }
