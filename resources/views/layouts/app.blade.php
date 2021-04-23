@@ -402,15 +402,12 @@
                     <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Update Bed Availability <small class="badge bg-red"> New</small></a></li>
                 @elseif($user->level=='vaccine')
                     <li><a href="{{ url('vaccine') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                    <li><a href="{{ url('vaccine/vaccineview') }}"><i class="fa fa-eyedropper"></i> Vaccine</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp; Municipality</span></a>
-                        <ul class="dropdown-menu">
-                            @foreach(\App\Province::get() as $prov)
-                                <li><a href="{{ asset('admin/municipality').'/'.$prov->id }}">{{ $prov->description }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
+                    @foreach(\App\Province::get() as $prov)
+                        <li><a href="{{ asset('vaccine/vaccineview').'/'.$prov->id }}">{{ $prov->description }}</a></li>
+                    @endforeach
+                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Cebu City</a></li>
+                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Mandaue City</a></li>
+                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Lapu-Lapu City</a></li>
                 @endif
                 @if($user->level == 'admin')
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>

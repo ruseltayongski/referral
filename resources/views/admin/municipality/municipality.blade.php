@@ -35,23 +35,10 @@
             @if(count($data)>0)
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
-                        <tr class="bg-black">
-                            <th>Municipality</th>
-                            <th>Eligible Population</th>
-                            <th>Total Vaccine Allocated</th>
-                            <th>Start Date</th>
-                            <th>Priority</th>
-                            <th>Vaccine</th>
-                            <th>Vaccinated</th>
-                            <th>AEFI</th>
-                            <th>Deferred</th>
-                            <th>Refused</th>
-                            <th>Wastage</th>
-                            <th>% Coverage</th>
-                            <th>Consumption Rate</th>
-                            <th>Remaining Unvaccinated</th>
-                        </tr>
                         @foreach($data as $row)
+                            <?php
+                                $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
+                            ?>
                             <tr>
                                 <td style="white-space: nowrap;">
                                     <b>
@@ -73,33 +60,276 @@
                                         @endif
                                     </a>
                                 </td>
-                                <td>
-                                    <p>{{ $row->sinovac_allocated + $row->astrazeneca_allocated }}</p>
-                                </td>
-                                <td>
+                            </tr>
+                            <tr>
+                                <td colspan="14">
+                                    <table style="font-size: 10pt;" class="table table-striped">
+                                        <tbody><tr>
+                                            <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
+                                            <th colspan="3"><center>Eligible Population</center></th>
+                                            <th>Vaccine Allocated</th>
+                                            <th>Total Vaccinated</th>
+                                            <th>Mild</th>
+                                            <th>Serious</th>
+                                            <th>Deferred</th>
+                                            <th>Refused</th>
+                                            <th>Wastage</th>
+                                            <th>Percent Coverage</th>
+                                            <th>Consumption Rate</th>
+                                            <th>Remaining Unvacinated</th>
+                                        </tr>
+                                        <tr>
+                                            <td></td> <!-- 1-2 -->
+                                            <th>Frontline</th>
+                                            <th>Seniors</th>
+                                            <th>Total</th>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="14">
+                                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                    Sinovac
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody><tbody id="collapseTwo" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <tr style="background-color: #ffd8d6">
+                                            <td rowspan="2">
 
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
+                                            </td> <!-- 1-3 -->
+                                            <td rowspan="2">600</td>
+                                            <td rowspan="2">0</td>
+                                            <td rowspan="2">
+                                                600
+                                            </td>
+                                            <td rowspan="2">1600</td>
+                                            <td>
+                                                <span class="label label-success">146</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">4</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">6</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">9</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">7</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">24.33%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success"> 9.13%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">447</span>
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #ffd8d6">
+                                            <td>
+                                                <span class="label label-warning">22</span>
+                                            </td> <!-- 1-4 -->
+                                            <td>
+                                                <span class="label label-warning">6</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">3.67%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">1.38%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">573 </span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody><tr>
+                                            <td colspan="14">
+                                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                                    Astrazeneca
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody><tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <tr style="background-color: #c3f6ff">
+                                            <td rowspan="2"></td> <!-- 1-5 -->
+                                            <td rowspan="2" style="color:black;">0</td>
+                                            <td rowspan="2" style="color:black;">350</td>
+                                            <td rowspan="2" style="color:black;">
+                                                350
+                                            </td>
+                                            <td rowspan="2" style="color:black;">700</td>
+                                            <td>
+                                                <span class="label label-success">60</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">5</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">17.14%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">8.57%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-success">285 </span>
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #c3f6ff">
+                                            <td>
+                                                <span class="label label-warning">30</span>
+                                            </td> <!-- 1-6 -->
+                                            <td>
+                                                <span class="label label-warning">3</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">3</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">3</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">3</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">3</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">17.14%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">4.29%</span>
+                                            </td>
+                                            <td>
+                                                <span class="label label-warning">317</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody><tr>
+                                            <td>Total</td> <!-- 1-7 -->
+                                            <td>
+                                                <b> 600 </b>
+                                            </td>
+                                            <td>
+                                                <b> 350 </b>
+                                            </td>
+                                            <td>
+                                                <b> 950 </b>
+                                            </td>
+                                            <td>
+                                                <b>2300</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">206</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">9</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">11</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">14</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">12</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">10</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">8.96%</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">21.68%</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-success" style="margin-right: 5%">732</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td> <!-- 1-7 -->
+                                            <td>
 
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">52</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">9</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">8</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">8</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">8</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">8</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">2.26%</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">5.47%</b>
+                                            </td>
+                                            <td>
+                                                <b class="label label-warning" style="margin-right: 5%">890</b>
+                                            </td>
+                                        </tr>
+                                        </tbody></table>
+                                </td>
                             </tr>
                         @endforeach
                     </table>
