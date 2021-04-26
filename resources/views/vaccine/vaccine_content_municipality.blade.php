@@ -15,7 +15,7 @@
             <thead class="bg-gray">
                 <tr>
                     <th>Dose Date</th>
-                    <th>Type Of Vaccine</th>
+                    <th width="15%">Type Of Vaccine</th>
                     <th>Priority</th>
                     <th>Vaccinated</th>
                     <th>Mild</th>
@@ -104,39 +104,38 @@
 
                         if($vaccine->typeof_vaccine == 'Sinovac'){
                             $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                            $vaccine->vaccine_allocated = $muncity->sinovac_allocated;
+                            $vaccine->vaccine_allocated_first = $muncity->sinovac_allocated_first;
+                            $vaccine->vaccine_allocated_second = $muncity->sinovac_allocated_second;
+                            $total_vaccine_allocated_sinovac_first += $muncity->sinovac_allocated_first;
+                            $total_vaccine_allocated_sinovac_second += $muncity->sinovac_allocated_second;
                         }
                         elseif($vaccine->typeof_vaccine == 'Astrazeneca'){
                             $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                            $vaccine->vaccine_allocated = $muncity->astrazeneca_allocated;
+                            $vaccine->vaccine_allocated_first = $muncity->astrazeneca_allocated_first;
+                            $vaccine->vaccine_allocated_second = $muncity->astrazeneca_allocated_second;
+                            $total_vaccine_allocated_astra_first += $muncity->astrazeneca_allocated_first;
+                            $total_vaccine_allocated_astra_second += $muncity->astrazeneca_allocated_second;
                         }
 
                         $total_percent_coverage_first += $total_vaccinated_first / $total_eli_pop * 100;
                         $total_percent_coverage_second += $total_vaccinated_second / $total_eli_pop * 100;
 
                         if($vaccine->typeof_vaccine == "Sinovac"){
+                            $total_eli_pop_sinovac_frontline = $muncity->frontline_health_workers;
+                            $total_eli_pop_sinovac_senior = $muncity->senior_citizens;
                             if($vaccine->priority == "frontline_health_workers"){
-                                if($total_eli_pop_sinovac_frontline_flag){
-                                    $total_eli_pop_sinovac_frontline += $vaccine->no_eli_pop;
-                                    $total_eli_pop_sinovac_frontline_flag = false;
-                                }
                                 $total_sinovac_a1_first += $vaccine->vaccinated_first; //correct
                                 $total_sinovac_a1_second += $vaccine->vaccinated_second; //correct
                             }
                             elseif($vaccine->priority == "indigent_senior_citizens"){
-                                if($total_eli_pop_sinovac_senior_flag){
-                                    $total_eli_pop_sinovac_senior += $vaccine->no_eli_pop;
-                                    $total_eli_pop_sinovac_senior_flag = false;
-                                }
                                 $total_sinovac_a2_first += $vaccine->vaccinated_first; //correct
                                 $total_sinovac_a2_second += $vaccine->vaccinated_second; //correct
 
                             }
                             if($total_vaccine_allocated_sinovac_flag){
-                                    $total_vaccine_allocated_sinovac += $vaccine->vaccine_allocated;
-                                    $total_vaccine_allocated_sinovac_flag = false;
+                                $total_vaccine_allocated_sinovac += $vaccine->vaccine_allocated;
+                                $total_vaccine_allocated_sinovac_flag = false;
                             }
-
                             $total_vaccinated_sinovac_first += $vaccine->vaccinated_first;
                             $total_vaccinated_sinovac_second += $vaccine->vaccinated_second;
                             $total_mild_sinovac_first += $vaccine->mild_first;
@@ -152,21 +151,13 @@
                         }
 
                         if($vaccine->typeof_vaccine == "Astrazeneca"){
+                            $total_eli_pop_astra_frontline = $muncity->frontline_health_workers;
+                            $total_eli_pop_astra_senior = $muncity->senior_citizens;
                             if($vaccine->priority == "frontline_health_workers"){
-                                if($total_eli_pop_astra_frontline_flag){
-                                    $total_eli_pop_astra_frontline += $vaccine->no_eli_pop;
-                                    $total_eli_pop_astra_frontline_flag = false;
-                                }
-
                                 $total_astra_a1_first += $vaccine->vaccinated_first; //correct
                                 $total_astra_a1_second += $vaccine->vaccinated_second; //correct
                             }
                             elseif($vaccine->priority == "indigent_senior_citizens" ){
-                                if($total_eli_pop_astra_senior_flag){
-                                    $total_eli_pop_astra_senior += $vaccine->no_eli_pop;
-                                    $total_eli_pop_astra_senior_flag = false;
-                                }
-
                                 $total_astra_a2_first += $vaccine->vaccinated_first; //correct
                                 $total_astra_a2_second += $vaccine->vaccinated_second; //correct
                             }
@@ -187,7 +178,22 @@
                             $total_refused_astra_second += $vaccine->refused_second;
                             $total_wastage_astra_first += $vaccine->wastage_first;
                             $total_wastage_astra_second += $vaccine->wastage_second;
+
                         }
+
+                            $total_allocated_overall_sinovac_first = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_sinovac_second;
+                            $total_allocated_overall_astra_first = $total_vaccine_allocated_astra_first + $total_vaccine_allocated_astra_second;
+
+                            $total_consumption_rate_sinovac_first =  $total_vaccinated_sinovac_first / $total_allocated_overall_sinovac_first * 100;
+                            $total_consumption_rate_sinovac_second = $total_vaccinated_sinovac_second / $total_allocated_overall_sinovac_first * 100;
+
+                            $total_consumption_rate_astra_first =  $total_vaccinated_astra_first / $total_allocated_overall_astra_first * 100;
+                            $total_consumption_rate_astra_second =  $total_vaccinated_astra_second / $total_allocated_overall_astra_first * 100;
+
+
+
+
+
 
                     ?>
                     <tr style="background-color: #59ab91">
@@ -196,7 +202,7 @@
                         <td style="width: 15%">
                             <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                         </td>
-                        <td style="width: 15%" rowspan="2">
+                        <td rowspan="2">
                             <select name="typeof_vaccine[]" id="typeof_vaccine" class="select2" required>
                                 <option value="">Select Option</option>
                                 <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
@@ -204,7 +210,15 @@
                                 <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
                                 <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
                             </select>
-                           <br><br> <input type="text" name="vaccine_allocated[]" value="<?php if(isset($vaccine->vaccine_allocated)) echo $vaccine->vaccine_allocated ?>" class="form-control" readonly>
+                            <br><br>
+                            <div class="row">
+                                <div class="col-md-6" style="padding: 2%;">
+                                    <input type="text" name="vaccine_allocated_first[]" value="<?php if(isset($vaccine->vaccine_allocated_first)) echo $vaccine->vaccine_allocated_first; ?>" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-6" style="background-color: #f39c12;padding: 2%">
+                                    <input type="text" name="vaccine_allocated_second[]" value="<?php if(isset($vaccine->vaccine_allocated_second)) echo $vaccine->vaccine_allocated_second; ?>" class="form-control" readonly>
+                                </div>
+                            </div>
                         </td>
                         <td style="width: 15%" rowspan="2">
                             <select name="priority[]" id="priority{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getEliPop('<?php echo $muncity_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')">
@@ -222,7 +236,8 @@
                                 <option value="remaining_filipino_citizen" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_filipino_citizen')echo 'selected';} ?> disabled>Remaining Filipino Citizen</option>
                                 <option value="etc" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'etc')echo 'selected';} ?> disabled >ETC.</option>
                             </select>
-                            <br><br><input type="text" name="no_eli_pop[]" id="no_eli_pop{{ $vaccine->id.$vaccine->encoded_by }}" value="{{ $vaccine->no_eli_pop }}" class="form-control" readonly>
+                            <br><br>
+                            <input type="text" name="no_eli_pop[]" id="no_eli_pop{{ $vaccine->id.$vaccine->encoded_by }}" value="{{ $vaccine->no_eli_pop }}" class="form-control" readonly>
                         </td>
                         <td style="width: 5%">
                             <input type="text" name="vaccinated_first[]"  value="<?php if(isset($vaccine->vaccinated_first)) echo $vaccine->vaccinated_first ?>" class="form-control">
@@ -247,6 +262,7 @@
                         <td>
                             <input type="text" id="date_picker2{{ $vaccine->id.$vaccine->encoded_by }}" name="date_second[]" value="<?php if(isset($vaccine->date_second)) echo date('m/d/Y',strtotime($vaccine->date_second)) ?>" class="form-control">
                         </td>
+
                         <td>
                             <input type="text" name="vaccinated_second[]" value="<?php if(isset($vaccine->vaccinated_second)) echo $vaccine->vaccinated_second ?>" class="form-control">
                         </td>
@@ -304,13 +320,19 @@
                 </td>
             </tr>
     </table>
+     <button class="btn btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        <b>Sinovac</b>
+     </button>
+     <button class="btn btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+        <b>Astrazeneca</b>
+     </button>
 </form>
 @if(count($vaccine_accomplishment) > 0)
 <table style="font-size: 10pt;" class="table table-striped" border="2">
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
         <th colspan="3"><center>Eligible Population</center></th>
-        <th>Vaccine Allocated</th>
+        <th colspan="3">Vaccine Allocated</th>
         <th colspan="3">Total Vaccinated</th>
         <th>Mild</th>
         <th>Serious</th>
@@ -326,7 +348,9 @@
         <th>Frontline(A1)</th>
         <th>Seniors(A2)</th>
         <th>Total</th>
-        <td></td>
+        <th>FD</th>
+        <th>SD</th>
+        <th>Total</th>
         <th>A1</th>
         <th>A2</th>
         <th>Total</th>
@@ -340,182 +364,181 @@
         <td></td>
     </tr>
     <tr>
-        <td colspan="16">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Sinovac
-            </button>
-        </td>
     </tr>
     <tbody id="collapseTwo" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #ffd8d6">
         <td rowspan="2">
 
         </td> <!-- 1-3 -->
-        <td rowspan="2">{{ $total_eli_pop_sinovac_frontline }}</td>
-        <td rowspan="2">{{ $total_eli_pop_sinovac_senior }}</td>
+        <td rowspan="2">{{ $total_eli_pop_sinovac_frontline }}</td> <!-- Frontline(A1) SINOVAC -->
+        <td rowspan="2">{{ $total_eli_pop_sinovac_senior }}</td> <!-- Seniors(A2) SINOVAC -->
         <td rowspan="2">
             <?php $total_eli_pop_sinovac = $total_eli_pop_sinovac_frontline + $total_eli_pop_sinovac_senior; ?>
-            {{ $total_eli_pop_sinovac }}
+            {{ $total_eli_pop_sinovac }} <!-- ELIPOP TOTAL SINOVAC FIRST  -->
         </td>
-        <td rowspan="2">{{ $total_vaccine_allocated_sinovac }} </td>
-        <td>
-            <span class="label label-success">{{ $total_sinovac_a1_first }} </span>
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sinovac_a2_first }} </span>
+        <td rowspan="2">{{ $total_vaccine_allocated_sinovac_first }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_vaccine_allocated_sinovac_second }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRSWT -->
+        <td rowspan="2">
+                         {{ $total_allocated_overall_sinovac_first }}  <!-- VACCINE ALLOCATED TOTAL SINOVAC -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_vaccinated_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_sinovac_a1_first }}</span> <!-- VACCINATED (A1) SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_mild_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_sinovac_a2_first }} </span> <!-- VACCINATED (A2) SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_serious_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_vaccinated_sinovac_first }}</span>  <!-- TOTAL VACCINATED SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_deferred_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_mild_sinovac_first }}</span>   <!-- MILD SINOVAC  FIRST-->
         </td>
         <td>
-            <span class="label label-success">{{ $total_refused_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_serious_sinovac_first }}</span>  <!-- SERIOUS SINOVAC FIRST-->
         </td>
         <td>
-            <span class="label label-success">{{ $total_wastage_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_deferred_sinovac_first }}</span> <!-- DEFERRED SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_refused_sinovac_first }}</span> <!-- REFUSED SINOVAC  FIRST-->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_wastage_sinovac_first }}</span> <!-- WASTAGE SINOVAC  FIRST-->
         </td>
         <td>
             <?php $percent_coverage_sinovac_first = ($total_vaccinated_sinovac_first / $total_eli_pop_sinovac) * 100; ?>
-            <span class="label label-success">{{ number_format($percent_coverage_sinovac_first,2) }}%</span>
+            <span class="label label-success">{{ number_format($percent_coverage_sinovac_first,2) }}%</span> <!-- PERCENT COVERAGE SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ number_format(($total_vaccinated_sinovac_first / $total_vaccine_allocated_sinovac) * 100,2) }}%</span>
+            <span class="label label-success">{{ number_format($total_consumption_rate_sinovac_first,2) }}%</span> <!-- CONSUMPTION RATE SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_eli_pop_sinovac - $total_vaccinated_sinovac_first - $total_refused_sinovac_first }}</span>
+            <span class="label label-success">{{ $total_eli_pop_sinovac - $total_vaccinated_sinovac_first - $total_refused_sinovac_first }}</span> <!-- REMAINING UNVACCINATED SINOVAC FIRST -->
         </td>
     </tr>
     <tr style="background-color: #ffd8d6">
         <td>
-            <span class="label label-warning">{{ $total_sinovac_a1_second }} </span>
+            <span class="label label-warning">{{ $total_sinovac_a1_second }} </span> <!-- VACCINATED (A1) SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_sinovac_a2_second }} </span>
+            <span class="label label-warning">{{ $total_sinovac_a2_second }} </span> <!-- VACCINATED (A2) SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_vaccinated_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_vaccinated_sinovac_second }}</span> <!-- TOTAL VACCINATED SINOVAC SECOND -->
         </td> <!-- 1-4 -->
         <td>
-            <span class="label label-warning">{{ $total_mild_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_mild_sinovac_second }}</span> <!-- MILD SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_serious_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_serious_sinovac_second }}</span> <!-- SERIOUS SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_deferred_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_deferred_sinovac_second }}</span> <!-- DEFERRED SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_refused_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_refused_sinovac_second }}</span> <!-- REFUSED SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_wastage_sinovac_second }}</span>
+            <span class="label label-warning">{{ $total_wastage_sinovac_second }}</span> <!-- WASTAGE SINOVAC SECOND -->
         </td>
         <td>
             <?php  $percent_coverage_sinovac_second = ($total_vaccinated_sinovac_second / $total_eli_pop_sinovac) * 100; ?>
-            <span class="label label-warning">{{ number_format($percent_coverage_sinovac_second,2) }}%</span>
+            <span class="label label-warning">{{ number_format($percent_coverage_sinovac_second,2) }}%</span> <!-- PERCENT COVERAGE SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ number_format(($total_vaccinated_sinovac_second / $total_vaccine_allocated_sinovac) * 100,2) }}%</span>
+            <span class="label label-warning">{{ number_format($total_consumption_rate_sinovac_second,2)}}%</span> <!-- CONSUMPTION RATE SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_eli_pop_sinovac - $total_vaccinated_sinovac_second - $total_refused_sinovac_second }} </span>
+            <span class="label label-warning">{{ $total_eli_pop_sinovac - $total_vaccinated_sinovac_second - $total_refused_sinovac_second }} </span> <!-- REMAINING UNVACCINATED SINOVAC SECOND -->
         </td>
     </tr>
     </tbody>
     <tr>
-        <td colspan="16">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                Astrazeneca
-            </button>
-        </td>
     </tr>
     <tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
-        <tr style="background-color: #c3f6ff">
+        <tr style="background-color: #f2fcac">
             <td rowspan="2"></td> <!-- 1-5 -->
-            <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_frontline }}</td>
-            <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_senior }}</td>
+            <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_frontline }}</td>  <!-- Frontline(A1) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_senior }}</td>  <!-- SENIOR(A2) ASTRA -->
             <td rowspan="2" style="color:black;">
                 <?php $total_eli_pop_astra = $total_eli_pop_astra_frontline + $total_eli_pop_astra_senior; ?>
-                {{ $total_eli_pop_astra }}
+                {{ $total_eli_pop_astra }}  <!-- ELIPOP TOTAL ASTRA FIRST  -->
             </td>
-            <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_astra }}</td>
+            </td>
+            <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_astra_first }}</td>  <!-- VACCINE ALLOCATED(FD) ASTRA FIRST -->
+            <td rowspan="2" style="color: black;">{{ $total_vaccine_allocated_astra_second }}</td>  <!-- VACCINE ALLOCATED(SD) ASTRA FIRST -->
+            <td rowspan="2" style="color:black;">
+              <!-- Total Allocated--> {{ $total_allocated_overall_astra_first }}  <!-- TOTAL VACCINE ALLOCATED ASTRA FIRST -->
+            </td>
             <td style="color:black;">
-                <span class="label label-success">{{ $total_astra_a1_first }}</span>
+                <span class="label label-success">{{ $total_astra_a1_first }}</span>  <!-- VACCINATED (A1) ASTRA FIRST -->
             </td>
             <td  style="color:black;">
-                <span class="label label-success">{{ $total_astra_a2_first }} </span>
+                <span class="label label-success">{{ $total_astra_a2_first }} </span> <!-- VACCINATED (A2) ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_vaccinated_astra_first }}</span>
+                <span class="label label-success">{{ $total_vaccinated_astra_first }}</span> <!-- TOTAL VACCINATED  ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_mild_astra_first }}</span>
+                <span class="label label-success">{{ $total_mild_astra_first }}</span> <!-- MILD ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_serious_astra_first }}</span>
+                <span class="label label-success">{{ $total_serious_astra_first }}</span>  <!-- SERIOUS ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_deferred_astra_first }}</span>
+                <span class="label label-success">{{ $total_deferred_astra_first }}</span>  <!-- DEFERRED ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_refused_astra_first }}</span>
+                <span class="label label-success">{{ $total_refused_astra_first }}</span>  <!-- REFUSED ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_wastage_astra_first }}</span>
+                <span class="label label-success">{{ $total_wastage_astra_first }}</span>  <!-- WASTAGE ASTRA FIRST -->
             </td>
             <td>
                 <?php $percent_coverage_astra_first = ($total_vaccinated_astra_first / $total_eli_pop_astra) * 100; ?>
-                <span class="label label-success">{{ number_format($percent_coverage_astra_first,2) }}%</span>
+                <span class="label label-success">{{ number_format($percent_coverage_astra_first,2) }}%</span>  <!-- PERCENT COVERAGE ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ number_format(($total_vaccinated_astra_first / $total_vaccine_allocated_astra) * 100,2) }}%</span>
+                <span class="label label-success">{{ number_format($total_consumption_rate_astra_first,2) }}%</span>  <!-- CONSUMPTION RATE ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_eli_pop_astra - $total_vaccinated_astra_first - $total_refused_astra_first }} </span>
+                <span class="label label-success">{{ $total_eli_pop_astra - $total_vaccinated_astra_first - $total_refused_astra_first }} </span>  <!-- REMAINING UNVACCINATED ASTRA FIRST -->
             </td>
         </tr>
-        <tr style="background-color: #c3f6ff">
+        <tr style="background-color: #f2fcac">
             <td style="color:black;">
-                <span class="label label-warning">{{ $total_astra_a1_second }}</span>
+                <span class="label label-warning">{{ $total_astra_a1_second }}</span> <!-- VACCINATED (A1) ASTRA SECOND -->
             </td>
             <td style="color:black;">
-                <span class="label label-warning">{{ $total_astra_a2_second }} </span>
+                <span class="label label-warning">{{ $total_astra_a2_second }} </span>  <!-- VACCINATED (A2) ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_vaccinated_astra_second }}</span>
+                <span class="label label-warning">{{ $total_vaccinated_astra_second }}</span> <!-- TOTAL VACCINATED ASTRA SECOND -->
             </td> <!-- 1-6 -->
             <td>
-                <span class="label label-warning">{{ $total_mild_astra_second }}</span>
+                <span class="label label-warning">{{ $total_mild_astra_second }}</span> <!-- MILD ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_serious_astra_second }}</span>
+                <span class="label label-warning">{{ $total_serious_astra_second }}</span> <!-- SERIOUS ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_deferred_astra_second }}</span>
+                <span class="label label-warning">{{ $total_deferred_astra_second }}</span> <!-- DEFERRED ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_refused_astra_second }}</span>
+                <span class="label label-warning">{{ $total_refused_astra_second }}</span> <!-- REFUSED ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_wastage_astra_second }}</span>
+                <span class="label label-warning">{{ $total_wastage_astra_second }}</span> <!-- WASTAGE ASTRA SECOND -->
             </td>
             <td>
                 <?php $percent_coverage_astra_second = ($total_vaccinated_astra_first / $total_eli_pop_astra) * 100; ?>
-                <span class="label label-warning">{{ number_format($percent_coverage_astra_second,2) }}%</span>
+                <span class="label label-warning">{{ number_format($percent_coverage_astra_second,2) }}%</span> <!-- PERCENT COVERAGE ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ number_format(($total_vaccinated_astra_second / $total_vaccine_allocated_astra) * 100,2) }}%</span>
+                <span class="label label-warning">{{ number_format($total_consumption_rate_astra_second,2) }}%</span> <!-- CONSUMPTION RATE ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_eli_pop_astra - $total_vaccinated_astra_second - $total_refused_astra_second }}</span>
+                <span class="label label-warning">{{ $total_eli_pop_astra - $total_vaccinated_astra_second - $total_refused_astra_second }}</span> <!-- REMAINING UNVACCINATED ASTRA SECOND -->
             </td>
         </tr>
     </tbody>
@@ -531,9 +554,17 @@
             <?php $total_eli_pop = $muncity->frontline_health_workers + $muncity->senior_citizens ?>
            <b>{{ $total_eli_pop }}</b>
         </td>
+        <td >
+            <?php $total_allocated_first = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_astra_first; ?>
+           <b>{{ $total_allocated_first }}</b>
+        </td>
+        <td >
+            <?php $total_allocated_second = $total_vaccine_allocated_sinovac_second + $total_vaccine_allocated_astra_second ?>
+            <b>{{ $total_allocated_second }}</b>
+        </td>
         <td>
-            <?php $total_allocated = $total_vaccine_allocated_sinovac + $total_vaccine_allocated_astra;?>
-            <b>{{ $total_allocated  }}</b>
+            <?php $total_allocated = $total_allocated_first + $total_allocated_second;?>
+            <b>{{ $total_allocated }}</b>
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{$total_sinovac_a1_first + $total_astra_a1_first}}</b>
@@ -580,17 +611,12 @@
     </tr>
     <tr>
         <td></td> <!-- 1-7 -->
-        <td>
-
-        </td>
-        <td>
-
-        </td>
-        <td>
-
-        </td>
-        <td>
-        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{$total_sinovac_a1_second + $total_astra_a1_second}}</b>
         </td>
@@ -659,7 +685,8 @@
             '            <option value="Moderna" disabled>Moderna</option>\n' +
             '            <option value="Pfizer" disabled>Pfizer</option>\n' +
             '        </select>\n' +
-            '       <br><br><input type="text" id="vaccine_allocated'+count+'" name="vaccine_allocated[]" class="form-control" readonly>\n' +
+            '       <br><br>' +
+            '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +
             '    </td>\n' +
             '    <td style="width: 15%" rowspan="2">\n' +
             '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+muncity_id+','+count+')" class="select2" >\n' +
@@ -746,7 +773,8 @@
     function getVaccineAllocated(muncity_id,count){
         var url = "<?php echo asset('vaccine/allocated').'/'; ?>"+muncity_id+"/"+$("#typeof_vaccine"+count).val();
         $.get(url,function(data){
-            $("#vaccine_allocated"+count).val(data);
+            $("#vaccine_allocated_first"+count).val(data[0]);
+            $("#vaccine_allocated_second"+count).val(data[1]);
         });
     }
 

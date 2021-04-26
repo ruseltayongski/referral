@@ -146,7 +146,8 @@ class VaccineController extends Controller
             $vaccine->wastage_first = $request->wastage_first[$count];
             $vaccine->wastage_second = $request->wastage_second[$count];
             $vaccine->no_eli_pop = $request->no_eli_pop[$count];
-            $vaccine->vaccine_allocated = $request->vaccine_allocated[$count];
+            $vaccine->vaccine_allocated_first = $request->vaccine_allocated_first[$count];
+            $vaccine->vaccine_allocated_second = $request->vaccine_allocated_second[$count];
             $vaccine->save();
             $count++;
         }
@@ -301,10 +302,14 @@ class VaccineController extends Controller
 
     public function getVaccineAllocated($muncity_id,$typeof_vaccine){
         $vaccine_allocated = Muncity::find($muncity_id);
-        if($typeof_vaccine == 'Sinovac')
-            return $vaccine_allocated->sinovac_allocated;
-
-        return $vaccine_allocated->astrazeneca_allocated;
+        if($typeof_vaccine == 'Sinovac'){
+            $data[0] = $vaccine_allocated->sinovac_allocated_first;
+            $data[1] = $vaccine_allocated->sinovac_allocated_second;
+        }else{
+            $data[0] = $vaccine_allocated->astrazeneca_allocated_first;
+            $data[1] = $vaccine_allocated->astrazeneca_allocated_second;
+        }
+        return $data;
     }
 
     public function getVallocatedModal(Request $request)

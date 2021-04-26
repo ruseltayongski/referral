@@ -1,7 +1,7 @@
 <form method="POST" action="{{ asset('admin/municipality/crud/add') }}">
     {{ csrf_field() }}
     <fieldset>
-        <legend><i class="fa fa-hospital-o"></i> Municipality</legend>
+        <legend><i class="fa fa-hospital-o"></i> {{ $muncity->description }}</legend>
     </fieldset>
     <input type="hidden" value="@if(isset($muncity->id)){{ $muncity->id }}@endif" name="id">
     <input type="hidden" value="{{ $province_id }}" name="province_id">

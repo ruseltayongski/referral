@@ -1,7 +1,7 @@
 <form method="POST" action="{{ asset('admin/municipality/crud/add') }}">
     {{ csrf_field() }}
     <fieldset>
-        <legend><i class="fa fa-hospital-o"></i> Municipality</legend>
+        <legend><i class="fa fa-hospital-o"></i> {{ $muncity->description }}</legend>
     </fieldset>
     <input type="hidden" value="@if(isset($muncity->id)){{ $muncity->id }}@endif" name="id">
     <input type="hidden" value="{{ $province_id }}" name="province_id">
@@ -18,12 +18,26 @@
         <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code" readonly>
     </div>
     <div class="form-group">
-        <label>Sinovac Allocated</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->sinovac_allocated)){{ $muncity->sinovac_allocated}}@endif" name="sinovac_allocated">
+        <center><label>Sinovac Allocated</label></center>
+        <div class="row">
+            <div class="col-md-6">
+            <input type="text" class="form-control text-green" value="@if(isset($muncity->sinovac_allocated_first)){{ $muncity->sinovac_allocated_first}}@endif" name="sinovac_allocated_first">
+            </div>
+            <div class="col-md-6">
+            <input type="text"  class="form-control text-yellow" value="@if(isset($muncity->sinovac_allocated_second)){{ $muncity->sinovac_allocated_second}}@endif" name="sinovac_allocated_second">
+            </div>
+        </div>
     </div>
     <div class="form-group">
-        <label>Astrazeneca Allocated</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->astrazeneca_allocated)){{ $muncity->astrazeneca_allocated}}@endif" name="astrazeneca_allocated">
+       <center><label>Astrazeneca Allocated</label></center>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-green" value="@if(isset($muncity->astrazeneca_allocated_first)){{ $muncity->astrazeneca_allocated_first}}@endif" name="astrazeneca_allocated_first">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-yellow" value="@if(isset($muncity->astrazeneca_allocated_second)){{ $muncity->astrazeneca_allocated_second}}@endif" name="astrazeneca_allocated_second">
+            </div>
+        </div>
         <br>
         <div class="modal-footer">
             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
