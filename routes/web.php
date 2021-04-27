@@ -484,6 +484,10 @@ Route::get('vaccine/no_eli_pop/{muncity_id}/{priority}','Vaccine\VaccineControll
 Route::get('vaccine/allocated/{muncity_id}/{typeof_vaccine}','Vaccine\VaccineController@getVaccineAllocated');
 Route::post('vaccine/vaccine_allocated_modal','Vaccine\VaccineController@getVallocatedModal');
 
+Route::get('test/send','Vaccine\VaccineController@sendNotification');
+
+
+
 
 
 
