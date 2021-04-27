@@ -545,68 +545,68 @@
     <tr>
         <td>Total</td> <!-- 1-7 -->
         <td>
-           <b>{{ $muncity->frontline_health_workers }}</b>
+           <b>{{ $muncity->frontline_health_workers }}</b>  <!-- TOTAL_FRONTLINE FIRST -->
         </td>
         <td>
-            <b>{{ $muncity->senior_citizens }}</b>
+            <b>{{ $muncity->senior_citizens }}</b>  <!-- TOTAL_SENIOR FIRST -->
         </td>
         <td>
             <?php $total_eli_pop = $muncity->frontline_health_workers + $muncity->senior_citizens ?>
-           <b>{{ $total_eli_pop }}</b>
+           <b>{{ $total_eli_pop }}</b>  <!-- TOTAL_ELI_POP  -->
         </td>
         <td >
             <?php $total_allocated_first = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_astra_first; ?>
-           <b>{{ $total_allocated_first }}</b>
+           <b>{{ $total_allocated_first }}</b>  <!-- TOTAL ALLOCATED_FIRST -->
         </td>
         <td >
             <?php $total_allocated_second = $total_vaccine_allocated_sinovac_second + $total_vaccine_allocated_astra_second ?>
-            <b>{{ $total_allocated_second }}</b>
+            <b>{{ $total_allocated_second }}</b>  <!-- TOTAL ALLOCATED_SECOND -->
         </td>
         <td>
             <?php $total_allocated = $total_allocated_first + $total_allocated_second;?>
-            <b>{{ $total_allocated }}</b>
+            <b>{{ $total_allocated }}</b>  <!-- TOTAL_ALLOCATED-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{$total_sinovac_a1_first + $total_astra_a1_first}}</b>
+            <b class="label label-success" style="margin-right: 5%">{{$total_sinovac_a1_first + $total_astra_a1_first}}</b>  <!-- TOTAL_A1   -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_sinovac_a2_first + $total_astra_a2_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_sinovac_a2_first + $total_astra_a2_first }}</b>  <!-- TOTAL_A2   -->
         </td>
         <td>
             <?php $total_vaccinated_first = $total_vaccinated_sinovac_first + $total_vaccinated_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_vaccinated_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_vaccinated_first }}</b>  <!-- TOTAL_VACCINATED  -->
         </td>
         <td>
             <?php $total_mild_first = $total_mild_sinovac_first + $total_mild_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_first }}</b>  <!-- TOTAL_MILD T  -->
         </td>
         <td>
             <?php $total_serious_first = $total_serious_sinovac_first + $total_serious_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_serious_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_serious_first }}</b>  <!-- TOTAL_SERIOUS   -->
         </td>
         <td>
             <?php $total_deferred_first = $total_deferred_sinovac_first + $total_deferred_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_deferred_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_deferred_first }}</b>  <!-- TOTAL_DEFERRED  -->
         </td>
         <td>
             <?php $total_refused_first = $total_refused_sinovac_first + $total_refused_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_refused_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_refused_first }}</b>  <!-- TOTAL_REFUSED  -->
         </td>
         <td>
             <?php $total_wastage_first = $total_wastage_sinovac_first + $total_wastage_astra_first;?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_wastage_first }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_wastage_first }}</b>  <!-- TOTAL_WASTAGE -->
         </td>
         <td>
             <?php $total_percent_coverage_first = $total_vaccinated_first / $total_eli_pop * 100; ?>
-            <b class="label label-success" style="margin-right: 5%">{{ number_format($total_percent_coverage_first,2) }}%</b>
+            <b class="label label-success" style="margin-right: 5%">{{ number_format($total_percent_coverage_first,2) }}%</b>  <!-- TOTAL_PERCENT_COVERAGE -->
         </td>
         <td>
             <?php $total_consumption_rate_first = number_format($total_vaccinated_first / $total_allocated * 100,2); ?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_consumption_rate_first }}%</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_consumption_rate_first }}%</b>  <!-- TOTAL_CONSUMPTION_RATE-->
         </td>
         <td>
             <?php $total_remaining = $total_eli_pop - $total_vaccinated_first - $total_refused_first; ?>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_remaining }}</b>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_remaining }}</b>  <!-- TOTAL_REMAINING_UNVACCINATED -->
         </td>
     </tr>
     <tr>
@@ -618,46 +618,46 @@
         <td></td>
         <td></td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_sinovac_a1_second + $total_astra_a1_second}}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_sinovac_a1_second + $total_astra_a1_second}}</b> <!-- TOTAL_A1   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_sinovac_a2_second + $total_astra_a2_second}}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_sinovac_a2_second + $total_astra_a2_second}}</b> <!-- TOTAL_A2   -->
         </td>
         <td>
             <?php $total_vaccinated_second = $total_vaccinated_sinovac_second + $total_vaccinated_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_vaccinated_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_vaccinated_second }}</b> <!-- TOTAL_VACCINATED 2   -->
         </td>
         <td>
             <?php $total_mild_second = $total_mild_sinovac_second + $total_mild_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_second }}</b> <!-- TOTAL_MILD 2   -->
         </td>
         <td>
             <?php $total_serious_second = $total_serious_sinovac_second + $total_serious_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_serious_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_serious_second }}</b> <!-- TOTAL_SERIOUS 2   -->
         </td>
         <td>
             <?php $total_deferred_second = $total_deferred_sinovac_second + $total_deferred_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_deferred_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_deferred_second }}</b> <!-- TOTAL_DEFERRED 2   -->
         </td>
         <td>
             <?php $total_refused_second = $total_refused_sinovac_second + $total_refused_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_refused_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_refused_second }}</b> <!-- TOTAL_REFUSED 2   -->
         </td>
         <td>
             <?php $total_wastage_second = $total_wastage_sinovac_second + $total_wastage_astra_second;?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_wastage_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_wastage_second }}</b> <!-- TOTAL_WASTAGE 2   -->
         </td>
         <td>
             <?php $total_percent_coverage_second = $total_vaccinated_second / $total_eli_pop * 100; ?>
-            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_percent_coverage_second,2) }}%</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_percent_coverage_second,2) }}%</b> <!-- TOTAL_PERCENT_COVERAGE_2   -->
         </td>
         <td>
             <?php $total_consumption_rate_second = number_format($total_vaccinated_second / $total_allocated * 100,2); ?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_consumption_rate_second }}%</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_consumption_rate_second }}%</b> <!-- TOTAL_CONSUMPTION_RATE 2   -->
         </td>
         <td>
             <?php $total_remaining_second = $total_eli_pop - $total_vaccinated_second - $total_refused_second; ?>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_remaining_second }}</b>
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_remaining_second }}</b> <!-- TOTAL_REMAINING_UNVACCINATED 2   -->
         </td>
     </tr>
 </table>
