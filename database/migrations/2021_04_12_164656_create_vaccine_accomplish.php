@@ -38,7 +38,8 @@ class CreateVaccineAccomplish extends Migration
             $table->string('wastage_first')->nullable();
             $table->string('wastage_second')->nullable();
             $table->string('no_eli_pop')->nullable();
-            $table->string('vaccine_allocated')->nullable();
+            $table->string('vaccine_allocated_first')->nullable();
+            $table->string('vaccine_allocated_second')->nullable();
 
             $table->timestamps();
         });
