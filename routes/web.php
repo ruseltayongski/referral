@@ -485,6 +485,7 @@ Route::get('vaccine/allocated/{muncity_id}/{typeof_vaccine}','Vaccine\VaccineCon
 Route::post('vaccine/vaccine_allocated_modal','Vaccine\VaccineController@getVallocatedModal');
 
 Route::get('test/send','Vaccine\VaccineController@sendNotification');
+Route::get('/ajax/{token}','Vaccine\VaccineController@ajax');
 
 
 

@@ -1461,7 +1461,18 @@
             })
             .then(function(token) {
                 // print the token on the HTML page
+                @if(!Session::get("ajax"))
                 console.log(token);
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("demo").innerHTML =
+                            this.responseText;
+                    }
+                };
+                xhttp.open("GET", "<?php echo asset('ajax'); ?>"+"/"+token, true);
+                xhttp.send();
+                @endif
             })
             .catch(function (err) {
                 console.log("Unable to get permission to notify.", err);

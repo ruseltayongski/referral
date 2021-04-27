@@ -325,7 +325,7 @@ class VaccineController extends Controller
 
 
     public function sendNotification(){
-        $token = "dsd67_nwkw0:APA91bEQT6F-ci0JJryb1HxZU4penyUq_L6A5PddT3FD51OwhD-Ke50WKYfEW24wE6RX9QeJ-L9SS_FdaHDDmC21fot72Kct3Ue--pPkywWfz850DiBejGlDSlMg81uCVZEY93U-uq-1";
+        $token = Session::get("ajax_token");
         $from = "AAAA4yHdicc:APA91bHLB-9vT2V6v3k6EjEXPIJ_OC70Lmd63ftlM3X3fEa1CgLYmCxoYLSIq4f0IULHDtG062jQ2cQ2Uy5hszVtSobwKc59dTZOzlNRV3NdjuIsNcax0UkKSjWwFKhN9VlO7V-rtuad";
         $msg = array
         (
@@ -358,6 +358,11 @@ class VaccineController extends Controller
         $result = curl_exec($ch );
         dd($result);
         curl_close( $ch );
+    }
+
+    public function ajax($token){
+        Session::put("ajax_token",$token);
+        Session::put("ajax",true);
     }
 
 
