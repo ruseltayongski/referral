@@ -345,12 +345,18 @@ class ApiController extends Controller
         if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first()->id)
             return 'Invalid Barangay Code';
 
+        if(!$referring_facility = Facility::where("facility_code",$req->referring_facility))
+            return 'Invalid Referring Facility';
+
+        if(!$referred_facility = Facility::where("facility_code",$req->referred_facility))
+            return 'Invalid Referred Facility';
+
         $unique = array(
             $req->fname,
             $req->mname,
             $req->lname,
             date('Ymd',strtotime($req->dob)),
-            $req->brgy
+            $barangay->id
         );
         $unique = implode($unique);
 
@@ -367,13 +373,91 @@ class ApiController extends Controller
         $patient->dob = $req->dob;
         $patient->sex = $req->sex;
         $patient->civil_status = $req->civil_status;
-        $patient->muncity = $req->muncity;
-        $patient->province = $req->province;
-        $patient->brgy = $req->barangay;
+        $patient->muncity = $muncity->id;
+        $patient->province = $province->id;
+        $patient->brgy = $barangay->id;
         $patient->save();
 
 
-        return $patient;
+        //referring doctor
+        if(!$referring_doctor = User::where("fname",$req->referring_md_fname)->where("mname",$req->referring_md_mname)->where("lname",$req->referring_md_lname)->first())
+            $referring_doctor = new User();
+
+        $match_referring = array(
+            'fname' => $req->referring_md_fname,
+            'mname' => $req->referring_md_mname,
+            'lname' => $req->referring_md_lname
+        );
+        $data = array(
+            'level' => 'doctor',
+            'facility_id' => $referring_facility->id,
+            'status' => 'active',
+            'contact' => $req->referring_md_contact,
+            'email' => $req->email,
+            'designation' => $req->designation,
+            'department_id' => $req->department_id,
+            'username' => $req->username,
+            'password' => bcrypt('123'),
+            'muncity' => $muncity->id,
+            'province' => $province->id
+        );
+        User::updateOrCreate($match_referring,$data);
+        //end referring doctor
+
+
+        //referred doctor
+        $match_referred = array(
+            'fname' => $req->referred_md_fname,
+            'mname' => $req->referred_md_mname,
+            'lname' => $req->referred_md_lname
+        );
+        $data = array(
+            'level' => 'doctor',
+            'facility_id' => $referred_facility->id,
+            'status' => 'active',
+            'contact' => $req->referred_md_contact,
+            'email' => $req->email,
+            'designation' => $req->designation,
+            'department_id' => $req->department_id,
+            'username' => $req->username,
+            'password' => bcrypt('123'),
+            'muncity' => $muncity->id,
+            'province' => $province->id
+        );
+        User::updateOrCreate($match_referred,$data);
+        //end referred doctor
+
+
+        //refer patient
+        $data = array(
+            'referring_facility' => $user->facility_id,
+            'referred_to' => $req->referred_facility,
+            'department_id' => $req->referred_department,
+            'covid_number' => $req->covid_number,
+            'refer_clinical_status' => $req->clinical_status,
+            'refer_sur_category' => $req->sur_category,
+            'time_referred' => date('Y-m-d H:i:s'),
+            'time_transferred' => '',
+            'patient_id' => $patient_id,
+            'case_summary' => $req->case_summary,
+            'reco_summary' => $req->reco_summary,
+            'diagnosis' => $req->diagnosis,
+            //'icd_code' => $req->icd_code,
+            'reason' => $req->reason,
+            'referring_md' => $user->id,
+            'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
+        );
+        $form = PatientForm::updateOrCreate($match,$data);
+        if($form->wasRecentlyCreated){
+            PatientForm::where('unique_id',$unique_id)
+                ->update([
+                    'code' => $code
+                ]);
+            $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
+        }
+
+
+
     }
 
 

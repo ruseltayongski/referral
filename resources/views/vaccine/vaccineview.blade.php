@@ -140,8 +140,8 @@
                                     $total_eli_pop_sinovac_senior  = $row->senior_citizens;
                                     $total_eli_pop_sinovac = $total_eli_pop_sinovac_frontline + $total_eli_pop_sinovac_senior;
                                     //Eligible_pop_astrazeneca
-                                    $total_eli_pop_astra_frontline = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->total_eli_pop;
-                                    $total_eli_pop_astra_senior = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->total_eli_pop;
+                                    $total_eli_pop_astra_frontline = $row->frontline_health_workers;
+                                    $total_eli_pop_astra_senior = $row->senior_citizens;
                                     $total_eli_pop_astra = $total_eli_pop_astra_frontline + $total_eli_pop_astra_senior;
                                     //vaccine_allocated
                                     $total_vaccine_allocated_sinovac_first = $row->sinovac_allocated_first;
@@ -217,29 +217,34 @@
                                     $total_vaccinated_first = $total_vaccinated_sinovac_first + $total_vaccinated_astra_first;
                                     $total_vaccinated_second = $total_vaccinated_sinovac_second + $total_vaccinated_astra_second;
 
-
-
-
                                     $total_percent_coverage_first = ($total_vaccinated_first /$total_eli_pop ) * 100;
                                     $total_percent_coverage_second = ($total_vaccinated_second / $total_eli_pop) * 100;
 
+                                    $total_vaccine_allocated_sinovac = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_sinovac_second;
 
+                                    $total_vaccine_allocated_astra = $total_vaccine_allocated_astra_first + $total_vaccine_allocated_astra_second;
 
-                                    //consumption_rate_first
-                                    $total_consumption_rate_sinovac_first = number_format($total_vaccinated_sinovac_first / $total_vaccine_allocated_sinovac * 100,2);
-                                    $total_consumption_rate_astra_first = number_format($total_vaccinated_astra_first / $total_vaccine_allocated_astra * 100,2);
-
-                                    //total_consumption_rate
-                                    $total_vaccine_allocated_first = $total_vaccine_allocated_sinovac + $total_vaccine_allocated_astra;
-                                    $total_consumption_rate_first = number_format($total_vaccinated_first / $total_vaccine_allocated_first * 100,2);
 
                                     //consumpiton_rate_second
-                                    $total_consumption_rate_sinovac_second = number_format($total_vaccinated_sinovac_second / $total_vaccine_allocated_sinovac * 100,2);
-                                    $total_consumption_rate_astra_second = number_format($total_vaccinated_astra_second / $total_vaccine_allocated_astra * 100,2);
+                                    $total_consumption_rate_sinovac_first = $total_vaccinated_sinovac_first / $total_vaccine_allocated_sinovac_first * 100;
+                                    $total_consumption_rate_sinovac_second = $total_vaccinated_sinovac_second / $total_vaccine_allocated_sinovac_second * 100;
+
+                                    $total_consumption_rate_astra_first = $total_vaccinated_astra_first / $total_vaccine_allocated_astra_first * 100;
+                                    $total_consumption_rate_astra_second = $total_vaccinated_astra_second / $total_vaccine_allocated_astra_second * 100;
+
+
 
                                     //total_consumption_rate
+                                    $total_allocated_first = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_astra_first;
+                                    $total_allocated_second = $total_vaccine_allocated_sinovac_second + $total_vaccine_allocated_astra_second;
+                                    $total_vaccine_allocated_first = $total_vaccine_allocated_sinovac + $total_vaccine_allocated_astra;
+                                    $total_consumption_rate_first = $total_vaccinated_first / $total_allocated_first * 100;
+                                    $total_consumption_rate_second = $total_vaccinated_second / $total_allocated_second * 100;
+
+
+
+
                                     $total_vaccine_allocated_second = $total_vaccine_allocated_sinovac + $total_vaccine_allocated_astra;
-                                    $total_consumption_rate_second = number_format($total_vaccinated_second / $total_vaccine_allocated_second * 100,2);
 
                                     //remaining_unvaccinated_first
                                     $total_remaining_unvaccinated_first_sinovac = $total_eli_pop_sinovac - $total_vaccinated_sinovac_first - $total_refused_sinovac_first;
@@ -265,6 +270,8 @@
                                     //percent_coverage_second
                                     $percent_coverage_sinovac_second = number_format($total_vaccinated_sinovac_second / $total_eli_pop_sinovac * 100,2);
                                     $percent_coverage_astra_second = number_format($total_vaccinated_astra_second / $total_eli_pop_astra * 100,2);
+
+
 
                                     ?>
                                     <tr>
@@ -352,7 +359,6 @@
                                                     <td rowspan="2">{{ $total_vaccine_allocated_sinovac_first }}</td>
                                                     <td rowspan="2">{{ $total_vaccine_allocated_sinovac_second }}</td>
                                                     <td rowspan="2">
-                                                        <?php $total_vaccine_allocated_sinovac = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_sinovac_second;?>
                                                         {{ $total_vaccine_allocated_sinovac }}
                                                     </td>
                                                     <td>
@@ -383,7 +389,7 @@
                                                         <span class="label label-success">{{ $percent_coverage_sinovac_first }}%</span>
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success">{{ $total_consumption_rate_sinovac_first }}%</span>
+                                                        <span class="label label-success">{{ number_format($total_consumption_rate_sinovac_first,2) }}%</span>
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_remaining_unvaccinated_first_sinovac }}</span>
@@ -418,7 +424,7 @@
                                                         <span class="label label-warning">{{ $percent_coverage_sinovac_second }}%</span>
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning">{{ $total_consumption_rate_sinovac_second }}%</span>
+                                                        <span class="label label-warning">{{ number_format($total_consumption_rate_sinovac_second,2) }}%</span>
                                                     </td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_remaining_unvaccinated_second_sinovac }} </span>
@@ -442,7 +448,6 @@
                                                     <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_astra_first }}</td>
                                                     <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_astra_second }}</td>
                                                     <td rowspan="2" style="color:black;">
-                                                        <?php $total_vaccine_allocated_astra = $total_vaccine_allocated_astra_first + $total_vaccine_allocated_astra_second;?>
                                                         {{ $total_vaccine_allocated_astra }}
                                                     </td>
                                                     <td style="color:black;">
@@ -473,7 +478,7 @@
                                                         <span class="label label-success">{{ $percent_coverage_astra_first }}%</span>
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success">{{ $total_consumption_rate_astra_first }}%</span>
+                                                        <span class="label label-success">{{ number_format($total_consumption_rate_astra_first,2) }}%</span>
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_remaining_unvaccinated_first_astra }}</span>
@@ -508,7 +513,7 @@
                                                         <span class="label label-warning">{{ $percent_coverage_astra_second }}%</span>
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning">{{ $total_consumption_rate_astra_second }}%</span>
+                                                        <span class="label label-warning">{{ number_format($total_consumption_rate_astra_second,2) }}%</span>
                                                     </td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_remaining_unvaccinated_second_astra }}</span>
@@ -518,21 +523,19 @@
                                                 <tbody><tr>
                                                     <td>Total</td> <!-- 1-7 -->
                                                     <td>
-                                                        <b> {{ $total_eli_pop_sinovac_frontline }} </b>
+                                                        <b>{{ $total_eli_pop_sinovac_frontline }} </b>
                                                     </td>
                                                     <td>
-                                                        <b> {{ $total_eli_pop_sinovac_senior }} </b>
+                                                        <b>{{ $total_eli_pop_sinovac_senior }} </b>
                                                     </td>
                                                     <td>
                                                         <b> <?php $total_eli_pop = $total_eli_pop_sinovac_frontline + $total_eli_pop_sinovac_senior;?>
                                                             {{ $total_eli_pop }}</b>
                                                     </td>
                                                     <td>
-                                                        <?php $total_allocated_first = $total_vaccine_allocated_sinovac_first + $total_vaccine_allocated_astra_first;?>
                                                        <b>{{ $total_allocated_first }}</b>
                                                     </td>
                                                     <td>
-                                                        <?php $total_allocated_second = $total_vaccine_allocated_sinovac_second + $total_vaccine_allocated_astra_second ?>
                                                         <b>{{ $total_allocated_second }}</b>
                                                     </td>
                                                     <td>
@@ -609,7 +612,7 @@
                                                         <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_percent_coverage_second,2) }}%</b>
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning" style="margin-right: 5%">{{ $total_consumption_rate_second }}%</b>
+                                                        <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_consumption_rate_second,2) }}%</b>
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_remaining_unvaccinated_second }}</b>
@@ -627,20 +630,16 @@
                             </div>
                             <hr>
                             <?php
-                            //Eligible_pop_sinovac
-                            $total_eli_pop_sinovac_frontline_prov =\DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','frontline_health_workers')")[0]->frontline_health_workers;
-                            $total_eli_pop_sinovac_senior_prov  = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->senior_citizens;
-                            $total_eli_pop_sinovac_prov = $total_eli_pop_sinovac_frontline_prov + $total_eli_pop_sinovac_senior_prov;
+
                             //Eligible_pop_astrazeneca
                             $total_eli_pop_astra_frontline_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->frontline_health_workers;
                             $total_eli_pop_astra_senior_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->senior_citizens;
                             $total_eli_pop_astra_prov = $total_eli_pop_astra_frontline_prov + $total_eli_pop_astra_senior_prov;
                             //vaccine_allocated
-                            $total_vaccine_allocated_sinovac_first_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','frontline_health_workers')")[0]->vaccine_allocated_first;
-                            $total_vaccine_allocated_sinovac_second_prov = $row->sinovac_allocated_second;
-                            $total_vaccine_allocated_astra_first_prov = $row->astrazeneca_allocated_first;
-                            $total_vaccine_allocated_astra_second_prov = $row->astrazeneca_allocated_second;
-
+                            $total_vaccine_allocated_sinovac_first_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_first;
+                            $total_vaccine_allocated_sinovac_second_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_second;
+                            $total_vaccine_allocated_astra_first_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first;
+                            $total_vaccine_allocated_astra_second_prov= \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second;
 
 
                             //sinovac
@@ -678,9 +677,11 @@
                             //total_mild_first
                             $total_mild_sinovac_first_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->mild_first;
                             $total_mild_astra_first_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->mild_first;
+
                             //total_mild_second
                             $total_mild_sinovac_second_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->mild_second;
                             $total_mild_astra_second_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->mild_second;
+
                             //total_serious_first
                             $total_serious_sinovac_first_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->serious_first;
                             $total_serious_astra_first_prov =  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->serious_first;
@@ -714,21 +715,55 @@
                             $total_percent_coverage_first_prov = ($total_vaccinated_first_prov /$total_eli_pop_prov ) * 100;
                             $total_percent_coverage_second_prov = ($total_vaccinated_second_prov / $total_eli_pop_prov) * 100;
 
+                            //total_refused_first
+                            $total_refused_first_prov = $total_refused_sinovac_first_prov + $total_refused_astra_first_prov;
+                            //total_refused_second
+                            $total_refused_second_prov = $total_refused_sinovac_second_prov + $total_refused_astra_second_prov;
+
+
+                            //percent_coverage_second
+                            $percent_coverage_sinovac_second_prov = number_format($total_vaccinated_sinovac_second_prov / $total_eli_pop_sinovac_prov * 100,2);
+                            $percent_coverage_astra_second_prov = number_format($total_vaccinated_astra_second_prov / $total_eli_pop_astra_prov * 100,2);
+
+                            //total_vaccine_allocated
+                            $total_vaccine_allocated_first_sinovac = $total_vaccine_allocated_sinovac_first_prov + $total_vaccine_allocated_sinovac_second_prov;
+                            $total_vaccine_allocated_first_astra = $total_vaccine_allocated_astra_first_prov + $total_vaccine_allocated_astra_second_prov;
+
+                            $total_vaccine_allocated =$total_vaccine_allocated_first_sinovac + $total_vaccine_allocated_first_astra;
+
+                            //total_vaccinated
+                            $total_vaccinated_first_prov = $total_vaccine_allocated_sinovac_first_prov + $total_vaccine_allocated_astra_first_prov;
+                            $total_vaccinated_second_prov = $total_vaccine_allocated_sinovac_second_prov + $total_vaccine_allocated_astra_second_prov;
+
+                            $total_vaccinated_sinovac_second_prov = $total_sinovac_a1_second_prov + $total_sinovac_a2_second_prov;
+
+                            $total_vaccinated_sinovac_first_prov = $total_sinovac_a1_first_prov + $total_sinovac_a2_first_prov;
+
+                            $total_vaccinated_astra_first_prov = $total_astra_a1_first_prov + $total_astra_a2_first_prov;
+                            $total_vaccinated_astra_second_prov = $total_astra_a1_second_prov + $total_astra_a2_second_prov;
+
+
+                            $total_eli_pop_sinovac_prov = $total_eli_pop_frontline_prov + $total_eli_pop_senior_prov;
+                            $total_eli_pop_astra_prov = $total_eli_pop_astra_frontline_prov + $total_eli_pop_astra_senior_prov;
+
+
+                            //percent_coverage_first
+                            $percent_coverage_sinovac_first_prov = $total_vaccinated_sinovac_first_prov / $total_eli_pop_sinovac_prov * 100;
+                            $percent_coverage_sinovac_second_prov =  $total_vaccinated_sinovac_second_prov / $total_eli_pop_sinovac_prov * 100;
+
+                            $percent_coverage_astra_first_prov = $total_vaccinated_astra_first_prov / $total_eli_pop_astra_prov * 100;
+                            $percent_coverage_astra_second_prov =  $total_vaccinated_astra_second_prov / $total_eli_pop_astra_prov * 100;
+
+
+
+
+
                             //consumption_rate_first
-                            $total_consumption_rate_sinovac_first_prov = number_format($total_vaccinated_sinovac_first_prov / $total_vaccine_allocated_sinovac_prov * 100,2);
-                            $total_consumption_rate_astra_first_prov = number_format($total_vaccinated_astra_first_prov / $total_vaccine_allocated_astra_prov * 100,2);
+                            $total_consumption_rate_sinovac_first_prov = $total_vaccinated_sinovac_first_prov / $total_vaccine_allocated_sinovac_first_prov * 100;
+                            $total_consumption_rate_sinovac_second_prov = $total_vaccinated_sinovac_second_prov / $total_vaccine_allocated_sinovac_second_prov * 100;
 
-                            //total_consumption_rate
-                            $total_vaccine_allocated_first_prov = $total_vaccine_allocated_sinovac_prov + $total_vaccine_allocated_astra_prov;
-                            $total_consumption_rate_first_prov = number_format($total_vaccinated_first_prov / $total_vaccine_allocated_first_prov * 100,2);
-
-                            //consumpiton_rate_second
-                            $total_consumption_rate_sinovac_second_prov = number_format($total_vaccinated_sinovac_second_prov / $total_vaccine_allocated_sinovac_prov * 100,2);
-                            $total_consumption_rate_astra_second_prov = number_format($total_vaccinated_astra_second_prov / $total_vaccine_allocated_astra_prov * 100,2);
-
-                            //total_consumption_rate
-                            $total_vaccine_allocated_second_prov = $total_vaccine_allocated_sinovac_prov + $total_vaccine_allocated_astra_prov;
-                            $total_consumption_rate_second_prov = number_format($total_vaccinated_second_prov / $total_vaccine_allocated_second_prov * 100,2);
+                            $total_consumption_rate_astra_first_prov = $total_vaccinated_astra_first_prov / $total_vaccine_allocated_astra_first_prov * 100;
+                            $total_consumption_rate_astra_second_prov = $total_vaccinated_astra_second_prov / $total_vaccine_allocated_astra_second_prov * 100;
 
                             //remaining_unvaccinated_first
                             $total_remaining_unvaccinated_first_sinovac_prov = $total_eli_pop_sinovac_prov - $total_vaccinated_sinovac_first_prov - $total_refused_sinovac_first_prov;
@@ -738,22 +773,20 @@
                             $total_remaining_unvaccinated_second_sinovac_prov = $total_eli_pop_sinovac_prov - $total_vaccinated_sinovac_second_prov - $total_refused_sinovac_second_prov;
                             $total_remaining_unvaccinated_second_astra_prov = $total_eli_pop_astra_prov - $total_vaccinated_astra_second_prov - $total_refused_astra_second_prov;
 
-                            //total_refused_first
-                            $total_refused_first_prov = $total_refused_sinovac_first_prov + $total_refused_astra_first_prov;
-                            //total_refused_second
-                            $total_refused_second_prov = $total_refused_sinovac_second_prov + $total_refused_astra_second_prov;
                             //total_remianing_unnvaccinated
                             $total_remaining_unvaccinated_first_prov = $total_eli_pop_prov - $total_vaccinated_first_prov - $total_refused_first_prov;
                             $total_remaining_unvaccinated_second_prov = $total_eli_pop_prov - $total_vaccinated_second_prov - $total_refused_second_prov;
 
-                            //percent_coverage_first
-                            $percent_coverage_sinovac_first_prov = number_format($total_vaccinated_sinovac_first_prov / $total_eli_pop_sinovac_prov * 100,2);
-                            $percent_coverage_astra_first_prov = number_format($total_vaccinated_astra_first_prov / $total_eli_pop_astra_prov * 100,2);
-                            //total_percent_coverage_first
+                            $total_first_prov = $total_sinovac_a1_first_prov + $total_astra_a1_first_prov;
+                            $total_second_prov = $total_sinovac_a1_second_prov + $total_sinovac_a1_second_prov;
 
-                            //percent_coverage_second
-                            $percent_coverage_sinovac_second_prov = number_format($total_vaccinated_sinovac_second_prov / $total_eli_pop_sinovac_prov * 100,2);
-                            $percent_coverage_astra_second_prov = number_format($total_vaccinated_astra_second_prov / $total_eli_pop_astra_prov * 100,2);
+
+                            //total percent coverage overall
+                            $total_percent_coverage_first_overall = $total_vaccinated_first_prov / $total_eli_pop_prov * 100;
+                            $total_percent_coverage_second_overall = $total_vaccinated_second_prov / $total_eli_pop_prov * 100;
+
+                            //total consumption rate_overall
+                            $total_consumption_rate_first_prov = $total_vaccinated_first_prov."-".$total_vaccinated_first_prov; //dara
                             ?>
                             <h4>Grand Total</h4>
                             <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac_grand" aria-expanded="false" aria-controls="collapse_sinovac_grandtotal">
@@ -814,84 +847,81 @@
                                     <td rowspan="2">
 
                                     </td> <!-- 1-3 -->
-                                    <td rowspan="2">{{ $total_eli_pop_sinovac_frontline_prov }}</td>
-                                    <td rowspan="2">{{ $total_eli_pop_sinovac_senior_prov }} </td>
+                                    <td rowspan="2">{{ $total_eli_pop_frontline_prov }}</td>  <!-- Frontline(A1) SINOVAC_FIRST-->
+                                    <td rowspan="2">{{ $total_eli_pop_senior_prov }} </td>   <!-- Senior (A2) SINOVAC_FIRST-->
                                     <td rowspan="2">
-                                        <?php $total_eli_pop_sinovac_prov = $total_eli_pop_sinovac_frontline_prov + $total_eli_pop_sinovac_senior_prov; ?>
-                                        {{ $total_eli_pop_sinovac_prov }}
+                                        {{ $total_eli_pop_sinovac_prov }} <!-- TOTAL ELI POP SINOVAC_FIRST-->
                                     </td>
-                                    <td rowspan="2">{{ $total_vaccine_allocated_sinovac_first_prov }}</td>
-                                    <td rowspan="2">{{ $total_vaccine_allocated_sinovac_second_prov }}</td>
-                                    <td rowspan="2"> {{ $total_vaccine_allocated_sinovac_prov }}</td>
+                                    <td rowspan="2">{{ $total_vaccine_allocated_sinovac_first_prov }} </td> <!-- VACCINE ALLOCATED (FD) SINOVAC_FIRST-->
+                                    <td rowspan="2">{{ $total_vaccine_allocated_sinovac_second_prov }} </td>  <!-- VACCINE ALLOCATED (SD) SINOVAC_FIRST-->
+                                    <td rowspan="2"> {{ $total_vaccine_allocated_first_sinovac }}</td>  <!-- TOTAL VACCINE ALLOCATED SINOVAC_FIRST-->
                                     <td>
-                                        <span class="label label-success">{{ $total_sinovac_a1_first_prov }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="label label-success">{{ $total_sinovac_a2_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_sinovac_a1_first_prov }}</span>   <!-- VACCINATED (A1) SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_sinovac_first_prov = $total_sinovac_a1_first_prov + $total_sinovac_a2_first_prov;?>
-                                        <span class="label label-success">{{ $total_vaccinated_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_sinovac_a2_first_prov }}</span>  <!-- VACCINATED (A2) SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_mild_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_vaccinated_sinovac_first_prov }}</span>  <!-- TOTAL VACCINATED SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_serious_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_mild_sinovac_first_prov }}</span>  <!-- MILD SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_deferred_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_serious_sinovac_first_prov }}</span> <!-- SERIOUS SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_refused_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_deferred_sinovac_first_prov }}</span> <!-- DEFERRED SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_wastage_sinovac_first_prov }}</span>
+                                        <span class="label label-success">{{ $total_refused_sinovac_first_prov }}</span> <!-- REFUSED SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $percent_coverage_sinovac_first_prov }}%</span>
+                                        <span class="label label-success">{{ $total_wastage_sinovac_first_prov }}</span> <!-- WASTAGE SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_consumption_rate_sinovac_first_prov }}%</span>
+                                        <span class="label label-success">{{ number_format($percent_coverage_sinovac_first_prov,2) }}%</span> <!-- PERCENT COVERAGE SINOVAC_FIRST-->
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_remaining_unvaccinated_first_sinovac_prov }}</span>
+                                        <span class="label label-success">{{ number_format($total_consumption_rate_sinovac_first_prov,2) }}%</span> <!-- CONSUMPTION RATE SINOVAC_FIRST-->
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">{{ $total_remaining_unvaccinated_first_sinovac_prov }}</span> <!-- REMAINING UNVACCINATED SINOVAC_FIRST-->
                                     </td>
                                 </tr>
                                 <tr style="background-color: #ffd8d6">
                                     <td>
-                                        <span class="label label-warning">{{ $total_sinovac_a1_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_sinovac_a1_second_prov }}</span>   <!-- VACCINATED (A1) SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_sinovac_a2_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_sinovac_a2_second_prov }}</span> <!-- VACCINATED (A2) SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_sinovac_second_prov = $total_sinovac_a1_second_prov + $total_sinovac_a2_second_prov; ?>
-                                        <span class="label label-warning">{{ $total_vaccinated_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_vaccinated_sinovac_second_prov }}</span> <!-- TOTAL VACCINATED SINOVAC_SECOND-->
                                     </td> <!-- 1-4 -->
                                     <td>
-                                        <span class="label label-warning">{{ $total_mild_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_mild_sinovac_second_prov }}</span> <!-- MILD SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_serious_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_serious_sinovac_second_prov }}</span> <!-- SERIOUS  SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_deferred_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_deferred_sinovac_second_prov }}</span> <!-- DEFERRED  SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_refused_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_refused_sinovac_second_prov }}</span> <!-- REFUSED  SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_wastage_sinovac_second_prov }}</span>
+                                        <span class="label label-warning">{{ $total_wastage_sinovac_second_prov }}</span> <!-- WASTAGE SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $percent_coverage_sinovac_second_prov }}%</span>
+                                        <span class="label label-warning">{{ number_format($percent_coverage_sinovac_second_prov,2)}}%</span> <!-- PERCENT COVERAGE  SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_consumption_rate_sinovac_second_prov }}%</span>
+                                        <span class="label label-warning">{{ number_format($total_consumption_rate_sinovac_second_prov,2) }}%</span> <!-- CONSUMPTION RATE SINOVAC_SECOND-->
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_remaining_unvaccinated_second_sinovac_prov }} </span>
+                                        <span class="label label-warning">{{ $total_remaining_unvaccinated_second_sinovac_prov }} </span> <!-- REMAINING UNVACCINATED  SINOVAC_SECOND-->
                                     </td>
                                 </tr>
                                 </tbody>
@@ -906,12 +936,11 @@
                                     <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_frontline_prov }}</td>
                                     <td rowspan="2" style="color:black;">{{ $total_eli_pop_astra_senior_prov }}</td>
                                     <td rowspan="2" style="color:black;">
-                                        <?php $total_eli_pop_astra_prov = $total_eli_pop_astra_frontline_prov + $total_eli_pop_astra_senior_prov;?>
                                         {{ $total_eli_pop_astra_prov }}
                                     </td>
-                                    <td rowspan="2"></td>
-                                    <td rowspan="2"></td>
-                                    <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_astra_prov }}</td>
+                                    <td rowspan="2" style="color:black">{{ $total_vaccine_allocated_astra_first_prov }}</td>
+                                    <td rowspan="2" style="color:black">{{ $total_vaccine_allocated_astra_second_prov }}</td>
+                                    <td rowspan="2" style="color:black;">{{ $total_vaccine_allocated_first_astra }}</td>
                                     <td style="color:black;">
                                         <span class="label label-success">{{ $total_astra_a1_first_prov }}</span>
                                     </td>
@@ -919,7 +948,6 @@
                                         <span class="label label-success">{{ $total_astra_a2_first_prov }}</span>
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_astra_first_prov = $total_astra_a1_first_prov + $total_astra_a2_first_prov;?>
                                         <span class="label label-success">{{ $total_vaccinated_astra_first_prov }}</span>
                                     </td>
                                     <td>
@@ -938,10 +966,10 @@
                                         <span class="label label-success">{{ $total_wastage_astra_first_prov }}</span>
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $percent_coverage_astra_first_prov }}%</span>
+                                        <span class="label label-success">{{ number_format($percent_coverage_astra_first_prov,2) }}%</span>
                                     </td>
                                     <td>
-                                        <span class="label label-success">{{ $total_consumption_rate_astra_first_prov }}%</span>
+                                        <span class="label label-success">{{ number_format($total_consumption_rate_astra_first_prov,2) }}%</span>
                                     </td>
                                     <td>
                                         <span class="label label-success">{{ $total_remaining_unvaccinated_first_astra_prov }}</span>
@@ -955,7 +983,6 @@
                                         <span class="label label-warning">{{ $total_astra_a2_second_prov }}</span>
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_astra_second_prov = $total_astra_a1_second_prov + $total_astra_a2_second_prov;?>
                                         <span class="label label-warning">{{ $total_vaccinated_astra_second_prov }}</span>
                                     </td> <!-- 1-6 -->
                                     <td>
@@ -974,10 +1001,10 @@
                                         <span class="label label-warning">{{ $total_wastage_astra_second_prov }}</span>
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $percent_coverage_astra_second_prov }}%</span>
+                                        <span class="label label-warning">{{ number_format($percent_coverage_astra_second_prov,2) }}%</span>
                                     </td>
                                     <td>
-                                        <span class="label label-warning">{{ $total_consumption_rate_astra_second_prov }}%</span>
+                                        <span class="label label-warning">{{ number_format($total_consumption_rate_astra_second_prov,2) }}%</span>
                                     </td>
                                     <td>
                                         <span class="label label-warning">{{ $total_remaining_unvaccinated_second_astra_prov }}</span>
@@ -990,20 +1017,18 @@
                                         <b> {{ $total_eli_pop_sinovac_frontline_prov }} </b>
                                     </td>
                                     <td>
-                                        <b> {{ $total_eli_pop_sinovac_senior_prov }} </b>
+                                        <b> {{ $total_eli_pop_sinovac_senior_prov }}</b>
                                     </td>
                                     <td>
-                                        <b> <?php $total_eli_pop_prov = $total_eli_pop_sinovac_frontline_prov + $total_eli_pop_sinovac_senior_prov;?>
-                                            {{ $total_eli_pop_prov }}</b>
+
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $total_vaccine_allocated_first_prov }}xxx</td>
+                                    <td>{{ $total_vaccinated_second_prov }}</td>
                                     <td>
                                         <b>
-                                            {{ $total_vaccine_allocated_first_prov }} </b>
+                                            {{ $total_vaccine_allocated }}</b>
                                     </td>
                                     <td>
-                                        <?php $total_first_prov = $total_sinovac_a1_first_prov + $total_astra_a1_first_prov; ?>
                                         <b class="label label-success" style="margin-right: 5%">{{ $total_first_prov}}</b>
                                     </td>
                                     <td>
@@ -1011,8 +1036,7 @@
                                         <b class="label label-success" style="margin-right: 5%">{{ $total_second_prov }}</b>
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_first_prov = $total_first_prov + $total_second_prov;?>
-                                        <b class="label label-success" style="margin-right: 5%">{{ $total_vaccinated_first_prov }} </b>
+                                        <b class="label label-success" style="margin-right: 5%">{{ $total_vaccinated_first_prov }}ww</b>
                                     </td>
                                     <td>
                                         <b class="label label-success" style="margin-right: 5%">{{ $total_mild_sinovac_first_prov + $total_mild_astra_first_prov }}</b>
@@ -1030,10 +1054,10 @@
                                         <b class="label label-success" style="margin-right: 5%">{{ $total_wastage_sinovac_first_prov + $total_wastage_astra_first_prov }}</b>
                                     </td>
                                     <td>
-                                        <b class="label label-success" style="margin-right: 5%">{{ number_format($total_percent_coverage_first_prov,2) }}%</b>
+                                        <b class="label label-success" style="margin-right: 5%">{{ number_format($total_percent_coverage_first_overall,2) }}%</b>
                                     </td>
                                     <td>
-                                        <b class="label label-success" style="margin-right: 5%">{{ $total_consumption_rate_first_prov }}%</b>
+                                        <b class="label label-success" style="margin-right: 5%">{{ $total_consumption_rate_first_prov }}%</b> <!-- dara -->
                                     </td>
                                     <td>
                                         <b class="label label-success" style="margin-right: 5%">{{ $total_remaining_unvaccinated_first_prov }} </b>
@@ -1045,7 +1069,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
+                                    <td> </td>
                                     <td></td>
                                     <td>
                                         <?php $total_first_prov1 = $total_sinovac_a1_second_prov + $total_astra_a1_second_prov; ?>
@@ -1056,7 +1080,6 @@
                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_second_prov1 }} </b>
                                     </td>
                                     <td>
-                                        <?php $total_vaccinated_second_prov = $total_first_prov1 + $total_second_prov1;?>
                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_vaccinated_second_prov }} </b>
                                     </td>
                                     <td>
@@ -1075,7 +1098,7 @@
                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_wastage_sinovac_second_prov + $total_wastage_astra_second_prov }}</b>
                                     </td>
                                     <td>
-                                        <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_percent_coverage_second_prov,2) }}%</b>
+                                        <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_percent_coverage_second_overall,2) }}%</b>
                                     </td>
                                     <td>
                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_consumption_rate_second_prov }}%</b>
