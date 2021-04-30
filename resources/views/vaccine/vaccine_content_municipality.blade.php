@@ -30,9 +30,6 @@
                 //TOTAL PERCENT COVERAGE
                 $total_p_cvrge_frst = 0;
                 $total_p_cvrge_scnd = 0;
-            //$total_percent_coverage_first = 0;
-            //$total_percent_coverage_second = 0;
-
 
                //TOTAL_VACCINATED_SINOVAC
                 $total_e_pop_svac_frtline = 0;
@@ -55,26 +52,6 @@
                 $total_rfsd_svac_scnd = 0;
                 $total_wstge_svac_frst = 0;
                 $total_wstge_svac_scnd = 0;
-            //$total_eli_pop_sinovac_frontline = 0;
-            //$total_eli_pop_sinovac_senior = 0;
-            //$total_eli_pop_sinovac_senior_flag = true;
-            //$total_eli_pop_sinovac_frontline_flag = true;
-            //$total_vaccine_allocated_sinovac = 0;
-            //$total_vaccine_allocated_sinovac_flag = true;
-            //$total_vaccine_allocated_sinovac_first = 0;
-            //$total_vaccine_allocated_sinovac_second = 0;
-            //$total_vaccinated_sinovac_first = 0;
-            //$total_vaccinated_sinovac_second = 0;
-            //$total_mild_sinovac_first = 0;
-            //$total_mild_sinovac_second = 0;
-            //$total_serious_sinovac_first = 0;
-            //$total_serious_sinovac_second = 0;
-            //$total_deferred_sinovac_first = 0;
-            //$total_deferred_sinovac_second = 0;
-            //$total_refused_sinovac_first = 0;
-            //$total_refused_sinovac_second = 0;
-            //$total_wastage_sinovac_first = 0;
-            //$total_wastage_sinovac_second = 0;
 
 
                 //TOTAL_VACCINATED_ASTRAZENECA
@@ -98,26 +75,6 @@
                 $total_rfsd_astra_scnd = 0;
                 $total_wstge_astra_frst = 0;
                 $total_wstge_astra_scnd = 0;
-            //$total_eli_pop_astra_frontline = 0;
-            //$total_eli_pop_astra_frontline_flag = true;
-            //$total_eli_pop_astra_senior = 0;
-            //$total_eli_pop_astra_senior_flag = true;
-            //$total_vaccine_allocated_astra = 0;
-            //$total_vaccine_allocated_astra_flag = true;
-            //$total_vaccine_allocated_astra_first = 0;
-            //$total_vaccine_allocated_astra_second = 0;
-            //$total_vaccinated_astra_first = 0;
-            //$total_vaccinated_astra_second = 0;
-            //$total_mild_astra_first = 0;
-            //$total_mild_astra_second = 0;
-            //$total_serious_astra_first = 0;
-            //$total_serious_astra_second = 0;
-            //$total_deferred_astra_first = 0;
-            //$total_deferred_astra_second = 0;
-            //$total_refused_astra_first = 0;
-            //$total_refused_astra_second = 0;
-            //$total_wastage_astra_first = 0;
-            //$total_wastage_astra_second = 0;
 
 
                 //SINOVAC
@@ -125,20 +82,13 @@
                 $total_svac_a2_frst = 0;
                 $total_svac_a1_scnd = 0;
                 $total_svac_a2_scnd = 0;
-            //$total_sinovac_a1_first = 0;
-            //$total_sinovac_a2_first = 0;
-            //$total_sinovac_a1_second = 0;
-            //$total_sinovac_a2_second = 0;
+
 
                 //ASTRAZENECA
                 $total_astra_a1_frst = 0;
                 $total_astra_a2_frst = 0;
                 $total_astra_a1_scnd = 0;
                 $total_astra_a2_scnd = 0;
-            //$total_astra_a1_first = 0;
-            //$total_astra_a2_first = 0;
-            //$total_astra_a1_second = 0;
-            //$total_astra_a2_second = 0;
 
 
             ?>
@@ -431,7 +381,7 @@
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
         <th colspan="3"><center>Eligible Population</center></th>
         <th colspan="3">Vaccine Allocated</th>
-        <th colspan="3">Total Vaccinated</th>
+        <th colspan="3"><center>Total Vaccinated</center></th>
         <th>Mild</th>
         <th>Serious</th>
         <th>Deferred</th>

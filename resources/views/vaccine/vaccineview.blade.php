@@ -133,43 +133,38 @@
                             <table style="width: 100%;">
                                 @foreach($data as $row)
                                     <?php
-
                                     $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
 
+                                    $total_epop_svac_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_SINOVAC
+                                    $total_epop_svac_sr = $row->senior_citizens; //E_POP_SENIOR_SINOVAC
+                                    $total_epop_svac = $total_epop_svac_frtline + $total_epop_svac_sr; //E_POP_SINOVAC FIRST
 
+                                    $total_epop_astra_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_ASTRA
+                                    $total_epop_astra_sr = $row->senior_citizens; //TOTAL_E_POP_SENIOR_ASTRA
+                                    $total_epop_astra = $total_epop_astra_frtline + $total_epop_astra_sr; //TOTAL_E_POP_ASTRA
 
-                                     $total_epop_svac_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_SINOVAC
-                                     $total_epop_svac_sr = $row->senior_citizens; //E_POP_SENIOR_SINOVAC
-                                     $total_epop_svac = $total_epop_svac_frtline + $total_epop_svac_sr; //E_POP_SINOVAC FIRST
+                                    //VACCINE_ALLOCATED
+                                    $total_vallocated_svac_frst = $row->sinovac_allocated_first; //VACCINE ALLOCATED_SINOVAC (FD)
+                                    $total_vallocated_svac_scnd = $row->sinovac_allocated_second; //VACCINE ALLOCATED_SINOVAC (SD)
+                                    $total_vallocated_astra_frst = $row->astrazeneca_allocated_first; //VACCINE ALLOCATED_ASTRA (FD)
+                                    $total_vallocated_astra_scnd = $row->astrazeneca_allocated_second; //VACCINE ALLOCATED_ASTRA (SD)
 
-                                     $total_epop_astra_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_ASTRA
-                                     $total_epop_astra_sr = $row->senior_citizens; //TOTAL_E_POP_SENIOR_ASTRA
-                                     $total_epop_astra = $total_epop_astra_frtline + $total_epop_astra_sr; //TOTAL_E_POP_ASTRA
+                                    //SINOVAC
+                                    $total_svac_a1_frst = 0; //A1_SINOVAC
+                                    $total_svac_a2_frst = 0; // A2_SINOVAC
+                                    $total_svac_a1_scnd = 0; //A1_SINOVAC2
+                                    $total_svac_a2_scnd = 0; //A2_SINOVAC2
 
-
-                                     //VACCINE_ALLOCATED
-                                     $total_vallocated_svac_frst = $row->sinovac_allocated_first; //VACCINE ALLOCATED_SINOVAC (FD)
-                                     $total_vallocated_svac_scnd = $row->sinovac_allocated_second; //VACCINE ALLOCATED_SINOVAC (SD)
-                                     $total_vallocated_astra_frst = $row->astrazeneca_allocated_first; //VACCINE ALLOCATED_ASTRA (FD)
-                                     $total_vallocated_astra_scnd = $row->astrazeneca_allocated_second; //VACCINE ALLOCATED_ASTRA (SD)
-
-                                     //SINOVAC
-                                     $total_svac_a1_frst = 0; //A1_SINOVAC
-                                     $total_svac_a2_frst = 0; // A2_SINOVAC
-                                     $total_svac_a1_scnd = 0; //A1_SINOVAC2
-                                     $total_svac_a2_scnd = 0; //A2_SINOVAC2
-
-                                     $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_first_a;
-                                     $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_first_a;
-                                     $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_second_a;
-                                     $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_second_a;
+                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_first_a;
+                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_first_a;
+                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_second_a;
+                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_second_a;
 
                                      //ASTRACENECA
-                                     $total_astra_a1_frst = 0; //A1_ASTRA
-                                     $total_astra_a2_frst = 0; //A2_ASTRA
-                                     $total_astra_a1_scnd = 0; //A1_ASTRA2
-                                     $total_astra_a2_scnd = 0; //A2_ASTRA2
-
+                                    $total_astra_a1_frst = 0; //A1_ASTRA
+                                    $total_astra_a2_frst = 0; //A2_ASTRA
+                                    $total_astra_a1_scnd = 0; //A1_ASTRA2
+                                    $total_astra_a2_scnd = 0; //A2_ASTRA2
 
                                     $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_first_a;
                                     $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_first_a;
@@ -243,16 +238,16 @@
                                     $total_c_rate_astra_scnd = $total_vcted_astra_scnd / $total_vallocated_astra_scnd * 100; //CONSUMPTION_RATE_ASTRA 2
 
                                     $total_c_rate_frst = $total_vcted_frst / $total_vallocated_frst * 100; //TOTAL CONSUMPTION_RATE
-                                    $total_c_rate_scnd = $total_vcted_scnd / $total_vallocated_scnd * 100; //TOTAL_CONSUMPTION_RATE - 2 //DARA
+                                    $total_c_rate_scnd = $total_vcted_scnd / $total_vallocated_scnd * 100; //TOTAL_CONSUMPTION_RATE - 2
 
-                                    $total_r_unvcted_frst_svac = $total_epop_svac_frtline - $total_vcted_svac_frst - $total_rfsd_svac_frst; //REMAINING UNVACCINATED_SINOVAC
-                                    $total_r_unvcted_frst_astra = $total_epop_astra_frtline - $total_vcted_astra_frst - $total_rfsd_astra_frst; //REMAINUNG UNVACCINATED_ASTRA
+                                    $total_r_unvcted_frst_svac = $total_epop_svac - $total_vcted_svac_frst - $total_rfsd_svac_frst; //REMAINING UNVACCINATED_SINOVAC
+                                    $total_r_unvcted_frst_astra = $total_epop_astra - $total_vcted_astra_frst - $total_rfsd_astra_frst; //REMAINUNG UNVACCINATED_ASTRA
 
-                                    $total_r_unvcted_scnd_svac = $total_epop_svac_sr - $total_vcted_svac_scnd - $total_rfsd_svac_scnd; //REMAINING UNVACCINATED_SINOVAC 2
-                                    $total_r_unvcted_scnd_astra = $total_epop_astra_sr - $total_vcted_astra_scnd - $total_rfsd_astra_scnd; //REMAINUNG_UNVACCIANTED_ASTRA 2
+                                    $total_r_unvcted_scnd_svac = $total_epop_svac - $total_vcted_svac_scnd - $total_rfsd_svac_scnd; //REMAINING UNVACCINATED_SINOVAC 2
+                                    $total_r_unvcted_scnd_astra = $total_epop_astra - $total_vcted_astra_scnd - $total_rfsd_astra_scnd; //REMAINUNG_UNVACCIANTED_ASTRA 2
 
-                                    $total_r_unvcted_frst = $total_epop_svac_frtline - $total_vcted_frst - $total_rfsd_frst; //DARA
-                                    $total_r_unvcted_scnd = $total_epop_svac_sr - $total_vcted_scnd - $total_rfsd_scnd;
+                                    $total_r_unvcted_frst = $total_epop_svac - $total_vcted_frst - $total_rfsd_frst;
+                                    $total_r_unvcted_scnd = $total_epop_astra - $total_vcted_scnd - $total_rfsd_scnd;
 
                                     ?>
                                     <tr>
@@ -293,7 +288,7 @@
                                                                 Vaccine Allocated
                                                             </a></center>
                                                     </th>
-                                                    <th colspan="3">Total Vaccinated</th>
+                                                    <th colspan="3"><center>Total Vaccinated</center></th>
                                                     <th>Mild</th>
                                                     <th>Serious</th>
                                                     <th>Deferred</th>
@@ -337,13 +332,13 @@
                                                     <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED_SINOVAC (SD)  -->
                                                     <td rowspan="2">{{ $total_vallocated_svac }}</td>  <!-- TOTAL VACCINE ALLOCATED_SINOVAC   -->
                                                     <td>
-                                                        <span class="label label-success">{{ $total_svac_a1_frst }}</span>  <!--  A1_SINOVAC -->
+                                                        <span class="label label-success">{{ $total_svac_a1_frst }}</span> <!-- A1_SINOVAC -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success">{{ $total_svac_a2_frst }}</span> <!--  A2_SINOVAC -->
+                                                        <span class="label label-success">{{ $total_svac_a2_frst }}</span> <!-- A2_SINOVAC -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success">{{  $total_vcted_svac_frst }}</span> <!-- TOTAL VACCINATED_SINOVAC-->
+                                                        <span class="label label-success">{{  $total_vcted_svac_frst }}</span><!-- TOTAL VACCINATED_SINOVAC -->
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_mild_svac_frst }}</span> <!-- MILD_SINOVAC -->
@@ -492,9 +487,9 @@
                                                 </tbody>
                                                 <tbody><tr>
                                                     <td>Total</td> <!-- 1-7 -->
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $total_epop_astra_frtline }}</td> <!-- TOTAL_FRONTLINE  -->
+                                                    <td>{{ $total_epop_astra_sr }}</td> <!-- TOTAL_SENIOR  -->
+                                                    <td>{{ $total_epop_astra }}</td> <!-- TOTAL_E_POP -->
                                                     <td>
                                                        <b>{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
                                                     </td>
