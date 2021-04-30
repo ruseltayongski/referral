@@ -21,9 +21,11 @@ use App\Seen;
 use App\Tracking;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Login;
+use Illuminate\Support\Facades\Session;
 
 class ApiController extends Controller
 {
@@ -336,21 +338,28 @@ class ApiController extends Controller
 
     public function apiReferPatient(Request $req)
     {
-        if(!$province = Province::where("province_code",$req->province)->first()->id)
+        if(!$province = Province::where("province_code",$req->province)->first())
             return 'Invalid Province Code';
 
-        if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first()->id)
+        if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first())
             return 'Invalid Municipality Code';
 
-        if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first()->id)
+        if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first())
             return 'Invalid Barangay Code';
+
+        if(!$referring_facility = Facility::where("facility_code",$req->referring_facility)->first())
+            return 'Invalid Referring Facility';
+
+        if(!$referred_facility = Facility::where("facility_code",$req->referred_facility)->first())
+            return 'Invalid Referred Facility';
+
 
         $unique = array(
             $req->fname,
             $req->mname,
             $req->lname,
             date('Ymd',strtotime($req->dob)),
-            $req->brgy
+            $barangay->id
         );
         $unique = implode($unique);
 
@@ -367,13 +376,198 @@ class ApiController extends Controller
         $patient->dob = $req->dob;
         $patient->sex = $req->sex;
         $patient->civil_status = $req->civil_status;
-        $patient->muncity = $req->muncity;
-        $patient->province = $req->province;
-        $patient->brgy = $req->barangay;
+        $patient->muncity = $muncity->id;
+        $patient->province = $province->id;
+        $patient->brgy = $barangay->id;
         $patient->save();
 
 
-        return $patient;
+        //referring doctor
+        if(!$referring_doctor = User::where("fname",$req->referring_md_fname)->where("mname",$req->referring_md_mname)->where("lname",$req->referring_md_lname)->first())
+            $referring_doctor = new User();
+
+        $referring_doctor->fname = $req->referring_md_fname;
+        $referring_doctor->mname = $req->referring_md_mname;
+        $referring_doctor->lname = $req->referring_md_lname;
+        $referring_doctor->level = 'doctor';
+        $referring_doctor->facility_id = $referring_facility->id;
+        $referring_doctor->status = 'active';
+        $referring_doctor->contact = $req->referring_md_contact;
+        $referring_doctor->email = "n/a";
+        $referring_doctor->designation = "doctor";
+        $referring_doctor->department_id = $req->department_id;
+        $referring_doctor->username = "$req->referring_md_fname$req->referring_md_mname$req->referring_md_lname";
+        $referring_doctor->password = bcrypt('123');
+        $referring_doctor->muncity = $muncity->id;
+        $referring_doctor->province = $province->id;
+        $referring_doctor->save();
+
+
+        if(!$referred_doctor = User::where("fname",$req->referred_md_fname)->where("mname",$req->referred_md_mname)->where("lname",$req->referred_md_lname)->first())
+            $referred_doctor = new User();
+
+        $referred_doctor->fname = $req->referred_md_fname;
+        $referred_doctor->mname = $req->referred_md_mname;
+        $referred_doctor->lname = $req->referred_md_lname;
+        $referred_doctor->level = 'doctor';
+        $referred_doctor->facility_id = $referred_facility->id;
+        $referred_doctor->status = 'active';
+        $referred_doctor->contact = $req->referred_md_contact;
+        $referred_doctor->email = "n/a";
+        $referred_doctor->designation = "doctor";
+        $referred_doctor->department_id = $req->department_id;
+        $referred_doctor->username = "$req->referred_md_fname$req->referred_md_mname$req->referred_md_lname";
+        $referred_doctor->password = bcrypt('123');
+        $referred_doctor->muncity = $muncity->id;
+        $referred_doctor->province = $province->id;
+        $referred_doctor->save();
+
+        //refer patient
+        $unique_id = "$patient->id-$referring_facility->id-".date('ymdH');
+        $match = array(
+            'unique_id' => $unique_id
+        );
+
+        $data = array(
+            'referring_facility' => $referring_facility->id,
+            'referred_to' => $referred_facility->id,
+            'department_id' => $req->department_id,
+            'time_referred' => date('Y-m-d H:i:s'),
+            'time_transferred' => '',
+            'patient_id' => $patient->id,
+            'case_summary' => $req->case_summary,
+            'reco_summary' => $req->reco_summary,
+            'diagnosis' => $req->diagnosis,
+            //'icd_code' => $req->icd_code,
+            'reason' => $req->reason,
+            'referring_md' => $referring_doctor->id,
+            'referred_md' => ($referred_doctor->id) ? $referred_doctor->id: 0,
+        );
+
+        $form = PatientForm::updateOrCreate($match,$data);
+
+        $user_code = str_pad($referring_facility->id,3,0,STR_PAD_LEFT);
+        $code = date('ymd').'-'.$user_code.'-'.date('His');
+
+
+        PatientForm::where('unique_id',$unique_id)
+            ->update([
+                'code' => $code
+            ]);
+        $type = 'normal';
+        $this->addTracking($code,$patient->id,$referring_doctor,$referred_doctor,$req,$type,$form->id,'refer');
+
+        return "success";
+    }
+
+    function addTracking($code,$patient_id,$referring_doctor,$referred_doctor,$req,$type,$form_id,$status='')
+    {
+        $match = array(
+            'code' => $code
+        );
+        $track = array(
+            'patient_id' => $patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'referred_from' => $referring_doctor->facility_id,
+            'referred_to' => $referred_doctor->facility_id,
+            'department_id' => $referring_doctor->department_id,
+            'referring_md' =>  $referring_doctor->id,
+            'action_md' => '',
+            'type' => $type,
+            'form_id' => $form_id,
+            'remarks' => ($req->reason) ? $req->reason: '',
+            'status' => ($status=='walkin') ? 'accepted' : 'referred',
+            'walkin' => 'no'
+        );
+
+        Tracking::updateOrCreate($match,$track);
+
+        $activity = array(
+            'code' => $code,
+            'patient_id' => $patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'date_seen' => '',
+            'referred_from' => $referred_doctor->id,
+            'referred_to' => $referring_doctor->facility_id,
+            'department_id' => $req->department_id,
+            'referring_md' => $referring_doctor->id,
+            'action_md' => '',
+            'remarks' => ($req->reason) ? $req->reason: '',
+            'status' => 'referred'
+        );
+
+        Activity::create($activity);
+
+        $this->sendNotification($code);
+    }
+
+    public function sendNotification($code){
+        /**
+         * Server Key
+         **/
+        $SERVER_KEY = "AAAA4yHdicc:APA91bHLB-9vT2V6v3k6EjEXPIJ_OC70Lmd63ftlM3X3fEa1CgLYmCxoYLSIq4f0IULHDtG062jQ2cQ2Uy5hszVtSobwKc59dTZOzlNRV3NdjuIsNcax0UkKSjWwFKhN9VlO7V-rtuad";
+
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        /**
+         * Give title,body and other param in notification
+         **/
+        $messageAndroidIos                   = array();
+        $messageAndroidIos['code']          = $code;
+
+        $login_token = Login::whereNotNull("token")->where("login","like","%".date('Y-m-d')."%")->where("logout","0000-00-00 00:00:00")->pluck('token')->toArray();
+        /**
+         * `registration_ids` send token in array for multiple devices
+         **/
+
+        $fields = array(
+            'registration_ids'  =>  $login_token, // Put your token in Array.
+            'data'              =>  $messageAndroidIos,
+            'notification'      =>  $messageAndroidIos,
+        );
+
+        $headers = array(
+            'Authorization: key='.$SERVER_KEY,
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL,$url);
+        curl_setopt( $ch,CURLOPT_POST,true);
+        curl_setopt( $ch,CURLOPT_HTTPHEADER,$headers);
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER,true);
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt( $ch,CURLOPT_POSTFIELDS,json_encode($fields));
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+    }
+
+    public function referralAppend($code){
+        /*$tracking = Tracking::where("code",$code)->first();
+        $patient_form = PatientForm::where("code",$code)->first();
+        $patient = Patients::find($patient_form->patient_id)->first();*/
+        $tracking = Tracking::select(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            'patients.sex',
+            'facility.name as facility_name',
+            DB::raw('CONCAT(
+                        if(users.level="doctor","Dr. ",""),
+                    users.fname," ",users.mname," ",users.lname) as referring_md'),
+            DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md')
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->leftJoin('users as action','action.id','=','tracking.action_md')
+            ->where('code',$code)
+            ->first();
+
+        return view('doctor.referral_append',[
+            "tracking" => $tracking
+        ]);
     }
 
 

@@ -324,48 +324,6 @@ class VaccineController extends Controller
     }
 
 
-    public function sendNotification(){
-        $token = Session::get("ajax_token");
-        $from = "AAAA4yHdicc:APA91bHLB-9vT2V6v3k6EjEXPIJ_OC70Lmd63ftlM3X3fEa1CgLYmCxoYLSIq4f0IULHDtG062jQ2cQ2Uy5hszVtSobwKc59dTZOzlNRV3NdjuIsNcax0UkKSjWwFKhN9VlO7V-rtuad";
-        $msg = array
-        (
-            'body'  => "Demo App",
-            'title' => "Rusel T. Tayong",
-            'receiver' => 'erw',
-            'icon'  => "https://cvehrs.doh.gov.ph/doh/referral/resources/img/doh.png",/*Default Icon*/
-            'sound' => 'mySound'/*Default sound*/
-        );
-
-        $fields = array
-        (
-            'to'        => $token,
-            'notification'  => $msg
-        );
-
-        $headers = array
-        (
-            'Authorization: key=' . $from,
-            'Content-Type: application/json'
-        );
-        //#Send Reponse To FireBase Server
-        $ch = curl_init();
-        curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-        curl_setopt( $ch,CURLOPT_POST, true );
-        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-        $result = curl_exec($ch );
-        dd($result);
-        curl_close( $ch );
-    }
-
-    public function ajax($token){
-        Session::put("ajax_token",$token);
-        Session::put("ajax",true);
-    }
-
-
 }
 
 

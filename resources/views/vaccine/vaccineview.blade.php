@@ -580,7 +580,6 @@
                                     </tr>
                                 @endforeach
                             </table>
-
                             <div>
                                 {{ $data->links() }}
                             </div>
@@ -783,52 +782,4 @@
 
     </script>
 
-    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-
-    <script>
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyD_XAIS_TWWI3BjflYl4TRmI_mBJqRcOx8",
-            authDomain: "laravelfcm-fc6bf.firebaseapp.com",
-            projectId: "laravelfcm-fc6bf",
-            storageBucket: "laravelfcm-fc6bf.appspot.com",
-            messagingSenderId: "975525743047",
-            appId: "1:975525743047:web:9fe2e039d68c0f00e5b1e2",
-            measurementId: "G-K2YD0S1V9M"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-
-        const messaging = firebase.messaging();
-        messaging
-            .requestPermission()
-            .then(function () {
-                console.log("Notification permission granted.");
-
-                // get the token in the form of promise
-                return messaging.getToken()
-            })
-            .then(function(token) {
-                // print the token on the HTML page
-                @if(!Session::get("ajax"))
-                console.log(token);
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("GET", "<?php echo asset('ajax'); ?>"+"/"+token, true);
-                xhttp.send();
-                @endif
-            })
-            .catch(function (err) {
-                console.log("Unable to get permission to notify.", err);
-            });
-
-        messaging.onMessage(function(payload) {
-            Lobibox.notify("success", {
-                size: 'mini',
-                title: 'Lorem ipsum',
-                msg: 'Lorem ipsum dolor sit amet against apennine any created, spend loveliest, building stripes.'
-            });
-            console.log(payload);
-        });
-
-    </script>
 @endsection

@@ -121,6 +121,8 @@ if($searchKeyword){
 @section('js')
     @include('admin.script.users')
     <script>
+        $("#container").removeClass("container");
+        $("#container").addClass("container-fluid");
         @if(Session::get('manage_user'))
             Lobibox.notify('success', {
                 title: "",
