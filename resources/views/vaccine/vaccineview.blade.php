@@ -772,11 +772,8 @@
                     dataPoints: [
                         { label: "Percent Coverage", y: 36 },
                         { label: "Consumption Rate", y: 31 },
-                        { label: "Remaining Unvaccinated", y: 7 },
-                        { label: "Twitter", y: 7 },
-                        { label: "Facebook", y: 6 },
-                        { label: "Google", y: 10 },
-                        { label: "Others", y: 3 }
+                        { label: "Remaining Unvaccinated", y: 7 }
+
                     ]
                 }]
             };
