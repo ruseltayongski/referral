@@ -234,6 +234,7 @@ Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
 Route::get('login','LoginCtrl@index');
+Route::get('login/update/token/{token}','LoginCtrl@updateToken');
 Route::post('login','LoginCtrl@validateLogin');
 Route::post('reset/password','LoginCtrl@resetPassword');
 Route::get('maintenance',function(){
@@ -483,6 +484,11 @@ Route::post('vaccine/new_delivery/saved','Vaccine\VaccineController@vaccineNewDe
 Route::get('vaccine/no_eli_pop/{muncity_id}/{priority}','Vaccine\VaccineController@getEliPop');
 Route::get('vaccine/allocated/{muncity_id}/{typeof_vaccine}','Vaccine\VaccineController@getVaccineAllocated');
 Route::post('vaccine/vaccine_allocated_modal','Vaccine\VaccineController@getVallocatedModal');
+
+Route::get('test/send','Vaccine\VaccineController@sendNotification');
+Route::get('api/referral/append/{code}','ApiController@referralAppend');
+
+
 
 
 

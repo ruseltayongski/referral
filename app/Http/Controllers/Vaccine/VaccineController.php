@@ -322,6 +322,8 @@ class VaccineController extends Controller
             "province_id" => $request->province_id
         ]);
     }
+
+
 }
 
 

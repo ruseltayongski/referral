@@ -201,6 +201,52 @@ $user = Session::get('auth');
             <?php Session::put("incoming_denied",false); ?>
         @endif
     </script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+
+    <audio id="carteSoudCtrl">
+        <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyD_XAIS_TWWI3BjflYl4TRmI_mBJqRcOx8",
+            authDomain: "laravelfcm-fc6bf.firebaseapp.com",
+            projectId: "laravelfcm-fc6bf",
+            storageBucket: "laravelfcm-fc6bf.appspot.com",
+            messagingSenderId: "975525743047",
+            appId: "1:975525743047:web:9fe2e039d68c0f00e5b1e2",
+            measurementId: "G-K2YD0S1V9M"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+        messaging
+            .requestPermission()
+            .then(function () {
+                console.log("Notification permission granted.");
+                // get the token in the form of promise
+                return messaging.getToken()
+            })
+            .then(function(token) {
+                $.get("<?php echo asset('login/update/token') ?>"+"/"+token,function(result){});
+                console.log(token);
+            })
+            .catch(function (err) {
+                console.log("Unable to get permission to notify.", err);
+            });
+
+        messaging.onMessage(function(payload) {
+            $('#carteSoudCtrl')[0].play();
+            console.log(payload.data.code);
+            $.get("<?php echo asset('api/referral/append'); ?>"+"/"+payload.data.code,function(result){
+                $(".timeline").prepend(result);
+            });
+        });
+    </script>
+
 @endsection
 
 
