@@ -498,10 +498,10 @@ class ApiController extends Controller
 
         Activity::create($activity);
 
-        $this->sendNotification($code);
+        $this->sendNotification($code,$referred_doctor->facility_id);
     }
 
-    public function sendNotification($code){
+    public function sendNotification($code,$referred_facility){
         /**
          * Server Key
          **/
@@ -514,6 +514,7 @@ class ApiController extends Controller
          **/
         $messageAndroidIos                   = array();
         $messageAndroidIos['code']          = $code;
+        $messageAndroidIos['referred_facility']          = $referred_facility;
 
         $login_token = Login::whereNotNull("token")->where("login","like","%".date('Y-m-d')."%")->where("logout","0000-00-00 00:00:00")->pluck('token')->toArray();
         /**
@@ -544,9 +545,6 @@ class ApiController extends Controller
     }
 
     public function referralAppend($code){
-        /*$tracking = Tracking::where("code",$code)->first();
-        $patient_form = PatientForm::where("code",$code)->first();
-        $patient = Patients::find($patient_form->patient_id)->first();*/
         $tracking = Tracking::select(
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),

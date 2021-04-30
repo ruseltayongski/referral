@@ -239,11 +239,14 @@ $user = Session::get('auth');
             });
 
         messaging.onMessage(function(payload) {
-            $('#carteSoudCtrl')[0].play();
-            console.log(payload.data.code);
-            $.get("<?php echo asset('api/referral/append'); ?>"+"/"+payload.data.code,function(result){
-                $(".timeline").prepend(result);
-            });
+            var login_referred_facility = "<?php echo $user->facility_id; ?>";
+            if(login_referred_facility == payload.data.referred_facility){
+                $('#carteSoudCtrl')[0].play();
+                console.log(payload.data.code);
+                $.get("<?php echo asset('api/referral/append'); ?>"+"/"+payload.data.code,function(result){
+                    $(".timeline").prepend(result);
+                });
+            }
         });
     </script>
 
