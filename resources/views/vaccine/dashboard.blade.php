@@ -92,7 +92,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 @endsection
 
 @section('js')
-    @include('script.chart')
 
     <script type="text/javascript">
         window.onload = function() {
