@@ -477,7 +477,8 @@ class ApiController extends Controller
             'form_id' => $form_id,
             'remarks' => ($req->reason) ? $req->reason: '',
             'status' => ($status=='walkin') ? 'accepted' : 'referred',
-            'walkin' => 'no'
+            'walkin' => 'no',
+            'source' => $req->source
         );
 
         Tracking::updateOrCreate($match,$track);
