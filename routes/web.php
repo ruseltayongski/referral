@@ -472,6 +472,7 @@ Route::post('telemedicine/sync/tsekap','ApiController@telemedicineToPatient');
 //vaccine
 Route::get('vaccine','Vaccine\VaccineController@index');
 Route::match(['GET',['POST']],'vaccine/vaccineview/{province_id}','Vaccine\VaccineController@vaccineView');
+Route::match(['GET',['POST']],'vaccine/facility/{tri_city}','Vaccine\VaccineController@vaccineFacility');
 Route::get('vaccine/vaccinated_content','Vaccine\VaccineController@vaccinatedContent');
 Route::get('vaccine/vaccinated/municipality/content/{province_id}/{muncity_id}','Vaccine\VaccineController@vaccinatedContentMunicipality');
 Route::post('vaccine/saved','Vaccine\VaccineController@vaccineSaved');

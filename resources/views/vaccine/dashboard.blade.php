@@ -19,7 +19,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     <div class="small-box bg-red">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Sinovac</h3>
-                            <p style="font-size:13pt" >{{ $sinovac_count }}</p>
+                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count }}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -31,7 +31,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     <div class="small-box bg-yellow">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Astrazeneca</h3>
-                            <p style="font-size:13pt" >{{ $astrazeneca_count }}</p>
+                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count }}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -94,6 +94,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 @section('js')
 
     <script type="text/javascript">
+
         window.onload = function() {
 
             var options1 = {

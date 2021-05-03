@@ -405,9 +405,9 @@
                     @foreach(\App\Province::get() as $prov)
                         <li><a href="{{ asset('vaccine/vaccineview').'/'.$prov->id }}">{{ $prov->description }}</a></li>
                     @endforeach
-                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Cebu City</a></li>
-                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Mandaue City</a></li>
-                    <li><a href="{{ asset('vaccine/vaccineview').'/' }}">Lapu-Lapu City</a></li>
+                    <li><a href="{{ asset('vaccine/facility').'/cebu' }}">Cebu City</a></li>
+                    <li><a href="{{ asset('vaccine/facility').'/mandaue' }}">Mandaue City</a></li>
+                    <li><a href="{{ asset('vaccine/vaccineview').'/lapu' }}">Lapu-Lapu City</a></li>
                 @endif
                 @if($user->level == 'admin')
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>

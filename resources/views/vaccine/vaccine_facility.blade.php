@@ -151,62 +151,62 @@
 
                                     //SINOVAC
                                     $total_svac_a1_frst = 0; //A1_SINOVAC
-                                    $total_svac_a2_frst = 0; // A2_SINOVAC
+                                    $total_svac_a2_frst = 0; //A2_SINOVAC
                                     $total_svac_a1_scnd = 0; //A1_SINOVAC2
                                     $total_svac_a2_scnd = 0; //A2_SINOVAC2
 
-                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_first_a;
-                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_first_a;
-                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_second_a;
-                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_second_a;
+                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','frontline_health_workers')")[0]->vaccinated_first_a;
+                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_first_a;
+                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','frontline_health_workers')")[0]->vaccinated_second_a;
+                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_second_a;
 
-                                     //ASTRACENECA
+                                    //ASTRACENECA
                                     $total_astra_a1_frst = 0; //A1_ASTRA
                                     $total_astra_a2_frst = 0; //A2_ASTRA
                                     $total_astra_a1_scnd = 0; //A1_ASTRA2
                                     $total_astra_a2_scnd = 0; //A2_ASTRA2
 
-                                    $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_first_a;
-                                    $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_first_a;
-                                    $total_astra_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_second_a;
-                                    $total_astra_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_second_a;
+                                    $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_first_a;
+                                    $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_first_a;
+                                    $total_astra_a1_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_second_a;
+                                    $total_astra_a2_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_second_a;
 
 
-                                    $total_vcted_svac_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->vaccinated_first; //VACCINATED_SINOVAC
-                                    $total_vcted_astra_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->vaccinated_first; //TOTAL VACCINATED_ASTRA
+                                    $total_vcted_svac_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->vaccinated_first; //VACCINATED_SINOVAC
+                                    $total_vcted_astra_frst = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->vaccinated_first; //TOTAL VACCINATED_ASTRA
 
-                                    $total_vcted_svac_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->vaccinated_second; //TOTAL_VACCINATED_SINOVAC 2
-                                    $total_vcted_astra_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->vaccinated_second; //TOTAL VACCINATED_ASTRA 2
+                                    $total_vcted_svac_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->vaccinated_second; //TOTAL_VACCINATED_SINOVAC 2
+                                    $total_vcted_astra_scnd = \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->vaccinated_second; //TOTAL VACCINATED_ASTRA 2
 
-                                    $total_mild_svac_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->mild_first; //MILD_SINOVAC
-                                    $total_mild_astra_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->mild_first; //MILD_ASTRA
+                                    $total_mild_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->mild_first; //MILD_SINOVAC
+                                    $total_mild_astra_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->mild_first; //MILD_ASTRA
 
-                                    $total_mild_svac_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->mild_second; //MILD_SINOVAC 2
-                                    $total_mild_astra_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->mild_second; //MILD_ASTRA 2
+                                    $total_mild_svac_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->mild_second; //MILD_SINOVAC 2
+                                    $total_mild_astra_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->mild_second; //MILD_ASTRA 2
 
-                                    $total_srs_svac_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->serious_first; //SERIOUS_SINOVAC
-                                    $total_srs_astra_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->serious_first; //SERIOUS_ASTRA
+                                    $total_srs_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->serious_first; //SERIOUS_SINOVAC
+                                    $total_srs_astra_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->serious_first; //SERIOUS_ASTRA
 
-                                    $total_srs_svac_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->serious_second; //SERIOUS_SINOVAC 2
-                                    $total_srs_astra_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->serious_second; //SERIOUS_ASTRA2
+                                    $total_srs_svac_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->serious_second; //SERIOUS_SINOVAC 2
+                                    $total_srs_astra_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->serious_second; //SERIOUS_ASTRA2
 
-                                    $total_dfrd_svac_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->deferred_first; //DEFERRED_SINOVAC
-                                    $total_dfrd_astra_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->deferred_first; //DEFERRED_ASTRA
+                                    $total_dfrd_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->deferred_first; //DEFERRED_SINOVAC
+                                    $total_dfrd_astra_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->deferred_first; //DEFERRED_ASTRA
 
-                                    $total_dfrd_svac_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->deferred_second; //DEFERRED_SINOVAC 2
-                                    $total_dfrd_astra_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->deferred_second; //DEFERRED_ASTRA 2
+                                    $total_dfrd_svac_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->deferred_second; //DEFERRED_SINOVAC 2
+                                    $total_dfrd_astra_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->deferred_second; //DEFERRED_ASTRA 2
 
-                                    $total_rfsd_svac_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->refused_first; //REFUSED_SINOVAC
-                                    $total_rfsd_astra_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->refused_first; //REFUSED_ASTRA
+                                    $total_rfsd_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->refused_first; //REFUSED_SINOVAC
+                                    $total_rfsd_astra_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->refused_first; //REFUSED_ASTRA
 
-                                    $total_rfsd_svac_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->refused_second; //REFUSED_SINOVAC 2
-                                    $total_rfsd_astra_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->refused_second; //REFUSED_ASTRA 2
+                                    $total_rfsd_svac_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->refused_second; //REFUSED_SINOVAC 2
+                                    $total_rfsd_astra_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->refused_second; //REFUSED_ASTRA 2
 
-                                    $total_wstge_svac_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->wastage_first; //WASTAGF_SINOVAC
-                                    $total_wstge_astra_frst =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->wastage_first; //WASTAGE_ASTRA
+                                    $total_wstge_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->wastage_first; //WASTAGF_SINOVAC
+                                    $total_wstge_astra_frst =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->wastage_first; //WASTAGE_ASTRA
 
-                                    $total_wstge_svac_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->wastage_second; //WASTAGE_SINOVAC 2
-                                    $total_wstge_astra_scnd =  \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','')")[0]->wastage_second; //WASTAGE_ASTRA2
+                                    $total_wstge_svac_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Sinovac','')")[0]->wastage_second; //WASTAGE_SINOVAC 2
+                                    $total_wstge_astra_scnd =  \DB::connection('mysql')->select("call vaccine_facility('$vaccine->facility_id','Astrazeneca','')")[0]->wastage_second; //WASTAGE_ASTRA2
 
 
                                     $total_vcted_frst = $total_vcted_svac_frst + $total_vcted_astra_frst; //TOTAL_VACCINATED
@@ -253,8 +253,8 @@
                                     <tr>
                                         <td style="white-space: nowrap;" colspan="12">
                                             <b>
-                                                <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="muncityVaccinated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>',$(this))">
-                                                    {{ $row->description }}
+                                                <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>',$(this))">
+                                                    {{ $row->name }}
                                                 </a>
                                             </b>
                                             <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}">
@@ -274,7 +274,7 @@
                                                         <center><a
                                                                     href="#facility_modal"
                                                                     data-toggle="modal"
-                                                                    onclick="MunicipalityBody('<?php echo $province_id; ?>','<?php echo $row->id; ?>')"
+                                                                    onclick=""
                                                             >
                                                                 Eligible Population
                                                             </a></center>
@@ -491,7 +491,7 @@
                                                     <td>{{ $total_epop_astra_sr }}</td> <!-- TOTAL_SENIOR  -->
                                                     <td>{{ $total_epop_astra }}</td> <!-- TOTAL_E_POP -->
                                                     <td>
-                                                       <b>{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
+                                                        <b>{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
                                                     </td>
                                                     <td>
                                                         <b>{{ $total_vallocated_scnd }} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
@@ -583,7 +583,7 @@
                             <div>
                                 {{ $data->links() }}
                             </div>
-                            @include('vaccine.vaccine_grand_total')
+                            @include('vaccine.vaccine_facility_overall')
                         </div>
                     </div>
                     <div class="col-md-3" style="padding-right: 2%">
@@ -595,7 +595,7 @@
             @else
                 <div class="alert alert-warning">
                 <span class="text-warning">
-                    <i class="fa fa-warning"></i> No Municipality found!
+                    <i class="fa fa-warning"></i> No Facility Found!
                 </span>
                 </div>
             @endif
@@ -639,7 +639,7 @@
         $("#container").removeClass("container");
         $("#container").addClass("container-fluid");
 
-        function muncityVaccinated(province_id,muncity_id,data){
+        function facilityVaccinated(province_id,muncity_id,data){
             $("#vaccine_modal_municipality").modal('show');
             $(".vaccinated_content_municipality").html(loading);
             $("a").css("background-color","");
@@ -713,21 +713,21 @@
         });
         @endif
 
-        window.onload = function() {
+            window.onload = function() {
 
             var sinovac_dashboard = <?php if(Session::get('sinovac_dashboard')) echo Session::get('sinovac_dashboard'); else echo 0; ?>;
             var astra_dashboard = <?php if(Session::get('astra_dashboard')) echo Session::get('astra_dashboard'); else echo 0; ?>;
             var options1 = {
                 title: {
-                    text: "Total Vaccinated"
+                    text: "Type of Vaccine"
                 },
                 data: [
                     {
                         // Change type to "doughnut", "line", "splineArea", etc.
                         type: "column",
                         dataPoints: [
-                            { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
-                            { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12"},
+                            { label: "Sinovac",  y: sinovac_dashboard },
+                            { label: "AstraZeneca", y: astra_dashboard },
                             { label: "Pfizer", y: 0  },
                             { label: "Sputnik V",  y: 0  },
                             { label: "Moderna",  y: 0  }
@@ -751,8 +751,8 @@
                         // Change type to "doughnut", "line", "splineArea", etc.
                         type: "column",
                         dataPoints: [
-                            { label: "(A1)",  y: total_e_pop_frtline_prov, color:"#00a65a"},
-                            { label: "(A2)", y: total_e_pop_sr_prov, color:"#00c0ef"},
+                            { label: "(A1)",  y: total_e_pop_frtline_prov},
+                            { label: "(A2)", y: total_e_pop_sr_prov },
                             { label: "(A3)", y: 0 },
                             { label: "(A4)",  y: 0  },
                             { label: "(A5)",  y: 0  },
@@ -763,23 +763,22 @@
             };
             $("#chartContainer2").CanvasJSChart(options2);
 
-            var percent_coverage_pie = <?php if(Session::get('percent_coverage_pie')) echo Session::get('percent_coverage_pie'); else echo 0; ?>;
-            var consumption_rate_pie = <?php if(Session::get('consumption_rate_pie')) echo Session::get('consumption_rate_pie'); else echo 0; ?>;
+
             var options3 = {
                 title: {
-                    text: "Percentage Coverage / Consumption Rate",
-                    fontSize: 23,
+                    text: "Total Percentage"
                 },
                 data: [{
                     type: "pie",
                     startAngle: 45,
                     showInLegend: "true",
                     legendText: "{label}",
-                    indexLabel: "{label} ({y}%)",
+                    indexLabel: "{label} ({y})",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "Percent Coverage", y: percent_coverage_pie },
-                        { label: "Consumption Rate", y: consumption_rate_pie },
+                        { label: "Percent Coverage", y: 36 },
+                        { label: "Consumption Rate", y: 31 },
+                        { label: "Remaining Unvaccinated", y: 7 }
 
                     ]
                 }]

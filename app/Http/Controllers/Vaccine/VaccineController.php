@@ -50,10 +50,11 @@ class VaccineController extends Controller
             $data['pfizer'][] = $pfizer;
         }
 
-        $sinovac_count = Vaccines::where("typeof_vaccine","Sinovac")->count();
-        $astrazeneca_count = Vaccines::where("typeof_vaccine","Astrazeneca")->count();
+        $sinovac_count = VaccineAccomplished::select(DB::raw("sum(vaccinated_first+vaccinated_second) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;
+        $astrazeneca_count = VaccineAccomplished::select(DB::raw("sum(vaccinated_first+vaccinated_second) as astra_count"))->where("typeof_vaccine","Astrazeneca")->first()->astra_count;
         $moderna_count = Vaccines::where("typeof_vaccine","Moderna")->count();
         $pfizer_count = Vaccines::where("typeof_vaccine","Pfizer")->count();
+
 
         return view("vaccine.dashboard",[
             "data" => $data,
@@ -92,7 +93,24 @@ class VaccineController extends Controller
             'province_id' => $province_id,
             'data' => $data
         ]);
+    }
 
+    public function vaccineFacility(Request $request,$tri_city)
+    {
+        if($tri_city == 'cebu'){
+            $data = Facility::where("province",2)
+                ->where(function($q){
+                    $q->where("id","227")
+                    ->orWhere("id","232");
+                })
+                ->paginate(10);
+        }
+        return view('vaccine.vaccine_facility',[
+            'title' => 'List of Facility',
+            'province_name' => "Cebu",
+            'province_id' => 2,
+            'data' => $data
+        ]);
     }
 
     public function vaccinatedContent()

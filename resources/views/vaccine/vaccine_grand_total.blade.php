@@ -16,6 +16,8 @@
     $total_vallocated_svac_frst_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_first; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
     $total_vallocated_svac_scnd_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_second; //VACCINE ALLOCATED (SD) SINOVAC_FIRST
     $total_vallocated_astra_frst_prov = \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first; //VACCINE_ALLOCATED (FD) ASTRA_FIRST
+    Session::put("total_e_pop_frtline_prov",$total_e_pop_frtline_prov);
+    Session::put("total_e_pop_sr_prov",$total_e_pop_sr_prov);
     $total_vallocated_astra_scnd_prov= \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second; //VACCINE ALLOCATED (SD) ASTRA_FIRST
 
 
@@ -138,11 +140,17 @@
     $total_r_unvcted_all_frst_prov  = $total_e_pop_svac_prov - $total_vcted_svac_prov - $total_rfsd_frst_prov; //TOTAL REMAINUNG UNVACCINATED
     $total_r_unvcted_all_scnd_prov  = $total_e_pop_svac_prov - $total_vcted_astra_prov - $total_rfsd_scnd_prov; //TOTAL REMAINING UNVACCIANTED  2
 
-    $sinovac_dashboard = $total_vcted_svac_frst_prov  + $total_vcted_svac_scnd_prov;
-    $astra_dashboard = $total_vcted_astra_frst_prov  + $total_vcted_astra_scnd_prov;
+    $sinovac_dashboard = $total_vcted_svac_frst_prov + $total_vcted_svac_scnd_prov;
+    $astra_dashboard = $total_vcted_scnd_a1_prov + $total_vcted_scnd_a2_prov;
+
+    $percent_coverage_pie =  number_format($total_p_cvrge_frst_prov + $total_p_cvrge_scnd_prov,2);
+    $consumption_rate_pie = number_format($total_c_rate_frst_prov + $total_c_rate_scnd_prov,2);
 
     Session::put("sinovac_dashboard",$sinovac_dashboard);
     Session::put("astra_dashboard",$astra_dashboard);
+    Session::put("percent_coverage_pie",$percent_coverage_pie);
+    Session::put("consumption_rate_pie",$consumption_rate_pie);
+
     ?>
 
 <h4>Grand Total</h4>
