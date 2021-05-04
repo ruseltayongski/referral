@@ -36,18 +36,18 @@
                         <div class="col-md-4">
                             <select name="priority" id="" class="select2">
                                 <option value="">Select Priority</option>
-                                <option value="frontline_health_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'frontline_health_workers')echo 'selected';} ?>>Frontline Health Workers</option>
-                                <option value="indigent_senior_citizens" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'indigent_senior_citizens')echo 'selected';} ?>>Senior Citizens</option>
-                                <option value="remaining_indigent_population" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_indigent_population')echo 'selected';} ?> disabled>Remaining Indigent Population</option>
-                                <option value="uniform_personnel" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'uniform_personnel')echo 'selected';} ?> disabled>Uniform Personnel</option>
-                                <option value="teachers_school_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'teachers_school_workers')echo 'selected';} ?> disabled>Teachers & School Workers</option>
-                                <option value="all_government_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'all_government_workers')echo 'selected';} ?> disabled>All Government Workers (National & Local)</option>
-                                <option value="essential_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'essential_workers')echo 'selected';} ?> disabled>Essential Workers</option>
-                                <option value="socio_demographic" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'socio_demographic')echo 'selected';} ?> disabled>Socio-demographic groups & significant higher risk other than senior citizen and indigent population (e.g.PDL,PWD,IP,Filipinos living in high-density areas)</option>
-                                <option value="ofw" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >OFW's</option>
-                                <option value="remaining_workforce" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_workforce')echo 'selected';} ?> disabled>Other remaining workforce</option>
-                                <option value="remaining_filipino_citizen" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_filipino_citizen')echo 'selected';} ?> disabled>Remaining Filipino Citizen</option>
-                                <option value="etc" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'etc')echo 'selected';} ?> disabled >ETC.</option>
+                                <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
+                                <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
+                                <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> disabled>A3</option>
+                                <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> disabled>A4</option>
+                                <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
+                                <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a6')echo 'selected';} ?> disabled>B1</option>
+                                <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a7')echo 'selected';} ?> disabled>B2</option>
+                                <option value="b3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a8')echo 'selected';} ?> disabled>B3</option>
+                                <option value="b4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >B4</option>
+                                <option value="b5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >B5</option>
+                                <option value="b6" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >B6</option>
+                                <option value="c" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >C</option>
                             </select>
                         </div>
                     </div>
@@ -135,13 +135,17 @@
                                     <?php
                                     $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
 
-                                    $total_epop_svac_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_SINOVAC
-                                    $total_epop_svac_sr = $row->senior_citizens; //E_POP_SENIOR_SINOVAC
-                                    $total_epop_svac = $total_epop_svac_frtline + $total_epop_svac_sr; //E_POP_SINOVAC FIRST
+                                    $total_epop_svac_a1 = $row->a1; //TOTAL_E_POP_FRONTLINE_SINOVAC
+                                    $total_epop_svac_a2 = $row->a2; //E_POP_SENIOR_SINOVAC
+                                    $total_epop_svac_a3 = $row->a3; //E_POP_A3
+                                    $total_epop_svac_a4 = $row->a4; //E_POP_A4
+                                    $total_epop_svac = $total_epop_svac_a1 + $total_epop_svac_a2 + $total_epop_svac_a3 + $total_epop_svac_a4;  //TOTAL_E_POP_SINOVAC
 
-                                    $total_epop_astra_frtline = $row->frontline_health_workers; //TOTAL_E_POP_FRONTLINE_ASTRA
-                                    $total_epop_astra_sr = $row->senior_citizens; //TOTAL_E_POP_SENIOR_ASTRA
-                                    $total_epop_astra = $total_epop_astra_frtline + $total_epop_astra_sr; //TOTAL_E_POP_ASTRA
+                                    $total_epop_astra_a1 = $row->a1; //TOTAL_E_POP_FRONTLINE_ASTRA
+                                    $total_epop_astra_a2 = $row->a2; //TOTAL_E_POP_SENIOR_ASTRA
+                                    $total_epop_astra_a3 = $row->a3; //EPOP_A3_ASTRA
+                                    $total_epop_astra_a4 = $row->a4; //EPOP_A4_ASTRA
+                                    $total_epop_astra = $total_epop_astra_a1 + $total_epop_astra_a2 + $total_epop_astra_a3 + $total_epop_astra_a4;  //TOTAL_E_POP_ASTRA
 
                                     //VACCINE_ALLOCATED
                                     $total_vallocated_svac_frst = $row->sinovac_allocated_first; //VACCINE ALLOCATED_SINOVAC (FD)
@@ -152,24 +156,40 @@
                                     //SINOVAC
                                     $total_svac_a1_frst = 0; //A1_SINOVAC
                                     $total_svac_a2_frst = 0; // A2_SINOVAC
-                                    $total_svac_a1_scnd = 0; //A1_SINOVAC2
-                                    $total_svac_a2_scnd = 0; //A2_SINOVAC2
+                                    $total_svac_a3_frst = 0; // A3_SINOVAC
+                                    $total_svac_a4_frst = 0; // A4_SINOVAC
+                                    $total_svac_a1_scnd = 0; //A1_SINOVAC 2
+                                    $total_svac_a2_scnd = 0; //A2_SINOVAC 2
+                                    $total_svac_a3_scnd = 0; //A3_SINOVAC 2
+                                    $total_svac_a4_scnd = 0; //A4_SINOVAC 2
 
-                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_first_a;
-                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_first_a;
-                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','frontline_health_workers')")[0]->vaccinated_second_a;
-                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','indigent_senior_citizens')")[0]->vaccinated_second_a;
+                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a1')")[0]->vaccinated_first_a;
+                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a2')")[0]->vaccinated_first_a;
+                                    $total_svac_a3_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a3')")[0]->vaccinated_first_a;
+                                    $total_svac_a4_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a4')")[0]->vaccinated_first_a;
+                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a1')")[0]->vaccinated_second_a;
+                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a2')")[0]->vaccinated_second_a;
+                                    $total_svac_a3_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a3')")[0]->vaccinated_second_a;
+                                    $total_svac_a4_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','a4')")[0]->vaccinated_second_a;
 
                                      //ASTRACENECA
                                     $total_astra_a1_frst = 0; //A1_ASTRA
                                     $total_astra_a2_frst = 0; //A2_ASTRA
-                                    $total_astra_a1_scnd = 0; //A1_ASTRA2
-                                    $total_astra_a2_scnd = 0; //A2_ASTRA2
+                                    $total_astra_a3_frst = 0; //A3_ASTRA
+                                    $total_astra_a4_frst = 0; //A4_ASTRA
+                                    $total_astra_a1_scnd = 0; //A1_ASTRA 2
+                                    $total_astra_a2_scnd = 0; //A2_ASTRA 2
+                                    $total_astra_a3_scnd = 0; //A3_ASTRA 2
+                                    $total_astra_a4_scnd = 0; //A4_ASTRA 2
 
-                                    $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_first_a;
-                                    $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_first_a;
-                                    $total_astra_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','frontline_health_workers')")[0]->vaccinated_second_a;
-                                    $total_astra_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','indigent_senior_citizens')")[0]->vaccinated_second_a;
+                                    $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a1')")[0]->vaccinated_first_a;
+                                    $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a2')")[0]->vaccinated_first_a;
+                                    $total_astra_a3_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a3')")[0]->vaccinated_first_a;
+                                    $total_astra_a4_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a4')")[0]->vaccinated_first_a;
+                                    $total_astra_a1_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a1')")[0]->vaccinated_second_a;
+                                    $total_astra_a2_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a2')")[0]->vaccinated_second_a;
+                                    $total_astra_a3_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a3')")[0]->vaccinated_second_a;
+                                    $total_astra_a4_scnd = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Astrazeneca','a4')")[0]->vaccinated_second_a;
 
 
                                     $total_vcted_svac_frst = \DB::connection('mysql')->select("call vaccine_data('$vaccine->muncity_id','Sinovac','')")[0]->vaccinated_first; //VACCINATED_SINOVAC
@@ -270,7 +290,7 @@
                                             <table style="font-size: 8pt;" class="table" border="2">
                                                 <tbody><tr>
                                                     <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-                                                    <th colspan="3">
+                                                    <th colspan="5">
                                                         <center><a
                                                                     href="#facility_modal"
                                                                     data-toggle="modal"
@@ -288,7 +308,7 @@
                                                                 Vaccine Allocated
                                                             </a></center>
                                                     </th>
-                                                    <th colspan="3"><center>Total Vaccinated</center></th>
+                                                    <th colspan="5"><center>Total Vaccinated</center></th>
                                                     <th>Mild</th>
                                                     <th>Serious</th>
                                                     <th>Deferred</th>
@@ -300,14 +320,18 @@
                                                 </tr>
                                                 <tr>
                                                     <td></td> <!-- 1-2 -->
-                                                    <th>Frontline(A1)</th>
-                                                    <th>Seniors(A2)</th>
+                                                    <th>A1</th>
+                                                    <th>A2</th>
+                                                    <th>A3</th>
+                                                    <th>A4</th>
                                                     <th>Total</th>
-                                                    <th>FD</th>
-                                                    <th>SD</th>
+                                                    <th>1st</th>
+                                                    <th>2nd</th>
                                                     <th>Total</th>
                                                     <th>A1</th>
                                                     <th>A2</th>
+                                                    <th>A3</th>
+                                                    <th>A4</th>
                                                     <th>Total</th>
                                                     <td></td>
                                                     <td></td>
@@ -325,8 +349,10 @@
                                                 <tr style="background-color: #ffd8d6">
                                                     <td rowspan="2">
                                                     </td> <!-- 1-3 -->
-                                                    <td rowspan="2">{{ $total_epop_svac_frtline }}</td> <!-- TOTAL_E_POP_FRONTLINE_SINOVAC   -->
-                                                    <td rowspan="2">{{ $total_epop_svac_sr }}</td> <!-- E_POP_SENIOR_SINOVAC -->
+                                                    <td rowspan="2">{{ $total_epop_svac_a1 }}</td> <!-- TOTAL_E_POP_FRONTLINE_SINOVAC   -->
+                                                    <td rowspan="2">{{ $total_epop_svac_a2 }}</td> <!-- E_POP_SENIOR_SINOVAC -->
+                                                    <td rowspan="2">{{ $total_epop_svac_a3 }}</td>  <!-- E_POP_A3_SINOVAC   -->
+                                                    <td rowspan="2">{{$total_epop_svac_a4}}</td>  <!-- E_POP_A4_SINOVAC   -->
                                                     <td rowspan="2">{{ $total_epop_svac }}</td> <!-- E_POP_SINOVAC FIRST  -->
                                                     <td rowspan="2">{{ $total_vallocated_svac_frst }}</td> <!-- VACCINE ALLOCATED_SINOVAC (FD)  -->
                                                     <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED_SINOVAC (SD)  -->
@@ -336,6 +362,12 @@
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_svac_a2_frst }}</span> <!-- A2_SINOVAC -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success">{{ $total_svac_a3_frst }}</span> <!-- A3_SINOVAC -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success">{{ $total_svac_a4_frst }}</span> <!-- A4_SINOVAC -->
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{  $total_vcted_svac_frst }}</span><!-- TOTAL VACCINATED_SINOVAC -->
@@ -371,6 +403,12 @@
                                                     </td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_svac_a2_scnd }}</span> <!-- A2_SINOVAC2 -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning">{{ $total_svac_a3_scnd }}</span> <!-- A3_SINOVAC2 -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning">{{ $total_svac_a4_scnd }}</span> <!-- A4_SINOVAC2 -->
                                                     </td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_vcted_svac_scnd }}</span> <!-- TOTAL_VACCINATED_SINOVAC 2-->
@@ -409,8 +447,10 @@
                                                     <td rowspan="2">
 
                                                     </td> <!-- 1-5 -->
-                                                    <td rowspan="2" style="color:black;">{{ $total_epop_astra_frtline }}</td> <!-- TOTAL_E_POP_FRONTLINE_ASTRA -->
-                                                    <td rowspan="2" style="color:black;">{{ $total_epop_astra_sr }}</td>  <!-- TOTAL_E_POP_SENIOR_ASTRA -->
+                                                    <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td> <!-- TOTAL_E_POP_FRONTLINE_ASTRA -->
+                                                    <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- TOTAL_E_POP_SENIOR_ASTRA -->
+                                                    <td rowspan="2" style="color:black">{{ $total_epop_astra_a3 }}</td>  <!-- TOTAL_E_POP_A3_ASTRA -->
+                                                    <td rowspan="2" style="color:black">{{ $total_epop_astra_a4 }}</td>  <!-- TOTAL_E_POP_A4_ASTRA -->
                                                     <td rowspan="2" style="color:black;">{{ $total_epop_astra }} </td>  <!-- TOTAL_E_POP_ASTRA -->
                                                     <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED_ASTRA (FD) -->
                                                     <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
@@ -420,6 +460,12 @@
                                                     </td>
                                                     <td style="color:black">
                                                         <span class="label label-success">{{ $total_astra_a2_frst }}</span>  <!-- A2_ASTRA  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success">{{ $total_astra_a3_frst }}</span>  <!-- A3_ASTRA  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success">{{ $total_astra_a4_frst }}</span>  <!-- A4_ASTRA  -->
                                                     </td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_vcted_astra_frst }}</span>  <!-- TOTAL VACCINATED_ASTRA-->
@@ -457,6 +503,12 @@
                                                         <span class="label label-warning">{{ $total_astra_a2_scnd }}</span>  <!-- A2_ASTRA2  -->
                                                     </td>
                                                     <td>
+                                                        <span class="label label-warning">{{ $total_astra_a3_scnd }}</span>  <!-- A3_ASTRA2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning">{{ $total_astra_a4_scnd }}</span>  <!-- A4_ASTRA2  -->
+                                                    </td>
+                                                    <td>
                                                         <span class="label label-warning">{{ $total_vcted_astra_scnd }}</span> <!-- TOTAL VACCINATED_ASTRA 2-->
                                                     </td> <!-- 1-6 -->
                                                     <td>
@@ -487,8 +539,10 @@
                                                 </tbody>
                                                 <tbody><tr>
                                                     <td>Total</td> <!-- 1-7 -->
-                                                    <td>{{ $total_epop_astra_frtline }}</td> <!-- TOTAL_FRONTLINE  -->
-                                                    <td>{{ $total_epop_astra_sr }}</td> <!-- TOTAL_SENIOR  -->
+                                                    <td>{{ $total_epop_astra_a1 }}</td> <!-- TOTAL_FRONTLINE  -->
+                                                    <td>{{ $total_epop_astra_a2 }}</td> <!-- TOTAL_SENIOR  -->
+                                                    <td>{{ $total_epop_astra_a3 }}</td>
+                                                    <td>{{ $total_epop_astra_a4 }}</td>
                                                     <td>{{ $total_epop_astra }}</td> <!-- TOTAL_E_POP -->
                                                     <td>
                                                        <b>{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
@@ -503,6 +557,12 @@
                                                     </td>
                                                     <td>
                                                         <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a2_frst + $total_astra_a2_frst }}</b> <!-- TOTAL_A2  -->
+                                                    </td>
+                                                    <td>
+                                                        <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a3_frst + $total_astra_a3_frst }}</b> <!-- TOTAL_A3  -->
+                                                    </td>
+                                                    <td>
+                                                        <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a4_frst + $total_astra_a4_frst }}</b> <!-- TOTAL_A4  -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_frst }}</b> <!-- TOTAL_VACCINATED  -->
@@ -540,11 +600,15 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a1_scnd + $total_astra_a1_scnd }}</b>  <!-- TOTAL_A1 - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a2_scnd + $total_astra_a2_scnd }} </b>  <!-- TOTAL_A2 - 2 -->
+                                                        <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a2_scnd + $total_astra_a2_scnd }}</b>  <!-- TOTAL_A2 - 2 -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b>  <!-- TOTAL_VACCINATED - 2 -->
@@ -589,7 +653,8 @@
                     <div class="col-md-3" style="padding-right: 2%">
                         <div id="chartContainer1" style="height: 370px; width: 100%;"></div><br><br><br>
                         <div id="chartContainer2" style="height: 370px; width: 100%;"></div><br><br><br>
-                        <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+                        <div id="chartPercentCoverage" style="height: 370px; width: 100%;"></div><br><br><br>
+                        <div id="chartConsumptionRate" style="height: 370px; width: 100%;"></div>
                     </div>
                 </div>
             @else
@@ -763,30 +828,57 @@
             };
             $("#chartContainer2").CanvasJSChart(options2);
 
-            var percent_coverage_pie = <?php if(Session::get('percent_coverage_pie')) echo Session::get('percent_coverage_pie'); else echo 0; ?>;
-            var consumption_rate_pie = <?php if(Session::get('consumption_rate_pie')) echo Session::get('consumption_rate_pie'); else echo 0; ?>;
+            var percent_coverage_firstdose = <?php if(Session::get('percent_coverage_firstdose')) echo Session::get('percent_coverage_firstdose'); else echo 0; ?>;
+            var percent_coverage_seconddose = <?php if(Session::get('percent_coverage_seconddose')) echo Session::get('percent_coverage_seconddose'); else echo 0; ?>;
             var options3 = {
                 title: {
-                    text: "Percentage Coverage / Consumption Rate",
+                    text: "Percentage Coverage",
                     fontSize: 23,
                 },
                 data: [{
-                    type: "pie",
+                    type: "doughnut",
                     startAngle: 45,
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "Percent Coverage", y: percent_coverage_pie },
-                        { label: "Consumption Rate", y: consumption_rate_pie },
+                        { label: "First Dose", y: percent_coverage_firstdose, color:"#00a65a" },
+                        { label: "Second Dose", y: percent_coverage_seconddose, color:"#f39c12" },
 
                     ]
                 }]
             };
-            $("#chartContainer3").CanvasJSChart(options3);
+            $("#chartPercentCoverage").CanvasJSChart(options3);
+
+            var consumption_rate_firstdose = <?php if(Session::get('consumption_rate_firstdose')) echo Session::get('consumption_rate_firstdose'); else echo 0; ?>;
+            var consumption_rate_secondddose = <?php if(Session::get('consumption_rate_secondddose')) echo Session::get('consumption_rate_secondddose'); else echo 0; ?>;
+            var options4 = {
+                title: {
+                    text: "Consumption Rate",
+                    fontSize: 23,
+                },
+                data: [{
+                    type: "doughnut",
+                    startAngle: 45,
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabel: "{label} ({y}%)",
+                    yValueFormatString:"#,##0.#"%"",
+                    dataPoints: [
+                        { label: "First Dose", y: consumption_rate_firstdose, color:"#00a65a" },
+                        { label: "Second Dose", y: consumption_rate_secondddose, color:"#f39c12" },
+
+                    ]
+                }]
+            };
+            $("#chartConsumptionRate").CanvasJSChart(options4);
+
+
 
         };
+
+
 
     </script>
 

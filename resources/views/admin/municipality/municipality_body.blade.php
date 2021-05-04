@@ -18,12 +18,20 @@
         <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code" readonly>
     </div>
     <div class="form-group">
-        <label>Frontline Health Workers:</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->frontline_health_workers)){{ $muncity->frontline_health_workers }}@endif" name="frontline_health_workers">
+        <label>A1</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->a1)){{ $muncity->a1 }}@endif" name="a1">
     </div>
     <div class="form-group">
-        <label>Senior Citizens</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->senior_citizens)){{ $muncity->senior_citizens }}@endif" name="senior_citizens">
+        <label>A2</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a2 }}@endif" name="a2">
+    </div>
+    <div class="form-group">
+        <label>A3</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a3 }}@endif" name="a3">
+    </div>
+    <div class="form-group">
+        <label>A4</label>
+        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a4 }}@endif" name="a4">
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

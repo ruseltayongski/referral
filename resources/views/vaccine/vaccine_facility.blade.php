@@ -253,7 +253,7 @@
                                     <tr>
                                         <td style="white-space: nowrap;" colspan="12">
                                             <b>
-                                                <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>',$(this))">
+                                                <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>',$(this))">
                                                     {{ $row->name }}
                                                 </a>
                                             </b>
@@ -281,9 +281,9 @@
                                                     </th>
                                                     <th colspan="3">
                                                         <center><a
-                                                                    href="#vaccine_modal_allocated"
+                                                                    href="#vaccine_facility_allocated"
                                                                     data-toggle="modal"
-                                                                    onclick="vaccineAllocated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>')"
+                                                                    onclick="vaccineFacilityAllocated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>')"
                                                             >
                                                                 Vaccine Allocated
                                                             </a></center>
@@ -602,10 +602,10 @@
         </div>
     </div>
 
-    <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
+    <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_facility" style="min-width: 100%">
         <div class="modal-dialog modal-lg modal_w" role="document">
             <div class="modal-content">
-                <div class="modal-body vaccinated_content_municipality">
+                <div class="modal-body vaccinated_content_facility">
 
                 </div><!-- /.modal-content -->
             </div>
@@ -613,10 +613,10 @@
     </div><!-- /.modal -->
 
 
-    <div class="modal fade" role="dialog" id="vaccine_modal_allocated">
+    <div class="modal fade" role="dialog" id="vaccine_facility_allocated">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-body vaccine_allocated_modal">
+                <div class="modal-body vaccine_facility_modal">
                     <center>
                         <img src="{{ asset('resources/img/loading.gif') }}" alt="">
                     </center>
@@ -639,15 +639,15 @@
         $("#container").removeClass("container");
         $("#container").addClass("container-fluid");
 
-        function facilityVaccinated(province_id,muncity_id,data){
-            $("#vaccine_modal_municipality").modal('show');
-            $(".vaccinated_content_municipality").html(loading);
+        function facilityVaccinated(facility_id,data){
+            $("#vaccine_modal_facility").modal('show');
+            $(".vaccinated_content_facility").html(loading);
             $("a").css("background-color","");
             data.css("background-color","yellow");
-            var url = "<?php echo asset('vaccine/vaccinated/municipality/content').'/'; ?>"+province_id+"/"+muncity_id;
+            var url = "<?php echo asset('vaccine/facility_content'); ?>"+"/"+facility_id;
             $.get(url,function(data){
                 setTimeout(function(){
-                    $(".vaccinated_content_municipality").html(data);
+                    $(".vaccinated_content_facility").html(data);
                     $(".select2").select2({ width: '100%' });
                 },500);
             });
@@ -673,15 +673,15 @@
             })
         }
 
-        function vaccineAllocated(province_id,muncity_id){
-            var url = "<?php echo asset('vaccine/vaccine_allocated_modal'); ?>";
+        function vaccineFacilityAllocated(province_id,muncity_id){
+            var url = "<?php echo asset('vaccine/facility_allocated'); ?>";
             json = {
                 "province_id" : province_id,
                 "muncity_id" : muncity_id ,
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(result){
-                $(".vaccine_allocated_modal").html(result);
+                $(".vaccine_facility_modal").html(result);
             })
         }
 
@@ -769,7 +769,7 @@
                     text: "Total Percentage"
                 },
                 data: [{
-                    type: "pie",
+                    type: "doughnut",
                     startAngle: 45,
                     showInLegend: "true",
                     legendText: "{label}",

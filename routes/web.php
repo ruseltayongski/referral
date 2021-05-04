@@ -472,7 +472,6 @@ Route::post('telemedicine/sync/tsekap','ApiController@telemedicineToPatient');
 //vaccine
 Route::get('vaccine','Vaccine\VaccineController@index');
 Route::match(['GET',['POST']],'vaccine/vaccineview/{province_id}','Vaccine\VaccineController@vaccineView');
-Route::match(['GET',['POST']],'vaccine/facility/{tri_city}','Vaccine\VaccineController@vaccineFacility');
 Route::get('vaccine/vaccinated_content','Vaccine\VaccineController@vaccinatedContent');
 Route::get('vaccine/vaccinated/municipality/content/{province_id}/{muncity_id}','Vaccine\VaccineController@vaccinatedContentMunicipality');
 Route::post('vaccine/saved','Vaccine\VaccineController@vaccineSaved');
@@ -488,6 +487,11 @@ Route::post('vaccine/vaccine_allocated_modal','Vaccine\VaccineController@getVall
 
 Route::get('test/send','Vaccine\VaccineController@sendNotification');
 Route::get('api/referral/append/{code}','ApiController@referralAppend');
+
+Route::match(['GET',['POST']],'vaccine/facility/{tri_city}','Vaccine\VaccineController@vaccineFacility');
+Route::get('vaccine/facility_content/{facility_id}','Vaccine\VaccineController@vaccinatedFacilityContent');
+Route::post('vaccine_facility/saved','Vaccine\VaccineController@vaccineFacilitySaved');
+Route::post('vaccine/facility_allocated','Vaccine\VaccineController@vaccineFacilitySaved');
 
 
 

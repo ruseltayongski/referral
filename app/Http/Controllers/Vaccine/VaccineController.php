@@ -50,8 +50,8 @@ class VaccineController extends Controller
             $data['pfizer'][] = $pfizer;
         }
 
-        $sinovac_count = VaccineAccomplished::select(DB::raw("sum(vaccinated_first+vaccinated_second) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;
-        $astrazeneca_count = VaccineAccomplished::select(DB::raw("sum(vaccinated_first+vaccinated_second) as astra_count"))->where("typeof_vaccine","Astrazeneca")->first()->astra_count;
+        $sinovac_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;
+        $astrazeneca_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_count"))->where("typeof_vaccine","Astrazeneca")->first()->astra_count;
         $moderna_count = Vaccines::where("typeof_vaccine","Moderna")->count();
         $pfizer_count = Vaccines::where("typeof_vaccine","Pfizer")->count();
 
@@ -95,14 +95,42 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccineFacility(Request $request,$tri_city)
+    public function vaccineFacility($tri_city)
     {
         if($tri_city == 'cebu'){
             $data = Facility::where("province",2)
                 ->where(function($q){
-                    $q->where("id","227")
-                    ->orWhere("id","232");
+                    $q->where("id","501")
+                    ->orWhere("id","502")
+                    ->orWhere("id","503")
+                    ->orWhere("id","504")
+                    ->orWhere("id","505")
+                    ->orWhere("id","506")
+                    ->orWhere("id","229")
+                    ->orWhere("id","508")
+                    ->orWhere("id","239")
+                    ->orWhere("id","257")
+                    ->orWhere("id","252")
+                    ->orWhere("id","236")
+                    ->orWhere("id","235")
+                    ->orWhere("id","6")
+                    ->orWhere("id","19")
+                    ->orWhere("id","242")
+                    ->orWhere("id","231")
+                    ->orWhere("id","24")
+                    ->orWhere("id","230")
+                    ->orWhere("id","12");
                 })
+                ->orderBy("name","asc")
+                ->paginate(10);
+        }
+        elseif($tri_city == 'mandaue'){
+            $data = Facility::where("province",2)
+                ->where(function($q){
+                    $q->where("id","501")
+                        ->orWhere("id","502");
+                })
+                ->orderBy("name","asc")
                 ->paginate(10);
         }
         return view('vaccine.vaccine_facility',[
@@ -127,10 +155,19 @@ class VaccineController extends Controller
     }
 
     public function vaccinatedContentMunicipality($province_id,$muncity_id)
-    {    $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$muncity_id)->orderBy('id','asc')->get();
+    {
+        $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$muncity_id)->orderBy('id','asc')->get();
         return view("vaccine.vaccine_content_municipality", [
             "province_id" => $province_id,
             "muncity_id" => $muncity_id,
+            "vaccine_accomplishment" => $vaccine_accomplishment
+        ]);
+    }
+
+    public function vaccinatedFacilityContent($facility_id){
+        $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$facility_id)->orderBy('id','asc')->get();
+        return view("vaccine.vaccine_facility_content", [
+            "facility_id" => $facility_id,
             "vaccine_accomplishment" => $vaccine_accomplishment
         ]);
     }
@@ -176,6 +213,46 @@ class VaccineController extends Controller
         return Redirect::back();
     }
 
+    public function vaccineFacilitySaved(Request $request)
+    {
+        VaccineAccomplished::where("facility_id",$request->facility_id)->delete();
+        $user_id = Session::get('auth')->id;
+        $count = 0;
+
+        foreach ($request->typeof_vaccine as $row){
+            $vaccine = new VaccineAccomplished();
+            $vaccine->encoded_by = $user_id;
+            $vaccine->facility_id = $request->facility_id;
+            $vaccine->typeof_vaccine = $request->typeof_vaccine[$count];
+            $vaccine->priority = $request->priority[$count];
+            if($request->date_first[$count])
+                $vaccine->date_first = date("Y-m-d H:m:i", strtotime($request->date_first[$count]));
+            if($request->date_second[$count])
+                $vaccine->date_second = date("Y-m-d H:m:i", strtotime($request->date_second[$count]));
+            $vaccine->vaccinated_first = $request->vaccinated_first[$count];
+            $vaccine->vaccinated_second = $request->vaccinated_second[$count];
+            $vaccine->mild_first = $request->mild_first[$count];
+            $vaccine->mild_second = $request->mild_second[$count];
+            $vaccine->serious_first = $request->serious_first[$count];
+            $vaccine->serious_second = $request->serious_second[$count];
+            $vaccine->refused_first = $request->refused_first[$count];
+            $vaccine->refused_second = $request->refused_second[$count];
+            $vaccine->deferred_first = $request->deferred_first[$count];
+            $vaccine->deferred_second = $request->deferred_second[$count];
+            $vaccine->wastage_first = $request->wastage_first[$count];
+            $vaccine->wastage_second = $request->wastage_second[$count];
+            $vaccine->no_eli_pop = $request->no_eli_pop[$count];
+            $vaccine->vaccine_allocated_first = $request->vaccine_allocated_first[$count];
+            $vaccine->vaccine_allocated_second = $request->vaccine_allocated_second[$count];
+            $vaccine->save();
+            $count++;
+        }
+
+        Session::put('vaccine_saved', true);
+
+        return Redirect::back();
+    }
+
     public function vaccineUpdateView($id)
     {
         $province = Province::get();
@@ -189,50 +266,6 @@ class VaccineController extends Controller
             "facility" => $facility,
             "vaccine" => $vaccine,
         ]);
-    }
-
-    public function vaccineUpdate(Request $request)
-    {
-        $vaccine = Vaccines::find($request->vaccine_id);
-        $vaccine->encoded_by = Session::get('auth')->id;
-        $vaccine->facility_id = $request->facility_id;
-        $vaccine->typeof_vaccine = $request->typeof_vaccine;
-        $vaccine->priority = $request->priority;
-        $vaccine->sub_priority = $request->sub_priority;
-        $vaccine->province_id = $request->province_id;
-        $vaccine->muncity_id = $request->muncity_id;
-        $vaccine->no_eli_pop = $request->no_eli_pop;
-        $vaccine->ownership = $request->ownership;
-        $vaccine->nvac_allocated = $request->nvac_allocated;
-        if($request->first_dose)
-            $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
-        else
-            $vaccine->first_dose = null;
-        if($request->second_dose)
-            $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
-        else
-            $vaccine->second_dose = null;
-        $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
-        $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
-        $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->aefi = $request->aefi;
-        $vaccine->aefi_qty = $request->aefi_qty;
-        $vaccine->deferred = $request->deferred;
-        $vaccine->refused = $request->refused;
-        $vaccine->wastage = $request->wastage;
-        $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
-        $vaccine->numof_vaccinated2 = $request->numof_vaccinated2;
-        $vaccine->aefi2 = $request->aefi2;
-        $vaccine->aefi_qty2 = $request->aefi_qty2;
-        $vaccine->deferred2 = $request->deferred2;
-        $vaccine->refused2 = $request->refused2;
-        $vaccine->wastage2= $request->wastage2;
-        $vaccine->save();
-
-        Session::put('vaccine_update', true);
-
-        return Redirect::back();
     }
 
     public function getFacility($province_id)
@@ -268,54 +301,17 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccineNewDeliverySaved(Request $request){
-
-        $vaccine = new Vaccines();
-        $vaccine->encoded_by = Session::get('auth')->id;
-        $vaccine->facility_id = $request->facility_id;
-        $vaccine->typeof_vaccine = $request->typeof_vaccine;
-        $vaccine->priority = $request->priority;
-        $vaccine->sub_priority = $request->sub_priority;
-        $vaccine->province_id = $request->province_id;
-        $vaccine->muncity_id = $request->muncity_id;
-        $vaccine->no_eli_pop = $request->no_eli_pop;
-        $vaccine->ownership = $request->ownership;
-        $vaccine->nvac_allocated = $request->nvac_allocated;
-        if($request->first_dose)
-            $vaccine->first_dose = date("Y-m-d H:m:i", strtotime($request->first_dose));
-        if($request->second_dose)
-            $vaccine->second_dose = date("Y-m-d H:m:i", strtotime($request->second_dose));
-        if($request->dateof_del)
-            $vaccine->dateof_del = date("Y-m-d H:m:i", strtotime($request->dateof_del));
-        $vaccine->tgtdoseper_day = $request->tgtdoseper_day;
-        $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->numof_vaccinated = $request->numof_vaccinated;
-        $vaccine->aefi = $request->aefi;
-        $vaccine->aefi_qty = $request->aefi_qty;
-        $vaccine->deferred = $request->deferred;
-        $vaccine->refused = $request->refused;
-        $vaccine->wastage= $request->wastage;
-        $vaccine->numof_vaccinated2 = $request->numof_vaccinated2;
-        if($request->dateof_del2)
-            $vaccine->dateof_del2 = date("Y-m-d H:m:i", strtotime($request->dateof_del2));
-        $vaccine->aefi2 = $request->aefi2;
-        $vaccine->aefi_qty2 = $request->aefi_qty2;
-        $vaccine->deferred2 = $request->deferred2;
-        $vaccine->refused2 = $request->refused2;
-        $vaccine->wastage2= $request->wastage2;
-        $vaccine->save();
-
-        Session::put('vaccine_saved', true);
-
-        return Redirect::back();
-    }
 
     public function getEliPop($muncity_id,$priority){
         $no_eli_pop = Muncity::find($muncity_id);
-        if($priority == 'frontline_health_workers')
-            return $no_eli_pop->frontline_health_workers;
-
-        return $no_eli_pop->senior_citizens;
+        if($priority == 'a1')
+            return $no_eli_pop->a1;
+        elseif($priority == 'a2')
+            return $no_eli_pop->a2;
+        elseif($priority == 'a3')
+            return $no_eli_pop->a3;
+        elseif($priority == 'a4')
+            return $no_eli_pop->a4;
     }
 
     public function getVaccineAllocated($muncity_id,$typeof_vaccine){
@@ -340,7 +336,6 @@ class VaccineController extends Controller
             "province_id" => $request->province_id
         ]);
     }
-
 
 }
 
