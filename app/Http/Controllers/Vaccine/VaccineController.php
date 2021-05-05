@@ -337,6 +337,16 @@ class VaccineController extends Controller
         ]);
     }
 
+    public function vaccineFacilityEligiblePop(Request $request){
+        $facility = Facility::where("id",$request->facility_id)->where("province",$request->province_id)->first();
+        $province = Province::find($request->province_id);
+        return view('vaccine.vaccine_facility_eligible',[
+            "facility" => $facility,
+            "province_name" => $province->description,
+            "province_id" => $request->province_id
+        ]);
+    }
+
 }
 
 

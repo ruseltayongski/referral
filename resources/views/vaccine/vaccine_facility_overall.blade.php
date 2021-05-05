@@ -158,7 +158,7 @@ Session::put("astra_dashboard",$astra_dashboard);
     <tbody>
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-        <th colspan="3">
+        <th colspan="5">
             <center>
                 <a style="color:black"> Eligible Population</a>
             </center>
@@ -168,7 +168,7 @@ Session::put("astra_dashboard",$astra_dashboard);
                 <a style="color:black"> Vaccine Allocated</a>
             </center>
         </th>
-        <th colspan="3"><center>Total Vaccinated </center></th>
+        <th colspan="5"><center>Total Vaccinated </center></th>
         <th>Mild</th>
         <th>Serious</th>
         <th>Deferred</th>
@@ -180,14 +180,18 @@ Session::put("astra_dashboard",$astra_dashboard);
     </tr>
     <tr>
         <td></td> <!-- 1-2 -->
-        <th>Frontline(A1)</th>
-        <th>Seniors(A2)</th>
+        <th>A1</th>
+        <th>A2</th>
+        <th>A3</th>
+        <th>A4</th>
         <th>Total</th>
-        <th>FD</th>
-        <th>SD</th>
+        <th>1st</th>
+        <th>2nd</th>
         <th>Total</th>
         <th>A1</th>
         <th>A2</th>
+        <th>A3</th>
+        <th>A4</th>
         <th>Total</th>
         <td></td>
         <td></td>
@@ -208,8 +212,9 @@ Session::put("astra_dashboard",$astra_dashboard);
         </td> <!-- 1-3 -->
         <td rowspan="2">{{ $total_e_pop_frtline_prov }}</td>  <!-- Frontline(A1) SINOVAC_FIRST-->
         <td rowspan="2">{{ $total_e_pop_sr_prov }} </td>   <!-- Senior (A2) SINOVAC_FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_prov }} <!-- TOTAL ELI POP SINOVAC_FIRST -->
-        </td>
+        <td rowspan="2">{{ $total_e_pop_svac_prov }}</td> <!-- TOTAL ELI POP SINOVAC_FIRST -->
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
         <td rowspan="2">{{ $total_vallocated_svac_frst_prov }} </td> <!-- VACCINE ALLOCATED (FD) SINOVAC_FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd_prov }} </td>  <!-- VACCINE ALLOCATED (SD) SINOVAC_FIRST -->
         <td rowspan="2"> {{ $total_vallocated_frst_svac }}</td>  <!-- TOTAL VACCINE ALLOCATED SINOVAC_FIRST -->
@@ -219,6 +224,8 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td>
             <span class="label label-success">{{ $total_svac_a2_frst_prov }}</span>  <!-- VACCINATED (A2) SINOVAC_FIRST -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <span class="label label-success">{{ $total_vcted_svac_frst_prov }}</span>  <!-- TOTAL VACCINATED SINOVAC_FIRST -->
         </td>
@@ -254,6 +261,8 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td>
             <span class="label label-warning">{{ $total_svac_a2_scnd_prov }}</span> <!-- VACCINATED (A2) SINOVAC_SECOND -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <span class="label label-warning">{{ $total_vcted_svac_scnd_prov }}</span> <!-- TOTAL VACCINATED SINOVAC_SECOND -->
         </td> <!-- 1-4 -->
@@ -290,9 +299,9 @@ Session::put("astra_dashboard",$astra_dashboard);
         </td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_frtline_prov }}</td>  <!-- Frontline(A1) ASTRA_FIRST-->
         <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_sr_prov }}</td> <!-- SENIOR(A2) ASTRA_FIRST -->
-        <td rowspan="2" style="color:black;">
-        {{ $total_e_pop_astra_prov }} <!-- TOTAL E POP ASTRA_FIRST -->
-        </td>
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_prov }}</td> <!-- TOTAL E POP ASTRA_FIRST -->
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
         <td rowspan="2" style="color:black">{{ $total_vallocated_astra_frst_prov }}</td> <!-- VACCINE_ALLOCATED (FD) ASTRA_FIRST-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_astra_scnd_prov }}</td>  <!-- VACCINE ALLOCATED (SD) ASTRA_FIRST -->
         <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_astra }}</td>  <!-- TOTAL VACCINE ALLOCATED ASTRA_FIRST -->
@@ -302,6 +311,8 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td style="color:black">
             <span class="label label-success">{{ $total_astra_a2_frst_prov }}</span> <!-- VACCINATED (A2) ASTRA_FIRST -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <span class="label label-success">{{ $total_vcted_astra_frst_prov }}</span> <!-- TOTAL VACCINATED ASTRA_FIRST -->
         </td>
@@ -337,6 +348,8 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td style="color:black;">
             <span class="label label-warning">{{ $total_astra_a2_scnd_prov }}</span>  <!-- VACCINATED (A2) ASTRA_SECOND -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <span class="label label-warning">{{ $total_vcted_astra_scnd_prov }}</span>  <!-- TOTAL VACCINATED ASTRA_SECOND -->
         </td> <!-- 1-6 -->
@@ -371,17 +384,20 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td>Total</td> <!-- 1-7 -->
         <td>{{ $total_e_pop_astra_frtline_prov }}</td> <!-- TOTAL FRONTLINE -->
         <td>{{ $total_e_pop_astra_sr_prov }}</td>  <!-- TOTAL SR -->
+        <td></td>
+        <td></td>
         <td>{{ $total_e_pop_astra_prov }}</td>  <!-- TOTAL E POP  -->
         <td>{{ $total_vallocated_frst_prov }}</td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
         <td>{{ $total_vallocated_scnd_prov }} </td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
-        <td>
-            <b>{{ $total_vallocated }} </b>  <!-- TOTAL VACCINE ALLOCATED  -->
+        <td><b>{{ $total_vallocated }} </b></td>  <!-- TOTAL VACCINE ALLOCATED  -->
         <td>
             <b class="label label-success" style="margin-right: 5%">{{$total_vcted_svac_frst_prov}}</b> <!-- TOTAL VACCINATED (A1) -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_svac_scnd_prov}}</b>  <!-- TOTAL VACCINATED (A2) -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_svac_prov }}</b>  <!-- TOTAL VACCINATED -->
         </td>
@@ -418,6 +434,8 @@ Session::put("astra_dashboard",$astra_dashboard);
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
         <td>
 
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd_a1_prov }}</b> <!-- TOTAL VACCINATED (FD) 2 -->
@@ -426,6 +444,8 @@ Session::put("astra_dashboard",$astra_dashboard);
 
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd_a2_prov }}</b> <!-- TOTAL VACCINATED (SD) 2 -->
         </td>
+        <td></td>
+        <td></td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_astra_prov }}</b> <!-- TOTAL VACCINATED 2 -->
         </td>

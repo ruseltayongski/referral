@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-md-9">
                          <span class="input-group-btn">
-                            <button type="submit" class="btn btn-success" onclick="load"><i class="fa fa-filter"></i> Filter</button>
+                            <button type="submit" class="btn btn-success" onclick=""><i class="fa fa-filter"></i> Filter</button>
                             <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                              <!--
@@ -253,7 +253,7 @@
                                     <tr>
                                         <td style="white-space: nowrap;" colspan="12">
                                             <b>
-                                                <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>',$(this))">
+                                                <a class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>',$(this))">
                                                     {{ $row->name }}
                                                 </a>
                                             </b>
@@ -270,11 +270,11 @@
                                             <table style="font-size: 8pt;" class="table" border="2">
                                                 <tbody><tr>
                                                     <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-                                                    <th colspan="3">
+                                                    <th colspan="5">
                                                         <center><a
                                                                     href="#facility_modal"
                                                                     data-toggle="modal"
-                                                                    onclick=""
+                                                                    onclick="facilityBody('<?php echo $province_id; ?>','<?php echo $row->id; ?>')"
                                                             >
                                                                 Eligible Population
                                                             </a></center>
@@ -288,7 +288,7 @@
                                                                 Vaccine Allocated
                                                             </a></center>
                                                     </th>
-                                                    <th colspan="3"><center>Total Vaccinated</center></th>
+                                                    <th colspan="5"><center>Total Vaccinated</center></th>
                                                     <th>Mild</th>
                                                     <th>Serious</th>
                                                     <th>Deferred</th>
@@ -300,14 +300,18 @@
                                                 </tr>
                                                 <tr>
                                                     <td></td> <!-- 1-2 -->
-                                                    <th>Frontline(A1)</th>
-                                                    <th>Seniors(A2)</th>
+                                                    <th>A1</th>
+                                                    <th>A2</th>
+                                                    <th>A3</th>
+                                                    <th>A4</th>
                                                     <th>Total</th>
-                                                    <th>FD</th>
-                                                    <th>SD</th>
+                                                    <th>1st</th>
+                                                    <th>2nd</th>
                                                     <th>Total</th>
                                                     <th>A1</th>
                                                     <th>A2</th>
+                                                    <th>A3</th>
+                                                    <th>A4</th>
                                                     <th>Total</th>
                                                     <td></td>
                                                     <td></td>
@@ -327,6 +331,8 @@
                                                     </td> <!-- 1-3 -->
                                                     <td rowspan="2">{{ $total_epop_svac_frtline }}</td> <!-- TOTAL_E_POP_FRONTLINE_SINOVAC   -->
                                                     <td rowspan="2">{{ $total_epop_svac_sr }}</td> <!-- E_POP_SENIOR_SINOVAC -->
+                                                    <td rowspan="2"></td>
+                                                    <td rowspan="2"></td>
                                                     <td rowspan="2">{{ $total_epop_svac }}</td> <!-- E_POP_SINOVAC FIRST  -->
                                                     <td rowspan="2">{{ $total_vallocated_svac_frst }}</td> <!-- VACCINE ALLOCATED_SINOVAC (FD)  -->
                                                     <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED_SINOVAC (SD)  -->
@@ -337,6 +343,8 @@
                                                     <td>
                                                         <span class="label label-success">{{ $total_svac_a2_frst }}</span> <!-- A2_SINOVAC -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <span class="label label-success">{{  $total_vcted_svac_frst }}</span><!-- TOTAL VACCINATED_SINOVAC -->
                                                     </td>
@@ -372,6 +380,8 @@
                                                     <td>
                                                         <span class="label label-warning">{{ $total_svac_a2_scnd }}</span> <!-- A2_SINOVAC2 -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_vcted_svac_scnd }}</span> <!-- TOTAL_VACCINATED_SINOVAC 2-->
                                                     </td> <!-- 1-4 -->
@@ -411,6 +421,8 @@
                                                     </td> <!-- 1-5 -->
                                                     <td rowspan="2" style="color:black;">{{ $total_epop_astra_frtline }}</td> <!-- TOTAL_E_POP_FRONTLINE_ASTRA -->
                                                     <td rowspan="2" style="color:black;">{{ $total_epop_astra_sr }}</td>  <!-- TOTAL_E_POP_SENIOR_ASTRA -->
+                                                    <td rowspan="2"></td>
+                                                    <td rowspan="2"></td>
                                                     <td rowspan="2" style="color:black;">{{ $total_epop_astra }} </td>  <!-- TOTAL_E_POP_ASTRA -->
                                                     <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED_ASTRA (FD) -->
                                                     <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
@@ -421,6 +433,8 @@
                                                     <td style="color:black">
                                                         <span class="label label-success">{{ $total_astra_a2_frst }}</span>  <!-- A2_ASTRA  -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <span class="label label-success">{{ $total_vcted_astra_frst }}</span>  <!-- TOTAL VACCINATED_ASTRA-->
                                                     </td>
@@ -456,6 +470,8 @@
                                                     <td style="color:black;">
                                                         <span class="label label-warning">{{ $total_astra_a2_scnd }}</span>  <!-- A2_ASTRA2  -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <span class="label label-warning">{{ $total_vcted_astra_scnd }}</span> <!-- TOTAL VACCINATED_ASTRA 2-->
                                                     </td> <!-- 1-6 -->
@@ -489,6 +505,8 @@
                                                     <td>Total</td> <!-- 1-7 -->
                                                     <td>{{ $total_epop_astra_frtline }}</td> <!-- TOTAL_FRONTLINE  -->
                                                     <td>{{ $total_epop_astra_sr }}</td> <!-- TOTAL_SENIOR  -->
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>{{ $total_epop_astra }}</td> <!-- TOTAL_E_POP -->
                                                     <td>
                                                         <b>{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
@@ -496,7 +514,8 @@
                                                     <td>
                                                         <b>{{ $total_vallocated_scnd }} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
                                                     </td>
-                                                    <td><b>{{$total_vallocated }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->
+                                                    <td>
+                                                        <b>{{$total_vallocated }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a1_frst + $total_astra_a1_frst }}</b> <!-- TOTAL_A1  -->
@@ -504,6 +523,8 @@
                                                     <td>
                                                         <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a2_frst + $total_astra_a2_frst }}</b> <!-- TOTAL_A2  -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_frst }}</b> <!-- TOTAL_VACCINATED  -->
                                                     </td>
@@ -540,12 +561,16 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a1_scnd + $total_astra_a1_scnd }}</b>  <!-- TOTAL_A1 - 2 -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a2_scnd + $total_astra_a2_scnd }} </b>  <!-- TOTAL_A2 - 2 -->
                                                     </td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b>  <!-- TOTAL_VACCINATED - 2 -->
                                                     </td>
@@ -653,9 +678,9 @@
             });
         }
 
-        function MunicipalityBody(province_id,muncity_id){
+        function facilityBody(province_id,facility_id){
             var json;
-            if(muncity_id == 'empty'){
+            if(facility_id == 'empty'){
                 json = {
                     "province_id" : province_id,
                     "_token" : "<?php echo csrf_token()?>"
@@ -663,11 +688,11 @@
             } else {
                 json = {
                     "province_id" : province_id,
-                    "muncity_id" : muncity_id ,
+                    "facility_id" : facility_id ,
                     "_token" : "<?php echo csrf_token()?>"
                 };
             }
-            var url = "<?php echo asset('admin/municipality/crud/body') ?>";
+            var url = "<?php echo asset('vaccine/facility_eligible_pop') ?>";
             $.post(url,json,function(result){
                 $(".facility_body").html(result);
             })
@@ -681,7 +706,7 @@
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(result){
-                $(".vaccine_facility_modal").html(result);
+                $(".vaccine_allocated_modal").html(result);
             })
         }
 

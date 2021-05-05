@@ -602,13 +602,15 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a1_scnd + $total_astra_a1_scnd }}</b>  <!-- TOTAL_A1 - 2 -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a2_scnd + $total_astra_a2_scnd }}</b>  <!-- TOTAL_A2 - 2 -->
+                                                    </td>
+                                                    <td> <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a3_scnd + $total_astra_a3_scnd }}</b>  <!-- TOTAL_A3 - 2 -->
+                                                    </td>
+                                                    <td> <b class="label label-warning" style="margin-right: 5%">{{ $total_svac_a4_scnd + $total_astra_a4_scnd }}</b>  <!-- TOTAL_A4 - 2 -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b>  <!-- TOTAL_VACCINATED - 2 -->
@@ -805,8 +807,10 @@
 
             $("#chartContainer1").CanvasJSChart(options1);
 
-            var total_e_pop_frtline_prov = <?php if(Session::get('total_e_pop_frtline_prov')) echo Session::get('total_e_pop_frtline_prov'); else echo 0; ?>;
-            var total_e_pop_sr_prov = <?php if(Session::get('total_e_pop_sr_prov')) echo Session::get('total_e_pop_sr_prov'); else echo 0; ?>;
+            var a1_dashboard = <?php if(Session::get('a1_dashboard')) echo Session::get('a1_dashboard'); else echo 0; ?>;
+            var a2_dashboard = <?php if(Session::get('a2_dashboard')) echo Session::get('a2_dashboard'); else echo 0; ?>;
+            var a3_dashboard = <?php if(Session::get('a3_dashboard')) echo Session::get('a3_dashboard'); else echo 0; ?>;
+            var a4_dashboard = <?php if(Session::get('a4_dashboard')) echo Session::get('a4_dashboard'); else echo 0; ?>;
             var options2 = {
                 title: {
                     text: "Priority"
@@ -816,12 +820,10 @@
                         // Change type to "doughnut", "line", "splineArea", etc.
                         type: "column",
                         dataPoints: [
-                            { label: "(A1)",  y: total_e_pop_frtline_prov, color:"#00a65a"},
-                            { label: "(A2)", y: total_e_pop_sr_prov, color:"#00c0ef"},
-                            { label: "(A3)", y: 0 },
-                            { label: "(A4)",  y: 0  },
-                            { label: "(A5)",  y: 0  },
-                            { label: "(A5)",  y: 0  }
+                            { label: "(A1)",  y: a1_dashboard },
+                            { label: "(A2)", y: a2_dashboard},
+                            { label: "(A3)", y: a3_dashboard },
+                            { label: "(A4)",  y: a4_dashboard }
                         ]
                     }
                 ]

@@ -445,6 +445,7 @@
 
     function sendNormalData(data)
     {
+        console.log("ni sud!");
         if(data.id!=0){
             var form_data = {
                 referring_name: referring_facility_name,
@@ -482,11 +483,13 @@
                 },
                 dataType: 'json',
                 success: function (data) {
+                    console.log(data);
                     console.info(data);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 }
             });
-
-
             connRef.on('child_added',function(data){
                 setTimeout(function(){
                     connRef.child(data.key).remove();
