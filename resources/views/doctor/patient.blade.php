@@ -485,6 +485,7 @@
                 success: function (data) {
                     console.log(data);
                     console.info(data);
+                    window.location.reload(false);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
