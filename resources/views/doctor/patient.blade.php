@@ -497,10 +497,12 @@
                 },500);
             });
         }else{
+            console.log("error else");
             setTimeout(function(){
                 window.location.reload(false);
             },500);
         }
+        console.log("ni lahus sa last!");
     }
 
     @if(Session::get('patient_update_save'))
