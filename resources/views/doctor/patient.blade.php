@@ -490,12 +490,12 @@
                     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 }
             });
-            connRef.on('child_added',function(data){
+            /*connRef.on('child_added',function(data){
                 setTimeout(function(){
                     connRef.child(data.key).remove();
                     window.location.reload(false);
                 },500);
-            });
+            });*/
         }else{
             console.log("error else");
             setTimeout(function(){
