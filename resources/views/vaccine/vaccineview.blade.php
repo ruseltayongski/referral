@@ -38,8 +38,8 @@
                                 <option value="">Select Priority</option>
                                 <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
                                 <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
-                                <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> disabled>A3</option>
-                                <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> disabled>A4</option>
+                                <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?>>A3</option>
+                                <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?>>A4</option>
                                 <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
                                 <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a6')echo 'selected';} ?> disabled>B1</option>
                                 <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a7')echo 'selected';} ?> disabled>B2</option>
@@ -823,7 +823,7 @@
                             { label: "(A1)",  y: a1_dashboard },
                             { label: "(A2)", y: a2_dashboard},
                             { label: "(A3)", y: a3_dashboard },
-                            { label: "(A4)",  y: a4_dashboard }
+                            { label: "(A4)",  y: a4_dashboard  }
                         ]
                     }
                 ]

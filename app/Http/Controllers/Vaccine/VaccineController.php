@@ -326,7 +326,7 @@ class VaccineController extends Controller
         return $data;
     }
 
-    public function getVallocatedModal(Request $request)
+    public function getVaccineallocatedModal(Request $request)
     {
         $muncity = Muncity::where("id", $request->muncity_id)->where("province_id", $request->province_id)->first();
         $province = Province::find($request->province_id);

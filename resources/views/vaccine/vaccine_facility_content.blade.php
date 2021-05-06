@@ -271,18 +271,18 @@
                     <td style="width: 15%" rowspan="2">
                         <select name="priority[]" id="priority{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getEliPop('<?php echo $muncity_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')">
                             <option value="">Select Priority</option>
-                            <option value="frontline_health_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'frontline_health_workers')echo 'selected';} ?>>Frontline Health Workers</option>
-                            <option value="indigent_senior_citizens" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'indigent_senior_citizens')echo 'selected';} ?>>Senior Citizens</option>
-                            <option value="remaining_indigent_population" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_indigent_population')echo 'selected';} ?> disabled>Remaining Indigent Population</option>
-                            <option value="uniform_personnel" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'uniform_personnel')echo 'selected';} ?> disabled>Uniform Personnel</option>
-                            <option value="teachers_school_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'teachers_school_workers')echo 'selected';} ?> disabled>Teachers & School Workers</option>
-                            <option value="all_government_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'all_government_workers')echo 'selected';} ?> disabled>All Government Workers (National & Local)</option>
-                            <option value="essential_workers" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'essential_workers')echo 'selected';} ?> disabled>Essential Workers</option>
-                            <option value="socio_demographic" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'socio_demographic')echo 'selected';} ?> disabled>Socio-demographic groups & significant higher risk other than senior citizen and indigent population (e.g.PDL,PWD,IP,Filipinos living in high-density areas)</option>
-                            <option value="ofw" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'ofw')echo 'selected';} ?> disabled >OFW's</option>
-                            <option value="remaining_workforce" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_workforce')echo 'selected';} ?> disabled>Other remaining workforce</option>
-                            <option value="remaining_filipino_citizen" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'remaining_filipino_citizen')echo 'selected';} ?> disabled>Remaining Filipino Citizen</option>
-                            <option value="etc" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'etc')echo 'selected';} ?> disabled >ETC.</option>
+                            <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
+                            <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
+                            <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> disabled>A3</option>
+                            <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> disabled>A4</option>
+                            <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
+                            <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b1')echo 'selected';} ?> disabled>B1</option>
+                            <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b2')echo 'selected';} ?> disabled>B2</option>
+                            <option value="b3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b3')echo 'selected';} ?> disabled>B3</option>
+                            <option value="b4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b4')echo 'selected';} ?> disabled >B4</option>
+                            <option value="b5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b5')echo 'selected';} ?> disabled>B5</option>
+                            <option value="b6" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b6')echo 'selected';} ?> disabled>B6</option>
+                            <option value="c" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'C')echo 'selected';} ?> disabled >C</option>
                         </select>
                         <br><br>
                         <input type="text" name="no_eli_pop[]" id="no_eli_pop{{ $vaccine->id.$vaccine->encoded_by }}" value="{{ $vaccine->no_eli_pop }}" class="form-control" readonly>
@@ -704,18 +704,18 @@
             '    <td style="width: 15%" rowspan="2">\n' +
             '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+muncity_id+','+count+')" class="select2" >\n' +
             '            <option value="">Select Priority</option>\n' +
-            '            <option value="frontline_health_workers" >Frontline Health Workers</option>\n' +
-            '            <option value="indigent_senior_citizens" >Senior Citizens</option>\n' +
-            '            <option value="remaining_indigent_population"  disabled>Remaining Indigent Population</option>\n' +
-            '            <option value="uniform_personnel" disabled>Uniform Personnel</option>\n' +
-            '            <option value="teachers_school_workers" disabled>Teachers & School Workers</option>\n' +
-            '            <option value="all_government_workers" disabled>All Government Workers (National & Local)</option>\n' +
-            '            <option value="essential_workers"  disabled>Essential Workers</option>\n' +
-            '            <option value="socio_demographic" disabled>Socio-demographic groups & significant higher risk other than senior citizen and indigent population (e.g.PDL,PWD,IP,Filipinos living in high-density areas)</option>\n' +
-            '            <option value="ofw" disabled >OFW\'s</option>\n' +
-            '            <option value="remaining_workforce"  disabled>Other remaining workforce</option>\n' +
-            '            <option value="remaining_filipino_citizen" disabled>Remaining Filipino Citizen</option>\n' +
-            '            <option value="etc"  disabled >ETC.</option>\n' +
+            '            <option value="a1" >A1</option>\n' +
+            '            <option value="a2" >A2</option>\n' +
+            '            <option value="a3"  disabled>A3</option>\n' +
+            '            <option value="a4" disabled>A4</option>\n' +
+            '            <option value="a5" disabled>A5</option>\n' +
+            '            <option value="b1" disabled>B1</option>\n' +
+            '            <option value="b2"  disabled>B2</option>\n' +
+            '            <option value="b3" disabled>B3</option>\n' +
+            '            <option value="b4" disabled >B4</option>\n' +
+            '            <option value="b5"  disabled>B5</option>\n' +
+            '            <option value="b6" disabled>B6</option>\n' +
+            '            <option value="c"  disabled >C</option>\n' +
             '        </select>\n' +
             '       <br><br><input type="text" name="no_eli_pop[]" id="no_eli_pop'+count+'" class="form-control" readonly>\n' +
             '    </td>\n' +
