@@ -283,7 +283,7 @@
                                                         <center><a
                                                                     href="#vaccine_facility_allocated"
                                                                     data-toggle="modal"
-                                                                    onclick="vaccineFacilityAllocated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>')"
+                                                                    onclick="vaccineFacilityAllocated('<?php echo $row->province; ?>','<?php echo $row->id; ?>')"
                                                             >
                                                                 Vaccine Allocated
                                                             </a></center>
@@ -641,7 +641,7 @@
     <div class="modal fade" role="dialog" id="vaccine_facility_allocated">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-body vaccine_facility_modal">
+                <div class="modal-body vaccine_facility_allocated">
                     <center>
                         <img src="{{ asset('resources/img/loading.gif') }}" alt="">
                     </center>
@@ -698,15 +698,15 @@
             })
         }
 
-        function vaccineFacilityAllocated(province_id,muncity_id){
+        function vaccineFacilityAllocated(province_id,facility_id){
             var url = "<?php echo asset('vaccine/facility_allocated'); ?>";
             json = {
                 "province_id" : province_id,
-                "muncity_id" : muncity_id ,
+                "facility_id" : facility_id ,
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(result){
-                $(".vaccine_allocated_modal").html(result);
+                $(".vaccine_facility_allocated").html(result);
             })
         }
 

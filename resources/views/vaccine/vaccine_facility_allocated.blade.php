@@ -1,10 +1,10 @@
-<form method="POST" action="{{ asset('admin/municipality/crud/add') }}">
+<form method="POST" action="{{ asset('admin/facility/add') }}">
     {{ csrf_field() }}
     <fieldset>
         <legend><i class="fa fa-hospital-o"></i> {{ $facility->name }}</legend>
     </fieldset>
     <input type="hidden" value="@if(isset($facility->id)){{ $facility->id }}@endif" name="id">
-    <input type="hidden" value="{{ $province_id }}" name="province_id">
+    <input type="hidden" value="{{ $province_id }}" name="province">
     <div class="form-group">
         <label>Province Name:</label>
         <input type="text" class="form-control" value="{{ $province_name }} Province" disabled>
