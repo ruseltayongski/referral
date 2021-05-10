@@ -67,6 +67,14 @@ class VaccineController extends Controller
 
     public function vaccineView(Request $request,$province_id)
     {
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = '2021-03-01 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
         if($request->view_all == 'view_all')
             $keyword = '';
         else{
@@ -83,15 +91,25 @@ class VaccineController extends Controller
         Session::put('keyword_muncity',$keyword);
 
         $data = Muncity::where('description',"like","%$keyword%")
-            ->where("province_id",$province_id)
-            ->orderBy("description","asc")
-            ->paginate(10);
+            ->where("province_id",$province_id);
+        if($request->muncity_filter)
+            $data = $data->where("id",$request->muncity_filter);
+
+        $data = $data->orderBy("description","asc");
+        $muncity = $data->get();
+
+        $data = $data->paginate(10);
 
         return view('vaccine.vaccineview',[
             'title' => 'List of Municipality',
             'province_name' => Province::find($province_id)->description,
             'province_id' => $province_id,
-            'data' => $data
+            'data' => $data,
+            'muncity' => $muncity,
+            'typeof_vaccine_filter' => $request->typeof_vaccine_filter,
+            'muncity_filter' => $request->muncity_filter,
+            'date_start' => $date_start,
+            'date_end' => $date_end
         ]);
     }
 
@@ -154,12 +172,24 @@ class VaccineController extends Controller
         ]);
     }
 
-    public function vaccinatedContentMunicipality($province_id,$muncity_id)
+    public function vaccinatedContentMunicipality($province_id,$muncity_id,$date_start,$date_end,Request $request)
     {
-        $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$muncity_id)->orderBy('id','asc')->get();
+        $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$muncity_id)->whereBetween("date_first",[$date_start,$date_end])->orderBy('id','asc')->paginate(2);
+        if($request->isMethod('post'))
+        {
+            return view("vaccine.vaccine_table", [
+                "province_id" => $province_id,
+                "muncity_id" => $muncity_id,
+                "date_start" => $date_start,
+                "date_end" => $date_end,
+                "vaccine_accomplishment" => $vaccine_accomplishment
+            ]);
+        }
         return view("vaccine.vaccine_content_municipality", [
             "province_id" => $province_id,
             "muncity_id" => $muncity_id,
+            "date_start" => $date_start,
+            "date_end" => $date_end,
             "vaccine_accomplishment" => $vaccine_accomplishment
         ]);
     }
@@ -168,6 +198,7 @@ class VaccineController extends Controller
         $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$facility_id)->orderBy('id','asc')->get();
         return view("vaccine.vaccine_facility_content", [
             "facility_id" => $facility_id,
+            "province_id" => Facility::find($facility_id)->province,
             "vaccine_accomplishment" => $vaccine_accomplishment
         ]);
     }
@@ -222,6 +253,7 @@ class VaccineController extends Controller
         foreach ($request->typeof_vaccine as $row){
             $vaccine = new VaccineAccomplished();
             $vaccine->encoded_by = $user_id;
+            $vaccine->province_id = $request->province_id;
             $vaccine->facility_id = $request->facility_id;
             $vaccine->typeof_vaccine = $request->typeof_vaccine[$count];
             $vaccine->priority = $request->priority[$count];
@@ -301,7 +333,6 @@ class VaccineController extends Controller
         ]);
     }
 
-
     public function getEliPop($muncity_id,$priority){
         $no_eli_pop = Muncity::find($muncity_id);
         if($priority == 'a1')
@@ -314,8 +345,32 @@ class VaccineController extends Controller
             return $no_eli_pop->a4;
     }
 
+    public function getEliPopFacility($facility_id,$priority){
+        $no_eli_pop = Facility::find($facility_id);
+        if($priority == 'a1')
+            return $no_eli_pop->a1;
+        elseif($priority == 'a2')
+            return $no_eli_pop->a2;
+        elseif($priority == 'a3')
+            return $no_eli_pop->a3;
+        elseif($priority == 'a4')
+            return $no_eli_pop->a4;
+    }
+
     public function getVaccineAllocated($muncity_id,$typeof_vaccine){
         $vaccine_allocated = Muncity::find($muncity_id);
+        if($typeof_vaccine == 'Sinovac'){
+            $data[0] = $vaccine_allocated->sinovac_allocated_first;
+            $data[1] = $vaccine_allocated->sinovac_allocated_second;
+        }else{
+            $data[0] = $vaccine_allocated->astrazeneca_allocated_first;
+            $data[1] = $vaccine_allocated->astrazeneca_allocated_second;
+        }
+        return $data;
+    }
+
+    public function getVaccineAllocatedFacility($facility_id,$typeof_vaccine){
+        $vaccine_allocated = Facility::find($facility_id);
         if($typeof_vaccine == 'Sinovac'){
             $data[0] = $vaccine_allocated->sinovac_allocated_first;
             $data[1] = $vaccine_allocated->sinovac_allocated_second;

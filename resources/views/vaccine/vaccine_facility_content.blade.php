@@ -32,14 +32,21 @@
         $total_p_cvrge_scnd = 0;
 
         //TOTAL_VACCINATED_SINOVAC
-        $total_e_pop_svac_frtline = 0;
-        $total_e_pop_svac_frtline_flag = true;
-        $total_e_pop_svac_sr = 0;
-        $total_e_pop_svac_sr_flag = true;
+        $total_e_pop_svac_a1 = 0;
+        $total_e_pop_svac_a1_flag = true;
+        $total_e_pop_svac_a2 = 0;
+        $total_e_pop_svac_a2_flag = true;
+        $total_e_pop_svac_a3 = 0;
+        $total_e_pop_svac_a3_flag = true;
+        $total_e_pop_svac_a4 = 0;
+        $total_e_pop_svac_a4_flag = true;
+
         $total_vallocated_svac = 0;
         $total_vallocated_svac_flag = true;
         $total_vallocated_svac_frst = 0;
         $total_vallocated_svac_scnd = 0;
+
+
         $total_vcted_svac_frst = 0;
         $total_vcted_svac_scnd = 0;
         $total_mild_svac_frst = 0;
@@ -55,10 +62,16 @@
 
 
         //TOTAL_VACCINATED_ASTRAZENECA
-        $total_e_pop_astra_frtline = 0;
-        $total_e_pop_astra_frtline_flag = true;
-        $total_e_pop_astra_sr = 0;
-        $total_e_pop_astra_sr_flag = true;
+        $total_e_pop_astra_a1 = 0;
+        $total_e_pop_astra_a1_flag = true;
+        $total_e_pop_astra_a2 = 0;
+        $total_e_pop_astra_a2_flag = true;
+        $total_e_pop_astra_a3 = 0;
+        $total_e_pop_astra_a3_flag = true;
+        $total_e_pop_astra_a4 = 0;
+        $total_e_pop_astra_a4_flag = true;
+
+
         $total_vallocated_astra = 0;
         $total_vallocated_astra_flag = true;
         $total_vallocated_astra_frst = 0;
@@ -80,15 +93,23 @@
         //SINOVAC
         $total_svac_a1_frst = 0;
         $total_svac_a2_frst = 0;
+        $total_svac_a3_frst = 0;
+        $total_svac_a4_frst = 0;
         $total_svac_a1_scnd = 0;
         $total_svac_a2_scnd = 0;
+        $total_svac_a3_scnd = 0;
+        $total_svac_a4_scnd = 0;
 
 
         //ASTRAZENECA
         $total_astra_a1_frst = 0;
         $total_astra_a2_frst = 0;
+        $total_astra_a3_frst = 0;
+        $total_astra_a4_frst = 0;
         $total_astra_a1_scnd = 0;
         $total_astra_a2_scnd = 0;
+        $total_astra_a3_scnd = 0;
+        $total_astra_a4_scnd = 0;
 
 
         ?>
@@ -96,42 +117,61 @@
             @foreach($vaccine_accomplishment as $vaccine)
                 <?php
                 //modified vaccine accomplishment table
-                if($vaccine->priority == 'frontline_health_workers'){
-                    $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                    $vaccine->no_eli_pop = $muncity->frontline_health_workers;
+                if($vaccine->priority == 'a1'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->a1;
                 }
-                elseif($vaccine->priority == 'indigent_senior_citizens'){
-                    $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                    $vaccine->no_eli_pop = $muncity->senior_citizens;
+                elseif($vaccine->priority == 'a2'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->a2;
+                }
+                elseif($vaccine->priority == 'a3'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->a3;
+                }
+                elseif($vaccine->priority == 'a4'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->a4;
                 }
 
                 if($vaccine->typeof_vaccine == 'Sinovac'){
-                    $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                    $vaccine->vaccine_allocated_first = $muncity->sinovac_allocated_first;
-                    $vaccine->vaccine_allocated_second = $muncity->sinovac_allocated_second;
-                    $total_vallocated_svac_frst += $muncity->sinovac_allocated_first; //VACCINE ALLOCATED(FD) SINOVAC FIRST
-                    $total_vallocated_svac_scnd += $muncity->sinovac_allocated_second; //VACCINE ALLOCATED(SD) SINOVAC FIRST
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->sinovac_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->sinovac_allocated_second;
+                    $total_vallocated_svac_frst += $facility->sinovac_allocated_first; //VACCINE ALLOCATED(FD) SINOVAC FIRST
+                    $total_vallocated_svac_scnd += $facility->sinovac_allocated_second; //VACCINE ALLOCATED(SD) SINOVAC FIRST
                 }
                 elseif($vaccine->typeof_vaccine == 'Astrazeneca'){
-                    $muncity = \App\Muncity::find($vaccine->muncity_id)->first();
-                    $vaccine->vaccine_allocated_first = $muncity->astrazeneca_allocated_first;
-                    $vaccine->vaccine_allocated_second = $muncity->astrazeneca_allocated_second;
-                    $total_vallocated_astra_frst += $muncity->astrazeneca_allocated_first; //VACCINE ALLOCATED(FD) ASTRA FIRST
-                    $total_vallocated_astra_scnd += $muncity->astrazeneca_allocated_second; //VACCINE ALLOCATED(SD) ASTRA FIRST
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->astrazeneca_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->astrazeneca_allocated_second;
+                    $total_vallocated_astra_frst += $facility->astrazeneca_allocated_first; //VACCINE ALLOCATED(FD) ASTRA FIRST
+                    $total_vallocated_astra_scnd += $facility->astrazeneca_allocated_second; //VACCINE ALLOCATED(SD) ASTRA FIRST
                 }
-
 
 
                 if($vaccine->typeof_vaccine == "Sinovac"){
-                    $total_e_pop_svac_frtline = $muncity->frontline_health_workers;
-                    $total_e_pop_svac_sr = $muncity->senior_citizens;
-                    if($vaccine->priority == "frontline_health_workers"){
+                    $total_e_pop_svac_a1 = $facility->a1; //A1 SINOVAC
+                    $total_e_pop_svac_a2 = $facility->a2; //A2 SINOVAC
+                    $total_e_pop_svac_a3 = $facility->a3; //A3 SINOVAC
+                    $total_e_pop_svac_a4 = $facility->a4; //A4 SINOVAC
+                    if($vaccine->priority == "a1"){
                         $total_svac_a1_frst += $vaccine->vaccinated_first; //VACCINATED (A1) SINOVAC FIRST
                         $total_svac_a1_scnd += $vaccine->vaccinated_second; //VACCINATED (A1) SINOVAC SECOND
                     }
-                    elseif($vaccine->priority == "indigent_senior_citizens"){
+                    elseif($vaccine->priority == "a2"){
                         $total_svac_a2_frst += $vaccine->vaccinated_first; //VACCINATED (A2) SINOVAC FIRST
                         $total_svac_a2_scnd += $vaccine->vaccinated_second; //VACCINATED (A2) SINOVAC SECOND
+
+                    }
+                    elseif($vaccine->priority == "a3"){
+                        $total_svac_a3_frst += $vaccine->vaccinated_first; //VACCINATED (A3) SINOVAC FIRST
+                        $total_svac_a3_scnd += $vaccine->vaccinated_second; //VACCINATED (A3) SINOVAC SECOND
+
+                    }
+                    elseif($vaccine->priority == "a4"){
+                        $total_svac_a4_frst += $vaccine->vaccinated_first; //VACCINATED (A4) SINOVAC FIRST
+                        $total_svac_a4_scnd += $vaccine->vaccinated_second; //VACCINATED (A4) SINOVAC SECOND
 
                     }
                     if($total_vallocated_svac_flag){
@@ -153,15 +193,25 @@
                 }
 
                 if($vaccine->typeof_vaccine == "Astrazeneca"){
-                    $total_e_pop_astra_frtline = $muncity->frontline_health_workers;
-                    $total_e_pop_astra_sr = $muncity->senior_citizens;
-                    if($vaccine->priority == "frontline_health_workers"){
+                    $total_e_pop_astra_a1 = $facility->a1;
+                    $total_e_pop_astra_a2 = $facility->a2;
+                    $total_e_pop_astra_a3 = $facility->a3;
+                    $total_e_pop_astra_a4 = $facility->a4;
+                    if($vaccine->priority == "a1"){
                         $total_astra_a1_frst += $vaccine->vaccinated_first; // VACCINATED (A1) ASTRA FIRST
                         $total_astra_a1_scnd += $vaccine->vaccinated_second; //VACCINATED (A1) ASTRA SECOND
                     }
-                    elseif($vaccine->priority == "indigent_senior_citizens" ){
+                    elseif($vaccine->priority == "a2" ){
                         $total_astra_a2_frst += $vaccine->vaccinated_first; //VACCINATED (A2) ASTRA FIRST
                         $total_astra_a2_scnd += $vaccine->vaccinated_second; //VACCINATED (A2) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "a3" ){
+                        $total_astra_a3_frst += $vaccine->vaccinated_first; //VACCINATED (A3) ASTRA FIRST
+                        $total_astra_a3_scnd += $vaccine->vaccinated_second; //VACCINATED (A3) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "a4" ){
+                        $total_astra_a4_frst += $vaccine->vaccinated_first; //VACCINATED (A4) ASTRA FIRST
+                        $total_astra_a4_scnd += $vaccine->vaccinated_second; //VACCINATED (A4) ASTRA SECOND
                     }
                     if($total_vallocated_astra_flag){
                         $total_vallocated_astra += $vaccine->vaccine_allocated;
@@ -191,9 +241,9 @@
 
 
 
-                $total_e_pop_svac = $total_e_pop_svac_frtline + $total_e_pop_svac_sr;  //ELIPOP TOTAL SINOVAC FIRST
-                $total_e_pop_astra = $total_e_pop_astra_frtline + $total_e_pop_astra_sr;  //ELIPOP TOTAL ASTRA FIRST
-                $total_e_pop = $muncity->frontline_health_workers + $muncity->senior_citizens; //TOTAL_ELI_POP
+                $total_e_pop_svac = $total_e_pop_svac_a1 + $total_e_pop_svac_a2 + $total_e_pop_svac_a3 + $total_e_pop_svac_a4 ;  //ELIPOP TOTAL SINOVAC FIRST
+                $total_e_pop_astra = $total_e_pop_astra_a1 + $total_e_pop_astra_a2 + $total_e_pop_astra_a3 + $total_e_pop_astra_a4;  //ELIPOP TOTAL ASTRA FIRST
+                $total_e_pop = $facility->a1 + $facility->a2 + $facility->a3 + $facility->a4; //TOTAL_ELI_POP
 
                 $p_cvrge_astra_frst = ($total_vcted_astra_frst / $total_e_pop_astra) * 100; //PERCENT COVERAGE ASTRA FIRST
                 $p_cvrge_astra_scnd = ($total_vcted_astra_scnd / $total_e_pop_astra) * 100; //PERCENT COVERAGE ASTRA SECOND
@@ -246,7 +296,7 @@
                 ?>
                 <tr style="background-color: #59ab91">
                     <input type="hidden" name="province_id" value="{{ $province_id }}">
-                    <input type="hidden" name="muncity_id" value="{{ $muncity_id }}">
+                    <input type="hidden" name="facility_id" value="{{ $facility_id }}">
                     <td style="width: 15%">
                         <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                     </td>
@@ -269,12 +319,12 @@
                         </div>
                     </td>
                     <td style="width: 15%" rowspan="2">
-                        <select name="priority[]" id="priority{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getEliPop('<?php echo $muncity_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')">
+                        <select name="priority[]" id="priority{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getEliPop('<?php echo $facility_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')">
                             <option value="">Select Priority</option>
                             <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
                             <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
-                            <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> disabled>A3</option>
-                            <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> disabled>A4</option>
+                            <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> >A3</option>
+                            <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> >A4</option>
                             <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
                             <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b1')echo 'selected';} ?> disabled>B1</option>
                             <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b2')echo 'selected';} ?> disabled>B2</option>
@@ -356,7 +406,7 @@
         </tbody>
         <tr>
             <td colspan="9">
-                <a href="#" onclick="addTbodyContent('<?php echo $province_id; ?>','<?php echo $muncity_id; ?>')" class="pull-right red" id="workAdd"><i class="fa fa-user-plus"></i> Add Daily Accomplishment</a>
+                <a href="#" onclick="addTbodyContent('<?php echo $province_id; ?>','<?php echo $facility_id; ?>')" class="pull-right red" id="workAdd"><i class="fa fa-user-plus"></i> Add Daily Accomplishment</a>
             </td>
         </tr>
         <tr>
@@ -379,9 +429,9 @@
     <table style="font-size: 10pt;" class="table table-striped" border="2">
         <tr>
             <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-            <th colspan="3"><center>Eligible Population</center></th>
+            <th colspan="5"><center>Eligible Population</center></th>
             <th colspan="3">Vaccine Allocated</th>
-            <th colspan="3"><center>Total Vaccinated</center></th>
+            <th colspan="5"><center>Total Vaccinated</center></th>
             <th>Mild</th>
             <th>Serious</th>
             <th>Deferred</th>
@@ -393,14 +443,18 @@
         </tr>
         <tr>
             <td></td> <!-- 1-2 -->
-            <th>Frontline(A1)</th>
-            <th>Seniors(A2)</th>
+            <th>A1</th>
+            <th>A2</th>
+            <th>A3</th>
+            <th>A4</th>
             <th>Total</th>
-            <th>FD</th>
-            <th>SD</th>
+            <th>1st</th>
+            <th>2nd</th>
             <th>Total</th>
             <th>A1</th>
             <th>A2</th>
+            <th>A3</th>
+            <th>A4</th>
             <th>Total</th>
             <td></td>
             <td></td>
@@ -418,8 +472,10 @@
             <td rowspan="2">
 
             </td> <!-- 1-3 -->
-            <td rowspan="2">{{ $total_e_pop_svac_frtline }}</td> <!-- Frontline(A1) SINOVAC -->
-            <td rowspan="2">{{ $total_e_pop_svac_sr }}</td> <!-- Seniors(A2) SINOVAC -->
+            <td rowspan="2">{{ $total_e_pop_svac_a1 }}</td> <!-- A1 SINOVAC -->
+            <td rowspan="2">{{ $total_e_pop_svac_a2 }}</td> <!-- A2 SINOVAC -->
+            <td rowspan="2">{{ $total_e_pop_svac_a3 }}</td> <!-- A3 SINOVAC -->
+            <td rowspan="2">{{ $total_e_pop_svac_a4 }}</td> <!-- A4 SINOVAC -->
             <td rowspan="2">{{ $total_e_pop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
             <td rowspan="2">{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
             <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRST -->
@@ -429,6 +485,12 @@
             </td>
             <td>
                 <span class="label label-success">{{ $total_svac_a2_frst }}</span> <!-- VACCINATED (A2) SINOVAC FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_svac_a3_frst }}</span> <!-- VACCINATED (A3) SINOVAC FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_svac_a4_frst }}</span> <!-- VACCINATED (A4) SINOVAC FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_vcted_svac_frst }}</span>  <!-- TOTAL VACCINATED SINOVAC FIRST -->
@@ -467,6 +529,12 @@
                 <span class="label label-warning">{{ $total_svac_a2_scnd }} </span> <!-- VACCINATED (A2) SINOVAC SECOND -->
             </td>
             <td>
+                <span class="label label-warning">{{ $total_svac_a3_scnd }} </span> <!-- VACCINATED (A3) SINOVAC SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_svac_a4_scnd }} </span> <!-- VACCINATED (A4) SINOVAC SECOND -->
+            </td>
+            <td>
                 <span class="label label-warning">{{ $total_vcted_svac_scnd }}</span> <!-- TOTAL VACCINATED SINOVAC SECOND -->
             </td> <!-- 1-4 -->
             <td>
@@ -501,8 +569,10 @@
         <tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #f2fcac">
             <td rowspan="2"></td> <!-- 1-5 -->
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_frtline }}</td>  <!-- Frontline(A1) ASTRA -->
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_sr }}</td>  <!-- SENIOR(A2) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a1 }}</td>  <!-- A1 ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a2 }}</td>  <!-- A2 ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a3}}</td>  <!-- A3 ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a4 }}</td>  <!-- A4 ASTRA -->
             <td rowspan="2" style="color:black;">{{ $total_e_pop_astra }}</td>  <!-- ELIPOP TOTAL ASTRA FIRST  -->
             <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED(FD) ASTRA FIRST -->
             <td rowspan="2" style="color: black;">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) ASTRA FIRST -->
@@ -512,6 +582,12 @@
             </td>
             <td  style="color:black;">
                 <span class="label label-success">{{ $total_astra_a2_frst }} </span> <!-- VACCINATED (A2) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_a3_frst }} </span> <!-- VACCINATED (A3) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_a4_frst }} </span> <!-- VACCINATED (A4) ASTRA FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_vcted_astra_frst }}</span> <!-- TOTAL VACCINATED  ASTRA FIRST -->
@@ -549,6 +625,12 @@
                 <span class="label label-warning">{{ $total_astra_a2_scnd }} </span>  <!-- VACCINATED (A2) ASTRA SECOND -->
             </td>
             <td>
+                <span class="label label-warning">{{ $total_astra_a3_scnd }} </span>  <!-- VACCINATED (A3) ASTRA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_astra_a4_scnd }} </span>  <!-- VACCINATED (A4) ASTRA SECOND -->
+            </td>
+            <td>
                 <span class="label label-warning">{{ $total_vcted_astra_scnd }}</span> <!-- TOTAL VACCINATED ASTRA SECOND -->
             </td> <!-- 1-6 -->
             <td>
@@ -580,10 +662,16 @@
         <tr>
             <td>Total</td> <!-- 1-7 -->
             <td>
-                <b>{{ $muncity->frontline_health_workers }}</b>  <!-- TOTAL_FRONTLINE FIRST -->
+                <b>{{ $facility->a1 }}</b>  <!-- TOTAL_A1_FIRST -->
             </td>
             <td>
-                <b>{{ $muncity->senior_citizens }}</b>  <!-- TOTAL_SENIOR FIRST -->
+                <b>{{ $facility->a2 }}</b>  <!-- TOTAL_A2_FIRST -->
+            </td>
+            <td>
+                <b>{{ $facility->a3 }}</b>  <!-- TOTAL_A3_FIRST -->
+            </td>
+            <td>
+                <b>{{ $facility->a4 }}</b>  <!-- TOTAL_A4_FIRST -->
             </td>
             <td>
                 <b>{{ $total_e_pop }}</b>  <!-- TOTAL_ELI_POP  -->
@@ -602,6 +690,12 @@
             </td>
             <td>
                 <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a2_frst + $total_astra_a2_frst }}</b>  <!-- TOTAL_A2   -->
+            </td>
+            <td>
+                <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a3_frst + $total_astra_a3_frst }}</b>  <!-- TOTAL_A3   -->
+            </td>
+            <td>
+                <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a4_frst + $total_astra_a4_frst }}</b>  <!-- TOTAL_A4   -->
             </td>
             <td>
                 <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_frst }}</b>  <!-- TOTAL_VACCINATED  -->
@@ -639,11 +733,19 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
             <td>
                 <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a1_scnd + $total_astra_a1_scnd}}</b> <!-- TOTAL_A1   -->
             </td>
             <td>
                 <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a2_scnd + $total_astra_a2_scnd}}</b> <!-- TOTAL_A2   -->
+            </td>
+            <td>
+                <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a3_scnd + $total_astra_a3_scnd}}</b> <!-- TOTAL_A3   -->
+            </td>
+            <td>
+                <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a4_scnd + $total_astra_a4_scnd}}</b> <!-- TOTAL_A4   -->
             </td>
             <td>
                 <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b> <!-- TOTAL_VACCINATED 2   -->
@@ -682,16 +784,16 @@
 
 <script>
     var count = 0;
-    function addTbodyContent(province_id,muncity_id) {
+    function addTbodyContent(province_id,facility_id) {
         count++;
         $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
             '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
-            '    <input type="hidden" name="muncity_id" value="'+muncity_id+'" >\n' +
+            '    <input type="hidden" name="facility_id" value="'+facility_id+'" >\n' +
             '    <td style="width: 15%">\n' +
             '        <input type="text" id="date_picker'+count+'" name="date_first[]" class="form-control" >\n' +
             '    </td>\n' +
             '    <td style="width: 15%" rowspan="2">\n' +
-            '        <select name="typeof_vaccine[]" id="typeof_vaccine'+count+'" onchange="getVaccineAllocated('+muncity_id+','+count+')" class="select2" required>\n' +
+            '        <select name="typeof_vaccine[]" id="typeof_vaccine'+count+'" onchange="getVaccineAllocated('+facility_id+','+count+')" class="select2" required>\n' +
             '            <option value="">Select Option</option>\n' +
             '            <option value="Sinovac">Sinovac</option>\n' +
             '            <option value="Astrazeneca">Astrazeneca</option>\n' +
@@ -702,12 +804,12 @@
             '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +
             '    </td>\n' +
             '    <td style="width: 15%" rowspan="2">\n' +
-            '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+muncity_id+','+count+')" class="select2" >\n' +
+            '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+facility_id+','+count+')" class="select2" >\n' +
             '            <option value="">Select Priority</option>\n' +
             '            <option value="a1" >A1</option>\n' +
             '            <option value="a2" >A2</option>\n' +
-            '            <option value="a3"  disabled>A3</option>\n' +
-            '            <option value="a4" disabled>A4</option>\n' +
+            '            <option value="a3" >A3</option>\n' +
+            '            <option value="a4" >A4</option>\n' +
             '            <option value="a5" disabled>A5</option>\n' +
             '            <option value="b1" disabled>B1</option>\n' +
             '            <option value="b2"  disabled>B2</option>\n' +
@@ -776,16 +878,17 @@
         $(".select2").select2({ width: '100%' });
     }
 
-    function getEliPop(muncity_id,count){
-        var url = "<?php echo asset('vaccine/no_eli_pop').'/'; ?>"+muncity_id+"/"+$("#priority"+count).val();
+    function getEliPop(facility_id,count){
+        var url = "<?php echo asset('vaccine/facility_no_eli_pop').'/'; ?>"+facility_id+"/"+$("#priority"+count).val();
         $.get(url,function(data){
             $("#no_eli_pop"+count).val(data);
         });
     }
 
-    function getVaccineAllocated(muncity_id,count){
-        var url = "<?php echo asset('vaccine/allocated').'/'; ?>"+muncity_id+"/"+$("#typeof_vaccine"+count).val();
+    function getVaccineAllocated(facility_id,count){
+        var url = "<?php echo asset('vaccine/facility_allocated').'/'; ?>"+facility_id+"/"+$("#typeof_vaccine"+count).val();
         $.get(url,function(data){
+            console.log(data);
             $("#vaccine_allocated_first"+count).val(data[0]);
             $("#vaccine_allocated_second"+count).val(data[1]);
         });

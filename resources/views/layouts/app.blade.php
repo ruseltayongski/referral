@@ -514,6 +514,9 @@
     var urlParams = new URLSearchParams(window.location.search);
     var query_string_search = urlParams.get('search') ? urlParams.get('search') : '';
     var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
+    var query_string_typeof_vaccine = urlParams.get('typeof_vaccine_filter') ? urlParams.get('typeof_vaccine_filter') : '';
+    var query_string_muncity = urlParams.get('muncity_filter') ? urlParams.get('muncity_filter') : '';
+
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
         var res = _href;
@@ -521,7 +524,7 @@
         if(_href && !_href.includes("localhost"))
             res = _href.replace("http://","https://");
 
-        $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range);
+        $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity);
     });
 
 
