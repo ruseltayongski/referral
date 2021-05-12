@@ -12,11 +12,11 @@
 
     <div class="box box-success">
         <div class="box-header">
-            <form action="{{ asset('vaccine/vaccineview') }}" method="GET">
+            <form action="{{ asset('vaccine/facility').'/'.$tri_city }}" method="GET">
                 {{ csrf_field() }}
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
                                 <option value="">Select Type of Vaccine</option>
                                 <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
@@ -25,29 +25,12 @@
                                 <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <select name="province_id_filter" id="province_id_filter" class="select2" onchange="onChangeProvinceFilter($(this).val())">
-                                <option value="">Select Province</option>
-                                @foreach($muncity as $row)
-                                    <option value="{{ $row->id }}"  <?php if(isset($vaccine->province_id)){if($vaccine->province_id == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                        <div class="col-md-6">
+                            <select name="muncity_filter" id="muncity_filter" class="select2">
+                                <option value="">Select Tricity</option>
+                                @foreach($facility as $row)
+                                    <option value="{{ $row->id }}" <?php if(isset($muncity_filter)){if($muncity_filter == $row->id)echo 'selected';} ?> >{{ $row->name }}</option>
                                 @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="priority" id="" class="select2">
-                                <option value="">Select Priority</option>
-                                <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
-                                <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
-                                <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> >A3</option>
-                                <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> >A4</option>
-                                <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
-                                <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b1')echo 'selected';} ?> disabled>B1</option>
-                                <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b2')echo 'selected';} ?> disabled>B2</option>
-                                <option value="b3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b3')echo 'selected';} ?> disabled>B3</option>
-                                <option value="b4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b4')echo 'selected';} ?> disabled >B4</option>
-                                <option value="b5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b5')echo 'selected';} ?> disabled>B5</option>
-                                <option value="b6" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b6')echo 'selected';} ?> disabled>B6/option>
-                                <option value="c" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'c')echo 'selected';} ?> disabled >C</option>
                             </select>
                         </div>
                     </div>
@@ -55,13 +38,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="col-md-3">
-                            <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
                         </div>
                         <div class="col-md-9">
                          <span class="input-group-btn">
                             <button type="submit" class="btn btn-success" onclick=""><i class="fa fa-filter"></i> Filter</button>
                             <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
-                            <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                            <a href="{{ asset('vaccine/facility').'/'.$tri_city }}" type="button" class="btn btn-warning" onclick="loadPage()"><i class="fa fa-eye"></i> View All</a>
                              <!--
                             <button type="button" class="btn btn-primary" onclick="newVaccinated()"><i class="fa fa-eyedropper"></i> New Vaccinated</button>
                             -->
@@ -135,67 +118,51 @@
                                     <?php
                                     $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
 
-                                    $total_epop_svac_a1 = $row->a1; // A1 EPOP SINOVAC
-                                    $total_epop_svac_a2 = $row->a2; // A2 EPOP SINOVAC
-                                    $total_epop_svac_a3 = $row->a3; // A3 EPOP SINOVAC
-                                    $total_epop_svac_a4 = $row->a4; // A4 EPOP SINOVAC
+                                    $total_epop_svac_a1 = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->a1 : 0; // A1 EPOP SINOVAC
+                                    $total_epop_svac_a2 = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->a2 : 0; // A2 EPOP SINOVAC
+                                    $total_epop_svac_a3 = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->a3 : 0; // A3 EPOP SINOVAC
+                                    $total_epop_svac_a4 = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->a4 : 0; // A4 EPOP SINOVAC
                                     $total_epop_svac = $total_epop_svac_a1 + $total_epop_svac_a2 + $total_epop_svac_a3 + $total_epop_svac_a4; //TOTAL_E_POP_SINOVAC 
 
-                                    $total_epop_astra_a1 = $row->a1; //A1_EPOP ASTRA
-                                    $total_epop_astra_a2 = $row->a2; //A2_EPOP ASTRA
-                                    $total_epop_astra_a3 = $row->a3; //A3_EPOP ASTRA
-                                    $total_epop_astra_a4 = $row->a4; //A4_EPOP ASTRA
+                                    $total_epop_astra_a1 = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->a1: 0; //A1_EPOP ASTRA
+                                    $total_epop_astra_a2 = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->a2: 0; //A2_EPOP ASTRA
+                                    $total_epop_astra_a3 = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->a3: 0; //A3_EPOP ASTRA
+                                    $total_epop_astra_a4 = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->a4: 0; //A4_EPOP ASTRA
                                     $total_epop_astra = $total_epop_astra_a1 + $total_epop_astra_a2 + $total_epop_astra_a3 + $total_epop_astra_a4; //TOTAL_E_POP_ASTRA
 
                                     //VACCINE_ALLOCATED
-                                    $total_vallocated_svac_frst = $row->sinovac_allocated_first; //VACCINE ALLOCATED_SINOVAC (FD)
-                                    $total_vallocated_svac_scnd = $row->sinovac_allocated_second; //VACCINE ALLOCATED_SINOVAC (SD)
-                                    $total_vallocated_astra_frst = $row->astrazeneca_allocated_first; //VACCINE ALLOCATED_ASTRA (FD)
-                                    $total_vallocated_astra_scnd = $row->astrazeneca_allocated_second; //VACCINE ALLOCATED_ASTRA (SD)
+                                    $total_vallocated_svac_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->sinovac_allocated_first : 0; //VACCINE ALLOCATED_SINOVAC (FD)
+                                    $total_vallocated_svac_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->sinovac_allocated_second : 0; //VACCINE ALLOCATED_SINOVAC (SD)
+                                    $total_vallocated_astra_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->astrazeneca_allocated_first : 0; //VACCINE ALLOCATED_ASTRA (FD)
+                                    $total_vallocated_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->astrazeneca_allocated_second :0; //VACCINE ALLOCATED_ASTRA (SD)
 
                                     //SINOVAC
-                                    $total_svac_a1_frst = 0; //A1_SINOVAC
-                                    $total_svac_a2_frst = 0; //A2_SINOVAC
-                                    $total_svac_a3_frst = 0; //A3_SINOVAC
-                                    $total_svac_a4_frst = 0; //A4_SINOVAC
-                                    $total_svac_a1_scnd = 0; //A1_SINOVAC 2
-                                    $total_svac_a2_scnd = 0; //A2_SINOVAC 2
-                                    $total_svac_a3_scnd = 0; //A3_SINOVAC 2
-                                    $total_svac_a4_scnd = 0; //A4_SINOVAC 2
 
-                                    $total_svac_a1_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a1')")[0]->vaccinated_first;
-                                    $total_svac_a2_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a2')")[0]->vaccinated_first;
-                                    $total_svac_a3_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a3')")[0]->vaccinated_first;
-                                    $total_svac_a4_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a4')")[0]->vaccinated_first;
-                                    $total_svac_a1_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a1')")[0]->vaccinated_second;
-                                    $total_svac_a2_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a2')")[0]->vaccinated_second;
-                                    $total_svac_a3_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a3')")[0]->vaccinated_second;
-                                    $total_svac_a4_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a4')")[0]->vaccinated_second;
+                                    $total_svac_a1_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a1')")[0]->vaccinated_first : 0; //A1_SINOVAC
+                                    $total_svac_a2_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a2')")[0]->vaccinated_first : 0; //A2_SINOVAC
+                                    $total_svac_a3_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a3')")[0]->vaccinated_first : 0; //A3_SINOVAC
+                                    $total_svac_a4_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a4')")[0]->vaccinated_first : 0;  //A4_SINOVAC
+                                    $total_svac_a1_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a1')")[0]->vaccinated_second : 0; //A1_SINOVAC 2
+                                    $total_svac_a2_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a2')")[0]->vaccinated_second : 0; //A2_SINOVAC 2
+                                    $total_svac_a3_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a3')")[0]->vaccinated_second : 0; //A3_SINOVAC 2
+                                    $total_svac_a4_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','a4')")[0]->vaccinated_second : 0; //A4_SINOVAC 2
 
                                     //ASTRACENECA
-                                    $total_astra_a1_frst = 0; //A1_ASTRA
-                                    $total_astra_a2_frst = 0; //A2_ASTRA
-                                    $total_astra_a3_frst = 0; //A3_ASTRA
-                                    $total_astra_a4_frst = 0; //A4_ASTRA
-                                    $total_astra_a1_scnd = 0; //A1_ASTRA 2
-                                    $total_astra_a2_scnd = 0; //A2_ASTRA 2
-                                    $total_astra_a3_scnd = 0; //A3_ASTRA 2
-                                    $total_astra_a4_scnd = 0; //A4_ASTRA 2
 
-                                    $total_astra_a1_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a1')")[0]->vaccinated_first;
-                                    $total_astra_a2_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a2')")[0]->vaccinated_first;
-                                    $total_astra_a3_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a3')")[0]->vaccinated_first;
-                                    $total_astra_a4_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a4')")[0]->vaccinated_first;
-                                    $total_astra_a1_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a1')")[0]->vaccinated_second;
-                                    $total_astra_a2_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a2')")[0]->vaccinated_second;
-                                    $total_astra_a3_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a3')")[0]->vaccinated_second;
-                                    $total_astra_a4_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a4')")[0]->vaccinated_second;
+                                    $total_astra_a1_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a1')")[0]->vaccinated_first : 0; //A1_ASTRA
+                                    $total_astra_a2_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a2')")[0]->vaccinated_first : 0; //A2_ASTRA
+                                    $total_astra_a3_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a3')")[0]->vaccinated_first : 0; //A3_ASTRA
+                                    $total_astra_a4_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a4')")[0]->vaccinated_first : 0; //A4_ASTRA
+                                    $total_astra_a1_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a1')")[0]->vaccinated_second : 0; //A1_ASTRA 2
+                                    $total_astra_a2_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a2')")[0]->vaccinated_second : 0; //A2_ASTRA 2
+                                    $total_astra_a3_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a3')")[0]->vaccinated_second : 0; //A3_ASTRA 2
+                                    $total_astra_a4_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a4')")[0]->vaccinated_second : 0; //A4_ASTRA 2
 
 
-                                    $total_vcted_svac_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_first; //VACCINATED_SINOVAC
-                                    $total_vcted_astra_frst = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->vaccinated_first; //TOTAL VACCINATED_ASTRA
+                                    $total_vcted_svac_frst =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_first : 0; //VACCINATED_SINOVAC
+                                    $total_vcted_astra_frst =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->vaccinated_first : 0; //TOTAL VACCINATED_ASTRA
 
-                                    $total_vcted_svac_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_second; //TOTAL_VACCINATED_SINOVAC 2
+                                    $total_vcted_svac_scnd =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_second : 0; //TOTAL_VACCINATED_SINOVAC 2
                                     $total_vcted_astra_scnd = \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->vaccinated_second; //TOTAL VACCINATED_ASTRA 2
 
                                     $total_mild_svac_frst =  \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->mild_first; //MILD_SINOVAC
@@ -290,6 +257,17 @@
                                             <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
                                                 <b>Astrazeneca</b>
                                             </button>
+                                            <br>
+                                            @foreach(\App\VaccineAccomplished::where("facility_id",$row->id)->whereBetween("date_first",[$date_start,$date_end])->orderBy("date_first","asc")->get() as $x)
+                                                <span class="badge bg-blue">
+                                                    {{ date("F d,Y",strtotime($x->date_first)) }}
+                                                </span>
+                                                <?php $count++; ?>
+                                                @if($count == 12)
+                                                    <br>
+                                                    <?php $count = 0; ?>
+                                                @endif
+                                            @endforeach
                                         </td>
                                     </tr>
                                     <tr>
@@ -709,6 +687,7 @@
 @section('js')
     @include('script.chart')
     <script>
+        $('#date_range').daterangepicker();
         $(".sinovac_dashboard").text({{ Session::get("sinovac_dashboard") }});
         $(".astra_dashboard").text({{ Session::get("astra_dashboard") }});
 

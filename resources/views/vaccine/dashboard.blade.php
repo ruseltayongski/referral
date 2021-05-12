@@ -92,6 +92,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 @endsection
 
 @section('js')
+    @include('script.chart')
 
     <script type="text/javascript">
 
@@ -217,7 +218,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             ]
         };
 
-        $.each(<?php echo json_encode($past_days)?>, function( index, value ) {
+        $.each(<?php echo json_encode($sinovac_past)?>, function( index, value ) {
             dataPoints.push({
                 x: new Date(value.date),
                 y: value.value

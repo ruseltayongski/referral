@@ -14,11 +14,6 @@
      <div id="table_data">
      @include('vaccine.vaccine_table')
      </div>
-     <div class="pull-right">
-         <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-         <button type="submit" class="btn btn-success btn-md" onclick="javascript=this.disabled = true; form.submit();"><i class="fa fa-send"></i> Submit</button>
-     </div>
-
      <button class="btn btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
         <b>Sinovac</b>
      </button>
@@ -73,14 +68,14 @@
         <td rowspan="2">
 
         </td> <!-- 1-3 -->
-        <td rowspan="2">{{ $total_e_pop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
-        <td rowspan="2">{{$total_e_pop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_a3 }}</td> <!-- A3 SINOVAC FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_a4 }}</td> <!-- A4 SINOVAC FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
+        <td rowspan="2">{{ $total_epop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
+        <td rowspan="2">{{$total_epop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_a3 }}</td> <!-- A3 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_a4 }}</td> <!-- A4 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
         <td rowspan="2">{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRST -->
-        <td rowspan="2">{{ $total_allocated_overall_svac_frst }}</td><!-- VACCINE ALLOCATED TOTAL SINOVAC -->
+        <td rowspan="2">{{ $total_vallocated_svac }}</td><!-- VACCINE ALLOCATED TOTAL SINOVAC -->
         <td>
             <span class="label label-success">{{ $total_svac_a1_frst }}</span> <!-- VACCINATED (A1) SINOVAC FIRST -->
         </td>
@@ -118,7 +113,7 @@
             <span class="label label-success">{{ number_format($total_c_rate_svac_frst,2) }}%</span> <!-- CONSUMPTION RATE SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success">{{ $total_e_pop_svac - $total_vcted_svac_frst - $total_rfsd_svac_frst }}</span> <!-- REMAINING UNVACCINATED SINOVAC FIRST -->
+            <span class="label label-success">{{ $total_r_unvcted_frst_svac }}</span> <!-- REMAINING UNVACCINATED SINOVAC FIRST -->
         </td>
     </tr>
     <tr style="background-color: #ffd8d6">
@@ -160,7 +155,7 @@
             <span class="label label-warning">{{ number_format($total_c_rate_svac_scnd,2)}}%</span> <!-- CONSUMPTION RATE SINOVAC SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_e_pop_svac - $total_vcted_svac_scnd - $total_rfsd_svac_scnd }} </span> <!-- REMAINING UNVACCINATED SINOVAC SECOND -->
+            <span class="label label-warning">{{ $total_r_unvcted_scnd_svac }} </span> <!-- REMAINING UNVACCINATED SINOVAC SECOND -->
         </td>
     </tr>
     </tbody>
@@ -169,14 +164,14 @@
     <tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #f2fcac">
             <td rowspan="2"></td> <!-- 1-5 -->
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a1 }}</td>  <!-- Frontline(A1) ASTRA -->
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a2 }}</td>  <!-- SENIOR(A2) ASTRA -->
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a3 }}</td>
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a4 }}</td>
-            <td rowspan="2" style="color:black;">{{ $total_e_pop_astra }}</td>  <!-- ELIPOP TOTAL ASTRA FIRST  -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- Frontline(A1) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- SENIOR(A2) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3 }}</td>
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a4 }}</td>
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra }}</td>  <!-- ELIPOP TOTAL ASTRA FIRST  -->
             <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED(FD) ASTRA FIRST -->
             <td rowspan="2" style="color: black;">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) ASTRA FIRST -->
-            <td rowspan="2" style="color:black;">{{ $total_allocated_overall_astra_frst }}</td>  <!-- TOTAL VACCINE ALLOCATED ASTRA FIRST -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_astra }}</td>  <!-- TOTAL VACCINE ALLOCATED ASTRA FIRST -->
             <td style="color:black;">
                 <span class="label label-success">{{ $total_astra_a1_frst }}</span>  <!-- VACCINATED (A1) ASTRA FIRST -->
             </td>
@@ -214,7 +209,7 @@
                 <span class="label label-success">{{ number_format($total_c_rate_astra_frst,2) }}%</span>  <!-- CONSUMPTION RATE ASTRA FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_e_pop_astra - $total_vcted_astra_frst - $total_rfsd_astra_frst }} </span>  <!-- REMAINING UNVACCINATED ASTRA FIRST -->
+                <span class="label label-success">{{ $total_r_unvcted_frst_astra }} </span>  <!-- REMAINING UNVACCINATED ASTRA FIRST -->
             </td>
         </tr>
         <tr style="background-color: #f2fcac">
@@ -255,7 +250,7 @@
                 <span class="label label-warning">{{ number_format($total_c_rate_astra_scnd,2) }}%</span> <!-- CONSUMPTION RATE ASTRA SECOND -->
             </td>
             <td>
-                <span class="label label-warning">{{ $total_e_pop_astra - $total_vcted_astra_scnd - $total_rfsd_astra_scnd }}</span> <!-- REMAINING UNVACCINATED ASTRA SECOND -->
+                <span class="label label-warning">{{ $total_r_unvcted_scnd_astra }}</span> <!-- REMAINING UNVACCINATED ASTRA SECOND -->
             </td>
         </tr>
     </tbody>
@@ -277,52 +272,52 @@
            <b></b>  <!-- TOTAL_ELI_POP  -->
         </td>
         <td >
-           <b>{{ $total_allocated_frst }}</b>  <!-- TOTAL ALLOCATED_FIRST -->
+           <b>{{ $total_vallocated_frst }}</b>  <!-- TOTAL ALLOCATED_FIRST -->
         </td>
         <td >
-            <b>{{ $total_allocated_scnd }}</b>  <!-- TOTAL ALLOCATED_SECOND -->
+            <b>{{ $total_vallocated_scnd }}</b>  <!-- TOTAL ALLOCATED_SECOND -->
         </td>
         <td>
-            <b>{{ $total_allocated }}</b>  <!-- TOTAL_ALLOCATED-->
+            <b>{{ $total_vallocated}}</b>  <!-- TOTAL_ALLOCATED-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{$total_svac_a1_frst + $total_astra_a1_frst}}</b>  <!-- TOTAL_A1   -->
+            <b class="label label-success" style="margin-right: 5%">{{$total_a1}}</b>  <!-- TOTAL_A1   -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a2_frst + $total_astra_a2_frst }}</b>  <!-- TOTAL_A2   -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_a2 }}</b>  <!-- TOTAL_A2   -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a3_frst + $total_astra_a3_frst }}</b>  <!-- TOTAL_A3   -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_a3 }}</b>  <!-- TOTAL_A3   -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_svac_a4_frst + $total_astra_a4_frst }}</b>  <!-- TOTAL_A4   -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_a4 }}</b>  <!-- TOTAL_A4   -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_frst }}</b>  <!-- TOTAL_VACCINATED  -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_frst }}</b>  <!-- TOTAL_MILD  -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_mild }}</b>  <!-- TOTAL_MILD  -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_srs_frst }}</b>  <!-- TOTAL_SERIOUS   -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_serious }}</b>  <!-- TOTAL_SERIOUS   -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_dfrd_frst }}</b>  <!-- TOTAL_DEFERRED  -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_deferred }}</b>  <!-- TOTAL_DEFERRED  -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_rfsd_frst }}</b>  <!-- TOTAL_REFUSED  -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_refused }}</b>  <!-- TOTAL_REFUSED  -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_wstge_frst }}</b>  <!-- TOTAL_WASTAGE -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_wastage }}</b>  <!-- TOTAL_WASTAGE -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ number_format($total_p_cvrge_frst,2) }}%</b>  <!-- TOTAL_PERCENT_COVERAGE -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_c_rate_frst }}%</b>  <!-- TOTAL_CONSUMPTION_RATE-->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_c_rate_frst }}</b>  <!-- TOTAL_CONSUMPTION_RATE-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_remaining }}</b>  <!-- TOTAL_REMAINING_UNVACCINATED -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_r_unvcted_frst }}</b>  <!-- TOTAL_REMAINING_UNVACCINATED -->
         </td>
     </tr>
     <tr>
@@ -336,43 +331,43 @@
         <td></td>
         <td></td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a1_scnd + $total_astra_a1_scnd}}</b> <!-- TOTAL_A1   -->
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a1}}</b> <!-- TOTAL_A1   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a2_scnd + $total_astra_a2_scnd}}</b> <!-- TOTAL_A2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a2}}</b> <!-- TOTAL_A2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a3_scnd + $total_astra_a3_scnd}}</b> <!-- TOTAL_A3   -->
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a3}}</b> <!-- TOTAL_A3   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_svac_a4_scnd + $total_astra_a4_scnd}}</b> <!-- TOTAL_A4   -->
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a4}}</b> <!-- TOTAL_A4   -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b> <!-- TOTAL_VACCINATED 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_scnd }}</b> <!-- TOTAL_MILD 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_mild }}</b> <!-- TOTAL_MILD 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_srs_scnd }}</b> <!-- TOTAL_SERIOUS 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_serious}}</b> <!-- TOTAL_SERIOUS 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_dfrd_scnd }}</b> <!-- TOTAL_DEFERRED 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_deferred }}</b> <!-- TOTAL_DEFERRED 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_rfsd_scnd }}</b> <!-- TOTAL_REFUSED 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_refused }}</b> <!-- TOTAL_REFUSED 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_wstge_scnd }}</b> <!-- TOTAL_WASTAGE 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_wastage }}</b> <!-- TOTAL_WASTAGE 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_p_cvrge_scnd,2) }}%</b> <!-- TOTAL_PERCENT_COVERAGE_2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_overall_p_coverage,2) }}%</b> <!-- TOTAL_PERCENT_COVERAGE_2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_c_rate_scnd }}%</b> <!-- TOTAL_CONSUMPTION_RATE 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_c_rate }}</b> <!-- TOTAL_CONSUMPTION_RATE 2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_remaining_scnd }}</b> <!-- TOTAL_REMAINING_UNVACCINATED 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_r_unvcted }}</b> <!-- TOTAL_REMAINING_UNVACCINATED 2   -->
         </td>
     </tr>
 </table>
@@ -508,9 +503,14 @@
             var date_start = "<?php echo $date_start; ?>";
             var date_end = "<?php echo $date_end; ?>";
             var url = "<?php echo asset('vaccine/vaccinated/municipality/content'); ?>";
-            url = url+"/"+province_id+"/"+muncity_id+"/"+date_start+"/"+date_end+"?page="+page;
+            url = url+"?page="+page;
             var json = {
-                "_token" : "<?php echo csrf_token(); ?>"
+                "_token" : "<?php echo csrf_token(); ?>",
+                "province_id" : province_id,
+                "muncity_id" : muncity_id,
+                "date_start" : date_start,
+                "date_end" : date_end,
+                "pagination_table" : "true",
             };
             $.post(url,json,function(result){
                 $('#table_data').html(result);

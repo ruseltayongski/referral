@@ -486,6 +486,10 @@
                     console.log(data);
                     console.info(data);
                     //window.location.reload(false);
+                    setTimeout(function () {
+                        window.location.reload(false);
+                        console.log("Force refresh!");
+                    },15000);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);

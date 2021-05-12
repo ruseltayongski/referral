@@ -272,11 +272,11 @@
             $total_c_rate_scnd = number_format($total_vcted_scnd / $total_allocated_scnd * 100,2); //TOTAL_CONSUMPTION_RATE 2
 
 
-
             ?>
             <tr style="background-color: #59ab91">
                 <input type="hidden" name="province_id" value="{{ $province_id }}">
                 <input type="hidden" name="muncity_id" value="{{ $muncity_id }}">
+                <input type="hidden" name="vaccine_id[]" value="{{ $vaccine->id }}">
                 <td style="width: 15%">
                     <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                 </td>
@@ -391,4 +391,14 @@
         </td>
     </tr>
 </table>
-{{ $vaccine_accomplishment->links() }}
+<div class="row">
+    <div class="col-md-6">
+        {{ $vaccine_accomplishment->links() }}
+    </div>
+    <div class="col-md-6">
+        <div class="pull-right">
+            <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-success btn-md" onclick="javascript=this.disabled = true; form.submit();"><i class="fa fa-send"></i> Submit</button>
+        </div>
+    </div>
+</div>
