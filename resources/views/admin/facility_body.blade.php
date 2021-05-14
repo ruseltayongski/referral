@@ -206,6 +206,22 @@
             <option value="0" {{ $data->status == 0 ? 'selected' : '' }}>Inactive</option>
         </select>
     </div>
+    <div class="form-group">
+        <label>Vaccine Used:</label>
+        <select class="form-control" name="vaccine_used">
+            <option value="no" <?php if($data->vaccine_used == 'no')echo 'selected'; ?>>No</option>
+            <option value="yes" <?php if($data->vaccine_used == 'yes')echo 'selected'; ?>>Yes</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Tri City</label>
+        <select class="select2" name="tricity_id">
+            <option value="">Select tricity</option>
+            @foreach(\App\Muncity::where("province_id",2)->get() as $row)
+                <option value="{{ $row->id }}" <?php if($row->id==$data->tricity_id) echo 'selected'; ?>>{{ $row->description }}</option>
+            @endforeach
+        </select>
+    </div>
     <hr />
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

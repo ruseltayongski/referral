@@ -6,7 +6,6 @@ use App\Facility;
 use App\Muncity;
 use App\Province;
 use App\VaccineAccomplished;
-use App\Vaccines;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,10 +20,8 @@ class VaccineController extends Controller
         //for past 15 days
         $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(15))).' 00:00:00';
         $date_end = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
-        $sinovac_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','Sinovac')");
-        $astra_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','Astrazeneca')");
-        $moderna_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','Moderna')");
-        $pfizer_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','Pfizer')");
+        $first_dose_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','first')");
+        $second_dose_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','second')");
         ///
         for($i=1; $i<=12; $i++)
         {
@@ -32,28 +29,28 @@ class VaccineController extends Controller
             $startdate = Carbon::parse($date)->startOfMonth();
             $enddate = Carbon::parse($date)->endOfMonth();
 
-            $sinovac = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_count"))
+            $sinovac = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as sinovac_count"))
                 ->where("typeof_vaccine","Sinovac")
                 ->whereBetween('created_at',[$startdate,$enddate])
                 ->first()
                 ->sinovac_count;
             $data['sinovac'][] = $sinovac;
 
-            $astrazeneca = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_count"))
+            $astrazeneca = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as astra_count"))
                 ->where("typeof_vaccine","Astrazeneca")
                 ->whereBetween('created_at',[$startdate,$enddate])
                 ->first()
                 ->astra_count;
             $data['astrazeneca'][] = $astrazeneca;
 
-            $moderna = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as moderna_count"))
+            $moderna = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as moderna_count"))
                 ->where("typeof_vaccine","Moderna")
                 ->whereBetween('created_at',[$startdate,$enddate])
                 ->first()
                 ->moderna_count;
             $data['moderna'][] = $moderna;
 
-            $pfizer = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as pfizer_count"))
+            $pfizer = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as pfizer_count"))
                 ->where("typeof_vaccine","Pfizer")
                 ->whereBetween('created_at',[$startdate,$enddate])
                 ->first()
@@ -63,20 +60,34 @@ class VaccineController extends Controller
 
         $sinovac_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;
         $astrazeneca_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_count"))->where("typeof_vaccine","Astrazeneca")->first()->astra_count;
-        $moderna_count = Vaccines::where("typeof_vaccine","Moderna")->count();
-        $pfizer_count = Vaccines::where("typeof_vaccine","Pfizer")->count();
+
+        $total_vaccinated_first = VaccineAccomplished::select(DB::raw("sum(vaccinated_first) as total_vaccinated_first"))->first()->total_vaccinated_first;
+        $total_vaccinated_second = VaccineAccomplished::select(DB::raw("sum(vaccinated_second) as total_vaccinated_second"))->first()->total_vaccinated_second;
+
+
+        $elipop_muncity = Muncity::select(DB::raw("sum(COALESCE(a1,0)+COALESCE(a2,0)+COALESCE(a3,0)+COALESCE(a4,0)) as elipop_muncity"))->first()->elipop_muncity;
+
+        $percent_coverage_first = number_format($total_vaccinated_first / $elipop_muncity * 100,2);
+        $percent_coverage_second = number_format($total_vaccinated_second / $elipop_muncity * 100,2);
+
+        $total_vaccine_allocated_first = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)) as total_vaccine_allocated_first"))->first()->total_vaccine_allocated_first;
+        $total_vaccine_allocated_second = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)) as total_vaccine_allocated_second"))->first()->total_vaccine_allocated_second;
+
+        $consumption_rate_first =  number_format($total_vaccinated_first / $total_vaccine_allocated_first * 100,2);
+        $consumption_rate_second =  number_format($total_vaccinated_second / $total_vaccine_allocated_second * 100,2);
 
 
         return view("vaccine.dashboard",[
             "data" => $data,
             "sinovac_count" => $sinovac_count,
             "astrazeneca_count" => $astrazeneca_count,
-            "moderna_count" => $moderna_count,
-            "pfizer_count" => $pfizer_count,
-            "sinovac_past" => $sinovac_past,
-            "astra_past" => $astra_past,
-            "moderna_past" => $moderna_past,
-            "pfizer_past" => $pfizer_past
+            "percent_coverage_first" =>$percent_coverage_first,
+            "percent_coverage_second"=>$percent_coverage_second,
+            "consumption_rate_first" =>$consumption_rate_first,
+            "consumption_rate_second" =>$consumption_rate_second,
+            "first_dose_past" =>$first_dose_past,
+            "second_dose_past" =>$second_dose_past,
+
         ]);
     }
 
@@ -140,35 +151,13 @@ class VaccineController extends Controller
 
         if($tri_city == 'cebu'){
             $data = Facility::where("province",2)
-                ->where(function($q){
-                    $q->where("id","501")
-                    ->orWhere("id","502")
-                    ->orWhere("id","503")
-                    ->orWhere("id","504")
-                    ->orWhere("id","505")
-                    ->orWhere("id","506")
-                    ->orWhere("id","229")
-                    ->orWhere("id","508")
-                    ->orWhere("id","239")
-                    ->orWhere("id","257")
-                    ->orWhere("id","252")
-                    ->orWhere("id","236")
-                    ->orWhere("id","235")
-                    ->orWhere("id","6")
-                    ->orWhere("id","19")
-                    ->orWhere("id","242")
-                    ->orWhere("id","231")
-                    ->orWhere("id","24")
-                    ->orWhere("id","230")
-                    ->orWhere("id","12");
-                });
+                ->where("vaccine_used","yes")
+                ->where("tricity_id",63);
         }
         elseif($tri_city == 'mandaue'){
             $data = Facility::where("province",2)
-                ->where(function($q){
-                    $q->where("id","501")
-                        ->orWhere("id","502");
-                });
+                ->where("vaccine_used","yes")
+                ->where("tricity_id",80);
         }
 
         $facility = $data->orderBy("name","asc")
@@ -260,6 +249,9 @@ class VaccineController extends Controller
             "total_epop_astra_a3" => $request->total_epop_astra_a3,
             "total_epop_astra_a4" => $request->total_epop_astra_a4,
             "total_epop_astra" => $request->total_epop_astra,
+
+
+
             "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
             "total_vallocated_astra_scnd" => $request->total_vallocated_astra_scnd,
             "total_vallocated_astra" => $request->total_vallocated_astra,
@@ -329,13 +321,129 @@ class VaccineController extends Controller
         return view("vaccine.vaccine_content_municipality",$data);
     }
 
-    public function vaccinatedFacilityContent($facility_id){
-        $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$facility_id)->orderBy('id','asc')->get();
-        return view("vaccine.vaccine_facility_content", [
-            "facility_id" => $facility_id,
-            "province_id" => Facility::find($facility_id)->province,
-            "vaccine_accomplishment" => $vaccine_accomplishment
-        ]);
+    public function vaccinatedFacilityContent(Request $request){
+        $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$request->facility_id)
+                            ->whereBetween("date_first",[$request->date_start,$request->date_end])
+                            ->orderBy('id','asc')
+                            ->paginate(8);
+
+        $data = [
+            "vaccine_accomplishment" => $vaccine_accomplishment,
+            "facility_id" => $request->facility_id,
+            "province_id" => Facility::find($request->facility_id)->province,
+            "date_start" => $request->date_start,
+            "date_end" => $request->date_end,
+            "total_epop_svac_a1" => $request->total_epop_svac_a1,
+            "total_epop_svac_a2" => $request->total_epop_svac_a2,
+            "total_epop_svac_a3" => $request->total_epop_svac_a3,
+            "total_epop_svac_a4" => $request->total_epop_svac_a4,
+            "total_epop_svac" => $request->total_epop_svac,
+            "total_vallocated_svac_frst" => $request->total_vallocated_svac_frst,
+            "total_vallocated_svac_scnd" => $request->total_vallocated_svac_scnd,
+            "total_vallocated_svac" => $request->total_vallocated_svac,
+            "total_svac_a1_frst" => $request->total_svac_a1_frst,
+            "total_svac_a2_frst" => $request->total_svac_a2_frst,
+            "total_svac_a3_frst" => $request->total_svac_a3_frst,
+            "total_svac_a4_frst" => $request->total_svac_a4_frst,
+            "total_vcted_svac_frst" => $request->total_vcted_svac_frst,
+            "total_mild_svac_frst" => $request->total_mild_svac_frst,
+            "total_srs_svac_frst" => $request->total_srs_svac_frst,
+            "total_dfrd_svac_frst" => $request->total_dfrd_svac_frst,
+            "total_rfsd_svac_frst" => $request->total_rfsd_svac_frst,
+            "total_wstge_svac_frst" => $request->total_wstge_svac_frst,
+            "p_cvrge_svac_frst" => $request->p_cvrge_svac_frst,
+            "total_c_rate_svac_frst" => $request->total_c_rate_svac_frst,
+            "total_r_unvcted_frst_svac" => $request->total_r_unvcted_frst_svac,
+
+            "total_svac_a1_scnd" => $request->total_svac_a1_scnd,
+            "total_svac_a2_scnd" => $request->total_svac_a2_scnd,
+            "total_svac_a3_scnd" => $request->total_svac_a3_scnd,
+            "total_svac_a4_scnd" => $request->total_svac_a4_scnd,
+            "total_vcted_svac_scnd" => $request->total_vcted_svac_scnd,
+            "total_mild_svac_scnd" => $request->total_mild_svac_scnd,
+            "total_srs_svac_scnd" => $request->total_srs_svac_scnd,
+            "total_dfrd_svac_scnd" => $request->total_dfrd_svac_scnd,
+            "total_rfsd_svac_scnd" => $request->total_rfsd_svac_scnd,
+            "total_wstge_svac_scnd" => $request->total_wstge_svac_scnd,
+            "p_cvrge_svac_scnd" => $request->p_cvrge_svac_scnd,
+            "total_c_rate_svac_scnd" => $request->total_c_rate_svac_scnd,
+            "total_r_unvcted_scnd_svac" => $request->total_r_unvcted_scnd_svac,
+
+            "total_epop_astra_a1" => $request->total_epop_astra_a1,
+            "total_epop_astra_a2" => $request->total_epop_astra_a2,
+            "total_epop_astra_a3" => $request->total_epop_astra_a3,
+            "total_epop_astra_a4" => $request->total_epop_astra_a4,
+            "total_epop_astra" => $request->total_epop_astra,
+            "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
+            "total_vallocated_astra_scnd" => $request->total_vallocated_astra_scnd,
+            "total_vallocated_astra" => $request->total_vallocated_astra,
+            "total_astra_a1_frst" => $request->total_astra_a1_frst,
+            "total_astra_a2_frst" => $request->total_astra_a2_frst,
+            "total_astra_a3_frst" => $request->total_astra_a3_frst,
+            "total_astra_a4_frst" => $request->total_astra_a4_frst,
+            "total_vcted_astra_frst" => $request->total_vcted_astra_frst,
+            "total_mild_astra_frst" => $request->total_mild_astra_frst,
+            "total_srs_astra_frst" => $request->total_srs_astra_frst,
+            "total_dfrd_astra_frst" => $request->total_dfrd_astra_frst,
+            "total_rfsd_astra_frst" => $request->total_rfsd_astra_frst,
+            "total_wstge_astra_frst" => $request->total_wstge_astra_frst,
+            "p_cvrge_astra_frst" => $request->p_cvrge_astra_frst,
+            "total_c_rate_astra_frst" => $request->total_c_rate_astra_frst,
+            "total_r_unvcted_frst_astra" => $request->total_r_unvcted_frst_astra,
+
+            "total_astra_a1_scnd" => $request->total_astra_a1_scnd,
+            "total_astra_a2_scnd" => $request->total_astra_a2_scnd,
+            "total_astra_a3_scnd" => $request->total_astra_a3_scnd,
+            "total_astra_a4_scnd" => $request->total_astra_a4_scnd,
+            "total_vcted_astra_scnd" => $request->total_vcted_astra_scnd,
+            "total_mild_astra_scnd" => $request->total_mild_astra_scnd,
+            "total_srs_astra_scnd" => $request->total_srs_astra_scnd,
+            "total_dfrd_astra_scnd" => $request->total_dfrd_astra_scnd,
+            "total_rfsd_astra_scnd" => $request->total_rfsd_astra_scnd,
+            "total_wstge_astra_scnd" => $request->total_wstge_astra_scnd,
+            "p_cvrge_astra_scnd" => $request->p_cvrge_astra_scnd,
+            "total_c_rate_astra_scnd" => $request->total_c_rate_astra_scnd,
+            "total_r_unvcted_scnd_astra" => $request->total_r_unvcted_scnd_astra,
+
+            "total_vallocated_frst" => $request->total_vallocated_frst,
+            "total_vallocated_scnd" => $request->total_vallocated_scnd,
+            "total_vallocated" => $request->total_vallocated,
+            "total_overall_a1_first" => $request->total_overall_a1_first,
+            "total_overall_a2_first" => $request->total_overall_a2_first,
+            "total_overall_a3_first" => $request->total_overall_a3_first,
+            "total_overall_a4_first" => $request->total_overall_a4_first,
+            "total_vcted_frst" => $request->total_vcted_frst,
+            "total_overall_mild_first" => $request->total_overall_mild_first,
+            "total_overall_serious_first" => $request->total_overall_serious_first,
+            "total_overall_deferred_first" => $request->total_overall_deferred_first,
+            "total_rfsd_frst" => $request->total_rfsd_frst,
+            "total_overall_wastage_first" => $request->total_overall_wastage_first,
+            "total_p_cvrge_frst" => $request->total_p_cvrge_frst,
+            "total_c_rate_frst" => $request->total_c_rate_frst,
+            "total_r_unvcted_frst" => $request->total_r_unvcted_frst,
+
+            "total_overall_a1_second" => $request->total_overall_a1_second,
+            "total_overall_a2_second" => $request->total_overall_a2_second,
+            "total_overall_a3_second" => $request->total_overall_a3_second,
+            "total_overall_a4_second" => $request->total_overall_a4_second,
+            "total_vcted_scnd" => $request->total_vcted_scnd,
+            "total_overall_mild_second" => $request->total_overall_mild_second,
+            "total_overall_serious_second" => $request->total_overall_serious_second,
+            "total_overall_deferred_second" => $request->total_overall_deferred_second,
+            "total_rfsd_scnd" => $request->total_rfsd_scnd,
+            "total_overall_wastage_second" => $request->total_overall_wastage_second,
+            "total_p_cvrge_scnd" => $request->total_p_cvrge_scnd,
+            "total_c_rate_scnd" => $request->total_c_rate_scnd,
+            "total_r_unvcted_scnd" => $request->total_r_unvcted_scnd,
+
+
+
+        ];
+
+        if($request->pagination_table == "true"){
+            return view("vaccine.vaccine_facility_table",$data);
+        }
+        return view("vaccine.vaccine_facility_content",$data);
     }
 
     public function vaccineSaved(Request $request)
@@ -544,6 +652,16 @@ class VaccineController extends Controller
         $province = Province::find($request->province_id);
         return view('vaccine.vaccine_facility_eligible',[
             "facility" => $facility,
+            "province_name" => $province->description,
+            "province_id" => $request->province_id
+        ]);
+    }
+
+    public function vaccineEligiblePop(Request $request){
+        $muncity = Muncity::where("id",$request->muncity_id)->where("province_id",$request->province_id)->first();
+        $province = Province::find($request->province_id);
+        return view('vaccine.vaccine_eligible_pop',[
+            "muncity" => $muncity,
             "province_name" => $province->description,
             "province_id" => $request->province_id
         ]);

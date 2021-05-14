@@ -489,12 +489,13 @@ Route::get('test/send','Vaccine\VaccineController@sendNotification');
 Route::get('api/referral/append/{code}','ApiController@referralAppend');
 
 Route::match(['GET',['POST']],'vaccine/facility/{tri_city}','Vaccine\VaccineController@vaccineFacility');
-Route::get('vaccine/facility_content/{facility_id}','Vaccine\VaccineController@vaccinatedFacilityContent');
+Route::post('vaccine/facility_content','Vaccine\VaccineController@vaccinatedFacilityContent');
 Route::post('vaccine_facility/saved','Vaccine\VaccineController@vaccineFacilitySaved');
 Route::post('vaccine/facility_eligible_pop','Vaccine\VaccineController@vaccineFacilityEligiblePop');
 Route::post('vaccine/facility_allocated','Vaccine\VaccineController@vaccineFacilityAllocated');
 Route::get('vaccine/facility_allocated/{facility_id}/{typeof_vaccine}','Vaccine\VaccineController@getVaccineAllocatedFacility');
 Route::get('vaccine/facility_no_eli_pop/{facility_id}/{priority}','Vaccine\VaccineController@getEliPopFacility');
+Route::post('vaccine/eligible_pop','Vaccine\VaccineController@vaccineEligiblePop');
 
 
 

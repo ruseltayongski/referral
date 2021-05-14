@@ -1,90 +1,80 @@
 <hr>
 <?php
 //ELIGIBLE POP SINOVAC
-$total_e_pop_svac_a1_grand =\DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1; //A1 SINOVAC_FIRST
-$total_e_pop_svac_a2_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2; //A2 SINOVAC_FIRST
-$total_e_pop_svac_a3_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3; //A3 SINOVAC_FIRST
-$total_e_pop_svac_a4_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4; //A4 SINOVAC_FIRST
+$total_e_pop_svac_a1_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SINOVAC_FIRST
+$total_e_pop_svac_a2_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SINOVAC_FIRST
+$total_e_pop_svac_a3_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3 : 0; //A3 SINOVAC_FIRST
+$total_e_pop_svac_a4_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4 : 0; //A4 SINOVAC_FIRST
 $total_e_pop_svac_grand = $total_e_pop_svac_a1_grand + $total_e_pop_svac_a2_grand + $total_e_pop_svac_a3_grand + $total_e_pop_svac_a4_grand ; //TOTAL ELI POP SINOVAC_FIRST
 
 
 //ELIGIBLE_POP_ASTRAZENECA
-$total_e_pop_astra_a1_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1; //A1 ASTRA_FIRST
-$total_e_pop_astra_a2_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2; //A2 ASTRA_FIRST
-$total_e_pop_astra_a3_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2; //A3 ASTRA_FIRST
-$total_e_pop_astra_a4_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2; //A4 ASTRA_FIRST
+$total_e_pop_astra_a1_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 ASTRA_FIRST
+$total_e_pop_astra_a2_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 ASTRA_FIRST
+$total_e_pop_astra_a3_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 ASTRA_FIRST
+$total_e_pop_astra_a4_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 ASTRA_FIRST
 $total_e_pop_astra_grand = $total_e_pop_astra_a1_grand + $total_e_pop_astra_a2_grand + $total_e_pop_astra_a3_grand + $total_e_pop_astra_a4_grand; //TOTAL E POP ASTRA_FIRST
 
 
 //VACCINE_ALLOCATED
-$total_vallocated_svac_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_first; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
-$total_vallocated_svac_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_second; //VACCINE ALLOCATED (SD) SINOVAC_FIRST
-$total_vallocated_astra_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first; //VACCINE_ALLOCATED (FD) ASTRA_FIRST
-$total_vallocated_astra_scnd_grand= \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second; //VACCINE ALLOCATED (SD) ASTRA_FIRST
-//Session::put("total_e_pop_frtline_grand",$total_e_pop_a1_grand);
-//Session::put("total_e_pop_sr_grand",$total_e_pop_a2_grand);
+$total_vallocated_svac_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_first : 0; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
+$total_vallocated_svac_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_second : 0; //VACCINE ALLOCATED (SD) SINOVAC_FIRST
+$total_vallocated_astra_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first : 0; //VACCINE_ALLOCATED (FD) ASTRA_FIRST
+$total_vallocated_astra_scnd_grand= $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second : 0; //VACCINE ALLOCATED (SD) ASTRA_FIRST
 
 //SINOVAC
-$total_svac_a1_frst_grand = 0; //VACCINATED (A1) SINOVAC_FIRST
-$total_svac_a2_frst_grand= 0; //VACCINATED (A2) SINOVAC_FIRST
-$total_svac_a3_frst_grand= 0; //VACCINATED (A3) SINOVAC_FIRST
-$total_svac_a4_frst_grand= 0; //VACCINATED (A4) SINOVAC_FIRST
-$total_svac_a1_scnd_grand = 0; //VACCINATED (A1) SINOVAC_SECOND
-$total_svac_a2_scnd_grand = 0; //VACCINATED (A2) SINOVAC_SECOND
-$total_svac_a3_scnd_grand = 0; //VACCINATED (A3) SINOVAC_SECOND
-$total_svac_a4_scnd_grand = 0; //VACCINATED (A4) SINOVAC_SECOND
 
-$total_svac_a1_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_first_a;
-$total_svac_a2_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_first_a;
-$total_svac_a3_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_first_a;
-$total_svac_a4_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_first_a;
-$total_svac_a1_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_second_a;
-$total_svac_a2_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_second_a;
-$total_svac_a3_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_second_a;
-$total_svac_a4_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_second_a;
+$total_svac_a1_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_first_a : 0; //VACCINATED (A1) SINOVAC_FIRST
+$total_svac_a2_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_first_a : 0; //VACCINATED (A2) SINOVAC_FIRST
+$total_svac_a3_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_first_a : 0; //VACCINATED (A3) SINOVAC_FIRST
+$total_svac_a4_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_first_a : 0; //VACCINATED (A4) SINOVAC_FIRST
+$total_svac_a1_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_second_a : 0; //VACCINATED (A1) SINOVAC_SECOND
+$total_svac_a2_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_second_a : 0; //VACCINATED (A2) SINOVAC_SECOND
+$total_svac_a3_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_second_a : 0; //VACCINATED (A3) SINOVAC_SECOND
+$total_svac_a4_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_second_a : 0; //VACCINATED (A4) SINOVAC_SECOND
 
 //ASTRAZENECA
-$total_astra_a1_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_first_a;
-$total_astra_a2_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_first_a;
-$total_astra_a3_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_first_a;
-$total_astra_a4_frst_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_first_a;
-$total_astra_a1_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_second_a;
-$total_astra_a2_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_second_a;
-$total_astra_a3_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_second_a;
-$total_astra_a4_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_second_a;
+$total_astra_a1_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_first_a : 0;
+$total_astra_a2_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_first_a : 0;
+$total_astra_a3_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_first_a : 0;
+$total_astra_a4_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_first_a : 0;
+$total_astra_a1_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_second_a : 0;
+$total_astra_a2_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_second_a : 0;
+$total_astra_a3_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_second_a : 0;
+$total_astra_a4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_second_a : 0;
 
 
-$total_vcted_astra_scnd_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->vaccinated_second; //TOTAL VACCINATED ASTRA_SECOND
+$total_vcted_astra_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED ASTRA_SECOND
 
-$total_mild_svac_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_first; //MILD SINOVAC_FIRST
-$total_mild_astra_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_first; //MILD ASTRA_FIRST
+$total_mild_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_first : 0; //MILD SINOVAC_FIRST
+$total_mild_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_first : 0; //MILD ASTRA_FIRST
 
-$total_mild_svac_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_second; //MILD SINOVAC_SECOND
-$total_mild_astra_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_second; //MILD ASTRA_SECOND
+$total_mild_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_second : 0; //MILD SINOVAC_SECOND
+$total_mild_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_second : 0; //MILD ASTRA_SECOND
 
-$total_srs_svac_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_first; //SERIOUS SINOVAC_FIRST
-$total_srs_astra_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_first; //SERIOUS ASTRA_FIRST
+$total_srs_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_first : 0; //SERIOUS SINOVAC_FIRST
+$total_srs_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_first : 0; //SERIOUS ASTRA_FIRST
 
-$total_srs_svac_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_second; //SERIOUS  SINOVAC_SECOND
-$total_srs_astra_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_second; //SERIOUS ASTRA_SECOND
+$total_srs_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_second : 0; //SERIOUS  SINOVAC_SECOND
+$total_srs_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_second : 0; //SERIOUS ASTRA_SECOND
 
-$total_dfrd_svac_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_first; //DEFERRED SINOVAC_FIRST
-$total_dfrd_astra_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_first; //DEFERRED ASTRA_FIRS
+$total_dfrd_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_first : 0; //DEFERRED SINOVAC_FIRST
+$total_dfrd_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_first : 0; //DEFERRED ASTRA_FIRS
 
-$total_dfrd_svac_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_second; //DEFERRED  SINOVAC_SECOND
-$total_dfrd_astra_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_second; //DEFERRED ASTRA_SECOND
+$total_dfrd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_second : 0; //DEFERRED  SINOVAC_SECOND
+$total_dfrd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_second : 0; //DEFERRED ASTRA_SECOND
 
-$total_rfsd_svac_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_first; //REFUSED SINOVAC_FIRST
-$total_rfsd_astra_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_first; //REFUSED ASTRA_FIRST
+$total_rfsd_svac_frst_grand =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_first : 0; //REFUSED SINOVAC_FIRST
+$total_rfsd_astra_frst_grand =   $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_first : 0; //REFUSED ASTRA_FIRST
 
-$total_rfsd_svac_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_second; //REFUSED  SINOVAC_SECOND
-$total_rfsd_astra_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_second; //REFUSED ASTRA_SECOND
+$total_rfsd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_second : 0; //REFUSED  SINOVAC_SECOND
+$total_rfsd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_second : 0; //REFUSED ASTRA_SECOND
 
-$total_wstge_svac_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_first; //WASTAGE SINOVAC_FIRST
-$total_wstge_astra_frst_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_first; //WASTAGE ASTRA_FIRST
+$total_wstge_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_first : 0; //WASTAGE SINOVAC_FIRST
+$total_wstge_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_first : 0; //WASTAGE ASTRA_FIRST
 
-$total_wstge_svac_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_second; //WASTAGE SINOVAC_SECOND
-$total_wstge_astra_scnd_grand =  \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_second; //WASTAGE ASTRA_SECOND
+$total_wstge_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_second : 0; //WASTAGE SINOVAC_SECOND
+$total_wstge_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_second : 0; //WASTAGE ASTRA_SECOND
 
 $total_vallocated_frst_svac = $total_vallocated_svac_frst_grand + $total_vallocated_svac_scnd_grand; //TOTAL VACCINE ALLOCATED SINOVAC_FIRST
 $total_vallocated_frst_astra = $total_vallocated_astra_frst_grand + $total_vallocated_astra_scnd_grand; //TOTAL VACCINE ALLOCATED ASTRA_FIRS

@@ -833,7 +833,7 @@
                     "_token" : "<?php echo csrf_token()?>"
                 };
             }
-            var url = "<?php echo asset('admin/municipality/crud/body') ?>";
+            var url = "<?php echo asset('vaccine/eligible_pop') ?>";
             $.post(url,json,function(result){
                 $(".facility_body").html(result);
             })

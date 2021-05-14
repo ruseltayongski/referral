@@ -75,16 +75,16 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
     <div class="col-md-3">
         <div class="panel panel-jim">
-            <div id="typeof_vaccine" style="height: 340px; width: 100%;"></div>
+            <div id="chartPercentCoverage" style="height: 335px; width: 100%;"></div>
         </div>
         <div class="panel panel-jim">
-            <div id="transaction_status" style="height: 340px; width: 100%;"></div>
+            <div id="chartConsumptionRate" style="height: 335px; width: 100%;"></div>
         </div>
     </div>
 
     <div class="col-md-12">
         <div class="jim-content">
-            <h3 class="page-header">Last 15 days call</h3>
+            <h3 class="page-header">Last 15 days vaccinated</h3>
             <div id="past_days" style="height: 370px; width: 100%;"></div>
         </div>
     </div>
@@ -98,55 +98,51 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
         window.onload = function() {
 
-            var options1 = {
+            var percent_coverage_first = <?php echo $percent_coverage_first; ?>;
+            var percent_coverage_second = <?php echo $percent_coverage_second ; ?>;
+            var options3 = {
                 title: {
-                    text: "Type of Vaccine",
-                    fontFamily: "Arial"
+                    text: "Percentage Coverage",
+                    fontSize: 23,
                 },
-                legend: {
-                    horizontalAlign: "center", // "center" , "right"
-                    verticalAlign: "top",  // "top" , "bottom"
-                },
-                animationEnabled: true,
                 data: [{
-                    type: "pie",
+                    type: "doughnut",
+                    startAngle: 45,
                     showInLegend: "true",
                     legendText: "{label}",
-                    indexLabel: "{label} ({y})",
+                    indexLabel: "{label} ({y}%)",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "Sinovac", y: "{{ $inquiry }}" },
-                        { label: "Astrazeneca", y: "{{ $referral }}" },
-                        { label: "Others", y: "{{ $others }}" }
+                        { label: "First Dose", y: percent_coverage_first, color:"#00a65a" },
+                        { label: "Second Dose", y: percent_coverage_second, color:"#f39c12" },
+
                     ]
                 }]
             };
-            $("#typeof_vaccine").CanvasJSChart(options1);
+            $("#chartPercentCoverage").CanvasJSChart(options3);
 
-
-            var options = {
+            var consumption_rate_first = <?php echo $consumption_rate_first; ?>;
+            var consumption_rate_second = <?php echo $consumption_rate_second ; ?>;
+            var options4 = {
                 title: {
-                    text: "Priority",
-                    fontFamily: "Arial"
+                    text: "Consumption Rate",
+                    fontSize: 23,
                 },
-                legend: {
-                    horizontalAlign: "center", // "center" , "right"
-                    verticalAlign: "top"  // "top" , "bottom"
-                },
-                animationEnabled: true,
                 data: [{
-                    type: "pie",
+                    type: "doughnut",
+                    startAngle: 45,
                     showInLegend: "true",
                     legendText: "{label}",
-                    indexLabel: "{label} ({y})",
+                    indexLabel: "{label} ({y}%)",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "Complete", y: "{{ $transaction_complete }}" },
-                        { label: "In Complete", y: "{{ $transaction_incomplete }}" }
+                        { label: "First Dose", y: consumption_rate_first, color:"#00a65a" },
+                        { label: "Second Dose", y: consumption_rate_second, color:"#f39c12" },
+
                     ]
                 }]
             };
-            $("#transaction_status").CanvasJSChart(options);
+            $("#chartConsumptionRate").CanvasJSChart(options4);
 
         };
 
@@ -184,48 +180,66 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
 
         //line chart
-        var dataPoints = [];
-        var options_days = {
-            animationEnabled: true,
-            theme: "light2",
-            title:{
-                text: ""
-            },
-            axisX:{
-                valueFormatString: "DD MMM"
-            },
-            axisY: {
-                title: "",
-                suffix: "",
-                minimum: 0
-            },
-            toolTip:{
-                shared:true
-            },
-            legend:{
-                display: false
-            },
-            data: [{
-                type: "line",
-                showInLegend: true,
-                name: "",
-                markerType: "square",
-                xValueFormatString: "DD MMM, YYYY",
-                color: "#00a65a",
-                yValueFormatString: "call: #,##0",
-                dataPoints: dataPoints
-            }
-            ]
-        };
-
-        $.each(<?php echo json_encode($sinovac_past)?>, function( index, value ) {
-            dataPoints.push({
+        var dataPoints1 = [];
+        var dataPoints2 = [];
+        $.each(<?php echo json_encode($first_dose_past)?>, function( index, value ) {
+            dataPoints1.push({
                 x: new Date(value.date),
                 y: value.value
             });
         });
 
-        $("#past_days").CanvasJSChart(options_days);
+        $.each(<?php echo json_encode($second_dose_past)?>, function( index, value ) {
+            dataPoints2.push({
+                x: new Date(value.date),
+                y: value.value,
+            });
+        });
+
+        var chart = new CanvasJS.Chart("past_days", {
+            axisX: {
+                valueFormatString: "DD MMM"
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor: "pointer",
+                itemclick: toogleDataSeries
+            },
+            animationEnabled: true,
+            data: [
+                {
+                    type:"line",
+                    name: "First Dose",
+                    showInLegend: true,
+                    lineColor: "#00a65a",
+                    color: '#00a65a',
+                    yValueFormatString: "#,###",
+                    dataPoints: dataPoints1
+                },
+                {
+                    type:"line",
+                    name: "Second Dose",
+                    showInLegend: true,
+                    lineColor: "#f39c12",
+                    color: '#f39c12',
+                    yValueFormatString: "#,###",
+                    dataPoints: dataPoints2
+                }
+            ]
+        });
+        chart.render();
+
+        function toogleDataSeries(e){
+            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else{
+                e.dataSeries.visible = true;
+            }
+            chart.render();
+        }
+
 
 
     </script>
