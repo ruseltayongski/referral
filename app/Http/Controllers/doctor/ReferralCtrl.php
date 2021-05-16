@@ -44,6 +44,7 @@ class ReferralCtrl extends Controller
 
     public function index()
     {
+        $user = Session::get('auth');
         ParamCtrl::lastLogin();
         $search = Session::get('search_referral');
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
@@ -131,8 +132,9 @@ class ReferralCtrl extends Controller
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
         $data = $data
-                //->orderByRaw("IF( (tracking.status='referred' or tracking.status='seen'), TIMESTAMPDIFF(MINUTE,tracking.date_referred,now()), tracking.id )",'desc')
+                ->orderBy(DB::raw("IF( ((tracking.status='referred' or tracking.status='seen' or tracking.status = 'transferred') && tracking.department_id = '$user->department_id' ), now(), tracking.date_referred )"),"desc")
                 ->orderBy("tracking.date_referred","desc")
+                //->orderBy("tracking.date_referred","desc")
                 ->paginate(15);
 
         return view('doctor.referral',[
