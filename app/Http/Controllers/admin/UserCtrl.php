@@ -33,6 +33,9 @@ class UserCtrl extends Controller
             });
         }
 
+        if($request->facility_filter)
+            $data = $data->where("facility_id",$request->facility_filter);
+
         $data = $data
                 ->where(function($q){
                     $q->where("level",'support')
@@ -40,7 +43,7 @@ class UserCtrl extends Controller
                         ->orWhere("level","bed_tracker");
                     })
                 ->orderBy('lname','asc')
-                ->paginate(10);
+                ->paginate(20);
 
         $facility = Facility::orderBy('name','asc')->get();
 
@@ -48,7 +51,8 @@ class UserCtrl extends Controller
             'title' => 'List of Support User',
             'data' => $data,
             'facility' => $facility,
-            'search' => $keyword
+            'search' => $keyword,
+            'facility_filter' => $request->facility_filter
         ]);
     }
 

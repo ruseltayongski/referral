@@ -516,6 +516,7 @@
     var query_string_date_range = urlParams.get('date_range') ? urlParams.get('date_range') : '';
     var query_string_typeof_vaccine = urlParams.get('typeof_vaccine_filter') ? urlParams.get('typeof_vaccine_filter') : '';
     var query_string_muncity = urlParams.get('muncity_filter') ? urlParams.get('muncity_filter') : '';
+    var query_string_facility = urlParams.get('facility_filter') ? urlParams.get('facility_filter') : '';
 
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
@@ -524,7 +525,7 @@
         if(_href && !_href.includes("localhost"))
             res = _href.replace("http://","https://");
 
-        $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity);
+        $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity+'&facility_filter='+query_string_facility);
     });
 
 

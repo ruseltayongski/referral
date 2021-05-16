@@ -20,11 +20,22 @@ if($searchKeyword){
     <div class="col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ url('admin/users') }}" method="GET" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-lg" style="margin-bottom: 10px;">
+                <h3>{{ $title }}</h3>
+                <form action="{{ url('admin/users') }}" method="GET">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-md-4">
                             <input type="text" class="form-control" name="search" placeholder="Search name..." value="{{ $search }}">
+                        </div>
+                        <div class="col-md-4">
+                            <select name="facility_filter" class="select2">
+                                <option value="">Select Facility</option>
+                                @foreach($facility as $row)
+                                    <option value="{{ $row->id }}" <?php if($facility_filter == $row->id)echo 'selected'; ?>>{{ $row->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
@@ -39,9 +50,8 @@ if($searchKeyword){
                                 </a>
                             @endif
                         </div>
-                    </form>
-                </div>
-                <h3>{{ $title }}</h3>
+                    </div>
+                </form>
             </div>
             <div class="box-body">
                 @if(count($data)>0)
