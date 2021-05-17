@@ -470,6 +470,8 @@ class PatientCtrl extends Controller
             }
         }
 
+        Session::put("refer_patient",true);
+
         return array(
             'id' => $tracking_id,
             'patient_code' => $code,

@@ -440,9 +440,6 @@
 
     });
 
-
-
-
     function sendNormalData(data)
     {
         console.log("ni sud!");
@@ -487,8 +484,8 @@
                     console.info(data);
                     //window.location.reload(false);
                     setTimeout(function () {
-                        window.location.reload(false);
                         console.log("Force refresh!");
+                        window.location.reload(false);
                     },15000);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -511,16 +508,27 @@
     }
 
     @if(Session::get('patient_update_save'))
-    Lobibox.notify('success', {
-        title: "",
-        msg: "<?php echo Session::get("patient_message"); ?>",
-        size: 'mini',
-        rounded: true
-    });
+        Lobibox.notify('success', {
+            title: "",
+            msg: "<?php echo Session::get("patient_message"); ?>",
+            size: 'mini',
+            rounded: true
+        });
     <?php
-    Session::put("patient_update_save",false);
-    Session::put("patient_message",false)
+        Session::put("patient_update_save",false);
+        Session::put("patient_message",false)
     ?>
+    @endif
+
+
+    @if(Session::get('refer_patient'))
+        Lobibox.notify('success', {
+            title: "Sucessfully",
+            msg: "Referred Patient!"
+        });
+        <?php
+        Session::put("refer_patient",false);
+        ?>
     @endif
 
 </script>
