@@ -222,6 +222,14 @@
             @endforeach
         </select>
     </div>
+    <div class="form-group">
+        <label>Referral Used</label>
+        <select class="form-control" name="referral_used" required>
+            <option value="">Select Option</option>
+            <option value="yes" <?php if($data->referral_used == 'yes')echo 'selected'; ?>>Yes</option>
+            <option value="no" <?php if($data->referral_used == 'no')echo 'selected'; ?>>No</option>
+        </select>
+    </div>
     <hr />
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

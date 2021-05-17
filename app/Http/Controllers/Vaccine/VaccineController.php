@@ -18,10 +18,16 @@ class VaccineController extends Controller
     public function index()
     {
         //for past 15 days
-        $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(15))).' 00:00:00';
-        $date_end = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
-        $first_dose_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','first')");
-        $second_dose_past = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start','$date_end','second')");
+        $date_start_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(31))).' 00:00:00';
+        $date_end_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 23:59:59';
+        $first_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','first')");
+        $second_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','second')");
+
+        $date_start_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 00:00:00';
+        $date_end_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
+        $first_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','first')");
+        $second_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','second')");
+
         ///
         for($i=1; $i<=12; $i++)
         {
@@ -85,9 +91,10 @@ class VaccineController extends Controller
             "percent_coverage_second"=>$percent_coverage_second,
             "consumption_rate_first" =>$consumption_rate_first,
             "consumption_rate_second" =>$consumption_rate_second,
-            "first_dose_past" =>$first_dose_past,
-            "second_dose_past" =>$second_dose_past,
-
+            "first_dose_past_1" =>$first_dose_past_1,
+            "second_dose_past_1" =>$second_dose_past_1,
+            "first_dose_past_2" =>$first_dose_past_2,
+            "second_dose_past_2" =>$second_dose_past_2,
         ]);
     }
 
@@ -157,7 +164,8 @@ class VaccineController extends Controller
         elseif($tri_city == 'mandaue'){
             $data = Facility::where("province",2)
                 ->where("vaccine_used","yes")
-                ->where("tricity_id",80);
+                ->where("tricity_id",80)
+                ->where('referral_used','yes');
         }
 
         $facility = $data->orderBy("name","asc")

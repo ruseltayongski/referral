@@ -4,6 +4,7 @@
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
         ->where('status',1)
+        ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">

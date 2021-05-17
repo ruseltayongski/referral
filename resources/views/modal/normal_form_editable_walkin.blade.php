@@ -3,6 +3,7 @@ $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
     ->where('id','!=',$user->facility_id)
     ->where('status',1)
+    ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 $myfacility = \App\Facility::find($user->facility_id);
 $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);

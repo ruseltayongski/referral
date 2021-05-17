@@ -4,8 +4,45 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9">
+    <div class="row">
         <div class="jim-content">
+            <form action="{{ asset('vaccine/vaccineview').'/'.$province_id }}" method="GET">
+                {{ csrf_field() }}
+                <div class="row">
+                    <div class="col-md-3">
+                        <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
+                            <option value="">Select Type of Vaccine</option>
+                            <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
+                            <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
+                            <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
+                            <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="muncity_filter" id="muncity_filter" class="select2">
+                            <option value="">Select Municipality</option>
+                            @foreach($muncity as $row)
+                                <option value="{{ $row->id }}" <?php if(isset($muncity_filter)){if($muncity_filter == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
+                    </div>
+                    <div class="col-md-3">
+                         <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
+                             <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
+                            <a href="{{ asset('vaccine/vaccineview').'/'.$province_id }}" type="button" class="btn btn-warning" onclick="loadPage()"><i class="fa fa-eye"></i> View All</a>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9 jim-content">
             @if($error)
                 <div class="alert alert-danger">
                 <span class="text-danger">
@@ -43,7 +80,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Moderna</h3>
-                            <p style="font-size:13pt" >{{ $moderna_count }}</p>
+                            <p style="font-size:13pt" >0</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -55,7 +92,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     <div class="small-box bg-aqua">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Pfizer</h3>
-                            <p style="font-size:13pt" >{{ $pfizer_count }}</p>
+                            <p style="font-size:13pt" >0</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -70,24 +107,42 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <canvas id="barChart"></canvas>
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div class="row" style="padding-left:6%">
+                <div class="jim-content">
+                    <div id="chartPercentCoverage" style="height: 335px; width: 100%;"></div>
+                    <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-left:6%">
+                <div class="jim-content">
+                    <div id="chartConsumptionRate" style="height: 335px; width: 100%;"></div>
+                    <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 100%">
+        <div class="row">
+            <div class="col-md-12 jim-content">
+                <h3 class="page-header">Last 30 days vaccinated</h3>
+                <div id="past_days_1" style="height: 370px; width: 100%;"></div>
+                <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 jim-content">
+                <div id="past_days_2" style="height: 370px; width: 100%;"></div>
+                <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+            </div>
+        </div>
     </div>
 
 
-    <div class="col-md-3">
-        <div class="panel panel-jim">
-            <div id="chartPercentCoverage" style="height: 335px; width: 100%;"></div>
-        </div>
-        <div class="panel panel-jim">
-            <div id="chartConsumptionRate" style="height: 335px; width: 100%;"></div>
-        </div>
-    </div>
-
-    <div class="col-md-12">
-        <div class="jim-content">
-            <h3 class="page-header">Last 15 days vaccinated</h3>
-            <div id="past_days" style="height: 370px; width: 100%;"></div>
-        </div>
-    </div>
 
 @endsection
 
@@ -101,6 +156,13 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             var percent_coverage_first = <?php echo $percent_coverage_first; ?>;
             var percent_coverage_second = <?php echo $percent_coverage_second ; ?>;
             var options3 = {
+                legend:{
+                    cursor:"pointer",
+                    verticalAlign: "top",
+                    horizontalAlign: "center",
+                    dockInsidePlotArea: false,
+                    fontSize: 12
+                },
                 title: {
                     text: "Percentage Coverage",
                     fontSize: 23,
@@ -124,6 +186,13 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             var consumption_rate_first = <?php echo $consumption_rate_first; ?>;
             var consumption_rate_second = <?php echo $consumption_rate_second ; ?>;
             var options4 = {
+                legend:{
+                    cursor:"pointer",
+                    verticalAlign: "top",
+                    horizontalAlign: "center",
+                    dockInsidePlotArea: false,
+                    fontSize: 12
+                },
                 title: {
                     text: "Consumption Rate",
                     fontSize: 23,
@@ -179,24 +248,24 @@ $error = \Illuminate\Support\Facades\Input::get('error');
         new Chart(ctx, chartdata);
 
 
-        //line chart
+        //line chart 1
         var dataPoints1 = [];
         var dataPoints2 = [];
-        $.each(<?php echo json_encode($first_dose_past)?>, function( index, value ) {
+        $.each(<?php echo json_encode($first_dose_past_1)?>, function( index, value ) {
             dataPoints1.push({
                 x: new Date(value.date),
                 y: value.value
             });
         });
 
-        $.each(<?php echo json_encode($second_dose_past)?>, function( index, value ) {
+        $.each(<?php echo json_encode($second_dose_past_1)?>, function( index, value ) {
             dataPoints2.push({
                 x: new Date(value.date),
                 y: value.value,
             });
         });
 
-        var chart = new CanvasJS.Chart("past_days", {
+        var chart = new CanvasJS.Chart("past_days_1", {
             axisX: {
                 valueFormatString: "DD MMM"
             },
@@ -204,8 +273,12 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 shared: true
             },
             legend: {
-                cursor: "pointer",
-                itemclick: toogleDataSeries
+                cursor:"pointer",
+                verticalAlign: "bottom",
+                horizontalAlign: "center",
+                dockInsidePlotArea: false,
+                fontSize: 15,
+                itemclick: toogleDataSeries1
             },
             animationEnabled: true,
             data: [
@@ -231,13 +304,79 @@ $error = \Illuminate\Support\Facades\Input::get('error');
         });
         chart.render();
 
-        function toogleDataSeries(e){
+        function toogleDataSeries1(e){
             if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                 e.dataSeries.visible = false;
             } else{
                 e.dataSeries.visible = true;
             }
             chart.render();
+        }
+        //line chart 1
+
+        //line chart 2
+        var dataPoints1_2 = [];
+        var dataPoints2_2 = [];
+        $.each(<?php echo json_encode($first_dose_past_2)?>, function( index, value ) {
+            dataPoints1_2.push({
+                x: new Date(value.date),
+                y: value.value
+            });
+        });
+
+        $.each(<?php echo json_encode($second_dose_past_2)?>, function( index, value ) {
+            dataPoints2_2.push({
+                x: new Date(value.date),
+                y: value.value,
+            });
+        });
+
+        var chart_2 = new CanvasJS.Chart("past_days_2", {
+            axisX: {
+                valueFormatString: "DD MMM"
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor:"pointer",
+                verticalAlign: "bottom",
+                horizontalAlign: "center",
+                dockInsidePlotArea: false,
+                fontSize: 15,
+                itemclick: toogleDataSeries2
+            },
+            animationEnabled: true,
+            data: [
+                {
+                    type:"line",
+                    name: "First Dose",
+                    showInLegend: true,
+                    lineColor: "#00a65a",
+                    color: '#00a65a',
+                    yValueFormatString: "#,###",
+                    dataPoints: dataPoints1_2
+                },
+                {
+                    type:"line",
+                    name: "Second Dose",
+                    showInLegend: true,
+                    lineColor: "#f39c12",
+                    color: '#f39c12',
+                    yValueFormatString: "#,###",
+                    dataPoints: dataPoints2_2
+                }
+            ]
+        });
+        chart_2.render();
+
+        function toogleDataSeries2(e){
+            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else{
+                e.dataSeries.visible = true;
+            }
+            chart_2.render();
         }
 
 

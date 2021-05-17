@@ -2,6 +2,7 @@
 $user = \Illuminate\Support\Facades\Session::get('auth');
 $fac = \App\Facility::where('id','<>',$user->facility_id)
     ->where('status',1)
+    ->where('referral_used','yes')
     ->select('facility.id','facility.name')
     ->orderBy('name','asc')
     ->get();

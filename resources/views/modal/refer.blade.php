@@ -4,6 +4,7 @@
     ->where('id','!=',$user->facility_id)
     ->where('province',$user->province)
     ->where('status',1)
+    ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 ?>
 
