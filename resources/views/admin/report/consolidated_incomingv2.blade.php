@@ -367,7 +367,7 @@
                                             echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
                                             echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Not Accepted <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
-                                            echo '<span class="label label-warning">Archived <span class="badge bg-red" >'.$achived_outgoing.'</span></span><br><br><br><br><br>';
+                                            echo '<span class="label label-warning">Archived <span class="badge bg-red" >Under Development</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
                                     <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
