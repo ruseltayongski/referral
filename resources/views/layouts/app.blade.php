@@ -162,7 +162,7 @@
         ?>
         <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
             <ul class="nav navbar-nav">
-                @if($user->level=='doctor' || $user->level=='midwife')
+                @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse')
                     <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
