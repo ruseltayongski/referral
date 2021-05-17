@@ -54,6 +54,8 @@
                             <option value="">Select Option</option>
                             <option value="doctor">Doctor</option>
                             <option value="midwife">Midwife</option>
+                            <option value="medical_dispatcher">Medical Dispatcher</option>
+                            <option value="nurse">Nurse</option>
                             <!-- <option value="mcc">Medical Center Chief</option> -->
                         </select>
                     </div>

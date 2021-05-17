@@ -461,6 +461,8 @@ Route::get('issue/concern/{tracking_id}/{referred_from}','Monitoring\MonitoringC
 
 //midwife
 Route::get('midwife','doctor\HomeCtrl@index');
+Route::get('medical_dispatcher','doctor\HomeCtrl@index');
+Route::get('nurse','doctor\HomeCtrl@index');
 
 //ICD 10
 Route::post('icd/search','icd\IcdController@icdSearch');
