@@ -26,7 +26,7 @@
     </div>
     <div class="col-md-9">
         <div class="jim-content">
-            <h3 class="page-header">Patient List</h3>
+            <h3 class="page-header">{{ $title }}</h3>
             @if(count($data))
                 <div class="table-responsive">
                     <table class="table table-striped"  style="white-space:nowrap;">
