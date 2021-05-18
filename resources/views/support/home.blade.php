@@ -17,6 +17,9 @@ if($searchKeyword){
             margin-bottom: 10px;
         }
     </style>
+    <div class="jim-content">
+        <iframe style="width: 100%;height: 700px;" src="https://dohph.maps.arcgis.com/apps/webappviewer/index.html?id=cf43a3468a4f4ee99ef128d89ea8a150&fbclid=IwAR0MHBpMuSjr0-ToS6oDHYI0c_gdhftfK3MTwioeIoLJPV5HPZaCexyqmw4"></iframe>
+    </div>
     <div class="col-md-9">
         <div class="box box-success">
             <div class="box-header with-border">

@@ -445,12 +445,6 @@
     </div>
 </nav>
 
-
-<div class="container">
-    <div class="jim-content">
-        <iframe style="width: 100%;height: 500px;" src="https://dohph.maps.arcgis.com/apps/webappviewer/index.html?id=cf43a3468a4f4ee99ef128d89ea8a150&fbclid=IwAR0MHBpMuSjr0-ToS6oDHYI0c_gdhftfK3MTwioeIoLJPV5HPZaCexyqmw4"></iframe>
-    </div>
-</div>
 @if(isset(Request::segments()[3]))
     <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2].'/'.Request::segments()[3], array('admin/report/patient/incoming','admin/report/patient/outgoing','admin/report/consolidated/incoming','admin/report/graph/incoming','admin/report/consolidated/incomingv2','admin/report/graph/bar_chart'), true) ? 'container-fluid' : 'container' }}" >
         <div class="loading"></div>
