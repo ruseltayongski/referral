@@ -1,11 +1,13 @@
 <?php
 $error = \Illuminate\Support\Facades\Input::get('error');
+header('Access-Control-Allow-Origin: *');
 ?>
 @extends('layouts.app')
 
 @section('content')
     <div class="row">
         <div class="jim-content">
+            <iframe style="width: 100%;height: 500px;" src="https://dohph.maps.arcgis.com/apps/webappviewer/index.html?id=cf43a3468a4f4ee99ef128d89ea8a150&fbclid=IwAR0MHBpMuSjr0-ToS6oDHYI0c_gdhftfK3MTwioeIoLJPV5HPZaCexyqmw4"></iframe>
             <form action="{{ asset('vaccine/vaccineview').'/'.$province_id }}" method="GET">
                 {{ csrf_field() }}
                 <div class="row">
@@ -150,7 +152,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
     @include('script.chart')
 
     <script type="text/javascript">
-
         window.onload = function() {
 
             var percent_coverage_first = <?php echo $percent_coverage_first; ?>;
