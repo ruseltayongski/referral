@@ -5,145 +5,151 @@ header('Access-Control-Allow-Origin: *');
 @extends('layouts.app')
 
 @section('content')
-    <div class="row">
-        <div class="jim-content">
-            <form action="{{ asset('vaccine/vaccineview').'/'.$province_id }}" method="GET">
-                {{ csrf_field() }}
-                <div class="row">
-                    <div class="col-md-3">
-                        <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
-                            <option value="">Select Type of Vaccine</option>
-                            <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
-                            <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                            <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
-                            <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select name="muncity_filter" id="muncity_filter" class="select2">
-                            <option value="">Select Municipality</option>
-                            @foreach($muncity as $row)
-                                <option value="{{ $row->id }}" <?php if(isset($muncity_filter)){if($muncity_filter == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
-                    </div>
-                    <div class="col-md-3">
+    <div style="padding-right: 2%;padding-left: 2%">
+        <div class="row">
+            <div class="jim-content">
+                <iframe style="width: 100%;height: 700px;" src="https://dohph.maps.arcgis.com/apps/webappviewer/index.html?id=228d631ffa6c43df93bec08a1098143e"></iframe>
+            </div>
+        </div>
+        <div class="row">
+            <div class="jim-content">
+                <form action="{{ asset('vaccine/vaccineview').'/'.$province_id }}" method="GET">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
+                                <option value="">Select Type of Vaccine</option>
+                                <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
+                                <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
+                                <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
+                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="muncity_filter" id="muncity_filter" class="select2">
+                                <option value="">Select Municipality</option>
+                                @foreach($muncity as $row)
+                                    <option value="{{ $row->id }}" <?php if(isset($muncity_filter)){if($muncity_filter == $row->id)echo 'selected';} ?> >{{ $row->description }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
+                        </div>
+                        <div class="col-md-3">
                          <span class="input-group-btn">
                             <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
                              <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <a href="{{ asset('vaccine/vaccineview').'/'.$province_id }}" type="button" class="btn btn-warning" onclick="loadPage()"><i class="fa fa-eye"></i> View All</a>
                         </span>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-9 jim-content">
-            @if($error)
-                <div class="alert alert-danger">
+        <div class="row">
+            <div class="col-md-9 jim-content">
+                @if($error)
+                    <div class="alert alert-danger">
                 <span class="text-danger">
                     <i class="fa fa-times"></i> Error switching account! Please try again.
                 </span>
-                </div>
-            @endif
-            <h3 class="page-header">Dashboard</h3>
-            <div class="row" style="padding-left: 1%;padding-right: 1%; ">
-                <div class="col-lg-3">
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3 style="font-size: 20pt;">Sinovac</h3>
-                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
+                    </div>
+                @endif
+                <h3 class="page-header">Dashboard</h3>
+                <div class="row" style="padding-left: 1%;padding-right: 1%; ">
+                    <div class="col-lg-3">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3 style="font-size: 20pt;">Sinovac</h3>
+                                <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="small-box bg-yellow">
+                            <div class="inner">
+                                <h3 style="font-size: 20pt;">Astrazeneca</h3>
+                                <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="small-box bg-green">
+                            <div class="inner">
+                                <h3 style="font-size: 20pt;">Moderna</h3>
+                                <p style="font-size:13pt" >0</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3 style="font-size: 20pt;">Pfizer</h3>
+                                <p style="font-size:13pt" >0</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3 style="font-size: 20pt;">Astrazeneca</h3>
-                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3 style="font-size: 20pt;">Moderna</h3>
-                            <p style="font-size:13pt" >0</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3 style="font-size: 20pt;">Pfizer</h3>
-                            <p style="font-size:13pt" >0</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
+
+                <h3 class="page-header">Monthly Activity</h3>
+                <div class="chart">
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
 
-            <h3 class="page-header">Monthly Activity</h3>
-            <div class="chart">
-                <canvas id="barChart"></canvas>
+            <div class="col-md-3">
+                <div class="row" style="padding-left:6%">
+                    <div class="jim-content">
+                        <div id="chartPercentCoverage" style="height: 335px; width: 100%;"></div>
+                        <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-left:6%">
+                    <div class="jim-content">
+                        <div id="chartConsumptionRate" style="height: 335px; width: 100%;"></div>
+                        <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="row" style="padding-left:6%">
-                <div class="jim-content">
-                    <div id="chartPercentCoverage" style="height: 335px; width: 100%;"></div>
+        <div style="width: 100%">
+            <div class="row">
+                <div class="col-md-12 jim-content">
+                    <h3 class="page-header">Last 30 days vaccinated</h3>
+                    <div id="past_days_1" style="height: 370px; width: 100%;"></div>
                     <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
                 </div>
             </div>
 
-            <div class="row" style="padding-left:6%">
-                <div class="jim-content">
-                    <div id="chartConsumptionRate" style="height: 335px; width: 100%;"></div>
+            <div class="row">
+                <div class="col-md-12 jim-content">
+                    <div id="past_days_2" style="height: 370px; width: 100%;"></div>
                     <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
                 </div>
             </div>
         </div>
+
     </div>
-
-    <div style="width: 100%">
-        <div class="row">
-            <div class="col-md-12 jim-content">
-                <h3 class="page-header">Last 30 days vaccinated</h3>
-                <div id="past_days_1" style="height: 370px; width: 100%;"></div>
-                <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 jim-content">
-                <div id="past_days_2" style="height: 370px; width: 100%;"></div>
-                <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
-            </div>
-        </div>
-    </div>
-
-
 
 @endsection
 
@@ -151,6 +157,9 @@ header('Access-Control-Allow-Origin: *');
     @include('script.chart')
 
     <script type="text/javascript">
+        $("#container").removeClass("container");
+        $("#container").addClass("container-fluid");
+
         window.onload = function() {
 
             var percent_coverage_first = <?php echo $percent_coverage_first; ?>;
