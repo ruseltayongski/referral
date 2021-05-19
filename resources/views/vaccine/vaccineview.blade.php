@@ -887,6 +887,7 @@
                 title: {
                     text: "Total Vaccinated"
                 },
+                animationEnabled: true,
                 data: [
                     {
                         // Change type to "doughnut", "line", "splineArea", etc.
@@ -914,6 +915,7 @@
                 title: {
                     text: "Priority"
                 },
+                animationEnabled: true,
                 data: [
                     {
                         // Change type to "doughnut", "line", "splineArea", etc.
@@ -936,6 +938,7 @@
                     text: "Percentage Coverage",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,
@@ -959,6 +962,7 @@
                     text: "Consumption Rate",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,

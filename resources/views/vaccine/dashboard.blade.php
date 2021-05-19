@@ -57,7 +57,7 @@ header('Access-Control-Allow-Origin: *');
                     <div class="small-box bg-red">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Sinovac</h3>
-                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count }}</p>
+                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -69,7 +69,7 @@ header('Access-Control-Allow-Origin: *');
                     <div class="small-box bg-yellow">
                         <div class="inner">
                             <h3 style="font-size: 20pt;">Astrazeneca</h3>
-                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count }}</p>
+                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -167,6 +167,7 @@ header('Access-Control-Allow-Origin: *');
                     text: "Percentage Coverage",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,
@@ -197,6 +198,7 @@ header('Access-Control-Allow-Origin: *');
                     text: "Consumption Rate",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,

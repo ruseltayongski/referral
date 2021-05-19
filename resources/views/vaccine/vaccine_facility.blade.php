@@ -815,19 +815,6 @@
                 "total_r_unvcted_scnd" : $(".total_r_unvcted_scnd"+facility_id).text(),
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             };
             var url = "<?php echo asset('vaccine/facility_content'); ?>";
             $.post(url,json,function(data){
@@ -906,6 +893,7 @@
                 title: {
                     text: "Type of Vaccine"
                 },
+                animationEnabled: true,
                 data: [
                     {
                         // Change type to "doughnut", "line", "splineArea", etc.
@@ -934,6 +922,7 @@
                 title: {
                     text: "Priority"
                 },
+                animationEnabled: true,
                 data: [
                     {
                         // Change type to "doughnut", "line", "splineArea", etc.
@@ -959,6 +948,7 @@
                     text: "Percentage Coverage",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,
@@ -982,6 +972,7 @@
                     text: "Consumption Rate",
                     fontSize: 23,
                 },
+                animationEnabled: true,
                 data: [{
                     type: "doughnut",
                     startAngle: 45,
