@@ -21,8 +21,8 @@ header('Access-Control-Allow-Origin: *');
                                 <option value="">Select Type of Vaccine</option>
                                 <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                 <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                                <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
-                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                                <option value="SputnikV" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'SputnikV')echo 'selected';} ?>>SputnikV</option>
+                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -86,7 +86,7 @@ header('Access-Control-Allow-Origin: *');
                     <div class="col-lg-3">
                         <div class="small-box bg-green">
                             <div class="inner">
-                                <h3 style="font-size: 20pt;">Moderna</h3>
+                                <h3 style="font-size: 20pt;">Sputnik V</h3>
                                 <p style="font-size:13pt" >0</p>
                             </div>
                             <div class="icon">
@@ -243,9 +243,9 @@ header('Access-Control-Allow-Origin: *');
                         data: <?php echo json_encode($data["astrazeneca"]); ?>
                     },
                     {
-                        label: 'Moderna',
+                        label: 'SputnikV',
                         backgroundColor: '#00a65a',
-                        data: <?php echo json_encode($data["moderna"]); ?>
+                        data: <?php echo json_encode($data["SputnikV"]); ?>
                     },
                     {
                         label: 'Pfizer',

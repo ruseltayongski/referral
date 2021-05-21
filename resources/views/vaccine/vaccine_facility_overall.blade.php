@@ -166,12 +166,18 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
 ?>
 
 <h4>Grand Total</h4>
-<button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac_grand" aria-expanded="false" aria-controls="collapse_sinovac_grandtotal">
-    <b>Sinovac</b>
-</button>
-<button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra_grand" aria-expanded="false" aria-controls="collapse_astra_grandtotal">
-    <b>Astrazeneca</b>
-</button>
+    <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac_grand" aria-expanded="false" aria-controls="collapse_sinovac_grandtotal">
+        <b>Sinovac</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra_grand" aria-expanded="false" aria-controls="collapse_astra_grandtotal">
+        <b>Astrazeneca</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color:#00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv_grand" aria-expanded="false" aria-controls="collapse_sputnikv_grandtotal">
+        <b>SputnikV</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer_grand" aria-expanded="false" aria-controls="collapse_pfizer_grandtotal">
+        <b>Pfizer</b>
+    </button>
 <table style="font-size: 8pt;" class="table" border="2">
     <tbody>
     <tr>
@@ -223,6 +229,7 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
     <tr>
     </tr>
     </tbody>
+    <!-- SINOVAC -->
     <tbody id="collapse_sinovac_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #ffd8d6">
         <td rowspan="2">
@@ -317,6 +324,7 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         </td>
     </tr>
     </tbody>
+    <!-- ASTRAZENECA -->
     <tbody id="collapse_astra_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #f2fcac">
         <td rowspan="2">
@@ -412,6 +420,200 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         </td>
     </tr>
     </tbody>
+    <!-- SPUTNIKV -->
+    <tbody id="collapse_sputnikv_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tr style="background-color: #b1ffdb">
+        <td rowspan="2">
+
+        </td> <!-- 1-5 -->
+        <td rowspan="2" style="color:black;">xx</td>  <!-- A1 SPUTNIKV_FIRST-->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A2 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A3 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A4 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- TOTAL E POP SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black">xx</td> <!-- VACCINE_ALLOCATED (FD) SPUTNIKV_FIRST-->
+        <td rowspan="2" style="color:black">xx</td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
+        <td style="color:black;">
+            <span class="label label-success">xx</span>  <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
+        </td>
+        <td style="color:black">
+            <span class="label label-success">xx</span> <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- MILD SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- SERIOUS SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- DEFERRED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- REFUSED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- WASTAGE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx%</span> <!-- PERCENT_COVERAGE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
+        </td>
+    </tr>
+    <tr style="background-color: #b1ffdb">
+        <td style="color: black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
+        </td> <!-- 1-6 -->
+        <td>
+            <span class="label label-warning">xx</span>  <!-- MILD SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- SERIOUS SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- DEFERRED SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- REFUSED SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- WASTAGE SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx%</span> <!-- PERCENT COVERAGE SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED SPUTNIKV_SECOND -->
+        </td>
+    </tr>
+    </tbody>
+    <!-- PFIZER -->
+    <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tr style="background-color: #8fe7fd">
+        <td rowspan="2">
+
+        </td> <!-- 1-5 -->
+        <td rowspan="2" style="color:black;">xx</td>  <!-- A1 PFIZER_FIRST-->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A2 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A3 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- A4 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td> <!-- TOTAL E POP PFIZER_FIRST -->
+        <td rowspan="2" style="color:black">xx</td> <!-- VACCINE_ALLOCATED (FD) PFIZER_FIRST-->
+        <td rowspan="2" style="color:black">xx</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">xx</td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
+        <td style="color:black;">
+            <span class="label label-success">xx</span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
+        </td>
+        <td style="color:black">
+            <span class="label label-success">xx</span> <!-- VACCINATED (A2) PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- VACCINATED (A3) PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- VACCINATED (A4) PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- MILD PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- SERIOUS PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- DEFERRED PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- REFUSED PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- WASTAGE PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx%</span> <!-- PERCENT_COVERAGE PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE PFIZER_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">xx</span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
+        </td>
+    </tr>
+    <tr style="background-color: #8fe7fd">
+        <td style="color: black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
+        </td> <!-- 1-6 -->
+        <td>
+            <span class="label label-warning">xx</span>  <!-- MILD PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- SERIOUS PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- DEFERRED PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- REFUSED PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- WASTAGE PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx%</span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE PFIZERSECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED PFIZER_SECOND -->
+        </td>
+    </tr>
+    </tbody>
+
+
     <tbody>
     <tr>
         <td>Total</td> <!-- 1-7 -->

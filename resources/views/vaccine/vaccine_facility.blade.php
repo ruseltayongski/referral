@@ -80,9 +80,9 @@
             <div class="col-lg-3">
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>Moderna</h3>
+                        <h3>Sputnik V</h3>
 
-                        <p style="font-size:13pt" class="moderna_count">0</p>
+                        <p style="font-size:13pt" class="sputnikv_count">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -248,12 +248,18 @@
                                                     {{ $row->name }}
                                                 </a>
                                             </b>
-                                            <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}">
-                                                <b>Sinovac</b>
-                                            </button>
-                                            <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
-                                                <b>Astrazeneca</b>
-                                            </button>
+                                                <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}">
+                                                    <b>Sinovac</b>
+                                                </button>
+                                                <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
+                                                    <b>Astrazeneca</b>
+                                                </button>
+                                                <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
+                                                    <b>SputnikV</b>
+                                                </button>
+                                                <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
+                                                    <b>Pfizer</b>
+                                                </button>
                                             <br>
                                             @foreach(\App\VaccineAccomplished::where("facility_id",$row->id)->whereBetween("date_first",[$date_start,$date_end])->orderBy("date_first","asc")->get() as $x)
                                                 <span class="badge bg-blue">
@@ -327,6 +333,7 @@
                                                 <tr>
 
                                                 </tr>
+                                                <!-- SINOVAC -->
                                                 </tbody><tbody id="collapse_sinovac{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                 <tr style="background-color: #ffd8d6">
                                                     <td rowspan="2">
@@ -421,13 +428,10 @@
                                                     </td>
                                                 </tr>
                                                 </tbody>
-                                                <tbody><tr>
-
-                                                </tr>
-                                                </tbody><tbody id="collapse_astra{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                                <!-- ASTRACENECA -->
+                                                 <tbody id="collapse_astra{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                 <tr style="background-color: #f2fcac">
                                                     <td rowspan="2">
-
                                                     </td> <!-- 1-5 -->
                                                     <td rowspan="2" style="color:black;" class="total_epop_astra_a1{{ $row->id }}">{{ $total_epop_astra_a1 }}</td> <!-- A1 EPOP ASTRA -->
                                                     <td rowspan="2" style="color:black;" class="total_epop_astra_a2{{ $row->id }}">{{ $total_epop_astra_a2 }}</td>  <!-- A2 EPOP ASTRA -->
@@ -519,6 +523,197 @@
                                                     </td>
                                                 </tr>
                                                 </tbody>
+                                                <!-- SPUTNIKV -->
+                                                <tbody id="collapse_sputnikv{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                                <tr style="background-color: #b1ffdb">
+                                                    <td rowspan="2">
+                                                    </td> <!-- 1-5 -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a1{{ $row->id }}">xx</td> <!-- A1 EPOP SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a2{{ $row->id }}">xx</td>  <!-- A2 EPOP SPUTNIKV  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a3{{ $row->id }}">xx</td> <!-- A3 EPOP SPUTNIKV  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a4{{ $row->id }}">xx</td> <!-- A4 EPOP SPUTNIKV  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv{{ $row->id }}">xx</td>  <!-- TOTAL_E_POP_SPUTNIKV  -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_frst{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (FD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_scnd{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_SPUTNIKV  (SD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv{{ $row->id }}">xx</td>  <!-- TOTAL VACCINE ALLOCATED_SPUTNIKV -->
+                                                    <td style="color:black;">
+                                                        <span class="label label-success total_sputnikv_a1_frst{{ $row->id }}">xx</span>  <!-- A1_SPUTNIKV  -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_sputnikv_a2_frst{{ $row->id }}">xx</span>  <!-- A2_SPUTNIKV   -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_sputnikv_a3_frst{{ $row->id }}">xx</span>  <!-- A3_SPUTNIKV   -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_sputnikv_a4_frst{{ $row->id }}">xx</span>  <!-- A4_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_vcted_sputnikv_frst{{ $row->id }}">xx</span>  <!-- TOTAL VACCINATED_SPUTNIKV -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_mild_sputnikv_frst{{ $row->id }}">xx</span> <!-- MILD_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_srs_sputnikv_frst{{ $row->id }}">xx</span>  <!-- SERIOUS_SPUTNIKV  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_dfrd_sputnikv_frst{{ $row->id }}">xx</span> <!-- DEFERRED_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_rfsd_sputnikv_frst{{ $row->id }}">xx</span> <!-- REFUSED_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_wstge_sputnikv_frst{{ $row->id }}">xx</span> <!-- WASTAGE_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success p_cvrge_sputnikv_frst{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_c_rate_sputnikv_frst{{ $row->id }}">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_r_unvcted_frst_sputnikv{{ $row->id }}">xx</span> <!-- REMAINUNG UNVACCINATED_SPUTNIKV   -->
+                                                    </td>
+                                                </tr>
+                                                <tr style="background-color: #b1ffdb">
+                                                    <td style="color: black;">
+                                                        <span class="label label-warning total_sputnikv_a1_scnd{{ $row->id }}">xx</span>  <!-- A1_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td style="color:black;">
+                                                        <span class="label label-warning total_sputnikv_a2_scnd{{ $row->id }}">xx</span>  <!-- A2_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-warning total_sputnikv_a3_scnd{{ $row->id }}">xx</span>  <!-- A3_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td style="color:black;">
+                                                        <span class="label label-warning total_sputnikv_a4_scnd{{ $row->id }}">xx</span>  <!-- A4_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_vcted_sputnikv_scnd{{ $row->id }}">xx</span> <!-- TOTAL VACCINATED_SPUTNIKV  2-->
+                                                    </td> <!-- 1-6 -->
+                                                    <td>
+                                                        <span class="label label-warning total_mild_sputnikv_scnd{{ $row->id }}">xx</span> <!-- MILD_SPUTNIKV  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_srs_sputnikv_scnd{{ $row->id }}">xx</span> <!-- SERIOUS_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_dfrd_sputnikv_scnd{{ $row->id }}">xx</span> <!-- DEFERRED_SPUTNIKV  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_rfsd_sputnikv_scnd{{ $row->id }}">xx</span> <!-- REFUSED_SPUTNIKV  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_wstge_sputnikv_scnd{{ $row->id }}">xx</span> <!-- WASTAGE_SPUTNIKV 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning p_cvrge_sputnikv_scnd{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_SPUTNIKV  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_c_rate_sputnikv_scnd{{ $row->id }}">xx%</span> <!-- CONSUMPTION_RATE_SPUTNIKV  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_r_unvcted_scnd_sputnikv{{ $row->id }}">xx</span> <!-- REMAINUNG_UNVACCIANTED_SPUTNIKV  2  -->
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <!-- PFIZER -->
+                                                <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                                <tr style="background-color: #8fe7fd">
+                                                    <td rowspan="2">
+                                                    </td> <!-- 1-5 -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a1{{ $row->id }}">xx</td> <!-- A1 EPOP PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a2{{ $row->id }}">xx</td>  <!-- A2 EPOP PFIZER  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a3{{ $row->id }}">xx</td> <!-- A3 EPOP PFIZER  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a4{{ $row->id }}">xx</td> <!-- A4 EPOP PFIZER  -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer{{ $row->id }}">xx</td>  <!-- TOTAL_E_POP_PFIZER  -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_frst{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_scnd{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_PFIZER  (SD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">xx</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER-->
+                                                    <td style="color:black;">
+                                                        <span class="label label-success total_pfizer_a1_frst{{ $row->id }}">xx</span>  <!-- A1_PFIZER  -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_pfizer_a2_frst{{ $row->id }}">xx</span>  <!-- A2_PFIZER   -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_pfizer_a3_frst{{ $row->id }}">xx</span>  <!-- A3_PFIZER   -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-success total_pfizer_a4_frst{{ $row->id }}">xx</span>  <!-- A4_PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_vcted_pfizer_frst{{ $row->id }}">xx</span>  <!-- TOTAL VACCINATED_PFIZER-->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_mild_pfizer_frst{{ $row->id }}">xx</span> <!-- MILD_PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_srs_pfizer_frst{{ $row->id }}">xx</span>  <!-- SERIOUS_PFIZER  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_dfrd_pfizer_frst{{ $row->id }}">xx</span> <!-- DEFERRED_PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_rfsd_pfizer_frst{{ $row->id }}">xx</span> <!-- REFUSED_PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_wstge_pfizer_frst{{ $row->id }}">xx</span> <!-- WASTAGE_PFIZER  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success p_cvrge_pfizer_frst{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_c_rate_pfizer_frst{{ $row->id }}">xx%</span> <!-- CONSUMPTION RATE PFIZER   -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-success total_r_unvcted_frst_pfizer{{ $row->id }}">xx</span> <!-- REMAINUNG UNVACCINATED_PFIZER  -->
+                                                    </td>
+                                                </tr>
+                                                <tr style="background-color: #8fe7fd">
+                                                    <td style="color: black;">
+                                                        <span class="label label-warning total_pfizer_a1_scnd{{ $row->id }}">xx</span>  <!-- A1_PFIZER 2  -->
+                                                    </td>
+                                                    <td style="color:black;">
+                                                        <span class="label label-warning total_pfizer_a2_scnd{{ $row->id }}">xx</span>  <!-- A2_PFIZER 2  -->
+                                                    </td>
+                                                    <td style="color:black">
+                                                        <span class="label label-warning total_pfizer_a3_scnd{{ $row->id }}">xx</span>  <!-- A3_PFIZER 2  -->
+                                                    </td>
+                                                    <td style="color:black;">
+                                                        <span class="label label-warning total_pfizer_a4_scnd{{ $row->id }}">xx</span>  <!-- A4_PFIZER 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_vcted_pfizerv_scnd{{ $row->id }}">xx</span> <!-- TOTAL VACCINATED_PFIZER  2-->
+                                                    </td> <!-- 1-6 -->
+                                                    <td>
+                                                        <span class="label label-warning total_mild_pfizer_scnd{{ $row->id }}">xx</span> <!-- MILD_PFIZER 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_srs_pfizer_scnd{{ $row->id }}">xx</span> <!-- SERIOUS_PFIZER 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_dfrd_pfizer_scnd{{ $row->id }}">xx</span> <!-- DEFERRED_PFIZER  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_rfsd_pfizer_scnd{{ $row->id }}">xx</span> <!-- REFUSED_PFIZER  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_wstge_pfizer_scnd{{ $row->id }}">xx</span> <!-- WASTAGE_PFIZER 2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning p_cvrge_pfizer_scnd{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_PFIZER  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_c_rate_pfizer_scnd{{ $row->id }}">xx%</span> <!-- CONSUMPTION_RATE_PFIZER  2  -->
+                                                    </td>
+                                                    <td>
+                                                        <span class="label label-warning total_r_unvcted_scnd_pfizer{{ $row->id }}">xx</span> <!-- REMAINUNG_UNVACCIANTED_PFIZER  2  -->
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+
                                                 <tbody><tr>
                                                     <td>Total</td> <!-- 1-7 -->
                                                     <td class=""></td> <!-- TOTAL_A1  -->
@@ -901,8 +1096,8 @@
                         dataPoints: [
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12" },
-                            { label: "Pfizer", y: 0  },
-                            { label: "Sputnik V",  y: 0  },
+                            { label: "Sputnik V", y: 0  },
+                            { label: "Pfizer",  y: 0  },
                             { label: "Moderna",  y: 0  }
                         ]
 

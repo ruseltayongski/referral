@@ -18,7 +18,7 @@
         <input type="text" class="form-control" value="@if(isset($facility->facility_code)){{ $facility->facility_code }}@endif" name="facility_code" readonly>
     </div>
     <div class="form-group">
-        <center><label>Sinovac Allocated</label></center>
+      <label style="margin-left: -3%;">Sinovac Allocated</label>
         <div class="row">
             <div class="col-md-6">
                 <input type="text" class="form-control text-green" value="@if(isset($facility->sinovac_allocated_first)){{ $facility->sinovac_allocated_first}}@endif" name="sinovac_allocated_first">
@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="form-group">
-        <center><label>Astrazeneca Allocated</label></center>
+       <label style="margin-left: -3%;">Astrazeneca Allocated</label>
         <div class="row">
             <div class="col-md-6">
                 <input type="text" class="form-control text-green" value="@if(isset($facility->astrazeneca_allocated_first)){{ $facility->astrazeneca_allocated_first}}@endif" name="astrazeneca_allocated_first">
@@ -38,12 +38,35 @@
                 <input type="text" class="form-control text-yellow" value="@if(isset($facility->astrazeneca_allocated_second)){{ $facility->astrazeneca_allocated_second}}@endif" name="astrazeneca_allocated_second">
             </div>
         </div>
+    </div>
+    <div class="form-group">
+       <label style="margin-left: -3%;">Sputnik V Allocated</label>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-green" value="@if(isset($facility->sputnikv_allocated_first)){{ $facility->sputnikv_allocated_first}}@endif" name="sputnikv_allocated_first">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-yellow" value="@if(isset($facility->sputnikv_allocated_second)){{ $facility->sputnikv_allocated_second}}@endif" name="sputnikv_allocated_second">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+       <label style="margin-left: -3%;">Pfizer Allocated</label>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-green" value="@if(isset($facility->pfizer_allocated_first)){{ $facility->pfizer_allocated_first}}@endif" name="pfizer_allocated_first">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-yellow" value="@if(isset($facility->pfizer_allocated_second)){{ $facility->pfizer_allocated_second}}@endif" name="pfizer_allocated_second">
+            </div>
+        </div>
+    </div>
         <br>
         <div class="modal-footer">
             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
             <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
         </div>
-    </div>
+
 </form>
 
 

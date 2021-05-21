@@ -14,6 +14,20 @@
     $total_e_pop_astra_a4_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a4 :0; //A4 ASTRA_FIRST goods
     $total_e_pop_astra_prov = $total_e_pop_astra_a1_prov + $total_e_pop_astra_a2_prov + $total_e_pop_astra_a3_prov + $total_e_pop_astra_a4_prov; //TOTAL E POP ASTRA_FIRST goods
 
+    //ELIGIBLE_POP_SPUTNIKV
+    //$total_e_pop_sputnikv_a1_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a1 :0; //A1 SPUTNIKV_FIRST goods
+    //$total_e_pop_sputnikv_a2_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a2 :0; //A2 SPUTNIKV_FIRST goods
+    //$total_e_pop_sputnikv_a3_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a3 :0; //A3 SPUTNIKV_FIRST goods
+    //$total_e_pop_sputnikv_a4_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a4 :0; //A4 SPUTNIKV_FIRST goods
+    //$total_e_pop_sputnikv_prov = $total_e_pop_sputnikv_a1_prov + $total_e_pop_sputnikv_a2_prov + $total_e_pop_sputnikv_a3_prov + $total_e_pop_sputnikv_a4_prov; //TOTAL E POP SPUTNIKV_FIRST goods
+
+    //ELIGIBLE_POP_PFIZER
+    //$total_e_pop_pfizer_a1_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a1 :0; //A1 PFIZER_FIRST goods
+    //$total_e_pop_pfizer_a2_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a2 :0; //A2 PFIZER_FIRST goods
+    //$total_e_pop_pfizer_a3_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a3 :0; //A3 PFIZER_FIRST goods
+    //$total_e_pop_pfizer_a4_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'','')")[0]->a4 :0; //A4 PFIZER_FIRST goods
+    //$total_e_pop_pfizer_prov = $total_e_pop_pfizer_a1_prov + $total_e_pop_pfizer_a2_prov + $total_e_pop_pfizer_a3_prov + $total_e_pop_pfizer_a4_prov; //TOTAL E POP PFIZER_FIRST goods
+
 
     //VACCINE_ALLOCATED
     $total_vallocated_svac_frst_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_first :0; //VACCINE ALLOCATED (FD) SINOVAC_FIRST goods
@@ -21,7 +35,10 @@
     $total_vallocated_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first :0; //VACCINE_ALLOCATED (FD) ASTRA_FIRST goods
     $total_vallocated_astra_scnd_prov= $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second :0; //VACCINE ALLOCATED (SD) ASTRA_FIRST goods
 
-
+    //$total_vallocated_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sinovac_allocated_first :0; //VACCINE ALLOCATED (FD) SPUTNIKV_FIRST goods
+    //$total_vallocated_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sinovac_allocated_second :0; //VACCINE ALLOCATED (SD) SPUTNIKV_FIRST goods
+    //$total_vallocated_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->astrazeneca_allocated_first :0; //VACCINE_ALLOCATED (FD) PFIZER_FIRST goods
+    //$total_vallocated_pfizer_scnd_prov= $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->astrazeneca_allocated_second :0; //VACCINE ALLOCATED (SD) PFIZER_FIRST goods
 
     $total_svac_a1_frst_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','a1')")[0]->vaccinated_first_a :0; //VACCINATED (A1) SINOVAC_FIRST
     $total_svac_a2_frst_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','a2')")[0]->vaccinated_first_a :0; //VACCINATED (A2) SINOVAC_FIRST
@@ -42,38 +59,76 @@
     $total_astra_a3_scnd_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','a3')")[0]->vaccinated_second_a :0; //VACCINATED (A3) ASTRA_SECOND
     $total_astra_a4_scnd_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','a4')")[0]->vaccinated_second_a :0; //VACCINATED (A4) ASTRA_SECOND
 
-    $total_vcted_a1_grand_first = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->vaccinated_first :0; //TOTAL VACCINATED A1 GRAND FIRST
+    //$total_sputnikv_a1_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a1')")[0]->vaccinated_first_a :0; //VACCINATED (A1) SPUTNIKV_FIRST
+    //$total_sputnikv_a2_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a2')")[0]->vaccinated_first_a :0; //VACCINATED (A2) SPUTNIKV_FIRST
+    //$total_sputnikv_a3_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a3')")[0]->vaccinated_first_a :0; //VACCINATED (A3) SPUTNIKV_FIRST
+    //$total_sputnikv_a4_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a4')")[0]->vaccinated_first_a :0; //VACCINATED (A4) SPUTNIKV_FIRST
+    //$total_sputnikv_a1_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a1')")[0]->vaccinated_second_a :0; //VACCINATED (A1) SPUTNIKV_SECOND
+    //$total_sputnikv_a2_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a2')")[0]->vaccinated_second_a :0; //VACCINATED (A2) SPUTNIKV_SECOND
+    //$total_sputnikv_a3_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a3')")[0]->vaccinated_second_a :0; //VACCINATED (A3) SPUTNIKV_SECOND
+    //$total_sputnikv_a4_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','a4')")[0]->vaccinated_second_a :0; //VACCINATED (A4) SPUTNIKV_SECOND
 
+    //$total_pfizer_a1_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a1')")[0]->vaccinated_first_a :0; //VACCINATED (A1) PFIZER_FIRST
+    //$total_pfizer_a2_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a2')")[0]->vaccinated_first_a :0; //VACCINATED (A2) PFIZER_FIRST
+    //$total_pfizer_a3_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a3')")[0]->vaccinated_first_a :0; //VACCINATED (A3) PFIZER_FIRST
+    //$total_pfizer_a4_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a4')")[0]->vaccinated_first_a :0; //VACCINATED (A3) PFIZER_FIRST
+    //$total_pfizer_a1_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a1')")[0]->vaccinated_second_a :0; //VACCINATED (A1) PFIZER_SECOND
+    //$total_pfizer_a2_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a2')")[0]->vaccinated_second_a :0; //VACCINATED (A2) PFIZER_SECOND
+    //$total_pfizer_a3_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a3')")[0]->vaccinated_second_a :0; //VACCINATED (A3) PFIZER_SECOND
+    //$total_pfizer_a4_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','a4')")[0]->vaccinated_second_a :0; //VACCINATED (A4) PFIZER_SECOND
+
+    $total_vcted_a1_grand_first = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->vaccinated_first :0; //TOTAL VACCINATED A1 GRAND FIRST
 
     $total_mild_svac_frst_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->mild_first :0; //MILD SINOVAC_FIRST goods
     $total_mild_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->mild_first :0; //MILD ASTRA_FIRST goods
+    //$total_mild_sputnikv_frst_prov =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->mild_first :0; //MILD SPUTNIKV_FIRST goods
+    //$total_mild_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->mild_first :0; //MILD PFIZER_FIRST goods
+
 
     $total_mild_svac_scnd_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->mild_second :0; //MILD SINOVAC_SECOND goods
     $total_mild_astra_scnd_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->mild_second :0; //MILD ASTRA_SECOND goods
+    //$total_mild_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->mild_second :0; //MILD SPUTNIKV_SECOND goods
+    //$total_mild_pfizer_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->mild_second :0; //MILD PFIZER _SECOND goods
 
     $total_srs_svac_frst_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->serious_first :0; //SERIOUS SINOVAC_FIRST goods
     $total_srs_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->serious_first :0; //SERIOUS ASTRA_FIRST goods
+    //$total_srs_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->serious_first :0; //SERIOUS SPUTNIKV_FIRST goods
+    //$total_srs_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->serious_first :0; //SERIOUS PFIZER_FIRST goods
 
     $total_srs_svac_scnd_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->serious_second :0; //SERIOUS  SINOVAC_SECOND goods
     $total_srs_astra_scnd_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->serious_second :0; //SERIOUS ASTRA_SECOND goods
+    //$total_srs_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->serious_second :0; //SERIOUS SPUTNIKV_SECOND goods
+    //$total_srs_pfizer_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->serious_second :0; //SERIOUS PFIZER_SECOND goods
 
     $total_dfrd_svac_frst_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->deferred_first :0; //DEFERRED SINOVAC_FIRST goods
     $total_dfrd_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->deferred_first :0; //DEFERRED ASTRA_FIRST goods
+    //$total_dfrd_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->deferred_first :0; //DEFERRED SPUTNIKV_FIRST goods
+    //$total_dfrd_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->deferred_first :0; //DEFERRED PFIZER_FIRST goods
 
     $total_dfrd_svac_scnd_prov =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->deferred_second :0; //DEFERRED  SINOVAC_SECOND goods
     $total_dfrd_astra_scnd_prov =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->deferred_second :0; //DEFERRED ASTRA_SECOND goods
+    //$total_dfrd_sputnikv_scnd_prov =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->deferred_second :0; //DEFERRED SPUTNIKV_SECOND goods
+    //$total_dfrd_pfizer_scnd_prov =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->deferred_second :0; //DEFERRED PFIZER_SECOND goods
 
     $total_rfsd_svac_frst_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->refused_first :0; //REFUSED SINOVAC_FIRST goods
     $total_rfsd_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->refused_first :0; //REFUSED ASTRA_FIRST goods
+    //$total_rfsd_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->refused_first :0; //REFUSED SPUTNIKV_FIRST goods
+    //$total_rfsd_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->refused_first :0; //REFUSED PFIZER_FIRST goods
 
     $total_rfsd_svac_scnd_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->refused_second :0; //REFUSED  SINOVAC_SECOND goods
     $total_rfsd_astra_scnd_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->refused_second :0; //REFUSED ASTRA_SECOND goods
+    //$total_rfsd_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->refused_second :0; //REFUSED SPUTNIKV_SECOND goods
+    //$total_rfsd_pfizer_scnd_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ?  \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->refused_second :0; //REFUSED PFIZER_SECOND goods
 
     $total_wstge_svac_frst_prov =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->wastage_first :0; //WASTAGE SINOVAC_FIRST goods
     $total_wstge_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->wastage_first :0; //WASTAGE ASTRA_FIRST goods
+    //$total_wstge_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->wastage_first :0; //WASTAGE SPUTNIKV_FIRST goods
+    //$total_wstge_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->wastage_first :0; //WASTAGE PFIZER_FIRST goods
 
     $total_wstge_svac_scnd_prov =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->wastage_second :0; //WASTAGE SINOVAC_SECOND goods
     $total_wstge_astra_scnd_prov =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->wastage_second :0; //WASTAGE ASTRA_SECOND goods
+    //$total_wstge_sputnikv_scnd_prov =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->wastage_second :0; //WASTAGE SPUTNIKV_SECOND goods
+    //$total_wstge_pfizer_scnd_prov =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->wastage_second :0; //WASTAGE PFIZER_SECOND goods
 
     $total_vallocated_frst_svac = $total_vallocated_svac_frst_prov + $total_vallocated_svac_scnd_prov; //TOTAL VACCINE ALLOCATED SINOVAC_FIRST goods
     $total_vallocated_frst_astra = $total_vallocated_astra_frst_prov + $total_vallocated_astra_scnd_prov; //TOTAL VACCINE ALLOCATED ASTRA_FIRST goods
@@ -167,6 +222,12 @@
     </button>
     <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra_grand" aria-expanded="false" aria-controls="collapse_astra_grandtotal">
         <b>Astrazeneca</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv_grand" aria-expanded="false" aria-controls="collapse_sinovac_grandtotal">
+        <b>Sputnik V</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer_grand" aria-expanded="false" aria-controls="collapse_astra_grandtotal">
+        <b>Pfizer</b>
     </button>
     <table style="font-size: 8pt;" class="table" border="2">
      <tbody>
@@ -410,6 +471,201 @@
             </td>
         </tr>
     </tbody>
+        <!-- SPUTNIKV -->
+        <tbody id="collapse_sputnikv_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+        <tr style="background-color: #b1ffdb">
+            <td rowspan="2">
+
+            </td> <!-- 1-3 -->
+            <td rowspan="2">xx</td><!-- A1 SPUTNIKV_FIRST -->
+            <td rowspan="2">xx</td><!-- A2 SPUTNIKV_FIRST -->
+            <td rowspan="2">xx</td><!-- A3 SPUTNIKV_FIRST -->
+            <td rowspan="2">xx</td><!-- A4 SPUTNIKV_FIRST -->
+            <td rowspan="2">xx<!-- TOTAL ELI POP SPUTNIKV_FIRST -->
+            </td>
+            <td rowspan="2">xx</td> <!-- VACCINE ALLOCATED (FD) SPUTNIKV_FIRST -->
+            <td rowspan="2">xx</td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
+            <td rowspan="2">xx</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
+            <td>
+                <span class="label label-success">xx</span>   <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span>  <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span>  <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span>  <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span>  <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span>  <!-- MILD SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- SERIOUS SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- DEFERRED SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- REFUSED SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- WASTAGE SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx%</span> <!-- PERCENT COVERAGE SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- REMAINING UNVACCINATED SPUTNIKV_FIRST -->
+            </td>
+        </tr>
+        <tr style="background-color: #b1ffdb">
+            <td>
+                <span class="label label-warning">xx</span>   <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
+            </td> <!-- 1-4 -->
+            <td>
+                <span class="label label-warning">xx</span> <!-- MILD SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- SERIOUS  SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- DEFERRED  SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- REFUSED  SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- WASTAGE SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx%</span> <!-- PERCENT COVERAGE  SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED  SPUTNIKV_SECOND -->
+            </td>
+        </tr>
+        </tbody>
+        <!-- PFIZER -->
+        <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+        <tr style="background-color: #8fe7fd">
+            <td rowspan="2">
+
+            </td> <!-- 1-5 -->
+            <td rowspan="2" style="color:black;">xx</td>  <!-- A1 PFIZER_FIRST -->
+            <td rowspan="2" style="color:black;">xx</td>  <!-- A2 PFIZER_FIRST-->
+            <td rowspan="2">xx</td>  <!-- A3 PFIZER_FIRST -->
+            <td rowspan="2">xx</td>  <!-- A4 PFIZER_FIRST -->
+            <td rowspan="2" style="color:black;">xx <!-- TOTAL E POP PFIZER_FIRST --></td>
+            <td rowspan="2" style="color:black">xx</td> <!-- VACCINE_ALLOCATED (FD) PFIZER_FIRST-->
+            <td rowspan="2" style="color:black">xx</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
+            <td rowspan="2" style="color:black;">xx</td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
+            <td style="color:black;">
+                <span class="label label-success">xx</span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
+            </td>
+            <td style="color:black">
+                <span class="label label-success">xx</span> <!-- VACCINATED (A2) PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- VACCINATED (A3) PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- VACCINATED (A4) PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- MILD PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- SERIOUS PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- DEFERRED PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- REFUSED PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- WASTAGE PFIZER_FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx%</span> <!-- PERCENT_COVERAGE PFIZER__FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE PFIZER__FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">xx</span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
+            </td>
+        </tr>
+        <tr style="background-color: #8fe7fd">
+            <td style="color: black;">
+                <span class="label label-warning">xx</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
+            </td>
+            <td style="color:black;">
+                <span class="label label-warning">xx</span>  <!-- VACCINATED (A2) PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span>  <!-- VACCINATED (A3) PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span>  <!-- VACCINATED (A4) PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span>  <!-- TOTAL VACCINATED PFIZER__SECOND -->
+            </td> <!-- 1-6 -->
+            <td>
+                <span class="label label-warning">xx</span>  <!-- MILD PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- SERIOUS PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- DEFERRED PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- REFUSED PFIZER_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- WASTAGE PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx%</span> <!-- PERCENT_COVERAGE_PFIZER__SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE PFIZER_SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED PFIZER__SECOND -->
+            </td>
+        </tr>
+        </tbody>
+
+
     <tbody>
     <tr>
         <td>Total</td> <!-- 1-7 -->

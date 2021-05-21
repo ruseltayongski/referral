@@ -10,8 +10,8 @@
                 <option value="">Select Option</option>
                 <option value="Sinovac">Sinovac</option>
                 <option value="Astrazeneca">Astrazeneca</option>
-                <option value="Moderna" disabled>Moderna</option>
-                <option value="Pfizer" disabled>Pfizer</option>
+                <option value="SputnikV">SputnikV</option>
+                <option value="Pfizer">Pfizer</option>
             </select>
         </div>
         <div class="col-md-4">

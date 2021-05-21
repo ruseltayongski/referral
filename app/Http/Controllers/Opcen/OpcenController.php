@@ -355,7 +355,7 @@ class OpcenController extends Controller
         $opcen_client->save();
 
         Session::put('opcen',true);
-        return Redirect::back();
+        return redirect('/opcen/client');
     }
 
     public function clientInfo($client_id){
