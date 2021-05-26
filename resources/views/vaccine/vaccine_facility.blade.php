@@ -21,8 +21,8 @@
                                 <option value="">Select Type of Vaccine</option>
                                 <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                 <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                                <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> disabled>Moderna</option>
-                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                                <option value="Sputnikv" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?>>Sputnikv</option>
+                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -80,9 +80,9 @@
             <div class="col-lg-3">
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>Sputnik V</h3>
+                        <h3>Sputnikv</h3>
 
-                        <p style="font-size:13pt" class="sputnikv_count">0</p>
+                        <p style="font-size:13pt" class="moderna_count">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -127,11 +127,27 @@
                                     $total_epop_astra_a4 = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->a4: 0; //A4_EPOP ASTRA
                                     $total_epop_astra = $total_epop_astra_a1 + $total_epop_astra_a2 + $total_epop_astra_a3 + $total_epop_astra_a4; //TOTAL_E_POP_ASTRA
 
+                                    $total_epop_sputnikv_a1 = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->a1 : 0; // A1 EPOP SPUTNIKV
+                                    $total_epop_sputnikv_a2 = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->a2 : 0; // A2 EPOP SPUTNIKV
+                                    $total_epop_sputnikv_a3 = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->a3 : 0; // A3 EPOP SPUTNIKV
+                                    $total_epop_sputnikv_a4 = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->a4 : 0; // A4 EPOP SPUTNIKV
+                                    $total_epop_sputnikv = $total_epop_sputnikv_a1 + $total_epop_sputnikv_a2 + $total_epop_sputnikv_a3 + $total_epop_sputnikv_a4; //TOTAL_E_POP_SPUTNIKV
+
+                                    $total_epop_pfizer_a1 = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->a1: 0; //A1_EPOP PFIZER
+                                    $total_epop_pfizer_a2 = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->a2: 0; //A2_EPOP PFIZER
+                                    $total_epop_pfizer_a3 = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->a3: 0; //A3_EPOP PFIZER
+                                    $total_epop_pfizer_a4 = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->a4: 0; //A4_EPOP PFIZER
+                                    $total_epop_pfizer = $total_epop_pfizer_a1 + $total_epop_pfizer_a2 + $total_epop_pfizer_a3 + $total_epop_pfizer_a4; //TOTAL_E_POP_PFIZER
+
                                     //VACCINE_ALLOCATED
                                     $total_vallocated_svac_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->sinovac_allocated_first : 0; //VACCINE ALLOCATED_SINOVAC (FD)
                                     $total_vallocated_svac_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? $row->sinovac_allocated_second : 0; //VACCINE ALLOCATED_SINOVAC (SD)
                                     $total_vallocated_astra_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->astrazeneca_allocated_first : 0; //VACCINE ALLOCATED_ASTRA (FD)
                                     $total_vallocated_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? $row->astrazeneca_allocated_second :0; //VACCINE ALLOCATED_ASTRA (SD)
+                                    $total_vallocated_sputnikv_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->sputnikv_allocated_first : 0; //VACCINE ALLOCATED_SPUTNIKV (FD)
+                                    $total_vallocated_sputnikv_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? $row->sputnikv_allocated_second : 0; //VACCINE ALLOCATED_SPUTNIKV (SD)
+                                    $total_vallocated_pfizer_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->pfizer_allocated_first : 0; //VACCINE ALLOCATED_PFIZER (FD)
+                                    $total_vallocated_pfizer_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? $row->pfizer_allocated_second :0; //VACCINE ALLOCATED_PFIZER (SD)
 
                                     //SINOVAC
 
@@ -155,42 +171,87 @@
                                     $total_astra_a3_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a3')")[0]->vaccinated_second : 0; //A3_ASTRA 2
                                     $total_astra_a4_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','a4')")[0]->vaccinated_second : 0; //A4_ASTRA 2
 
+                                    //SPUTNIKV
+
+                                    $total_sputnikv_a1_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a1')")[0]->vaccinated_first : 0; //A1_SPUTNIKV
+                                    $total_sputnikv_a2_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a2')")[0]->vaccinated_first : 0; //A2_SPUTNIKV
+                                    $total_sputnikv_a3_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a3')")[0]->vaccinated_first : 0; //A3_SPUTNIKV
+                                    $total_sputnikv_a4_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a4')")[0]->vaccinated_first : 0; //A4_SPUTNIKV
+                                    $total_sputnikv_a1_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a1')")[0]->vaccinated_second : 0; //A1_SPUTNIKV 2
+                                    $total_sputnikv_a2_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a2')")[0]->vaccinated_second : 0; //A2_SPUTNIKV 2
+                                    $total_sputnikv_a3_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a3')")[0]->vaccinated_second : 0; //A3_SPUTNIKV 2
+                                    $total_sputnikv_a4_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','a4')")[0]->vaccinated_second : 0; //A4_SPUTNIKV 2
+
+                                    //PFIZER
+
+                                    $total_pfizer_a1_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a1')")[0]->vaccinated_first : 0; //A1_PFIZER
+                                    $total_pfizer_a2_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a2')")[0]->vaccinated_first : 0; //A2_PFIZER
+                                    $total_pfizer_a3_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a3')")[0]->vaccinated_first : 0; //A3_PFIZER
+                                    $total_pfizer_a4_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a4')")[0]->vaccinated_first : 0; //A4_PFIZER
+                                    $total_pfizer_a1_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a1')")[0]->vaccinated_second : 0; //A1_PFIZER 2
+                                    $total_pfizer_a2_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a2')")[0]->vaccinated_second : 0; //A2_PFIZER 2
+                                    $total_pfizer_a3_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a3')")[0]->vaccinated_second : 0; //A3_PFIZER 2
+                                    $total_pfizer_a4_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','a4')")[0]->vaccinated_second : 0; //A4_PFIZER 2
 
                                     $total_vcted_svac_frst =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_first : 0; //VACCINATED_SINOVAC
                                     $total_vcted_astra_frst =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->vaccinated_first : 0; //TOTAL VACCINATED_ASTRA
+                                    $total_vcted_sputnikv_frst =  $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->vaccinated_first : 0; //TOTAL VACCINATED_SPUTNIKV
+                                    $total_vcted_pfizer_frst =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->vaccinated_first : 0; //TOTAL VACCINATED_PFIZER
 
                                     $total_vcted_svac_scnd =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->vaccinated_second : 0; //TOTAL_VACCINATED_SINOVAC 2
                                     $total_vcted_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED_ASTRA 2
+                                    $total_vcted_sputnikv_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED_SPUTNIKV 2
+                                    $total_vcted_pfizer_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED_PFIZER 2
 
                                     $total_mild_svac_frst =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->mild_first : 0; //MILD_SINOVAC
                                     $total_mild_astra_frst =   $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->mild_first : 0; //MILD_ASTRA
+                                    $total_mild_sputnikv_frst =   $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->mild_first : 0; //MILD_SPUTNIKV
+                                    $total_mild_pfizer_frst =   $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->mild_first : 0; //MILD_PFIZER
 
                                     $total_mild_svac_scnd =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->mild_second : 0; //MILD_SINOVAC 2
                                     $total_mild_astra_scnd =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->mild_second : 0; //MILD_ASTRA 2
+                                    $total_mild_sputnikv_scnd =  $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->mild_second : 0; //MILD_SPUTNIKV 2
+                                    $total_mild_pfizer_scnd =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->mild_second : 0; //MILD_PFIZER 2
 
                                     $total_srs_svac_frst =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->serious_first : 0; //SERIOUS_SINOVAC
                                     $total_srs_astra_frst =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->serious_first : 0; //SERIOUS_ASTRA
+                                    $total_srs_sputnikv_frst =  $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->serious_first : 0; //SERIOUS_SPUTNIKV
+                                    $total_srs_pfizer_frst =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->serious_first : 0; //SERIOUS_PFIZER
 
                                     $total_srs_svac_scnd = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->serious_second : 0; //SERIOUS_SINOVAC 2
                                     $total_srs_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->serious_second : 0; //SERIOUS_ASTRA2
+                                    $total_srs_sputnikv_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->serious_second : 0; //SERIOUS_SPUTNIKV2
+                                    $total_srs_pfizer_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->serious_second : 0; //SERIOUS_PFIZER2
 
                                     $total_dfrd_svac_frst =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->deferred_first : 0; //DEFERRED_SINOVAC
                                     $total_dfrd_astra_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->deferred_first : 0; //DEFERRED_ASTRA
+                                    $total_dfrd_sputnikv_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->deferred_first : 0; //DEFERRED_SPUTNIKV
+                                    $total_dfrd_pfizer_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->deferred_first : 0; //DEFERRED_PFIZER
 
                                     $total_dfrd_svac_scnd =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->deferred_second : 0; //DEFERRED_SINOVAC 2
                                     $total_dfrd_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->deferred_second : 0; //DEFERRED_ASTRA 2
+                                    $total_dfrd_sputnikv_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->deferred_second : 0; //DEFERRED_SPUTNIKV 2
+                                    $total_dfrd_pfizer_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->deferred_second : 0; //DEFERRED_PFIZER 2
 
                                     $total_rfsd_svac_frst = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->refused_first : 0; //REFUSED_SINOVAC
                                     $total_rfsd_astra_frst = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->refused_first : 0; //REFUSED_ASTRA
+                                    $total_rfsd_sputnikv_frst = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->refused_first : 0; //REFUSED_SPUTNIKV
+                                    $total_rfsd_pfizer_frst = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->refused_first : 0; //REFUSED_PFIZER
 
                                     $total_rfsd_svac_scnd =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->refused_second : 0; //REFUSED_SINOVAC 2
                                     $total_rfsd_astra_scnd = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->refused_second : 0; //REFUSED_ASTRA 2
+                                    $total_rfsd_sputnikv_scnd = $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->refused_second : 0; //REFUSED_SPUTNIKV 2
+                                    $total_rfsd_pfizer_scnd = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->refused_second : 0; //REFUSED_PFIZER 2
 
                                     $total_wstge_svac_frst =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->wastage_first : 0; //WASTAGF_SINOVAC
                                     $total_wstge_astra_frst =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->wastage_first : 0; //WASTAGE_ASTRA
+                                    $total_wstge_sputnikv_frst =  $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->wastage_first : 0; //WASTAGE_SPUTNIKV
+                                    $total_wstge_pfizer_frst =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->wastage_first : 0; //WASTAGE_PFIZER
 
                                     $total_wstge_svac_scnd =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sinovac','')")[0]->wastage_second : 0; //WASTAGE_SINOVAC 2
                                     $total_wstge_astra_scnd =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Astrazeneca','')")[0]->wastage_second : 0; //WASTAGE_ASTRA2
+                                    $total_wstge_sputnikv_scnd =  $typeof_vaccine_filter == "Sputnikv" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Sputnikv','')")[0]->wastage_second : 0; //WASTAGE_SPUTNIKV2
+                                    $total_wstge_pfizer_scnd =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility('$row->id','Pfizer','')")[0]->wastage_second : 0; //WASTAGE_PFIZER2
 
 
                                     $total_vcted_svac_frst = $total_svac_a1_frst + $total_svac_a2_frst + $total_svac_a3_frst + $total_svac_a4_frst; //TOTAL_VACCINATED_SINOVAC_FIRST
@@ -199,46 +260,86 @@
                                     $total_vcted_astra_frst = $total_astra_a1_frst + $total_astra_a2_frst + $total_astra_a3_frst + $total_astra_a4_frst; //TOTAL_VACCINATED_ASTRA_FIRST
                                     $total_vcted_astra_scnd = $total_astra_a1_scnd + $total_astra_a2_scnd + $total_astra_a3_scnd + $total_astra_a4_scnd; //TOTAL_VACCINATED_ASTRA_SECOND
 
-                                    $total_vcted_frst = $total_vcted_svac_frst +  $total_vcted_astra_frst; //TOTAL_VACCINATED_FIRST //DARAAAA
-                                    $total_vcted_scnd = $total_vcted_svac_scnd +  $total_vcted_astra_scnd; //TOTAL_VACCINATED_SECOND
+                                    $total_vcted_sputnikv_frst = $total_sputnikv_a1_frst + $total_sputnikv_a2_frst + $total_sputnikv_a3_frst + $total_sputnikv_a4_frst; //TOTAL_VACCINATED_SPUTNIKV_FIRST
+                                    $total_vcted_sputnikv_scnd = $total_sputnikv_a1_scnd + $total_sputnikv_a2_scnd + $total_sputnikv_a3_scnd + $total_sputnikv_a4_scnd; //TOTAL_VACCINATED_SPUTNIKV_SECOND
 
+                                    $total_vcted_pfizer_frst = $total_pfizer_a1_frst + $total_pfizer_a2_frst + $total_pfizer_a3_frst + $total_pfizer_a4_frst; //TOTAL_VACCINATED_PFIZER_FIRST
+                                    $total_vcted_pfizer_scnd = $total_pfizer_a1_scnd + $total_pfizer_a2_scnd + $total_pfizer_a3_scnd + $total_pfizer_a4_scnd; //TOTAL_VACCINATED_PFIZER_SECOND
 
                                     $total_vallocated_svac = $total_vallocated_svac_frst + $total_vallocated_svac_scnd; //TOTAL VACCINE ALLOCATED_SINOVAC
                                     $total_vallocated_astra = $total_vallocated_astra_frst + $total_vallocated_astra_scnd; //TOTAL VACCINE ALLOCATED_ASTRA
-                                    $total_vallocated  = $total_vallocated_svac + $total_vallocated_astra; //TOTAL_VACCINE_ALLOCATED
+                                    $total_vallocated_sputnikv = $total_vallocated_sputnikv_frst + $total_vallocated_sputnikv_scnd; //TOTAL VACCINE ALLOCATED_SPUTNIKV
+                                    $total_vallocated_pfizer = $total_vallocated_pfizer_frst + $total_vallocated_pfizer_scnd; //TOTAL VACCINE ALLOCATED_PFIZER
+                                    $total_vallocated  = $total_vallocated_svac + $total_vallocated_astra + $total_vallocated_sputnikv + $total_vallocated_pfizer; //TOTAL_VACCINE_ALLOCATED
 
-                                    $total_vallocated_frst =  $total_vallocated_svac_frst + $total_vallocated_astra_frst; //TOTAL_VACCINE_ALLOCATED_FIRST
-                                    $total_vallocated_scnd = $total_vallocated_svac_scnd + $total_vallocated_astra_scnd; //TOTAL_VACCINE_ALLOCATED_SECOND
+                                    $total_vallocated_frst =  $total_vallocated_svac_frst + $total_vallocated_astra_frst + $total_vallocated_sputnikv_frst + $total_vallocated_pfizer_frst; //TOTAL_VACCINE_ALLOCATED_FIRST
+                                    $total_vallocated_scnd = $total_vallocated_svac_scnd + $total_vallocated_astra_scnd + $total_vallocated_sputnikv_scnd + $total_vallocated_pfizer_scnd; //TOTAL_VACCINE_ALLOCATED_SECOND
 
-                                    $total_rfsd_frst = $total_rfsd_svac_frst + $total_rfsd_astra_frst; //TOTAL_REFUSED
-                                    $total_rfsd_scnd = $total_rfsd_svac_scnd + $total_rfsd_astra_scnd; //TOTAL_REFUSED - 2
+                                    $total_rfsd_frst = $total_rfsd_svac_frst + $total_rfsd_astra_frst + $total_rfsd_sputnikv_frst + $total_rfsd_pfizer_frst; //TOTAL_REFUSED
+                                    $total_rfsd_scnd = $total_rfsd_svac_scnd + $total_rfsd_astra_scnd + $total_rfsd_sputnikv_scnd + $total_rfsd_pfizer_scnd; //TOTAL_REFUSED - 2
 
                                     $p_cvrge_svac_frst = $total_vcted_svac_frst / $total_epop_svac * 100; //PERCENT_COVERAGE_SINOVAC
                                     $p_cvrge_astra_frst = $total_vcted_astra_frst / $total_epop_astra * 100; //PERCENT_COVERAGE_ASTRA
+                                    $p_cvrge_sputnikv_frst = $total_vcted_sputnikv_frst / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV
+                                    $p_cvrge_pfizer_frst = $total_vcted_pfizer_frst / $total_epop_pfizer * 100; //PERCENT_COVERAGE_PFIZER
+
 
                                     $p_cvrge_svac_scnd = $total_vcted_svac_scnd / $total_epop_svac * 100; //PERCENT_COVERAGE_SINOVAC 2
                                     $p_cvrge_astra_scnd = $total_vcted_astra_scnd / $total_epop_astra * 100; //PERCENT_COVERAGE_ASTRA 2
+                                    $p_cvrge_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV 2
+                                    $p_cvrge_pfizer_scnd = $total_vcted_pfizer_scnd / $total_epop_pfizer * 100; //PERCENT_COVERAGE_PFIZER 2
 
-                                    $total_p_cvrge_frst = $total_vcted_frst / $total_epop_astra * 100; //TOTAL_PERCENT_COVERAGE
-                                    $total_p_cvrge_scnd = $total_vcted_scnd / $total_epop_astra * 100; //TOTAL_PERCENT_COVERAGE - 2
 
                                     $total_c_rate_svac_frst = $total_vcted_svac_frst / $total_vallocated_svac_frst * 100; //CONSUMPTION RATE_SINOVAC
                                     $total_c_rate_astra_frst = $total_vcted_astra_frst / $total_vallocated_astra_frst * 100; //CONSUMPTION RATE ASTRA
+                                    $total_c_rate_sputnikv_frst = $total_vcted_sputnikv_frst / $total_vallocated_sputnikv_frst * 100; //CONSUMPTION RATE SPUTNIKV
+                                    $total_c_rate_pfizer_frst = $total_vcted_pfizer_frst / $total_vallocated_pfizer_frst * 100; //CONSUMPTION RATE PFIZER
 
                                     $total_c_rate_svac_scnd = $total_vcted_svac_scnd / $total_vallocated_svac_scnd * 100; //CONSUMPTION RATE SINOVAC 2
                                     $total_c_rate_astra_scnd = $total_vcted_astra_scnd / $total_vallocated_astra_scnd * 100; //CONSUMPTION_RATE_ASTRA 2
-
-                                    $total_c_rate_frst = $total_vcted_frst / $total_vallocated_frst * 100; //TOTAL CONSUMPTION_RATE
-                                    $total_c_rate_scnd = $total_vcted_scnd / $total_vallocated_scnd * 100; //TOTAL_CONSUMPTION_RATE - 2
+                                    $total_c_rate_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_vallocated_sputnikv_scnd * 100; //CONSUMPTION_RATE_SPUTNIKV 2
+                                    $total_c_rate_pfizer_scnd = $total_vcted_pfizer_scnd / $total_vallocated_pfizer_scnd * 100; //CONSUMPTION_RATE_PFIZER 2
 
                                     $total_r_unvcted_frst_svac = $total_epop_svac - $total_vcted_svac_frst - $total_rfsd_svac_frst; //REMAINING UNVACCINATED_SINOVAC
                                     $total_r_unvcted_frst_astra = $total_epop_astra - $total_vcted_astra_frst - $total_rfsd_astra_frst; //REMAINUNG UNVACCINATED_ASTRA
+                                    $total_r_unvcted_frst_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_frst - $total_rfsd_sputnikv_frst; //REMAINUNG UNVACCINATED_SPUTNIKV
+                                    $total_r_unvcted_frst_pfizer = $total_epop_pfizer - $total_vcted_pfizer_frst - $total_rfsd_pfizer_frst; //REMAINUNG UNVACCINATED_PFIZER
 
                                     $total_r_unvcted_scnd_svac = $total_epop_svac - $total_vcted_svac_scnd - $total_rfsd_svac_scnd; //REMAINING UNVACCINATED_SINOVAC 2
                                     $total_r_unvcted_scnd_astra = $total_epop_astra - $total_vcted_astra_scnd - $total_rfsd_astra_scnd; //REMAINUNG_UNVACCIANTED_ASTRA 2
+                                    $total_r_unvcted_scnd_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_scnd - $total_rfsd_sputnikv_scnd; //REMAINUNG_UNVACCIANTED_SPUTNIKV 2
+                                    $total_r_unvcted_scnd_pfizer = $total_epop_pfizer - $total_vcted_pfizer_scnd - $total_rfsd_pfizer_scnd; //REMAINUNG_UNVACCIANTED_PFIZER 2
 
-                                    $total_r_unvcted_frst = $total_epop_svac - $total_vcted_frst - $total_rfsd_frst;
-                                    $total_r_unvcted_scnd = $total_epop_astra - $total_vcted_scnd - $total_rfsd_scnd;
+                                    $total_vcted_a1_first = $total_svac_a1_frst + $total_astra_a1_frst + $total_sputnikv_a1_frst + $total_pfizer_a1_frst;//VACCINATED A1
+                                    $total_vcted_a2_first = $total_svac_a2_frst + $total_astra_a2_frst + $total_sputnikv_a2_frst + $total_pfizer_a2_frst;//VACCINATED A2
+                                    $total_vcted_a3_first = $total_svac_a3_frst + $total_astra_a3_frst + $total_sputnikv_a3_frst + $total_pfizer_a3_frst;//VACCINATED A3
+                                    $total_vcted_a4_first = $total_svac_a4_frst + $total_astra_a4_frst + $total_sputnikv_a4_frst + $total_pfizer_a4_frst;//VACCINATED A4
+                                    $total_vcted_overall_first = $total_vcted_a1_first + $total_vcted_a2_first + $total_vcted_a3_first + $total_vcted_a4_first;//VACCINATED OVERALL
+
+                                    $total_vcted_a1_scnd = $total_svac_a1_scnd + $total_astra_a1_scnd + $total_sputnikv_a1_scnd + $total_pfizer_a1_scnd; //VACCINATED A1 2
+                                    $total_vcted_a2_scnd = $total_svac_a2_scnd + $total_astra_a2_scnd + $total_sputnikv_a2_scnd + $total_pfizer_a2_scnd; //VACCINATED A2 2
+                                    $total_vcted_a3_scnd = $total_svac_a3_scnd + $total_astra_a3_scnd + $total_sputnikv_a3_scnd + $total_pfizer_a3_scnd; //VACCINATED A3 2
+                                    $total_vcted_a4_scnd = $total_svac_a4_scnd + $total_astra_a4_scnd + $total_sputnikv_a4_scnd + $total_pfizer_a4_scnd; //VACCINATED A4 2
+                                    $total_vcted_overall_scnd = $total_vcted_a1_scnd + $total_vcted_a2_scnd + $total_vcted_a3_scnd + $total_vcted_a4_scnd;//VACCINATED OVERALL
+
+
+                                    $total_overall_mild_frst = $total_mild_svac_frst + $total_mild_astra_frst + $total_mild_sputnikv_frst + $total_mild_pfizer_frst; //TOTAL_OVERALL_MILD_FIRST
+                                    $total_overall_srs_frst = $total_srs_svac_frst + $total_srs_astra_frst + $total_srs_sputnikv_frst + $total_srs_pfizer_frst; //TOTAL_OVERALL_SERIOUS_FIRST
+                                    $total_overall_dfrd_frst = $total_dfrd_svac_frst + $total_dfrd_astra_frst + $total_dfrd_sputnikv_frst + $total_dfrd_pfizer_frst; //TOTAL_OVERALL_DEFERRED_FIRST
+                                    $total_overall_wstge_frst = $total_wstge_svac_frst + $total_wstge_astra_frst + $total_wstge_sputnikv_frst + $total_wstge_pfizer_frst; //TOTAL_OVERALL_WASTAGE_FIRST
+
+
+                                    $total_p_cvrge_overall_frst = $total_vcted_overall_first / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_FIRST
+                                    $total_p_cvrge_overall_scnd = $total_vcted_overall_scnd / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_SCND
+
+                                    $total_c_rate_overall_frst = $total_vcted_overall_first / $total_vallocated_frst * 100; //TOTAL_CONSUMPTION_RATE_OVERALL_FIRST
+                                    $total_c_rate_overall_scnd = $total_vcted_overall_scnd / $total_vallocated_scnd * 100; //OTAL_CONSUMPTION_RATE_OVERALL_SECOND
+
+                                    $total_r_unvcted_overall_frst = $total_epop_pfizer - $total_vcted_overall_first - $total_rfsd_frst; //TOTAL_REMAINING_UNVACCINATED_OVERALL_FIRST
+                                    $total_r_unvcted_overall_scnd = $total_epop_pfizer - $total_vcted_overall_scnd - $total_rfsd_scnd; //TOTAL_REMAINING_UNVACCINATED_OVERALL_SECOND
+
+
+
 
                                     ?>
                                     <tr>
@@ -523,193 +624,195 @@
                                                     </td>
                                                 </tr>
                                                 </tbody>
+
                                                 <!-- SPUTNIKV -->
                                                 <tbody id="collapse_sputnikv{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                 <tr style="background-color: #b1ffdb">
                                                     <td rowspan="2">
-                                                    </td> <!-- 1-5 -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a1{{ $row->id }}">xx</td> <!-- A1 EPOP SPUTNIKV -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a2{{ $row->id }}">xx</td>  <!-- A2 EPOP SPUTNIKV  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a3{{ $row->id }}">xx</td> <!-- A3 EPOP SPUTNIKV  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a4{{ $row->id }}">xx</td> <!-- A4 EPOP SPUTNIKV  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_sputnikv{{ $row->id }}">xx</td>  <!-- TOTAL_E_POP_SPUTNIKV  -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_frst{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (FD) -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_scnd{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_SPUTNIKV  (SD) -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv{{ $row->id }}">xx</td>  <!-- TOTAL VACCINE ALLOCATED_SPUTNIKV -->
+                                                    </td>
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a1{{ $row->id }}">{{ $total_epop_sputnikv_a1 }}</td> <!-- A1 EPOP SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a2{{ $row->id }}">{{ $total_epop_sputnikv_a2 }}</td>  <!-- A2 EPOP SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a3{{ $row->id }}">{{ $total_epop_sputnikv_a3 }}</td> <!-- A3 EPOP SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a4{{ $row->id }}">{{ $total_epop_sputnikv_a4 }}</td> <!-- A4 EPOP SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra{{ $row->id }}">{{ $total_epop_sputnikv }} </td>  <!-- TOTAL_E_POP_SPUTNIKV -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra_frst{{ $row->id }}">{{ $total_vallocated_sputnikv_frst }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (FD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $total_vallocated_sputnikv_scnd }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (SD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED_SPUTNIKV -->
                                                     <td style="color:black;">
-                                                        <span class="label label-success total_sputnikv_a1_frst{{ $row->id }}">xx</span>  <!-- A1_SPUTNIKV  -->
+                                                        <span class="label label-success total_sputnikv_a1_frst{{ $row->id }}">{{ $total_sputnikv_a1_frst }}</span>  <!-- A1_SPUTNIKV  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_sputnikv_a2_frst{{ $row->id }}">xx</span>  <!-- A2_SPUTNIKV   -->
+                                                        <span class="label label-success total_sputnikv_a2_frst{{ $row->id }}">{{ $total_sputnikv_a2_frst }}</span>  <!-- A2_SPUTNIKV  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_sputnikv_a3_frst{{ $row->id }}">xx</span>  <!-- A3_SPUTNIKV   -->
+                                                        <span class="label label-success total_sputnikv_a3_frst{{ $row->id }}">{{ $total_sputnikv_a3_frst }}</span>  <!-- A3_SPUTNIKV  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_sputnikv_a4_frst{{ $row->id }}">xx</span>  <!-- A4_SPUTNIKV   -->
+                                                        <span class="label label-success total_sputnikv_a4_frst{{ $row->id }}">{{ $total_sputnikv_a4_frst }}</span>  <!-- A4_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_vcted_sputnikv_frst{{ $row->id }}">xx</span>  <!-- TOTAL VACCINATED_SPUTNIKV -->
+                                                        <span class="label label-success total_vcted_sputnikv_frst{{ $row->id }}">{{ $total_vcted_sputnikv_frst }}</span>  <!-- TOTAL VACCINATED_SPUTNIKV-->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_mild_sputnikv_frst{{ $row->id }}">xx</span> <!-- MILD_SPUTNIKV   -->
+                                                        <span class="label label-success total_mild_sputnikv_frst{{ $row->id }}">{{ $total_mild_sputnikv_frst }}</span> <!-- MILD_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_srs_sputnikv_frst{{ $row->id }}">xx</span>  <!-- SERIOUS_SPUTNIKV  -->
+                                                        <span class="label label-success total_srs_sputnikv_frst{{ $row->id }}">{{ $total_srs_sputnikv_frst }}</span>  <!-- SERIOUS_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_dfrd_sputnikv_frst{{ $row->id }}">xx</span> <!-- DEFERRED_SPUTNIKV   -->
+                                                        <span class="label label-success total_dfrd_sputnikv_frst{{ $row->id }}">{{ $total_dfrd_sputnikv_frst }}</span> <!-- DEFERRED_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_rfsd_sputnikv_frst{{ $row->id }}">xx</span> <!-- REFUSED_SPUTNIKV   -->
+                                                        <span class="label label-success total_rfsd_sputnikv_frst{{ $row->id }}">{{ $total_rfsd_sputnikv_frst }}</span> <!-- REFUSED_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_wstge_sputnikv_frst{{ $row->id }}">xx</span> <!-- WASTAGE_SPUTNIKV   -->
+                                                        <span class="label label-success total_wstge_sputnikv_frst{{ $row->id }}">{{ $total_wstge_sputnikv_frst }}</span> <!-- WASTAGE_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success p_cvrge_sputnikv_frst{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_SPUTNIKV   -->
+                                                        <span class="label label-success p_cvrge_sputnikv_frst{{ $row->id }}">{{ number_format($p_cvrge_sputnikv_frst,2) }}%</span> <!-- PERCENT_COVERAGE_SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_c_rate_sputnikv_frst{{ $row->id }}">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV   -->
+                                                        <span class="label label-success total_c_rate_sputnikv_frst{{ $row->id }}">{{ number_format($total_c_rate_sputnikv_frst,2) }}%</span> <!-- CONSUMPTION RATE SPUTNIKV  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_r_unvcted_frst_sputnikv{{ $row->id }}">xx</span> <!-- REMAINUNG UNVACCINATED_SPUTNIKV   -->
+                                                        <span class="label label-success total_r_unvcted_frst_sputnikv{{ $row->id }}">{{ $total_r_unvcted_frst_sputnikv }}</span> <!-- REMAINUNG UNVACCINATED_SPUTNIKV  -->
                                                     </td>
                                                 </tr>
                                                 <tr style="background-color: #b1ffdb">
                                                     <td style="color: black;">
-                                                        <span class="label label-warning total_sputnikv_a1_scnd{{ $row->id }}">xx</span>  <!-- A1_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_sputnikv_a1_scnd{{ $row->id }}">{{ $total_sputnikv_a1_scnd }}</span>  <!-- A1_SPUTNIKV 2  -->
                                                     </td>
                                                     <td style="color:black;">
-                                                        <span class="label label-warning total_sputnikv_a2_scnd{{ $row->id }}">xx</span>  <!-- A2_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_sputnikv_a2_scnd{{ $row->id }}">{{ $total_sputnikv_a2_scnd }}</span>  <!-- A2_SPUTNIKV 2  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-warning total_sputnikv_a3_scnd{{ $row->id }}">xx</span>  <!-- A3_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_sputnikv_a3_scnd{{ $row->id }}">{{ $total_sputnikv_a3_scnd }}</span>  <!-- A3_SPUTNIKV 2  -->
                                                     </td>
                                                     <td style="color:black;">
-                                                        <span class="label label-warning total_sputnikv_a4_scnd{{ $row->id }}">xx</span>  <!-- A4_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_sputnikv_a4_scnd{{ $row->id }}">{{ $total_sputnikv_a4_scnd }}</span>  <!-- A4_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_vcted_sputnikv_scnd{{ $row->id }}">xx</span> <!-- TOTAL VACCINATED_SPUTNIKV  2-->
+                                                        <span class="label label-warning total_vcted_sputnikv_scnd{{ $row->id }}">{{ $total_vcted_sputnikv_scnd }}</span> <!-- TOTAL VACCINATED_SPUTNIKV 2-->
                                                     </td> <!-- 1-6 -->
                                                     <td>
-                                                        <span class="label label-warning total_mild_sputnikv_scnd{{ $row->id }}">xx</span> <!-- MILD_SPUTNIKV  2  -->
+                                                        <span class="label label-warning total_mild_sputnikv_scnd{{ $row->id }}">{{ $total_mild_sputnikv_scnd }}</span> <!-- MILD_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_srs_sputnikv_scnd{{ $row->id }}">xx</span> <!-- SERIOUS_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_srs_sputnikv_scnd{{ $row->id }}">{{ $total_srs_sputnikv_scnd }}</span> <!-- SERIOUS_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_dfrd_sputnikv_scnd{{ $row->id }}">xx</span> <!-- DEFERRED_SPUTNIKV  2  -->
+                                                        <span class="label label-warning total_dfrd_sputnikv_scnd{{ $row->id }}">{{ $total_dfrd_sputnikv_scnd }}</span> <!-- DEFERRED_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_rfsd_sputnikv_scnd{{ $row->id }}">xx</span> <!-- REFUSED_SPUTNIKV  2  -->
+                                                        <span class="label label-warning total_rfsd_sputnikv_scnd{{ $row->id }}">{{ $total_rfsd_sputnikv_scnd }}</span> <!-- REFUSED_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_wstge_sputnikv_scnd{{ $row->id }}">xx</span> <!-- WASTAGE_SPUTNIKV 2  -->
+                                                        <span class="label label-warning total_wstge_sputnikv_scnd{{ $row->id }}">{{ $total_wstge_sputnikv_scnd }}</span> <!-- WASTAGE_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning p_cvrge_sputnikv_scnd{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_SPUTNIKV  2  -->
+                                                        <span class="label label-warning p_cvrge_sputnikv_scnd{{ $row->id }}">{{ number_format($p_cvrge_sputnikv_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_c_rate_sputnikv_scnd{{ $row->id }}">xx%</span> <!-- CONSUMPTION_RATE_SPUTNIKV  2  -->
+                                                        <span class="label label-warning total_c_rate_sputnikv_scnd{{ $row->id }}">{{ number_format($total_c_rate_sputnikv_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_SPUTNIKV 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_r_unvcted_scnd_sputnikv{{ $row->id }}">xx</span> <!-- REMAINUNG_UNVACCIANTED_SPUTNIKV  2  -->
+                                                        <span class="label label-warning total_r_unvcted_scnd_sputnikv{{ $row->id }}">{{ $total_r_unvcted_scnd_sputnikv }}</span> <!-- REMAINUNG_UNVACCIANTED_SPUTNIKV 2  -->
                                                     </td>
                                                 </tr>
                                                 </tbody>
+
                                                 <!-- PFIZER -->
                                                 <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                 <tr style="background-color: #8fe7fd">
                                                     <td rowspan="2">
-                                                    </td> <!-- 1-5 -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a1{{ $row->id }}">xx</td> <!-- A1 EPOP PFIZER -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a2{{ $row->id }}">xx</td>  <!-- A2 EPOP PFIZER  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a3{{ $row->id }}">xx</td> <!-- A3 EPOP PFIZER  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer_a4{{ $row->id }}">xx</td> <!-- A4 EPOP PFIZER  -->
-                                                    <td rowspan="2" style="color:black;" class="total_epop_pfizer{{ $row->id }}">xx</td>  <!-- TOTAL_E_POP_PFIZER  -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_frst{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_scnd{{ $row->id }}">xx</td>  <!-- VACCINE ALLOCATED_PFIZER  (SD) -->
-                                                    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">xx</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER-->
+                                                    </td>
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a1{{ $row->id }}">{{ $total_epop_pfizer_a1 }}</td> <!-- A1 EPOP PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a2{{ $row->id }}">{{ $total_epop_pfizer_a2 }}</td>  <!-- A2 EPOP PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a3{{ $row->id }}">{{ $total_epop_pfizer_a3 }}</td> <!-- A3 EPOP PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra_a4{{ $row->id }}">{{ $total_epop_pfizer_a4 }}</td> <!-- A4 EPOP PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_epop_astra{{ $row->id }}">{{ $total_epop_pfizer }} </td>  <!-- TOTAL_E_POP_PFIZER -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra_frst{{ $row->id }}">{{ $total_vallocated_pfizer_frst }}</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $total_vallocated_pfizer_scnd }}</td>  <!-- VACCINE ALLOCATED_PFIZER(SD) -->
+                                                    <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated_pfizer }}</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER -->
                                                     <td style="color:black;">
-                                                        <span class="label label-success total_pfizer_a1_frst{{ $row->id }}">xx</span>  <!-- A1_PFIZER  -->
+                                                        <span class="label label-success total_astra_a1_frst{{ $row->id }}">{{ $total_pfizer_a1_frst }}</span>  <!-- A1_PFIZER  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_pfizer_a2_frst{{ $row->id }}">xx</span>  <!-- A2_PFIZER   -->
+                                                        <span class="label label-success total_astra_a2_frst{{ $row->id }}">{{ $total_pfizer_a2_frst }}</span>  <!-- A2_PFIZER  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_pfizer_a3_frst{{ $row->id }}">xx</span>  <!-- A3_PFIZER   -->
+                                                        <span class="label label-success total_astra_a3_frst{{ $row->id }}">{{ $total_pfizer_a3_frst }}</span>  <!-- A3_PFIZER  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-success total_pfizer_a4_frst{{ $row->id }}">xx</span>  <!-- A4_PFIZER   -->
+                                                        <span class="label label-success total_astra_a4_frst{{ $row->id }}">{{ $total_pfizer_a4_frst }}</span>  <!-- A4_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_vcted_pfizer_frst{{ $row->id }}">xx</span>  <!-- TOTAL VACCINATED_PFIZER-->
+                                                        <span class="label label-success total_vcted_astra_frst{{ $row->id }}">{{ $total_vcted_pfizer_frst }}</span>  <!-- TOTAL VACCINATED_PFIZER-->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_mild_pfizer_frst{{ $row->id }}">xx</span> <!-- MILD_PFIZER   -->
+                                                        <span class="label label-success total_mild_astra_frst{{ $row->id }}">{{ $total_mild_pfizer_frst }}</span> <!-- MILD_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_srs_pfizer_frst{{ $row->id }}">xx</span>  <!-- SERIOUS_PFIZER  -->
+                                                        <span class="label label-success total_srs_astra_frst{{ $row->id }}">{{ $total_srs_pfizer_frst }}</span>  <!-- SERIOUS_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_dfrd_pfizer_frst{{ $row->id }}">xx</span> <!-- DEFERRED_PFIZER   -->
+                                                        <span class="label label-success total_dfrd_astra_frst{{ $row->id }}">{{ $total_dfrd_pfizer_frst }}</span> <!-- DEFERRED_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_rfsd_pfizer_frst{{ $row->id }}">xx</span> <!-- REFUSED_PFIZER   -->
+                                                        <span class="label label-success total_rfsd_astra_frst{{ $row->id }}">{{ $total_rfsd_pfizer_frst }}</span> <!-- REFUSED_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_wstge_pfizer_frst{{ $row->id }}">xx</span> <!-- WASTAGE_PFIZER  -->
+                                                        <span class="label label-success total_wstge_astra_frst{{ $row->id }}">{{ $total_wstge_pfizer_frst }}</span> <!-- WASTAGE_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success p_cvrge_pfizer_frst{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_PFIZER   -->
+                                                        <span class="label label-success p_cvrge_astra_frst{{ $row->id }}">{{ number_format($p_cvrge_pfizer_frst,2) }}%</span> <!-- PERCENT_COVERAGE_PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_c_rate_pfizer_frst{{ $row->id }}">xx%</span> <!-- CONSUMPTION RATE PFIZER   -->
+                                                        <span class="label label-success total_c_rate_astra_frst{{ $row->id }}">{{ number_format($total_c_rate_pfizer_frst,2) }}%</span> <!-- CONSUMPTION RATE PFIZER  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-success total_r_unvcted_frst_pfizer{{ $row->id }}">xx</span> <!-- REMAINUNG UNVACCINATED_PFIZER  -->
+                                                        <span class="label label-success total_r_unvcted_frst_astra{{ $row->id }}">{{ $total_r_unvcted_frst_pfizer }}</span> <!-- REMAINUNG UNVACCINATED_PFIZER  -->
                                                     </td>
                                                 </tr>
                                                 <tr style="background-color: #8fe7fd">
                                                     <td style="color: black;">
-                                                        <span class="label label-warning total_pfizer_a1_scnd{{ $row->id }}">xx</span>  <!-- A1_PFIZER 2  -->
+                                                        <span class="label label-warning total_astra_a1_scnd{{ $row->id }}">{{ $total_pfizer_a1_scnd }}</span>  <!-- A1_PFIZER 2  -->
                                                     </td>
                                                     <td style="color:black;">
-                                                        <span class="label label-warning total_pfizer_a2_scnd{{ $row->id }}">xx</span>  <!-- A2_PFIZER 2  -->
+                                                        <span class="label label-warning total_astra_a2_scnd{{ $row->id }}">{{ $total_pfizer_a2_scnd }}</span>  <!-- A2_PFIZER 2  -->
                                                     </td>
                                                     <td style="color:black">
-                                                        <span class="label label-warning total_pfizer_a3_scnd{{ $row->id }}">xx</span>  <!-- A3_PFIZER 2  -->
+                                                        <span class="label label-warning total_astra_a3_scnd{{ $row->id }}">{{ $total_pfizer_a3_scnd }}</span>  <!-- A3_PFIZER 2  -->
                                                     </td>
                                                     <td style="color:black;">
-                                                        <span class="label label-warning total_pfizer_a4_scnd{{ $row->id }}">xx</span>  <!-- A4_PFIZER 2  -->
+                                                        <span class="label label-warning total_astra_a4_scnd{{ $row->id }}">{{ $total_pfizer_a4_scnd }}</span>  <!-- A4_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_vcted_pfizerv_scnd{{ $row->id }}">xx</span> <!-- TOTAL VACCINATED_PFIZER  2-->
+                                                        <span class="label label-warning total_vcted_astra_scnd{{ $row->id }}">{{ $total_vcted_pfizer_scnd }}</span> <!-- TOTAL VACCINATED_PFIZER 2-->
                                                     </td> <!-- 1-6 -->
                                                     <td>
-                                                        <span class="label label-warning total_mild_pfizer_scnd{{ $row->id }}">xx</span> <!-- MILD_PFIZER 2  -->
+                                                        <span class="label label-warning total_mild_astra_scnd{{ $row->id }}">{{ $total_mild_pfizer_scnd }}</span> <!-- MILD_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_srs_pfizer_scnd{{ $row->id }}">xx</span> <!-- SERIOUS_PFIZER 2  -->
+                                                        <span class="label label-warning total_srs_astra_scnd{{ $row->id }}">{{ $total_srs_pfizer_scnd }}</span> <!-- SERIOUS_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_dfrd_pfizer_scnd{{ $row->id }}">xx</span> <!-- DEFERRED_PFIZER  2  -->
+                                                        <span class="label label-warning total_dfrd_astra_scnd{{ $row->id }}">{{ $total_dfrd_pfizer_scnd }}</span> <!-- DEFERRED_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_rfsd_pfizer_scnd{{ $row->id }}">xx</span> <!-- REFUSED_PFIZER  2  -->
+                                                        <span class="label label-warning total_rfsd_astra_scnd{{ $row->id }}">{{ $total_rfsd_pfizer_scnd }}</span> <!-- REFUSED_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_wstge_pfizer_scnd{{ $row->id }}">xx</span> <!-- WASTAGE_PFIZER 2  -->
+                                                        <span class="label label-warning total_wstge_astra_scnd{{ $row->id }}">{{ $total_wstge_pfizer_scnd }}</span> <!-- WASTAGE_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning p_cvrge_pfizer_scnd{{ $row->id }}">xx%</span> <!-- PERCENT_COVERAGE_PFIZER  2  -->
+                                                        <span class="label label-warning p_cvrge_astra_scnd{{ $row->id }}">{{ number_format($p_cvrge_pfizer_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_c_rate_pfizer_scnd{{ $row->id }}">xx%</span> <!-- CONSUMPTION_RATE_PFIZER  2  -->
+                                                        <span class="label label-warning total_c_rate_astra_scnd{{ $row->id }}">{{ number_format($total_c_rate_pfizer_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_PFIZER 2  -->
                                                     </td>
                                                     <td>
-                                                        <span class="label label-warning total_r_unvcted_scnd_pfizer{{ $row->id }}">xx</span> <!-- REMAINUNG_UNVACCIANTED_PFIZER  2  -->
+                                                        <span class="label label-warning total_r_unvcted_scnd_astra{{ $row->id }}">{{ $total_r_unvcted_scnd_pfizer }}</span> <!-- REMAINUNG_UNVACCIANTED_PFIZER 2  -->
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -731,43 +834,43 @@
                                                         <b class="total_vallocated{{ $row->id }}">{{$total_vallocated }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_a1_first{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a1_frst + $total_astra_a1_frst }}</b> <!-- TOTAL_A1  -->
+                                                        <b class="label label-success total_overall_a1_first{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a1_first}}</b> <!-- TOTAL_A1  -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_a2_first{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a2_frst + $total_astra_a2_frst }}</b> <!-- TOTAL_A2  -->
+                                                        <b class="label label-success total_overall_a2_first{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a2_first }}</b> <!-- TOTAL_A2  -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_a3_first{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a3_frst + $total_astra_a3_frst }}</b> <!-- TOTAL_A3  -->
+                                                        <b class="label label-success total_overall_a3_first{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a3_first}}</b> <!-- TOTAL_A3  -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_a4_first{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a4_frst + $total_astra_a4_frst }}</b> <!-- TOTAL_A4  -->
+                                                        <b class="label label-success total_overall_a4_first{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a4_first }}</b> <!-- TOTAL_A4  -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_vcted_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_frst }}</b> <!-- TOTAL_VACCINATED_FIRST -->
+                                                        <b class="label label-success total_vcted_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_overall_first }}</b> <!-- TOTAL_VACCINATED_FIRST -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_mild_first{{ $row->id }}" style="margin-right: 5%">{{ $total_mild_svac_first + $total_mild_astra_frst }}</b> <!-- TOTAL_MILD -->
+                                                        <b class="label label-success total_overall_mild_first{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_mild_frst }}</b> <!-- TOTAL_OVERALL_MILD_FIRST-->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_serious_first{{ $row->id }}" style="margin-right: 5%">{{ $total_srs_svac_frst + $total_srs_astra_frst }}</b>  <!-- TOTAL_SERIOUS -->
+                                                        <b class="label label-success total_overall_serious_first{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_srs_frst }}</b>  <!-- TOTAL_OVERALL_SERIOUS_FIRST -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_deferred_first{{ $row->id }}" style="margin-right: 5%">{{ $total_dfrd_svac_frst + $total_dfrd_astra_frst }}</b>  <!-- TOTAL_DEFERRED -->
+                                                        <b class="label label-success total_overall_deferred_first{{ $row->id }}" style="margin-right: 5%">{{  $total_overall_dfrd_frst }}</b>  <!-- TOTAL_OVERALL_DEFERRED_FIRST -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-success total_rfsd_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_rfsd_frst }}</b>  <!-- TOTAL_REFUSED -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_overall_wastage_first{{ $row->id }}" style="margin-right: 5%">{{ $total_wstge_svac_frst + $total_wstge_astra_frst }}</b>  <!-- TOTAL_WASTAGE -->
+                                                        <b class="label label-success total_overall_wastage_first{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_wstge_frst }}</b>  <!-- TOTAL_OVERALL_WASTAGE_FIRST-->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_p_cvrge_frst{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_p_cvrge_frst,2) }}%</b>  <!-- TOTAL_PERCENT_COVERAGE -->
+                                                        <b class="label label-success total_p_cvrge_frst{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_p_cvrge_overall_frst,2) }}%</b>  <!-- TOTAL_PERCENT_COVERAGE_OVERALL_FIRST -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_c_rate_frst{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_c_rate_frst,2) }}%</b>  <!-- TOTAL CONSUMPTION_RATE -->
+                                                        <b class="label label-success total_c_rate_frst{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_c_rate_overall_frst,2) }}%</b>  <!-- TOTAL_CONSUMPTION_RATE_OVERALL_FIRST -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-success total_r_unvcted_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_r_unvcted_frst }}</b>  <!-- REMAINUNG_UNVACCINATED -->
+                                                        <b class="label label-success total_r_unvcted_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_r_unvcted_overall_frst }}</b>  <!-- REMAINUNG_UNVACCINATED -->
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -781,43 +884,43 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_a1_second{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a1_scnd + $total_astra_a1_scnd }}</b>  <!-- TOTAL_A1 - 2 -->
+                                                        <b class="label label-warning total_overall_a1_second{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a1_scnd }}</b>  <!-- TOTAL_A1 - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_a2_second{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a2_scnd + $total_astra_a2_scnd }} </b>  <!-- TOTAL_A2 - 2 -->
+                                                        <b class="label label-warning total_overall_a2_second{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a2_scnd }} </b>  <!-- TOTAL_A2 - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_a3_second{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a3_scnd + $total_astra_a3_scnd }} </b>  <!-- TOTAL_A3 - 2 -->
+                                                        <b class="label label-warning total_overall_a3_second{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a3_scnd }} </b>  <!-- TOTAL_A3 - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_a4_second{{ $row->id }}" style="margin-right: 5%">{{ $total_svac_a4_scnd + $total_astra_a4_scnd }} </b>  <!-- TOTAL_A3 - 2 -->
+                                                        <b class="label label-warning total_overall_a4_second{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_a4_scnd}} </b>  <!-- TOTAL_A3 - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_vcted_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_scnd }}</b>  <!-- TOTAL_VACCINATED_SECOND -->
+                                                        <b class="label label-warning total_vcted_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_overall_scnd }}</b>  <!-- TOTAL_VACCINATED_SECOND -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_mild_second{{ $row->id }}" style="margin-right: 5%">{{ $total_mild_svac_scnd + $total_mild_astra_scnd  }}</b>  <!-- TOTAL_MILD - 2 -->
+                                                        <b class="label label-warning total_overall_mild_second{{ $row->id }}" style="margin-right: 5%">{{ $total_mild_svac_scnd + $total_mild_astra_scnd + $total_mild_sputnikv_scnd + $total_mild_pfizer_scnd }}</b>  <!-- TOTAL_MILD - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_serious_second{{ $row->id }}" style="margin-right: 5%">{{ $total_srs_svac_scnd + $total_srs_astra_scnd }}</b> <!-- TOTAL_SERIOUS - 2 -->
+                                                        <b class="label label-warning total_overall_serious_second{{ $row->id }}" style="margin-right: 5%">{{ $total_srs_svac_scnd + $total_srs_astra_scnd + $total_srs_sputnikv_scnd + $total_srs_pfizer_scnd }}</b> <!-- TOTAL_SERIOUS - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_deferred_second{{ $row->id }}" style="margin-right: 5%">{{ $total_dfrd_svac_scnd + $total_dfrd_astra_scnd }}</b> <!-- TOTAL_DEFERRED - 2 -->
+                                                        <b class="label label-warning total_overall_deferred_second{{ $row->id }}" style="margin-right: 5%">{{ $total_dfrd_svac_scnd + $total_dfrd_astra_scnd + $total_dfrd_sputnikv_scnd + $total_dfrd_pfizer_scnd }}</b> <!-- TOTAL_DEFERRED - 2 -->
                                                     </td>
                                                     <td>
                                                         <b class="label label-warning total_rfsd_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_rfsd_scnd }}</b> <!-- TOTAL_REFUSED - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_overall_wastage_second{{ $row->id }}" style="margin-right: 5%">{{ $total_wstge_svac_scnd + $total_wstge_astra_scnd }}</b> <!-- TOTAL_WASTAGE - 2 -->
+                                                        <b class="label label-warning total_overall_wastage_second{{ $row->id }}" style="margin-right: 5%">{{ $total_wstge_svac_scnd + $total_wstge_astra_scnd + $total_wstge_sputnikv_scnd + $total_wstge_pfizer_scnd }}</b> <!-- TOTAL_WASTAGE - 2 -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_p_cvrge_scnd{{ $row->id }}" style="margin-right: 5%">{{number_format($total_p_cvrge_scnd,2)}}%</b> <!-- TOTAL_PERCENT_COVERAGE - 2 -->
+                                                        <b class="label label-warning total_p_cvrge_scnd{{ $row->id }}" style="margin-right: 5%">{{number_format($total_p_cvrge_overall_scnd ,2)}}%</b> <!-- TOTAL_PERCENT_COVERAGE_OVERALL_SCND -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_c_rate_scnd{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_c_rate_scnd,2)}}%</b> <!-- TOTAL_CONSUMPTION_RATE - 2 -->
+                                                        <b class="label label-warning total_c_rate_scnd{{ $row->id }}" style="margin-right: 5%">{{ number_format($total_c_rate_overall_scnd,2)}}%</b> <!-- TOTAL_CONSUMPTION_RATE_OVERALL_SCND -->
                                                     </td>
                                                     <td>
-                                                        <b class="label label-warning total_r_unvcted_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_r_unvcted_scnd }}</b> <!-- REMAINING_UNVACCINATED - 2 -->
+                                                        <b class="label label-warning total_r_unvcted_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_r_unvcted_overall_scnd }}</b> <!-- REMAINING_UNVACCINATED - 2 -->
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -1097,7 +1200,7 @@
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12" },
                             { label: "Sputnik V", y: 0  },
-                            { label: "Pfizer",  y: 0  },
+                            { label: "",  y: 0  },
                             { label: "Moderna",  y: 0  }
                         ]
 

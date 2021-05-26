@@ -110,7 +110,7 @@
                                 </li>
                                 <ol>
                                     <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
-                                    <li>Rogemar Sumalinog - 09380784037 </li>
+                                    <li>Rogemar Sumalinog - 09914100134 </li>
                                     <li>Remwel Sanchez - 09067334425 </li>
                                     <li>Jonaden Dela Cerna - 09068482000 </li>
                                     <li>Val Vincent Villan - 09686361161 </li>

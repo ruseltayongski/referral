@@ -220,6 +220,8 @@ class VaccineController extends Controller
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
             "vaccine_accomplishment" => $vaccine_accomplishment,
+
+            //sinovac
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
             "total_epop_svac_a3" => $request->total_epop_svac_a3,
@@ -255,14 +257,14 @@ class VaccineController extends Controller
             "p_cvrge_svac_scnd" => $request->p_cvrge_svac_scnd,
             "total_c_rate_svac_scnd" => $request->total_c_rate_svac_scnd,
             "total_r_unvcted_scnd_svac" => $request->total_r_unvcted_scnd_svac,
+            //end sinovav
 
+            //astra
             "total_epop_astra_a1" => $request->total_epop_astra_a1,
             "total_epop_astra_a2" => $request->total_epop_astra_a2,
             "total_epop_astra_a3" => $request->total_epop_astra_a3,
             "total_epop_astra_a4" => $request->total_epop_astra_a4,
             "total_epop_astra" => $request->total_epop_astra,
-
-
 
             "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
             "total_vallocated_astra_scnd" => $request->total_vallocated_astra_scnd,
@@ -294,6 +296,83 @@ class VaccineController extends Controller
             "p_cvrge_astra_scnd" => $request->p_cvrge_astra_scnd,
             "total_c_rate_astra_scnd" => $request->total_c_rate_astra_scnd,
             "total_r_unvcted_scnd_astra" => $request->total_r_unvcted_scnd_astra,
+            //end astra
+
+            //sputnikv
+            "total_epop_sputnikv_a1" => $request->total_epop_sputnikv_a1,
+            "total_epop_sputnikv_a2" => $request->total_epop_sputnikv_a2,
+            "total_epop_sputnikv_a3" => $request->total_epop_sputnikv_a3,
+            "total_epop_sputnikv_a4" => $request->total_epop_sputnikv_a4,
+            "total_epop_sputnikv" => $request->total_epop_sputnikv,
+            "total_vallocated_sputnikv_frst" => $request->total_vallocated_sputnikv_frst,
+            "total_vallocated_sputnikv_scnd" => $request->total_vallocated_sputnikv_scnd,
+            "total_vallocated_sputnikv" => $request->total_vallocated_sputnikv,
+            "total_sputnikv_a1_frst" => $request->total_sputnikv_a1_frst,
+            "total_sputnikv_a2_frst" => $request->total_sputnikv_a2_frst,
+            "total_sputnikv_a3_frst" => $request->total_sputnikv_a3_frst,
+            "total_sputnikv_a4_frst" => $request->total_sputnikv_a4_frst,
+            "total_vcted_sputnikv_frst" => $request->total_vcted_sputnikv_frst,
+            "total_mild_sputnikv_frst" => $request->total_mild_sputnikv_frst,
+            "total_srs_sputnikv_frst" => $request->total_srs_sputnikv_frst,
+            "total_dfrd_sputnikv_frst" => $request->total_dfrd_sputnikv_frst,
+            "total_rfsd_sputnikv_frst" => $request->total_rfsd_sputnikv_frst,
+            "total_wstge_sputnikv_frst" => $request->total_wstge_sputnikv_frst,
+            "p_cvrge_sputnikv_frst" => $request->p_cvrge_sputnikv_frst,
+            "total_c_rate_sputnikv_frst" => $request->total_c_rate_sputnikv_frst,
+            "total_r_unvcted_frst_sputnikv" => $request->total_r_unvcted_frst_sputnikv,
+
+            "total_sputnikv_a1_scnd" => $request->total_sputnikv_a1_scnd,
+            "total_sputnikv_a2_scnd" => $request->total_sputnikv_a2_scnd,
+            "total_sputnikv_a3_scnd" => $request->total_sputnikv_a3_scnd,
+            "total_sputnikv_a4_scnd" => $request->total_sputnikv_a4_scnd,
+            "total_vcted_sputnikv_scnd" => $request->total_vcted_sputnikv_scnd,
+            "total_mild_sputnikv_scnd" => $request->total_mild_sputnikv_scnd,
+            "total_srs_sputnikv_scnd" => $request->total_srs_sputnikv_scnd,
+            "total_dfrd_sputnikv_scnd" => $request->total_dfrd_sputnikv_scnd,
+            "total_rfsd_sputnikv_scnd" => $request->total_rfsd_sputnikv_scnd,
+            "total_wstge_sputnikv_scnd" => $request->total_wstge_sputnikv_scnd,
+            "p_cvrge_sputnikv_scnd" => $request->p_cvrge_sputnikv_scnd,
+            "total_c_rate_sputnikv_scnd" => $request->total_c_rate_sputnikv_scnd,
+            "total_r_unvcted_scnd_sputnikv" => $request->total_r_unvcted_scnd_sputnikv,
+            //end sputnikv
+
+            //pfizer
+            "total_epop_pfizer_a1" => $request->total_epop_pfizer_a1,
+            "total_epop_pfizer_a2" => $request->total_epop_pfizer_a2,
+            "total_epop_pfizer_a3" => $request->total_epop_pfizer_a3,
+            "total_epop_pfizer_a4" => $request->total_epop_pfizer_a4,
+            "total_epop_pfizer" => $request->total_epop_pfizer,
+            "total_vallocated_pfizer_frst" => $request->total_vallocated_pfizer_frst,
+            "total_vallocated_pfizer_scnd" => $request->total_vallocated_pfizer_scnd,
+            "total_vallocated_pfizer" => $request->total_vallocated_pfizer,
+            "total_pfizer_a1_frst" => $request->total_pfizer_a1_frst,
+            "total_pfizer_a2_frst" => $request->total_pfizer_a2_frst,
+            "total_pfizer_a3_frst" => $request->total_pfizer_a3_frst,
+            "total_pfizer_a4_frst" => $request->total_pfizer_a4_frst,
+            "total_vcted_pfizer_frst" => $request->total_vcted_pfizer_frst,
+            "total_mild_pfizer_frst" => $request->total_mild_pfizer_frst,
+            "total_srs_pfizer_frst" => $request->total_srs_pfizer_frst,
+            "total_dfrd_pfizer_frst" => $request->total_dfrd_pfizer_frst,
+            "total_rfsd_pfizer_frst" => $request->total_rfsd_pfizer_frst,
+            "total_wstge_pfizer_frst" => $request->total_wstge_pfizer_frst,
+            "p_cvrge_pfizer_frst" => $request->p_cvrge_pfizer_frst,
+            "total_c_rate_pfizer_frst" => $request->total_c_rate_pfizer_frst,
+            "total_r_unvcted_frst_pfizer" => $request->total_r_unvcted_frst_pfizer,
+
+            "total_pfizer_a1_scnd" => $request->total_pfizer_a1_scnd,
+            "total_pfizer_a2_scnd" => $request->total_pfizer_a2_scnd,
+            "total_pfizer_a3_scnd" => $request->total_pfizer_a3_scnd,
+            "total_pfizer_a4_scnd" => $request->total_pfizer_a4_scnd,
+            "total_vcted_pfizer_scnd" => $request->total_vcted_pfizer_scnd,
+            "total_mild_pfizer_scnd" => $request->total_mild_pfizer_scnd,
+            "total_srs_pfizer_scnd" => $request->total_srs_pfizer_scnd,
+            "total_dfrd_pfizer_scnd" => $request->total_dfrd_pfizer_scnd,
+            "total_rfsd_pfizer_scnd" => $request->total_rfsd_pfizer_scnd,
+            "total_wstge_pfizer_scnd" => $request->total_wstge_pfizer_scnd,
+            "p_cvrge_pfizer_scnd" => $request->p_cvrge_pfizer_scnd,
+            "total_c_rate_pfizer_scnd" => $request->total_c_rate_pfizer_scnd,
+            "total_r_unvcted_scnd_pfizer" => $request->total_r_unvcted_scnd_pfizer,
+            // pfizer end
 
             "total_vallocated_frst" => $request->total_vallocated_frst,
             "total_vallocated_scnd" => $request->total_vallocated_scnd,
@@ -381,6 +460,7 @@ class VaccineController extends Controller
             "total_c_rate_svac_scnd" => $request->total_c_rate_svac_scnd,
             "total_r_unvcted_scnd_svac" => $request->total_r_unvcted_scnd_svac,
 
+            //astra
             "total_epop_astra_a1" => $request->total_epop_astra_a1,
             "total_epop_astra_a2" => $request->total_epop_astra_a2,
             "total_epop_astra_a3" => $request->total_epop_astra_a3,
@@ -416,6 +496,82 @@ class VaccineController extends Controller
             "p_cvrge_astra_scnd" => $request->p_cvrge_astra_scnd,
             "total_c_rate_astra_scnd" => $request->total_c_rate_astra_scnd,
             "total_r_unvcted_scnd_astra" => $request->total_r_unvcted_scnd_astra,
+
+            //sputnikv
+            "total_epop_sputnikv_a1" => $request->total_epop_sputnikv_a1,
+            "total_epop_sputnikv_a2" => $request->total_epop_sputnikv_a2,
+            "total_epop_sputnikv_a3" => $request->total_epop_sputnikv_a3,
+            "total_epop_sputnikv_a4" => $request->total_epop_sputnikv_a4,
+            "total_epop_sputnikv" => $request->total_epop_sputnikv,
+            "total_vallocated_sputnikv_frst" => $request->total_vallocated_sputnikv_frst,
+            "total_vallocated_sputnikv_scnd" => $request->total_vallocated_sputnikv_scnd,
+            "total_vallocated_sputnikv" => $request->total_vallocated_sputnikv,
+            "total_sputnikv_a1_frst" => $request->total_sputnikv_a1_frst,
+            "total_sputnikv_a2_frst" => $request->total_sputnikv_a2_frst,
+            "total_sputnikv_a3_frst" => $request->total_sputnikv_a3_frst,
+            "total_sputnikv_a4_frst" => $request->total_sputnikv_a4_frst,
+            "total_vcted_sputnikv_frst" => $request->total_vcted_sputnikv_frst,
+            "total_mild_sputnikv_frst" => $request->total_mild_sputnikv_frst,
+            "total_srs_sputnikv_frst" => $request->total_srs_sputnikv_frst,
+            "total_dfrd_sputnikv_frst" => $request->total_dfrd_sputnikv_frst,
+            "total_rfsd_sputnikv_frst" => $request->total_rfsd_sputnikv_frst,
+            "total_wstge_sputnikv_frst" => $request->total_wstge_sputnikv_frst,
+            "p_cvrge_sputnikv_frst" => $request->p_cvrge_sputnikv_frst,
+            "total_c_rate_sputnikv_frst" => $request->total_c_rate_sputnikv_frst,
+            "total_r_unvcted_frst_sputnikv" => $request->total_r_unvcted_frst_sputnikv,
+
+            "total_sputnikv_a1_scnd" => $request->total_sputnikv_a1_scnd,
+            "total_sputnikv_a2_scnd" => $request->total_sputnikv_a2_scnd,
+            "total_sputnikv_a3_scnd" => $request->total_sputnikv_a3_scnd,
+            "total_sputnikv_a4_scnd" => $request->total_sputnikv_a4_scnd,
+            "total_vcted_sputnikv_scnd" => $request->total_vcted_sputnikv_scnd,
+            "total_mild_sputnikv_scnd" => $request->total_mild_sputnikv_scnd,
+            "total_srs_sputnikv_scnd" => $request->total_srs_sputnikv_scnd,
+            "total_dfrd_sputnikv_scnd" => $request->total_dfrd_sputnikv_scnd,
+            "total_rfsd_sputnikv_scnd" => $request->total_rfsd_sputnikv_scnd,
+            "total_wstge_sputnikv_scnd" => $request->total_wstge_sputnikv_scnd,
+            "p_cvrge_sputnikv_scnd" => $request->p_cvrge_sputnikv_scnd,
+            "total_c_rate_sputnikv_scnd" => $request->total_c_rate_sputnikv_scnd,
+            "total_r_unvcted_scnd_sputnikv" => $request->total_r_unvcted_scnd_sputnikv,
+            //end sputnikv
+
+            //pfizer
+            "total_epop_pfizer_a1" => $request->total_epop_pfizer_a1,
+            "total_epop_pfizer_a2" => $request->total_epop_pfizer_a2,
+            "total_epop_pfizer_a3" => $request->total_epop_pfizer_a3,
+            "total_epop_pfizer_a4" => $request->total_epop_pfizer_a4,
+            "total_epop_pfizer" => $request->total_epop_pfizer,
+            "total_vallocated_pfizer_frst" => $request->total_vallocated_pfizer_frst,
+            "total_vallocated_pfizer_scnd" => $request->total_vallocated_pfizer_scnd,
+            "total_vallocated_pfizer" => $request->total_vallocated_pfizer,
+            "total_pfizer_a1_frst" => $request->total_pfizer_a1_frst,
+            "total_pfizer_a2_frst" => $request->total_pfizer_a2_frst,
+            "total_pfizer_a3_frst" => $request->total_pfizer_a3_frst,
+            "total_pfizer_a4_frst" => $request->total_pfizer_a4_frst,
+            "total_vcted_pfizer_frst" => $request->total_vcted_pfizer_frst,
+            "total_mild_pfizer_frst" => $request->total_mild_pfizer_frst,
+            "total_srs_pfizer_frst" => $request->total_srs_pfizer_frst,
+            "total_dfrd_pfizer_frst" => $request->total_dfrd_pfizer_frst,
+            "total_rfsd_pfizer_frst" => $request->total_rfsd_pfizer_frst,
+            "total_wstge_pfizer_frst" => $request->total_wstge_pfizer_frst,
+            "p_cvrge_pfizer_frst" => $request->p_cvrge_pfizer_frst,
+            "total_c_rate_pfizer_frst" => $request->total_c_rate_pfizer_frst,
+            "total_r_unvcted_frst_pfizer" => $request->total_r_unvcted_frst_pfizer,
+
+            "total_pfizer_a1_scnd" => $request->total_pfizer_a1_scnd,
+            "total_pfizer_a2_scnd" => $request->total_pfizer_a2_scnd,
+            "total_pfizer_a3_scnd" => $request->total_pfizer_a3_scnd,
+            "total_pfizer_a4_scnd" => $request->total_pfizer_a4_scnd,
+            "total_vcted_pfizer_scnd" => $request->total_vcted_pfizer_scnd,
+            "total_mild_pfizer_scnd" => $request->total_mild_pfizer_scnd,
+            "total_srs_pfizer_scnd" => $request->total_srs_pfizer_scnd,
+            "total_dfrd_pfizer_scnd" => $request->total_dfrd_pfizer_scnd,
+            "total_rfsd_pfizer_scnd" => $request->total_rfsd_pfizer_scnd,
+            "total_wstge_pfizer_scnd" => $request->total_wstge_pfizer_scnd,
+            "p_cvrge_pfizer_scnd" => $request->p_cvrge_pfizer_scnd,
+            "total_c_rate_pfizer_scnd" => $request->total_c_rate_pfizer_scnd,
+            "total_r_unvcted_scnd_pfizer" => $request->total_r_unvcted_scnd_pfizer,
+            // pfizer end
 
             "total_vallocated_frst" => $request->total_vallocated_frst,
             "total_vallocated_scnd" => $request->total_vallocated_scnd,
@@ -463,7 +619,6 @@ class VaccineController extends Controller
         $user_id = Session::get('auth')->id;
         $count = 0;
         foreach ($request->typeof_vaccine as $row){
-            $request->vaccine_id[$count];
             VaccineAccomplished::where("id",$request->vaccine_id[$count])->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->delete();
             $vaccine = new VaccineAccomplished();
             $vaccine->encoded_by = $user_id;
@@ -502,12 +657,12 @@ class VaccineController extends Controller
 
     public function vaccineFacilitySaved(Request $request)
     {
-        VaccineAccomplished::where("facility_id",$request->facility_id)->delete();
         $user_id = Session::get('auth')->id;
         $count = 0;
 
         foreach ($request->typeof_vaccine as $row){
             $vaccine = new VaccineAccomplished();
+            VaccineAccomplished::where("id",$request->vaccine_id[$count])->delete();
             $vaccine->encoded_by = $user_id;
             $vaccine->province_id = $request->province_id;
             $vaccine->facility_id = $request->facility_id;
@@ -618,21 +773,38 @@ class VaccineController extends Controller
         if($typeof_vaccine == 'Sinovac'){
             $data[0] = $vaccine_allocated->sinovac_allocated_first;
             $data[1] = $vaccine_allocated->sinovac_allocated_second;
-        }else{
+        }
+        elseif($typeof_vaccine == 'Astrazeneca'){
             $data[0] = $vaccine_allocated->astrazeneca_allocated_first;
             $data[1] = $vaccine_allocated->astrazeneca_allocated_second;
         }
+        elseif($typeof_vaccine == 'SputnikV'){
+            $data[0] = $vaccine_allocated->sputnikv_allocated_first;
+            $data[1] = $vaccine_allocated->sputnikv_allocated_second;
+        }
+        elseif($typeof_vaccine == 'Pfizer'){
+            $data[0] = $vaccine_allocated->pfizer_allocated_first;
+            $data[1] = $vaccine_allocated->pfizer_allocated_second;
+        }
         return $data;
     }
-
     public function getVaccineAllocatedFacility($facility_id,$typeof_vaccine){
         $vaccine_allocated = Facility::find($facility_id);
         if($typeof_vaccine == 'Sinovac'){
             $data[0] = $vaccine_allocated->sinovac_allocated_first;
             $data[1] = $vaccine_allocated->sinovac_allocated_second;
-        }else{
+        }
+        elseif($typeof_vaccine == 'Astrazeneca'){
             $data[0] = $vaccine_allocated->astrazeneca_allocated_first;
             $data[1] = $vaccine_allocated->astrazeneca_allocated_second;
+        }
+        elseif($typeof_vaccine == 'SputnikV'){
+            $data[0] = $vaccine_allocated->sputnikv_allocated_first;
+            $data[1] = $vaccine_allocated->sputnikv_allocated_second;
+        }
+        elseif($typeof_vaccine == 'Pfizer'){
+            $data[0] = $vaccine_allocated->pfizer_allocated_first;
+            $data[1] = $vaccine_allocated->pfizer_allocated_second;
         }
         return $data;
     }

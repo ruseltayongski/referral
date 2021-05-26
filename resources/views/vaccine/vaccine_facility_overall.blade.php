@@ -1,154 +1,229 @@
 <hr>
 <?php
-//ELIGIBLE POP SINOVAC
-$total_e_pop_svac_a1_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SINOVAC_FIRST
-$total_e_pop_svac_a2_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SINOVAC_FIRST
-$total_e_pop_svac_a3_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3 : 0; //A3 SINOVAC_FIRST
-$total_e_pop_svac_a4_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4 : 0; //A4 SINOVAC_FIRST
-$total_e_pop_svac_grand = $total_e_pop_svac_a1_grand + $total_e_pop_svac_a2_grand + $total_e_pop_svac_a3_grand + $total_e_pop_svac_a4_grand ; //TOTAL ELI POP SINOVAC_FIRST
+    //ELIGIBLE POP SINOVAC
+    $total_e_pop_svac_a1_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SINOVAC_FIRST
+    $total_e_pop_svac_a2_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SINOVAC_FIRST
+    $total_e_pop_svac_a3_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3 : 0; //A3 SINOVAC_FIRST
+    $total_e_pop_svac_a4_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4 : 0; //A4 SINOVAC_FIRST
+    $total_e_pop_svac_grand = $total_e_pop_svac_a1_grand + $total_e_pop_svac_a2_grand + $total_e_pop_svac_a3_grand + $total_e_pop_svac_a4_grand ; //TOTAL ELI POP SINOVAC_FIRST
 
 
-//ELIGIBLE_POP_ASTRAZENECA
-$total_e_pop_astra_a1_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 ASTRA_FIRST
-$total_e_pop_astra_a2_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 ASTRA_FIRST
-$total_e_pop_astra_a3_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 ASTRA_FIRST
-$total_e_pop_astra_a4_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 ASTRA_FIRST
-$total_e_pop_astra_grand = $total_e_pop_astra_a1_grand + $total_e_pop_astra_a2_grand + $total_e_pop_astra_a3_grand + $total_e_pop_astra_a4_grand; //TOTAL E POP ASTRA_FIRST
+    //ELIGIBLE_POP_ASTRAZENECA
+    $total_e_pop_astra_a1_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 ASTRA_FIRST
+    $total_e_pop_astra_a2_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 ASTRA_FIRST
+    $total_e_pop_astra_a3_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 ASTRA_FIRST
+    $total_e_pop_astra_a4_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 ASTRA_FIRST
+    $total_e_pop_astra_grand = $total_e_pop_astra_a1_grand + $total_e_pop_astra_a2_grand + $total_e_pop_astra_a3_grand + $total_e_pop_astra_a4_grand; //TOTAL E POP ASTRA_FIRST
 
 
-//VACCINE_ALLOCATED
-$total_vallocated_svac_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_first : 0; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
-$total_vallocated_svac_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_second : 0; //VACCINE ALLOCATED (SD) SINOVAC_FIRST
-$total_vallocated_astra_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first : 0; //VACCINE_ALLOCATED (FD) ASTRA_FIRST
-$total_vallocated_astra_scnd_grand= $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second : 0; //VACCINE ALLOCATED (SD) ASTRA_FIRST
-
-//SINOVAC
-
-$total_svac_a1_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_first_a : 0; //VACCINATED (A1) SINOVAC_FIRST
-$total_svac_a2_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_first_a : 0; //VACCINATED (A2) SINOVAC_FIRST
-$total_svac_a3_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_first_a : 0; //VACCINATED (A3) SINOVAC_FIRST
-$total_svac_a4_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_first_a : 0; //VACCINATED (A4) SINOVAC_FIRST
-$total_svac_a1_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_second_a : 0; //VACCINATED (A1) SINOVAC_SECOND
-$total_svac_a2_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_second_a : 0; //VACCINATED (A2) SINOVAC_SECOND
-$total_svac_a3_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_second_a : 0; //VACCINATED (A3) SINOVAC_SECOND
-$total_svac_a4_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_second_a : 0; //VACCINATED (A4) SINOVAC_SECOND
-
-//ASTRAZENECA
-$total_astra_a1_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_first_a : 0;
-$total_astra_a2_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_first_a : 0;
-$total_astra_a3_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_first_a : 0;
-$total_astra_a4_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_first_a : 0;
-$total_astra_a1_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_second_a : 0;
-$total_astra_a2_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_second_a : 0;
-$total_astra_a3_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_second_a : 0;
-$total_astra_a4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_second_a : 0;
+    //ELIGIBLE_POP_SPUTNIKV
+    $total_e_pop_sputnikv_a1_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SPUTNIKV_FIRST
+    $total_e_pop_sputnikv_a2_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SPUTNIKV_FIRST
+    $total_e_pop_sputnikv_a3_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 SPUTNIKV_FIRST
+    $total_e_pop_sputnikv_a4_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 SPUTNIKV_FIRST
+    $total_e_pop_sputnikv_grand = $total_e_pop_sputnikv_a1_grand + $total_e_pop_sputnikv_a2_grand + $total_e_pop_sputnikv_a3_grand + $total_e_pop_sputnikv_a4_grand; //TOTAL E POP SPUTNIKV_FIRST
 
 
-$total_vcted_astra_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED ASTRA_SECOND
-
-$total_mild_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_first : 0; //MILD SINOVAC_FIRST
-$total_mild_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_first : 0; //MILD ASTRA_FIRST
-
-$total_mild_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_second : 0; //MILD SINOVAC_SECOND
-$total_mild_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_second : 0; //MILD ASTRA_SECOND
-
-$total_srs_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_first : 0; //SERIOUS SINOVAC_FIRST
-$total_srs_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_first : 0; //SERIOUS ASTRA_FIRST
-
-$total_srs_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_second : 0; //SERIOUS  SINOVAC_SECOND
-$total_srs_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_second : 0; //SERIOUS ASTRA_SECOND
-
-$total_dfrd_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_first : 0; //DEFERRED SINOVAC_FIRST
-$total_dfrd_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_first : 0; //DEFERRED ASTRA_FIRS
-
-$total_dfrd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_second : 0; //DEFERRED  SINOVAC_SECOND
-$total_dfrd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_second : 0; //DEFERRED ASTRA_SECOND
-
-$total_rfsd_svac_frst_grand =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_first : 0; //REFUSED SINOVAC_FIRST
-$total_rfsd_astra_frst_grand =   $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_first : 0; //REFUSED ASTRA_FIRST
-
-$total_rfsd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_second : 0; //REFUSED  SINOVAC_SECOND
-$total_rfsd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_second : 0; //REFUSED ASTRA_SECOND
-
-$total_wstge_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_first : 0; //WASTAGE SINOVAC_FIRST
-$total_wstge_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_first : 0; //WASTAGE ASTRA_FIRST
-
-$total_wstge_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_second : 0; //WASTAGE SINOVAC_SECOND
-$total_wstge_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_second : 0; //WASTAGE ASTRA_SECOND
-
-$total_vallocated_frst_svac = $total_vallocated_svac_frst_grand + $total_vallocated_svac_scnd_grand; //TOTAL VACCINE ALLOCATED SINOVAC_FIRST
-$total_vallocated_frst_astra = $total_vallocated_astra_frst_grand + $total_vallocated_astra_scnd_grand; //TOTAL VACCINE ALLOCATED ASTRA_FIRS
-$total_vallocated = $total_vallocated_frst_svac + $total_vallocated_frst_astra;
-
-$total_vallocated_frst_grand = $total_vallocated_svac_frst_grand + $total_vallocated_astra_frst_grand; //TOTAL VACCINE ALLOCATED FIRST
-$total_vallocated_scnd_grand = $total_vallocated_svac_scnd_grand + $total_vallocated_astra_scnd_grand; //TOTAL VACCINE ALLOCATED SECOND
-$total_vallocated = $total_vallocated_frst_grand + $total_vallocated_scnd_grand;
+    //ELIGIBLE_POP_PFIZER
+    $total_e_pop_pfizer_a1_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 PFIZER_FIRST
+    $total_e_pop_pfizer_a2_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 PFIZER_FIRST
+    $total_e_pop_pfizer_a3_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 PFIZER_FIRST
+    $total_e_pop_pfizer_a4_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 PFIZER_FIRST
+    $total_e_pop_pfizer_grand = $total_e_pop_pfizer_a1_grand + $total_e_pop_pfizer_a2_grand + $total_e_pop_pfizer_a3_grand + $total_e_pop_pfizer_a4_grand; //TOTAL E POP PFIZER_FIRST
 
 
-$total_vcted_svac_frst_grand = $total_svac_a1_frst_grand + $total_svac_a2_frst_grand + $total_svac_a3_frst_grand + $total_svac_a4_frst_grand; //TOTAL VACCINATED SINOVAC_FIRST
-$total_vcted_svac_scnd_grand = $total_svac_a1_scnd_grand + $total_svac_a2_scnd_grand + $total_svac_a3_scnd_grand + $total_svac_a4_scnd_grand; //TOTAL VACCINATED SINOVAC_SECOND
+    //VACCINE_ALLOCATED
+    $total_vallocated_svac_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_first : 0; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
+    $total_vallocated_svac_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->sinovac_allocated_second : 0; //VACCINE ALLOCATED (SD) SINOVAC_FIRST
+    $total_vallocated_astra_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first : 0; //VACCINE_ALLOCATED (FD) ASTRA_FIRST
+    $total_vallocated_astra_scnd_grand= $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second : 0; //VACCINE ALLOCATED (SD) ASTRA_FIRST
+    $total_vallocated_sputnikv_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->sputnikv_allocated_first : 0; //VACCINE ALLOCATED (FD) SPUTNIKV_FIRST
+    $total_vallocated_sputnikv_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->sputnikv_allocated_second : 0; //VACCINE ALLOCATED (SD) SPUTNIKV_FIRST
+    $total_vallocated_pfizer_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->pfizer_allocated_first : 0; //VACCINE ALLOCATED (FD) PFIZER_FIRST
+    $total_vallocated_pfizer_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->pfizer_allocated_second : 0; //VACCINE ALLOCATED (SD) PFIZER_FIRST
+
+    //SINOVAC
+
+    $total_svac_a1_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_first_a : 0; //VACCINATED (A1) SINOVAC_FIRST
+    $total_svac_a2_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_first_a : 0; //VACCINATED (A2) SINOVAC_FIRST
+    $total_svac_a3_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_first_a : 0; //VACCINATED (A3) SINOVAC_FIRST
+    $total_svac_a4_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_first_a : 0; //VACCINATED (A4) SINOVAC_FIRST
+    $total_svac_a1_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a1')")[0]->vaccinated_second_a : 0; //VACCINATED (A1) SINOVAC_SECOND
+    $total_svac_a2_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a2')")[0]->vaccinated_second_a : 0; //VACCINATED (A2) SINOVAC_SECOND
+    $total_svac_a3_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a3')")[0]->vaccinated_second_a : 0; //VACCINATED (A3) SINOVAC_SECOND
+    $total_svac_a4_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','a4')")[0]->vaccinated_second_a : 0; //VACCINATED (A4) SINOVAC_SECOND
+
+    //ASTRAZENECA
+    $total_astra_a1_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_first_a : 0;
+    $total_astra_a2_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_first_a : 0;
+    $total_astra_a3_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_first_a : 0;
+    $total_astra_a4_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_first_a : 0;
+    $total_astra_a1_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a1')")[0]->vaccinated_second_a : 0;
+    $total_astra_a2_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a2')")[0]->vaccinated_second_a : 0;
+    $total_astra_a3_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a3')")[0]->vaccinated_second_a : 0;
+    $total_astra_a4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','a4')")[0]->vaccinated_second_a : 0;
 
 
-$total_vcted_astra_frst_grand = $total_astra_a1_frst_grand + $total_astra_a2_frst_grand + $total_astra_a3_frst_grand + $total_astra_a4_frst_grand; // TOTAL VACCINATED ASTRA_FIRST
-$total_vcted_astra_scnd_grand = $total_astra_a1_scnd_grand + $total_astra_a2_scnd_grand + $total_astra_a3_scnd_grand + $total_astra_a4_scnd_grand; //TOTAL VACCINATED ASTRA_SECOND
+    //SPUTNIKV
+    $total_sputnikv_a1_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a1')")[0]->vaccinated_first_a : 0;
+    $total_sputnikv_a2_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a2')")[0]->vaccinated_first_a : 0;
+    $total_sputnikv_a3_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a3')")[0]->vaccinated_first_a : 0;
+    $total_sputnikv_a4_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a4')")[0]->vaccinated_first_a : 0;
+    $total_sputnikv_a1_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a1')")[0]->vaccinated_second_a : 0;
+    $total_sputnikv_a2_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a2')")[0]->vaccinated_second_a : 0;
+    $total_sputnikv_a3_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a3')")[0]->vaccinated_second_a : 0;
+    $total_sputnikv_a4_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','a4')")[0]->vaccinated_second_a : 0;
 
-$total_vcted_a1_first_grand = $total_svac_a1_frst_grand + $total_astra_a1_frst_grand; //TOTAL VACCINATED (A1)
-$total_vcted_a2_first_grand = $total_svac_a2_frst_grand + $total_astra_a2_frst_grand; //TOTAL VACCINATED (A2)
-$total_vcted_a3_first_grand = $total_svac_a3_frst_grand + $total_astra_a3_frst_grand; //TOTAL VACCINATED (A3)
-$total_vcted_a4_first_grand = $total_svac_a4_frst_grand + $total_astra_a4_frst_grand; //TOTAL VACCINATED (A4)
+    //PFIZER
+    $total_pfizer_a1_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a1')")[0]->vaccinated_first_a : 0;
+    $total_pfizer_a2_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a2')")[0]->vaccinated_first_a : 0;
+    $total_pfizer_a3_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a3')")[0]->vaccinated_first_a : 0;
+    $total_pfizer_a4_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a4')")[0]->vaccinated_first_a : 0;
+    $total_pfizer_a1_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a1')")[0]->vaccinated_second_a : 0;
+    $total_pfizer_a2_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a2')")[0]->vaccinated_second_a : 0;
+    $total_pfizer_a3_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a3')")[0]->vaccinated_second_a : 0;
+    $total_pfizer_a4_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','a4')")[0]->vaccinated_second_a : 0;
 
-$total_vcted_first_overall =  $total_vcted_a1_first_grand + $total_vcted_a2_first_grand + $total_vcted_a3_first_grand + $total_vcted_a4_first_grand; //TOTAL VACCINATED FIRST DOSE OVERALL
+    $total_vcted_astra_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->vaccinated_second : 0; //TOTAL VACCINATED ASTRA_SECOND
 
-$total_vcted_scnd_a1_grand = $total_svac_a1_scnd_grand + $total_astra_a1_scnd_grand; //TOTAL VACCINATED SECOND DOSE A1
-$total_vcted_scnd_a2_grand = $total_svac_a2_scnd_grand + $total_astra_a2_scnd_grand; //TOTAL VACCINATED SECOND DOSE A2
-$total_vcted_scnd_a3_grand = $total_svac_a3_scnd_grand + $total_astra_a3_scnd_grand; //TOTAL VACCINATED SECOND DOSE A3
-$total_vcted_scnd_a4_grand = $total_svac_a4_scnd_grand + $total_astra_a4_scnd_grand; //TOTAL VACCINATED SECOND DOSE A4
+    $total_mild_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_first : 0; //MILD SINOVAC_FIRST
+    $total_mild_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_first : 0; //MILD ASTRA_FIRST
+    $total_mild_sputnikv_frst_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->mild_first : 0; //MILD SPUTNIKV_FIRST
+    $total_mild_pfizer_frst_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->mild_first : 0; //MILD PFIZER_FIRST
 
-$total_vcted_scnd_overall =  $total_vcted_scnd_a1_grand + $total_vcted_scnd_a2_grand + $total_vcted_scnd_a3_grand + $total_vcted_scnd_a4_grand; //TOTAL VACCINATED SECOND DOSE OVERALL
+    $total_mild_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->mild_second : 0; //MILD SINOVAC_SECOND
+    $total_mild_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->mild_second : 0; //MILD ASTRA_SECOND
+    $total_mild_sputnikv_scnd_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->mild_second : 0; //MILD SPUTNIKV_SECOND
+    $total_mild_pfizer_scnd_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->mild_second : 0; //MILD PFIZER_SECOND
+
+    $total_srs_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_first : 0; //SERIOUS SINOVAC_FIRST
+    $total_srs_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_first : 0; //SERIOUS ASTRA_FIRST
+    $total_srs_sputnikv_frst_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->serious_first : 0; //SERIOUS SPUTNIKV_FIRST
+    $total_srs_pfizer_frst_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->serious_first : 0; //SERIOUS PFIZER_FIRST
+
+    $total_srs_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->serious_second : 0; //SERIOUS  SINOVAC_SECOND
+    $total_srs_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->serious_second : 0; //SERIOUS ASTRA_SECOND
+    $total_srs_sputnikv_scnd_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->serious_second : 0; //SERIOUS SPUTNIKV_SECOND
+    $total_srs_pfizer_scnd_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->serious_second : 0; //SERIOUS PFIZER_SECOND
+
+    $total_dfrd_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_first : 0; //DEFERRED SINOVAC_FIRST
+    $total_dfrd_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_first : 0; //DEFERRED ASTRA_FIRS
+    $total_dfrd_sputnikv_frst_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->deferred_first : 0; //DEFERRED SPUTNIKV_FIRS
+    $total_dfrd_pfizer_frst_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->deferred_first : 0; //DEFERRED PFIZER_FIRS
+
+    $total_dfrd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->deferred_second : 0; //DEFERRED  SINOVAC_SECOND
+    $total_dfrd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->deferred_second : 0; //DEFERRED ASTRA_SECOND
+    $total_dfrd_sputnikv_scnd_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->deferred_second : 0; //DEFERRED SPUTNIKV_SECOND
+    $total_dfrd_pfizer_scnd_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->deferred_second : 0; //DEFERRED PFIZER_SECOND
+
+    $total_rfsd_svac_frst_grand =   $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_first : 0; //REFUSED SINOVAC_FIRST
+    $total_rfsd_astra_frst_grand =   $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_first : 0; //REFUSED ASTRA_FIRST
+    $total_rfsd_sputnikv_frst_grand =   $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->refused_first : 0; //REFUSED SPUTNIKV_FIRST
+    $total_rfsd_pfizer_frst_grand =   $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->refused_first : 0; //REFUSED PFIZER_FIRST
+
+    $total_rfsd_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->refused_second : 0; //REFUSED  SINOVAC_SECOND
+    $total_rfsd_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->refused_second : 0; //REFUSED ASTRA_SECOND
+    $total_rfsd_sputnikv_scnd_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->refused_second : 0; //REFUSED SPUTNIKV_SECOND
+    $total_rfsd_pfizer_scnd_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->refused_second : 0; //REFUSED PFIZER_SECOND
+
+    $total_wstge_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_first : 0; //WASTAGE SINOVAC_FIRST
+    $total_wstge_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_first : 0; //WASTAGE ASTRA_FIRST
+    $total_wstge_sputnikv_frst_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->wastage_first : 0; //WASTAGE SPUTNIKV
+    $total_wstge_pfizer_frst_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->wastage_first : 0; //WASTAGE PFIZER_FIRST
+
+    $total_wstge_svac_scnd_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Sinovac','')")[0]->wastage_second : 0; //WASTAGE SINOVAC_SECOND
+    $total_wstge_astra_scnd_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Astrazeneca','')")[0]->wastage_second : 0; //WASTAGE ASTRA_SECOND
+    $total_wstge_sputnikv_scnd_grand =  $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'SputnikV','')")[0]->wastage_second : 0; //WASTAGE SPUTNIKV_SECOND
+    $total_wstge_pfizer_scnd_grand =  $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'Pfizer','')")[0]->wastage_second : 0; //WASTAGE PFIZER_SECOND
+
+    $total_vallocated_frst_svac = $total_vallocated_svac_frst_grand + $total_vallocated_svac_scnd_grand; //TOTAL VACCINE ALLOCATED SINOVAC_FIRST
+    $total_vallocated_frst_astra = $total_vallocated_astra_frst_grand + $total_vallocated_astra_scnd_grand; //TOTAL VACCINE ALLOCATED ASTRA_FIRS
+    $total_vallocated_frst_sputnikv = $total_vallocated_sputnikv_frst_grand + $total_vallocated_sputnikv_scnd_grand; //TOTAL VACCINE ALLOCATED SPUTNIKV_FIRS
+    $total_vallocated_frst_pfizer = $total_vallocated_pfizer_frst_grand + $total_vallocated_pfizer_scnd_grand; //TOTAL VACCINE ALLOCATED PFIZER_FIRS
+    $total_vallocated = $total_vallocated_frst_svac + $total_vallocated_frst_astra + $total_vallocated_frst_sputnikv + $total_vallocated_frst_pfizer;
+
+    $total_vallocated_frst_grand = $total_vallocated_svac_frst_grand + $total_vallocated_astra_frst_grand + $total_vallocated_sputnikv_frst_grand + $total_vallocated_pfizer_frst_grand; //TOTAL VACCINE ALLOCATED FIRST
+    $total_vallocated_scnd_grand = $total_vallocated_svac_scnd_grand + $total_vallocated_astra_scnd_grand + $total_vallocated_sputnikv_scnd_grand + $total_vallocated_pfizer_scnd_grand; //TOTAL VACCINE ALLOCATED SECOND
+    $total_vallocated = $total_vallocated_frst_grand + $total_vallocated_scnd_grand;
 
 
-$total_rfsd_frst_grand = $total_rfsd_svac_frst_grand + $total_rfsd_astra_frst_grand; //TOTAL REFUSED
-$total_rfsd_scnd_grand = $total_rfsd_svac_scnd_grand + $total_rfsd_astra_scnd_grand; //TOTAL REFUSED  2
+    $total_vcted_svac_frst_grand = $total_svac_a1_frst_grand + $total_svac_a2_frst_grand + $total_svac_a3_frst_grand + $total_svac_a4_frst_grand; //TOTAL VACCINATED SINOVAC_FIRST
+    $total_vcted_svac_scnd_grand = $total_svac_a1_scnd_grand + $total_svac_a2_scnd_grand + $total_svac_a3_scnd_grand + $total_svac_a4_scnd_grand; //TOTAL VACCINATED SINOVAC_SECOND
+    $total_vcted_astra_frst_grand = $total_astra_a1_frst_grand + $total_astra_a2_frst_grand + $total_astra_a3_frst_grand + $total_astra_a4_frst_grand; // TOTAL VACCINATED ASTRA_FIRST
+    $total_vcted_astra_scnd_grand = $total_astra_a1_scnd_grand + $total_astra_a2_scnd_grand + $total_astra_a3_scnd_grand + $total_astra_a4_scnd_grand; //TOTAL VACCINATED ASTRA_SECOND
+    $total_vcted_sputnikv_frst_grand = $total_sputnikv_a1_frst_grand + $total_sputnikv_a2_frst_grand + $total_sputnikv_a3_frst_grand + $total_sputnikv_a4_frst_grand; //TOTAL VACCINATED SPUTNIKV_FIRST
+    $total_vcted_sputnikv_scnd_grand = $total_sputnikv_a1_scnd_grand + $total_sputnikv_a2_scnd_grand + $total_sputnikv_a3_scnd_grand + $total_sputnikv_a4_scnd_grand; //TOTAL VACCINATED SPUTNIKV_SECOND
+    $total_vcted_pfizer_frst_grand = $total_pfizer_a1_frst_grand + $total_pfizer_a2_frst_grand + $total_pfizer_a3_frst_grand + $total_pfizer_a4_frst_grand; //TOTAL VACCINATED PFIZER_FIRST
+    $total_vcted_pfizer_scnd_grand = $total_pfizer_a1_scnd_grand + $total_pfizer_a2_scnd_grand + $total_pfizer_a3_scnd_grand + $total_pfizer_a4_scnd_grand; //TOTAL VACCINATED PFIZER_SECOND
 
-//PERCENT COVERAGE
-$total_p_cvrge_svac_frst_grand = $total_vcted_svac_frst_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_FIRST
-$total_p_cvrge_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_SECOND
-$total_p_cvrge_astra_frst_grand = $total_vcted_astra_frst_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_FIRST
-$total_p_cvrge_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_SECOND
-$total_p_cvrge_overall_frst = $total_vcted_first_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
-$total_p_cvrge_overall_scnd = $total_vcted_scnd_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
+    $total_vcted_a1_first_grand = $total_svac_a1_frst_grand + $total_astra_a1_frst_grand + $total_sputnikv_a1_frst_grand + $total_pfizer_a1_frst_grand; //TOTAL VACCINATED (A1)
+    $total_vcted_a2_first_grand = $total_svac_a2_frst_grand + $total_astra_a2_frst_grand + $total_sputnikv_a2_frst_grand + $total_pfizer_a2_frst_grand; //TOTAL VACCINATED (A2)
+    $total_vcted_a3_first_grand = $total_svac_a3_frst_grand + $total_astra_a3_frst_grand + $total_sputnikv_a3_frst_grand + $total_pfizer_a3_frst_grand; //TOTAL VACCINATED (A3)
+    $total_vcted_a4_first_grand = $total_svac_a4_frst_grand + $total_astra_a4_frst_grand + $total_sputnikv_a4_frst_grand + $total_pfizer_a4_frst_grand; //TOTAL VACCINATED (A4)
+
+    $total_vcted_first_overall =  $total_vcted_a1_first_grand + $total_vcted_a2_first_grand + $total_vcted_a3_first_grand + $total_vcted_a4_first_grand; //TOTAL VACCINATED FIRST DOSE OVERALL
+
+    $total_vcted_scnd_a1_grand = $total_svac_a1_scnd_grand + $total_astra_a1_scnd_grand + $total_sputnikv_a1_scnd_grand + $total_pfizer_a1_scnd_grand; //TOTAL VACCINATED SECOND DOSE A1
+    $total_vcted_scnd_a2_grand = $total_svac_a2_scnd_grand + $total_astra_a2_scnd_grand + $total_sputnikv_a2_scnd_grand + $total_pfizer_a2_scnd_grand; //TOTAL VACCINATED SECOND DOSE A2
+    $total_vcted_scnd_a3_grand = $total_svac_a3_scnd_grand + $total_astra_a3_scnd_grand + $total_sputnikv_a3_scnd_grand + $total_pfizer_a3_scnd_grand; //TOTAL VACCINATED SECOND DOSE A3
+    $total_vcted_scnd_a4_grand = $total_svac_a4_scnd_grand + $total_astra_a4_scnd_grand + $total_sputnikv_a4_scnd_grand + $total_pfizer_a4_scnd_grand; //TOTAL VACCINATED SECOND DOSE A4
+
+    $total_vcted_scnd_overall =  $total_vcted_scnd_a1_grand + $total_vcted_scnd_a2_grand + $total_vcted_scnd_a3_grand + $total_vcted_scnd_a4_grand; //TOTAL VACCINATED SECOND DOSE OVERALL
+
+    $total_rfsd_frst_grand = $total_rfsd_svac_frst_grand + $total_rfsd_astra_frst_grand + $total_rfsd_sputnikv_frst_grand + $total_rfsd_pfizer_frst_grand; //TOTAL REFUSED
+    $total_rfsd_scnd_grand = $total_rfsd_svac_scnd_grand + $total_rfsd_astra_scnd_grand + $total_rfsd_sputnikv_scnd_grand + $total_rfsd_pfizer_scnd_grand; //TOTAL REFUSED  2
+
+    //PERCENT COVERAGE
+    $total_p_cvrge_svac_frst_grand = $total_vcted_svac_frst_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_FIRST
+    $total_p_cvrge_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_SECOND
+    $total_p_cvrge_astra_frst_grand = $total_vcted_astra_frst_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_FIRST
+    $total_p_cvrge_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_SECOND
+    $total_p_cvrge_sputnikv_frst_grand = $total_vcted_sputnikv_frst_grand / $total_e_pop_sputnikv_grand * 100; //PERCENT COVERAGE SPUTNIKV_FIRST
+    $total_p_cvrge_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_e_pop_sputnikv_grand * 100; //PERCENT COVERAGE SPUTNIKV_SECOND
+    $total_p_cvrge_pfizer_frst_grand = $total_vcted_pfizer_frst_grand / $total_e_pop_pfizer_grand * 100; //PERCENT COVERAGE PFIZER_FIRST
+    $total_p_cvrge_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_e_pop_pfizer_grand * 100; //PERCENT COVERAGE PFIZER_SECOND
+    $total_p_cvrge_overall_frst = $total_vcted_first_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
+    $total_p_cvrge_overall_scnd = $total_vcted_scnd_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
 
 
-//CONSUMPTTION RATE
-$total_c_rate_svac_frst_grand = $total_vcted_svac_frst_grand / $total_vallocated_svac_frst_grand * 100; //CONSUMPTION RATE SINOVAC_FIRST goods
-$total_c_rate_astra_frst_grand = $total_vcted_astra_frst_grand / $total_vallocated_astra_frst_grand * 100; //CONSUMPTION RATE ASTRA_FIRST goods
-$total_c_rate_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_vallocated_svac_scnd_grand * 100; //CONSUMPTION RATE SINOVAC_SECOND goods
-$total_c_rate_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_vallocated_astra_scnd_grand * 100; //CONSUMPTION RATE ASTRA_SECOND goods
+    //CONSUMPTTION RATE
+    $total_c_rate_svac_frst_grand = $total_vcted_svac_frst_grand / $total_vallocated_svac_frst_grand * 100; //CONSUMPTION RATE SINOVAC_FIRST goods
+    $total_c_rate_astra_frst_grand = $total_vcted_astra_frst_grand / $total_vallocated_astra_frst_grand * 100; //CONSUMPTION RATE ASTRA_FIRST goods
+    $total_c_rate_sputnikv_frst_grand = $total_vcted_sputnikv_frst_grand / $total_vallocated_sputnikv_frst_grand * 100; //CONSUMPTION RATE SPUTNIKV_FIRST goods
+    $total_c_rate_pfizer_frst_grand = $total_vcted_pfizer_frst_grand / $total_vallocated_pfizer_frst_grand * 100; //CONSUMPTION RATE PFIZER_FIRST goods
+    $total_c_rate_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_vallocated_svac_scnd_grand * 100; //CONSUMPTION RATE SINOVAC_SECOND goods
+    $total_c_rate_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_vallocated_astra_scnd_grand * 100; //CONSUMPTION RATE ASTRA_SECOND goods
+    $total_c_rate_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_vallocated_sputnikv_scnd_grand * 100; //CONSUMPTION RATE SPUTNIKV_SECOND goods
+    $total_c_rate_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_vallocated_pfizer_scnd_grand * 100; //CONSUMPTION RATE PFIZER SECOND goods
 
-$total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
-$total_c_rate_scnd_grand =  $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
-
-
-//REMAINING UNVACCINATED
-$total_r_unvcted_frst_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_frst_grand - $total_rfsd_svac_frst_grand; //REMAINING UNVACCINATED SINOVAC_FIRST goods
-$total_r_unvcted_frst_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_frst_grand - $total_rfsd_astra_frst_grand; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
-$total_r_unvcted_scnd_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_scnd_grand - $total_rfsd_svac_scnd_grand; //REMAINING UNVACCINATED  SINOVAC_SECOND goods
-$total_r_unvcted_scnd_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_scnd_grand - $total_rfsd_astra_scnd_grand;  //REMAINING UNVACCINATED ASTRA_SECOND goods
-
-$total_r_unvcted_all_frst_grand = $total_e_pop_svac_grand - $total_vcted_first_overall - $total_rfsd_frst_grand; //TOTAL REMAINUNG UNVACCINATED goods //
-$total_r_unvcted_all_scnd_grand = $total_e_pop_astra_grand - $total_vcted_scnd_overall - $total_rfsd_scnd_grand; //TOTAL REMAINING UNVACCIANTED  2 goods
+    $total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
+    $total_c_rate_scnd_grand =  $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
 
 
-$sinovac_dashboard = $total_vcted_svac_frst_grand + $total_vcted_svac_scnd_grand;
-$astra_dashboard = $total_vcted_astra_frst_grand + $total_vcted_astra_scnd_grand;
-$a1_dashboard = $total_vcted_a1_first_grand + $total_vcted_scnd_a1_grand;
-$a2_dashboard = $total_vcted_a2_first_grand + $total_vcted_scnd_a2_grand;
-$a3_dashboard = $total_vcted_a3_first_grand + $total_vcted_scnd_a3_grand;
-$a4_dashboard = $total_vcted_a4_first_grand + $total_vcted_scnd_a4_grand;
-$percent_coverage_dashboard_first = $total_p_cvrge_overall_frst;
-$percent_coverage_dashboard_second = $total_p_cvrge_overall_scnd;
-$consumption_rate_dashboard_first = $total_c_rate_frst_grand;
-$consumption_rate_dashboard_second = $total_c_rate_scnd_grand;
+    //REMAINING UNVACCINATED
+    $total_r_unvcted_frst_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_frst_grand - $total_rfsd_svac_frst_grand; //REMAINING UNVACCINATED SINOVAC_FIRST goods
+    $total_r_unvcted_frst_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_frst_grand - $total_rfsd_astra_frst_grand; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
+    $total_r_unvcted_frst_sputnikv_grand = $total_e_pop_sputnikv_grand - $total_vcted_sputnikv_frst_grand - $total_rfsd_sputnikv_frst_grand; //REMAINUNG UNVACCINATED SPUTNIKV_FIRST goods
+    $total_r_unvcted_frst_pfizer_grand = $total_e_pop_pfizer_grand - $total_vcted_pfizer_frst_grand - $total_rfsd_pfizer_frst_grand; //REMAINUNG UNVACCINATED PFIZER_FIRST goods
+    $total_r_unvcted_scnd_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_scnd_grand - $total_rfsd_svac_scnd_grand; //REMAINING UNVACCINATED  SINOVAC_SECOND goods
+    $total_r_unvcted_scnd_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_scnd_grand - $total_rfsd_astra_scnd_grand;  //REMAINING UNVACCINATED ASTRA_SECOND goods
+    $total_r_unvcted_scnd_sputnikv_grand = $total_e_pop_sputnikv_grand - $total_vcted_sputnikv_scnd_grand - $total_rfsd_sputnikv_scnd_grand;  //REMAINING UNVACCINATED SPUTNIKV_SECOND goods
+    $total_r_unvcted_scnd_pfizer_grand = $total_e_pop_pfizer_grand - $total_vcted_pfizer_scnd_grand - $total_rfsd_pfizer_scnd_grand;  //REMAINING UNVACCINATED PFIZER_SECOND goods
+
+    $total_r_unvcted_all_frst_grand = $total_e_pop_svac_grand - $total_vcted_first_overall - $total_rfsd_frst_grand; //TOTAL REMAINUNG UNVACCINATED goods //
+    $total_r_unvcted_all_scnd_grand = $total_e_pop_astra_grand - $total_vcted_scnd_overall - $total_rfsd_scnd_grand; //TOTAL REMAINING UNVACCIANTED  2 goods
+
+
+    $sinovac_dashboard = $total_vcted_svac_frst_grand + $total_vcted_svac_scnd_grand;
+    $astra_dashboard = $total_vcted_astra_frst_grand + $total_vcted_astra_scnd_grand;
+    $a1_dashboard = $total_vcted_a1_first_grand + $total_vcted_scnd_a1_grand;
+    $a2_dashboard = $total_vcted_a2_first_grand + $total_vcted_scnd_a2_grand;
+    $a3_dashboard = $total_vcted_a3_first_grand + $total_vcted_scnd_a3_grand;
+    $a4_dashboard = $total_vcted_a4_first_grand + $total_vcted_scnd_a4_grand;
+    $percent_coverage_dashboard_first = $total_p_cvrge_overall_frst;
+    $percent_coverage_dashboard_second = $total_p_cvrge_overall_scnd;
+    $consumption_rate_dashboard_first = $total_c_rate_frst_grand;
+    $consumption_rate_dashboard_second = $total_c_rate_scnd_grand;
 
 
 
@@ -426,93 +501,93 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         <td rowspan="2">
 
         </td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">xx</td>  <!-- A1 SPUTNIKV_FIRST-->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A2 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A3 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A4 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- TOTAL E POP SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black">xx</td> <!-- VACCINE_ALLOCATED (FD) SPUTNIKV_FIRST-->
-        <td rowspan="2" style="color:black">xx</td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a1_grand }}</td>  <!-- A1 SPUTNIKV_FIRST-->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a2_grand }}</td> <!-- A2 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a3_grand }}</td> <!-- A3 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a4_grand }}</td> <!-- A4 SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_grand }}</td> <!-- TOTAL E POP SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black">{{ $total_vallocated_sputnikv_frst_grand }}</td> <!-- VACCINE_ALLOCATED (FD) SPUTNIKV_FIRST-->
+        <td rowspan="2" style="color:black">{{ $total_vallocated_sputnikv_scnd_grand }}</td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
         <td style="color:black;">
-            <span class="label label-success">xx</span>  <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_sputnikv_a1_frst_grand }}</span>  <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
         </td>
         <td style="color:black">
-            <span class="label label-success">xx</span> <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_sputnikv_a2_frst_grand }}</span> <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_sputnikv_a3_frst_grand }}</span> <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_sputnikv_a4_frst_grand }}</span> <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_vcted_sputnikv_frst_grand }}</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- MILD SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_mild_sputnikv_frst_grand }}</span> <!-- MILD SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- SERIOUS SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_srs_sputnikv_frst_grand }}</span> <!-- SERIOUS SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- DEFERRED SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_dfrd_sputnikv_frst_grand }}</span> <!-- DEFERRED SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- REFUSED SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_rfsd_sputnikv_frst_grand }}</span> <!-- REFUSED SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- WASTAGE SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_wstge_sputnikv_frst_grand }}</span> <!-- WASTAGE SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx%</span> <!-- PERCENT_COVERAGE SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ number_format($total_p_cvrge_sputnikv_frst_grand,2) }}%</span> <!-- PERCENT_COVERAGE SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ number_format($total_c_rate_sputnikv_frst_grand,2) }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
+            <span class="label label-success">{{ $total_r_unvcted_frst_sputnikv_grand }}</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
         </td>
     </tr>
     <tr style="background-color: #b1ffdb">
         <td style="color: black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a1_scnd_grand }}</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a2_scnd_grand }}</span>  <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a3_scnd_grand }}</span>  <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a4_scnd_grand }}</span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_vcted_sputnikv_scnd_grand }}</span>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
         </td> <!-- 1-6 -->
         <td>
-            <span class="label label-warning">xx</span>  <!-- MILD SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_mild_sputnikv_scnd_grand }}</span>  <!-- MILD SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- SERIOUS SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_srs_sputnikv_scnd_grand }}</span> <!-- SERIOUS SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- DEFERRED SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_dfrd_sputnikv_scnd_grand }}</span> <!-- DEFERRED SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- REFUSED SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_rfsd_sputnikv_scnd_grand }}</span> <!-- REFUSED SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- WASTAGE SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_wstge_sputnikv_scnd_grand }}</span> <!-- WASTAGE SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx%</span> <!-- PERCENT COVERAGE SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ number_format($total_p_cvrge_sputnikv_scnd_grand,2) }}%</span> <!-- PERCENT COVERAGE SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ number_format($total_c_rate_sputnikv_scnd_grand,2) }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED SPUTNIKV_SECOND -->
+            <span class="label label-warning">{{ $total_r_unvcted_scnd_sputnikv_grand }}</span> <!-- REMAINING UNVACCINATED SPUTNIKV_SECOND -->
         </td>
     </tr>
     </tbody>
@@ -522,93 +597,93 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         <td rowspan="2">
 
         </td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">xx</td>  <!-- A1 PFIZER_FIRST-->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A2 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A3 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- A4 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td> <!-- TOTAL E POP PFIZER_FIRST -->
-        <td rowspan="2" style="color:black">xx</td> <!-- VACCINE_ALLOCATED (FD) PFIZER_FIRST-->
-        <td rowspan="2" style="color:black">xx</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">xx</td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a1_grand }}</td>  <!-- A1 PFIZER_FIRST-->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a2_grand }}</td> <!-- A2 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a3_grand }}</td> <!-- A3 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a4_grand }}</td> <!-- A4 PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_grand }} </td> <!-- TOTAL E POP PFIZER_FIRST -->
+        <td rowspan="2" style="color:black">{{ $total_vallocated_pfizer_frst_grand }}</td> <!-- VACCINE_ALLOCATED (FD) PFIZER_FIRST-->
+        <td rowspan="2" style="color:black">{{ $total_vallocated_pfizer_frst_grand }}</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
+        <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_pfizer }}</td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
         <td style="color:black;">
-            <span class="label label-success">xx</span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_pfizer_a1_frst_grand }}</span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
         </td>
         <td style="color:black">
-            <span class="label label-success">xx</span> <!-- VACCINATED (A2) PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_pfizer_a2_frst_grand }}</span> <!-- VACCINATED (A2) PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- VACCINATED (A3) PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_pfizer_a3_frst_grand }}</span> <!-- VACCINATED (A3) PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- VACCINATED (A4) PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_pfizer_a4_frst_grand }}</span> <!-- VACCINATED (A4) PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_vcted_pfizer_frst_grand }}</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- MILD PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_mild_pfizer_frst_grand }}</span> <!-- MILD PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- SERIOUS PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_srs_pfizer_frst_grand }}</span> <!-- SERIOUS PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- DEFERRED PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_dfrd_pfizer_frst_grand }}</span> <!-- DEFERRED PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- REFUSED PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_rfsd_pfizer_frst_grand }}</span> <!-- REFUSED PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- WASTAGE PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_wstge_pfizer_frst_grand }}</span> <!-- WASTAGE PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx%</span> <!-- PERCENT_COVERAGE PFIZER_FIRST -->
+            <span class="label label-success">{{ number_format($total_p_cvrge_pfizer_frst_grand,2) }}%</span> <!-- PERCENT_COVERAGE PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx%</span> <!-- CONSUMPTION RATE PFIZER_FIRST -->
+            <span class="label label-success">{{ number_format($total_c_rate_pfizer_frst_grand,2) }}%</span> <!-- CONSUMPTION RATE PFIZER_FIRST -->
         </td>
         <td>
-            <span class="label label-success">xx</span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
+            <span class="label label-success">{{ $total_r_unvcted_frst_pfizer_grand }}</span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
         </td>
     </tr>
     <tr style="background-color: #8fe7fd">
         <td style="color: black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a1_scnd_grand }}</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a2_scnd_grand }}</span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a3_scnd_grand }}</span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_sputnikv_a4_scnd_grand }}</span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_vcted_pfizer_scnd_grand }}</span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
         </td> <!-- 1-6 -->
         <td>
-            <span class="label label-warning">xx</span>  <!-- MILD PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_mild_pfizer_scnd_grand }}</span>  <!-- MILD PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- SERIOUS PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_srs_pfizer_scnd_grand }}</span> <!-- SERIOUS PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- DEFERRED PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_dfrd_pfizer_scnd_grand }}</span> <!-- DEFERRED PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- REFUSED PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_rfsd_pfizer_scnd_grand }}</span> <!-- REFUSED PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- WASTAGE PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_wstge_pfizer_scnd_grand }}</span> <!-- WASTAGE PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx%</span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
+            <span class="label label-warning">{{ number_format($total_p_cvrge_pfizer_scnd_grand,2) }}%%</span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx%</span> <!-- CONSUMPTION RATE PFIZERSECOND -->
+            <span class="label label-warning">{{ number_format($total_c_rate_pfizer_scnd_grand,2) }}%</span> <!-- CONSUMPTION RATE PFIZER SECOND -->
         </td>
         <td>
-            <span class="label label-warning">xx</span> <!-- REMAINING UNVACCINATED PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_r_unvcted_scnd_pfizer_grand }}</span> <!-- REMAINING UNVACCINATED PFIZER_SECOND -->
         </td>
     </tr>
     </tbody>

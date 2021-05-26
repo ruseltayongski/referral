@@ -349,7 +349,7 @@
                     <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                 </td>
                 <td rowspan="2">
-                    <select name="typeof_vaccine[]" id="typeof_vaccine" class="select2" required>
+                    <select name="typeof_vaccine[]" id="typeof_vaccine{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getVaccineAllocated('<?php echo $muncity_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')" required>
                         <option value="">Select Option</option>
                         <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                         <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
@@ -359,10 +359,10 @@
                     <br><br>
                     <div class="row">
                         <div class="col-md-6" style="padding: 2%;">
-                            <input type="text" name="vaccine_allocated_first[]" value="<?php if(isset($vaccine->vaccine_allocated_first)) echo $vaccine->vaccine_allocated_first; ?>" class="form-control" readonly>
+                            <input type="text" name="vaccine_allocated_first[]" id="vaccine_allocated_first{{ $vaccine->id.$vaccine->encoded_by }}" value="<?php if(isset($vaccine->vaccine_allocated_first)) echo $vaccine->vaccine_allocated_first; ?>" class="form-control" readonly>
                         </div>
                         <div class="col-md-6" style="background-color: #f39c12;padding: 2%">
-                            <input type="text" name="vaccine_allocated_second[]" value="<?php if(isset($vaccine->vaccine_allocated_second)) echo $vaccine->vaccine_allocated_second; ?>" class="form-control" readonly>
+                            <input type="text" name="vaccine_allocated_second[]" id="vaccine_allocated_second{{ $vaccine->id.$vaccine->encoded_by }}" value="<?php if(isset($vaccine->vaccine_allocated_second)) echo $vaccine->vaccine_allocated_second; ?>" class="form-control" readonly>
                         </div>
                     </div>
                 </td>
