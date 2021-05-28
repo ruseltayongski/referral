@@ -51,7 +51,8 @@ class FacilityCtrl extends Controller
             "facility.chief_hospital",
             "facility.level",
             "facility.hospital_type",
-            "facility.status"
+            "facility.status",
+            "facility.referral_used"
         ) ->leftJoin("province as prov","prov.id","=","facility.province")
          ->leftJoin("muncity as mun","mun.id","=","facility.muncity")
          ->leftJoin("barangay as bar","bar.id","=","facility.brgy");
