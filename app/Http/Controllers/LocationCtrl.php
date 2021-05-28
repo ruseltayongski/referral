@@ -23,6 +23,7 @@ class LocationCtrl extends Controller
     function getMuncity($province_id)
     {
         $muncity = Muncity::where('province_id',$province_id)
+            ->where("vaccine_used","!=","Yes")
             ->orderBy('description','asc')
             ->get();
         return $muncity;
