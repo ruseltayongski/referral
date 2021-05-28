@@ -1,6 +1,5 @@
 <form action="{{ asset('vaccine_facility/saved') }}" method="POST" id="form_submit" autocomplete="off">
     {{ csrf_field() }}
-    <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
     <br>
     <table class="table" style="font-size: 8pt">
         <thead class="bg-gray">
@@ -79,6 +78,34 @@
         $total_rfsd_astra_scnd = 0;
         $total_wstge_astra_frst = 0;
         $total_wstge_astra_scnd = 0;
+
+        //TOTAL_VACCINATED_SPUTNIKV
+        $total_e_pop_sputnikv_a1 = 0;
+        $total_e_pop_sputnikv_a1_flag = true;
+        $total_e_pop_sputnikv_a2 = 0;
+        $total_e_pop_sputnikv_a2_flag = true;
+        $total_e_pop_sputnikv_a3 = 0;
+        $total_e_pop_sputnikv_a3_flag = true;
+        $total_e_pop_sputnikv_a4 = 0;
+        $total_e_pop_sputnikv_a4_flag = true;
+
+
+        $total_vallocated_sputnikv = 0;
+        $total_vallocated_sputnikv_flag = true;
+        $total_vallocated_sputnikv_frst = 0;
+        $total_vallocated_sputnikv_scnd = 0;
+        $total_vcted_sputnikv_frst = 0;
+        $total_vcted_sputnikv_scnd = 0;
+        $total_mild_sputnikv_frst = 0;
+        $total_mild_sputnikv_scnd = 0;
+        $total_srs_sputnikv_frst = 0;
+        $total_srs_sputnikv_scnd = 0;
+        $total_dfrd_sputnikv_frst = 0;
+        $total_dfrd_sputnikv_scnd = 0;
+        $total_rfsd_sputnikv_frst = 0;
+        $total_rfsd_sputnikv_scnd = 0;
+        $total_wstge_sputnikv_frst = 0;
+        $total_wstge_sputnikv_scnd = 0;
 
 
         //SINOVAC
@@ -288,6 +315,7 @@
                 <tr style="background-color: #59ab91">
                     <input type="hidden" name="province_id" value="{{ $province_id }}">
                     <input type="hidden" name="facility_id" value="{{ $facility_id }}">
+                    <input type="hidden" name="vaccine_id[]" value="{{ $vaccine->id }}">
                     <td style="width: 15%">
                         <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                     </td>

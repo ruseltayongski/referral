@@ -38,6 +38,7 @@
                             </th>
                             <th>Ownership</th>
                             <th>Status</th>
+                            <th>Referral Used</th>
                         </tr>
                         @foreach($data as $row)
                             <tr>
@@ -96,6 +97,9 @@
                                 </td>
                                 <td>
                                     <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-blue">{{ strtoupper($row->referral_used) }}</span>
                                 </td>
                             </tr>
                         @endforeach

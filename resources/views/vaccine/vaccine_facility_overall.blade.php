@@ -146,6 +146,21 @@
     $total_vallocated_scnd_grand = $total_vallocated_svac_scnd_grand + $total_vallocated_astra_scnd_grand + $total_vallocated_sputnikv_scnd_grand + $total_vallocated_pfizer_scnd_grand; //TOTAL VACCINE ALLOCATED SECOND
     $total_vallocated = $total_vallocated_frst_grand + $total_vallocated_scnd_grand;
 
+    $total_mild_overall_frst = $total_mild_svac_frst_grand + $total_mild_astra_frst_grand + $total_mild_sputnikv_frst_grand + $total_mild_pfizer_frst_grand; // TOTAL MILD OVERALL FIRST
+    $total_mild_overall_scnd = $total_mild_svac_scnd_grand + $total_mild_astra_scnd_grand + $total_mild_sputnikv_scnd_grand + $total_mild_pfizer_scnd_grand; // TOTAL MILD OVERALL SECOND
+
+    $total_srs_overall_frst = $total_srs_svac_frst_grand + $total_srs_astra_frst_grand + $total_srs_sputnikv_frst_grand + $total_srs_pfizer_frst_grand; // TOTAL SERIOUS FIRST
+    $total_srs_overall_scnd = $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand + $total_srs_sputnikv_scnd_grand + $total_srs_pfizer_scnd_grand; // TOTAL SERIOUS SECOND
+
+    $total_dfrd_overall_frst = $total_dfrd_svac_frst_grand + $total_dfrd_astra_frst_grand + $total_dfrd_sputnikv_frst_grand + $total_dfrd_pfizer_frst_grand; // TOTAL DEFERRED FIRST
+    $total_dfrd_overall_scnd = $total_dfrd_svac_scnd_grand + $total_dfrd_astra_scnd_grand + $total_dfrd_sputnikv_scnd_grand + $total_dfrd_pfizer_scnd_grand; // TOTAL DEFERRED SECOND
+
+    $total_rfsd_overall_frst = $total_rfsd_svac_frst_grand + $total_rfsd_astra_frst_grand + $total_rfsd_sputnikv_frst_grand + $total_rfsd_pfizer_frst_grand; // TOTAL REFUSED FIRST
+    $total_rfsd_overall_scnd = $total_rfsd_svac_scnd_grand + $total_rfsd_astra_scnd_grand + $total_rfsd_sputnikv_scnd_grand + $total_rfsd_pfizer_scnd_grand; // TOTAL REFUSED SECOND
+
+    $total_wstge_overall_first = $total_wstge_svac_frst_grand + $total_wstge_astra_frst_grand + $total_wstge_sputnikv_frst_grand + $total_wstge_pfizer_frst_grand; // TOTAL WASTAGE FIRST
+    $total_wstge_overall_scnd = $total_wstge_svac_scnd_grand + $total_wstge_astra_scnd_grand + $total_wstge_sputnikv_scnd_grand + $total_wstge_pfizer_scnd_grand; // TOTAL WASTAGE SECOND
+
 
     $total_vcted_svac_frst_grand = $total_svac_a1_frst_grand + $total_svac_a2_frst_grand + $total_svac_a3_frst_grand + $total_svac_a4_frst_grand; //TOTAL VACCINATED SINOVAC_FIRST
     $total_vcted_svac_scnd_grand = $total_svac_a1_scnd_grand + $total_svac_a2_scnd_grand + $total_svac_a3_scnd_grand + $total_svac_a4_scnd_grand; //TOTAL VACCINATED SINOVAC_SECOND
@@ -692,11 +707,11 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
     <tbody>
     <tr>
         <td>Total</td> <!-- 1-7 -->
-        <td>{{ $total_e_pop_astra_a1_grand }}</td> <!-- TOTAL A1 -->
-        <td>{{ $total_e_pop_astra_a2_grand }}</td>  <!-- TOTAL A2 -->
-        <td>{{ $total_e_pop_astra_a3_grand }}</td><!-- TOTAL A3 -->
-        <td>{{ $total_e_pop_astra_a4_grand }}</td> <!-- TOTAL A4 -->
-        <td>{{ $total_e_pop_astra_grand }}</td>  <!-- TOTAL E POP  -->
+        <td></td> <!-- TOTAL A1 -->
+        <td></td>  <!-- TOTAL A2 -->
+        <td></td><!-- TOTAL A3 -->
+        <td></td> <!-- TOTAL A4 -->
+        <td></td>  <!-- TOTAL E POP  -->
         <td>{{ $total_vallocated_frst_grand }}</td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
         <td>{{ $total_vallocated_scnd_grand }} </td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
         <td><b>{{ $total_vallocated }} </b></td>  <!-- TOTAL VACCINE ALLOCATED  -->
@@ -716,19 +731,19 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_first_overall }}</b>  <!-- TOTAL VACCINATED FIRST DOSE OVERALL-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_svac_frst_grand + $total_mild_astra_frst_grand }}</b>  <!-- TOTAL MILD -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_overall_frst }}</b>  <!--  TOTAL MILD-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_srs_svac_frst_grand + $total_srs_astra_frst_grand }}</b>  <!-- TOTAL SERIOUS -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_srs_overall_frst }}</b>  <!-- TOTAL SERIOUS -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_dfrd_svac_frst_grand + $total_dfrd_astra_frst_grand }}</b>  <!-- TOTAL DEFERRED -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_dfrd_overall_frst }}</b>  <!-- TOTAL DEFERRED -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_rfsd_frst_grand }}</b>  <!-- TOTAL REFUSED -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_rfsd_overall_frst }}</b>  <!-- TOTAL REFUSED -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_wstge_svac_frst_grand + $total_wstge_astra_frst_grand }}</b>  <!-- TOTAL WASTAGE -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_wstge_overall_first }}</b>  <!-- TOTAL WASTAGE -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ number_format($total_p_cvrge_overall_frst,2) }}%</b>  <!-- PERCENT_COVERAGE_OVERALL_FIRST -->
@@ -767,19 +782,19 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd_overall }}</b> <!-- //TOTAL VACCINATED SECOND DOSE OVERALL -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_svac_scnd_grand + $total_mild_astra_scnd_grand  }}</b> <!-- TOTAL MILD 2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_overall_scnd }}</b> <!-- TOTAL MILD 2 -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand }}</b> <!-- TOTAL SERIOUS  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_srs_overall_scnd }}</b> <!-- TOTAL SERIOUS  2 -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_dfrd_svac_scnd_grand + $total_dfrd_astra_scnd_grand }}</b> <!-- TOTAL DEFERRED  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_dfrd_overall_scnd }}</b> <!-- TOTAL DEFERRED  2 -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_rfsd_scnd_grand }}</b> <!-- TOTAL REFUSED  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_rfsd_overall_scnd }}</b> <!-- TOTAL REFUSED  2 -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_wstge_svac_scnd_grand + $total_wstge_astra_scnd_grand }}</b> <!-- TOTAL WASTAGE  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_wstge_overall_scnd }}</b> <!-- TOTAL WASTAGE  2 -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_p_cvrge_overall_scnd,2) }}%</b> <!-- PERCENT_COVERAGE_OVERALL_FIRST -->

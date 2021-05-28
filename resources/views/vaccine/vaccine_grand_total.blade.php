@@ -34,10 +34,10 @@
     $total_vallocated_svac_scnd_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','')")[0]->sinovac_allocated_second :0; //VACCINE ALLOCATED (SD) SINOVAC_FIRST goods
     $total_vallocated_astra_frst_prov = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_first :0; //VACCINE_ALLOCATED (FD) ASTRA_FIRST goods
     $total_vallocated_astra_scnd_prov= $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Astrazeneca','')")[0]->astrazeneca_allocated_second :0; //VACCINE ALLOCATED (SD) ASTRA_FIRST goods
-    $total_vallocated_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sinovac_allocated_first :0; //VACCINE ALLOCATED (FD) SPUTNIKV_FIRST goods
-    $total_vallocated_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sinovac_allocated_second :0; //VACCINE ALLOCATED (SD) SPUTNIKV_FIRST goods
-    $total_vallocated_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->astrazeneca_allocated_first :0; //VACCINE_ALLOCATED (FD) PFIZER_FIRST goods
-    $total_vallocated_pfizer_scnd_prov= $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->astrazeneca_allocated_second :0; //VACCINE ALLOCATED (SD) PFIZER_FIRST goods
+    $total_vallocated_sputnikv_frst_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sputnikv_allocated_first :0; //VACCINE ALLOCATED (FD) SPUTNIKV_FIRST goods
+    $total_vallocated_sputnikv_scnd_prov = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'SputnikV','')")[0]->sputnikv_allocated_second :0; //VACCINE ALLOCATED (SD) SPUTNIKV_FIRST goods
+    $total_vallocated_pfizer_frst_prov = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->pfizer_allocated_first :0; //VACCINE_ALLOCATED (FD) PFIZER_FIRST goods
+    $total_vallocated_pfizer_scnd_prov= $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Pfizer','')")[0]->pfizer_allocated_second :0; //VACCINE ALLOCATED (SD) PFIZER_FIRST goods
 
     $total_svac_a1_frst_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','a1')")[0]->vaccinated_first_a :0; //VACCINATED (A1) SINOVAC_FIRST
     $total_svac_a2_frst_prov = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_data_province($province_id,'Sinovac','a2')")[0]->vaccinated_first_a :0; //VACCINATED (A2) SINOVAC_FIRST
@@ -150,68 +150,80 @@
     $total_vcted_grand_a4_second = $total_svac_a4_scnd_prov + $total_astra_a4_scnd_prov + $total_sputnikv_a4_scnd_prov + $total_pfizer_a4_scnd_prov; //TOTAL VACCINATED GRAND A4 SECOND DOSE
 
 
-    $total_vcted_svac_first = $total_svac_a1_frst_prov + $total_svac_a2_frst_prov + $total_svac_a3_frst_prov + $total_svac_a4_frst_prov; //TOTAL VACCINATED SINOVAC_FIRST
+    $total_vcted_svac_frst = $total_svac_a1_frst_prov + $total_svac_a2_frst_prov + $total_svac_a3_frst_prov + $total_svac_a4_frst_prov; //TOTAL VACCINATED SINOVAC_FIRST
     $total_vcted_svac_second = $total_svac_a1_scnd_prov + $total_svac_a2_scnd_prov +$total_svac_a3_scnd_prov +$total_svac_a4_scnd_prov; //TOTAL VACCINATED SINOVAC_SECOND
 
-    $total_vcted_astra_first = $total_astra_a1_frst_prov + $total_astra_a2_frst_prov + $total_astra_a3_frst_prov + $total_astra_a4_frst_prov; //TOTAL VACCINATED ASTRA_FIRST
+    $total_vcted_astra_frst = $total_astra_a1_frst_prov + $total_astra_a2_frst_prov + $total_astra_a3_frst_prov + $total_astra_a4_frst_prov; //TOTAL VACCINATED ASTRA_FIRST
     $total_vcted_astra_second = $total_astra_a1_scnd_prov + $total_astra_a2_scnd_prov +$total_astra_a3_scnd_prov +$total_astra_a4_scnd_prov; //TOTAL VACCINATED ASTRA_SECOND
 
-    $total_vcted_sputnikv_first = $total_sputnikv_a1_frst_prov + $total_sputnikv_a2_frst_prov + $total_sputnikv_a3_frst_prov + $total_sputnikv_a4_frst_prov; //TOTAL VACCINATED SPUTNIKV_FIRST
+    $total_vcted_sputnikv_frst = $total_sputnikv_a1_frst_prov + $total_sputnikv_a2_frst_prov + $total_sputnikv_a3_frst_prov + $total_sputnikv_a4_frst_prov; //TOTAL VACCINATED SPUTNIKV_FIRST
     $total_vcted_sputnikv_second = $total_sputnikv_a1_scnd_prov + $total_sputnikv_a2_scnd_prov +$total_sputnikv_a3_scnd_prov +$total_sputnikv_a4_scnd_prov; //TOTAL VACCINATED SPUTNIKV_SECOND
 
-    $total_vcted_pfizer_first = $total_pfizer_a1_frst_prov + $total_pfizer_a2_frst_prov + $total_pfizer_a3_frst_prov + $total_pfizer_a4_frst_prov; //TOTAL VACCINATED PFIZER_FIRST
+    $total_vcted_pfizer_frst = $total_pfizer_a1_frst_prov + $total_pfizer_a2_frst_prov + $total_pfizer_a3_frst_prov + $total_pfizer_a4_frst_prov; //TOTAL VACCINATED PFIZER_FIRST
     $total_vcted_pfizer_second = $total_pfizer_a1_scnd_prov + $total_pfizer_a2_scnd_prov + $total_pfizer_a3_scnd_prov +$total_pfizer_a4_scnd_prov; //TOTAL VACCINATED PFIZER_SECOND
 
-    $total_vcted_overall_first =  $total_vcted_grand_a1_first + $total_vcted_grand_a2_first +  $total_vcted_grand_a3_first + $total_vcted_grand_a4_first; //TOTAL VACCINATED OVERALL FIRST
+    $total_vcted_overall_frst =  $total_vcted_grand_a1_first + $total_vcted_grand_a2_first +  $total_vcted_grand_a3_first + $total_vcted_grand_a4_first; //TOTAL VACCINATED OVERALL FIRST
     $total_vcted_overall_second =  $total_vcted_grand_a1_second + $total_vcted_grand_a2_second +  $total_vcted_grand_a3_second + $total_vcted_grand_a4_second; //TOTAL VACCINATED OVERALL SECOND
+
+    $total_mild_overall_frst = $total_mild_svac_frst_prov + $total_mild_astra_frst_prov + $total_mild_sputnikv_frst_prov + $total_mild_pfizer_frst_prov; //TOTAL MILD OVERALL FIRST
+    $total_mild_overall_scnd = $total_mild_svac_scnd_prov + $total_mild_astra_scnd_prov + $total_mild_sputnikv_scnd_prov + $total_mild_pfizer_scnd_prov; //TOTAL MILD OVERALL SECOND
+
+    $total_srs_overall_frst = $total_srs_svac_frst_prov + $total_srs_astra_frst_prov + $total_srs_sputnikv_frst_prov + $total_srs_pfizer_frst_prov; //TOTAL SERIOUS OVERALL FIRST
+    $total_srs_overall_scnd = $total_srs_svac_scnd_prov + $total_srs_astra_scnd_prov + $total_srs_sputnikv_scnd_prov + $total_srs_pfizer_scnd_prov; //TOTAL SERIOUS OVERALL SECOND
+
+    $total_dfrd_overall_frst = $total_dfrd_svac_frst_prov + $total_dfrd_astra_frst_prov + $total_dfrd_sputnikv_frst_prov + $total_dfrd_pfizer_frst_prov;  //TOTAL DEFERRED OVERALL FIRST
+    $total_dfrd_overall_scnd = $total_dfrd_svac_scnd_prov + $total_dfrd_astra_scnd_prov + $total_dfrd_sputnikv_scnd_prov + $total_dfrd_pfizer_scnd_prov;  //TOTAOL DEFERRED OVERALL SECOND
+
+    $total_rfsd_overall_frst = $total_rfsd_svac_frst_prov + $total_rfsd_astra_frst_prov + $total_rfsd_sputnikv_frst_prov + $total_rfsd_pfizer_frst_prov; //TOTAL REFUSED OVERALL FIRST
+    $total_rfsd_overall_scnd = $total_rfsd_svac_scnd_prov + $total_rfsd_astra_scnd_prov + $total_rfsd_sputnikv_scnd_prov + $total_rfsd_pfizer_scnd_prov; //TOTAL REFUSED OVERALL SECOND
+
+    $total_wstge_overall_frst = $total_wstge_svac_frst_prov + $total_wstge_astra_frst_prov + $total_wstge_sputnikv_frst_prov + $total_wstge_pfizer_frst_prov; //TOTAL WASTAGE OVERALL FIRST
+    $total_wstge_overall_scnd = $total_wstge_svac_scnd_prov + $total_wstge_astra_scnd_prov + $total_wstge_sputnikv_scnd_prov + $total_wstge_pfizer_scnd_prov; //TOTAL WASTAGE OVERALL SECOND
 
     $total_rfsd_frst_prov = $total_rfsd_svac_frst_prov + $total_rfsd_astra_frst_prov; //TOTAL REFUSED goods
     $total_rfsd_scnd_prov = $total_rfsd_svac_scnd_prov + $total_rfsd_astra_scnd_prov; //TOTAL REFUSED  2 goods
 
-
-    $total_p_cvrge_frst_prov = $total_vcted_overall_first / $total_e_pop_astra_prov * 100; //TOTAL PERCENT_COVERAGE goods
+    $total_p_cvrge_frst_prov = $total_vcted_overall_frst / $total_e_pop_astra_prov * 100; //TOTAL PERCENT_COVERAGE goods
     $total_p_cvrge_scnd_prov = $total_vcted_overall_second / $total_e_pop_astra_prov * 100; //TOTAL PERCENT_COVERAGE  2 goods
 
-    $total_c_rate_frst_prov = $total_vcted_overall_first / $total_vallocated_frst_prov * 100; //TOTAL CONSUMPTION RATE goods
+    $total_c_rate_frst_prov = $total_vcted_overall_frst / $total_vallocated_frst_prov * 100; //TOTAL CONSUMPTION RATE goods
     $total_c_rate_scnd_prov =  $total_vcted_overall_second / $total_vallocated_scnd_prov * 100; //TOTAL CONSUMPTION RATE  2 goods
 
-
-    $total_c_rate_svac_frst_prov = $total_vcted_svac_first / $total_vallocated_svac_frst_prov * 100; //CONSUMPTION RATE SINOVAC_FIRST goods
-    $total_c_rate_astra_frst_prov = $total_vcted_astra_first / $total_vallocated_astra_frst_prov * 100; //CONSUMPTION RATE ASTRA_FIRST goods
-    $total_c_rate_sputnikv_frst_prov = $total_vcted_sputnikv_first / $total_vallocated_sputnikv_frst_prov * 100; //CONSUMPTION RATE SPUTNIKV_FIRST goods
-    $total_c_rate_pfizer_frst_prov = $total_vcted_pfizer_first / $total_vallocated_pfizer_frst_prov * 100; //CONSUMPTION RATE PFIZER_FIRST goods
+    $total_c_rate_svac_frst_prov = $total_vcted_svac_frst / $total_vallocated_svac_frst_prov * 100; //CONSUMPTION RATE SINOVAC_FIRST goods
+    $total_c_rate_astra_frst_prov = $total_vcted_astra_frst / $total_vallocated_astra_frst_prov * 100; //CONSUMPTION RATE ASTRA_FIRST goods
+    $total_c_rate_sputnikv_frst_prov = $total_vcted_sputnikv_frst / $total_vallocated_sputnikv_frst_prov * 100; //CONSUMPTION RATE SPUTNIKV_FIRST goods
+    $total_c_rate_pfizer_frst_prov = $total_vcted_pfizer_frst / $total_vallocated_pfizer_frst_prov * 100; //CONSUMPTION RATE PFIZER_FIRST goods
 
     $total_c_rate_astra_scnd_prov = $total_vcted_astra_second / $total_vallocated_astra_scnd_prov * 100; //CONSUMPTION RATE ASTRA_SECOND goods
     $total_c_rate_svac_scnd_prov = $total_vcted_svac_second / $total_vallocated_svac_scnd_prov * 100; //CONSUMPTION RATE SINOVAC_SECOND goods
     $total_c_rate_sputnikv_scnd_prov = $total_vcted_sputnikv_second / $total_vallocated_sputnikv_scnd_prov * 100; //CONSUMPTION RATE SPUTNIKV_SECOND goods
     $total_c_rate_pfizer_scnd_prov  = $total_vcted_pfizer_second / $total_vallocated_pfizer * 100; //CONSUMPTION RATE PFIZER_SECOND goods
 
-    $total_p_cvrge_svac_frst_prov = $total_vcted_svac_first / $total_e_pop_svac_prov * 100; //PERCENT COVERAGE SINOVAC_FIRST goods
-    $total_p_cvrge_astra_frst_prov = $total_vcted_astra_first / $total_e_pop_astra_prov * 100; //PERCENT_COVERAGE ASTRA_FIRST goods
-    $total_p_cvrge_sputnikv_frst_prov = $total_vcted_sputnikv_first / $total_e_pop_sputnikv_prov * 100; //PERCENT_COVERAGE SPUTNIKV_FIRST goods
-    $total_p_cvrge_pfizer_frst_prov = $total_vcted_pfizer_first / $total_e_pop_pfizer_prov * 100; //PERCENT_COVERAGE PFIZER_FIRST goods
+    $total_p_cvrge_svac_frst_prov = $total_vcted_svac_frst / $total_e_pop_svac_prov * 100; //PERCENT COVERAGE SINOVAC_FIRST goods
+    $total_p_cvrge_astra_frst_prov = $total_vcted_astra_frst / $total_e_pop_astra_prov * 100; //PERCENT_COVERAGE ASTRA_FIRST goods
+    $total_p_cvrge_sputnikv_frst_prov = $total_vcted_sputnikv_frst / $total_e_pop_sputnikv_prov * 100; //PERCENT_COVERAGE SPUTNIKV_FIRST goods
+    $total_p_cvrge_pfizer_frst_prov = $total_vcted_pfizer_frst / $total_e_pop_pfizer_prov * 100; //PERCENT_COVERAGE PFIZER_FIRST goods
 
     $total_p_cvrge_svac_scnd_prov =  $total_vcted_svac_second / $total_e_pop_svac_prov * 100; //PERCENT COVERAGE  SINOVAC_SECOND goods
     $total_p_cvage_astra_scnd_prov =  $total_vcted_astra_second / $total_e_pop_astra_prov * 100; //PERCENT_COVERAGE_ASTRA_SECOND goods
     $total_p_cvage_sputnikv_scnd_prov =  $total_vcted_sputnikv_second / $total_e_pop_sputnikv_prov * 100; //PERCENT_COVERAGE_ASTRA_SECOND goods
     $total_p_cvage_pfizer_scnd_prov =  $total_vcted_pfizer_second / $total_e_pop_pfizer_prov * 100; //PERCENT_COVERAGE_PFIZER_SECOND goods
 
-
-    $total_r_unvcted_frst_svac_prov = $total_e_pop_svac_prov - $total_vcted_svac_first - $total_rfsd_svac_frst_prov; //REMAINING UNVACCINATED SINOVAC_FIRST goods
-    $total_r_unvcted_frst_astra_prov = $total_e_pop_astra_prov - $total_vcted_astra_first - $total_rfsd_astra_frst_prov; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
-    $total_r_unvcted_frst_sputnikv_prov = $total_e_pop_sputnikv_prov - $total_vcted_sputnikv_first - $total_rfsd_sputnikv_frst_prov; //REMAINUNG UNVACCINATED SPUTNIKV_FIRST goods
-    $total_r_unvcted_frst_pfizer_prov = $total_e_pop_pfizer_prov - $total_vcted_pfizer_first - $total_rfsd_pfizer_frst_prov; //REMAINUNG UNVACCINATED PFIZER_FIRST goods
+    $total_r_unvcted_frst_svac_prov = $total_e_pop_svac_prov - $total_vcted_svac_frst - $total_rfsd_svac_frst_prov; //REMAINING UNVACCINATED SINOVAC_FIRST goods
+    $total_r_unvcted_frst_astra_prov = $total_e_pop_astra_prov - $total_vcted_astra_frst - $total_rfsd_astra_frst_prov; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
+    $total_r_unvcted_frst_sputnikv_prov = $total_e_pop_sputnikv_prov - $total_vcted_sputnikv_frst - $total_rfsd_sputnikv_frst_prov; //REMAINUNG UNVACCINATED SPUTNIKV_FIRST goods
+    $total_r_unvcted_frst_pfizer_prov = $total_e_pop_pfizer_prov - $total_vcted_pfizer_frst - $total_rfsd_pfizer_frst_prov; //REMAINUNG UNVACCINATED PFIZER_FIRST goods
 
     $total_r_unvcted_scnd_svac_prov = $total_e_pop_svac_prov - $total_vcted_svac_second - $total_rfsd_svac_scnd_prov; //REMAINING UNVACCINATED  SINOVAC_SECOND goods
     $total_r_unvcted_scnd_astra_prov = $total_e_pop_astra_prov - $total_vcted_astra_second - $total_rfsd_astra_scnd_prov;  //REMAINING UNVACCINATED ASTRA_SECOND goods
     $total_r_unvcted_scnd_sputnikv_prov = $total_e_pop_sputnikv_prov - $total_vcted_sputnikv_second - $total_rfsd_sputnikv_scnd_prov;  //REMAINING UNVACCINATED SPUTNIKV_SECOND goods
     $total_r_unvcted_scnd_pfizer_prov = $total_e_pop_pfizer_prov - $total_vcted_pfizer_second - $total_rfsd_pfizer_scnd_prov;  //REMAINING UNVACCINATED PFIZER_SECOND goods
 
-    $total_r_unvcted_all_frst_prov = $total_e_pop_svac_prov - $total_vcted_overall_first - $total_rfsd_frst_prov; //TOTAL REMAINUNG UNVACCINATED goods //dara
+    $total_r_unvcted_all_frst_prov = $total_e_pop_svac_prov - $total_vcted_overall_frst - $total_rfsd_frst_prov; //TOTAL REMAINUNG UNVACCINATED goods //dara
     $total_r_unvcted_all_scnd_prov = $total_e_pop_svac_prov - $total_vcted_overall_second - $total_rfsd_scnd_prov; //TOTAL REMAINING UNVACCIANTED  2 goods
 
-    $sinovac_dashboard = $total_vcted_svac_first + $total_vcted_svac_second;
-    $astra_dashboard = $total_vcted_astra_first + $total_vcted_astra_second;
+    $sinovac_dashboard = $total_vcted_svac_frst + $total_vcted_svac_second;
+    $astra_dashboard = $total_vcted_astra_frst + $total_vcted_astra_second;
 
     $percent_coverage_firstdose =  number_format($total_p_cvrge_frst_prov,2);
     $percent_coverage_seconddose = number_format($total_p_cvrge_scnd_prov,2);
@@ -305,7 +317,7 @@
         <tr style="background-color: #ffd8d6">
             <td rowspan="2">
 
-            </td> <!-- 1-3 -->
+            </td> <!--SINOVAC -->
             <td rowspan="2">{{ $total_e_pop_svac_a1_prov }}</td><!-- A1 SINOVAC_FIRST -->
             <td rowspan="2">{{ $total_e_pop_svac_a2_prov }}</td><!-- A2 SINOVAC_FIRST -->
             <td rowspan="2">{{ $total_e_pop_svac_a3_prov }}</td><!-- A3 SINOVAC_FIRST -->
@@ -328,7 +340,7 @@
                 <span class="label label-success">{{ $total_svac_a4_frst_prov }}</span>  <!-- VACCINATED (A4) SINOVAC_FIRST -->
             </td>
             <td>
-                <span class="label label-success"> {{ $total_vcted_svac_first }}</span>  <!-- TOTAL VACCINATED SINOVAC_FIRST -->
+                <span class="label label-success"> {{ $total_vcted_svac_frst }}</span>  <!-- TOTAL VACCINATED SINOVAC_FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_mild_svac_frst_prov }}</span>  <!-- MILD SINOVAC_FIRST -->
@@ -423,7 +435,7 @@
                 <span class="label label-success">{{ $total_astra_a4_frst_prov }}</span> <!-- VACCINATED (A4) ASTRA_FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_vcted_astra_first }}</span> <!-- TOTAL VACCINATED ASTRA_FIRST -->
+                <span class="label label-success">{{ $total_vcted_astra_frst }}</span> <!-- TOTAL VACCINATED ASTRA_FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_mild_astra_frst_prov }}</span> <!-- MILD ASTRA_FIRST -->
@@ -520,7 +532,7 @@
                 <span class="label label-success">{{ $total_sputnikv_a4_frst_prov }}</span>  <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_vcted_sputnikv_first }}</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
+                <span class="label label-success">{{ $total_vcted_sputnikv_frst }}</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_mild_sputnikv_frst_prov }}</span> <!-- MILD SPUTNIKV_FIRST -->
@@ -589,6 +601,7 @@
             </td>
         </tr>
         </tbody>
+
         <!-- PFIZER -->
         <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #8fe7fd">
@@ -617,7 +630,7 @@
                 <span class="label label-success">{{ $total_pfizer_a4_frst_prov }}</span>  <!-- VACCINATED (A4) PFIZER_FIRST -->
             </td>
             <td>
-                <span class="label label-success">{{ $total_vcted_pfizer_first }}</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
+                <span class="label label-success">{{ $total_vcted_pfizer_frst }}</span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_mild_pfizer_frst_prov }}</span> <!-- MILD PFIZER_FIRST -->
@@ -713,22 +726,22 @@
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_grand_a4_first }}</b>  <!-- TOTAL VACCINATED (A4) -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_overall_first }}</b>  <!-- TOTAL VACCINATED OVERALL FIRST -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_overall_frst }}</b>  <!-- TOTAL VACCINATED OVERALL FIRST -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_svac_frst_prov + $total_mild_astra_frst_prov + $total_mild_sputnikv_frst_prov + $total_mild_pfizer_frst_prov }}</b>  <!-- TOTAL MILD -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_mild_overall_frst }}</b>  <!-- TOTAL MILD OVERALL FIRST-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_srs_svac_frst_prov + $total_srs_astra_frst_prov + $total_srs_sputnikv_frst_prov + $total_srs_pfizer_frst_prov }}</b>  <!-- TOTAL SERIOUS -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_srs_overall_frst }}</b>  <!-- TOTAL SERIOUS OVERALL FIRST -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_dfrd_svac_frst_prov + $total_dfrd_astra_frst_prov + $total_dfrd_sputnikv_frst_prov + $total_dfrd_pfizer_frst_prov }}</b>  <!-- TOTAL DEFERRED -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_dfrd_overall_frst }}</b>  <!-- TOTAL DEFERRED OVERALL FIRST -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_rfsd_svac_frst_prov + $total_rfsd_astra_frst_prov + $total_rfsd_sputnikv_frst_prov + $total_rfsd_pfizer_frst_prov }}</b>  <!-- TOTAL REFUSED -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_rfsd_overall_frst }}</b>  <!-- TOTAL REFUSED OVERALL FIRST-->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_wstge_svac_frst_prov + $total_wstge_astra_frst_prov + $total_wstge_sputnikv_frst_prov + $total_wstge_pfizer_frst_prov }}</b>  <!-- TOTAL WASTAGE -->
+            <b class="label label-success" style="margin-right: 5%">{{ $total_wstge_overall_frst }}</b>  <!-- TOTAL WASTAGE OVREALL FIRST-->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ number_format($total_p_cvrge_frst_prov,2) }}%</b>  <!-- TOTAL PERCENT_COVERAGE -->
@@ -766,28 +779,28 @@
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_overall_second }}</b> <!-- TOTAL VACCINATED OVERALL SECOND -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_svac_scnd_prov + $total_mild_astra_scnd_prov + $total_mild_sputnikv_scnd_prov + $total_mild_pfizer_scnd_prov }}</b> <!-- TOTAL MILD 2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_mild_overall_scnd }}</b> <!-- TOTAL MILD OVERALL SECOND-->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_srs_svac_scnd_prov + $total_srs_astra_scnd_prov + $total_srs_sputnikv_scnd_prov + $total_srs_pfizer_scnd_prov }}</b> <!-- TOTAL SERIOUS  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_srs_overall_scnd }}</b> <!-- TOTAL SERIOUS OVERALL SECOND -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_dfrd_svac_scnd_prov + $total_dfrd_astra_scnd_prov + $total_dfrd_sputnikv_scnd_prov + $total_dfrd_pfizer_scnd_prov }}</b> <!-- TOTAL DEFERRED  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_dfrd_overall_scnd }}</b> <!-- TOTAL DEFERRED OVERALL SECOND -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_rfsd_svac_scnd_prov + $total_rfsd_astra_scnd_prov + $total_rfsd_sputnikv_scnd_prov + $total_rfsd_pfizer_scnd_prov }}</b> <!-- TOTAL REFUSED  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_rfsd_overall_frst }}</b> <!-- TOTAL REFUSED OVERALL SECOND-->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_wstge_svac_scnd_prov + $total_wstge_astra_scnd_prov + $total_wstge_sputnikv_scnd_prov + $total_wstge_pfizer_scnd_prov}}</b> <!-- TOTAL WASTAGE  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_wstge_overall_scnd }}</b> <!-- TOTAL WASTAGE OVERALL SECOND-->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_p_cvrge_scnd_prov,2) }}%</b> <!-- TOTAL PERCENT_COVERAGE  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_p_cvrge_scnd_prov,2) }}%</b> <!-- TOTAL PERCENT_COVERAGE OVERALL SECOND -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%"> {{ number_format($total_c_rate_scnd_prov,2) }}%</b> <!-- TOTAL CONSUMPTION RATE  2 -->
+            <b class="label label-warning" style="margin-right: 5%"> {{ number_format($total_c_rate_scnd_prov,2) }}%</b> <!-- TOTAL CONSUMPTION RATE OVERALL SECOND -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_r_unvcted_all_scnd_prov }}</b> <!-- TOTAL REMAINING UNVACCIANTED  2 -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_r_unvcted_all_scnd_prov }}</b> <!-- TOTAL REMAINING UNVACCIANTED  OVERALL SECOND  -->
         </td>
     </tr>
     </tbody>

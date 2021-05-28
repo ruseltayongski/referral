@@ -171,7 +171,7 @@
         <td rowspan="2"></td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- A1 ASTRA -->
         <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- A2 ASTRA -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3}}</td>  <!-- A3 ASTRA -->
+        <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3 }}</td>  <!-- A3 ASTRA -->
         <td rowspan="2" style="color:black;">{{ $total_epop_astra_a4 }}</td>  <!-- A4 ASTRA -->
         <td rowspan="2" style="color:black;">{{ $total_epop_astra }}</td>  <!-- ELIPOP TOTAL ASTRA FIRST  -->
         <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED(FD) ASTRA FIRST -->
@@ -264,7 +264,7 @@
     <tr>
     </tr>
     <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
-    <tr style="background-color: #f2fcac">
+    <tr style="background-color: #b1ffdb">
         <td rowspan="2"></td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a1 }}</td>  <!-- A1 SPUTNIKV -->
         <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a2 }}</td>  <!-- A2 SPUTNIKV -->
@@ -314,7 +314,7 @@
             <span class="label label-success">{{ $total_r_unvcted_frst_sputnikv}} </span>  <!-- REMAINING UNVACCINATED SPUTNIKV FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #f2fcac">
+    <tr style="background-color: #b1ffdb">
         <td style="color:black;">
             <span class="label label-warning">{{ $total_sputnikv_a1_scnd }}</span> <!-- VACCINATED (A1) SPUTNIKV SECOND -->
         </td>
@@ -411,7 +411,7 @@
             <span class="label label-success">{{ $total_r_unvcted_frst_pfizer}} </span>  <!-- REMAINING UNVACCINATED PFIZER FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #f2fcac">
+    <tr style="background-color: #8fe7fd">
         <td style="color:black;">
             <span class="label label-warning">{{ $total_pfizer_a1_scnd }}</span> <!-- VACCINATED (A1) PFIZER SECOND -->
         </td>
