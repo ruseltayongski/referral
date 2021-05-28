@@ -246,6 +246,7 @@
     $(".select2").select2({ width: '100%' });
 
     $('.select_province').on('change',function(){
+        $('.loading').show();
         var province_id = $(this).val();
         var url = "{{ url('location/muncity/') }}";
         $.ajax({
@@ -253,6 +254,7 @@
             type: 'GET',
             success: function(data){
                 console.log(data);
+                $('.loading').hide();
                 $('.select_muncity').empty()
                     .append($('<option>', {
                         value: '',
@@ -278,6 +280,7 @@
     });
 
     $('.select_muncity').on('change',function(){
+        $('.loading').show();
         var province_id = $(".select_province").val();
         var muncity_id = $(this).val();
         var url = "{{ url('location/barangay/') }}";
@@ -285,6 +288,7 @@
             url: url+'/'+province_id+'/'+muncity_id,
             type: 'GET',
             success: function(data){
+                $('.loading').hide();
                 $('.select_barangay').empty()
                     .append($('<option>', {
                         value: '',
