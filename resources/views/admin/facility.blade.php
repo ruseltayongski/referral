@@ -99,7 +99,7 @@
                                     <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-blue">{{ strtoupper($row->referral_used) }}</span>
+                                    <span class="badge bg-blue">{{ ucfirst($row->referral_used) }}</span>
                                 </td>
                             </tr>
                         @endforeach
