@@ -66,8 +66,8 @@
                             <br>
                             <h5 class="description-header">
                                 <?php
-                                    $no_action = $incoming_statistics->incoming - ($incoming_statistics->accepted + $incoming_statistics->redirected + $seen_only);;
-                                    echo $no_action;
+                                    $no_action = $incoming_statistics->incoming - ($incoming_statistics->accepted + $incoming_statistics->redirected + $seen_only);
+                                    echo $no_action > 0 ? $no_action : 0;
                                 ?>
                             </h5>
                             <span class="description-text">No Action</span>
