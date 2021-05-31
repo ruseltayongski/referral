@@ -3,6 +3,7 @@ $search_doctor = Session::get('search_doctor');
 $facilities = \App\Facility::select('id','name')
     ->where('province',$user->province)
     ->where('status',1)
+    ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 ?>
 <div class="panel panel-jim">

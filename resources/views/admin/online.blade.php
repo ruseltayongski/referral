@@ -1,6 +1,7 @@
 <?php
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
+    ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 
 $dateReportOnline = \Illuminate\Support\Facades\Session::get('dateReportOnline');

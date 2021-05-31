@@ -1,6 +1,8 @@
 <?php
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
+    ->where('id','!=','63')
+    ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 ?>
 @extends('layouts.app')

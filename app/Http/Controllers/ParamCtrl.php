@@ -185,11 +185,10 @@ class ParamCtrl extends Controller
     {
         Session::forget('admin');
         $user = Session::get('auth');
-        $user->facility_id = 63;
-        $user->level = 'admin';
+        $user = User::find($user->id);
         Session::put('auth',$user);
         print_r($user);
-        return redirect('/admin');
+        return redirect($user->level);
     }
 
     static function lastLogin()
