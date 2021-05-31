@@ -82,7 +82,7 @@
                     <div class="inner">
                         <h3>Sputnikv</h3>
 
-                        <p style="font-size:13pt" class="moderna_count">0</p>
+                        <p style="font-size:13pt" class="sputnikv_dashboard">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -95,7 +95,7 @@
                     <div class="inner">
                         <h3>Pfizer</h3>
 
-                        <p style="font-size:13pt" class="pfizer_count">0</p>
+                        <p style="font-size:13pt" class="pfizer_dashboard">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -985,6 +985,8 @@
         $('#date_range').daterangepicker();
         $(".sinovac_dashboard").text({{ Session::get("sinovac_dashboard") }});
         $(".astra_dashboard").text({{ Session::get("astra_dashboard") }});
+        $(".sputnikv_dashboard").text({{ Session::get("sputnikv_dashboard") }});
+        $(".pfizer_dashboard").text({{ Session::get("pfizer_dashboard") }});
 
         <?php $user = Session::get('auth'); ?>
         $("#container").removeClass("container");
@@ -1001,6 +1003,7 @@
                 "date_start": date_start,
                 "date_end" : date_end,
                 "pagination_table" : "false",
+                //sinovac
                 "total_epop_svac_a1" : $(".total_epop_svac_a1"+facility_id).text(),
                 "total_epop_svac_a2" : $(".total_epop_svac_a2"+facility_id).text(),
                 "total_epop_svac_a3" : $(".total_epop_svac_a3"+facility_id).text(),
@@ -1036,7 +1039,9 @@
                 "p_cvrge_svac_scnd" : $(".p_cvrge_svac_scnd"+facility_id).text(),
                 "total_c_rate_svac_scnd" : $(".total_c_rate_svac_scnd"+facility_id).text(),
                 "total_r_unvcted_scnd_svac" : $(".total_r_unvcted_scnd_svac"+facility_id).text(),
+                //end sinovac
 
+                //astra
                 "total_epop_astra_a1" : $(".total_epop_astra_a1"+facility_id).text(),
                 "total_epop_astra_a2" : $(".total_epop_astra_a2"+facility_id).text(),
                 "total_epop_astra_a3" : $(".total_epop_astra_a3"+facility_id).text(),
@@ -1080,6 +1085,87 @@
                 "p_cvrge_astra_scnd" : $(".p_cvrge_astra_scnd"+facility_id).text(),
                 "total_c_rate_astra_scnd" : $(".total_c_rate_astra_scnd"+facility_id).text(),
                 "total_r_unvcted_scnd_astra" : $(".total_r_unvcted_scnd_astra"+facility_id).text(),
+                //end astra
+
+                //sputnikv
+                "total_epop_sputnikv_a1" : $(".total_epop_sputnikv_a1"+facility_id).text(),
+                "total_epop_sputnikv_a2" : $(".total_epop_sputnikv_a2"+facility_id).text(),
+                "total_epop_sputnikv_a3" : $(".total_epop_sputnikv_a3"+facility_id).text(),
+                "total_epop_sputnikv_a4" : $(".total_epop_sputnikv_a4"+facility_id).text(),
+                "total_epop_sputnikv" : $(".total_epop_sputnikv"+facility_id).text(),
+
+
+                "total_vallocated_sputnikv_frst" : $(".total_vallocated_sputnikv_frst"+facility_id).text(),
+                "total_vallocated_sputnikv_scnd" : $(".total_vallocated_sputnikv_scnd"+facility_id).text(),
+                "total_vallocated_sputnikv" : $(".total_vallocated_sputnikv"+facility_id).text(),
+                "total_sputnikv_a1_frst" : $(".total_sputnikv_a1_frst"+facility_id).text(),
+                "total_sputnikv_a2_frst" : $(".total_sputnikv_a2_frst"+facility_id).text(),
+                "total_sputnikv_a3_frst" : $(".total_sputnikv_a3_frst"+facility_id).text(),
+                "total_sputnikv_a4_frst" : $(".total_sputnikv_a4_frst"+facility_id).text(),
+                "total_vcted_sputnikv_frst" : $(".total_vcted_sputnikv_frst"+facility_id).text(),
+                "total_mild_sputnikv_frst" : $(".total_mild_sputnikv_frst"+facility_id).text(),
+                "total_srs_sputnikv_frst" : $(".total_srs_sputnikv_frst"+facility_id).text(),
+                "total_dfrd_sputnikv_frst" : $(".total_dfrd_sputnikv_frst"+facility_id).text(),
+                "total_rfsd_sputnikv_frst" : $(".total_rfsd_sputnikv_frst"+facility_id).text(),
+                "total_wstge_sputnikv_frst" : $(".total_wstge_sputnikv_frst"+facility_id).text(),
+                "p_cvrge_sputnikv_frst" : $(".p_cvrge_sputnikv_frst"+facility_id).text(),
+                "total_c_rate_sputnikv_frst" : $(".total_c_rate_sputnikv_frst"+facility_id).text(),
+                "total_r_unvcted_frst_sputnikv" : $(".total_r_unvcted_frst_sputnikv"+facility_id).text(),
+
+                "total_sputnikv_a1_scnd" : $(".total_sputnikv_a1_scnd"+facility_id).text(),
+                "total_sputnikv_a2_scnd" : $(".total_sputnikv_a2_scnd"+facility_id).text(),
+                "total_sputnikv_a3_scnd" : $(".total_sputnikv_a3_scnd"+facility_id).text(),
+                "total_sputnikv_a4_scnd" : $(".total_sputnikv_a4_scnd"+facility_id).text(),
+                "total_vcted_sputnikv_scnd" : $(".total_vcted_sputnikv_scnd"+facility_id).text(),
+                "total_mild_sputnikv_scnd" : $(".total_mild_sputnikv_scnd"+facility_id).text(),
+                "total_srs_sputnikv_scnd" : $(".total_srs_sputnikv_scnd"+facility_id).text(),
+                "total_dfrd_sputnikv_scnd" : $(".total_dfrd_sputnikv_scnd"+facility_id).text(),
+                "total_rfsd_sputnikv_scnd" : $(".total_rfsd_sputnikv_scnd"+facility_id).text(),
+                "total_wstge_sputnikv_scnd" : $(".total_wstge_sputnikv_scnd"+facility_id).text(),
+                "p_cvrge_sputnikv_scnd" : $(".p_cvrge_sputnikv_scnd"+facility_id).text(),
+                "total_c_rate_sputnikv_scnd" : $(".total_c_rate_sputnikv_scnd"+facility_id).text(),
+                "total_r_unvcted_scnd_sputnikv" : $(".total_r_unvcted_scnd_sputnikv"+facility_id).text(),
+                //end sputnikv
+
+                //pfizer
+                "total_epop_pfizer_a1" : $(".total_epop_pfizer_a1"+facility_id).text(),
+                "total_epop_pfizer_a2" : $(".total_epop_pfizer_a2"+facility_id).text(),
+                "total_epop_pfizer_a3" : $(".total_epop_pfizer_a3"+facility_id).text(),
+                "total_epop_pfizer_a4" : $(".total_epop_pfizer_a4"+facility_id).text(),
+                "total_epop_pfizer" : $(".total_epop_pfizer"+facility_id).text(),
+
+
+                "total_vallocated_pfizer_frst" : $(".total_vallocated_pfizer_frst"+facility_id).text(),
+                "total_vallocated_pfizer_scnd" : $(".total_vallocated_pfizer_scnd"+facility_id).text(),
+                "total_vallocated_pfizer" : $(".total_vallocated_pfizer"+facility_id).text(),
+                "total_pfizer_a1_frst" : $(".total_pfizer_a1_frst"+facility_id).text(),
+                "total_pfizer_a2_frst" : $(".total_pfizer_a2_frst"+facility_id).text(),
+                "total_pfizer_a3_frst" : $(".total_pfizer_a3_frst"+facility_id).text(),
+                "total_pfizer_a4_frst" : $(".total_pfizer_a4_frst"+facility_id).text(),
+                "total_vcted_pfizer_frst" : $(".total_vcted_pfizer_frst"+facility_id).text(),
+                "total_mild_pfizer_frst" : $(".total_mild_pfizer_frst"+facility_id).text(),
+                "total_srs_pfizer_frst" : $(".total_srs_pfizer_frst"+facility_id).text(),
+                "total_dfrd_pfizer_frst" : $(".total_dfrd_pfizer_frst"+facility_id).text(),
+                "total_rfsd_pfizer_frst" : $(".total_rfsd_pfizer_frst"+facility_id).text(),
+                "total_wstge_pfizer_frst" : $(".total_wstge_pfizer_frst"+facility_id).text(),
+                "p_cvrge_pfizer_frst" : $(".p_cvrge_pfizer_frst"+facility_id).text(),
+                "total_c_rate_pfizer_frst" : $(".total_c_rate_pfizer_frst"+facility_id).text(),
+                "total_r_unvcted_frst_pfizer" : $(".total_r_unvcted_frst_pfizer"+facility_id).text(),
+
+                "total_pfizer_a1_scnd" : $(".total_pfizer_a1_scnd"+facility_id).text(),
+                "total_pfizer_a2_scnd" : $(".total_pfizer_a2_scnd"+facility_id).text(),
+                "total_pfizer_a3_scnd" : $(".total_pfizer_a3_scnd"+facility_id).text(),
+                "total_pfizer_a4_scnd" : $(".total_pfizer_a4_scnd"+facility_id).text(),
+                "total_vcted_pfizer_scnd" : $(".total_vcted_pfizer_scnd"+facility_id).text(),
+                "total_mild_pfizer_scnd" : $(".total_mild_pfizer_scnd"+facility_id).text(),
+                "total_srs_pfizer_scnd" : $(".total_srs_pfizer_scnd"+facility_id).text(),
+                "total_dfrd_pfizer_scnd" : $(".total_dfrd_pfizer_scnd"+facility_id).text(),
+                "total_rfsd_pfizer_scnd" : $(".total_rfsd_pfizer_scnd"+facility_id).text(),
+                "total_wstge_pfizer_scnd" : $(".total_wstge_pfizer_scnd"+facility_id).text(),
+                "p_cvrge_pfizer_scnd" : $(".p_cvrge_pfizer_scnd"+facility_id).text(),
+                "total_c_rate_pfizer_scnd" : $(".total_c_rate_pfizer_scnd"+facility_id).text(),
+                "total_r_unvcted_scnd_pfizer" : $(".total_r_unvcted_scnd_pfizer"+facility_id).text(),
+                //end pfizer
 
                 "total_vallocated_frst" : $(".total_vallocated_frst"+facility_id).text(),
                 "total_vallocated_scnd" : $(".total_vallocated_scnd"+facility_id).text(),
@@ -1187,6 +1273,8 @@
 
             var sinovac_dashboard = <?php if(Session::get('sinovac_dashboard')) echo Session::get('sinovac_dashboard'); else echo 0; ?>;
             var astra_dashboard = <?php if(Session::get('astra_dashboard')) echo Session::get('astra_dashboard'); else echo 0; ?>;
+            var sputnikv_dashboard = <?php if(Session::get('sputnikv_dashboard')) echo Session::get('sputnikv_dashboard'); else echo 0; ?>;
+            var pfizer_dashboard = <?php if(Session::get('pfizer_dashboard')) echo Session::get('pfizer_dashboard'); else echo 0; ?>;
             var options1 = {
                 title: {
                     text: "Type of Vaccine"
@@ -1199,8 +1287,8 @@
                         dataPoints: [
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12" },
-                            { label: "Sputnik V", y: 0  },
-                            { label: "",  y: 0  },
+                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a"  },
+                            { label: "Pfizer",  y: pfizer_dashboard, color:"#00c0ef"  },
                             { label: "Moderna",  y: 0  }
                         ]
 
@@ -1263,8 +1351,12 @@
             };
             $("#chartPercentCoverage").CanvasJSChart(options3);
 
-            var $consumption_rate_dashboard_first = <?php if(Session::get('consumption_rate_dashboard_first')) echo Session::get('consumption_rate_dashboard_first'); else echo 0; ?>;
-            var $consumption_rate_dashboard_second = <?php if(Session::get('consumption_rate_dashboard_second')) echo Session::get('consumption_rate_dashboard_second'); else echo 0; ?>;
+            var consumption_rate_dashboard_first = <?php if(Session::get('consumption_rate_dashboard_first')) echo Session::get('consumption_rate_dashboard_first'); else echo 0; ?>;
+            var consumption_rate_dashboard_second = <?php if(Session::get('consumption_rate_dashboard_second')) echo Session::get('consumption_rate_dashboard_second'); else echo 0; ?>;
+
+            console.log(consumption_rate_dashboard_first);
+            console.log(consumption_rate_dashboard_second);
+
             var options4 = {
                 title: {
                     text: "Consumption Rate",
@@ -1279,8 +1371,8 @@
                     indexLabel: "{label} ({y}%)",
                     yValueFormatString:"#,##0.#"%"",
                     dataPoints: [
-                        { label: "First Dose", y: $consumption_rate_dashboard_first, color:"#00a65a" },
-                        { label: "Second Dose", y: $consumption_rate_dashboard_second, color:"#f39c12" },
+                        { label: "First Dose", y: consumption_rate_dashboard_first, color:"#00a65a" },
+                        { label: "Second Dose", y: consumption_rate_dashboard_second, color:"#f39c12" },
 
                     ]
                 }]

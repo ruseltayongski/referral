@@ -1,35 +1,11 @@
 <hr>
 <?php
     //ELIGIBLE POP SINOVAC
-    $total_e_pop_svac_a1_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SINOVAC_FIRST
-    $total_e_pop_svac_a2_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SINOVAC_FIRST
-    $total_e_pop_svac_a3_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3 : 0; //A3 SINOVAC_FIRST
-    $total_e_pop_svac_a4_grand  = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4 : 0; //A4 SINOVAC_FIRST
-    $total_e_pop_svac_grand = $total_e_pop_svac_a1_grand + $total_e_pop_svac_a2_grand + $total_e_pop_svac_a3_grand + $total_e_pop_svac_a4_grand ; //TOTAL ELI POP SINOVAC_FIRST
-
-
-    //ELIGIBLE_POP_ASTRAZENECA
-    $total_e_pop_astra_a1_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 ASTRA_FIRST
-    $total_e_pop_astra_a2_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 ASTRA_FIRST
-    $total_e_pop_astra_a3_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 ASTRA_FIRST
-    $total_e_pop_astra_a4_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 ASTRA_FIRST
-    $total_e_pop_astra_grand = $total_e_pop_astra_a1_grand + $total_e_pop_astra_a2_grand + $total_e_pop_astra_a3_grand + $total_e_pop_astra_a4_grand; //TOTAL E POP ASTRA_FIRST
-
-
-    //ELIGIBLE_POP_SPUTNIKV
-    $total_e_pop_sputnikv_a1_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 SPUTNIKV_FIRST
-    $total_e_pop_sputnikv_a2_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 SPUTNIKV_FIRST
-    $total_e_pop_sputnikv_a3_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 SPUTNIKV_FIRST
-    $total_e_pop_sputnikv_a4_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 SPUTNIKV_FIRST
-    $total_e_pop_sputnikv_grand = $total_e_pop_sputnikv_a1_grand + $total_e_pop_sputnikv_a2_grand + $total_e_pop_sputnikv_a3_grand + $total_e_pop_sputnikv_a4_grand; //TOTAL E POP SPUTNIKV_FIRST
-
-
-    //ELIGIBLE_POP_PFIZER
-    $total_e_pop_pfizer_a1_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1 : 0; //A1 PFIZER_FIRST
-    $total_e_pop_pfizer_a2_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A2 PFIZER_FIRST
-    $total_e_pop_pfizer_a3_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 : 0; //A3 PFIZER_FIRST
-    $total_e_pop_pfizer_a4_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2 :0; //A4 PFIZER_FIRST
-    $total_e_pop_pfizer_grand = $total_e_pop_pfizer_a1_grand + $total_e_pop_pfizer_a2_grand + $total_e_pop_pfizer_a3_grand + $total_e_pop_pfizer_a4_grand; //TOTAL E POP PFIZER_FIRST
+    $total_e_pop_a1_grand = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a1; //TOTAL ELIPOP A1
+    $total_e_pop_a2_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a2; ///TOTAL ELIPOP A2
+    $total_e_pop_a3_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a3; //TOTAL ELIPOP A3
+    $total_e_pop_a4_grand  = \DB::connection('mysql')->select("call vaccine_facility_overall($province_id,'','')")[0]->a4; //TOTAL ELIPOP A4
+    $total_e_pop_grand = $total_e_pop_a1_grand + $total_e_pop_a2_grand + $total_e_pop_a3_grand + $total_e_pop_a4_grand ; //TOTAL ELI POP
 
 
     //VACCINE_ALLOCATED
@@ -189,17 +165,16 @@
     $total_rfsd_scnd_grand = $total_rfsd_svac_scnd_grand + $total_rfsd_astra_scnd_grand + $total_rfsd_sputnikv_scnd_grand + $total_rfsd_pfizer_scnd_grand; //TOTAL REFUSED  2
 
     //PERCENT COVERAGE
-    $total_p_cvrge_svac_frst_grand = $total_vcted_svac_frst_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_FIRST
-    $total_p_cvrge_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_e_pop_svac_grand * 100; //PERCENT COVERAGE SINOVAC_SECOND
-    $total_p_cvrge_astra_frst_grand = $total_vcted_astra_frst_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_FIRST
-    $total_p_cvrge_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_e_pop_astra_grand * 100; //PERCENT COVERAGE ASTRA_SECOND
-    $total_p_cvrge_sputnikv_frst_grand = $total_vcted_sputnikv_frst_grand / $total_e_pop_sputnikv_grand * 100; //PERCENT COVERAGE SPUTNIKV_FIRST
-    $total_p_cvrge_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_e_pop_sputnikv_grand * 100; //PERCENT COVERAGE SPUTNIKV_SECOND
-    $total_p_cvrge_pfizer_frst_grand = $total_vcted_pfizer_frst_grand / $total_e_pop_pfizer_grand * 100; //PERCENT COVERAGE PFIZER_FIRST
-    $total_p_cvrge_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_e_pop_pfizer_grand * 100; //PERCENT COVERAGE PFIZER_SECOND
-    $total_p_cvrge_overall_frst = $total_vcted_first_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
-    $total_p_cvrge_overall_scnd = $total_vcted_scnd_overall / $total_e_pop_svac_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
-
+    $total_p_cvrge_svac_frst_grand = $total_vcted_svac_frst_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE SINOVAC_FIRST //DARA
+    $total_p_cvrge_svac_scnd_grand = $total_vcted_svac_scnd_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE SINOVAC_SECOND
+    $total_p_cvrge_astra_frst_grand = $total_vcted_astra_frst_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE ASTRA_FIRST
+    $total_p_cvrge_astra_scnd_grand = $total_vcted_astra_scnd_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE ASTRA_SECOND
+    $total_p_cvrge_sputnikv_frst_grand = $total_vcted_sputnikv_frst_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE SPUTNIKV_FIRST
+    $total_p_cvrge_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE SPUTNIKV_SECOND
+    $total_p_cvrge_pfizer_frst_grand = $total_vcted_pfizer_frst_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE PFIZER_FIRST
+    $total_p_cvrge_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_e_pop_grand * 100; //PERCENT COVERAGE PFIZER_SECOND
+    $total_p_cvrge_overall_frst = $total_vcted_first_overall / $total_e_pop_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
+    $total_p_cvrge_overall_scnd = $total_vcted_scnd_overall / $total_e_pop_grand * 100; //PERCENT_COVERAGE_OVERALL_FIRST
 
     //CONSUMPTTION RATE
     $total_c_rate_svac_frst_grand = $total_vcted_svac_frst_grand / $total_vallocated_svac_frst_grand * 100; //CONSUMPTION RATE SINOVAC_FIRST goods
@@ -211,49 +186,56 @@
     $total_c_rate_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_vallocated_sputnikv_scnd_grand * 100; //CONSUMPTION RATE SPUTNIKV_SECOND goods
     $total_c_rate_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_vallocated_pfizer_scnd_grand * 100; //CONSUMPTION RATE PFIZER SECOND goods
 
-    $total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
-    $total_c_rate_scnd_grand =  $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
-
 
     //REMAINING UNVACCINATED
-    $total_r_unvcted_frst_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_frst_grand - $total_rfsd_svac_frst_grand; //REMAINING UNVACCINATED SINOVAC_FIRST goods
-    $total_r_unvcted_frst_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_frst_grand - $total_rfsd_astra_frst_grand; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
-    $total_r_unvcted_frst_sputnikv_grand = $total_e_pop_sputnikv_grand - $total_vcted_sputnikv_frst_grand - $total_rfsd_sputnikv_frst_grand; //REMAINUNG UNVACCINATED SPUTNIKV_FIRST goods
-    $total_r_unvcted_frst_pfizer_grand = $total_e_pop_pfizer_grand - $total_vcted_pfizer_frst_grand - $total_rfsd_pfizer_frst_grand; //REMAINUNG UNVACCINATED PFIZER_FIRST goods
-    $total_r_unvcted_scnd_svac_grand = $total_e_pop_svac_grand - $total_vcted_svac_scnd_grand - $total_rfsd_svac_scnd_grand; //REMAINING UNVACCINATED  SINOVAC_SECOND goods
-    $total_r_unvcted_scnd_astra_grand = $total_e_pop_astra_grand - $total_vcted_astra_scnd_grand - $total_rfsd_astra_scnd_grand;  //REMAINING UNVACCINATED ASTRA_SECOND goods
-    $total_r_unvcted_scnd_sputnikv_grand = $total_e_pop_sputnikv_grand - $total_vcted_sputnikv_scnd_grand - $total_rfsd_sputnikv_scnd_grand;  //REMAINING UNVACCINATED SPUTNIKV_SECOND goods
-    $total_r_unvcted_scnd_pfizer_grand = $total_e_pop_pfizer_grand - $total_vcted_pfizer_scnd_grand - $total_rfsd_pfizer_scnd_grand;  //REMAINING UNVACCINATED PFIZER_SECOND goods
+    $total_r_unvcted_frst_svac_grand = $total_e_pop_grand - $total_vcted_svac_frst_grand - $total_rfsd_svac_frst_grand; //REMAINING UNVACCINATED SINOVAC_FIRST goods
+    $total_r_unvcted_frst_astra_grand = $total_e_pop_grand - $total_vcted_astra_frst_grand - $total_rfsd_astra_frst_grand; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
+    $total_r_unvcted_frst_sputnikv_grand = $total_e_pop_grand - $total_vcted_sputnikv_frst_grand - $total_rfsd_sputnikv_frst_grand; //REMAINUNG UNVACCINATED SPUTNIKV_FIRST goods
+    $total_r_unvcted_frst_pfizer_grand = $total_e_pop_grand - $total_vcted_pfizer_frst_grand - $total_rfsd_pfizer_frst_grand; //REMAINUNG UNVACCINATED PFIZER_FIRST goods
+    $total_r_unvcted_scnd_svac_grand = $total_e_pop_grand - $total_vcted_svac_scnd_grand - $total_rfsd_svac_scnd_grand; //REMAINING UNVACCINATED  SINOVAC_SECOND goods
+    $total_r_unvcted_scnd_astra_grand = $total_e_pop_grand - $total_vcted_astra_scnd_grand - $total_rfsd_astra_scnd_grand;  //REMAINING UNVACCINATED ASTRA_SECOND goods
+    $total_r_unvcted_scnd_sputnikv_grand = $total_e_pop_grand - $total_vcted_sputnikv_scnd_grand - $total_rfsd_sputnikv_scnd_grand;  //REMAINING UNVACCINATED SPUTNIKV_SECOND goods
+    $total_r_unvcted_scnd_pfizer_grand = $total_e_pop_grand - $total_vcted_pfizer_scnd_grand - $total_rfsd_pfizer_scnd_grand;  //REMAINING UNVACCINATED PFIZER_SECOND goods
 
-    $total_r_unvcted_all_frst_grand = $total_e_pop_svac_grand - $total_vcted_first_overall - $total_rfsd_frst_grand; //TOTAL REMAINUNG UNVACCINATED goods //
-    $total_r_unvcted_all_scnd_grand = $total_e_pop_astra_grand - $total_vcted_scnd_overall - $total_rfsd_scnd_grand; //TOTAL REMAINING UNVACCIANTED  2 goods
+    $total_r_unvcted_all_frst_grand = $total_e_pop_grand - $total_vcted_first_overall - $total_rfsd_frst_grand; //TOTAL REMAINUNG UNVACCINATED goods //
+    $total_r_unvcted_all_scnd_grand = $total_e_pop_grand - $total_vcted_scnd_overall - $total_rfsd_scnd_grand; //TOTAL REMAINING UNVACCIANTED  2 goods
 
 
     $sinovac_dashboard = $total_vcted_svac_frst_grand + $total_vcted_svac_scnd_grand;
     $astra_dashboard = $total_vcted_astra_frst_grand + $total_vcted_astra_scnd_grand;
+    $sputnikv_dashboard = $total_vcted_sputnikv_frst_grand + $total_vcted_sputnikv_scnd_grand;
+    $pfizer_dashboard = $total_vcted_pfizer_frst_grand + $total_vcted_pfizer_scnd_grand;
+
+
+
     $a1_dashboard = $total_vcted_a1_first_grand + $total_vcted_scnd_a1_grand;
     $a2_dashboard = $total_vcted_a2_first_grand + $total_vcted_scnd_a2_grand;
     $a3_dashboard = $total_vcted_a3_first_grand + $total_vcted_scnd_a3_grand;
     $a4_dashboard = $total_vcted_a4_first_grand + $total_vcted_scnd_a4_grand;
-    $percent_coverage_dashboard_first = $total_p_cvrge_overall_frst;
-    $percent_coverage_dashboard_second = $total_p_cvrge_overall_scnd;
-    $consumption_rate_dashboard_first = $total_c_rate_frst_grand;
-    $consumption_rate_dashboard_second = $total_c_rate_scnd_grand;
+    $percent_coverage_dashboard_first =  number_format($total_p_cvrge_overall_frst,2);
+    $percent_coverage_dashboard_second = number_format($total_p_cvrge_overall_scnd,2);
 
 
+    $total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
+    $total_c_rate_scnd_grand = $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
+
+    $consumption_rate_dashboard_first = number_format($total_c_rate_frst_grand,2);
+    $consumption_rate_dashboard_second = number_format($total_c_rate_scnd_grand,2);
 
 
-Session::put("sinovac_dashboard",$sinovac_dashboard);
-Session::put("astra_dashboard",$astra_dashboard);
-Session::put("a1_dashboard",$a1_dashboard);
-Session::put("a2_dashboard",$a2_dashboard);
-Session::put("a3_dashboard",$a3_dashboard);
-Session::put("a4_dashboard",$a4_dashboard);
-Session::put("percent_coverage_dashboard_first",$percent_coverage_dashboard_first);
-Session::put("percent_coverage_dashboard_second",$percent_coverage_dashboard_second);
-Session::put("consumption_rate_dashboard_first",$consumption_rate_dashboard_first);
-Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_second);
-?>
+    Session::put("sinovac_dashboard",$sinovac_dashboard);
+    Session::put("astra_dashboard",$astra_dashboard);
+    Session::put("sputnikv_dashboard",$sputnikv_dashboard);
+    Session::put("pfizer_dashboard",$pfizer_dashboard);
+    Session::put("a1_dashboard",$a1_dashboard);
+    Session::put("a2_dashboard",$a2_dashboard);
+    Session::put("a3_dashboard",$a3_dashboard);
+    Session::put("a4_dashboard",$a4_dashboard);
+    Session::put("percent_coverage_dashboard_first",$percent_coverage_dashboard_first);
+    Session::put("percent_coverage_dashboard_second",$percent_coverage_dashboard_second);
+    Session::put("consumption_rate_dashboard_first",$consumption_rate_dashboard_first);
+    Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_second);
+    ?>
 
 <h4>Grand Total</h4>
     <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac_grand" aria-expanded="false" aria-controls="collapse_sinovac_grandtotal">
@@ -324,11 +306,11 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
     <tr style="background-color: #ffd8d6">
         <td rowspan="2">
         </td> <!-- 1-3 -->
-        <td rowspan="2">{{ $total_e_pop_svac_a1_grand }}</td>  <!-- A1 SINOVAC_FIRST-->
-        <td rowspan="2">{{ $total_e_pop_svac_a1_grand }} </td>   <!-- A2 SINOVAC_FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_a1_grand }}</td>  <!-- A3 SINOVAC_FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_a1_grand }}</td>  <!-- A4 SINOVAC_FIRST -->
-        <td rowspan="2">{{ $total_e_pop_svac_grand }}</td> <!-- TOTAL ELI POP SINOVAC_FIRST -->
+        <td rowspan="2">{{ $total_e_pop_a1_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a2_grand }} </td>   <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a3_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a4_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_grand }}</td> <!--//TOTAL ELI POP-->
         <td rowspan="2">{{ $total_vallocated_svac_frst_grand }} </td> <!-- VACCINE ALLOCATED (FD) SINOVAC_FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd_grand }} </td>  <!-- VACCINE ALLOCATED (SD) SINOVAC_FIRST -->
         <td rowspan="2"> {{ $total_vallocated_frst_svac }}</td>  <!-- TOTAL VACCINE ALLOCATED SINOVAC_FIRST -->
@@ -420,11 +402,11 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         <td rowspan="2">
 
         </td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a1_grand }}</td>  <!-- A1 ASTRA_FIRST-->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a2_grand }}</td> <!-- A2 ASTRA_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a3_grand }}</td> <!-- A3 ASTRA_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_a4_grand }}</td> <!-- A4 ASTRA_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_astra_grand }}</td> <!-- TOTAL E POP ASTRA_FIRST -->
+        <td rowspan="2">{{ $total_e_pop_a1_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a2_grand }} </td>   <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a3_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a4_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_grand }}</td> <!--//TOTAL ELI POP-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_astra_frst_grand }}</td> <!-- VACCINE_ALLOCATED (FD) ASTRA_FIRST-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_astra_scnd_grand }}</td>  <!-- VACCINE ALLOCATED (SD) ASTRA_FIRST -->
         <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_astra }}</td>  <!-- TOTAL VACCINE ALLOCATED ASTRA_FIRST -->
@@ -516,11 +498,11 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         <td rowspan="2">
 
         </td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a1_grand }}</td>  <!-- A1 SPUTNIKV_FIRST-->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a2_grand }}</td> <!-- A2 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a3_grand }}</td> <!-- A3 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_a4_grand }}</td> <!-- A4 SPUTNIKV_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_sputnikv_grand }}</td> <!-- TOTAL E POP SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ $total_e_pop_a1_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a2_grand }} </td>   <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a3_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a4_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_grand }}</td> <!--//TOTAL ELI POP-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_sputnikv_frst_grand }}</td> <!-- VACCINE_ALLOCATED (FD) SPUTNIKV_FIRST-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_sputnikv_scnd_grand }}</td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
         <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
@@ -612,13 +594,13 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
         <td rowspan="2">
 
         </td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a1_grand }}</td>  <!-- A1 PFIZER_FIRST-->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a2_grand }}</td> <!-- A2 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a3_grand }}</td> <!-- A3 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_a4_grand }}</td> <!-- A4 PFIZER_FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_e_pop_pfizer_grand }} </td> <!-- TOTAL E POP PFIZER_FIRST -->
+        <td rowspan="2">{{ $total_e_pop_a1_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a2_grand }} </td>   <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a3_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_a4_grand }}</td>  <!--TOTAL ELIPOP A1-->
+        <td rowspan="2">{{ $total_e_pop_grand }}</td> <!--//TOTAL ELI POP-->
         <td rowspan="2" style="color:black">{{ $total_vallocated_pfizer_frst_grand }}</td> <!-- VACCINE_ALLOCATED (FD) PFIZER_FIRST-->
-        <td rowspan="2" style="color:black">{{ $total_vallocated_pfizer_frst_grand }}</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
+        <td rowspan="2" style="color:black">{{ $total_vallocated_pfizer_scnd_grand }}</td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
         <td rowspan="2" style="color:black;">{{ $total_vallocated_frst_pfizer }}</td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
         <td style="color:black;">
             <span class="label label-success">{{ $total_pfizer_a1_frst_grand }}</span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
@@ -662,16 +644,16 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
     </tr>
     <tr style="background-color: #8fe7fd">
         <td style="color: black;">
-            <span class="label label-warning">{{ $total_sputnikv_a1_scnd_grand }}</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_pfizer_a1_scnd_grand }}</span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">{{ $total_sputnikv_a2_scnd_grand }}</span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_pfizer_a2_scnd_grand }}</span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
         </td>
         <td style="color:black;">
-            <span class="label label-warning">{{ $total_sputnikv_a3_scnd_grand }}</span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_pfizer_a3_scnd_grand }}</span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ $total_sputnikv_a4_scnd_grand }}</span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
+            <span class="label label-warning">{{ $total_pfizer_a4_scnd_grand }}</span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
         </td>
         <td>
             <span class="label label-warning">{{ $total_vcted_pfizer_scnd_grand }}</span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
@@ -692,7 +674,7 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
             <span class="label label-warning">{{ $total_wstge_pfizer_scnd_grand }}</span> <!-- WASTAGE PFIZER_SECOND -->
         </td>
         <td>
-            <span class="label label-warning">{{ number_format($total_p_cvrge_pfizer_scnd_grand,2) }}%%</span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
+            <span class="label label-warning">{{ number_format($total_p_cvrge_pfizer_scnd_grand,2) }}%</span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
         </td>
         <td>
             <span class="label label-warning">{{ number_format($total_c_rate_pfizer_scnd_grand,2) }}%</span> <!-- CONSUMPTION RATE PFIZER SECOND -->
@@ -708,11 +690,11 @@ Session::put("consumption_rate_dashboard_second",$consumption_rate_dashboard_sec
     <tr>
         <td>Total</td> <!-- 1-7 -->
         <td></td> <!-- TOTAL A1 -->
-        <td></td>  <!-- TOTAL A2 -->
-        <td></td><!-- TOTAL A3 -->
+        <td></td> <!-- TOTAL A2 -->
+        <td></td> <!-- TOTAL A3 -->
         <td></td> <!-- TOTAL A4 -->
-        <td></td>  <!-- TOTAL E POP  -->
-        <td>{{ $total_vallocated_frst_grand }}</td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
+        <td></td> <!-- TOTAL E POP  -->
+        <td>{{ $total_vallocated_frst_grand }} </td> <!-- TOTAL VACCINE ALLOCATED FIRST -->
         <td>{{ $total_vallocated_scnd_grand }} </td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
         <td><b>{{ $total_vallocated }} </b></td>  <!-- TOTAL VACCINE ALLOCATED  -->
         <td>

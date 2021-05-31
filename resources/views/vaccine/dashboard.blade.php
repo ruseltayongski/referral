@@ -22,7 +22,7 @@ header('Access-Control-Allow-Origin: *');
                                 <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                 <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
                                 <option value="SputnikV" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'SputnikV')echo 'selected';} ?>>SputnikV</option>
-                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
+                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -87,7 +87,7 @@ header('Access-Control-Allow-Origin: *');
                         <div class="small-box bg-green">
                             <div class="inner">
                                 <h3 style="font-size: 20pt;">Sputnik V</h3>
-                                <p style="font-size:13pt" >0</p>
+                                <p style="font-size:13pt" class="sputnikv_dashboard">{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -99,7 +99,7 @@ header('Access-Control-Allow-Origin: *');
                         <div class="small-box bg-aqua">
                             <div class="inner">
                                 <h3 style="font-size: 20pt;">Pfizer</h3>
-                                <p style="font-size:13pt" >0</p>
+                                <p style="font-size:13pt" class="pfizer_dashboard">{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-erlenmeyer-flask-bubbles"></i>

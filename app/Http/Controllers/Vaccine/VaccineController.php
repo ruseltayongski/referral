@@ -53,12 +53,12 @@ class VaccineController extends Controller
                 ->astra_count;
             $data['astrazeneca'][] = $astrazeneca;
 
-            $moderna = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as moderna_count"))
-                ->where("typeof_vaccine","Moderna")
+            $sputnikv = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as sputnikv_count"))
+                ->where("typeof_vaccine","SputnikV")
                 ->whereBetween('created_at',[$startdate,$enddate])
                 ->first()
-                ->moderna_count;
-            $data['moderna'][] = $moderna;
+                ->sputnikv_count;
+            $data['sputnikv'][] = $sputnikv;
 
             $pfizer = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as pfizer_count"))
                 ->where("typeof_vaccine","Pfizer")
@@ -70,6 +70,8 @@ class VaccineController extends Controller
 
         $sinovac_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;
         $astrazeneca_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_count"))->where("typeof_vaccine","Astrazeneca")->first()->astra_count;
+        $sputnikv_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sputnikv_count"))->where("typeof_vaccine","SputnikV")->first()->sputnikv_count;
+        $pfizer_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as pfizer_count"))->where("typeof_vaccine","Pfizer")->first()->pfizer_count;
 
         $total_vaccinated_first = VaccineAccomplished::select(DB::raw("sum(vaccinated_first) as total_vaccinated_first"))->first()->total_vaccinated_first;
         $total_vaccinated_second = VaccineAccomplished::select(DB::raw("sum(vaccinated_second) as total_vaccinated_second"))->first()->total_vaccinated_second;
@@ -91,6 +93,8 @@ class VaccineController extends Controller
             "data" => $data,
             "sinovac_count" => $sinovac_count,
             "astrazeneca_count" => $astrazeneca_count,
+            "sputnikv_count" => $sputnikv_count,
+            "pfizer_count" => $pfizer_count,
             "percent_coverage_first" =>$percent_coverage_first,
             "percent_coverage_second"=>$percent_coverage_second,
             "consumption_rate_first" =>$consumption_rate_first,
@@ -257,7 +261,7 @@ class VaccineController extends Controller
             "p_cvrge_svac_scnd" => $request->p_cvrge_svac_scnd,
             "total_c_rate_svac_scnd" => $request->total_c_rate_svac_scnd,
             "total_r_unvcted_scnd_svac" => $request->total_r_unvcted_scnd_svac,
-            //end sinovav
+            //end sinovac
 
             //astra
             "total_epop_astra_a1" => $request->total_epop_astra_a1,

@@ -19,19 +19,19 @@
     </div>
     <div class="form-group">
         <label>A1</label>
-        <input type="text" class="form-control" value="@if(isset($facility->a1)){{ $facility->a1 }}@endif" name="a1">
+        <input type="text" class="form-control" value="@if(isset($facility->a1)){{ $facility->a1 }}@endif" name="a1" required>
     </div>
     <div class="form-group">
         <label>A2</label>
-        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a2 }}@endif" name="a2">
+        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a2 }}@endif" name="a2" required>
     </div>
     <div class="form-group">
         <label>A3</label>
-        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a3 }}@endif" name="a3">
+        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a3 }}@endif" name="a3" required>
     </div>
     <div class="form-group">
         <label>A4</label>
-        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a4 }}@endif" name="a4">
+        <input type="text" class="form-control" value="@if(isset($facility->a2)){{ $facility->a4 }}@endif" name="a4" required>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>

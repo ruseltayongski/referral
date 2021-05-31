@@ -425,6 +425,9 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @if($user->level == 'opcen')
+                            <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As <small class="badge bg-red"> New</small></a></li>
+                        @endif
                         <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
                         <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
                         @if($user->level=='doctor' || $user->level=='midwife')

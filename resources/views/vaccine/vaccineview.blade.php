@@ -85,7 +85,7 @@
                     <div class="inner">
                         <h3>Sputnik V</h3>
 
-                        <p style="font-size:13pt" class="sputnikv_count">0</p>
+                        <p style="font-size:13pt" class="sputnikv_dashboard">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -98,7 +98,7 @@
                     <div class="inner">
                         <h3>Pfizer</h3>
 
-                        <p style="font-size:13pt" class="pfizer_count">0</p>
+                        <p style="font-size:13pt" class="pfizer_dashboard">0</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -995,6 +995,8 @@
         $('#date_range').daterangepicker();
         $(".sinovac_dashboard").text({{ Session::get("sinovac_dashboard") }});
         $(".astra_dashboard").text({{ Session::get("astra_dashboard") }});
+        $(".sputnikv_dashboard").text({{ Session::get("sputnikv_dashboard") }});
+        $(".pfizer_dashboard").text({{ Session::get("pfizer_dashboard") }});
 
         <?php $user = Session::get('auth'); ?>
         $("#container").removeClass("container");
@@ -1271,6 +1273,8 @@
 
             var sinovac_dashboard = <?php if(Session::get('sinovac_dashboard')) echo Session::get('sinovac_dashboard'); else echo 0; ?>;
             var astra_dashboard = <?php if(Session::get('astra_dashboard')) echo Session::get('astra_dashboard'); else echo 0; ?>;
+            var sputnikv_dashboard = <?php if(Session::get('sputnikv_dashboard')) echo Session::get('sputnikv_dashboard'); else echo 0; ?>;
+            var pfizer_dashboard = <?php if(Session::get('pfizer_dashboard')) echo Session::get('pfizer_dashboard'); else echo 0; ?>;
             var options1 = {
                 title: {
                     text: "Total Vaccinated"
@@ -1283,8 +1287,8 @@
                         dataPoints: [
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12"},
-                            { label: "Sputnik V", y: 0  },
-                            { label: "Pfizer",  y: 0  },
+                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a" },
+                            { label: "Pfizer",  y: pfizer_dashboard, color:"#00c0ef" },
                             { label: "Moderna",  y: 0  }
                         ]
 

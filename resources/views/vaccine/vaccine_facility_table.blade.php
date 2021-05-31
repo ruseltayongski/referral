@@ -107,6 +107,32 @@
         $total_wstge_sputnikv_frst = 0;
         $total_wstge_sputnikv_scnd = 0;
 
+        //TOTAL_VACCINATED_PFIZER
+        $total_e_pop_pfizer_a1 = 0;
+        $total_e_pop_pfizer_a1_flag = true;
+        $total_e_pop_pfizer_a2 = 0;
+        $total_e_pop_pfizer_a2_flag = true;
+        $total_e_pop_pfizer_a3 = 0;
+        $total_e_pop_pfizer_a3_flag = true;
+        $total_e_pop_pfizer_a4 = 0;
+        $total_e_pop_pfizer_a4_flag = true;
+
+        $total_vallocated_pfizer = 0;
+        $total_vallocated_pfizer_flag = true;
+        $total_vallocated_pfizer_frst = 0;
+        $total_vallocated_pfizer_scnd = 0;
+        $total_vcted_pfizer_frst = 0;
+        $total_vcted_pfizer_scnd = 0;
+        $total_mild_pfizer_frst = 0;
+        $total_mild_pfizer_scnd = 0;
+        $total_srs_pfizer_frst = 0;
+        $total_srs_pfizer_scnd = 0;
+        $total_dfrd_pfizer_frst = 0;
+        $total_dfrd_pfizer_scnd = 0;
+        $total_rfsd_pfizer_frst = 0;
+        $total_rfsd_pfizer_scnd = 0;
+        $total_wstge_pfizer_frst = 0;
+        $total_wstge_pfizer_scnd = 0;
 
         //SINOVAC
         $total_svac_a1_frst = 0;
@@ -118,7 +144,6 @@
         $total_svac_a3_scnd = 0;
         $total_svac_a4_scnd = 0;
 
-
         //ASTRAZENECA
         $total_astra_a1_frst = 0;
         $total_astra_a2_frst = 0;
@@ -129,6 +154,25 @@
         $total_astra_a3_scnd = 0;
         $total_astra_a4_scnd = 0;
 
+        //ASTRAZENECA
+        $total_sputnikv_a1_frst = 0;
+        $total_sputnikv_a2_frst = 0;
+        $total_sputnikv_a3_frst = 0;
+        $total_sputnikv_a4_frst = 0;
+        $total_sputnikv_a1_scnd = 0;
+        $total_sputnikv_a2_scnd = 0;
+        $total_sputnikv_a3_scnd = 0;
+        $total_sputnikv_a4_scnd = 0;
+
+        //ASTRAZENECA
+        $total_pfizer_a1_frst = 0;
+        $total_pfizer_a2_frst = 0;
+        $total_pfizer_a3_frst = 0;
+        $total_pfizer_a4_frst = 0;
+        $total_pfizer_a1_scnd = 0;
+        $total_pfizer_a2_scnd = 0;
+        $total_pfizer_a3_scnd = 0;
+        $total_pfizer_a4_scnd = 0;
 
         ?>
         @if(count($vaccine_accomplishment)>0)

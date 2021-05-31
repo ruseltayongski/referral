@@ -224,6 +224,8 @@
 
     $sinovac_dashboard = $total_vcted_svac_frst + $total_vcted_svac_second;
     $astra_dashboard = $total_vcted_astra_frst + $total_vcted_astra_second;
+    $sputnikv_dashboard = $total_vcted_sputnikv_frst + $total_vcted_sputnikv_second;
+    $pfizer_dashboard = $total_vcted_pfizer_frst + $total_vcted_pfizer_second;
 
     $percent_coverage_firstdose =  number_format($total_p_cvrge_frst_prov,2);
     $percent_coverage_seconddose = number_format($total_p_cvrge_scnd_prov,2);
@@ -238,6 +240,8 @@
 
     Session::put("sinovac_dashboard",$sinovac_dashboard);
     Session::put("astra_dashboard",$astra_dashboard);
+    Session::put("sputnikv_dashboard",$sputnikv_dashboard);
+    Session::put("pfizer_dashboard",$pfizer_dashboard);
     Session::put("percent_coverage_firstdose",$percent_coverage_firstdose);
     Session::put("percent_coverage_seconddose",$percent_coverage_seconddose);
     Session::put("consumption_rate_firstdose",$consumption_rate_firstdose);
