@@ -500,6 +500,11 @@ Route::get('vaccine/facility_no_eli_pop/{facility_id}/{priority}','Vaccine\Vacci
 Route::post('vaccine/eligible_pop','Vaccine\VaccineController@vaccineEligiblePop');
 
 
+Route::get('vaccine/map','Vaccine\VaccineController@vaccineMap');
+Route::get('vaccine/line_chart','Vaccine\VaccineController@vaccineLineChart');
+Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryReport');
+
+
 
 
 

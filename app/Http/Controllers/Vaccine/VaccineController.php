@@ -16,23 +16,30 @@ use Illuminate\Support\Facades\Session;
 class VaccineController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Allow-Headers: *');
-        //for past 15 days
-        $date_start_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(31))).' 00:00:00';
-        $date_end_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 23:59:59';
-        $first_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','first')");
-        $second_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','second')");
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = '2021-03-01 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
 
-        $date_start_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 00:00:00';
-        $date_end_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
-        $first_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','first')");
-        $second_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','second')");
+        $a1_target = Muncity::select(DB::raw("sum(coalesce(a1,0)) as a1_target"))->first()->a1_target;
+        $a2_target = Muncity::select(DB::raw("sum(coalesce(a2,0)) as a2_target"))->first()->a2_target;
+        $a3_target = Muncity::select(DB::raw("sum(coalesce(a3,0)) as a3_target"))->first()->a3_target;
+        $a4_target = Muncity::select(DB::raw("sum(coalesce(a4,0)) as a4_target"))->first()->a4_target;
 
-        ///
+        $a1_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_first,0)+coalesce(vaccinated_second,0)) as a1_completion"))->where("priority","a1")->first()->a1_completion;
+        $a2_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_first,0)+coalesce(vaccinated_second,0)) as a2_completion"))->where("priority","a2")->first()->a2_completion;
+        $a3_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_first,0)+coalesce(vaccinated_second,0)) as a3_completion"))->where("priority","a3")->first()->a3_completion;
+        $a4_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_first,0)+coalesce(vaccinated_second,0)) as a4_completion"))->where("priority","a4")->first()->a4_completion;
+        $a1_completion = number_format($a1_completion / $a1_target * 100,2);
+        $a2_completion = number_format($a2_completion / $a2_target * 100,2);
+        $a3_completion = number_format($a3_completion / $a3_target * 100,2);
+        $a4_completion = number_format($a4_completion / $a4_target * 100,2);
+
         for($i=1; $i<=12; $i++)
         {
             $date = date('Y').'/'.$i.'/01';
@@ -76,7 +83,6 @@ class VaccineController extends Controller
         $total_vaccinated_first = VaccineAccomplished::select(DB::raw("sum(vaccinated_first) as total_vaccinated_first"))->first()->total_vaccinated_first;
         $total_vaccinated_second = VaccineAccomplished::select(DB::raw("sum(vaccinated_second) as total_vaccinated_second"))->first()->total_vaccinated_second;
 
-
         $elipop_muncity = Muncity::select(DB::raw("sum(COALESCE(a1,0)+COALESCE(a2,0)+COALESCE(a3,0)+COALESCE(a4,0)) as elipop_muncity"))->first()->elipop_muncity;
 
         $percent_coverage_first = number_format($total_vaccinated_first / $elipop_muncity * 100,2);
@@ -99,10 +105,16 @@ class VaccineController extends Controller
             "percent_coverage_second"=>$percent_coverage_second,
             "consumption_rate_first" =>$consumption_rate_first,
             "consumption_rate_second" =>$consumption_rate_second,
-            "first_dose_past_1" =>$first_dose_past_1,
-            "second_dose_past_1" =>$second_dose_past_1,
-            "first_dose_past_2" =>$first_dose_past_2,
-            "second_dose_past_2" =>$second_dose_past_2,
+            "a1_target" => $a1_target,
+            "a2_target" => $a2_target,
+            "a3_target" => $a3_target,
+            "a4_target" => $a4_target,
+            "a1_completion" => $a1_completion,
+            "a2_completion" => $a2_completion,
+            "a3_completion" => $a3_completion,
+            "a4_completion" => $a4_completion,
+            "date_start" => $date_start,
+            "date_end" => $date_end
         ]);
     }
 
@@ -855,6 +867,33 @@ class VaccineController extends Controller
         ]);
     }
 
+    public function vaccineMap(){
+        return view('vaccine.vaccine_map');
+    }
+
+    public function vaccineLineChart(){
+        //for past 15 days
+        $date_start_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(31))).' 00:00:00';
+        $date_end_1 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 23:59:59';
+        $first_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','first')");
+        $second_dose_past_1 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_1','$date_end_1','second')");
+
+        $date_start_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(16))).' 00:00:00';
+        $date_end_2 = date('Y-m-d',strtotime(Carbon::now()->subDays(1))).' 23:59:59';
+        $first_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','first')");
+        $second_dose_past_2 = \DB::connection('mysql')->select("call vaccine_past_vaccinated('$date_start_2','$date_end_2','second')");
+        ///
+        return view('vaccine.vaccine_line_chart',[
+            "first_dose_past_1" =>$first_dose_past_1,
+            "second_dose_past_1" =>$second_dose_past_1,
+            "first_dose_past_2" =>$first_dose_past_2,
+            "second_dose_past_2" =>$second_dose_past_2,
+        ]);
+    }
+
+    public function vaccineSummaryReport(){
+        return view('vaccine.vaccine_summary_report');
+    }
 }
 
 

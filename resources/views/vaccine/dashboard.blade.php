@@ -1,16 +1,11 @@
 <?php
 $error = \Illuminate\Support\Facades\Input::get('error');
-header('Access-Control-Allow-Origin: *');
 ?>
 @extends('layouts.app')
 
 @section('content')
     <div style="padding-right: 2%;padding-left: 2%">
-        <div class="row">
-            <div class="jim-content">
-                <iframe style="width: 100%;height: 700px;" src="https://dohph.maps.arcgis.com/apps/webappviewer/index.html?id=228d631ffa6c43df93bec08a1098143e"></iframe>
-            </div>
-        </div>
+
         <div class="row">
             <div class="jim-content">
                 <form action="{{ asset('vaccine/vaccineview').'/'.$province_id }}" method="GET">
@@ -58,60 +53,164 @@ header('Access-Control-Allow-Origin: *');
                     </div>
                 @endif
                 <h3 class="page-header">Dashboard</h3>
-                <div class="row" style="padding-left: 1%;padding-right: 1%; ">
-                    <div class="col-lg-3">
-                        <div class="small-box bg-red">
-                            <div class="inner">
-                                <h3 style="font-size: 20pt;">Sinovac</h3>
-                                <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="true">Tab 1</a></li>
+                        <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false" onclick="tab2();">Tab 2</a></li>
+                        <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="false" onclick="tab3();">Tab 3</a></li>
+                        <li class=""><a href="#tab4" data-toggle="tab" aria-expanded="false" onclick="tab4();">Tab 4</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab1">
+                            <div class="row" style="padding-left: 1%;padding-right: 1%; ">
+                                <div class="col-lg-3">
+                                    <div class="small-box bg-red">
+                                        <div class="inner">
+                                            <h3 style="font-size: 20pt;">Sinovac</h3>
+                                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <h3 style="font-size: 20pt;">Astrazeneca</h3>
+                                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <h3 style="font-size: 20pt;">Sputnik V</h3>
+                                            <p style="font-size:13pt" class="sputnikv_dashboard">{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h3 style="font-size: 20pt;">Pfizer</h3>
+                                            <p style="font-size:13pt" class="pfizer_dashboard">{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="icon">
-                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="small-box bg-yellow">
-                            <div class="inner">
-                                <h3 style="font-size: 20pt;">Astrazeneca</h3>
-                                <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="small-box bg-green">
-                            <div class="inner">
-                                <h3 style="font-size: 20pt;">Sputnik V</h3>
-                                <p style="font-size:13pt" class="sputnikv_dashboard">{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="small-box bg-aqua">
-                            <div class="inner">
-                                <h3 style="font-size: 20pt;">Pfizer</h3>
-                                <p style="font-size:13pt" class="pfizer_dashboard">{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                </div>
 
-                <h3 class="page-header">Monthly Activity</h3>
-                <div class="chart">
-                    <canvas id="barChart"></canvas>
+                            <h3 class="page-header">Monthly Activity</h3>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="chart">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="info-box bg-yellow">
+                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Target vaccination for A1</span>
+                                            <span class="info-box-number">{{ number_format($a1_target) }}</span>
+
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a1_completion }}%"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                                {{ $a1_completion }}% Goal Completion
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+
+                                    <div class="info-box bg-green">
+                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Target vaccination for A2</span>
+                                            <span class="info-box-number">{{ number_format($a2_target) }}</span>
+
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a2_completion }}%"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                                {{ $a2_completion }}% Goal Completion
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+
+
+                                    <div class="info-box bg-aqua">
+                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Target vaccination for A3</span>
+                                            <span class="info-box-number">{{ number_format($a3_target) }}</span>
+
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a3_completion }}%"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                                {{ $a3_completion }}% Goal Completion
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+
+                                    <div class="info-box bg-red">
+                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Targer vaccination for A4</span>
+                                            <span class="info-box-number">{{ number_format($a4_target) }}</span>
+
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                                {{ $a4_completion }}% Goal Completion
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab2">
+                            <div class="row">
+                                <div class="jim-content tab_content2">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab3">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content3">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab4">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content4">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -130,24 +229,9 @@ header('Access-Control-Allow-Origin: *');
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <div style="width: 100%">
-            <div class="row">
-                <div class="col-md-12 jim-content">
-                    <h3 class="page-header">Last 30 days vaccinated</h3>
-                    <div id="past_days_1" style="height: 370px; width: 100%;"></div>
-                    <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 jim-content">
-                    <div id="past_days_2" style="height: 370px; width: 100%;"></div>
-                    <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
-                </div>
-            </div>
-        </div>
 
     </div>
 
@@ -155,10 +239,42 @@ header('Access-Control-Allow-Origin: *');
 
 @section('js')
     @include('script.chart')
-
     <script type="text/javascript">
         $("#container").removeClass("container");
         $("#container").addClass("container-fluid");
+
+        function tab2(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width:30%;"></center>';
+
+            $(".tab_content2").html(loading_content);
+            setTimeout(function(){
+                $(".tab_content2").html('<iframe style="width: 100%;height: 800px;" src="<?php echo asset('vaccine/line_chart'); ?>"></iframe>');
+            },1000);
+        }
+
+        function tab3(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content3").html(loading_content);
+            $.get("<?php echo asset('vaccine/map'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content3").html(data);
+                },500);
+            });
+        }
+        function tab4(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content4").html(loading_content);
+            $.get("<?php echo asset('vaccine/summary/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content4").html(data);
+                },500);
+            });
+        }
 
         window.onload = function() {
 
@@ -226,6 +342,7 @@ header('Access-Control-Allow-Origin: *');
 
         };
 
+
         var chartdata = {
             type: 'bar',
             data: {
@@ -245,7 +362,7 @@ header('Access-Control-Allow-Origin: *');
                     {
                         label: 'SputnikV',
                         backgroundColor: '#00a65a',
-                        data: <?php echo json_encode($data["SputnikV"]); ?>
+                        data: <?php echo json_encode($data["sputnikv"]); ?>
                     },
                     {
                         label: 'Pfizer',
@@ -257,138 +374,6 @@ header('Access-Control-Allow-Origin: *');
         };
         var ctx = document.getElementById('barChart').getContext('2d');
         new Chart(ctx, chartdata);
-
-
-        //line chart 1
-        var dataPoints1 = [];
-        var dataPoints2 = [];
-        $.each(<?php echo json_encode($first_dose_past_1)?>, function( index, value ) {
-            dataPoints1.push({
-                x: new Date(value.date),
-                y: value.value
-            });
-        });
-
-        $.each(<?php echo json_encode($second_dose_past_1)?>, function( index, value ) {
-            dataPoints2.push({
-                x: new Date(value.date),
-                y: value.value,
-            });
-        });
-
-        var chart = new CanvasJS.Chart("past_days_1", {
-            axisX: {
-                valueFormatString: "DD MMM"
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                cursor:"pointer",
-                verticalAlign: "bottom",
-                horizontalAlign: "center",
-                dockInsidePlotArea: false,
-                fontSize: 15,
-                itemclick: toogleDataSeries1
-            },
-            animationEnabled: true,
-            data: [
-                {
-                    type:"line",
-                    name: "First Dose",
-                    showInLegend: true,
-                    lineColor: "#00a65a",
-                    color: '#00a65a',
-                    yValueFormatString: "#,###",
-                    dataPoints: dataPoints1
-                },
-                {
-                    type:"line",
-                    name: "Second Dose",
-                    showInLegend: true,
-                    lineColor: "#f39c12",
-                    color: '#f39c12',
-                    yValueFormatString: "#,###",
-                    dataPoints: dataPoints2
-                }
-            ]
-        });
-        chart.render();
-
-        function toogleDataSeries1(e){
-            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            } else{
-                e.dataSeries.visible = true;
-            }
-            chart.render();
-        }
-        //line chart 1
-
-        //line chart 2
-        var dataPoints1_2 = [];
-        var dataPoints2_2 = [];
-        $.each(<?php echo json_encode($first_dose_past_2)?>, function( index, value ) {
-            dataPoints1_2.push({
-                x: new Date(value.date),
-                y: value.value
-            });
-        });
-
-        $.each(<?php echo json_encode($second_dose_past_2)?>, function( index, value ) {
-            dataPoints2_2.push({
-                x: new Date(value.date),
-                y: value.value,
-            });
-        });
-
-        var chart_2 = new CanvasJS.Chart("past_days_2", {
-            axisX: {
-                valueFormatString: "DD MMM"
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                cursor:"pointer",
-                verticalAlign: "bottom",
-                horizontalAlign: "center",
-                dockInsidePlotArea: false,
-                fontSize: 15,
-                itemclick: toogleDataSeries2
-            },
-            animationEnabled: true,
-            data: [
-                {
-                    type:"line",
-                    name: "First Dose",
-                    showInLegend: true,
-                    lineColor: "#00a65a",
-                    color: '#00a65a',
-                    yValueFormatString: "#,###",
-                    dataPoints: dataPoints1_2
-                },
-                {
-                    type:"line",
-                    name: "Second Dose",
-                    showInLegend: true,
-                    lineColor: "#f39c12",
-                    color: '#f39c12',
-                    yValueFormatString: "#,###",
-                    dataPoints: dataPoints2_2
-                }
-            ]
-        });
-        chart_2.render();
-
-        function toogleDataSeries2(e){
-            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            } else{
-                e.dataSeries.visible = true;
-            }
-            chart_2.render();
-        }
 
 
 

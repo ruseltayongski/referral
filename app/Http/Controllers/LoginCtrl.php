@@ -15,32 +15,7 @@ class LoginCtrl extends Controller
     public function index()
     {
         if($login = Session::get('auth')){
-            if($login->level=='doctor')
-                return redirect('doctor');
-            else if($login->level=='chief')
-                return redirect('chief');
-            else if($login->level=='support')
-                return redirect('support');
-            else if($login->level=='mcc')
-                return redirect('mcc');
-            else if($login->level=='admin')
-                return redirect('admin');
-            else if($login->level=='eoc_region')
-                return redirect('eoc_region');
-            else if($login->level=='eoc_city')
-                return redirect('eoc_city');
-            else if($login->level=='opcen')
-                return redirect('opcen');
-            else if($login->level=='bed_tracker')
-                return redirect('bed_tracker');
-            else if($login->level=='midwife')
-                return redirect('midwife');
-            else if($login->level=='medical_dispatcher')
-                return redirect('medical_dispatcher');
-            else if($login->level=='nurse')
-                return redirect('nurse');
-            else if($login->level=='vaccine')
-                return redirect('vaccine');
+            return redirect($login->level);
         }
 
         return view('login');
