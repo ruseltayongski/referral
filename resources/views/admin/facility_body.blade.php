@@ -230,6 +230,14 @@
             <option value="no" <?php if($data->referral_used == 'no')echo 'selected'; ?>>No</option>
         </select>
     </div>
+    <div class="form-group">
+        <label>Latitude:</label>
+        <input type="text" class="form-control" value="@if(isset($data->latitude)){{ $data->latitude }}@endif" name="latitude" required>
+    </div>
+    <div class="form-group">
+        <label>Longitude:</label>
+        <input type="text" class="form-control" value="@if(isset($data->longitude)){{ $data->longitude }}@endif" name="longitude" required>
+    </div>
     <hr />
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
