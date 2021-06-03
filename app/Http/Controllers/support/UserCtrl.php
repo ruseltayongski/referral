@@ -27,7 +27,8 @@ class UserCtrl extends Controller
         $data = User::where('facility_id',$user->facility_id)
             ->where(function($q) use($search){
                 $q->where("users.level","doctor")
-                    ->orWhere("users.level","midwife");
+                    ->orWhere("users.level","midwife")
+                    ->orWhere("users.level","nurse");
             })
             ->where(function($q) use($search){
                 $q->where('fname','like',"%$search%")
