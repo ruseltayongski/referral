@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Activity;
+use App\Facility;
 use App\Http\Controllers\ParamCtrl;
 use App\Tracking;
 use App\User;
@@ -77,6 +78,13 @@ class HomeCtrl extends Controller
             "incoming_statistics" => $incoming_statistics,
             "date_start" => $date_start,
             "date_end" => Carbon::now()->format('Y-m-d')
+        ]);
+    }
+
+    public function viewMap(){
+        $facility = Facility::whereNotNull("latitude")->get();
+        return view('map',[
+            "facility" => $facility
         ]);
     }
 

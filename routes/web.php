@@ -471,6 +471,9 @@ Route::get('icd/get','icd\IcdController@index');
 //xnynap
 Route::post('telemedicine/sync/tsekap','ApiController@telemedicineToPatient');
 
+//map
+Route::get('map','doctor\HomeCtrl@viewMap');
+
 //vaccine
 Route::get('vaccine','Vaccine\VaccineController@index');
 Route::match(['GET',['POST']],'vaccine/vaccineview/{province_id}','Vaccine\VaccineController@vaccineView');
@@ -506,6 +509,8 @@ Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryRep
 Route::get('vaccine/tab5/report','Vaccine\VaccineController@vaccineTab5Report');//tab5
 Route::get('vaccine/tab6/report','Vaccine\VaccineController@vaccineTab6Report');//tab6
 Route::get('vaccine/tab7/report','Vaccine\VaccineController@vaccineTab7Report');//tab7
+
+
 
 
 
