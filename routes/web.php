@@ -502,7 +502,10 @@ Route::post('vaccine/eligible_pop','Vaccine\VaccineController@vaccineEligiblePop
 
 Route::get('vaccine/map','Vaccine\VaccineController@vaccineMap');
 Route::get('vaccine/line_chart','Vaccine\VaccineController@vaccineLineChart');
-Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryReport');
+Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryReport');//tab4
+Route::get('vaccine/tab5/report','Vaccine\VaccineController@vaccineTab5Report');//tab5
+Route::get('vaccine/tab6/report','Vaccine\VaccineController@vaccineTab6Report');//tab6
+Route::get('vaccine/tab7/report','Vaccine\VaccineController@vaccineTab7Report');//tab7
 
 
 

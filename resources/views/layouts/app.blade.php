@@ -407,7 +407,7 @@
                     @endforeach
                     <li><a href="{{ asset('vaccine/facility').'/cebu' }}">Cebu City</a></li>
                     <li><a href="{{ asset('vaccine/facility').'/mandaue' }}">Mandaue City</a></li>
-                    <li><a href="{{ asset('vaccine/vaccineview').'/lapu' }}">Lapu-Lapu City</a></li>
+                    <li><a href="{{ asset('vaccine/facility').'/lapu' }}">Lapu-Lapu City</a></li>
                 @endif
                 @if($user->level == 'admin')
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
