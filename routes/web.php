@@ -151,7 +151,6 @@ Route::get('support/chat/sample','support\ChatCtrl@sample');
 Route::get('doctor','doctor\HomeCtrl@index');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
-Route::post('doctor/referral','doctor\ReferralCtrl@searchReferral');
 
 Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if the form is seen
 Route::get('doctor/referral/seenBy/{track_id}','doctor\ReferralCtrl@seenBy');//if the form is seen

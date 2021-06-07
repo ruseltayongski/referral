@@ -29,28 +29,15 @@ class ReferralCtrl extends Controller
         //$this->middleware('doctor');
     }
 
-    public function searchReferral(Request $req)
+    public function index(Request $request)
     {
-        $data = array(
-            'keyword' => $req->keyword,
-            'option' => $req->option,
-            'date' => $req->date,
-            'department' => $req->department,
-            'facility' => $req->facility
-        );
-        Session::put('search_referral',$data);
-        return self::index();
-    }
-
-    public function index()
-    {
-        $user = Session::get('auth');
         ParamCtrl::lastLogin();
-        $search = Session::get('search_referral');
+        $keyword = '';
+        $dept = '';
+        $fac = '';
+        $option = '';
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfYear()->format('m/d/Y');
-        /*$start = Carbon::now()->startOfMonth()->subMonth()->format('m/d/Y');
-        $end = Carbon::now()->subMonth()->endOfMonth()->format('m/d/Y');*/
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.*',
@@ -68,9 +55,9 @@ class ReferralCtrl extends Controller
                 ->leftJoin('users','users.id','=','tracking.referring_md')
                 ->leftJoin('users as action','action.id','=','tracking.action_md')
                 ->where('referred_to',$user->facility_id);
-        if($search['keyword'])
+        if($request->search)
         {
-            $keyword = $search['keyword'];
+            $keyword = $request->search;
             $data = $data->where(function($q) use ($keyword){
                 $q->where('patients.lname',"$keyword")
                     ->orwhere('patients.fname',"$keyword")
@@ -78,21 +65,21 @@ class ReferralCtrl extends Controller
             });
         }
 
-        if($search['department'])
+        if($request->department_filter)
         {
-            $dept = $search['department'];
+            $dept = $request->department_filter;
             $data = $data->where('tracking.department_id',$dept);
         }
 
-        if($search['facility'])
+        if($request->facility_filter)
         {
-            $fac = $search['facility'];
+            $fac = $request->facility_filter;
             $data = $data->where('tracking.referred_from',$fac);
         }
 
-        if($search['date'])
+        if($request->date)
         {
-            $date = $search['date'];
+            $date = $request->date;
             $range = explode('-',str_replace(' ', '', $date));
             $start = $range[0];
             $end = $range[1];
@@ -101,9 +88,9 @@ class ReferralCtrl extends Controller
         $start_date = Carbon::parse($start)->startOfDay();
         $end_date = Carbon::parse($end)->endOfDay();
 
-        if($search['option'])
+        if($request->option_filter)
         {
-            $option = $search['option'];
+            $option = $request->option_filter;
             if($option=='referred'){
                 $data = $data->where(function($q){
                     $q->where('tracking.status','referred')
@@ -140,7 +127,11 @@ class ReferralCtrl extends Controller
             'title' => 'Incoming Patients',
             'data' => $data,
             'start' => $start,
-            'end' => $end
+            'end' => $end,
+            'keyword' => $keyword,
+            'department' => $dept,
+            'facility' => $fac,
+            'option' => $option
         ]);
     }
 
