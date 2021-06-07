@@ -363,27 +363,14 @@ class ReferralCtrl extends Controller
         ]);
     }
 
-    public function searchReferred(Request $req)
-    {
-        $keyword = $req->keyword;
-        $type = $req->type;
-        Session::put('referredKeyword',$keyword);
-        Session::put('referredSelect',$type);
-        Session::put('referred_date',$req->date);
-        Session::put('referred_facility',$req->facility);
-        Session::put('referred_department',$req->department);
-        return redirect('doctor/referred');
-    }
-
     public function referred(Request $request)
     {
         ParamCtrl::lastLogin();
-        $keyword = Session::get('referredKeyword');
-        $type = Session::get('referredSelect');
-        $date = Session::get('referred_date');
-        $facility = Session::get('referred_facility');
-        $department = Session::get('referred_department');
-
+        $search = $request->search;
+        $option_filter = $request->option_filter;
+        $date = $request->date;
+        $facility_filter = $request->facility_filter;
+        $department_filter = $request->department_filter;
 
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfYear()->format('m/d/Y');
@@ -439,27 +426,26 @@ class ReferralCtrl extends Controller
                         ->orwhere('tracking.status','archived')
                         ->orwhere('tracking.status','rejected');
                 });
-            if($keyword){
-                $data = $data->where(function($q) use ($keyword){
-                    $q->where('patients.fname','like',"%$keyword%")
-                        ->orwhere('patients.mname','like',"%$keyword%")
-                        ->orwhere('patients.lname','like',"%$keyword%")
-                        ->orwhere('tracking.code','like',"%$keyword%");
+            if($search){
+                $data = $data->where(function($q) use ($search){
+                    $q->where('patients.fname','like',"%$search%")
+                        ->orwhere('patients.mname','like',"%$search%")
+                        ->orwhere('patients.lname','like',"%$search%")
+                        ->orwhere('tracking.code','like',"%$search%");
                 });
             }
 
-            if($type){
-                $data = $data->where('tracking.status',$type);
+            if($option_filter){
+                $data = $data->where('tracking.status',$option_filter);
             }
-            if($facility)
+            if($facility_filter)
             {
-                $data = $data->where('tracking.referred_to',$facility);
+                $data = $data->where('tracking.referred_to',$facility_filter);
             }
-            if($department)
+            if($department_filter)
             {
-                $data = $data->where('tracking.department_id',$department);
+                $data = $data->where('tracking.department_id',$department_filter);
             }
-
 
             if($date)
             {
@@ -477,13 +463,16 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
         }
 
-
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
             'data' => $data,
             'start' => $start,
             'end' => $end,
-            'referredCode' => $request->referredCode
+            'referredCode' => $request->referredCode,
+            'search' => $search,
+            'option_fitler' => $option_filter,
+            'facility_filter' => $facility_filter,
+            'department_filter' => $department_filter
         ]);
     }
 

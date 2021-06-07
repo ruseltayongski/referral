@@ -23,7 +23,7 @@
         <form action="{{ url('doctor/referral/') }}" method="GET">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $keyword }}" id="keyword" name="keyword"/>
+                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $keyword }}" id="keyword" name="search"/>
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
