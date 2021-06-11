@@ -20,42 +20,42 @@
         </h3>
     </div>
     <div class="panel-body">
-        <form action="{{ url('doctor/referral/') }}" method="POST">
+        <form action="{{ url('doctor/referral/') }}" method="GET">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $search_referral['keyword'] }}" id="keyword" name="keyword"/>
+                <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $keyword }}" id="keyword" name="search"/>
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="form-control select2" name="facility" id="facility">
+                <select class="form-control select2" name="facility_filter" id="facility">
                     <option value="">All Facility</option>
                     @foreach($fac as $f)
-                        <option {{ ($search_referral['facility']==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
+                        <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control" name="department" id="department">
+                <select class="form-control" name="department_filter" id="department">
                     <option value="">All Department</option>
                     @foreach($dept as $d)
-                        <option {{ ($search_referral['department']==$d->id) ? 'selected': '' }} value="{{ $d->id }}">{{ $d->description }}</option>
+                        <option {{ ($department==$d->id) ? 'selected': '' }} value="{{ $d->id }}">{{ $d->description }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
-                <select class="form-control" name="option" id="option">
+                <select class="form-control" name="option_filter" id="option">
                     <option value="">Select All</option>
-                    <option {{ ($search_referral['option']=='referred') ? 'selected': '' }} value="referred">New Referral</option>
-                    <option {{ ($search_referral['option']=='accepted') ? 'selected': '' }} value="accepted">Accepted</option>
+                    <option {{ ($option=='referred') ? 'selected': '' }} value="referred">New Referral</option>
+                    <option {{ ($option=='accepted') ? 'selected': '' }} value="accepted">Accepted</option>
                 </select>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-flat btn-warning" onclick="clearFieldsSidebar()">
                     <i class="fa fa-eye"></i> View All
                 </button>
-                <button type="submit" class="btn btn-flat btn-success">
+                <button type="submit" name="filter_submit" value="submit" class="btn btn-flat btn-success">
                     <i class="fa fa-filter"></i> Filter Result
                 </button>
             </div>

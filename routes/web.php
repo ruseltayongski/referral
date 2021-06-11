@@ -151,7 +151,6 @@ Route::get('support/chat/sample','support\ChatCtrl@sample');
 Route::get('doctor','doctor\HomeCtrl@index');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
-Route::post('doctor/referral','doctor\ReferralCtrl@searchReferral');
 
 Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if the form is seen
 Route::get('doctor/referral/seenBy/{track_id}','doctor\ReferralCtrl@seenBy');//if the form is seen
@@ -172,7 +171,7 @@ Route::post('doctor/referral/redirect/{activity_id}','doctor\ReferralCtrl@redire
 Route::get('doctor/referral/data/normal/{id}','doctor\ReferralCtrl@normalForm');
 Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantForm');
 
-Route::match(["GET","POST"],'doctor/referred','doctor\ReferralCtrl@referred');
+Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
 Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
 Route::post('doctor/referred/transfer/{id}','doctor\ReferralCtrl@transferReferral');
