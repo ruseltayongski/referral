@@ -1,10 +1,17 @@
-
-<b style="font-size:20pt"><center>CENTRAL VISAYAS COVID-19 VACCINATION SUMMARY REPORT</center></b>
-<b style="font-size:17pt"><center>Data via SMS from Implementing Units as of</center></b>
-<b style="font-size:17pt"><center><p class="text-blue">{{ date('F d, Y')  }}</p></center></b><br>
+<center>
+    <b style="font-size:20pt">
+        CENTRAL VISAYAS COVID-19 VACCINATION SUMMARY REPORT
+    </b><br>
+    <b style="font-size:17pt">
+        Data via SMS from Implementing Units as of
+    </b><br>
+    <b style="font-size:17pt">
+        <p class="text-blue">{{ date('F d, Y')  }}</p>
+    </b><br>
+</center>
 
 <style>
-    td {
+    td,th {
         text-align: center;
     }
 </style>
@@ -13,16 +20,16 @@
         <thead>
         <tr style="background-color: #fbe4d5">
             <th><b style="font-size: 10pt">Province</b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>Vaccine Allocation</center></b></th>
-            <th colspan="1"><b style="font-size: 10pt"><center>Eligible Population ({{ $priority_set }})</center></b></th>
-            <th colspan="10"><b style="font-size: 10pt"><center>Vaccinated</center></b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</center></b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</center></b></th>
-            <th colspan="2"><b style="font-size: 10pt"><center>Total Refusal</center></b></th>
-            <th colspan="2"><b style="font-size: 10pt"><center>Total Deferral</center></b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>Wastage</center></b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>1st dose Consumption Rate</center></b></th>
-            <th colspan="5"><b style="font-size: 10pt"><center>2nd dose Consumption Rate</center></b></th>
+            <th colspan="5"><b style="font-size: 10pt">Vaccine Allocation</b></th>
+            <th colspan="1"><b style="font-size: 10pt">Eligible Population ({{ $priority_set }})</b></th>
+            <th colspan="10"><b style="font-size: 10pt">Vaccinated</b></th>
+            <th colspan="5"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="5"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
+            <th colspan="2"><b style="font-size: 10pt">Total Deferral</b></th>
+            <th colspan="5"><b style="font-size: 10pt">Wastage</b></th>
+            <th colspan="5"><b style="font-size: 10pt">1st dose Consumption Rate</b></th>
+            <th colspan="5"><b style="font-size: 10pt">2nd dose Consumption Rate</b></th>
         </tr>
         <tr style="background-color: #fbe4d5;">
             <td></td>
