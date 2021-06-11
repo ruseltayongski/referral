@@ -107,6 +107,77 @@
                 </div>
             </div>
         </div>
+        <div class="row" style="padding-left: 1%;padding-right: 1%">
+            <div class="col-md-3">
+                <div class="info-box bg-yellow">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Target vaccination for A1</span>
+                        <span class="info-box-number">{{ number_format($a1_target) }}</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ $a1_completion }}%"></div>
+                        </div>
+                        <span class="progress-description">
+                        {{ $a1_completion }}% Goal Completion
+                    </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-green">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Target vaccination for A2</span>
+                        <span class="info-box-number">{{ number_format($a2_target) }}</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ $a2_completion }}%"></div>
+                        </div>
+                        <span class="progress-description">
+                                                {{ $a2_completion }}% Goal Completion
+                                            </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-aqua">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Target vaccination for A3</span>
+                        <span class="info-box-number">{{ number_format($a3_target) }}</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ $a3_completion }}%"></div>
+                        </div>
+                        <span class="progress-description">
+                                                {{ $a3_completion }}% Goal Completion
+                                            </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-red">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Targer vaccination for A4</span>
+                        <span class="info-box-number">{{ number_format($a4_target) }}</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ $a4_completion }}%"></div>
+                        </div>
+                        <span class="progress-description">
+                                                {{ $a4_completion }}% Goal Completion
+                                            </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+        </div>
 
         <div class="box-body">
             @if(count($data)>0)
@@ -999,8 +1070,6 @@
         $(".pfizer_dashboard").text({{ Session::get("pfizer_dashboard") }});
 
         <?php $user = Session::get('auth'); ?>
-        $("#container").removeClass("container");
-        $("#container").addClass("container-fluid");
 
         function muncityVaccinated(province_id,muncity_id,date_start,date_end,data){
             var json = {
