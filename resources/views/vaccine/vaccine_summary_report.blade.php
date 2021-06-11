@@ -5,9 +5,9 @@
     <b style="font-size:17pt">
         Data via SMS from Implementing Units as of
     </b><br>
-    <b style="font-size:17pt">
-        <p class="text-blue">{{ date('F d, Y')  }}</p>
-    </b><br>
+    <b style="font-size:17pt" class="text-blue">
+        {{ date('F d, Y')  }}
+    </b><br><br>
 </center>
 
 <style>
