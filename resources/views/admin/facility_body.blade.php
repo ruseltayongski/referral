@@ -232,11 +232,11 @@
     </div>
     <div class="form-group">
         <label>Latitude:</label>
-        <input type="text" class="form-control" value="@if(isset($data->latitude)){{ $data->latitude }}@endif" name="latitude" required>
+        <input type="text" class="form-control" value="@if(isset($data->latitude)){{ $data->latitude }}@endif" name="latitude">
     </div>
     <div class="form-group">
         <label>Longitude:</label>
-        <input type="text" class="form-control" value="@if(isset($data->longitude)){{ $data->longitude }}@endif" name="longitude" required>
+        <input type="text" class="form-control" value="@if(isset($data->longitude)){{ $data->longitude }}@endif" name="longitude">
     </div>
     <hr />
     <div class="modal-footer">

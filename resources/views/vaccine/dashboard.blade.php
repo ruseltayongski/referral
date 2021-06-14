@@ -62,6 +62,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         <li class=""><a href="#tab5" data-toggle="tab" aria-expanded="false" onclick="tab5();">Eligible Pop.(A2)</a></li>
                         <li class=""><a href="#tab6" data-toggle="tab" aria-expanded="false" onclick="tab6();">Eligible Pop.(A3)</a></li>
                         <li class=""><a href="#tab7" data-toggle="tab" aria-expanded="false" onclick="tab7();">Eligible Pop.(A4)</a></li>
+                        <li class=""><a href="#tab8" data-toggle="tab" aria-expanded="false" onclick="tab8();">Grand Total</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
@@ -236,6 +237,13 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="tab8">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content8">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -267,8 +275,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 @section('js')
     @include('script.chart')
     <script type="text/javascript">
-        $("#container").removeClass("container");
-        $("#container").addClass("container-fluid");
 
         function tab2(){
             var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
@@ -335,6 +341,18 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             $.get("<?php echo asset('vaccine/tab7/report'); ?>",function(data){
                 setTimeout(function(){
                     $(".tab_content7").html(data);
+                },500);
+            });
+        }
+
+        function tab8(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content8").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab8/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content8").html(data);
                 },500);
             });
         }

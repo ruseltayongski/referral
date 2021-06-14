@@ -508,6 +508,7 @@ Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryRep
 Route::get('vaccine/tab5/report','Vaccine\VaccineController@vaccineTab5Report');//tab5
 Route::get('vaccine/tab6/report','Vaccine\VaccineController@vaccineTab6Report');//tab6
 Route::get('vaccine/tab7/report','Vaccine\VaccineController@vaccineTab7Report');//tab7
+Route::get('vaccine/tab8/report','Vaccine\VaccineController@vaccineTab8Report');//tab8
 
 
 

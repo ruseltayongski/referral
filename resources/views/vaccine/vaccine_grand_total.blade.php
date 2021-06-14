@@ -134,8 +134,8 @@
     $total_vallocated_frst_sputnikv = $total_vallocated_sputnikv_frst_prov + $total_vallocated_sputnikv_scnd_prov; //TOTAL VACCINE ALLOCATED SPUTNIK_FIRST goods
     $total_vallocated_pfizer = $total_vallocated_pfizer_frst_prov + $total_vallocated_pfizer_scnd_prov; //TOTAL VACCINE ALLOCATED PFIZER_FIRST goods
 
-    $total_vallocated_frst_prov = $total_vallocated_svac_frst_prov + $total_vallocated_astra_frst_prov; //TOTAL VACCINE ALLOCATED FIRST goods
-    $total_vallocated_scnd_prov = $total_vallocated_svac_scnd_prov + $total_vallocated_astra_scnd_prov; //TOTAL VACCINE ALLOCATED SECOND goods
+    $total_vallocated_frst_prov = $total_vallocated_svac_frst_prov + $total_vallocated_astra_frst_prov + $total_vallocated_sputnikv_frst_prov + $total_vallocated_pfizer_frst_prov; //TOTAL VACCINE ALLOCATED FIRST goods //DEARA
+    $total_vallocated_scnd_prov = $total_vallocated_svac_scnd_prov + $total_vallocated_astra_scnd_prov + $total_vallocated_sputnikv_scnd_prov + $total_vallocated_pfizer_scnd_prov; //TOTAL VACCINE ALLOCATED SECOND goods
     $total_vallocated = $total_vallocated_frst_prov + $total_vallocated_scnd_prov;
 
 
