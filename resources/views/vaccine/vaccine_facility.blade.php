@@ -107,11 +107,11 @@
 
         <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-md-3">
-                <div class="info-box bg-yellow">
+                <div class="info-box bg-red">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for A1</span>
-                        <span class="info-box-number">{{ number_format($a1_target) }}</span>
+                        <span class="info-box-number">{{ number_format($a1_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a1_completion }}%"></div>
@@ -124,12 +124,12 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-green">
+                <div class="info-box bg-yellow">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
 
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for A2</span>
-                        <span class="info-box-number">{{ number_format($a2_target) }}</span>
+                        <span class="info-box-number">{{ number_format($a2_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a2_completion }}%"></div>
@@ -142,11 +142,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-aqua">
+                <div class="info-box bg-green">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for A3</span>
-                        <span class="info-box-number">{{ number_format($a3_target) }}</span>
+                        <span class="info-box-number">{{ number_format($a3_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a3_completion }}%"></div>
@@ -159,11 +159,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-red">
+                <div class="info-box bg-aqua">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Targer vaccination for A4</span>
-                        <span class="info-box-number">{{ number_format($a4_target) }}</span>
+                        <span class="info-box-number">{{ number_format($a4_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a4_completion }}%"></div>

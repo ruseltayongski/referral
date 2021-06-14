@@ -109,7 +109,7 @@
         </div>
         <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-md-3">
-                <div class="info-box bg-yellow">
+                <div class="info-box bg-red">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for A1</span>
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-green">
+                <div class="info-box bg-yellow">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
 
                     <div class="info-box-content">
@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-aqua">
+                <div class="info-box bg-green">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for A3</span>
@@ -161,7 +161,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-red">
+                <div class="info-box bg-aqua">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Targer vaccination for A4</span>
