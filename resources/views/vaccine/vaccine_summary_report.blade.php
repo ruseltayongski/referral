@@ -23,11 +23,11 @@
             <th colspan="5"><b style="font-size: 10pt">Vaccine Allocation</b></th>
             <th colspan="1"><b style="font-size: 10pt">Eligible Population ({{ $priority_set }})</b></th>
             <th colspan="10"><b style="font-size: 10pt">Vaccinated</b></th>
-            <th colspan="5"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
-            <th colspan="5"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Deferral</b></th>
             <th colspan="5"><b style="font-size: 10pt">Wastage</b></th>
+            <th colspan="5"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="5"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
             <th colspan="5"><b style="font-size: 10pt">1st dose Consumption Rate</b></th>
             <th colspan="5"><b style="font-size: 10pt">2nd dose Consumption Rate</b></th>
         </tr>
@@ -37,28 +37,18 @@
             <td>Astra</td>
             <td>Sputnikv</td>
             <td>Pfizer</td>
-            <td>Total</td>
+            <td><b>TOTAL</b></td>
             <td></td>
-            <td><center>1st Dose Sinovac</center></td>
-            <td><center>2nd Dose Sinovac</center></td>
-            <td><center>1st Dose AZ</center></td>
-            <td><center>2nd Dose AZ</center></td>
-            <td><center>1st Dose Sputnikv</center></td>
-            <td><center>2nd Dose Sputnikv</center></td>
-            <td><center>1st Dose Pfizer</center></td>
-            <td><center>2nd Dose Pfizer</center></td>
-            <td><center>1st Dose Total</center></td>
-            <td><center>2nd Dose Total</center></td>
-            <td>Sinovac</td>
-            <td>Astra</td>
-            <td>Sputnikv</td>
-            <td>Pfizer</td>
-            <td>Total</td>
-            <td>Sinovac</td>
-            <td>Astra</td>
-            <td>Sputnikv</td>
-            <td>Pfizer</td>
-            <td>Total</td>
+            <td>1st Dose Sinovac</td>
+            <td>2nd Dose Sinovac</td>
+            <td>1st Dose AZ</td>
+            <td>2nd Dose AZ</td>
+            <td>1st Dose Sputnikv</td>
+            <td>2nd Dose Sputnikv</td>
+            <td>1st Dose Pfizer</td>
+            <td>2nd Dose Pfizer</td>
+            <td><b>(1st Dose Total)</b></td>
+            <td><b>(2nd Dose Total)</b></td>
             <td>1st Dose</td>
             <td>2nd Dose</td>
             <td>1st Dose</td>
@@ -67,17 +57,27 @@
             <td>Astra</td>
             <td>Sputnikv</td>
             <td>Pfizer</td>
-            <td>Total Wastage</td>
+            <td><b>(Total Wastage)</b></td>
+            <td>Sinovac</td>
+            <td>Astra</td>
+            <td>Sputnikv</td>
+            <td>Pfizer</td>
+            <td><b>(Total Percent Coverage)</b></td>
+            <td>Sinovac</td>
+            <td>Astra</td>
+            <td>Sputnikv</td>
+            <td>Pfizer</td>
+            <td><b>(Total Percent Coverage)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Sputnikv</td>
             <td>Pfizer</td>
-            <td>Total</td>
+            <td><b>(Total Consumption Rate)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Sputnikv</td>
             <td>Pfizer</td>
-            <td>Total</td>
+            <td><b>(Total Consumption Rate)</b></td>
         </tr>
         <tr style="background-color: #e2efd9">
             <td>Region 7</td>
@@ -97,6 +97,15 @@
             <td>{{ $region_pfizer_second_dose }}</td> <!-- VACCINATED PFIZER_SECOND REGION -->
             <td>{{ $first_dose_total }}</td> <!-- TOTAL VACCINATED FIRST REGION -->
             <td>{{ $second_dose_total }}</td> <!-- TOTAL VACCINATED SECOND REGION -->
+            <td>{{ $total_refusal_first }}</td> <!--  REFUSED FIRST REGION -->
+            <td>{{$total_refusal_second}}</td> <!--  REFUSED SECOND REGION -->
+            <td>{{$total_deferred_first}}</td> <!--  DEFERRED FIRST REGION -->
+            <td>{{$total_deferred_second}}</td> <!--  DEFERRED SECOND REGION -->
+            <td>{{$wastage_sinovac_first}}</td> <!--  WASTAGE SINOVAC REGION -->
+            <td>{{$wastage_astra_first}}</td> <!--  WASTAGE ASTRA  REGION -->
+            <td>{{$wastage_sputnikv_first}}</td> <!--  WASTAGE SPUTNIKV  REGION -->
+            <td>{{$wastage_pfizer_first}}</td> <!--  WASTAGE PFIZER REGION -->
+            <td>{{$wastage_region}}</td>   <!-- TOTAL WASTAGE REGION -->
             <td>{{ $total_p_cvrge_sinovac_region_first }}%</td> <!-- TOTAL PERCENT COVERAGE SINOVAC FIRST REGION -->
             <td>{{$total_p_cvrge_astra_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA FIRST REGION -->
             <td>{{$total_p_cvrge_sputnikv_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION -->
@@ -107,15 +116,6 @@
             <td>{{$total_p_cvrge_sputnikv_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION -->
             <td>{{$total_p_cvrge_pfizer_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER SECOND REGION -->
             <td>{{ $total_p_cvrge_region_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND REGION -->
-            <td>{{ $total_refusal_first }}</td> <!--  REFUSED FIRST REGION -->
-            <td>{{$total_refusal_second}}</td> <!--  REFUSED SECOND REGION -->
-            <td>{{$total_deferred_first}}</td> <!--  DEFERRED FIRST REGION -->
-            <td>{{$total_deferred_second}}</td> <!--  DEFERRED SECOND REGION -->
-            <td>{{$wastage_sinovac_first}}</td> <!--  WASTAGE SINOVAC REGION -->
-            <td>{{$wastage_astra_first}}</td> <!--  WASTAGE ASTRA  REGION -->
-            <td>{{$wastage_sputnikv_first}}</td> <!--  WASTAGE SPUTNIKV  REGION -->
-            <td>{{$wastage_pfizer_first}}</td> <!--  WASTAGE PFIZER REGION -->
-            <td>{{$wastage_region}}</td>   <!-- TOTAL WASTAGE REGION -->
             <td>{{ $c_rate_region_sinovac_first }}%</td>  <!-- CONSUMPTION RATE SINOVAC FIRST REGION -->
             <td>{{ $c_rate_region_astra_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST REGION -->
             <td>{{ $c_rate_region_sputnikv_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST REGION -->
@@ -145,6 +145,15 @@
             <td>{{ $vcted_pfizer_bohol_second }}</td> <!-- VACCINATED PFIZER_SECOND BOHOL -->
             <td>{{ $total_vcted_first_bohol}}</td> <!-- TOTAL VACCINATED FIRST BOHOL -->
             <td>{{ $total_vcted_second_bohol }}</td> <!-- TOTAL VACCINATED SECOND BOHOL -->
+            <td>{{ $refused_first_bohol }}</td> <!--  REFUSED FIRST BOHOL -->
+            <td>{{ $refused_second_bohol }}</td> <!--  REFUSED SECOND BOHOL -->
+            <td>{{ $deferred_first_bohol }}</td> <!--  DEFERRED FIRST BOHOL -->
+            <td>{{ $deferred_second_bohol }}</td> <!--  DEFERRED SECOND BOHOL -->
+            <td>{{ $wastage_sinovac_bohol_first }}</td> <!-- WASTAGE SINOVAC FIRST BOHOL -->
+            <td>{{ $wastage_astra_bohol_first }}</td> <!--  WASTAGE ASTRA FIRST BOHOL -->
+            <td>{{ $wastage_sputnikv_bohol_first }}</td> <!--  WASTAGE SPUTNIKV FIRST BOHOL -->
+            <td>{{ $wastage_pfizer_bohol_first }}</td> <!--  WASTAGE PFIZER FIRST BOHOL -->
+            <td>{{$total_wastage_bohol}}</td> <!--  TOTAL WASTAGE FIRST BOHOL -->
             <td>{{ $p_cvrge_sinovac_bohol_first }}%</td> <!--  PERCENT COVERAGE SINOVAC FIRST BOHOL -->
             <td>{{ $p_cvrge_astra_bohol_first }}%</td> <!--  PERCENT COVERAGE ASTRA FIRST BOHOL -->
             <td>{{ $p_cvrge_sputnikv_bohol_first }}%</td> <!--  PERCENT COVERAGE SPUTNIKV FIRST BOHOL -->
@@ -155,15 +164,6 @@
             <td>{{ $p_cvrge_sputnikv_bohol_second }}%</td> <!--  PERCENT COVERAGE SPUTNIKV SECOND BOHOL -->
             <td>{{ $p_cvrge_pfizer_bohol_second }}%</td> <!--  PERCENT COVERAGE PFIZER SECOND BOHOL -->
             <td>{{ $total_p_cvrge_bohol_second }}%</td> <!--  TOTAL PERCENT COVERAGE SECOND BOHOL -->
-            <td>{{ $refused_first_bohol }}</td> <!--  REFUSED FIRST BOHOL -->
-            <td>{{ $refused_second_bohol }}</td> <!--  REFUSED SECOND BOHOL -->
-            <td>{{ $deferred_first_bohol }}</td> <!--  DEFERRED FIRST BOHOL -->
-            <td>{{ $deferred_second_bohol }}</td> <!--  DEFERRED SECOND BOHOL -->
-            <td>{{ $wastage_sinovac_bohol_first }}</td> <!-- WASTAGE SINOVAC FIRST BOHOL -->
-            <td>{{ $wastage_astra_bohol_first }}</td> <!--  WASTAGE ASTRA FIRST BOHOL -->
-            <td>{{ $wastage_sputnikv_bohol_first }}</td> <!--  WASTAGE SPUTNIKV FIRST BOHOL -->
-            <td>{{ $wastage_pfizer_bohol_first }}</td> <!--  WASTAGE PFIZER FIRST BOHOL -->
-            <td>{{$total_wastage_bohol}}</td> <!--  TOTAL WASTAGE FIRST BOHOL -->
             <td>{{ $c_rate_sinovac_bohol_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST BOHOL -->
             <td>{{ $c_rate_astra_bohol_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST BOHOL -->
             <td>{{ $c_rate_sputnikv_bohol_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST BOHOL -->
@@ -193,6 +193,15 @@
             <td>{{ $vcted_pfizer_cebu_second }}</td> <!-- VACCINATED PFIZER_SECOND CEBU -->
             <td>{{ $total_vcted_first_cebu}}</td> <!-- TOTAL VACCINATED FIRST CEBU -->
             <td>{{ $total_vcted_second_cebu }}</td> <!-- TOTAL VACCINATED SECOND CEBU -->
+            <td>{{ $refused_first_cebu }}</td> <!--  REFUSED FIRST CEBU -->
+            <td>{{ $refused_second_cebu }}</td> <!--  REFUSED SECOND CEBU -->
+            <td>{{ $deferred_first_cebu }}</td> <!--  DEFERRED FIRST CEBU -->
+            <td>{{ $deferred_second_cebu }}</td> <!-- DEFERRED SECOND CEBU -->
+            <td>{{ $wastage_sinovac_cebu_first }}</td> <!-- WASTAGE SINOVAC CEBU -->
+            <td>{{ $wastage_astra_cebu_first }}</td> <!-- WASTAGE ASTRA CEBU -->
+            <td>{{ $wastage_sputnikv_cebu_first }}</td> <!-- WASTAGE SPUTNIKV CEBU -->
+            <td>{{ $wastage_pfizer_cebu_first }}</td> <!-- WASTAGE PFIZER CEBU -->
+            <td>{{$total_wastage_cebu}}</td> <!-- TOTAL WASTAGE CEBU -->
             <td>{{ $p_cvrge_sinovac_cebu_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST CEBU -->
             <td>{{ $p_cvrge_astra_cebu_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST CEBU -->
             <td>{{ $p_cvrge_sputnikv_cebu_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU -->
@@ -203,15 +212,6 @@
             <td>{{ $p_cvrge_sputnikv_cebu_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU -->
             <td>{{ $p_cvrge_pfizer_cebu_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND CEBU -->
             <td>{{ $total_p_cvrge_cebu_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND CEBU -->
-            <td>{{ $refused_first_cebu }}</td> <!--  REFUSED FIRST CEBU -->
-            <td>{{ $refused_second_cebu }}</td> <!--  REFUSED SECOND CEBU -->
-            <td>{{ $deferred_first_cebu }}</td> <!--  DEFERRED FIRST CEBU -->
-            <td>{{ $deferred_second_cebu }}</td> <!-- DEFERRED SECOND CEBU -->
-            <td>{{ $wastage_sinovac_cebu_first }}</td> <!-- WASTAGE SINOVAC CEBU -->
-            <td>{{ $wastage_astra_cebu_first }}</td> <!-- WASTAGE ASTRA CEBU -->
-            <td>{{ $wastage_sputnikv_cebu_first }}</td> <!-- WASTAGE SPUTNIKV CEBU -->
-            <td>{{ $wastage_pfizer_cebu_first }}</td> <!-- WASTAGE PFIZER CEBU -->
-            <td>{{$total_wastage_cebu}}</td> <!-- TOTAL WASTAGE CEBU -->
             <td>{{ $c_rate_sinovac_cebu_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST CEBU -->
             <td>{{ $c_rate_astra_cebu_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST CEBU -->
             <td>{{ $c_rate_sputnikv_cebu_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU -->
@@ -241,6 +241,15 @@
             <td>{{ $vcted_pfizer_negros_second }}</td> <!-- VACCINATED PFIZER_SECOND NEGROS -->
             <td>{{ $total_vcted_first_negros}}</td> <!-- TOTAL VACCINATED FIRST NEGROS -->
             <td>{{ $total_vcted_second_negros }}</td> <!-- TOTAL VACCINATED SECOND NEGROS -->
+            <td>{{ $refused_first_negros }}</td>  <!-- REFUSED FIRST NEGROS -->
+            <td>{{ $refused_second_negros }}</td> <!-- REFUSED SECOND NEGROS -->
+            <td>{{ $deferred_first_negros }}</td> <!-- DEFERRED FIRST NEGROS -->
+            <td>{{ $deferred_second_negros }}</td> <!-- DEFERRED SECOND NEGROS -->
+            <td>{{ $wastage_sinovac_negros_first }}</td> <!-- WASTAGE SINOVAC NEGROS -->
+            <td>{{ $wastage_astra_negros_first }}</td>  <!-- WASTAGE ASTRA NEGROS -->
+            <td>{{ $wastage_sputnikv_negros_first }}</td> <!-- WASTAGE SPUTNIKV NEGROS -->
+            <td>{{ $wastage_pfizer_negros_first }}</td> <!-- WASTAGE PFIZER NEGROS -->
+            <td>{{$total_wastage_negros}}</td> <!-- TOTAL WASTAGE NEGROS -->
             <td>{{ $p_cvrge_sinovac_negros_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST NEGROS -->
             <td>{{ $p_cvrge_astra_negros_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST NEGROS -->
             <td>{{ $p_cvrge_sputnikv_negros_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST NEGROS -->
@@ -251,15 +260,6 @@
             <td>{{ $p_cvrge_sputnikv_negros_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND NEGROS -->
             <td>{{ $p_cvrge_pfizer_negros_second }}%</td>  <!-- PERCENT COVERAGE PFIZER SECOND NEGROS -->
             <td>{{ $total_p_cvrge_negros_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND NEGROS -->
-            <td>{{ $refused_first_negros }}</td>  <!-- REFUSED FIRST NEGROS -->
-            <td>{{ $refused_second_negros }}</td> <!-- REFUSED SECOND NEGROS -->
-            <td>{{ $deferred_first_negros }}</td> <!-- DEFERRED FIRST NEGROS -->
-            <td>{{ $deferred_second_negros }}</td> <!-- DEFERRED SECOND NEGROS -->
-            <td>{{ $wastage_sinovac_negros_first }}</td> <!-- WASTAGE SINOVAC NEGROS -->
-            <td>{{ $wastage_astra_negros_first }}</td>  <!-- WASTAGE ASTRA NEGROS -->
-            <td>{{ $wastage_sputnikv_negros_first }}</td> <!-- WASTAGE SPUTNIKV NEGROS -->
-            <td>{{ $wastage_pfizer_negros_first }}</td> <!-- WASTAGE PFIZER NEGROS -->
-            <td>{{$total_wastage_negros}}</td> <!-- TOTAL WASTAGE NEGROS -->
             <td>{{ $c_rate_sinovac_negros_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST NEGROS -->
             <td>{{ $c_rate_astra_negros_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST NEGROS -->
             <td>{{ $c_rate_sputnikv_negros_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST NEGROS -->
@@ -289,6 +289,15 @@
             <td>{{ $vcted_pfizer_siquijor_second }}</td> <!-- VACCINATED PFIZER_SECOND SIQUIJOR -->
             <td>{{ $total_vcted_first_siquijor}}</td> <!-- TOTAL VACCINATED FIRST SIQUIJOR -->
             <td>{{ $total_vcted_second_siquijor }}</td> <!-- TOTAL VACCINATED SECOND SIQUIJOR -->
+            <td>{{ $refused_first_siquijor }}</td> <!-- REFUSED FIRST SIQUIJOR -->
+            <td>{{ $refused_second_siquijor }}</td> <!-- REFUSED SECOND SIQUIJOR -->
+            <td>{{ $deferred_first_siquijor }}</td> <!-- DEFERRED FIRST SIQUIJOR -->
+            <td>{{ $deferred_second_siquijor }}</td> <!-- DEFERRED SECOND SIQUIJOR -->
+            <td>{{ $wastage_sinovac_siquijor_first }}</td> <!-- WASTAGE SINOVAC SIQUIJOR -->
+            <td>{{ $wastage_astra_siquijor_first }}</td> <!-- WASTAGE ASTRA SIQUIJOR -->
+            <td>{{ $wastage_sputnikv_siquijor_first }}</td> <!-- WASTAGE SPUTNIKV SIQUIJOR -->
+            <td>{{ $wastage_pfizer_siquijor_first }}</td> <!-- WASTAGE PFIZER SIQUIJOR -->
+            <td>{{$total_wastage_siquijor}}</td> <!-- TOTAL WASTAGE SIQUIJOR -->
             <td>{{ $p_cvrge_sinovac_siquijor_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_astra_siquijor_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_sputnikv_siquijor_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST SIQUIJOR -->
@@ -299,15 +308,6 @@
             <td>{{ $p_cvrge_sputnikv_siquijor_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND SIQUIJOR -->
             <td>{{ $p_cvrge_pfizer_siquijor_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND SIQUIJOR -->
             <td>{{ $total_p_cvrge_siquijor_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND SIQUIJOR -->
-            <td>{{ $refused_first_siquijor }}</td> <!-- REFUSED FIRST SIQUIJOR -->
-            <td>{{ $refused_second_siquijor }}</td> <!-- REFUSED SECOND SIQUIJOR -->
-            <td>{{ $deferred_first_siquijor }}</td> <!-- DEFERRED FIRST SIQUIJOR -->
-            <td>{{ $deferred_second_siquijor }}</td> <!-- DEFERRED SECOND SIQUIJOR -->
-            <td>{{ $wastage_sinovac_siquijor_first }}</td> <!-- WASTAGE SINOVAC SIQUIJOR -->
-            <td>{{ $wastage_astra_siquijor_first }}</td> <!-- WASTAGE ASTRA SIQUIJOR -->
-            <td>{{ $wastage_sputnikv_siquijor_first }}</td> <!-- WASTAGE SPUTNIKV SIQUIJOR -->
-            <td>{{ $wastage_pfizer_siquijor_first }}</td> <!-- WASTAGE PFIZER SIQUIJOR -->
-            <td>{{$total_wastage_siquijor}}</td> <!-- TOTAL WASTAGE SIQUIJOR -->
             <td>{{ $c_rate_sinovac_siquijor_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST SIQUIJOR -->
             <td>{{ $c_rate_astra_siquijor_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST SIQUIJOR -->
             <td>{{ $c_rate_sputnikv_siquijor_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST SIQUIJOR -->
@@ -337,6 +337,15 @@
             <td>{{ $vcted_pfizer_cebu_facility_second }}</td> <!-- VACCINATED PFIZER_SECOND CEBU FACILITY -->
             <td>{{ $total_vcted_cebu_facility_first }}</td>  <!-- TOTAL VACCINATED FIRST CEBU FACILITY -->
             <td>{{ $total_vcted_cebu_facility_second }}</td> <!-- TOTAL VACCINATED SECOND CEBU FACILITY -->
+            <td>{{ $refused_cebu_facility_first }}</td> <!-- REFUSED FIRST CEBU FACILITY -->
+            <td>{{ $refused_cebu_facility_second }}</td> <!-- REFUSED SECOND CEBU FACILITY -->
+            <td>{{ $deferred_cebu_facility_first }}</td> <!-- DEFERRED FIRST CEBU FACILITY -->
+            <td>{{ $deferred_cebu_facility_second }}</td> <!-- DEFERRED SECOND CEBU FACILITY -->
+            <td>{{ $wastage_sinovac_cebu_facility_first }}</td> <!-- WASTAGE SINOVAC CEBU FACILITY -->
+            <td>{{ $wastage_astra_cebu_facility_first }}</td> <!-- WASTAGE ASTRA CEBU FACILITY -->
+            <td>{{ $wastage_sputnikv_cebu_facility_first }}</td>  <!-- WASTAGE SPUTNIKV CEBU FACILITY -->
+            <td>{{ $wastage_pfizer_cebu_facility_first }}</td> <!-- WASTAGE PFIZER CEBU FACILITY -->
+            <td>{{ $total_wastage_cebu_facility }}</td> <!-- TOTAL WASTAGE CEBU FACILITY -->
             <td>{{ $p_cvrge_sinovac_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST CEBU FACILITY -->
             <td>{{ $p_cvrge_astra_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST CEBU FACILITY -->
             <td>{{ $p_cvrge_sputnikv_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU FACILITY -->
@@ -347,15 +356,6 @@
             <td>{{ $p_cvrge_sputnikv_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU FACILITY -->
             <td>{{ $p_cvrge_pfizer_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND CEBU FACILITY -->
             <td>{{ $total_p_cvrge_cebu_facility_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND CEBU FACILITY -->
-            <td>{{ $refused_cebu_facility_first }}</td> <!-- REFUSED FIRST CEBU FACILITY -->
-            <td>{{ $refused_cebu_facility_second }}</td> <!-- REFUSED SECOND CEBU FACILITY -->
-            <td>{{ $deferred_cebu_facility_first }}</td> <!-- DEFERRED FIRST CEBU FACILITY -->
-            <td>{{ $deferred_cebu_facility_second }}</td> <!-- DEFERRED SECOND CEBU FACILITY -->
-            <td>{{ $wastage_sinovac_cebu_facility_first }}</td> <!-- WASTAGE SINOVAC CEBU FACILITY -->
-            <td>{{ $wastage_astra_cebu_facility_first }}</td> <!-- WASTAGE ASTRA CEBU FACILITY -->
-            <td>{{ $wastage_sputnikv_cebu_facility_first }}</td>  <!-- WASTAGE SPUTNIKV CEBU FACILITY -->
-            <td>{{ $wastage_pfizer_cebu_facility_first }}</td> <!-- WASTAGE PFIZER CEBU FACILITY -->
-            <td>{{ $total_wastage_cebu_facility }}</td> <!-- TOTAL WASTAGE CEBU FACILITY -->
             <td>{{ $c_rate_sinovac_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST CEBU FACILITY -->
             <td>{{ $c_rate_astra_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST CEBU FACILITY -->
             <td>{{ $c_rate_sputnikv_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU FACILITY -->
@@ -385,6 +385,15 @@
             <td>{{ $vcted_pfizer_mandaue_facility_second }}</td> <!-- VACCINATED PFIZER_SECOND MANDAUE FACILITY -->
             <td>{{ $total_vcted_mandaue_facility_first }}</td> <!-- TOTAL VACCINATED FIRST MANDAUE FACILITY -->
             <td>{{ $total_vcted_mandaue_facility_second }}</td>  <!-- TOTAL VACCINATED SECOND MANDAUE FACILITY -->
+            <td>{{ $refused_mandaue_facility_first }}</td> <!-- REFUSED FIRST MANDAUE FACILITY -->
+            <td>{{ $refused_mandaue_facility_second }}</td> <!-- REFUSED SECOND MANDAUE FACILITY -->
+            <td>{{ $deferred_mandaue_facility_first }}</td> <!-- DEFERRED FIRST MANDAUE FACILITY -->
+            <td>{{ $deferred_mandaue_facility_second }}</td> <!-- DEFERRED SECOND MANDAUE FACILITY -->
+            <td>{{ $wastage_sinovac_mandaue_facility_first }}</td> <!-- WASTAGE SINOVAC MANDAUE FACILITY -->
+            <td>{{ $wastage_astra_mandaue_facility_first }}</td> <!-- WASTAGE ASTRA MANDAUE FACILITY -->
+            <td>{{ $wastage_sputnikv_mandaue_facility_first }}</td> <!-- WASTAGE SPUTNIKV MANDAUE FACILITY -->
+            <td>{{ $wastage_pfizer_mandaue_facility_first }}</td> <!-- WASTAGE PFIZER MANDAUE FACILITY -->
+            <td>{{ $total_wastage_mandaue_facility }}</td> <!-- TOTAL WASTAGE MANDAUE FACILITY -->
             <td>{{ $p_cvrge_sinovac_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST MANDAUE FACILITY -->
             <td>{{ $p_cvrge_astra_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST MANDAUE FACILITY -->
             <td>{{ $p_cvrge_sputnikv_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST MANDAUE FACILITY -->
@@ -395,15 +404,6 @@
             <td>{{ $p_cvrge_sputnikv_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND MANDAUE FACILITY -->
             <td>{{ $p_cvrge_pfizer_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND MANDAUE FACILITY -->
             <td>{{ $total_p_cvrge_mandaue_facility_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND MANDAUE FACILITY -->
-            <td>{{ $refused_mandaue_facility_first }}</td> <!-- REFUSED FIRST MANDAUE FACILITY -->
-            <td>{{ $refused_mandaue_facility_second }}</td> <!-- REFUSED SECOND MANDAUE FACILITY -->
-            <td>{{ $deferred_mandaue_facility_first }}</td> <!-- DEFERRED FIRST MANDAUE FACILITY -->
-            <td>{{ $deferred_mandaue_facility_second }}</td> <!-- DEFERRED SECOND MANDAUE FACILITY -->
-            <td>{{ $wastage_sinovac_mandaue_facility_first }}</td> <!-- WASTAGE SINOVAC MANDAUE FACILITY -->
-            <td>{{ $wastage_astra_mandaue_facility_first }}</td> <!-- WASTAGE ASTRA MANDAUE FACILITY -->
-            <td>{{ $wastage_sputnikv_mandaue_facility_first }}</td> <!-- WASTAGE SPUTNIKV MANDAUE FACILITY -->
-            <td>{{ $wastage_pfizer_mandaue_facility_first }}</td> <!-- WASTAGE PFIZER MANDAUE FACILITY -->
-            <td>{{ $total_wastage_mandaue_facility }}</td> <!-- TOTAL WASTAGE MANDAUE FACILITY -->
             <td>{{ $c_rate_sinovac_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST MANDAUE FACILITY -->
             <td>{{ $c_rate_astra_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST MANDAUE FACILITY -->
             <td>{{ $c_rate_sputnikv_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST MANDAUE FACILITY -->
@@ -433,6 +433,15 @@
             <td>{{ $vcted_pfizer_lapu_facility_second }}</td> <!-- VACCINATED PFIZER_SECOND LAPU-LAPU FACILITY -->
             <td>{{ $total_vcted_lapu_facility_first }}</td>  <!-- TOTAL VACCINATED FIRST LAPU-LAPU FACILITY -->
             <td>{{ $total_vcted_lapu_facility_second }}</td>  <!-- TOTAL VACCINATED SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $refused_lapu_facility_first }}</td> <!-- REFUSED FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $refused_lapu_facility_second }}</td> <!-- REFUSED SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $deferred_lapu_facility_first }}</td> <!-- DEFERRED FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $deferred_lapu_facility_second }}</td>  <!-- DEFERRED SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_sinovac_lapu_facility_first }}</td>  <!-- WASTAGE SINOVAC LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_astra_lapu_facility_first }}</td> <!-- WASTAGE ASTRA LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_sputnikv_lapu_facility_first }}</td> <!-- WASTAGE SPUTNIKV LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_pfizer_lapu_facility_first }}</td> <!-- WASTAGE PFIZER LAPU-LAPU FACILITY -->
+            <td>{{ $total_wastage_lapu_facility }}</td> <!-- TOTAL WASTAGE LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_sinovac_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_astra_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA  FIRST LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_sputnikv_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST LAPU-LAPU FACILITY -->
@@ -443,15 +452,6 @@
             <td>{{ $p_cvrge_sputnikv_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_pfizer_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE PFIZER SECOND LAPU-LAPU FACILITY -->
             <td>{{ $total_p_cvrge_lapu_facility_second }}%</td>   <!-- TOTAL PERCENT COVERAGE SECOND LAPU-LAPU FACILITY -->
-            <td>{{ $refused_lapu_facility_first }}</td> <!-- REFUSED FIRST LAPU-LAPU FACILITY -->
-            <td>{{ $refused_lapu_facility_second }}</td> <!-- REFUSED SECOND LAPU-LAPU FACILITY -->
-            <td>{{ $deferred_lapu_facility_first }}</td> <!-- DEFERRED FIRST LAPU-LAPU FACILITY -->
-            <td>{{ $deferred_lapu_facility_second }}</td>  <!-- DEFERRED SECOND LAPU-LAPU FACILITY -->
-            <td>{{ $wastage_sinovac_lapu_facility_first }}</td>  <!-- WASTAGE SINOVAC LAPU-LAPU FACILITY -->
-            <td>{{ $wastage_astra_lapu_facility_first }}</td> <!-- WASTAGE ASTRA LAPU-LAPU FACILITY -->
-            <td>{{ $wastage_sputnikv_lapu_facility_first }}</td> <!-- WASTAGE SPUTNIKV LAPU-LAPU FACILITY -->
-            <td>{{ $wastage_pfizer_lapu_facility_first }}</td> <!-- WASTAGE PFIZER LAPU-LAPU FACILITY -->
-            <td>{{ $total_wastage_lapu_facility }}</td> <!-- TOTAL WASTAGE LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_sinovac_lapu_facility_first }}%</td>  <!-- CONSUMPTION RATE SINOVAC FIRST LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_astra_lapu_facility_first }}%</td>   <!-- CONSUMPTION RATE ASTRA FIRST LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_sputnikv_lapu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST LAPU-LAPU FACILITY -->

@@ -2009,6 +2009,20 @@ class VaccineController extends Controller
         $this->region_pfizer_second_dose = $this->vcted_pfizer_bohol_second + $this->vcted_pfizer_cebu_second + $this->vcted_pfizer_negros_second + $this->vcted_pfizer_siquijor_second +
                                      $this->vcted_pfizer_cebu_facility_second + $this->vcted_pfizer_mandaue_facility_second + $this->vcted_pfizer_lapu_facility_second; //VACCINATED PFIZER_SECOND REGION
 
+        $this->total_elipop_region = $this->eli_pop_bohol + $this->eli_pop_cebu + $this->eli_pop_siquijor + $this->eli_pop_cebu_facility + $this->eli_pop_mandaue_facility + $this->eli_pop_lapu_facility; //TOTAL ELIGBLE_POP REGION
+        $this->first_dose_total = $this->region_sinovac_first_dose + $this->region_astra_first_dose + $this->region_sputnikv_first_dose + $this->region_pfizer_first_dose; //TOTAL VACCINATED FIRST REGION
+        $this->second_dose_total = $this->region_sinovac_second_dose + $this->region_astra_second_dose + $this->region_sputnikv_second_dose + $this->region_pfizer_second_dose; //TOTAL VACCINATED SECOND REGION
+
+        $this->total_region = $this->sinovac_region + $this->astra_region + $this->sputnikv_region + $this->pfizer_region; //VACCINE ALLOCATED TOTAL REGION
+        $this->total_bohol = $this->sinovac_bohol + $this->astra_bohol + $this->sputnikv_bohol + $this->pfizer_bohol; //TOTAL VACCINE ALLOCATED BOHOL
+        $this->total_cebu = $this->sinovac_cebu + $this->astra_cebu + $this->sputnikv_cebu + $this->pfizer_cebu; //TOTAL VACCINE ALLOCATED CEBU
+        $this->total_negros = $this->sinovac_negros + $this->astra_negros + $this->sputnikv_negros + $this->pfizer_negros; //TOTAL VACCINE ALLOCATED NEGROS
+        $this->total_siquijor = $this->sinovac_siquijor + $this->astra_siquijor + $this->sputnikv_siquijor + $this->pfizer_siquijor; //TOTAL VACCINE ALLOCATED SIQUIJOR
+        $this->total_cebu_facility = $this->sinovac_cebu_facility + $this->astra_cebu_facility + $this->sputnikv_cebu_facility + $this->pfizer_cebu_facility; //TOTAL VACCINE ALLOCATED CEBU FACILITY
+        $this->total_mandaue_facility = $this->sinovac_mandaue_facility + $this->astra_mandaue_facility + $this->sputnikv_mandaue_facility + $this->pfizer_mandaue_facility; //TOTAL VACCINE ALLOCATED MANDAUE FACILITY
+        $this->total_lapu_facility = $this->sinovac_lapu_facility + $this->astra_lapu_facility + $this->sputnikv_lapu_facility + $this->pfizer_lapu_facility; //TOTAL VACCINE ALLOCATED LAPU-LAPU FACILITY
+
+
         //TOTAL VACCINATED_FIRST
         $this->total_vcted_first_bohol = $this->vcted_sinovac_bohol_first + $this->vcted_astra_bohol_first + $this->vcted_sputnikv_bohol_first + $this->vcted_pfizer_bohol_first; //TOTAL VACCINATED FIRST BOHOL
         $this->total_vcted_first_cebu = $this->vcted_sinovac_cebu_first + $this->vcted_astra_cebu_first + $this->vcted_sputnikv_cebu_first + $this->vcted_pfizer_cebu_first; //TOTAL VACCINATED FIRST CEBU
@@ -2065,13 +2079,13 @@ class VaccineController extends Controller
         $this->p_cvrge_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $this->eli_pop_lapu_facility * 100,2); //PERCENT COVERAGE PFIZER FIRST LAPU-LAPU FACILITY
 
         //TOTAL_PERCENT_COVERAGE_FIRST
-        $this->total_p_cvrge_bohol_first = number_format($this->p_cvrge_sinovac_bohol_first + $this->p_cvrge_astra_bohol_first + $this->p_cvrge_sputnikv_bohol_first + $this->p_cvrge_pfizer_bohol_first,2); //TOTAL PERCENT COVERAGE FIRST BOHOL
-        $this->total_p_cvrge_cebu_first = number_format($this->p_cvrge_sinovac_cebu_first + $this->p_cvrge_astra_cebu_first + $this->p_cvrge_sputnikv_cebu_first + $this->p_cvrge_pfizer_cebu_first,2); //TOTAL PERCENT COVERAGE FIRST CEBU
-        $this->total_p_cvrge_negros_first = number_format($this->p_cvrge_sinovac_negros_first + $this->p_cvrge_astra_negros_first + $this->p_cvrge_sputnikv_negros_first + $this->p_cvrge_pfizer_negros_first,2); //TOTAL PERCENT COVERAGE FIRST NEGROS
-        $this->total_p_cvrge_siquijor_first = number_format($this->p_cvrge_sinovac_siquijor_first + $this->p_cvrge_astra_siquijor_first + $this->p_cvrge_sputnikv_siquijor_first + $this->p_cvrge_pfizer_siquijor_first,2); //TOTAL PERCENT COVERAGE FIRST SIQUIJOR
-        $this->total_p_cvrge_cebu_facility_first = number_format($this->p_cvrge_sinovac_cebu_facility_first + $this->p_cvrge_astra_cebu_facility_first + $this->p_cvrge_sputnikv_cebu_facility_first + $this->p_cvrge_pfizer_cebu_facility_first,2); //TOTAL PERCENT COVERAGE FIRST CEBU FACILITY
-        $this->total_p_cvrge_mandaue_facility_first = number_format($this->p_cvrge_sinovac_mandaue_facility_first + $this->p_cvrge_astra_mandaue_facility_first + $this->p_cvrge_sputnikv_mandaue_facility_first + $this->p_cvrge_pfizer_mandaue_facility_first,2); //TOTAL PERCENT COVERAGE FIRST MANDAUE FACILITY
-        $this->total_p_cvrge_lapu_facility_first = number_format($this->p_cvrge_sinovac_lapu_facility_first + $this->p_cvrge_astra_lapu_facility_first + $this->p_cvrge_sputnikv_lapu_facility_first + $this->p_cvrge_pfizer_lapu_facility_first,2); //TOTAL PERCENT COVERAGE FIRST LAPU-LAPU FACILITY
+        $this->total_p_cvrge_bohol_first = number_format($this->total_vcted_first_bohol / $this->eli_pop_bohol * 100,2 ); //TOTAL PERCENT COVERAGE FIRST BOHOL
+        $this->total_p_cvrge_cebu_first = number_format($this->total_vcted_first_cebu / $this->eli_pop_cebu * 100,2 ); //TOTAL PERCENT COVERAGE FIRST CEBU
+        $this->total_p_cvrge_negros_first = number_format($this->total_vcted_first_negros / $this->eli_pop_negros * 100,2 );  //TOTAL PERCENT COVERAGE FIRST NEGROS
+        $this->total_p_cvrge_siquijor_first = number_format($this->total_vcted_first_siquijor / $this->eli_pop_siquijor * 100,2 );  //TOTAL PERCENT COVERAGE FIRST SIQUIJOR
+        $this->total_p_cvrge_cebu_facility_first = number_format($this->total_vcted_cebu_facility_first / $this->eli_pop_cebu_facility * 100,2 );  //TOTAL PERCENT COVERAGE FIRST CEBU FACILITY
+        $this->total_p_cvrge_mandaue_facility_first = number_format($this->total_vcted_mandaue_facility_first / $this->eli_pop_mandaue_facility * 100,2 ); //TOTAL PERCENT COVERAGE FIRST MANDAUE FACILITY
+        $this->total_p_cvrge_lapu_facility_first = number_format($this->total_vcted_lapu_facility_first / $this->eli_pop_lapu_facility * 100,2 );  //TOTAL PERCENT COVERAGE FIRST LAPU-LAPU FACILITY
 
         //PERCENT_COVERAGE_SINOVAC_SECOND
         $this->p_cvrge_sinovac_bohol_second = number_format($this->vcted_sinovac_bohol_second / $this->eli_pop_bohol * 100,2); //PPERCENT COVERAGE SINOVAC SECOND BOHOL
@@ -2101,7 +2115,6 @@ class VaccineController extends Controller
         $this->p_cvrge_sputnikv_mandaue_facility_second = number_format($this->vcted_sputnikv_mandaue_facility_second / $this->eli_pop_mandaue_facility * 100,2); //PERCENT COVERAGE SPUTNIKV MANDAUE FACILITY
         $this->p_cvrge_sputnikv_lapu_facility_second = number_format($this->vcted_sputnikv_lapu_facility_second / $this->eli_pop_lapu_facility * 100,2); //PERCENT COVERAGE SPUTNIKV SECOND LAPU-LAPU FACILIY
 
-
         //PERCENT_COVERAGE_PFIZER_SECOND
         $this->p_cvrge_pfizer_bohol_second = number_format($this->vcted_pfizer_bohol_second / $this->eli_pop_bohol * 100,2); //PERCENT COVERAGE PFIZER SECOND BOHOL
         $this->p_cvrge_pfizer_cebu_second = number_format($this->vcted_pfizer_cebu_second / $this->eli_pop_cebu * 100,2); //PERCENT COVERAGE PFIZER SECOND CEBU
@@ -2111,29 +2124,28 @@ class VaccineController extends Controller
         $this->p_cvrge_pfizer_mandaue_facility_second = number_format($this->vcted_pfizer_mandaue_facility_second / $this->eli_pop_mandaue_facility * 100,2); //PERCENT COVERAGE PFIZER SECOND MANDAUE FACILITY
         $this->p_cvrge_pfizer_lapu_facility_second = number_format($this->vcted_pfizer_lapu_facility_second / $this->eli_pop_lapu_facility * 100,2); //PERCENT COVERAGE PFIZER SECOND LAPU-LAPU FACILITY
 
-
         //TOTAL_PERCENT_COVERAGE_SECOND
-        $this->total_p_cvrge_bohol_second = number_format($this->p_cvrge_sinovac_bohol_second + $this->p_cvrge_astra_bohol_second + $this->p_cvrge_sputnikv_bohol_second + $this->p_cvrge_pfizer_bohol_second,2); //TOTAL PERCENT COVERAGE SECOND BOHOL
-        $this->total_p_cvrge_cebu_second = number_format($this->p_cvrge_sinovac_cebu_second + $this->p_cvrge_astra_cebu_second + $this->p_cvrge_sputnikv_cebu_second + $this->p_cvrge_pfizer_cebu_second,2); //TOTAL PERCENT COVERAGE SECOND CEBU
-        $this->total_p_cvrge_negros_second = number_format($this->p_cvrge_sinovac_negros_second + $this->p_cvrge_astra_negros_second + $this->p_cvrge_sputnikv_negros_second + $this->p_cvrge_pfizer_negros_second,2); //TOTAL PERCENT COVERAGE SECOND NEGROS
-        $this->total_p_cvrge_siquijor_second = number_format($this->p_cvrge_sinovac_siquijor_second + $this->p_cvrge_astra_siquijor_second + $this->p_cvrge_sputnikv_siquijor_second + $this->p_cvrge_pfizer_siquijor_second,2); //TOTAL PERCENT COVERAGE SECOND SIQUIJOR
-        $this->total_p_cvrge_cebu_facility_second = number_format($this->p_cvrge_sinovac_cebu_facility_second + $this->p_cvrge_astra_cebu_facility_second + $this->p_cvrge_sputnikv_cebu_facility_second + $this->p_cvrge_pfizer_cebu_facility_second,2); //TOTAL PERCENT COVERAGE SECOND CEBU FACILITY
-        $this->total_p_cvrge_mandaue_facility_second = number_format($this->p_cvrge_sinovac_mandaue_facility_second + $this->p_cvrge_astra_mandaue_facility_second + $this->p_cvrge_sputnikv_mandaue_facility_second + $this->p_cvrge_pfizer_mandaue_facility_second,2);//TOTAL PERCENT COVERAGE SECOND MANDAUE FACILITY
-        $this->total_p_cvrge_lapu_facility_second = number_format($this->p_cvrge_sinovac_lapu_facility_second + $this->p_cvrge_astra_lapu_facility_second + $this->p_cvrge_sputnikv_lapu_facility_second + $this->p_cvrge_pfizer_lapu_facility_second,2);//TOTAL PERCENT COVERAGE SECOND LAPU-LAPU FACILITY
+        $this->total_p_cvrge_bohol_second = number_format($this->total_vcted_second_bohol / $this->eli_pop_bohol * 100,2 ); //TOTAL PERCENT COVERAGE SECOND BOHOL
+        $this->total_p_cvrge_cebu_second = number_format($this->total_vcted_second_cebu / $this->eli_pop_cebu * 100,2 ); //TOTAL PERCENT COVERAGE SECOND CEBU
+        $this->total_p_cvrge_negros_second = number_format($this->total_vcted_second_negros / $this->eli_pop_negros * 100,2 );  //TOTAL PERCENT COVERAGE SECOND NEGROS
+        $this->total_p_cvrge_siquijor_second =  number_format($this->total_vcted_first_siquijor / $this->eli_pop_siquijor * 100,2 ); //TOTAL PERCENT COVERAGE SECOND SIQUIJOR
+        $this->total_p_cvrge_cebu_facility_second = number_format($this->total_vcted_cebu_facility_second / $this->eli_pop_cebu_facility * 100,2 );  //TOTAL PERCENT COVERAGE SECOND CEBU FACILITY
+        $this->total_p_cvrge_mandaue_facility_second = number_format($this->total_vcted_mandaue_facility_second / $this->eli_pop_mandaue_facility * 100,2 ); //TOTAL PERCENT COVERAGE SECOND MANDAUE FACILITY
+        $this->total_p_cvrge_lapu_facility_second = number_format($this->total_vcted_lapu_facility_second / $this->eli_pop_lapu_facility * 100,2 ); //TOTAL PERCENT COVERAGE SECOND LAPU-LAPU FACILITY
 
         //TOTAL_P_COVERAGE_REGION_FIRST
-        $this->total_p_cvrge_sinovac_region_first = number_format($this->p_cvrge_sinovac_bohol_first + $this->p_cvrge_sinovac_cebu_first + $this->p_cvrge_sinovac_negros_first + $this->p_cvrge_sinovac_siquijor_first + $this->p_cvrge_sinovac_cebu_facility_first + $this->p_cvrge_sinovac_mandaue_facility_first + $this->p_cvrge_sinovac_lapu_facility_first,2); //TOTAL PERCENT COVERAGE SINOVAC FIRST REGION
-        $this->total_p_cvrge_astra_region_first = number_format($this->p_cvrge_astra_bohol_first + $this->p_cvrge_astra_cebu_first + $this->p_cvrge_astra_negros_first + $this->p_cvrge_astra_siquijor_first + $this->p_cvrge_astra_cebu_facility_first + $this->p_cvrge_astra_mandaue_facility_first + $this->p_cvrge_astra_lapu_facility_first,2); //TOTAL PERCENT COVERAGE ASTRA FIRST REGION
-        $this->total_p_cvrge_sputnikv_region_first = number_format($this->p_cvrge_sputnikv_bohol_first + $this->p_cvrge_sputnikv_cebu_first + $this->p_cvrge_sputnikv_negros_first + $this->p_cvrge_sputnikv_siquijor_first + $this->p_cvrge_sputnikv_cebu_facility_first + $this->p_cvrge_sputnikv_mandaue_facility_first + $this->p_cvrge_sputnikv_lapu_facility_first,2); //TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION
-        $this->total_p_cvrge_pfizer_region_first = number_format($this->p_cvrge_pfizer_bohol_first + $this->p_cvrge_pfizer_cebu_first + $this->p_cvrge_pfizer_negros_first + $this->p_cvrge_pfizer_siquijor_first + $this->p_cvrge_pfizer_cebu_facility_first + $this->p_cvrge_pfizer_mandaue_facility_first + $this->p_cvrge_pfizer_lapu_facility_first,2); //TOTAL PERCENT COVERAGE PFIZER FIRST REGION
-        $this->total_p_cvrge_region_first = number_format($this->total_p_cvrge_sinovac_region_first + $this->total_p_cvrge_astra_region_first + $this->p_cvrge_sinovac_negros_first + $this->p_cvrge_sinovac_siquijor_first,2) ; //TOTAL PERCENT COVERAGE FIRST REGION
+        $this->total_p_cvrge_sinovac_region_first = number_format($this->region_sinovac_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE SINOVAC FIRST REGION
+        $this->total_p_cvrge_astra_region_first =  number_format($this->region_astra_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE ASTRA FIRST REGION
+        $this->total_p_cvrge_sputnikv_region_first = number_format($this->region_sputnikv_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION
+        $this->total_p_cvrge_pfizer_region_first =  number_format($this->region_pfizer_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE PFIZER FIRST REGION
+        $this->total_p_cvrge_region_first = number_format($this->first_dose_total / $this->total_elipop_region * 100,2) ; //TOTAL PERCENT COVERAGE FIRST REGION
 
         //TOTAL_P_COVERAGE_REGION_SECOND
-        $this->total_p_cvrge_sinovac_region_second = number_format($this->p_cvrge_sinovac_bohol_second + $this->p_cvrge_sinovac_cebu_second + $this->p_cvrge_sinovac_negros_second + $this->p_cvrge_sinovac_siquijor_second + $this->p_cvrge_sinovac_cebu_facility_second + $this->p_cvrge_sinovac_mandaue_facility_second + $this->p_cvrge_sinovac_lapu_facility_second,2); //TOTAL PERCENT COVERAGE SINOVAC SECOND REGION
-        $this->total_p_cvrge_astra_region_second = number_format($this->p_cvrge_astra_bohol_second + $this->p_cvrge_astra_cebu_second + $this->p_cvrge_astra_negros_second + $this->p_cvrge_astra_siquijor_second + $this->p_cvrge_astra_cebu_facility_second + $this->p_cvrge_astra_mandaue_facility_second + $this->p_cvrge_astra_lapu_facility_second,2); //TOTAL PERCENT COVERAGE ASTRA SECOND REGION
-        $this->total_p_cvrge_sputnikv_region_second = number_format($this->p_cvrge_sputnikv_bohol_second + $this->p_cvrge_sputnikv_cebu_second + $this->p_cvrge_sputnikv_negros_second + $this->p_cvrge_sputnikv_siquijor_second + $this->p_cvrge_sputnikv_cebu_facility_second + $this->p_cvrge_sputnikv_mandaue_facility_second + $this->p_cvrge_sputnikv_lapu_facility_second,2); //TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION
-        $this->total_p_cvrge_pfizer_region_second = number_format($this->p_cvrge_pfizer_bohol_second + $this->p_cvrge_pfizer_cebu_second + $this->p_cvrge_pfizer_negros_second + $this->p_cvrge_pfizer_siquijor_second + $this->p_cvrge_pfizer_cebu_facility_second + $this->p_cvrge_pfizer_mandaue_facility_second + $this->p_cvrge_pfizer_lapu_facility_second,2); //TOTAL PERCENT COVERAGE PFIZER SECOND REGION
-        $this->total_p_cvrge_region_second = number_format($this->total_p_cvrge_sinovac_region_second + $this->total_p_cvrge_astra_region_second + $this->p_cvrge_sinovac_negros_second + $this->p_cvrge_sinovac_siquijor_second,2);//TOTAL PERCENT COVERAGE SECOND REGION
+        $this->total_p_cvrge_sinovac_region_second =  number_format($this->region_sinovac_second_dose / $this->total_elipop_region * 100,2);; //TOTAL PERCENT COVERAGE SINOVAC SECOND REGION
+        $this->total_p_cvrge_astra_region_second = number_format($this->region_astra_second_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE ASTRA SECOND REGION
+        $this->total_p_cvrge_sputnikv_region_second =  number_format($this->region_sputnikv_second_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION
+        $this->total_p_cvrge_pfizer_region_second = number_format($this->region_pfizer_second_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE PFIZER SECOND REGION
+        $this->total_p_cvrge_region_second =number_format($this->second_dose_total / $this->total_elipop_region * 100,2) ; //TOTAL PERCENT COVERAGE SECOND REGION
 
         //TOTAL_WASTAGE
         $this->total_wastage_bohol = $this->wastage_sinovac_bohol_first + $this->wastage_astra_bohol_first + $this->wastage_sputnikv_bohol_first + $this->wastage_pfizer_bohol_first; //TOTAL WASTAGE FIRST BOHOL
@@ -2149,14 +2161,14 @@ class VaccineController extends Controller
         $this->total_refusal_second = $this->refused_second_bohol + $this->refused_second_cebu + $this->refused_second_negros + $this->refused_second_siquijor + $this->refused_cebu_facility_second + $this->refused_mandaue_facility_second + $this->refused_lapu_facility_second; //REFUSED SECOND REGION
 
         //TOTAL DEFFERED
-        $this->total_deferred_first = $this->deferred_first_bohol + $this->deferred_first_cebu + $this->deferred_first_negros + $this->deferred_first_siquijor; //DEFERRED FIRST REGION
-        $this->total_deferred_second = $this->deferred_second_bohol + $this->deferred_second_cebu + $this->deferred_second_negros + $this->deferred_second_siquijor; //DEFERRED SECOND REGION
+        $this->total_deferred_first = $this->deferred_first_bohol + $this->deferred_first_cebu + $this->deferred_first_negros + $this->deferred_first_siquijor + $this->deferred_cebu_facility_first + $this->deferred_mandaue_facility_first + $this->deferred_lapu_facility_first; //DEFERRED FIRST REGION
+        $this->total_deferred_second = $this->deferred_second_bohol + $this->deferred_second_cebu + $this->deferred_second_negros + $this->deferred_second_siquijor + $this->deferred_cebu_facility_second + $this->deferred_mandaue_facility_second + $this->deferred_lapu_facility_second ; //DEFERRED SECOND REGION
 
         //WASTAGE_SINOVAC_FIRST
-        $this->wastage_sinovac_first = $this->wastage_sinovac_bohol_first + $this->wastage_sinovac_cebu_first + $this->wastage_sinovac_negros_first + $this->wastage_sinovac_siquijor_first; //WASTAGE SINOVAC REGION
-        $this->wastage_astra_first = $this->wastage_astra_bohol_first + $this->wastage_astra_cebu_first + $this->wastage_astra_negros_first + $this->wastage_astra_siquijor_first; //WASTAGE ASTRA  REGION
-        $this->wastage_sputnikv_first = $this->wastage_sputnikv_bohol_first + $this->wastage_sputnikv_cebu_first + $this->wastage_sputnikv_negros_first + $this->wastage_sputnikv_siquijor_first; //WASTAGE SPUTNIKV  REGION
-        $this->wastage_pfizer_first = $this->wastage_pfizer_bohol_first + $this->wastage_pfizer_cebu_first + $this->wastage_pfizer_negros_first + $this->wastage_pfizer_siquijor_first; //WASTAGE PFIZER REGION
+        $this->wastage_sinovac_first = $this->wastage_sinovac_bohol_first + $this->wastage_sinovac_cebu_first + $this->wastage_sinovac_negros_first + $this->wastage_sinovac_siquijor_first + $this->wastage_sinovac_cebu_facility_first + $this->wastage_sinovac_mandaue_facility_first + $this->wastage_sinovac_lapu_facility_first; //WASTAGE SINOVAC REGION
+        $this->wastage_astra_first = $this->wastage_astra_bohol_first + $this->wastage_astra_cebu_first + $this->wastage_astra_negros_first + $this->wastage_astra_siquijor_first + $this->wastage_astra_cebu_facility_first + $this->wastage_astra_mandaue_facility_first + $this->wastage_astra_lapu_facility_first ; //WASTAGE ASTRA  REGION
+        $this->wastage_sputnikv_first = $this->wastage_sputnikv_bohol_first + $this->wastage_sputnikv_cebu_first + $this->wastage_sputnikv_negros_first + $this->wastage_sputnikv_siquijor_first + $this->wastage_sputnikv_cebu_facility_first + $this->wastage_sputnikv_mandaue_facility_first + $this->wastage_sputnikv_lapu_facility_first; //WASTAGE SPUTNIKV  REGION
+        $this->wastage_pfizer_first = $this->wastage_pfizer_bohol_first + $this->wastage_pfizer_cebu_first + $this->wastage_pfizer_negros_first + $this->wastage_pfizer_siquijor_first + $this->wastage_pfizer_cebu_facility_first + $this->wastage_pfizer_mandaue_facility_first + $this->wastage_pfizer_lapu_facility_first; //WASTAGE PFIZER REGION
 
         //WASTAGE
         $this->wastage_region = $this->wastage_sinovac_first + $this->wastage_astra_first + $this->wastage_sputnikv_first + $this->wastage_pfizer_first; //TOTAL WASTAGE REGION
@@ -2198,22 +2210,22 @@ class VaccineController extends Controller
         $this->c_rate_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $this->pfizer_lapu_facility * 100,2); //CONSUMPTION RATE PFIZER FIRST LAPU-LAPU
 
         //TOTAL_CONSUMPTION_RATE_FIRST
-        $this->total_c_rate_bohol_first = number_format($this->c_rate_sinovac_bohol_first + $this->c_rate_astra_bohol_first + $this->c_rate_sputnikv_bohol_first + $this->c_rate_pfizer_bohol_first,2); //TOTAL CONSUMPTION RATE FIRST BOHOL
-        $this->total_c_rate_cebu_first = number_format($this->c_rate_sinovac_cebu_first + $this->c_rate_astra_cebu_first + $this->c_rate_sputnikv_cebu_first + $this->c_rate_pfizer_cebu_first,2); //TOTAL CONSUMPTION RATE FIRST CEBU
-        $this->total_c_rate_negros_first = number_format($this->c_rate_sinovac_negros_first + $this->c_rate_astra_negros_first + $this->c_rate_sputnikv_negros_first + $this->c_rate_pfizer_negros_first,2); //TOTAL CONSUMPTION RATE FIRST NEGROS
-        $this->total_c_rate_siquijor_first = number_format($this->c_rate_sinovac_siquijor_first + $this->c_rate_astra_siquijor_first + $this->c_rate_sputnikv_siquijor_first + $this->c_rate_pfizer_siquijor_first,2); //TOTAL CONSUMPTION RATE FIRST SIQUIJOR
-        $this->total_c_rate_cebu_facility_first = number_format($this->c_rate_sinovac_cebu_facility_first + $this->c_rate_astra_cebu_facility_first + $this->c_rate_sputnikv_cebu_facility_first + $this->c_rate_pfizer_cebu_facility_first,2); //TOTAL CONSUMPTION RATE FIRST CEBU FACILITY
-        $this->total_c_rate_mandaue_facility_first = number_format($this->c_rate_sinovac_mandaue_facility_first + $this->c_rate_astra_mandaue_facility_first + $this->c_rate_sputnikv_mandaue_facility_first + $this->c_rate_pfizer_mandaue_facility_first,2); //TOTAL CONSUMPTION RATE FIRST MANDAUE FACILITY
-        $this->total_c_rate_lapu_facility_first = number_format($this->c_rate_sinovac_lapu_facility_first + $this->c_rate_astra_lapu_facility_first + $this->c_rate_sputnikv_lapu_facility_first + $this->c_rate_pfizer_lapu_facility_first,2); //TOTAL CONSUMPTION RATE FIRST LAPU-LAPU FACILITY
+        $this->total_c_rate_bohol_first = number_format($this->total_vcted_first_bohol / $this->total_bohol * 100,2); //TOTAL CONSUMPTION RATE FIRST BOHOL
+        $this->total_c_rate_cebu_first = number_format($this->total_vcted_first_cebu / $this->total_cebu * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU
+        $this->total_c_rate_negros_first = number_format($this->total_vcted_first_negros / $this->total_negros * 100,2); //TOTAL CONSUMPTION RATE FIRST NEGROS
+        $this->total_c_rate_siquijor_first = number_format($this->total_vcted_first_siquijor / $this->total_siquijor * 100,2); //TOTAL CONSUMPTION RATE FIRST SIQUIJOR
+        $this->total_c_rate_cebu_facility_first = number_format($this->total_vcted_cebu_facility_first / $this->total_cebu_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU FACILITY
+        $this->total_c_rate_mandaue_facility_first = number_format($this->total_vcted_mandaue_facility_first / $this->total_mandaue_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST MANDAUE FACILITY
+        $this->total_c_rate_lapu_facility_first = number_format($this->total_vcted_lapu_facility_first / $this->total_lapu_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST LAPU-LAPU FACILITY
 
-        //CONSUMPTION_RATE_REGION_FIRST
-        $this->c_rate_region_sinovac_first = number_format($this->c_rate_sinovac_bohol_first + $this->c_rate_sinovac_cebu_first + $this->c_rate_sinovac_negros_first + $this->c_rate_sinovac_siquijor_first + $this->c_rate_sinovac_cebu_facility_first + $this->c_rate_sinovac_mandaue_facility_first + $this->c_rate_sinovac_lapu_facility_first,2); //CONSUMPTION RATE SINOVAC FIRST REGION
-        $this->c_rate_region_astra_first = number_format($this->c_rate_astra_bohol_first + $this->c_rate_astra_cebu_first + $this->c_rate_astra_negros_first + $this->c_rate_astra_siquijor_first + $this->c_rate_astra_cebu_facility_first + $this->c_rate_astra_mandaue_facility_first + $this->c_rate_astra_lapu_facility_first,2); //CONSUMPTION RATE ASTRA FIRST REGION
-        $this->c_rate_region_sputnikv_first = number_format($this->c_rate_sputnikv_bohol_first + $this->c_rate_sputnikv_cebu_first + $this->c_rate_sputnikv_negros_first + $this->c_rate_sputnikv_siquijor_first + $this->c_rate_sputnikv_cebu_facility_first + $this->c_rate_sputnikv_mandaue_facility_first + $this->c_rate_sputnikv_lapu_facility_first,2); //CONSUMPTION RATE SPUTNIKV FIRST REGION
-        $this->c_rate_region_pfizer_first = number_format($this->c_rate_pfizer_bohol_first + $this->c_rate_pfizer_cebu_first + $this->c_rate_pfizer_negros_first + $this->c_rate_pfizer_siquijor_first + $this->c_rate_pfizer_cebu_facility_first + $this->c_rate_pfizer_mandaue_facility_first + $this->c_rate_pfizer_lapu_facility_first,2); //CONSUMPTION RATE PFIZER FIRST REGION
+        //CONSUMPTION_RATE_REGION_FIRST //DEARA
+        $this->c_rate_region_sinovac_first = number_format($this->region_sinovac_first_dose / $this->sinovac_region * 100,2); //CONSUMPTION RATE SINOVAC FIRST REGION
+        $this->c_rate_region_astra_first = number_format($this->region_astra_first_dose / $this->astra_region * 100,2); //CONSUMPTION RATE ASTRA FIRST REGION
+        $this->c_rate_region_sputnikv_first = number_format($this->region_sputnikv_first_dose / $this->sputnikv_region * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST REGION
+        $this->c_rate_region_pfizer_first =number_format($this->region_pfizer_first_dose / $this->pfizer_region * 100,2); //CONSUMPTION RATE PFIZER FIRST REGION
 
         //TOTAL_C_RATE_REGION_FIRST
-        $this->total_c_rate_region_first = number_format($this->c_rate_region_sinovac_first + $this->c_rate_region_astra_first + $this->c_rate_region_sputnikv_first + $this->c_rate_region_pfizer_first,2); //TOTAL CONSUMPTION RATE FIRST REGION
+        $this->total_c_rate_region_first = number_format($this->first_dose_total / $this->total_region * 100,2 ); //TOTAL CONSUMPTION RATE FIRST REGION
 
 
         //CONSUMPTION_RATE_SINOVAC_SECOND
@@ -2255,36 +2267,23 @@ class VaccineController extends Controller
 
 
         //TOTAL_CONSUMPTION_RATE_SECOND
-        $this->total_c_rate_bohol_second = number_format($this->c_rate_sinovac_bohol_second + $this->c_rate_astra_bohol_second + $this->c_rate_sputnikv_bohol_second + $this->c_rate_pfizer_bohol_second,2); //TOTAL CONSUMPTION RATE SECOND BOHOL
-        $this->total_c_rate_cebu_second = number_format($this->c_rate_sinovac_cebu_second + $this->c_rate_astra_cebu_second + $this->c_rate_sputnikv_cebu_second + $this->c_rate_pfizer_cebu_second,2); //TOTAL CONSUMPTION RATE SECOND CEBU
-        $this->total_c_rate_negros_second = number_format($this->c_rate_sinovac_negros_second + $this->c_rate_astra_negros_second + $this->c_rate_sputnikv_negros_second + $this->c_rate_pfizer_negros_second,2); //TOTAL CONSUMPTION RATE SECOND NEGROS
-        $this->total_c_rate_siquijor_second = number_format($this->c_rate_sinovac_siquijor_second + $this->c_rate_astra_siquijor_second + $this->c_rate_sputnikv_siquijor_second + $this->c_rate_pfizer_siquijor_second,2); //TOTAL CONSUMPTION RATE SECOND SIQUIJOR
-        $this->total_c_rate_cebu_facility_second = number_format($this->c_rate_sinovac_cebu_facility_second + $this->c_rate_astra_cebu_facility_second + $this->c_rate_sputnikv_cebu_facility_second + $this->c_rate_pfizer_cebu_facility_second,2); //TOTAL CONSUMPTION RATE SECOND CEBU FACILITY
-        $this->total_c_rate_mandaue_facility_second = number_format($this->c_rate_sinovac_mandaue_facility_second + $this->c_rate_astra_mandaue_facility_second + $this->c_rate_sputnikv_mandaue_facility_second + $this->c_rate_pfizer_mandaue_facility_second,2); //TOTAL CONSUMPTION RATE SECOND MANDAUE FACILITY
-        $this->total_c_rate_lapu_facility_second = number_format($this->c_rate_sinovac_lapu_facility_second + $this->c_rate_astra_lapu_facility_second + $this->c_rate_sputnikv_lapu_facility_second + $this->c_rate_pfizer_lapu_facility_second,2); //TOTAL CONSUMPTION RATE SECOND LAPU-LAPU FACI
+        $this->total_c_rate_bohol_second = number_format($this->total_vcted_second_bohol / $this->total_bohol * 100,2); //TOTAL CONSUMPTION RATE SECOND BOHOL
+        $this->total_c_rate_cebu_second = number_format($this->total_vcted_second_cebu / $this->total_cebu * 100,2); //TOTAL CONSUMPTION RATE SECOND CEBU
+        $this->total_c_rate_negros_second = number_format($this->total_vcted_second_negros / $this->total_negros * 100,2); //TOTAL CONSUMPTION RATE SECOND NEGROS
+        $this->total_c_rate_siquijor_second = number_format($this->total_vcted_second_siquijor / $this->total_siquijor * 100,2); //TOTAL CONSUMPTION RATE SECOND SIQUIJOR
+        $this->total_c_rate_cebu_facility_second = number_format($this->total_vcted_cebu_facility_second / $this->total_cebu_facility * 100,2);  //TOTAL CONSUMPTION RATE SECOND CEBU FACILITY
+        $this->total_c_rate_mandaue_facility_second = number_format($this->total_vcted_mandaue_facility_second / $this->total_mandaue_facility * 100,2); //TOTAL CONSUMPTION RATE SECOND MANDAUE FACILITY
+        $this->total_c_rate_lapu_facility_second =  number_format($this->total_vcted_lapu_facility_second / $this->total_lapu_facility * 100,2); //TOTAL CONSUMPTION RATE SECOND LAPU-LAPU FACI
 
         //CONSUMPTION_RATE_REGION_SECOND
-        $this->c_rate_region_sinovac_second = number_format($this->c_rate_sinovac_bohol_second + $this->c_rate_sinovac_cebu_second + $this->c_rate_sinovac_negros_second + $this->c_rate_sinovac_siquijor_second + $this->c_rate_sinovac_cebu_facility_second + $this->c_rate_sinovac_mandaue_facility_second + $this->c_rate_sinovac_lapu_facility_second,2); //CONSUMPTION RATE SINOVAC SECOND REGION
-        $this->c_rate_region_astra_second = number_format($this->c_rate_astra_bohol_second + $this->c_rate_astra_cebu_second + $this->c_rate_astra_negros_second + $this->c_rate_astra_siquijor_second + $this->c_rate_astra_cebu_facility_second + $this->c_rate_astra_mandaue_facility_second + $this->c_rate_astra_lapu_facility_second,2); //CONSUMPTION RATE ASTRA SECOND REGION
-        $this->c_rate_region_sputnikv_second = number_format($this->c_rate_sputnikv_bohol_second + $this->c_rate_sputnikv_cebu_second + $this->c_rate_sputnikv_negros_second + $this->c_rate_sputnikv_siquijor_second + $this->c_rate_sputnikv_cebu_facility_second + $this->c_rate_sputnikv_mandaue_facility_second + $this->c_rate_sputnikv_lapu_facility_second,2); //CONSUMPTION RATE SPUTNIKV SECOND REGION
-        $this->c_rate_region_pfizer_second = number_format($this->c_rate_pfizer_bohol_second + $this->c_rate_pfizer_cebu_second + $this->c_rate_pfizer_negros_second + $this->c_rate_pfizer_siquijor_second + $this->c_rate_pfizer_cebu_facility_second + $this->c_rate_pfizer_mandaue_facility_second + $this->c_rate_pfizer_lapu_facility_second,2); //CONSUMPTION RATE PFIZER SECOND REGION
+        $this->c_rate_region_sinovac_second = number_format($this->region_sinovac_second_dose / $this->sinovac_region * 100,2);  //CONSUMPTION RATE SINOVAC SECOND REGION
+        $this->c_rate_region_astra_second = number_format($this->region_astra_second_dose / $this->astra_region * 100,2); //CONSUMPTION RATE ASTRA SECOND REGION
+        $this->c_rate_region_sputnikv_second = number_format($this->region_sputnikv_second_dose / $this->sputnikv_region * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND REGION
+        $this->c_rate_region_pfizer_second =  number_format($this->region_pfizer_second_dose / $this->pfizer_region * 100,2); //CONSUMPTION RATE PFIZER SECOND REGION
         //TOTAL_C_RATE_REGION_SECOND
-        $this->total_c_rate_region_second = number_format($this->c_rate_region_sinovac_second + $this->c_rate_region_astra_second + $this->c_rate_region_sputnikv_second + $this->c_rate_region_pfizer_second,2); //TOTAL CONSUMPTION RATE SECOND REGION
+        $this->total_c_rate_region_second = number_format($this->second_dose_total / $this->total_region * 100,2 ); //TOTAL CONSUMPTION RATE SECOND REGION
 
 
-        $this->total_region = $this->sinovac_region + $this->astra_region + $this->sputnikv_region + $this->pfizer_region; //VACCINE ALLOCATED TOTAL REGION
-        $this->total_bohol = $this->sinovac_bohol + $this->astra_bohol + $this->sputnikv_bohol + $this->pfizer_bohol; //TOTAL VACCINE ALLOCATED BOHOL
-        $this->total_cebu = $this->sinovac_cebu + $this->astra_cebu + $this->sputnikv_cebu + $this->pfizer_cebu; //TOTAL VACCINE ALLOCATED CEBU
-        $this->total_negros = $this->sinovac_negros + $this->astra_negros + $this->sputnikv_negros + $this->pfizer_negros; //TOTAL VACCINE ALLOCATED NEGROS
-        $this->total_siquijor = $this->sinovac_siquijor + $this->astra_siquijor + $this->sputnikv_siquijor + $this->pfizer_siquijor; //TOTAL VACCINE ALLOCATED SIQUIJOR
-        $this->total_cebu_facility = $this->sinovac_cebu_facility + $this->astra_cebu_facility + $this->sputnikv_cebu_facility + $this->pfizer_cebu_facility; //TOTAL VACCINE ALLOCATED CEBU FACILITY
-        $this->total_mandaue_facility = $this->sinovac_mandaue_facility + $this->astra_mandaue_facility + $this->sputnikv_mandaue_facility + $this->pfizer_mandaue_facility; //TOTAL VACCINE ALLOCATED MANDAUE FACILITY
-        $this->total_lapu_facility = $this->sinovac_lapu_facility + $this->astra_lapu_facility + $this->sputnikv_lapu_facility + $this->pfizer_lapu_facility; //TOTAL VACCINE ALLOCATED LAPU-LAPU FACILITY
-
-        $this->total_elipop_region = $this->eli_pop_bohol + $this->eli_pop_cebu + $this->eli_pop_siquijor + $this->eli_pop_cebu_facility + $this->eli_pop_mandaue_facility + $this->eli_pop_lapu_facility; //TOTAL ELIGBLE_POP REGION
-
-        $this->first_dose_total = $this->region_sinovac_first_dose + $this->region_astra_first_dose + $this->region_sputnikv_first_dose + $this->region_pfizer_first_dose; //TOTAL VACCINATED FIRST REGION
-        $this->second_dose_total = $this->region_sinovac_second_dose + $this->region_astra_second_dose + $this->region_sputnikv_second_dose + $this->region_pfizer_second_dose; //TOTAL VACCINATED SECOND REGION
         //priority_set
         $this->priority_set = strtoupper($priority);
     }
@@ -2397,86 +2396,6 @@ class VaccineController extends Controller
         $vcted_pfizer_lapu_facility_first = $this->vcted_pfizer_lapu_facility_first;
         $vcted_pfizer_lapu_facility_second = $this->vcted_pfizer_lapu_facility_second;
 
-        //PERCENT COVERAGE SINOVAC FIRST A1
-        $total_p_cvrge_sinovac_region_first = $this->total_p_cvrge_sinovac_region_first;
-        $p_cvrge_sinovac_bohol_first = $this->p_cvrge_sinovac_bohol_first;
-        $p_cvrge_sinovac_cebu_first = $this->p_cvrge_sinovac_cebu_first;
-        $p_cvrge_sinovac_negros_first = $this->p_cvrge_sinovac_negros_first;
-        $p_cvrge_sinovac_siquijor_first = $this->p_cvrge_sinovac_siquijor_first;
-        $p_cvrge_sinovac_cebu_facility_first = $this->p_cvrge_sinovac_cebu_facility_first;
-        $p_cvrge_sinovac_mandaue_facility_first = $this->p_cvrge_sinovac_mandaue_facility_first;
-        $p_cvrge_sinovac_lapu_facility_first = $this->p_cvrge_sinovac_lapu_facility_first;
-
-        //PERCENT COVERAGE ASTRA FIRST A1
-        $total_p_cvrge_astra_region_first = $this->total_p_cvrge_astra_region_first;
-        $p_cvrge_astra_bohol_first = $this->p_cvrge_astra_bohol_first;
-        $p_cvrge_astra_cebu_first = $this->p_cvrge_astra_cebu_first;
-        $p_cvrge_astra_negros_first = $this->p_cvrge_astra_negros_first;
-        $p_cvrge_astra_siquijor_first = $this->p_cvrge_astra_siquijor_first;
-        $p_cvrge_astra_cebu_facility_first = $this->p_cvrge_astra_cebu_facility_first;
-        $p_cvrge_astra_mandaue_facility_first = $this->p_cvrge_astra_mandaue_facility_first;
-        $p_cvrge_astra_lapu_facility_first = $this->p_cvrge_astra_lapu_facility_first;
-
-        //PERCENT COVERAGE SPUTNIKV FIRST A1
-        $total_p_cvrge_sputnikv_region_first = $this->total_p_cvrge_sputnikv_region_first;
-        $p_cvrge_sputnikv_bohol_first = $this->p_cvrge_sputnikv_bohol_first;
-        $p_cvrge_sputnikv_cebu_first = $this->p_cvrge_sputnikv_cebu_first;
-        $p_cvrge_sputnikv_negros_first = $this->p_cvrge_sputnikv_negros_first;
-        $p_cvrge_sputnikv_siquijor_first = $this->p_cvrge_sputnikv_siquijor_first;
-        $p_cvrge_sputnikv_cebu_facility_first = $this->p_cvrge_sputnikv_cebu_facility_first;
-        $p_cvrge_sputnikv_mandaue_facility_first = $this->p_cvrge_sputnikv_mandaue_facility_first;
-        $p_cvrge_sputnikv_lapu_facility_first = $this->p_cvrge_sputnikv_lapu_facility_first;
-
-        //PERCENT COVERAGE PFIZER FIRST A1
-        $total_p_cvrge_pfizer_region_first = $this->total_p_cvrge_pfizer_region_first;
-        $p_cvrge_pfizer_bohol_first = $this->p_cvrge_pfizer_bohol_first;
-        $p_cvrge_pfizer_cebu_first = $this->p_cvrge_pfizer_cebu_first;
-        $p_cvrge_pfizer_negros_first = $this->p_cvrge_pfizer_negros_first;
-        $p_cvrge_pfizer_siquijor_first = $this->p_cvrge_pfizer_siquijor_first;
-        $p_cvrge_pfizer_cebu_facility_first = $this->p_cvrge_pfizer_cebu_facility_first;
-        $p_cvrge_pfizer_mandaue_facility_first = $this->p_cvrge_pfizer_mandaue_facility_first;
-        $p_cvrge_pfizer_lapu_facility_first = $this->p_cvrge_pfizer_lapu_facility_first;
-
-        //PERCENT COVERAGE SINOVAC SECOND A1
-        $total_p_cvrge_sinovac_region_second = $this->total_p_cvrge_sinovac_region_second;
-        $p_cvrge_sinovac_bohol_second = $this->p_cvrge_sinovac_bohol_second;
-        $p_cvrge_sinovac_cebu_second = $this->p_cvrge_sinovac_cebu_second;
-        $p_cvrge_sinovac_negros_second = $this->p_cvrge_sinovac_negros_second;
-        $p_cvrge_sinovac_siquijor_second = $this->p_cvrge_sinovac_siquijor_second;
-        $p_cvrge_sinovac_cebu_facility_second = $this->p_cvrge_sinovac_cebu_facility_second;
-        $p_cvrge_sinovac_mandaue_facility_second = $this->p_cvrge_sinovac_mandaue_facility_second;
-        $p_cvrge_sinovac_lapu_facility_second = $this->p_cvrge_sinovac_lapu_facility_second;
-
-        //PERCENT COVERAGE ASTRA SECOND A1
-        $total_p_cvrge_astra_region_second = $this->total_p_cvrge_astra_region_second;
-        $p_cvrge_astra_bohol_second = $this->p_cvrge_astra_bohol_second;
-        $p_cvrge_astra_cebu_second = $this->p_cvrge_astra_cebu_second;
-        $p_cvrge_astra_negros_second = $this->p_cvrge_astra_negros_second;
-        $p_cvrge_astra_siquijor_second = $this->p_cvrge_astra_siquijor_second;
-        $p_cvrge_astra_cebu_facility_second = $this->p_cvrge_astra_cebu_facility_second;
-        $p_cvrge_astra_mandaue_facility_second = $this->p_cvrge_astra_mandaue_facility_second;
-        $p_cvrge_astra_lapu_facility_second = $this->p_cvrge_astra_lapu_facility_second;
-
-        //PERCENT COVERAGE SPUTNIKV SECOND A1
-        $total_p_cvrge_sputnikv_region_second = $this->total_p_cvrge_sputnikv_region_second;
-        $p_cvrge_sputnikv_bohol_second = $this->p_cvrge_sputnikv_bohol_second;
-        $p_cvrge_sputnikv_cebu_second = $this->p_cvrge_sputnikv_cebu_second;
-        $p_cvrge_sputnikv_negros_second = $this->p_cvrge_sputnikv_negros_second;
-        $p_cvrge_sputnikv_siquijor_second = $this->p_cvrge_sputnikv_siquijor_second;
-        $p_cvrge_sputnikv_cebu_facility_second = $this->p_cvrge_sputnikv_cebu_facility_second;
-        $p_cvrge_sputnikv_mandaue_facility_second = $this->p_cvrge_sputnikv_mandaue_facility_second;
-        $p_cvrge_sputnikv_lapu_facility_second = $this->p_cvrge_sputnikv_lapu_facility_second;
-
-        //PERCENT COVERAGE PFIZER SECOND A1
-        $total_p_cvrge_pfizer_region_second = $this->total_p_cvrge_pfizer_region_second;
-        $p_cvrge_pfizer_bohol_second = $this->p_cvrge_pfizer_bohol_second;
-        $p_cvrge_pfizer_cebu_second = $this->p_cvrge_pfizer_cebu_second;
-        $p_cvrge_pfizer_negros_second = $this->p_cvrge_pfizer_negros_second;
-        $p_cvrge_pfizer_siquijor_second = $this->p_cvrge_pfizer_siquijor_second;
-        $p_cvrge_pfizer_cebu_facility_second = $this->p_cvrge_pfizer_cebu_facility_second;
-        $p_cvrge_pfizer_mandaue_facility_second = $this->p_cvrge_pfizer_mandaue_facility_second;
-        $p_cvrge_pfizer_lapu_facility_second = $this->p_cvrge_pfizer_lapu_facility_second;
-
         //TOTAL REFUSED FIRST A1
         $total_refusal_first = $this->total_refusal_first;
         $refused_first_bohol = $this->refused_first_bohol;
@@ -2558,118 +2477,6 @@ class VaccineController extends Controller
         $wastage_pfizer_cebu_facility_first = $this->wastage_pfizer_cebu_facility_first;
         $wastage_pfizer_mandaue_facility_first = $this->wastage_pfizer_mandaue_facility_first;
         $wastage_pfizer_lapu_facility_first = $this->wastage_pfizer_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION FIRST A1
-        $total_c_rate_region_first = $this->total_c_rate_region_first;
-        $c_rate_region_sinovac_first = $this->c_rate_region_sinovac_first;
-        $c_rate_region_astra_first = $this->c_rate_region_astra_first;
-        $c_rate_region_sputnikv_first = $this->c_rate_region_sputnikv_first;
-        $c_rate_region_pfizer_first = $this->c_rate_region_pfizer_first;
-
-        //CONSUMPTION RATE BOHOL FIRST A1
-        $c_rate_sinovac_bohol_first = $this->c_rate_sinovac_bohol_first;
-        $c_rate_astra_bohol_first = $this->c_rate_astra_bohol_first;
-        $c_rate_sputnikv_bohol_first = $this->c_rate_sputnikv_bohol_first;
-        $c_rate_pfizer_bohol_first = $this->c_rate_pfizer_bohol_first;
-        $total_c_rate_bohol_first = $this->total_c_rate_bohol_first;
-
-        //CONSUMPTION RATE CEBU FIRST A1
-        $c_rate_sinovac_cebu_first = $this->c_rate_sinovac_cebu_first;
-        $c_rate_astra_cebu_first = $this->c_rate_astra_cebu_first;
-        $c_rate_sputnikv_cebu_first = $this->c_rate_sputnikv_cebu_first;
-        $c_rate_pfizer_cebu_first = $this->c_rate_pfizer_cebu_first;
-        $total_c_rate_cebu_first = $this->total_c_rate_cebu_first;
-
-        //CONSUMPTION RATE NEGROS FIRST A1
-        $c_rate_sinovac_negros_first = $this->c_rate_sinovac_negros_first;
-        $c_rate_astra_negros_first = $this->c_rate_astra_negros_first;
-        $c_rate_sputnikv_negros_first = $this->c_rate_sputnikv_negros_first;
-        $c_rate_pfizer_negros_first = $this->c_rate_pfizer_negros_first;
-        $total_c_rate_negros_first = $this->total_c_rate_negros_first;
-
-        //CONSUMPTION RATE SIQUIJOR FIRST A1
-        $c_rate_sinovac_siquijor_first = $this->c_rate_sinovac_siquijor_first;
-        $c_rate_astra_siquijor_first = $this->c_rate_astra_siquijor_first;
-        $c_rate_sputnikv_siquijor_first = $this->c_rate_sputnikv_siquijor_first;
-        $c_rate_pfizer_siquijor_first = $this->c_rate_pfizer_siquijor_first;
-        $total_c_rate_siquijor_first = $this->total_c_rate_siquijor_first;
-
-        //CONSUMPTION RATE CEBU FACILITY FIRST A1
-        $c_rate_sinovac_cebu_facility_first = $this->c_rate_sinovac_cebu_facility_first;
-        $c_rate_astra_cebu_facility_first = $this->c_rate_astra_cebu_facility_first;
-        $c_rate_sputnikv_cebu_facility_first = $this->c_rate_sputnikv_cebu_facility_first;
-        $c_rate_pfizer_cebu_facility_first = $this->c_rate_pfizer_cebu_facility_first;
-        $total_c_rate_cebu_facility_first = $this->total_c_rate_cebu_facility_first;
-
-        //CONSUMPTION RATE MANDAUE FACILITY FIRST A1
-        $c_rate_sinovac_mandaue_facility_first = $this->c_rate_sinovac_mandaue_facility_first;
-        $c_rate_astra_mandaue_facility_first = $this->c_rate_astra_mandaue_facility_first;
-        $c_rate_sputnikv_mandaue_facility_first = $this->c_rate_sputnikv_mandaue_facility_first;
-        $c_rate_pfizer_mandaue_facility_first = $this->c_rate_pfizer_mandaue_facility_first;
-        $total_c_rate_mandaue_facility_first = $this->total_c_rate_mandaue_facility_first;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY FIRST A1
-        $c_rate_sinovac_lapu_facility_first = $this->c_rate_sinovac_lapu_facility_first;
-        $c_rate_astra_lapu_facility_first = $this->c_rate_astra_lapu_facility_first;
-        $c_rate_sputnikv_lapu_facility_first = $this->c_rate_sputnikv_lapu_facility_first;
-        $c_rate_pfizer_lapu_facility_first = $this->c_rate_pfizer_lapu_facility_first;
-        $total_c_rate_lapu_facility_first = $this->total_c_rate_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION SECOND A1
-        $total_c_rate_region_second = $this->total_c_rate_region_second;
-        $c_rate_region_sinovac_second = $this->c_rate_region_sinovac_second;
-        $c_rate_region_astra_second = $this->c_rate_region_astra_second;
-        $c_rate_region_sputnikv_second = $this->c_rate_region_sputnikv_second;
-        $c_rate_region_pfizer_second = $this->c_rate_region_pfizer_second;
-
-        //CONSUMPTION RATE BOHOL SECOND A1
-        $c_rate_sinovac_bohol_second = $this->c_rate_sinovac_bohol_second;
-        $c_rate_astra_bohol_second = $this->c_rate_astra_bohol_second;
-        $c_rate_sputnikv_bohol_second = $this->c_rate_sputnikv_bohol_second;
-        $c_rate_pfizer_bohol_second = $this->c_rate_pfizer_bohol_second;
-        $total_c_rate_bohol_second = $this->total_c_rate_bohol_second;
-
-        //CONSUMPTION RATE CEBU SECOND A1
-        $c_rate_sinovac_cebu_second = $this->c_rate_sinovac_cebu_second;
-        $c_rate_astra_cebu_second = $this->c_rate_astra_cebu_second;
-        $c_rate_sputnikv_cebu_second = $this->c_rate_sputnikv_cebu_second;
-        $c_rate_pfizer_cebu_second = $this->c_rate_pfizer_cebu_second;
-        $total_c_rate_cebu_second = $this->total_c_rate_cebu_second;
-
-        //CONSUMPTION RATE NEGROS SECOND A1
-        $c_rate_sinovac_negros_second = $this->c_rate_sinovac_negros_second;
-        $c_rate_astra_negros_second = $this->c_rate_astra_negros_second;
-        $c_rate_sputnikv_negros_second = $this->c_rate_sputnikv_negros_second;
-        $c_rate_pfizer_negros_second = $this->c_rate_pfizer_negros_second;
-        $total_c_rate_negros_second = $this->total_c_rate_negros_second;
-
-        //CONSUMPTION RATE SIQUIJOR SECOND A1
-        $c_rate_sinovac_siquijor_second = $this->c_rate_sinovac_siquijor_second;
-        $c_rate_astra_siquijor_second = $this->c_rate_astra_siquijor_second;
-        $c_rate_sputnikv_siquijor_second = $this->c_rate_sputnikv_siquijor_second;
-        $c_rate_pfizer_siquijor_second = $this->c_rate_pfizer_siquijor_second;
-        $total_c_rate_siquijor_second = $this->total_c_rate_siquijor_second;
-
-        //CONSUMPTION RATE CEBU FACILITY SECOND A1
-        $c_rate_sinovac_cebu_facility_second = $this->c_rate_sinovac_cebu_facility_second;
-        $c_rate_astra_cebu_facility_second = $this->c_rate_astra_cebu_facility_second;
-        $c_rate_sputnikv_cebu_facility_second = $this->c_rate_sputnikv_cebu_facility_second;
-        $c_rate_pfizer_cebu_facility_second = $this->c_rate_pfizer_cebu_facility_second;
-        $total_c_rate_cebu_facility_second = $this->total_c_rate_cebu_facility_second;
-
-        //CONSUMPTION RATE MANDAUE FACILITY SECOND A1
-        $c_rate_sinovac_mandaue_facility_second = $this->c_rate_sinovac_mandaue_facility_second;
-        $c_rate_astra_mandaue_facility_second = $this->c_rate_astra_mandaue_facility_second;
-        $c_rate_sputnikv_mandaue_facility_second = $this->c_rate_sputnikv_mandaue_facility_second;
-        $c_rate_pfizer_mandaue_facility_second = $this->c_rate_pfizer_mandaue_facility_second;
-        $total_c_rate_mandaue_facility_second = $this->total_c_rate_mandaue_facility_second;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY SECOND A1
-        $c_rate_sinovac_lapu_facility_second = $this->c_rate_sinovac_lapu_facility_second;
-        $c_rate_astra_lapu_facility_second = $this->c_rate_astra_lapu_facility_second;
-        $c_rate_sputnikv_lapu_facility_second = $this->c_rate_sputnikv_lapu_facility_second;
-        $c_rate_pfizer_lapu_facility_second = $this->c_rate_pfizer_lapu_facility_second;
-        $total_c_rate_lapu_facility_second = $this->total_c_rate_lapu_facility_second;
 
 
         $this->setPriority("a2");
@@ -2754,86 +2561,6 @@ class VaccineController extends Controller
         $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
         $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
 
-        //PERCENT COVERAGE SINOVAC FIRST A2
-        $total_p_cvrge_sinovac_region_first += $this->total_p_cvrge_sinovac_region_first;
-        $p_cvrge_sinovac_bohol_first += $this->p_cvrge_sinovac_bohol_first;
-        $p_cvrge_sinovac_cebu_first += $this->p_cvrge_sinovac_cebu_first;
-        $p_cvrge_sinovac_negros_first += $this->p_cvrge_sinovac_negros_first;
-        $p_cvrge_sinovac_siquijor_first += $this->p_cvrge_sinovac_siquijor_first;
-        $p_cvrge_sinovac_cebu_facility_first += $this->p_cvrge_sinovac_cebu_facility_first;
-        $p_cvrge_sinovac_mandaue_facility_first += $this->p_cvrge_sinovac_mandaue_facility_first;
-        $p_cvrge_sinovac_lapu_facility_first += $this->p_cvrge_sinovac_lapu_facility_first;
-
-        //PERCENT COVERAGE ASTRA FIRST A2
-        $total_p_cvrge_astra_region_first += $this->total_p_cvrge_astra_region_first;
-        $p_cvrge_astra_bohol_first += $this->p_cvrge_astra_bohol_first;
-        $p_cvrge_astra_cebu_first += $this->p_cvrge_astra_cebu_first;
-        $p_cvrge_astra_negros_first += $this->p_cvrge_astra_negros_first;
-        $p_cvrge_astra_siquijor_first += $this->p_cvrge_astra_siquijor_first;
-        $p_cvrge_astra_cebu_facility_first += $this->p_cvrge_astra_cebu_facility_first;
-        $p_cvrge_astra_mandaue_facility_first += $this->p_cvrge_astra_mandaue_facility_first;
-        $p_cvrge_astra_lapu_facility_first += $this->p_cvrge_astra_lapu_facility_first;
-
-        //PERCENT COVERAGE SPUTNIKV FIRST A2
-        $total_p_cvrge_sputnikv_region_first += $this->total_p_cvrge_sputnikv_region_first;
-        $p_cvrge_sputnikv_bohol_first += $this->p_cvrge_sputnikv_bohol_first;
-        $p_cvrge_sputnikv_cebu_first += $this->p_cvrge_sputnikv_cebu_first;
-        $p_cvrge_sputnikv_negros_first += $this->p_cvrge_sputnikv_negros_first;
-        $p_cvrge_sputnikv_siquijor_first += $this->p_cvrge_sputnikv_siquijor_first;
-        $p_cvrge_sputnikv_cebu_facility_first += $this->p_cvrge_sputnikv_cebu_facility_first;
-        $p_cvrge_sputnikv_mandaue_facility_first += $this->p_cvrge_sputnikv_mandaue_facility_first;
-        $p_cvrge_sputnikv_lapu_facility_first += $this->p_cvrge_sputnikv_lapu_facility_first;
-
-        //PERCENT COVERAGE PFIZER FIRST A2
-        $total_p_cvrge_pfizer_region_first += $this->total_p_cvrge_pfizer_region_first;
-        $p_cvrge_pfizer_bohol_first += $this->p_cvrge_pfizer_bohol_first;
-        $p_cvrge_pfizer_cebu_first += $this->p_cvrge_pfizer_cebu_first;
-        $p_cvrge_pfizer_negros_first += $this->p_cvrge_pfizer_negros_first;
-        $p_cvrge_pfizer_siquijor_first += $this->p_cvrge_pfizer_siquijor_first;
-        $p_cvrge_pfizer_cebu_facility_first += $this->p_cvrge_pfizer_cebu_facility_first;
-        $p_cvrge_pfizer_mandaue_facility_first += $this->p_cvrge_pfizer_mandaue_facility_first;
-        $p_cvrge_pfizer_lapu_facility_first += $this->p_cvrge_pfizer_lapu_facility_first;
-
-        //PERCENT COVERAGE SINOVAC SECOND A2
-        $total_p_cvrge_sinovac_region_second += $this->total_p_cvrge_sinovac_region_second;
-        $p_cvrge_sinovac_bohol_second += $this->p_cvrge_sinovac_bohol_second;
-        $p_cvrge_sinovac_cebu_second += $this->p_cvrge_sinovac_cebu_second;
-        $p_cvrge_sinovac_negros_second += $this->p_cvrge_sinovac_negros_second;
-        $p_cvrge_sinovac_siquijor_second += $this->p_cvrge_sinovac_siquijor_second;
-        $p_cvrge_sinovac_cebu_facility_second += $this->p_cvrge_sinovac_cebu_facility_second;
-        $p_cvrge_sinovac_mandaue_facility_second += $this->p_cvrge_sinovac_mandaue_facility_second;
-        $p_cvrge_sinovac_lapu_facility_second += $this->p_cvrge_sinovac_lapu_facility_second;
-
-        //PERCENT COVERAGE ASTRA SECOND A2
-        $total_p_cvrge_astra_region_second += $this->total_p_cvrge_astra_region_second;
-        $p_cvrge_astra_bohol_second += $this->p_cvrge_astra_bohol_second;
-        $p_cvrge_astra_cebu_second += $this->p_cvrge_astra_cebu_second;
-        $p_cvrge_astra_negros_second += $this->p_cvrge_astra_negros_second;
-        $p_cvrge_astra_siquijor_second += $this->p_cvrge_astra_siquijor_second;
-        $p_cvrge_astra_cebu_facility_second += $this->p_cvrge_astra_cebu_facility_second;
-        $p_cvrge_astra_mandaue_facility_second += $this->p_cvrge_astra_mandaue_facility_second;
-        $p_cvrge_astra_lapu_facility_second += $this->p_cvrge_astra_lapu_facility_second;
-
-        //PERCENT COVERAGE SPUTNIKV SECOND A2
-        $total_p_cvrge_sputnikv_region_second += $this->total_p_cvrge_sputnikv_region_second;
-        $p_cvrge_sputnikv_bohol_second += $this->p_cvrge_sputnikv_bohol_second;
-        $p_cvrge_sputnikv_cebu_second += $this->p_cvrge_sputnikv_cebu_second;
-        $p_cvrge_sputnikv_negros_second += $this->p_cvrge_sputnikv_negros_second;
-        $p_cvrge_sputnikv_siquijor_second += $this->p_cvrge_sputnikv_siquijor_second;
-        $p_cvrge_sputnikv_cebu_facility_second += $this->p_cvrge_sputnikv_cebu_facility_second;
-        $p_cvrge_sputnikv_mandaue_facility_second += $this->p_cvrge_sputnikv_mandaue_facility_second;
-        $p_cvrge_sputnikv_lapu_facility_second += $this->p_cvrge_sputnikv_lapu_facility_second;
-
-        //PERCENT COVERAGE PFIZER SECOND A2
-        $total_p_cvrge_pfizer_region_second += $this->total_p_cvrge_pfizer_region_second;
-        $p_cvrge_pfizer_bohol_second += $this->p_cvrge_pfizer_bohol_second;
-        $p_cvrge_pfizer_cebu_second += $this->p_cvrge_pfizer_cebu_second;
-        $p_cvrge_pfizer_negros_second += $this->p_cvrge_pfizer_negros_second;
-        $p_cvrge_pfizer_siquijor_second += $this->p_cvrge_pfizer_siquijor_second;
-        $p_cvrge_pfizer_cebu_facility_second += $this->p_cvrge_pfizer_cebu_facility_second;
-        $p_cvrge_pfizer_mandaue_facility_second += $this->p_cvrge_pfizer_mandaue_facility_second;
-        $p_cvrge_pfizer_lapu_facility_second += $this->p_cvrge_pfizer_lapu_facility_second;
-
         //TOTAL REFUSED FIRST A2
         $total_refusal_first += $this->total_refusal_first;
         $refused_first_bohol += $this->refused_first_bohol;
@@ -2915,118 +2642,6 @@ class VaccineController extends Controller
         $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
         $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
         $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION FIRST A2
-        $total_c_rate_region_first += $this->total_c_rate_region_first;
-        $c_rate_region_sinovac_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_astra_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_sputnikv_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_sinovac_first += $this->c_rate_region_sinovac_first;
-
-        //CONSUMPTION RATE BOHOL FIRST A2
-        $c_rate_sinovac_bohol_first += $this->c_rate_sinovac_bohol_first;
-        $c_rate_astra_bohol_first += $this->c_rate_astra_bohol_first;
-        $c_rate_sputnikv_bohol_first += $this->c_rate_sputnikv_bohol_first;
-        $c_rate_pfizer_bohol_first += $this->c_rate_pfizer_bohol_first;
-        $total_c_rate_bohol_first += $this->total_c_rate_bohol_first;
-
-        //CONSUMPTION RATE CEBU FIRST A2
-        $c_rate_sinovac_cebu_first += $this->c_rate_sinovac_cebu_first;
-        $c_rate_astra_cebu_first += $this->c_rate_astra_cebu_first;
-        $c_rate_sputnikv_cebu_first += $this->c_rate_sputnikv_cebu_first;
-        $c_rate_pfizer_cebu_first += $this->c_rate_pfizer_cebu_first;
-        $total_c_rate_cebu_first += $this->total_c_rate_cebu_first;
-
-        //CONSUMPTION RATE NEGROS FIRST A2
-        $c_rate_sinovac_negros_first += $this->c_rate_sinovac_negros_first;
-        $c_rate_astra_negros_first += $this->c_rate_astra_negros_first;
-        $c_rate_sputnikv_negros_first += $this->c_rate_sputnikv_negros_first;
-        $c_rate_pfizer_negros_first += $this->c_rate_pfizer_negros_first;
-        $total_c_rate_negros_first += $this->total_c_rate_negros_first;
-
-        //CONSUMPTION RATE SIQUIJOR FIRST A2
-        $c_rate_sinovac_siquijor_first += $this->c_rate_sinovac_siquijor_first;
-        $c_rate_astra_siquijor_first += $this->c_rate_astra_siquijor_first;
-        $c_rate_sputnikv_siquijor_first += $this->c_rate_sputnikv_siquijor_first;
-        $c_rate_pfizer_siquijor_first += $this->c_rate_pfizer_siquijor_first;
-        $total_c_rate_siquijor_first += $this->total_c_rate_siquijor_first;
-
-        //CONSUMPTION RATE CEBU FACILITY FIRST A2
-        $c_rate_sinovac_cebu_facility_first += $this->c_rate_sinovac_cebu_facility_first;
-        $c_rate_astra_cebu_facility_first += $this->c_rate_astra_cebu_facility_first;
-        $c_rate_sputnikv_cebu_facility_first += $this->c_rate_sputnikv_cebu_facility_first;
-        $c_rate_pfizer_cebu_facility_first += $this->c_rate_pfizer_cebu_facility_first;
-        $total_c_rate_cebu_facility_first += $this->total_c_rate_cebu_facility_first;
-
-        //CONSUMPTION RATE MANDAUE FACILITY FIRST A2
-        $c_rate_sinovac_mandaue_facility_first += $this->c_rate_sinovac_mandaue_facility_first;
-        $c_rate_astra_mandaue_facility_first += $this->c_rate_astra_mandaue_facility_first;
-        $c_rate_sputnikv_mandaue_facility_first += $this->c_rate_sputnikv_mandaue_facility_first;
-        $c_rate_pfizer_mandaue_facility_first += $this->c_rate_pfizer_mandaue_facility_first;
-        $total_c_rate_mandaue_facility_first += $this->total_c_rate_mandaue_facility_first;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY FIRST A2
-        $c_rate_sinovac_lapu_facility_first += $this->c_rate_sinovac_lapu_facility_first;
-        $c_rate_astra_lapu_facility_first += $this->c_rate_astra_lapu_facility_first;
-        $c_rate_sputnikv_lapu_facility_first += $this->c_rate_sputnikv_lapu_facility_first;
-        $c_rate_pfizer_lapu_facility_first += $this->c_rate_pfizer_lapu_facility_first;
-        $total_c_rate_lapu_facility_first += $this->total_c_rate_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION SECOND A2
-        $total_c_rate_region_second += $this->total_c_rate_region_second;
-        $c_rate_region_sinovac_second += $this->c_rate_region_sinovac_second;
-        $c_rate_region_astra_second += $this->c_rate_region_astra_second;
-        $c_rate_region_sputnikv_second += $this->c_rate_region_sputnikv_second;
-        $c_rate_region_pfizer_second += $this->c_rate_region_pfizer_second;
-
-        //CONSUMPTION RATE BOHOL SECOND A2
-        $c_rate_sinovac_bohol_second += $this->c_rate_sinovac_bohol_second;
-        $c_rate_astra_bohol_second += $this->c_rate_astra_bohol_second;
-        $c_rate_sputnikv_bohol_second += $this->c_rate_sputnikv_bohol_second;
-        $c_rate_pfizer_bohol_second += $this->c_rate_pfizer_bohol_second;
-        $total_c_rate_bohol_second += $this->total_c_rate_bohol_second;
-
-        //CONSUMPTION RATE CEBU SECOND A2
-        $c_rate_sinovac_cebu_second += $this->c_rate_sinovac_cebu_second;
-        $c_rate_astra_cebu_second += $this->c_rate_astra_cebu_second;
-        $c_rate_sputnikv_cebu_second += $this->c_rate_sputnikv_cebu_second;
-        $c_rate_pfizer_cebu_second += $this->c_rate_pfizer_cebu_second;
-        $total_c_rate_cebu_second += $this->total_c_rate_cebu_second;
-
-        //CONSUMPTION RATE NEGROS SECOND A2
-        $c_rate_sinovac_negros_second += $this->c_rate_sinovac_negros_second;
-        $c_rate_astra_negros_second += $this->c_rate_astra_negros_second;
-        $c_rate_sputnikv_negros_second += $this->c_rate_sputnikv_negros_second;
-        $c_rate_pfizer_negros_second += $this->c_rate_pfizer_negros_second;
-        $total_c_rate_negros_second += $this->total_c_rate_negros_second;
-
-        //CONSUMPTION RATE SIQUIJOR SECOND A2
-        $c_rate_sinovac_siquijor_second += $this->c_rate_sinovac_siquijor_second;
-        $c_rate_astra_siquijor_second += $this->c_rate_astra_siquijor_second;
-        $c_rate_sputnikv_siquijor_second += $this->c_rate_sputnikv_siquijor_second;
-        $c_rate_pfizer_siquijor_second += $this->c_rate_pfizer_siquijor_second;
-        $total_c_rate_siquijor_second += $this->total_c_rate_siquijor_second;
-
-        //CONSUMPTION RATE CEBU FACILITY SECOND A2
-        $c_rate_sinovac_cebu_facility_second += $this->c_rate_sinovac_cebu_facility_second;
-        $c_rate_astra_cebu_facility_second += $this->c_rate_astra_cebu_facility_second;
-        $c_rate_sputnikv_cebu_facility_second += $this->c_rate_sputnikv_cebu_facility_second;
-        $c_rate_pfizer_cebu_facility_second += $this->c_rate_pfizer_cebu_facility_second;
-        $total_c_rate_cebu_facility_second += $this->total_c_rate_cebu_facility_second;
-
-        //CONSUMPTION RATE MANDAUE FACILITY SECOND A2
-        $c_rate_sinovac_mandaue_facility_second += $this->c_rate_sinovac_mandaue_facility_second;
-        $c_rate_astra_mandaue_facility_second += $this->c_rate_astra_mandaue_facility_second;
-        $c_rate_sputnikv_mandaue_facility_second += $this->c_rate_sputnikv_mandaue_facility_second;
-        $c_rate_pfizer_mandaue_facility_second += $this->c_rate_pfizer_mandaue_facility_second;
-        $total_c_rate_mandaue_facility_second += $this->total_c_rate_mandaue_facility_second;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY SECOND A2
-        $c_rate_sinovac_lapu_facility_second += $this->c_rate_sinovac_lapu_facility_second;
-        $c_rate_astra_lapu_facility_second += $this->c_rate_astra_lapu_facility_second;
-        $c_rate_sputnikv_lapu_facility_second += $this->c_rate_sputnikv_lapu_facility_second;
-        $c_rate_pfizer_lapu_facility_second += $this->c_rate_pfizer_lapu_facility_second;
-        $total_c_rate_lapu_facility_second += $this->total_c_rate_lapu_facility_second;
 
 
         $this->setPriority("a3");
@@ -3111,96 +2726,6 @@ class VaccineController extends Controller
         $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
         $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
 
-        //PERCENT COVERAGE SINOVAC FIRST A3
-        $total_p_cvrge_sinovac_region_first += $this->total_p_cvrge_sinovac_region_first;
-        $p_cvrge_sinovac_bohol_first += $this->p_cvrge_sinovac_bohol_first;
-        $p_cvrge_sinovac_cebu_first += $this->p_cvrge_sinovac_cebu_first;
-        $p_cvrge_sinovac_negros_first += $this->p_cvrge_sinovac_negros_first;
-        $p_cvrge_sinovac_siquijor_first += $this->p_cvrge_sinovac_siquijor_first;
-        $p_cvrge_sinovac_cebu_facility_first += $this->p_cvrge_sinovac_cebu_facility_first;
-        $p_cvrge_sinovac_mandaue_facility_first += $this->p_cvrge_sinovac_mandaue_facility_first;
-        $p_cvrge_sinovac_lapu_facility_first += $this->p_cvrge_sinovac_lapu_facility_first;
-
-        //PERCENT COVERAGE ASTRA FIRST A3
-        $total_p_cvrge_astra_region_first += $this->total_p_cvrge_astra_region_first;
-        $p_cvrge_astra_bohol_first += $this->p_cvrge_astra_bohol_first;
-        $p_cvrge_astra_cebu_first += $this->p_cvrge_astra_cebu_first;
-        $p_cvrge_astra_negros_first += $this->p_cvrge_astra_negros_first;
-        $p_cvrge_astra_siquijor_first += $this->p_cvrge_astra_siquijor_first;
-        $p_cvrge_astra_cebu_facility_first += $this->p_cvrge_astra_cebu_facility_first;
-        $p_cvrge_astra_mandaue_facility_first += $this->p_cvrge_astra_mandaue_facility_first;
-        $p_cvrge_astra_lapu_facility_first += $this->p_cvrge_astra_lapu_facility_first;
-
-        //PERCENT COVERAGE SPUTNIKV FIRST A3
-        $total_p_cvrge_sputnikv_region_first += $this->total_p_cvrge_sputnikv_region_first;
-        $p_cvrge_sputnikv_bohol_first += $this->p_cvrge_sputnikv_bohol_first;
-        $p_cvrge_sputnikv_cebu_first += $this->p_cvrge_sputnikv_cebu_first;
-        $p_cvrge_sputnikv_negros_first += $this->p_cvrge_sputnikv_negros_first;
-        $p_cvrge_sputnikv_siquijor_first += $this->p_cvrge_sputnikv_siquijor_first;
-        $p_cvrge_sputnikv_cebu_facility_first += $this->p_cvrge_sputnikv_cebu_facility_first;
-        $p_cvrge_sputnikv_mandaue_facility_first += $this->p_cvrge_sputnikv_mandaue_facility_first;
-        $p_cvrge_sputnikv_lapu_facility_first += $this->p_cvrge_sputnikv_lapu_facility_first;
-
-        //PERCENT COVERAGE PFIZER FIRST A3
-        $total_p_cvrge_pfizer_region_first += $this->total_p_cvrge_pfizer_region_first;
-        $p_cvrge_pfizer_bohol_first += $this->p_cvrge_pfizer_bohol_first;
-        $p_cvrge_pfizer_cebu_first += $this->p_cvrge_pfizer_cebu_first;
-        $p_cvrge_pfizer_negros_first += $this->p_cvrge_pfizer_negros_first;
-        $p_cvrge_pfizer_siquijor_first += $this->p_cvrge_pfizer_siquijor_first;
-        $p_cvrge_pfizer_cebu_facility_first += $this->p_cvrge_pfizer_cebu_facility_first;
-        $p_cvrge_pfizer_mandaue_facility_first += $this->p_cvrge_pfizer_mandaue_facility_first;
-        $p_cvrge_pfizer_lapu_facility_first += $this->p_cvrge_pfizer_lapu_facility_first;
-
-        //PERCENT COVERAGE SINOVAC SECOND A3
-        $total_p_cvrge_sinovac_region_second += $this->total_p_cvrge_sinovac_region_second;
-        $p_cvrge_sinovac_bohol_second += $this->p_cvrge_sinovac_bohol_second;
-        $p_cvrge_sinovac_cebu_second += $this->p_cvrge_sinovac_cebu_second;
-        $p_cvrge_sinovac_negros_second += $this->p_cvrge_sinovac_negros_second;
-        $p_cvrge_sinovac_siquijor_second += $this->p_cvrge_sinovac_siquijor_second;
-        $p_cvrge_sinovac_cebu_facility_second += $this->p_cvrge_sinovac_cebu_facility_second;
-        $p_cvrge_sinovac_mandaue_facility_second += $this->p_cvrge_sinovac_mandaue_facility_second;
-        $p_cvrge_sinovac_lapu_facility_second += $this->p_cvrge_sinovac_lapu_facility_second;
-
-        //PERCENT COVERAGE ASTRA SECOND A3
-        $total_p_cvrge_astra_region_second += $this->total_p_cvrge_astra_region_second;
-        $p_cvrge_astra_bohol_second += $this->p_cvrge_astra_bohol_second;
-        $p_cvrge_astra_cebu_second += $this->p_cvrge_astra_cebu_second;
-        $p_cvrge_astra_negros_second += $this->p_cvrge_astra_negros_second;
-        $p_cvrge_astra_siquijor_second += $this->p_cvrge_astra_siquijor_second;
-        $p_cvrge_astra_cebu_facility_second += $this->p_cvrge_astra_cebu_facility_second;
-        $p_cvrge_astra_mandaue_facility_second += $this->p_cvrge_astra_mandaue_facility_second;
-        $p_cvrge_astra_lapu_facility_second += $this->p_cvrge_astra_lapu_facility_second;
-
-        //PERCENT COVERAGE SPUTNIKV SECOND A3
-        $total_p_cvrge_sputnikv_region_second += $this->total_p_cvrge_sputnikv_region_second;
-        $p_cvrge_sputnikv_bohol_second += $this->p_cvrge_sputnikv_bohol_second;
-        $p_cvrge_sputnikv_cebu_second += $this->p_cvrge_sputnikv_cebu_second;
-        $p_cvrge_sputnikv_negros_second += $this->p_cvrge_sputnikv_negros_second;
-        $p_cvrge_sputnikv_siquijor_second += $this->p_cvrge_sputnikv_siquijor_second;
-        $p_cvrge_sputnikv_cebu_facility_second += $this->p_cvrge_sputnikv_cebu_facility_second;
-        $p_cvrge_sputnikv_mandaue_facility_second += $this->p_cvrge_sputnikv_mandaue_facility_second;
-        $p_cvrge_sputnikv_lapu_facility_second += $this->p_cvrge_sputnikv_lapu_facility_second;
-
-        //PERCENT COVERAGE PFIZER SECOND A3
-        $total_p_cvrge_pfizer_region_second += $this->total_p_cvrge_pfizer_region_second;
-        $p_cvrge_pfizer_bohol_second += $this->p_cvrge_pfizer_bohol_second;
-        $p_cvrge_pfizer_cebu_second += $this->p_cvrge_pfizer_cebu_second;
-        $p_cvrge_pfizer_negros_second += $this->p_cvrge_pfizer_negros_second;
-        $p_cvrge_pfizer_siquijor_second += $this->p_cvrge_pfizer_siquijor_second;
-        $p_cvrge_pfizer_cebu_facility_second += $this->p_cvrge_pfizer_cebu_facility_second;
-        $p_cvrge_pfizer_mandaue_facility_second += $this->p_cvrge_pfizer_mandaue_facility_second;
-        $p_cvrge_pfizer_lapu_facility_second += $this->p_cvrge_pfizer_lapu_facility_second;
-
-        //TOTAL REFUSED FIRST A3
-        $total_refusal_first += $this->total_refusal_first;
-        $refused_first_bohol += $this->refused_first_bohol;
-        $refused_first_cebu += $this->refused_first_cebu;
-        $refused_first_negros += $this->refused_first_negros;
-        $refused_first_siquijor += $this->refused_first_siquijor;
-        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
-        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
-        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
-
         //TOTAL REFUSED SECOND A3
         $total_refusal_second += $this->total_refusal_second;
         $refused_second_bohol += $this->refused_second_bohol;
@@ -3272,119 +2797,6 @@ class VaccineController extends Controller
         $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
         $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
         $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION FIRST A3
-        $total_c_rate_region_first += $this->total_c_rate_region_first;
-        $c_rate_region_sinovac_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_astra_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_sputnikv_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_sinovac_first += $this->c_rate_region_sinovac_first;
-
-        //CONSUMPTION RATE BOHOL FIRST A3
-        $c_rate_sinovac_bohol_first += $this->c_rate_sinovac_bohol_first;
-        $c_rate_astra_bohol_first += $this->c_rate_astra_bohol_first;
-        $c_rate_sputnikv_bohol_first += $this->c_rate_sputnikv_bohol_first;
-        $c_rate_pfizer_bohol_first += $this->c_rate_pfizer_bohol_first;
-        $total_c_rate_bohol_first += $this->total_c_rate_bohol_first;
-
-        //CONSUMPTION RATE CEBU FIRST A3
-        $c_rate_sinovac_cebu_first += $this->c_rate_sinovac_cebu_first;
-        $c_rate_astra_cebu_first += $this->c_rate_astra_cebu_first;
-        $c_rate_sputnikv_cebu_first += $this->c_rate_sputnikv_cebu_first;
-        $c_rate_pfizer_cebu_first += $this->c_rate_pfizer_cebu_first;
-        $total_c_rate_cebu_first += $this->total_c_rate_cebu_first;
-
-        //CONSUMPTION RATE NEGROS FIRST A3
-        $c_rate_sinovac_negros_first += $this->c_rate_sinovac_negros_first;
-        $c_rate_astra_negros_first += $this->c_rate_astra_negros_first;
-        $c_rate_sputnikv_negros_first += $this->c_rate_sputnikv_negros_first;
-        $c_rate_pfizer_negros_first += $this->c_rate_pfizer_negros_first;
-        $total_c_rate_negros_first += $this->total_c_rate_negros_first;
-
-        //CONSUMPTION RATE SIQUIJOR FIRST A3
-        $c_rate_sinovac_siquijor_first += $this->c_rate_sinovac_siquijor_first;
-        $c_rate_astra_siquijor_first += $this->c_rate_astra_siquijor_first;
-        $c_rate_sputnikv_siquijor_first += $this->c_rate_sputnikv_siquijor_first;
-        $c_rate_pfizer_siquijor_first += $this->c_rate_pfizer_siquijor_first;
-        $total_c_rate_siquijor_first += $this->total_c_rate_siquijor_first;
-
-        //CONSUMPTION RATE CEBU FACILITY FIRST A3
-        $c_rate_sinovac_cebu_facility_first += $this->c_rate_sinovac_cebu_facility_first;
-        $c_rate_astra_cebu_facility_first += $this->c_rate_astra_cebu_facility_first;
-        $c_rate_sputnikv_cebu_facility_first += $this->c_rate_sputnikv_cebu_facility_first;
-        $c_rate_pfizer_cebu_facility_first += $this->c_rate_pfizer_cebu_facility_first;
-        $total_c_rate_cebu_facility_first += $this->total_c_rate_cebu_facility_first;
-
-        //CONSUMPTION RATE MANDAUE FACILITY FIRST A3
-        $c_rate_sinovac_mandaue_facility_first += $this->c_rate_sinovac_mandaue_facility_first;
-        $c_rate_astra_mandaue_facility_first += $this->c_rate_astra_mandaue_facility_first;
-        $c_rate_sputnikv_mandaue_facility_first += $this->c_rate_sputnikv_mandaue_facility_first;
-        $c_rate_pfizer_mandaue_facility_first += $this->c_rate_pfizer_mandaue_facility_first;
-        $total_c_rate_mandaue_facility_first += $this->total_c_rate_mandaue_facility_first;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY FIRST A3
-        $c_rate_sinovac_lapu_facility_first += $this->c_rate_sinovac_lapu_facility_first;
-        $c_rate_astra_lapu_facility_first += $this->c_rate_astra_lapu_facility_first;
-        $c_rate_sputnikv_lapu_facility_first += $this->c_rate_sputnikv_lapu_facility_first;
-        $c_rate_pfizer_lapu_facility_first += $this->c_rate_pfizer_lapu_facility_first;
-        $total_c_rate_lapu_facility_first += $this->total_c_rate_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION SECOND A3
-        $total_c_rate_region_second += $this->total_c_rate_region_second;
-        $c_rate_region_sinovac_second += $this->c_rate_region_sinovac_second;
-        $c_rate_region_astra_second += $this->c_rate_region_astra_second;
-        $c_rate_region_sputnikv_second += $this->c_rate_region_sputnikv_second;
-        $c_rate_region_sinovac_second += $this->c_rate_region_pfizer_second;
-
-        //CONSUMPTION RATE BOHOL SECOND A3
-        $c_rate_sinovac_bohol_second += $this->c_rate_sinovac_bohol_second;
-        $c_rate_astra_bohol_second += $this->c_rate_astra_bohol_second;
-        $c_rate_sputnikv_bohol_second += $this->c_rate_sputnikv_bohol_second;
-        $c_rate_pfizer_bohol_second += $this->c_rate_pfizer_bohol_second;
-        $total_c_rate_bohol_second += $this->total_c_rate_bohol_second;
-
-        //CONSUMPTION RATE CEBU SECOND A3
-        $c_rate_sinovac_cebu_second += $this->c_rate_sinovac_cebu_second;
-        $c_rate_astra_cebu_second += $this->c_rate_astra_cebu_second;
-        $c_rate_sputnikv_cebu_second += $this->c_rate_sputnikv_cebu_second;
-        $c_rate_pfizer_cebu_second += $this->c_rate_pfizer_cebu_second;
-        $total_c_rate_cebu_second += $this->total_c_rate_cebu_second;
-
-        //CONSUMPTION RATE NEGROS SECOND A3
-        $c_rate_sinovac_negros_second += $this->c_rate_sinovac_negros_second;
-        $c_rate_astra_negros_second += $this->c_rate_astra_negros_second;
-        $c_rate_sputnikv_negros_second += $this->c_rate_sputnikv_negros_second;
-        $c_rate_pfizer_negros_second += $this->c_rate_pfizer_negros_second;
-        $total_c_rate_negros_second += $this->total_c_rate_negros_second;
-
-        //CONSUMPTION RATE SIQUIJOR SECOND A3
-        $c_rate_sinovac_siquijor_second += $this->c_rate_sinovac_siquijor_second;
-        $c_rate_astra_siquijor_second += $this->c_rate_astra_siquijor_second;
-        $c_rate_sputnikv_siquijor_second += $this->c_rate_sputnikv_siquijor_second;
-        $c_rate_pfizer_siquijor_second += $this->c_rate_pfizer_siquijor_second;
-        $total_c_rate_siquijor_second += $this->total_c_rate_siquijor_second;
-
-        //CONSUMPTION RATE CEBU FACILITY SECOND A3
-        $c_rate_sinovac_cebu_facility_second += $this->c_rate_sinovac_cebu_facility_second;
-        $c_rate_astra_cebu_facility_second += $this->c_rate_astra_cebu_facility_second;
-        $c_rate_sputnikv_cebu_facility_second += $this->c_rate_sputnikv_cebu_facility_second;
-        $c_rate_pfizer_cebu_facility_second += $this->c_rate_pfizer_cebu_facility_second;
-        $total_c_rate_cebu_facility_second += $this->total_c_rate_cebu_facility_second;
-
-        //CONSUMPTION RATE MANDAUE FACILITY SECOND A3
-        $c_rate_sinovac_mandaue_facility_second += $this->c_rate_sinovac_mandaue_facility_second;
-        $c_rate_astra_mandaue_facility_second += $this->c_rate_astra_mandaue_facility_second;
-        $c_rate_sputnikv_mandaue_facility_second += $this->c_rate_sputnikv_mandaue_facility_second;
-        $c_rate_pfizer_mandaue_facility_second += $this->c_rate_pfizer_mandaue_facility_second;
-        $total_c_rate_mandaue_facility_second += $this->total_c_rate_mandaue_facility_second;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY SECOND A3
-        $c_rate_sinovac_lapu_facility_second += $this->c_rate_sinovac_lapu_facility_second;
-        $c_rate_astra_lapu_facility_second += $this->c_rate_astra_lapu_facility_second;
-        $c_rate_sputnikv_lapu_facility_second += $this->c_rate_sputnikv_lapu_facility_second;
-        $c_rate_pfizer_lapu_facility_second += $this->c_rate_pfizer_lapu_facility_second;
-        $total_c_rate_lapu_facility_second += $this->total_c_rate_lapu_facility_second;
-
 
         $this->setPriority("a4");
         $total_elipop_region += $this->total_elipop_region;
@@ -3468,85 +2880,6 @@ class VaccineController extends Controller
         $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
         $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
 
-        //PERCENT COVERAGE SINOVAC FIRST A4
-        $total_p_cvrge_sinovac_region_first += $this->total_p_cvrge_sinovac_region_first;
-        $p_cvrge_sinovac_bohol_first += $this->p_cvrge_sinovac_bohol_first;
-        $p_cvrge_sinovac_cebu_first += $this->p_cvrge_sinovac_cebu_first;
-        $p_cvrge_sinovac_negros_first += $this->p_cvrge_sinovac_negros_first;
-        $p_cvrge_sinovac_siquijor_first += $this->p_cvrge_sinovac_siquijor_first;
-        $p_cvrge_sinovac_cebu_facility_first += $this->p_cvrge_sinovac_cebu_facility_first;
-        $p_cvrge_sinovac_mandaue_facility_first += $this->p_cvrge_sinovac_mandaue_facility_first;
-        $p_cvrge_sinovac_lapu_facility_first += $this->p_cvrge_sinovac_lapu_facility_first;
-
-        //PERCENT COVERAGE ASTRA FIRST A4
-        $total_p_cvrge_astra_region_first += $this->total_p_cvrge_astra_region_first;
-        $p_cvrge_astra_bohol_first += $this->p_cvrge_astra_bohol_first;
-        $p_cvrge_astra_cebu_first += $this->p_cvrge_astra_cebu_first;
-        $p_cvrge_astra_negros_first += $this->p_cvrge_astra_negros_first;
-        $p_cvrge_astra_siquijor_first += $this->p_cvrge_astra_siquijor_first;
-        $p_cvrge_astra_cebu_facility_first += $this->p_cvrge_astra_cebu_facility_first;
-        $p_cvrge_astra_mandaue_facility_first += $this->p_cvrge_astra_mandaue_facility_first;
-        $p_cvrge_astra_lapu_facility_first += $this->p_cvrge_astra_lapu_facility_first;
-
-        //PERCENT COVERAGE SPUTNIKV FIRST A4
-        $total_p_cvrge_sputnikv_region_first += $this->total_p_cvrge_sputnikv_region_first;
-        $p_cvrge_sputnikv_bohol_first += $this->p_cvrge_sputnikv_bohol_first;
-        $p_cvrge_sputnikv_cebu_first += $this->p_cvrge_sputnikv_cebu_first;
-        $p_cvrge_sputnikv_negros_first += $this->p_cvrge_sputnikv_negros_first;
-        $p_cvrge_sputnikv_siquijor_first += $this->p_cvrge_sputnikv_siquijor_first;
-        $p_cvrge_sputnikv_cebu_facility_first += $this->p_cvrge_sputnikv_cebu_facility_first;
-        $p_cvrge_sputnikv_mandaue_facility_first += $this->p_cvrge_sputnikv_mandaue_facility_first;
-        $p_cvrge_sputnikv_lapu_facility_first += $this->p_cvrge_sputnikv_lapu_facility_first;
-
-        //PERCENT COVERAGE PFIZER FIRST A4
-        $total_p_cvrge_pfizer_region_first += $this->total_p_cvrge_pfizer_region_first;
-        $p_cvrge_pfizer_bohol_first += $this->p_cvrge_pfizer_bohol_first;
-        $p_cvrge_pfizer_cebu_first += $this->p_cvrge_pfizer_cebu_first;
-        $p_cvrge_pfizer_negros_first += $this->p_cvrge_pfizer_negros_first;
-        $p_cvrge_pfizer_siquijor_first += $this->p_cvrge_pfizer_siquijor_first;
-        $p_cvrge_pfizer_cebu_facility_first += $this->p_cvrge_pfizer_cebu_facility_first;
-        $p_cvrge_pfizer_mandaue_facility_first += $this->p_cvrge_pfizer_mandaue_facility_first;
-        $p_cvrge_pfizer_lapu_facility_first += $this->p_cvrge_pfizer_lapu_facility_first;
-
-        //PERCENT COVERAGE SINOVAC SECOND A4
-        $total_p_cvrge_sinovac_region_second += $this->total_p_cvrge_sinovac_region_second;
-        $p_cvrge_sinovac_bohol_second += $this->p_cvrge_sinovac_bohol_second;
-        $p_cvrge_sinovac_cebu_second += $this->p_cvrge_sinovac_cebu_second;
-        $p_cvrge_sinovac_negros_second += $this->p_cvrge_sinovac_negros_second;
-        $p_cvrge_sinovac_siquijor_second += $this->p_cvrge_sinovac_siquijor_second;
-        $p_cvrge_sinovac_cebu_facility_second += $this->p_cvrge_sinovac_cebu_facility_second;
-        $p_cvrge_sinovac_mandaue_facility_second += $this->p_cvrge_sinovac_mandaue_facility_second;
-        $p_cvrge_sinovac_lapu_facility_second += $this->p_cvrge_sinovac_lapu_facility_second;
-
-        //PERCENT COVERAGE ASTRA SECOND A4
-        $total_p_cvrge_astra_region_second += $this->total_p_cvrge_astra_region_second;
-        $p_cvrge_astra_bohol_second += $this->p_cvrge_astra_bohol_second;
-        $p_cvrge_astra_cebu_second += $this->p_cvrge_astra_cebu_second;
-        $p_cvrge_astra_negros_second += $this->p_cvrge_astra_negros_second;
-        $p_cvrge_astra_siquijor_second += $this->p_cvrge_astra_siquijor_second;
-        $p_cvrge_astra_cebu_facility_second += $this->p_cvrge_astra_cebu_facility_second;
-        $p_cvrge_astra_mandaue_facility_second += $this->p_cvrge_astra_mandaue_facility_second;
-        $p_cvrge_astra_lapu_facility_second += $this->p_cvrge_astra_lapu_facility_second;
-
-        //PERCENT COVERAGE SPUTNIKV SECOND A4
-        $total_p_cvrge_sputnikv_region_second += $this->total_p_cvrge_sputnikv_region_second;
-        $p_cvrge_sputnikv_bohol_second += $this->p_cvrge_sputnikv_bohol_second;
-        $p_cvrge_sputnikv_cebu_second += $this->p_cvrge_sputnikv_cebu_second;
-        $p_cvrge_sputnikv_negros_second += $this->p_cvrge_sputnikv_negros_second;
-        $p_cvrge_sputnikv_siquijor_second += $this->p_cvrge_sputnikv_siquijor_second;
-        $p_cvrge_sputnikv_cebu_facility_second += $this->p_cvrge_sputnikv_cebu_facility_second;
-        $p_cvrge_sputnikv_mandaue_facility_second += $this->p_cvrge_sputnikv_mandaue_facility_second;
-        $p_cvrge_sputnikv_lapu_facility_second += $this->p_cvrge_sputnikv_lapu_facility_second;
-
-        //PERCENT COVERAGE PFIZER SECOND A4
-        $total_p_cvrge_pfizer_region_second += $this->total_p_cvrge_pfizer_region_second;
-        $p_cvrge_pfizer_bohol_second += $this->p_cvrge_pfizer_bohol_second;
-        $p_cvrge_pfizer_cebu_second += $this->p_cvrge_pfizer_cebu_second;
-        $p_cvrge_pfizer_negros_second += $this->p_cvrge_pfizer_negros_second;
-        $p_cvrge_pfizer_siquijor_second += $this->p_cvrge_pfizer_siquijor_second;
-        $p_cvrge_pfizer_cebu_facility_second += $this->p_cvrge_pfizer_cebu_facility_second;
-        $p_cvrge_pfizer_mandaue_facility_second += $this->p_cvrge_pfizer_mandaue_facility_second;
-        $p_cvrge_pfizer_lapu_facility_second += $this->p_cvrge_pfizer_lapu_facility_second;
 
         //TOTAL REFUSED FIRST A4
         $total_refusal_first += $this->total_refusal_first;
@@ -3630,118 +2963,6 @@ class VaccineController extends Controller
         $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
         $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
 
-        //CONSUMPTION RATE REGION FIRST A4
-        $total_c_rate_region_first += $this->total_c_rate_region_first;
-        $c_rate_region_sinovac_first += $this->c_rate_region_sinovac_first;
-        $c_rate_region_astra_first += $this->c_rate_region_astra_first;
-        $c_rate_region_sputnikv_first += $this->c_rate_region_sputnikv_first;
-        $c_rate_region_pfizer_first += $this->c_rate_region_pfizer_first;
-
-        //CONSUMPTION RATE BOHOL FIRST A4
-        $c_rate_sinovac_bohol_first += $this->c_rate_sinovac_bohol_first;
-        $c_rate_astra_bohol_first += $this->c_rate_astra_bohol_first;
-        $c_rate_sputnikv_bohol_first += $this->c_rate_sputnikv_bohol_first;
-        $c_rate_pfizer_bohol_first += $this->c_rate_pfizer_bohol_first;
-        $total_c_rate_bohol_first += $this->total_c_rate_bohol_first;
-
-        //CONSUMPTION RATE CEBU FIRST A4
-        $c_rate_sinovac_cebu_first += $this->c_rate_sinovac_cebu_first;
-        $c_rate_astra_cebu_first += $this->c_rate_astra_cebu_first;
-        $c_rate_sputnikv_cebu_first += $this->c_rate_sputnikv_cebu_first;
-        $c_rate_pfizer_cebu_first += $this->c_rate_pfizer_cebu_first;
-        $total_c_rate_cebu_first += $this->total_c_rate_cebu_first;
-
-        //CONSUMPTION RATE NEGROS FIRST A4
-        $c_rate_sinovac_negros_first += $this->c_rate_sinovac_negros_first;
-        $c_rate_astra_negros_first += $this->c_rate_astra_negros_first;
-        $c_rate_sputnikv_negros_first += $this->c_rate_sputnikv_negros_first;
-        $c_rate_pfizer_negros_first += $this->c_rate_pfizer_negros_first;
-        $total_c_rate_negros_first += $this->total_c_rate_negros_first;
-
-        //CONSUMPTION RATE SIQUIJOR FIRST A4
-        $c_rate_sinovac_siquijor_first += $this->c_rate_sinovac_siquijor_first;
-        $c_rate_astra_siquijor_first += $this->c_rate_astra_siquijor_first;
-        $c_rate_sputnikv_siquijor_first += $this->c_rate_sputnikv_siquijor_first;
-        $c_rate_pfizer_siquijor_first += $this->c_rate_pfizer_siquijor_first;
-        $total_c_rate_siquijor_first += $this->total_c_rate_siquijor_first;
-
-        //CONSUMPTION RATE CEBU FACILITY FIRST A4
-        $c_rate_sinovac_cebu_facility_first += $this->c_rate_sinovac_cebu_facility_first;
-        $c_rate_astra_cebu_facility_first += $this->c_rate_astra_cebu_facility_first;
-        $c_rate_sputnikv_cebu_facility_first += $this->c_rate_sputnikv_cebu_facility_first;
-        $c_rate_pfizer_cebu_facility_first += $this->c_rate_pfizer_cebu_facility_first;
-        $total_c_rate_cebu_facility_first += $this->total_c_rate_cebu_facility_first;
-
-        //CONSUMPTION RATE MANDAUE FACILITY FIRST A4
-        $c_rate_sinovac_mandaue_facility_first += $this->c_rate_sinovac_mandaue_facility_first;
-        $c_rate_astra_mandaue_facility_first += $this->c_rate_astra_mandaue_facility_first;
-        $c_rate_sputnikv_mandaue_facility_first += $this->c_rate_sputnikv_mandaue_facility_first;
-        $c_rate_pfizer_mandaue_facility_first += $this->c_rate_pfizer_mandaue_facility_first;
-        $total_c_rate_mandaue_facility_first += $this->total_c_rate_mandaue_facility_first;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY FIRST A4
-        $c_rate_sinovac_lapu_facility_first += $this->c_rate_sinovac_lapu_facility_first;
-        $c_rate_astra_lapu_facility_first += $this->c_rate_astra_lapu_facility_first;
-        $c_rate_sputnikv_lapu_facility_first += $this->c_rate_sputnikv_lapu_facility_first;
-        $c_rate_pfizer_lapu_facility_first += $this->c_rate_pfizer_lapu_facility_first;
-        $total_c_rate_lapu_facility_first += $this->total_c_rate_lapu_facility_first;
-
-        //CONSUMPTION RATE REGION SECOND A4
-        $total_c_rate_region_second += $this->total_c_rate_region_second;
-        $c_rate_region_sinovac_second += $this->c_rate_region_sinovac_second;
-        $c_rate_region_astra_second += $this->c_rate_region_astra_second;
-        $c_rate_region_sputnikv_second += $this->c_rate_region_sputnikv_second;
-        $c_rate_region_pfizer_second += $this->c_rate_region_pfizer_second;
-
-        //CONSUMPTION RATE BOHOL SECOND A4
-        $c_rate_sinovac_bohol_second += $this->c_rate_sinovac_bohol_second;
-        $c_rate_astra_bohol_second += $this->c_rate_astra_bohol_second;
-        $c_rate_sputnikv_bohol_second += $this->c_rate_sputnikv_bohol_second;
-        $c_rate_pfizer_bohol_second += $this->c_rate_pfizer_bohol_second;
-        $total_c_rate_bohol_second += $this->total_c_rate_bohol_second;
-
-        //CONSUMPTION RATE CEBU SECOND A4
-        $c_rate_sinovac_cebu_second += $this->c_rate_sinovac_cebu_second;
-        $c_rate_astra_cebu_second += $this->c_rate_astra_cebu_second;
-        $c_rate_sputnikv_cebu_second += $this->c_rate_sputnikv_cebu_second;
-        $c_rate_pfizer_cebu_second += $this->c_rate_pfizer_cebu_second;
-        $total_c_rate_cebu_second += $this->total_c_rate_cebu_second;
-
-        //CONSUMPTION RATE NEGROS SECOND A4
-        $c_rate_sinovac_negros_second += $this->c_rate_sinovac_negros_second;
-        $c_rate_astra_negros_second += $this->c_rate_astra_negros_second;
-        $c_rate_sputnikv_negros_second += $this->c_rate_sputnikv_negros_second;
-        $c_rate_pfizer_negros_second += $this->c_rate_pfizer_negros_second;
-        $total_c_rate_negros_second += $this->total_c_rate_negros_second;
-
-        //CONSUMPTION RATE SIQUIJOR SECOND A4
-        $c_rate_sinovac_siquijor_second += $this->c_rate_sinovac_siquijor_second;
-        $c_rate_astra_siquijor_second += $this->c_rate_astra_siquijor_second;
-        $c_rate_sputnikv_siquijor_second += $this->c_rate_sputnikv_siquijor_second;
-        $c_rate_pfizer_siquijor_second += $this->c_rate_pfizer_siquijor_second;
-        $total_c_rate_siquijor_second += $this->total_c_rate_siquijor_second;
-
-        //CONSUMPTION RATE CEBU FACILITY SECOND A4
-        $c_rate_sinovac_cebu_facility_second += $this->c_rate_sinovac_cebu_facility_second;
-        $c_rate_astra_cebu_facility_second += $this->c_rate_astra_cebu_facility_second;
-        $c_rate_sputnikv_cebu_facility_second += $this->c_rate_sputnikv_cebu_facility_second;
-        $c_rate_pfizer_cebu_facility_second += $this->c_rate_pfizer_cebu_facility_second;
-        $total_c_rate_cebu_facility_second += $this->total_c_rate_cebu_facility_second;
-
-        //CONSUMPTION RATE MANDAUE FACILITY SECOND A4
-        $c_rate_sinovac_mandaue_facility_second += $this->c_rate_sinovac_mandaue_facility_second;
-        $c_rate_astra_mandaue_facility_second += $this->c_rate_astra_mandaue_facility_second;
-        $c_rate_sputnikv_mandaue_facility_second += $this->c_rate_sputnikv_mandaue_facility_second;
-        $c_rate_pfizer_mandaue_facility_second += $this->c_rate_pfizer_mandaue_facility_second;
-        $total_c_rate_mandaue_facility_second += $this->total_c_rate_mandaue_facility_second;
-
-        //CONSUMPTION RATE LAPU-LAPU FACILITY SECOND A4
-        $c_rate_sinovac_lapu_facility_second += $this->c_rate_sinovac_lapu_facility_second;
-        $c_rate_astra_lapu_facility_second += $this->c_rate_astra_lapu_facility_second;
-        $c_rate_sputnikv_lapu_facility_second += $this->c_rate_sputnikv_lapu_facility_second;
-        $c_rate_pfizer_lapu_facility_second += $this->c_rate_pfizer_lapu_facility_second;
-        $total_c_rate_lapu_facility_second += $this->total_c_rate_lapu_facility_second;
-
         //GRAND OVERALL
         $this->total_elipop_region = $total_elipop_region;
         $this->eli_pop_bohol = $eli_pop_bohol;
@@ -3824,85 +3045,85 @@ class VaccineController extends Controller
         $this->vcted_pfizer_lapu_facility_first = $vcted_pfizer_lapu_facility_first;
         $this->vcted_pfizer_lapu_facility_second = $vcted_pfizer_lapu_facility_second;
 
-        //GRAND OVERALL PERCENT COVERAGE SINOVAC FIRST
-        $this->total_p_cvrge_sinovac_region_first = $total_p_cvrge_sinovac_region_first;
-        $this->p_cvrge_sinovac_bohol_first = $p_cvrge_sinovac_bohol_first;
-        $this->p_cvrge_sinovac_cebu_first = $p_cvrge_sinovac_cebu_first;
-        $this->p_cvrge_sinovac_negros_first = $p_cvrge_sinovac_negros_first;
-        $this->p_cvrge_sinovac_siquijor_first = $p_cvrge_sinovac_siquijor_first;
-        $this->p_cvrge_sinovac_cebu_facility_first = $p_cvrge_sinovac_cebu_facility_first;
-        $this->p_cvrge_sinovac_mandaue_facility_first = $p_cvrge_sinovac_mandaue_facility_first;
-        $this->p_cvrge_sinovac_lapu_facility_first = $p_cvrge_sinovac_lapu_facility_first;
+        //PERCENT COVERAGE SINOVAC FIRST
+        $this->total_p_cvrge_sinovac_region_first = number_format($this->region_sinovac_first_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_sinovac_bohol_first = number_format($this->vcted_sinovac_bohol_first / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_sinovac_cebu_first = number_format($this->vcted_sinovac_cebu_first / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_sinovac_negros_first = number_format($this->vcted_sinovac_negros_first / $eli_pop_negros * 100,2);
+        $this->p_cvrge_sinovac_siquijor_first = number_format($this->vcted_sinovac_siquijor_first / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_sinovac_cebu_facility_first = number_format($this->vcted_sinovac_cebu_facility_first / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_sinovac_mandaue_facility_first =  number_format($this->vcted_sinovac_mandaue_facility_first / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_sinovac_lapu_facility_first =  number_format($this->vcted_sinovac_lapu_facility_first / $eli_pop_lapu_facility * 100,2);
 
-        //GRAND OVERALL PERCENT COVERAGE ASTRA FIRST
-        $this->total_p_cvrge_astra_region_first = $total_p_cvrge_astra_region_first;
-        $this->p_cvrge_astra_bohol_first = $p_cvrge_astra_bohol_first;
-        $this->p_cvrge_astra_cebu_first = $p_cvrge_astra_cebu_first;
-        $this->p_cvrge_astra_negros_first = $p_cvrge_astra_negros_first;
-        $this->p_cvrge_astra_siquijor_first = $p_cvrge_astra_siquijor_first;
-        $this->p_cvrge_astra_cebu_facility_first = $p_cvrge_astra_cebu_facility_first;
-        $this->p_cvrge_astra_mandaue_facility_first = $p_cvrge_astra_mandaue_facility_first;
-        $this->p_cvrge_astra_lapu_facility_first = $p_cvrge_astra_lapu_facility_first;
+        //PERCENT COVERAGE ASTRA FIRST
+        $this->total_p_cvrge_astra_region_first = number_format($this->region_astra_first_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_astra_bohol_first =   number_format($this->vcted_astra_bohol_first / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_astra_cebu_first = number_format($this->vcted_astra_cebu_first / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_astra_negros_first = number_format($this->vcted_astra_negros_first / $eli_pop_negros * 100,2);
+        $this->p_cvrge_astra_siquijor_first = number_format($this->vcted_astra_siquijor_first / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_astra_cebu_facility_first = number_format($this->vcted_astra_cebu_facility_first / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_astra_mandaue_facility_first = number_format($this->vcted_astra_mandaue_facility_first / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_astra_lapu_facility_first = number_format($this->vcted_astra_lapu_facility_first / $eli_pop_lapu_facility * 100,2);
 
-        //GRAND OVERALL PERCENT COVERAGE SPUTNIKV FIRST
-        $this->total_p_cvrge_sputnikv_region_first = $total_p_cvrge_sputnikv_region_first;
-        $this->p_cvrge_sputnikv_bohol_first = $p_cvrge_sputnikv_bohol_first;
-        $this->p_cvrge_sputnikv_cebu_first = $p_cvrge_sputnikv_cebu_first;
-        $this->p_cvrge_sputnikv_negros_first = $p_cvrge_sputnikv_negros_first;
-        $this->p_cvrge_sputnikv_siquijor_first = $p_cvrge_sputnikv_siquijor_first;
-        $this->p_cvrge_sputnikv_cebu_facility_first = $p_cvrge_sputnikv_cebu_facility_first;
-        $this->p_cvrge_sputnikv_mandaue_facility_first = $p_cvrge_sputnikv_mandaue_facility_first;
-        $this->p_cvrge_sputnikv_lapu_facility_first = $p_cvrge_sputnikv_lapu_facility_first;
+        //PERCENT COVERAGE SPUTNIKV FIRST
+        $this->total_p_cvrge_sputnikv_region_first = number_format($this->region_sputnikv_first_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_sputnikv_bohol_first =  number_format($this->vcted_sputnikv_bohol_first / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_sputnikv_cebu_first = number_format($this->vcted_sputnikv_cebu_first / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_sputnikv_negros_first = number_format($this->vcted_sputnikv_negros_first / $eli_pop_negros * 100,2);
+        $this->p_cvrge_sputnikv_siquijor_first = number_format($this->vcted_sputnikv_siquijor_first / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_sputnikv_cebu_facility_first =  number_format($this->vcted_sputnikv_cebu_facility_first / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_sputnikv_mandaue_facility_first = number_format($this->vcted_sputnikv_mandaue_facility_first / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_sputnikv_lapu_facility_first = number_format($this->vcted_sputnikv_lapu_facility_first / $eli_pop_lapu_facility * 100,2);
 
-        //GRAND OVERALL PERCENT COVERAGE PFIZER FIRST
-        $this->total_p_cvrge_pfizer_region_first = $total_p_cvrge_pfizer_region_first;
-        $this->p_cvrge_pfizer_bohol_first = $p_cvrge_pfizer_bohol_first;
-        $this->p_cvrge_pfizer_cebu_first = $p_cvrge_pfizer_cebu_first;
-        $this->p_cvrge_pfizer_negros_first = $p_cvrge_pfizer_negros_first;
-        $this->p_cvrge_pfizer_siquijor_first = $p_cvrge_pfizer_siquijor_first;
-        $this->p_cvrge_pfizer_cebu_facility_first = $p_cvrge_pfizer_cebu_facility_first;
-        $this->p_cvrge_pfizer_mandaue_facility_first = $p_cvrge_pfizer_mandaue_facility_first;
-        $this->p_cvrge_pfizer_lapu_facility_first = $p_cvrge_pfizer_lapu_facility_first;
+        //OVERALL PERCENT COVERAGE PFIZER FIRST
+        $this->total_p_cvrge_pfizer_region_first = number_format($this->region_pfizer_first_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_pfizer_bohol_first =  number_format($this->vcted_pfizer_bohol_first / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_pfizer_cebu_first = number_format($this->vcted_pfizer_cebu_first / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_pfizer_negros_first = number_format($this->vcted_pfizer_negros_first / $eli_pop_negros * 100,2);
+        $this->p_cvrge_pfizer_siquijor_first = number_format($this->vcted_pfizer_siquijor_first / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_pfizer_cebu_facility_first =  number_format($this->vcted_pfizer_cebu_facility_first / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_pfizer_mandaue_facility_first = number_format($this->vcted_pfizer_mandaue_facility_first / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $eli_pop_lapu_facility * 100,2);
 
         //GRAND OVERALL PERCENT COVERAGE SINOVAC SECOND
-        $this->total_p_cvrge_sinovac_region_second = $total_p_cvrge_sinovac_region_second;
-        $this->p_cvrge_sinovac_bohol_second = $p_cvrge_sinovac_bohol_second;
-        $this->p_cvrge_sinovac_cebu_second = $p_cvrge_sinovac_cebu_second;
-        $this->p_cvrge_sinovac_negros_second = $p_cvrge_sinovac_negros_second;
-        $this->p_cvrge_sinovac_siquijor_second = $p_cvrge_sinovac_siquijor_second;
-        $this->p_cvrge_sinovac_cebu_facility_second = $p_cvrge_sinovac_cebu_facility_second;
-        $this->p_cvrge_sinovac_mandaue_facility_second = $p_cvrge_sinovac_mandaue_facility_second;
-        $this->p_cvrge_sinovac_lapu_facility_second = $p_cvrge_sinovac_lapu_facility_second;
+        $this->total_p_cvrge_sinovac_region_second = number_format($this->region_sinovac_second_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_sinovac_bohol_second = number_format($this->vcted_sinovac_bohol_second / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_sinovac_cebu_second = number_format($this->vcted_sinovac_cebu_second / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_sinovac_negros_second = number_format($this->vcted_sinovac_negros_second / $eli_pop_negros * 100,2);
+        $this->p_cvrge_sinovac_siquijor_second = number_format($this->vcted_sinovac_siquijor_second / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_sinovac_cebu_facility_second = number_format($this->vcted_sinovac_cebu_facility_second / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_sinovac_mandaue_facility_second =  number_format($this->vcted_sinovac_mandaue_facility_second / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_sinovac_lapu_facility_second =  number_format($this->vcted_sinovac_lapu_facility_second / $eli_pop_lapu_facility * 100,2);
 
         //GRAND OVERALL PERCENT COVERAGE ASTRA SECOND
-        $this->total_p_cvrge_astra_region_second = $total_p_cvrge_astra_region_second;
-        $this->p_cvrge_astra_bohol_second = $p_cvrge_astra_bohol_second;
-        $this->p_cvrge_astra_cebu_second = $p_cvrge_astra_cebu_second;
-        $this->p_cvrge_astra_negros_second = $p_cvrge_astra_negros_second;
-        $this->p_cvrge_astra_siquijor_second = $p_cvrge_astra_siquijor_second;
-        $this->p_cvrge_astra_cebu_facility_second = $p_cvrge_astra_cebu_facility_second;
-        $this->p_cvrge_astra_mandaue_facility_second = $p_cvrge_astra_mandaue_facility_second;
-        $this->p_cvrge_astra_lapu_facility_second = $p_cvrge_astra_lapu_facility_second;
+        $this->total_p_cvrge_astra_region_second = number_format($this->region_astra_second_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_astra_bohol_second = number_format($this->vcted_astra_bohol_second / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_astra_cebu_second = number_format($this->vcted_astra_cebu_second / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_astra_negros_second = number_format($this->vcted_astra_negros_second / $eli_pop_negros * 100,2);
+        $this->p_cvrge_astra_siquijor_second = number_format($this->vcted_astra_siquijor_second / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_astra_cebu_facility_second = number_format($this->vcted_astra_cebu_facility_second / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_astra_mandaue_facility_second =  number_format($this->vcted_astra_mandaue_facility_second / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_astra_lapu_facility_second =  number_format($this->vcted_astra_lapu_facility_second / $eli_pop_lapu_facility * 100,2);
 
         //GRAND OVERALL PERCENT COVERAGE SPUTNIKV SECOND
-        $this->total_p_cvrge_sputnikv_region_second = $total_p_cvrge_sputnikv_region_second;
-        $this->p_cvrge_sputnikv_bohol_second = $p_cvrge_sputnikv_bohol_second;
-        $this->p_cvrge_sputnikv_cebu_second = $p_cvrge_sputnikv_cebu_second;
-        $this->p_cvrge_sputnikv_negros_second = $p_cvrge_sputnikv_negros_second;
-        $this->p_cvrge_sputnikv_siquijor_second = $p_cvrge_sputnikv_siquijor_second;
-        $this->p_cvrge_sputnikv_cebu_facility_second = $p_cvrge_sputnikv_cebu_facility_second;
-        $this->p_cvrge_sputnikv_mandaue_facility_second = $p_cvrge_sputnikv_mandaue_facility_second;
-        $this->p_cvrge_sputnikv_lapu_facility_second = $p_cvrge_sputnikv_lapu_facility_second;
+        $this->total_p_cvrge_sputnikv_region_second = number_format($this->region_sputnikv_second_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_sputnikv_bohol_second = number_format($this->vcted_sputnikv_bohol_second / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_sputnikv_cebu_second = number_format($this->vcted_sputnikv_cebu_second / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_sputnikv_negros_second = number_format($this->vcted_sputnikv_negros_second / $eli_pop_negros * 100,2);
+        $this->p_cvrge_sputnikv_siquijor_second = number_format($this->vcted_sputnikv_siquijor_second / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_sputnikv_cebu_facility_second = number_format($this->vcted_sputnikv_cebu_facility_second / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_sputnikv_mandaue_facility_second =  number_format($this->vcted_sputnikv_mandaue_facility_second / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_sputnikv_lapu_facility_second =  number_format($this->vcted_sputnikv_lapu_facility_second / $eli_pop_lapu_facility * 100,2);
 
         //GRAND OVERALL PERCENT COVERAGE PFIZER SECOND
-        $this->total_p_cvrge_pfizer_region_second = $total_p_cvrge_pfizer_region_second;
-        $this->p_cvrge_pfizer_bohol_second = $p_cvrge_pfizer_bohol_second;
-        $this->p_cvrge_pfizer_cebu_second = $p_cvrge_pfizer_cebu_second;
-        $this->p_cvrge_pfizer_negros_second = $p_cvrge_pfizer_negros_second;
-        $this->p_cvrge_pfizer_siquijor_second = $p_cvrge_pfizer_siquijor_second;
-        $this->p_cvrge_pfizer_cebu_facility_second = $p_cvrge_pfizer_cebu_facility_second;
-        $this->p_cvrge_pfizer_mandaue_facility_second = $p_cvrge_pfizer_mandaue_facility_second;
-        $this->p_cvrge_pfizer_lapu_facility_second = $p_cvrge_pfizer_lapu_facility_second;
+        $this->total_p_cvrge_pfizer_region_second = number_format($this->region_pfizer_second_dose / $total_elipop_region * 100,2);
+        $this->p_cvrge_pfizer_bohol_second = number_format($this->vcted_pfizer_bohol_second / $eli_pop_bohol * 100,2);
+        $this->p_cvrge_pfizer_cebu_second = number_format($this->vcted_pfizer_cebu_second / $eli_pop_cebu * 100,2);
+        $this->p_cvrge_pfizer_negros_second = number_format($this->vcted_pfizer_negros_second / $eli_pop_negros * 100,2);
+        $this->p_cvrge_pfizer_siquijor_second = number_format($this->vcted_pfizer_siquijor_second / $eli_pop_siquijor * 100,2);
+        $this->p_cvrge_pfizer_cebu_facility_second = number_format($this->vcted_pfizer_cebu_facility_second / $eli_pop_cebu_facility * 100,2);
+        $this->p_cvrge_pfizer_mandaue_facility_second =  number_format($this->vcted_pfizer_mandaue_facility_second / $eli_pop_mandaue_facility * 100,2);
+        $this->p_cvrge_pfizer_lapu_facility_second =  number_format($this->vcted_pfizer_lapu_facility_second / $eli_pop_lapu_facility * 100,2);
 
         //GRAND OVER ALL TOTAL REFUSED FIRST
         $this->total_refusal_first = $total_refusal_first;
@@ -3977,7 +3198,7 @@ class VaccineController extends Controller
         $this->wastage_sputnikv_mandaue_facility_first = $wastage_sputnikv_mandaue_facility_first;
         $this->wastage_sputnikv_lapu_facility_first = $wastage_sputnikv_lapu_facility_first;
 
-        //GRAND OVERALL PFIZER A4
+        //GRAND OVERALL PFIZER
         $this->wastage_pfizer_bohol_first = $wastage_pfizer_bohol_first;
         $this->wastage_pfizer_cebu_first = $wastage_pfizer_cebu_first;
         $this->wastage_pfizer_negros_first = $wastage_pfizer_negros_first;
@@ -3986,118 +3207,119 @@ class VaccineController extends Controller
         $this->wastage_pfizer_mandaue_facility_first = $wastage_pfizer_mandaue_facility_first;
         $this->wastage_pfizer_lapu_facility_first = $wastage_pfizer_lapu_facility_first;
 
-        //GRAND TOTAL CONSUMPTION RATE REGION
-        $this->total_c_rate_region_first = $total_c_rate_region_first;
-        $this->c_rate_region_sinovac_first = $c_rate_region_sinovac_first;
-        $this->c_rate_region_astra_first = $c_rate_region_astra_first;
-        $this->c_rate_region_sputnikv_first = $c_rate_region_sputnikv_first;
-        $this->c_rate_region_pfizer_first = $c_rate_region_pfizer_first;
+        //TOTAL CONSUMPTION RATE REGION
 
-        //GRAND TOTAL CONSUMPTION RATE BOHOL
-        $this->c_rate_sinovac_bohol_first = $c_rate_sinovac_bohol_first;
-        $this->c_rate_astra_bohol_first = $c_rate_astra_bohol_first;
-        $this->c_rate_sputnikv_bohol_first = $c_rate_sputnikv_bohol_first;
-        $this->c_rate_pfizer_bohol_first = $c_rate_pfizer_bohol_first;
-        $this->total_c_rate_bohol_first = $total_c_rate_bohol_first;
+        $this->c_rate_region_sinovac_first = number_format($this->region_sinovac_first_dose / $this->sinovac_region * 100 ,2);
+        $this->c_rate_region_astra_first = number_format($this->region_astra_first_dose / $this->astra_region * 100 ,2);
+        $this->c_rate_region_sputnikv_first = number_format($this->region_sputnikv_first_dose / $this->sputnikv_region * 100 ,2);
+        $this->c_rate_region_pfizer_first = number_format($this->region_pfizer_first_dose / $this->pfizer_region * 100 ,2);
+        $this->total_c_rate_region_first = number_format($this->first_dose_total / $this->total_region * 100,2);
 
-        //GRAND TOTAL CONSUMPTION RATE CEBU
-        $this->c_rate_sinovac_cebu_first = $c_rate_sinovac_cebu_first;
-        $this->c_rate_astra_cebu_first = $c_rate_astra_cebu_first;
-        $this->c_rate_sputnikv_cebu_first = $c_rate_sputnikv_cebu_first;
-        $this->c_rate_pfizer_cebu_first = $c_rate_pfizer_cebu_first;
-        $this->total_c_rate_cebu_first = $total_c_rate_cebu_first;
+        //TOTAL CONSUMPTION RATE BOHOL
+        $this->c_rate_sinovac_bohol_first = number_format($this->vcted_sinovac_bohol_first / $this->sinovac_bohol * 100,2);
+        $this->c_rate_astra_bohol_first = number_format($this->vcted_astra_bohol_first / $this->astra_bohol * 100,2);
+        $this->c_rate_sputnikv_bohol_first = number_format($this->vcted_sputnikv_bohol_first / $this->sputnikv_bohol * 100,2);
+        $this->c_rate_pfizer_bohol_first = number_format($this->vcted_pfizer_bohol_first / $this->pfizer_bohol * 100,2);
+        $this->total_c_rate_bohol_first = number_format($this->total_vcted_first_bohol / $this->total_bohol,2);
 
-        //GRAND TOTAL CONSUMPTION RATE NEGROS
-        $this->c_rate_sinovac_negros_first = $c_rate_sinovac_negros_first;
-        $this->c_rate_astra_negros_first = $c_rate_astra_negros_first;
-        $this->c_rate_sputnikv_negros_first = $c_rate_sputnikv_negros_first;
-        $this->c_rate_pfizer_negros_first = $c_rate_pfizer_negros_first;
-        $this->total_c_rate_negros_first = $total_c_rate_negros_first;
+        //TOTAL CONSUMPTION RATE CEBU
+        $this->c_rate_sinovac_cebu_first = number_format($this->vcted_sinovac_cebu_first / $this->sinovac_cebu * 100,2);
+        $this->c_rate_astra_cebu_first = number_format($this->vcted_astra_cebu_first / $this->astra_cebu * 100,2);
+        $this->c_rate_sputnikv_cebu_first = number_format($this->vcted_sputnikv_cebu_first / $this->sputnikv_cebu * 100,2);
+        $this->c_rate_pfizer_cebu_first = number_format($this->vcted_pfizer_cebu_first / $this->pfizer_cebu * 100,2);
+        $this->total_c_rate_cebu_first = number_format($this->total_vcted_first_cebu / $this->total_cebu,2);
 
-        //GRAND TOTAL CONSUMPTION RATE SIQUIJOR
-        $this->c_rate_sinovac_siquijor_first = $c_rate_sinovac_siquijor_first;
-        $this->c_rate_astra_siquijor_first = $c_rate_astra_siquijor_first;
-        $this->c_rate_sputnikv_siquijor_first = $c_rate_sputnikv_siquijor_first;
-        $this->c_rate_pfizer_siquijor_first = $c_rate_pfizer_siquijor_first;
-        $this->total_c_rate_siquijor_first = $total_c_rate_siquijor_first;
+        //TOTAL CONSUMPTION RATE NEGROS
+        $this->c_rate_sinovac_negros_first = number_format($this->vcted_sinovac_negros_first / $this->sinovac_negros * 100,2);
+        $this->c_rate_astra_negros_first = number_format($this->vcted_astra_negros_first / $this->astra_negros * 100,2);
+        $this->c_rate_sputnikv_negros_first = number_format($this->vcted_sputnikv_negros_first / $this->sputnikv_negros * 100,2);
+        $this->c_rate_pfizer_negros_first = number_format($this->vcted_pfizer_negros_first / $this->pfizer_negros * 100,2);
+        $this->total_c_rate_negros_first = number_format($this->total_vcted_first_negros / $this->total_negros,2);
 
-        //GRAND TOTAL CONSUMPTION RATE CEBU FACILITY
-        $this->c_rate_sinovac_cebu_facility_first = $c_rate_sinovac_cebu_facility_first;
-        $this->c_rate_astra_cebu_facility_first = $c_rate_astra_cebu_facility_first;
-        $this->c_rate_sputnikv_cebu_facility_first = $c_rate_sputnikv_cebu_facility_first;
-        $this->c_rate_pfizer_cebu_facility_first = $c_rate_pfizer_cebu_facility_first;
-        $this->total_c_rate_cebu_facility_first = $total_c_rate_cebu_facility_first;
+        //TOTAL CONSUMPTION RATE SIQUIJOR
+        $this->c_rate_sinovac_siquijor_first = number_format($this->vcted_sinovac_siquijor_first / $this->sinovac_siquijor * 100,2);
+        $this->c_rate_astra_siquijor_first = number_format($this->vcted_astra_siquijor_first / $this->astra_siquijor * 100,2);
+        $this->c_rate_sputnikv_siquijor_first = number_format($this->vcted_sputnikv_siquijor_first / $this->sputnikv_siquijor * 100,2);
+        $this->c_rate_pfizer_siquijor_first = number_format($this->vcted_pfizer_siquijor_first / $this->pfizer_siquijor * 100,2);
+        $this->total_c_rate_siquijor_first = number_format($this->total_vcted_first_siquijor / $this->total_siquijor,2);
 
-        //GRAND TOTAL CONSUMPTION RATE MANDAUE FACILITY
-        $this->c_rate_sinovac_mandaue_facility_first = $c_rate_sinovac_mandaue_facility_first;
-        $this->c_rate_astra_mandaue_facility_first = $c_rate_astra_mandaue_facility_first;
-        $this->c_rate_sputnikv_mandaue_facility_first = $c_rate_sputnikv_mandaue_facility_first;
-        $this->c_rate_pfizer_mandaue_facility_first = $c_rate_pfizer_mandaue_facility_first;
-        $this->total_c_rate_mandaue_facility_first = $total_c_rate_mandaue_facility_first;
+        //TOTAL CONSUMPTION RATE CEBU FACILITY
+        $this->c_rate_sinovac_cebu_facility_first = number_format($this->vcted_sinovac_cebu_facility_first / $this->sinovac_cebu_facility * 100 ,2 );
+        $this->c_rate_astra_cebu_facility_first =  number_format($this->vcted_astra_cebu_facility_first / $this->astra_cebu_facility * 100  ,2 );
+        $this->c_rate_sputnikv_cebu_facility_first = number_format($this->vcted_sputnikv_cebu_facility_first / $this->sputnikv_cebu_facility * 100  ,2 );
+        $this->c_rate_pfizer_cebu_facility_first = number_format($this->vcted_pfizer_cebu_facility_first / $this->pfizer_cebu_facility * 100  ,2 );
+        $this->total_c_rate_cebu_facility_first = number_format($this->total_vcted_cebu_facility_first / $this->total_cebu_facility * 100,2);
 
-        //GRAND TOTAL CONSUMPTION RATE LAPU-LAPU FACILITY
-        $this->c_rate_sinovac_lapu_facility_first = $c_rate_sinovac_lapu_facility_first;
-        $this->c_rate_astra_lapu_facility_first = $c_rate_astra_lapu_facility_first;
-        $this->c_rate_sputnikv_lapu_facility_first = $c_rate_sputnikv_lapu_facility_first;
-        $this->c_rate_pfizer_lapu_facility_first = $c_rate_pfizer_lapu_facility_first;
-        $this->total_c_rate_lapu_facility_first = $total_c_rate_lapu_facility_first;
+        //TOTAL CONSUMPTION RATE MANDAUE FACILITY
+        $this->c_rate_sinovac_mandaue_facility_first = number_format($this->vcted_sinovac_mandaue_facility_first / $this->sinovac_mandaue_facility * 100 ,2 );
+        $this->c_rate_astra_mandaue_facility_first =  number_format($this->vcted_astra_mandaue_facility_first / $this->astra_mandaue_facility * 100  ,2 );
+        $this->c_rate_sputnikv_mandaue_facility_first = number_format($this->vcted_sputnikv_mandaue_facility_first / $this->sputnikv_mandaue_facility * 100  ,2 );
+        $this->c_rate_pfizer_mandaue_facility_first = number_format($this->vcted_pfizer_mandaue_facility_first / $this->pfizer_mandaue_facility * 100  ,2 );
+        $this->total_c_rate_mandaue_facility_first = number_format($this->total_vcted_mandaue_facility_first / $this->total_mandaue_facility * 100,2);
 
-        //GRAND TOTAL CONSUMPTION RATE REGION
-        $this->total_c_rate_region_second = $total_c_rate_region_second;
-        $this->c_rate_region_sinovac_second = $c_rate_region_sinovac_second;
-        $this->c_rate_region_astra_second = $c_rate_region_astra_second;
-        $this->c_rate_region_sputnikv_second = $c_rate_region_sputnikv_second;
-        $this->c_rate_region_pfizer_second = $c_rate_region_pfizer_second;
+        //TOTAL CONSUMPTION RATE LAPU-LAPU FACILITY
+        $this->c_rate_sinovac_lapu_facility_first = number_format($this->vcted_sinovac_lapu_facility_first / $this->sinovac_lapu_facility * 100 ,2 );
+        $this->c_rate_astra_lapu_facility_first =  number_format($this->vcted_astra_lapu_facility_first / $this->astra_lapu_facility * 100  ,2 );
+        $this->c_rate_sputnikv_lapu_facility_first = number_format($this->vcted_sputnikv_lapu_facility_first / $this->sputnikv_lapu_facility * 100  ,2 );
+        $this->c_rate_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $this->pfizer_lapu_facility * 100  ,2 );
+        $this->total_c_rate_lapu_facility_first = number_format($this->total_vcted_lapu_facility_first / $this->total_lapu_facility * 100,2);
 
-        //GRAND TOTAL CONSUMPTION RATE BOHOL
-        $this->c_rate_sinovac_bohol_second = $c_rate_sinovac_bohol_second;
-        $this->c_rate_astra_bohol_second = $c_rate_astra_bohol_second;
-        $this->c_rate_sputnikv_bohol_second = $c_rate_sputnikv_bohol_second;
-        $this->c_rate_pfizer_bohol_second = $c_rate_pfizer_bohol_second;
-        $this->total_c_rate_bohol_second = $total_c_rate_bohol_second;
+        //TOTAL CONSUMPTION RATE REGION
 
-        //GRAND TOTAL CONSUMPTION RATE CEBU
-        $this->c_rate_sinovac_cebu_second = $c_rate_sinovac_cebu_second;
-        $this->c_rate_astra_cebu_second = $c_rate_astra_cebu_second;
-        $this->c_rate_sputnikv_cebu_second = $c_rate_sputnikv_cebu_second;
-        $this->c_rate_pfizer_cebu_second = $c_rate_pfizer_cebu_second;
-        $this->total_c_rate_cebu_second = $total_c_rate_cebu_second;
+        $this->c_rate_region_sinovac_second = number_format($this->region_sinovac_second_dose / $this->sinovac_region * 100 ,2);
+        $this->c_rate_region_astra_second = number_format($this->region_astra_second_dose / $this->astra_region * 100 ,2);
+        $this->c_rate_region_sputnikv_second = number_format($this->region_sputnikv_second_dose / $this->sputnikv_region * 100 ,2);
+        $this->c_rate_region_pfizer_second = number_format($this->region_pfizer_second_dose / $this->pfizer_region * 100 ,2);
+        $this->total_c_rate_region_second = number_format($this->second_dose_total / $this->total_region * 100,2);
 
-        //GRAND TOTAL CONSUMPTION RATE NEGROS
-        $this->c_rate_sinovac_negros_second = $c_rate_sinovac_negros_second;
-        $this->c_rate_astra_negros_second = $c_rate_astra_negros_second;
-        $this->c_rate_sputnikv_negros_second = $c_rate_sputnikv_negros_second;
-        $this->c_rate_pfizer_negros_second = $c_rate_pfizer_negros_second;
-        $this->total_c_rate_negros_second = $total_c_rate_negros_second;
+        //TOTAL CONSUMPTION RATE BOHOL
+        $this->c_rate_sinovac_bohol_second = number_format($this->vcted_sinovac_bohol_second / $this->sinovac_bohol * 100,2);
+        $this->c_rate_astra_bohol_second = number_format($this->vcted_astra_bohol_second / $this->astra_bohol * 100,2);
+        $this->c_rate_sputnikv_bohol_second = number_format($this->vcted_sputnikv_bohol_second / $this->sputnikv_bohol * 100,2);
+        $this->c_rate_pfizer_bohol_second = number_format($this->vcted_pfizer_bohol_second / $this->pfizer_bohol * 100,2);
+        $this->total_c_rate_bohol_second = number_format($this->total_vcted_second_bohol / $this->total_bohol,2);
 
-        //GRAND TOTAL CONSUMPTION RATE SIQUIJOR
-        $this->c_rate_sinovac_siquijor_second = $c_rate_sinovac_siquijor_second;
-        $this->c_rate_astra_siquijor_second = $c_rate_astra_siquijor_second;
-        $this->c_rate_sputnikv_siquijor_second = $c_rate_sputnikv_siquijor_second;
-        $this->c_rate_pfizer_siquijor_second = $c_rate_pfizer_siquijor_second;
-        $this->total_c_rate_siquijor_second = $total_c_rate_siquijor_second;
+        //TOTAL CONSUMPTION RATE CEBU
+        $this->c_rate_sinovac_cebu_second = number_format($this->vcted_sinovac_cebu_second / $this->sinovac_cebu * 100,2);
+        $this->c_rate_astra_cebu_second = number_format($this->vcted_astra_cebu_second / $this->astra_cebu * 100,2);
+        $this->c_rate_sputnikv_cebu_second = number_format($this->vcted_sputnikv_cebu_second / $this->sputnikv_cebu * 100,2);
+        $this->c_rate_pfizer_cebu_second = number_format($this->vcted_pfizer_cebu_second / $this->pfizer_cebu * 100,2);
+        $this->total_c_rate_cebu_second = number_format($this->total_vcted_second_cebu / $this->total_cebu,2);
 
-        //GRAND TOTAL CONSUMPTION RATE CEBU FACILITY
-        $this->c_rate_sinovac_cebu_facility_second = $c_rate_sinovac_cebu_facility_second;
-        $this->c_rate_astra_cebu_facility_second = $c_rate_astra_cebu_facility_second;
-        $this->c_rate_sputnikv_cebu_facility_second = $c_rate_sputnikv_cebu_facility_second;
-        $this->c_rate_pfizer_cebu_facility_second = $c_rate_pfizer_cebu_facility_second;
-        $this->total_c_rate_cebu_facility_second = $total_c_rate_cebu_facility_second;
+        //TOTAL CONSUMPTION RATE NEGROS
+        $this->c_rate_sinovac_negros_second = number_format($this->vcted_sinovac_negros_second / $this->sinovac_negros * 100,2);
+        $this->c_rate_astra_negros_second = number_format($this->vcted_astra_negros_second / $this->astra_negros * 100,2);
+        $this->c_rate_sputnikv_negros_second = number_format($this->vcted_sputnikv_negros_second / $this->sputnikv_negros * 100,2);
+        $this->c_rate_pfizer_negros_second = number_format($this->vcted_pfizer_negros_second / $this->pfizer_negros * 100,2);
+        $this->total_c_rate_negros_second = number_format($this->total_vcted_second_negros / $this->total_negros,2);
 
-        //GRAND TOTAL CONSUMPTION RATE MANDAUE FACILITY
-        $this->c_rate_sinovac_mandaue_facility_second = $c_rate_sinovac_mandaue_facility_second;
-        $this->c_rate_astra_mandaue_facility_second = $c_rate_astra_mandaue_facility_second;
-        $this->c_rate_sputnikv_mandaue_facility_second = $c_rate_sputnikv_mandaue_facility_second;
-        $this->c_rate_pfizer_mandaue_facility_second = $c_rate_pfizer_mandaue_facility_second;
-        $this->total_c_rate_mandaue_facility_second = $total_c_rate_mandaue_facility_second;
+        //TOTAL CONSUMPTION RATE SIQUIJOR
+        $this->c_rate_sinovac_siquijor_second = number_format($this->vcted_sinovac_siquijor_second / $this->sinovac_siquijor * 100,2);
+        $this->c_rate_astra_siquijor_second = number_format($this->vcted_astra_siquijor_second / $this->astra_siquijor * 100,2);
+        $this->c_rate_sputnikv_siquijor_second = number_format($this->vcted_sputnikv_siquijor_second / $this->sputnikv_siquijor * 100,2);
+        $this->c_rate_pfizer_siquijor_second = number_format($this->vcted_pfizer_siquijor_second / $this->pfizer_siquijor * 100,2);
+        $this->total_c_rate_siquijor_second = number_format($this->total_vcted_second_siquijor / $this->total_siquijor,2);
 
-        //GRAND TOTAL CONSUMPTION RATE LAPU-LAPU FACILITY
-        $this->c_rate_sinovac_lapu_facility_second = $c_rate_sinovac_lapu_facility_second;
-        $this->c_rate_astra_lapu_facility_second = $c_rate_astra_lapu_facility_second;
-        $this->c_rate_sputnikv_lapu_facility_second = $c_rate_sputnikv_lapu_facility_second;
-        $this->c_rate_pfizer_lapu_facility_second = $c_rate_pfizer_lapu_facility_second;
-        $this->total_c_rate_lapu_facility_second = $total_c_rate_lapu_facility_second;
+        //TOTAL CONSUMPTION RATE CEBU FACILITY
+        $this->c_rate_sinovac_cebu_facility_second = number_format($this->vcted_sinovac_cebu_facility_second / $this->sinovac_cebu_facility * 100 ,2 );
+        $this->c_rate_astra_cebu_facility_second =  number_format($this->vcted_astra_cebu_facility_second / $this->astra_cebu_facility * 100  ,2 );
+        $this->c_rate_sputnikv_cebu_facility_second = number_format($this->vcted_sputnikv_cebu_facility_second / $this->sputnikv_cebu_facility * 100  ,2 );
+        $this->c_rate_pfizer_cebu_facility_second = number_format($this->vcted_pfizer_cebu_facility_second / $this->pfizer_cebu_facility * 100  ,2 );
+        $this->total_c_rate_cebu_facility_second = number_format($this->total_vcted_cebu_facility_second / $this->total_cebu_facility * 100,2);
 
+        //TOTAL CONSUMPTION RATE MANDAUE FACILITY
+        $this->c_rate_sinovac_mandaue_facility_second = number_format($this->vcted_sinovac_mandaue_facility_second / $this->sinovac_mandaue_facility * 100 ,2 );
+        $this->c_rate_astra_mandaue_facility_second =  number_format($this->vcted_astra_mandaue_facility_second / $this->astra_mandaue_facility * 100  ,2 );
+        $this->c_rate_sputnikv_mandaue_facility_second = number_format($this->vcted_sputnikv_mandaue_facility_second / $this->sputnikv_mandaue_facility * 100  ,2 );
+        $this->c_rate_pfizer_mandaue_facility_second = number_format($this->vcted_pfizer_mandaue_facility_second / $this->pfizer_mandaue_facility * 100  ,2 );
+        $this->total_c_rate_mandaue_facility_second = number_format($this->total_vcted_mandaue_facility_second / $this->total_mandaue_facility * 100,2);
+
+        //TOTAL CONSUMPTION RATE LAPU-LAPU FACILITY
+        $this->c_rate_sinovac_lapu_facility_second = number_format($this->vcted_sinovac_lapu_facility_second / $this->sinovac_lapu_facility * 100 ,2 );
+        $this->c_rate_astra_lapu_facility_second =  number_format($this->vcted_astra_lapu_facility_second / $this->astra_lapu_facility * 100  ,2 );
+        $this->c_rate_sputnikv_lapu_facility_second = number_format($this->vcted_sputnikv_lapu_facility_second / $this->sputnikv_lapu_facility * 100  ,2 );
+        $this->c_rate_pfizer_lapu_facility_second = number_format($this->vcted_pfizer_lapu_facility_second / $this->pfizer_lapu_facility * 100  ,2 );
+        $this->total_c_rate_lapu_facility_second = number_format($this->total_vcted_lapu_facility_second / $this->total_lapu_facility * 100,2);
 
         return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
     }
