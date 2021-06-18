@@ -118,6 +118,11 @@ class VaccineController extends Controller
     public $priority_set;
     //for grand variable
 
+    public $data_facility;  //DATA FACILITY
+    public $a1_target_facility, $a2_target_facility, $a3_target_facility, $a4_target_facility; //TARGET FACILITY
+    public $a1_completion_facility, $a2_completion_facility, $a3_completion_facility, $a4_completion_facility; //COMPLETION FACILITY
+    public $a1_vaccinated_facility ,  $a2_vaccinated_facility, $a3_vaccinated_facility, $a4_vaccinated_facility; //VACCINATED FACILITY
+
 
     public function index(Request $request)
     {
@@ -199,15 +204,25 @@ class VaccineController extends Controller
         $total_vaccinated_second = VaccineAccomplished::select(DB::raw("sum(vaccinated_second) as total_vaccinated_second"))->first()->total_vaccinated_second;
 
         $elipop_muncity = Muncity::select(DB::raw("sum(COALESCE(a1,0)+COALESCE(a2,0)+COALESCE(a3,0)+COALESCE(a4,0)) as elipop_muncity"))->first()->elipop_muncity;
+        $elipop_facility = Facility::select(DB::raw("sum(COALESCE(a1,0)+COALESCE(a2,0)+COALESCE(a3,0)+COALESCE(a4,0)) as elipop_facility"))->first()->elipop_facility;
 
-        $percent_coverage_first = number_format($total_vaccinated_first / $elipop_muncity * 100,2);
-        $percent_coverage_second = number_format($total_vaccinated_second / $elipop_muncity * 100,2);
+        $total_eli_pop = $elipop_muncity + $elipop_facility;
+
+        $percent_coverage_first = number_format($total_vaccinated_first / $total_eli_pop * 100,2);
+        $percent_coverage_second = number_format($total_vaccinated_second / $total_eli_pop * 100,2);
 
         $total_vaccine_allocated_first = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)) as total_vaccine_allocated_first"))->first()->total_vaccine_allocated_first;
         $total_vaccine_allocated_second = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)) as total_vaccine_allocated_second"))->first()->total_vaccine_allocated_second;
 
-        $consumption_rate_first =  number_format($total_vaccinated_first / $total_vaccine_allocated_first * 100,2);
-        $consumption_rate_second =  number_format($total_vaccinated_second / $total_vaccine_allocated_second * 100,2);
+        $total_vaccine_allocated_first_facility = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)) as total_vaccine_allocated_first_facility"))->first()->total_vaccine_allocated_first_facility;
+        $total_vaccine_allocated_second_facility = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)) as total_vaccine_allocated_second_facility"))->first()->total_vaccine_allocated_second_facility;
+
+        $total_overall_vaccine_allocated_first = $total_vaccine_allocated_first + $total_vaccine_allocated_first_facility;
+        $total_overall_vaccine_allocated_second = $total_vaccine_allocated_second + $total_vaccine_allocated_second_facility;
+
+
+        $consumption_rate_first =  number_format($total_vaccinated_first / $total_overall_vaccine_allocated_first * 100,2);
+        $consumption_rate_second =  number_format($total_vaccinated_second / $total_overall_vaccine_allocated_second * 100,2);
 
 
         return view("vaccine.dashboard",[
@@ -248,6 +263,7 @@ class VaccineController extends Controller
         $a2_completion = number_format($a2_completion / $a2_target * 100,2);
         $a3_completion = number_format($a3_completion / $a3_target * 100,2);
         $a4_completion = number_format($a4_completion / $a4_target * 100,2);
+
 
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
@@ -303,6 +319,48 @@ class VaccineController extends Controller
         ]);
     }
 
+    public function TargetCompletionFacility($muncity_id){
+        $this->data_facility = Facility::where("province",2)
+            ->where("vaccine_used","yes")
+            ->where("tricity_id",63);
+        $this->a1_target_facility = Facility::select(DB::raw("sum(coalesce(a1,0)) as a1_target_facility"))->where("tricity_id",63)->first()->a1_target_facility;
+        $this->a2_target_facility = Facility::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->where("tricity_id",63)->first()->a2_target_facility;
+        $this->a3_target_facility = Facility::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->where("tricity_id",63)->first()->a3_target_facility;
+        $this->a4_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as a4_target_facility"))->where("tricity_id",63)->first()->a4_target_facility;
+
+
+        $this->a1_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a1_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",63)
+            ->where("vaccine_accomplish.priority","a1")
+            ->first()
+            ->a1_vaccinated_facility;
+        $this->a2_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a2_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",63)
+            ->where("vaccine_accomplish.priority","a2")
+            ->first()
+            ->a2_vaccinated_facility;
+        $this->a3_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a3_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",63)
+            ->where("vaccine_accomplish.priority","a3")
+            ->first()
+            ->a3_vaccinated_facility;
+
+        $this->a4_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a4_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",63)
+            ->where("vaccine_accomplish.priority","a3")
+            ->first()
+            ->a4_vaccinated_facility;
+
+        $this->a1_completion_facility = number_format($this->a1_vaccinated_facility / $this->a1_target_facility * 100,2);
+        $this->a2_completion_facility = number_format($this->a2_vaccinated_facility / $this->a2_target_facility * 100,2);
+        $this->a3_completion_facility = number_format($this->a3_vaccinated_facility / $this->a3_target_facility * 100,2);
+        $this->a4_completion_facility = number_format($this->a4_vaccinated_facility / $this->a4_target_facility * 100,2);
+    }
+
     public function vaccineFacility($tri_city,Request $request)
     {
         if(isset($request->date_range)){
@@ -314,45 +372,50 @@ class VaccineController extends Controller
         }
 
         if($tri_city == 'cebu'){
-            $data = Facility::where("province",2)
-                ->where("vaccine_used","yes")
-                ->where("tricity_id",63);
+            $this->TargetCompletionFacility("63");
         }
         elseif($tri_city == 'mandaue'){
-            $data = Facility::where("province",2)
-                ->where("vaccine_used","yes")
-                ->where("tricity_id",80)
-                ->where('referral_used','yes');
+            $this->TargetCompletionFacility("80");
         }
         elseif($tri_city == 'lapu'){
-            $data = Facility::where("province",2)
-                ->where("vaccine_used","yes")
-                ->where("tricity_id",76)
-                ->where('referral_used','yes');
+            $this->TargetCompletionFacility("76");
         }
 
-        $facility = $data->orderBy("name","asc")
+        $facility = $this->data_facility->orderBy("name","asc")
             ->get();
 
         if($request->muncity_filter)
-            $data = $data->where("id",$request->muncity_filter);
+            $this->data_facility= $this->data_facility->where("id",$request->muncity_filter);
 
 
-        $data = $data
+        $this->data_facility = $this->data_facility
             ->orderBy("name","asc")
             ->paginate(10);
+
 
         return view('vaccine.vaccine_facility',[
             'title' => 'List of Facility',
             'province_name' => "Cebu",
             'province_id' => 2,
-            'data' => $data,
+            'data' => $this->data_facility,
             'date_start' => $date_start,
             'date_end' => $date_end,
             'tri_city' => $tri_city,
             "facility" => $facility,
             'muncity_filter' => $request->muncity_filter,
-            "typeof_vaccine_filter" => $request->typeof_vaccine_filter
+            "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
+            'a1_target_facility'  =>  $this->a1_target_facility,
+            'a2_target_facility'  =>  $this->a2_target_facility,
+            'a3_target_facility'  =>  $this->a3_target_facility,
+            'a4_target_facility'  =>  $this->a4_target_facility,
+            'a1_vaccinated_facility'  =>  $this->a1_vaccinated_facility,
+            'a2_vaccinated_facility'  =>  $this->a2_vaccinated_facility,
+            'a3_vaccinated_facility'  =>  $this->a3_vaccinated_facility,
+            'a4_vaccinated_facility'  =>  $this->a4_vaccinated_facility,
+            'a1_completion_facility'  =>  $this->a1_completion_facility,
+            'a2_completion_facility'  =>  $this->a2_completion_facility,
+            'a3_completion_facility'  =>  $this->a3_completion_facility,
+            'a4_completion_facility'  =>  $this->a4_completion_facility
         ]);
     }
 
@@ -2285,7 +2348,7 @@ class VaccineController extends Controller
 
 
         //priority_set
-        $this->priority_set = strtoupper($priority);
+        $this->priority_set = "(".strtoupper($priority).")";
     }
 
     public function vaccineSummaryReport()
@@ -3320,6 +3383,8 @@ class VaccineController extends Controller
         $this->c_rate_sputnikv_lapu_facility_second = number_format($this->vcted_sputnikv_lapu_facility_second / $this->sputnikv_lapu_facility * 100  ,2 );
         $this->c_rate_pfizer_lapu_facility_second = number_format($this->vcted_pfizer_lapu_facility_second / $this->pfizer_lapu_facility * 100  ,2 );
         $this->total_c_rate_lapu_facility_second = number_format($this->total_vcted_lapu_facility_second / $this->total_lapu_facility * 100,2);
+
+        $this->priority_set = "";
 
         return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
     }

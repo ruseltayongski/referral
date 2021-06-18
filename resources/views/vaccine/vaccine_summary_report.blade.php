@@ -21,7 +21,7 @@
         <tr style="background-color: #fbe4d5">
             <th><b style="font-size: 10pt">Province</b></th>
             <th colspan="5"><b style="font-size: 10pt">Vaccine Allocation</b></th>
-            <th colspan="1"><b style="font-size: 10pt">Eligible Population ({{ $priority_set }})</b></th>
+            <th colspan="1"><b style="font-size: 10pt">Eligible Population {{ $priority_set }}</b></th>
             <th colspan="10"><b style="font-size: 10pt">Vaccinated</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Deferral</b></th>
@@ -37,7 +37,7 @@
             <td>Astra</td>
             <td>Sputnikv</td>
             <td>Pfizer</td>
-            <td><b>TOTAL</b></td>
+            <td><b>Total</b></td>
             <td></td>
             <td>1st Dose Sinovac</td>
             <td>2nd Dose Sinovac</td>

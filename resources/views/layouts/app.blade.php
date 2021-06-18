@@ -534,9 +534,11 @@
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
 
-        var res = _href.replace("http",location.protocol);
+        if(_href){
+            var res = _href.replace("http",location.protocol);
+            $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity+'&facility_filter='+query_string_facility+'&department_filter='+query_string_department+'&option_filter='+query_string_option);
+        }
 
-        $($(this).children().get(0)).attr('href',res+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity+'&facility_filter='+query_string_facility+'&department_filter='+query_string_department+'&option_filter='+query_string_option);
     });
 
 

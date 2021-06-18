@@ -58,8 +58,8 @@
             <div class="col-lg-3">
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>Sinovac</h3>
-                        <p style="font-size:13pt" class="sinovac_dashboard">0</p>
+                        <h3 class="sinovac_dashboard"></h3>
+                        <p style="font-size: 150%">Sinovac</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -70,9 +70,8 @@
             <div class="col-lg-3">
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>Astrazeneca</h3>
-
-                        <p style="font-size:13pt" class="astra_dashboard">0</p>
+                        <h3 class="astra_dashboard"></h3>
+                        <p style="font-size: 150%">Astrazeneca</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -83,9 +82,8 @@
             <div class="col-lg-3">
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>Sputnik V</h3>
-
-                        <p style="font-size:13pt" class="sputnikv_dashboard">0</p>
+                        <h3 class="sputnikv_dashboard"></h3>
+                        <p style="font-size: 150%">SputnikV</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -96,9 +94,8 @@
             <div class="col-lg-3">
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>Pfizer</h3>
-
-                        <p style="font-size:13pt" class="pfizer_dashboard">0</p>
+                        <h3 class="pfizer_dashboard"></h3>
+                        <p style="font-size: 150%">Pfizer</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -109,14 +106,13 @@
         </div>
         <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-md-3">
-                <div class="info-box bg-red">
-                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                <div class="info-box" style="background-color: #e4ffde">
+                    <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Target vaccination for A1</span>
+                        <span class="info-box-text">Target vaccination for <b>(A1)</b></span>
                         <span class="info-box-number">{{ number_format($a1_target) }}</span>
-
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a1_completion }}%"></div>
+                            <div class="progress-bar" style="width: {{ $a1_completion }}%; background-color: #00a65a;"></div>
                         </div>
                         <span class="progress-description">
                         {{ $a1_completion }}% Goal Completion
@@ -126,59 +122,57 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-yellow">
-                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
-
+                <div class="info-box" style="background-color: #ffe7d3" >
+                    <span class="info-box-icon" style="background-color: #ffe7d3" ><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Target vaccination for A2</span>
+                        <span class="info-box-text">Target vaccination for <b>(A2)</b></span>
                         <span class="info-box-number">{{ number_format($a2_target) }}</span>
 
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a2_completion }}%"></div>
+                            <div class="progress-bar" style="width: {{ $a2_completion }}%; background-color: #f39c12"></div>
                         </div>
                         <span class="progress-description">
-                                                {{ $a2_completion }}% Goal Completion
-                                            </span>
+                            {{ $a2_completion }}% Goal Completion
+                        </span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-green">
-                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                <div class="info-box" style="background-color: #d0fffe">
+                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Target vaccination for A3</span>
+                        <span class="info-box-text">Target vaccination for <b>(A3)</b></span>
                         <span class="info-box-number">{{ number_format($a3_target) }}</span>
 
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a3_completion }}%"></div>
+                            <div class="progress-bar" style="width: {{ $a3_completion }}%; background-color: #00c0ef"></div>
                         </div>
                         <span class="progress-description">
-                                                {{ $a3_completion }}% Goal Completion
-                                            </span>
+                            {{ $a3_completion }}% Goal Completion
+                        </span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="info-box bg-aqua">
-                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                <div class="info-box" style="background-color: #fffddb">
+                    <span class="info-box-icon" style="background-color: #fffddb"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Targer vaccination for A4</span>
+                        <span class="info-box-text">Targer vaccination for <b>(A4)</b></span>
                         <span class="info-box-number">{{ number_format($a4_target) }}</span>
 
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%"></div>
+                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #fccb7d"></div>
                         </div>
                         <span class="progress-description">
-                                                {{ $a4_completion }}% Goal Completion
-                                            </span>
+                            {{ $a4_completion }}% Goal Completion
+                        </span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
             </div>
         </div>
-
         <div class="box-body">
             @if(count($data)>0)
                 <div class="row">
@@ -1063,6 +1057,7 @@
 @section('js')
     @include('script.chart')
     <script>
+
         $('#date_range').daterangepicker();
         $(".sinovac_dashboard").text({{ Session::get("sinovac_dashboard") }});
         $(".astra_dashboard").text({{ Session::get("astra_dashboard") }});
@@ -1338,7 +1333,7 @@
         });
         @endif
 
-            window.onload = function() {
+        window.onload = function() {
 
             var sinovac_dashboard = <?php if(Session::get('sinovac_dashboard')) echo Session::get('sinovac_dashboard'); else echo 0; ?>;
             var astra_dashboard = <?php if(Session::get('astra_dashboard')) echo Session::get('astra_dashboard'); else echo 0; ?>;
@@ -1392,8 +1387,8 @@
             };
             $("#chartContainer2").CanvasJSChart(options2);
 
-            var percent_coverage_firstdose = <?php if(Session::get('percent_coverage_firstdose')) echo Session::get('percent_coverage_firstdose'); else echo 0; ?>;
-            var percent_coverage_seconddose = <?php if(Session::get('percent_coverage_seconddose')) echo Session::get('percent_coverage_seconddose'); else echo 0; ?>;
+            var percent_coverage_firstdose = <?php if(Session::get('percent_coverage_firstdose')) echo str_replace(',','',Session::get('percent_coverage_firstdose')); else echo 0; ?>;
+            var percent_coverage_seconddose = <?php if(Session::get('percent_coverage_seconddose')) echo str_replace(',','',Session::get('percent_coverage_seconddose')); else echo 0; ?>;
             var options3 = {
                 title: {
                     text: "Percentage Coverage",
@@ -1416,8 +1411,8 @@
             };
             $("#chartPercentCoverage").CanvasJSChart(options3);
 
-            var consumption_rate_firstdose = <?php if(Session::get('consumption_rate_firstdose')) echo Session::get('consumption_rate_firstdose'); else echo 0; ?>;
-            var consumption_rate_secondddose = <?php if(Session::get('consumption_rate_secondddose')) echo Session::get('consumption_rate_secondddose'); else echo 0; ?>;
+            var consumption_rate_firstdose = <?php if(Session::get('consumption_rate_firstdose')) echo str_replace(',','',Session::get('consumption_rate_firstdose')); else echo 0; ?>;
+            var consumption_rate_secondddose = <?php if(Session::get('consumption_rate_secondddose')) echo str_replace(',','',Session::get('consumption_rate_seconddose')); else echo 0; ?>;
             var options4 = {
                 title: {
                     text: "Consumption Rate",
