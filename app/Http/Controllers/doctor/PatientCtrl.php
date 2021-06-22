@@ -184,7 +184,7 @@ class PatientCtrl extends Controller
     public function addPatient()
     {
         $user = Session::get('auth');
-        $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
+        $muncity = Muncity::where('province_id',$user->province)->WhereNull("vaccine_used")->orderby('description','asc')->get();
         return view('doctor.addPatient',[
             'title' => 'Add New Patient',
             'muncity' => $muncity,

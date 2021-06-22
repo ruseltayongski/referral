@@ -74,31 +74,31 @@
                     <tr>
                         <td><b class="text-success">{{ $facility->name }}</b></td>
                         <td><b class="text-success"><center>{{ ucfirst($facility->level) }}</center></b></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_covid_vacant" style="font-size: 10pt;">{{ $facility->emergency_room_covid_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_covid_occupied" style="font-size: 10pt;">{{ $facility->emergency_room_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_covid_vacant" style="font-size: 10pt;">{{ $facility->icu_covid_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_covid_occupied" style="font-size: 10pt;">{{ $facility->icu_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_covid_vacant" style="font-size: 10pt;">{{ $facility->beds_covid_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_covid_occupied" style="font-size: 10pt;">{{ $facility->beds_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_covid_vacant" style="font-size: 10pt;">{{ $facility->isolation_covid_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_covid_occupied" style="font-size: 10pt;">{{ $facility->isolation_covid_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="mechanical_used_covid" style="font-size: 10pt;">{{ $facility->mechanical_used_covid }}</a></td>
-                        <td><a href="#" class="text_editable" id="mechanical_vacant_covid" style="font-size: 10pt;">{{ $facility->mechanical_vacant_covid }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_non_vacant" style="font-size: 10pt;">{{ $facility->emergency_room_non_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_non_occupied" style="font-size: 10pt;">{{ $facility->emergency_room_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_non_vacant" style="font-size: 10pt;">{{ $facility->icu_non_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_non_occupied" style="font-size: 10pt;">{{ $facility->icu_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_non_vacant" style="font-size: 10pt;">{{ $facility->beds_non_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="beds_non_occupied" style="font-size: 10pt;">{{ $facility->beds_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_non_vacant" style="font-size: 10pt;">{{ $facility->isolation_non_vacant }}</a></td>
-                        <td><a href="#" class="text_editable" id="isolation_non_occupied" style="font-size: 10pt;">{{ $facility->isolation_non_occupied }}</a></td>
-                        <td><a href="#" class="text_editable" id="mechanical_used_non" style="font-size: 10pt;">{{ $facility->mechanical_used_non }}</a></td>
-                        <td><a href="#" class="text_editable" id="mechanical_vacant_non" style="font-size: 10pt;">{{ $facility->mechanical_vacant_non }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_covid_wait" style="font-size: 10pt;">{{ $facility->emergency_room_covid_wait }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_covid_wait" style="font-size: 10pt;">{{ $facility->icu_covid_wait }}</a></td>
-                        <td><a href="#" class="text_editable" id="emergency_room_non_wait" style="font-size: 10pt;">{{ $facility->emergency_room_non_wait }}</a></td>
-                        <td><a href="#" class="text_editable" id="icu_non_wait" style="font-size: 10pt;">{{ $facility->icu_non_wait }}</a></td>
-                        <td><a href="#" class="text_editable" id="remarks" >{{ $facility->remarks }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_covid_vacant" data-title="emergency_room_covid_vacant" style="font-size: 10pt;">{{ $facility->emergency_room_covid_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_covid_occupied" data-title="emergency_room_covid_occupied" style="font-size: 10pt;">{{ $facility->emergency_room_covid_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_covid_vacant" data-title="icu_covid_vacant" style="font-size: 10pt;">{{ $facility->icu_covid_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_covid_occupied" data-title="icu_covid_occupied" style="font-size: 10pt;">{{ $facility->icu_covid_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="beds_covid_vacant" data-title="beds_covid_vacant" style="font-size: 10pt;">{{ $facility->beds_covid_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="beds_covid_occupied" data-title="beds_covid_occupied" style="font-size: 10pt;">{{ $facility->beds_covid_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="isolation_covid_vacant" data-title="isolation_covid_vacant" style="font-size: 10pt;">{{ $facility->isolation_covid_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="isolation_covid_occupied" data-title="isolation_covid_occupied" style="font-size: 10pt;">{{ $facility->isolation_covid_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="mechanical_used_covid" data-title="mechanical_used_covid" style="font-size: 10pt;">{{ $facility->mechanical_used_covid }}</a></td>
+                        <td><a href="#" class="text_editable" id="mechanical_vacant_covid" data-title="mechanical_vacant_covid" style="font-size: 10pt;">{{ $facility->mechanical_vacant_covid }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_non_vacant" data-title="emergency_room_non_vacant" style="font-size: 10pt;">{{ $facility->emergency_room_non_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_non_occupied" data-title="emergency_room_non_occupied" style="font-size: 10pt;">{{ $facility->emergency_room_non_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_non_vacant" data-title="icu_non_vacant" style="font-size: 10pt;">{{ $facility->icu_non_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_non_occupied" data-title="icu_non_occupied" style="font-size: 10pt;">{{ $facility->icu_non_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="beds_non_vacant" data-title="beds_non_vacant" style="font-size: 10pt;">{{ $facility->beds_non_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="beds_non_occupied" data-title="beds_non_occupied" style="font-size: 10pt;">{{ $facility->beds_non_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="isolation_non_vacant" data-title="isolation_non_vacant" style="font-size: 10pt;">{{ $facility->isolation_non_vacant }}</a></td>
+                        <td><a href="#" class="text_editable" id="isolation_non_occupied" data-title="isolation_non_occupied" style="font-size: 10pt;">{{ $facility->isolation_non_occupied }}</a></td>
+                        <td><a href="#" class="text_editable" id="mechanical_used_non" data-title="mechanical_used_non" style="font-size: 10pt;">{{ $facility->mechanical_used_non }}</a></td>
+                        <td><a href="#" class="text_editable" id="mechanical_vacant_non" data-title="mechanical_vacant_non" style="font-size: 10pt;">{{ $facility->mechanical_vacant_non }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_covid_wait" data-title="emergency_room_covid_wait" style="font-size: 10pt;">{{ $facility->emergency_room_covid_wait }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_covid_wait" data-title="icu_covid_wait" style="font-size: 10pt;">{{ $facility->icu_covid_wait }}</a></td>
+                        <td><a href="#" class="text_editable" id="emergency_room_non_wait" data-title="emergency_room_non_wait" style="font-size: 10pt;">{{ $facility->emergency_room_non_wait }}</a></td>
+                        <td><a href="#" class="text_editable" id="icu_non_wait" data-title="icu_non_wait" style="font-size: 10pt;">{{ $facility->icu_non_wait }}</a></td>
+                        <td><a href="#" class="text_editable" id="remarks" data-title="remarks" >{{ $facility->remarks }}</a></td>
                         <td>
                             <?php
                             $encoded_by = \App\BedTracker::
