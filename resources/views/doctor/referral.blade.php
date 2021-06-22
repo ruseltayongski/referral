@@ -202,12 +202,11 @@ $user = Session::get('auth');
         @endif
     </script>
 
+    <!--
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-
     <audio id="carteSoudCtrl">
         <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
     </audio>
-
     <script>
         // Your web app's Firebase configuration
         var firebaseConfig = {
@@ -249,6 +248,7 @@ $user = Session::get('auth');
             }
         });
     </script>
+    -->
 
 @endsection
 
