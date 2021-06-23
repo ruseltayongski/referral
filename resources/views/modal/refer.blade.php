@@ -5,7 +5,8 @@
     ->where('province',$user->province)
     ->where('status',1)
     ->where('referral_used','yes')
-    ->orderBy('name','asc')->get();
+    ->orderBy('name','asc')
+    ->get();
 ?>
 
 <div class="modal fade" role="dialog" id="referFormModal">
