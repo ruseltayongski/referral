@@ -23,6 +23,7 @@ $dateNow = date('Y-m-d');
             <label>711 DOH CVCHD HealhLine</label><br>
             <label>Bed Occupancy Status</label><br>
             <label style="font-size: 9pt;">Central Visayas Electronic Health Referral System(CVe-HRS)</label>
+            <label style="font-size: 9pt;">JOHN ARDIENTE</label>
         </center>
           <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
               {{ csrf_field() }}
