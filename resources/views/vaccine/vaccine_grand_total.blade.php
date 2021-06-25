@@ -664,7 +664,7 @@
             <td>
                 <span class="label label-warning">
                     {{ $total_mild_astra_scnd_prov }}
-                    <?php session::put('total_mild_astra_scnd_excel_excel',$total_mild_astra_scnd_prov);?>
+                    <?php session::put('total_mild_astra_scnd_excel',$total_mild_astra_scnd_prov);?>
                 </span>  <!-- MILD ASTRA_SECOND -->
             </td>
             <td>

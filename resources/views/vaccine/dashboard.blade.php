@@ -43,7 +43,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             </div>
         </div>
 
-        <div class="row">
+          <div class="row">
             <div class="col-md-9 jim-content">
                 @if($error)
                     <div class="alert alert-danger">
@@ -70,8 +70,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <div class="col-lg-3">
                                     <div class="small-box bg-red">
                                         <div class="inner">
-                                            <h3 style="font-size: 20pt;">Sinovac</h3>
-                                            <p style="font-size:13pt"  class="sinovac_dashboard">{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</p>
+                                            <p style="font-size: 15pt;">Sinovac</p>
+                                            <h3 style="font-size:20pt"  class="sinovac_dashboard">+{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -82,8 +82,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <div class="col-lg-3">
                                     <div class="small-box bg-yellow">
                                         <div class="inner">
-                                            <h3 style="font-size: 20pt;">Astrazeneca</h3>
-                                            <p style="font-size:13pt" class="astra_dashboard">{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</p>
+                                            <p style="font-size: 15pt;">Astrazeneca</p>
+                                            <h3 style="font-size:20pt" class="astra_dashboard">+{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -94,8 +94,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <div class="col-lg-3">
                                     <div class="small-box bg-green">
                                         <div class="inner">
-                                            <h3 style="font-size: 20pt;">Sputnik V</h3>
-                                            <p style="font-size:13pt" class="sputnikv_dashboard">{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</p>
+                                            <p style="font-size: 15pt;">Sputnik V</p>
+                                            <h3 style="font-size:20pt" class="sputnikv_dashboard">+{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -106,8 +106,8 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <div class="col-lg-3">
                                     <div class="small-box bg-aqua">
                                         <div class="inner">
-                                            <h3 style="font-size: 20pt;">Pfizer</h3>
-                                            <p style="font-size:13pt" class="pfizer_dashboard">{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</p>
+                                            <p style="font-size: 15pt;">Pfizer</p>
+                                            <h3 style="font-size:20pt" class="pfizer_dashboard">+{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -157,7 +157,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
-
 
                                     <div class="info-box bg-aqua">
                                         <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>

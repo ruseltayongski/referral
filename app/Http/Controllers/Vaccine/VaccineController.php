@@ -122,6 +122,9 @@ class VaccineController extends Controller
     public $a1_target_facility, $a2_target_facility, $a3_target_facility, $a4_target_facility; //TARGET FACILITY
     public $a1_completion_facility, $a2_completion_facility, $a3_completion_facility, $a4_completion_facility; //COMPLETION FACILITY
     public $a1_vaccinated_facility ,  $a2_vaccinated_facility, $a3_vaccinated_facility, $a4_vaccinated_facility; //VACCINATED FACILITY
+    public $sinovac_allocated_facility ,  $astra_allocated_facility, $sputnikv_allocated_facility, $pfizer_allocated_facility; //VACCINATED FACILITY
+    public $sinovac_completion ,  $astra_completion, $sputnikv_completion, $pfizer_completion; //VACCINATED FACILITY
+
 
 
     public function index(Request $request)
@@ -139,10 +142,10 @@ class VaccineController extends Controller
         $a3_target = Muncity::select(DB::raw("sum(coalesce(a3,0)) as a3_target"))->first()->a3_target;
         $a4_target = Muncity::select(DB::raw("sum(coalesce(a4,0)) as a4_target"))->first()->a4_target;
 
-        $a1_target_facility = Muncity::select(DB::raw("sum(coalesce(a1,0)) as a1_target_facility"))->first()->a1_target_facility;
-        $a2_target_facility = Muncity::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->first()->a2_target_facility;
-        $a3_target_facility = Muncity::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->first()->a3_target_facility;
-        $a4_target_facility = Muncity::select(DB::raw("sum(coalesce(a4,0)) as a4_target_facility"))->first()->a4_target_facility;
+        $a1_target_facility = Facility::select(DB::raw("sum(coalesce(a1,0)) as a1_target_facility"))->first()->a1_target_facility;
+        $a2_target_facility = Facility::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->first()->a2_target_facility;
+        $a3_target_facility = Facility::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->first()->a3_target_facility;
+        $a4_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as a4_target_facility"))->first()->a4_target_facility;
 
         $a1_target = $a1_target + $a1_target_facility;
         $a2_target = $a2_target + $a2_target_facility;
@@ -157,8 +160,6 @@ class VaccineController extends Controller
         $a2_completion = number_format($a2_completion / $a2_target * 100,2);
         $a3_completion = number_format($a3_completion / $a3_target * 100,2);
         $a4_completion = number_format($a4_completion / $a4_target * 100,2);
-
-
 
         for($i=1; $i<=12; $i++)
         {
@@ -264,6 +265,20 @@ class VaccineController extends Controller
         $a3_completion = number_format($a3_completion / $a3_target * 100,2);
         $a4_completion = number_format($a4_completion / $a4_target * 100,2);
 
+        $sinovac_allocated = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(sinovac_allocated_second,0)) as sinovac_allocated"))->where("province_id",$province_id)->first()->sinovac_allocated;
+        $astra_allocated = Muncity::select(DB::raw("sum(COALESCE(astrazeneca_allocated_first,0)+COALESCE(astrazeneca_allocated_second,0)) as astra_allocated"))->where("province_id",$province_id)->first()->astra_allocated;
+        $sputnikv_allocated = Muncity::select(DB::raw("sum(COALESCE(sputnikv_allocated_first,0)+COALESCE(sputnikv_allocated_second,0)) as sputnikv_allocated"))->where("province_id",$province_id)->first()->sputnikv_allocated;
+        $pfizer_allocated = Muncity::select(DB::raw("sum(COALESCE(pfizer_allocated_first,0)+COALESCE(pfizer_allocated_second,0)) as pfizer_allocated"))->where("province_id",$province_id)->first()->pfizer_allocated;
+
+        $sinovac_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_completion"))->where("typeof_vaccine","Sinovac")->first()->sinovac_completion;
+        $astra_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_completion"))->where("typeof_vaccine","Astrazeneca")->first()->astra_completion;
+        $sputnikv_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sputnikv_completion"))->where("typeof_vaccine","Sputnikv")->first()->sputnikv_completion;
+        $pfizer_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as pfizer_completion"))->where("typeof_vaccine","Pfizer")->first()->pfizer_completion;
+
+        $sinovac_completion = number_format($sinovac_completion / $sinovac_allocated * 100,2);
+        $astra_completion = number_format($astra_completion / $astra_allocated * 100,2);
+        $sputnikv_completion = number_format($sputnikv_completion / $sputnikv_allocated * 100,2);
+        $pfizer_completion = number_format($pfizer_completion / $pfizer_allocated * 100,2);
 
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
@@ -316,13 +331,21 @@ class VaccineController extends Controller
             'a2_completion' => $a2_completion,
             'a3_completion' => $a3_completion,
             'a4_completion' => $a4_completion,
+            'sinovac_allocated' => $sinovac_allocated,
+            'astra_allocated' => $astra_allocated,
+            'sputnikv_allocated' => $sputnikv_allocated,
+            'pfizer_allocated' => $pfizer_allocated,
+            'sinovac_completion' => $sinovac_completion,
+            'astra_completion' => $astra_completion,
+            'sputnikv_completion' => $sputnikv_completion,
+            'pfizer_completion' => $pfizer_completion,
         ]);
     }
 
     public function TargetCompletionFacility($muncity_id){
         $this->data_facility = Facility::where("province",2)
             ->where("vaccine_used","yes")
-            ->where("tricity_id",63);
+            ->where("tricity_id",$muncity_id);
         $this->a1_target_facility = Facility::select(DB::raw("sum(coalesce(a1,0)) as a1_target_facility"))->where("tricity_id",63)->first()->a1_target_facility;
         $this->a2_target_facility = Facility::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->where("tricity_id",63)->first()->a2_target_facility;
         $this->a3_target_facility = Facility::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->where("tricity_id",63)->first()->a3_target_facility;
@@ -331,26 +354,26 @@ class VaccineController extends Controller
 
         $this->a1_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a1_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
-            ->where("facility.tricity_id","=",63)
+            ->where("facility.tricity_id","=",$muncity_id)
             ->where("vaccine_accomplish.priority","a1")
             ->first()
             ->a1_vaccinated_facility;
         $this->a2_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a2_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
-            ->where("facility.tricity_id","=",63)
+            ->where("facility.tricity_id","=",$muncity_id)
             ->where("vaccine_accomplish.priority","a2")
             ->first()
             ->a2_vaccinated_facility;
         $this->a3_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a3_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
-            ->where("facility.tricity_id","=",63)
+            ->where("facility.tricity_id","=",$muncity_id)
             ->where("vaccine_accomplish.priority","a3")
             ->first()
             ->a3_vaccinated_facility;
 
         $this->a4_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a4_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
-            ->where("facility.tricity_id","=",63)
+            ->where("facility.tricity_id","=",$muncity_id)
             ->where("vaccine_accomplish.priority","a3")
             ->first()
             ->a4_vaccinated_facility;
@@ -359,8 +382,22 @@ class VaccineController extends Controller
         $this->a2_completion_facility = number_format($this->a2_vaccinated_facility / $this->a2_target_facility * 100,2);
         $this->a3_completion_facility = number_format($this->a3_vaccinated_facility / $this->a3_target_facility * 100,2);
         $this->a4_completion_facility = number_format($this->a4_vaccinated_facility / $this->a4_target_facility * 100,2);
-    }
 
+        $this->sinovac_allocated_facility = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(sinovac_allocated_second,0)) as sinovac_allocated_facility"))->where("tricity_id",$muncity_id)->first()->sinovac_allocated_facility;
+        $this->astra_allocated_facility = Facility::select(DB::raw("sum(COALESCE(astrazeneca_allocated_first,0)+COALESCE(astrazeneca_allocated_second,0)) as astra_allocated_facility"))->where("tricity_id",$muncity_id)->first()->astra_allocated_facility;
+        $this->sputnikv_allocated_facility = Facility::select(DB::raw("sum(COALESCE(sputnikv_allocated_first,0)+COALESCE(sputnikv_allocated_second,0)) as sputnikv_allocated_facility"))->where("tricity_id",$muncity_id)->first()->sputnikv_allocated_facility;
+        $this->pfizer_allocated_facility = Facility::select(DB::raw("sum(COALESCE(pfizer_allocated_first,0)+COALESCE(pfizer_allocated_second,0)) as pfizer_allocated_facility"))->where("tricity_id",$muncity_id)->first()->pfizer_allocated_facility;
+
+        $this->sinovac_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_completion"))->where("typeof_vaccine","Sinovac")->first()->sinovac_completion;
+        $this->astra_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as astra_completion"))->where("typeof_vaccine","Astrazeneca")->first()->astra_completion;
+        $this->sputnikv_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sputnikv_completion"))->where("typeof_vaccine","Sputnikv")->first()->sputnikv_completion;
+        $this->pfizer_completion = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as pfizer_completion"))->where("typeof_vaccine","Pfizer")->first()->pfizer_completion;
+
+        $this->sinovac_completion = number_format($this->sinovac_completion / $this->sinovac_allocated_facility * 100,2);
+        $this->astra_completion = number_format($this->astra_completion / $this->astra_allocated_facility * 100,2);
+        $this->sputnikv_completion = number_format($this->sputnikv_completion / $this->sputnikv_allocated_facility * 100,2);
+        $this->pfizer_completion = number_format($this->pfizer_completion / $this->pfizer_allocated_facility * 100,2);
+    }
     public function vaccineFacility($tri_city,Request $request)
     {
         if(isset($request->date_range)){
@@ -392,7 +429,6 @@ class VaccineController extends Controller
             ->orderBy("name","asc")
             ->paginate(10);
 
-
         return view('vaccine.vaccine_facility',[
             'title' => 'List of Facility',
             'province_name' => "Cebu",
@@ -415,7 +451,15 @@ class VaccineController extends Controller
             'a1_completion_facility'  =>  $this->a1_completion_facility,
             'a2_completion_facility'  =>  $this->a2_completion_facility,
             'a3_completion_facility'  =>  $this->a3_completion_facility,
-            'a4_completion_facility'  =>  $this->a4_completion_facility
+            'a4_completion_facility'  =>  $this->a4_completion_facility,
+            'sinovac_allocated_facility'  => $this->sinovac_allocated_facility,
+            'astra_allocated_facility'  => $this->astra_allocated_facility,
+            'sputnikv_allocated_facility'  => $this->sputnikv_allocated_facility,
+            'pfizer_allocated_facility'  => $this->pfizer_allocated_facility,
+            'sinovac_completion' => $this->sinovac_completion,
+            'astra_completion' => $this->astra_completion,
+            'sputnikv_completion' => $this->sputnikv_completion,
+            'pfizer_completion' => $this->pfizer_completion,
         ]);
     }
 

@@ -37,6 +37,8 @@
     <link href="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.css') }}" rel="stylesheet">
 
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
     <title>
         @yield('title','Home')
     </title>
@@ -490,8 +492,6 @@
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('resources/plugin/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 

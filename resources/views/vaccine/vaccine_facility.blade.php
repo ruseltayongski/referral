@@ -53,62 +53,78 @@
         </div>
         <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-lg-3">
-                <div class="small-box bg-red">
-                    <div class="inner">
-                        <h3 class="sinovac_dashboard"></h3>
-                        <p style="font-size: 150%">Sinovac</p>
+                <div class="info-box bg-red">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">SINOVAC</span>
+                        <span class="info-box-number">+{{$sinovac_allocated_facility}}</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 50%"></div>
+                        </div>
+                        <span class="progress-description">
+                   {{ $sinovac_completion }}% Goal Completion
+                  </span>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="info-box bg-yellow">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">ASTRAZENECA</span>
+                        <span class="info-box-number">+{{ $astra_allocated_facility }}</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 50%"></div>
+                        </div>
+                        <span class="progress-description">
+                    {{ $astra_completion }}% Goal Completion
+                  </span>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <!-- /.info-box-content -->
                 </div>
             </div>
             <div class="col-lg-3">
-                <div class="small-box bg-yellow">
-                    <div class="inner">
-                        <h3 class="astra_dashboard"></h3>
-                        <p style="font-size: 150%">Astrazeneca</p>
+                <div class="info-box bg-green">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">SPUTNIKV</span>
+                        <span class="info-box-number">+{{ $sputnikv_allocated_facility }}</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 50%"></div>
+                        </div>
+                        <span class="progress-description">
+                   {{ $sputnikv_completion }}% Goal Completion
+                  </span>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <!-- /.info-box-content -->
                 </div>
             </div>
             <div class="col-lg-3">
-                <div class="small-box bg-green">
-                    <div class="inner">
-                        <h3 class="sputnikv_dashboard"></h3>
-                        <p style="font-size: 150%">SputnikV</p>
+                <div class="info-box bg-aqua">
+                    <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">PFIZER</span>
+                        <span class="info-box-number">+{{ $pfizer_allocated_facility }}</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 50%"></div>
+                        </div>
+                        <span class="progress-description">
+                   {{ $pfizer_completion }}% Goal Completion
+                  </span>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <!-- /.info-box-content -->
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="small-box bg-aqua">
-                    <div class="inner">
-                        <h3 class="pfizer_dashboard"></h3>
-                        <p style="font-size: 150%">Pfizer</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-        </div>
 
         <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-md-3">
                 <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-ios-medkit-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for <b>(A1)</b></span>
-                        <span class="info-box-number">{{ number_format($a1_target_facility) }}</span>
+                        <span class="info-box-number">+{{ number_format($a1_target_facility) }}</span>
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a1_completion_facility }}%; background-color: #00a65a;"></div>
                         </div>
@@ -121,10 +137,10 @@
             </div>
             <div class="col-md-3">
                 <div class="info-box" style="background-color: #ffe7d3" >
-                    <span class="info-box-icon" style="background-color: #ffe7d3" ><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <span class="info-box-icon" style="background-color: #ffe7d3" ><i class="ion ion-ios-medkit-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for <b>(A2)</b></span>
-                        <span class="info-box-number">{{ number_format($a2_target_facility) }}</span>
+                        <span class="info-box-number">+{{ number_format($a2_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a2_completion_facility }}%; background-color: #f39c12"></div>
@@ -138,10 +154,10 @@
             </div>
             <div class="col-md-3">
                 <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Target vaccination for <b>(A3)</b></span>
-                        <span class="info-box-number">{{ number_format($a3_target_facility) }}</span>
+                        <span class="info-box-number">+{{ number_format($a3_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a3_completion_facility }}%; background-color: #00c0ef"></div>
@@ -155,10 +171,10 @@
             </div>
             <div class="col-md-3">
                 <div class="info-box" style="background-color: #fffddb">
-                    <span class="info-box-icon" style="background-color: #fffddb"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                    <span class="info-box-icon" style="background-color: #fffddb"><i class=" ion ion-ios-medkit-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Targer vaccination for <b>(A4)</b></span>
-                        <span class="info-box-number">{{ number_format($a4_target_facility) }}</span>
+                        <span class="info-box-number">+{{ number_format($a4_target_facility) }}</span>
 
                         <div class="progress">
                             <div class="progress-bar" style="width: {{ $a4_completion_facility }}%; background-color: #fccb7d"></div>
@@ -428,7 +444,14 @@
                                                 <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
                                                     <b>Pfizer</b>
                                                 </button>
+                                                <button class="btn" style="color: black;" type="button">
+                                                    <h5>Total Allocated: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h5>
+                                                </button>
+                                                <button class="btn" style="color: black;" type="button">
+                                                    <h5>Goal Completion: <b style="font-size: 18px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up " style="color:#00a65a;"> </i>  {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100 ),2 }}%   </b></h5>
+                                                </button>
                                             <br>
+                                            <!--
                                             @foreach(\App\VaccineAccomplished::where("facility_id",$row->id)->whereBetween("date_first",[$date_start,$date_end])->orderBy("date_first","asc")->get() as $x)
                                                 <span class="badge bg-blue">
                                                     {{ date("F d,Y",strtotime($x->date_first)) }}
@@ -438,12 +461,13 @@
                                                     <br>
                                                     <?php $count = 0; ?>
                                                 @endif
-                                            @endforeach
+                                            @endforeach -->
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="14">
                                             <table style="font-size: 8pt;" class="table" border="2">
+                                                <br>
                                                 <tbody><tr>
                                                     <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
                                                     <th colspan="5">
@@ -1302,6 +1326,7 @@
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(result){
+                console.log(result);
                 $(".vaccine_facility_allocated").html(result);
             })
         }
