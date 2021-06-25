@@ -65,7 +65,8 @@ if(!$dateReportOnline)
                                         $count++;
                                         echo $count;
                                     ?>
-                                    {{ ucwords(mb_strtolower($row->lname)) }}, {{ ucwords(mb_strtolower($row->fname)) }}
+                                    {{ ucwords(mb_strtolower($row->lname)) }}, {{ ucwords(mb_strtolower($row->fname)) }}<br>
+                                    <small class="text-warning">{{ $row->contact }}</small>
                                 </td>
                                 <td class="text-danger">
                                     {{ ucfirst($row->level) }}
