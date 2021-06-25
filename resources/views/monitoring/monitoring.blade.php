@@ -71,7 +71,9 @@
                             </td>
                             <td width="20%">
                                 <?php
-                                    $monitoring_not_accepted = \App\Monitoring::where("code","=",$row->code)->get();
+                                    $monitoring_not_accepted = \App\Monitoring::select("monitoring.remarks","monitoring.created_at",\Illuminate\Support\Facades\DB::raw("CONCAT(users.fname,' ',users.mname,' ',users.lname) as agent_name"))->where("monitoring.code","=",$row->code)
+                                                                ->leftJoin("users","users.id","=","monitoring.remark_by")
+                                                                ->get();
                                 ?>
                                 @if($row->redirected_count)
                                 <span>Redirected by referred facility:</span> <small class="text-red"><span class="badge bg-red">{{ $row->redirected_count }}</span></small><br>
@@ -82,7 +84,9 @@
                                 @if(count($monitoring_not_accepted) > 0)
                                     @foreach($monitoring_not_accepted as $monitoring)
                                         <span class="text-green">={{ $monitoring->remarks }}</span><br>
-                                            <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small>
+                                        <small class="text-yellow">({{ date('F d,Y g:i a',strtotime($monitoring->created_at)) }})</small>
+                                        <br>
+                                        <small class="text-red"><i>{{ $monitoring->agent_name }}</i></small>
                                         <br><br>
                                     @endforeach
                                     @if(Session::get('auth')->level == 'opcen')

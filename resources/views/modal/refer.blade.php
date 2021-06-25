@@ -1,12 +1,11 @@
 <?php
-    $user = Session::get('auth');
-    $facilities = \App\Facility::select('id','name')
+$user = Session::get('auth');
+$facilities = \App\Facility::select('id','name')
     ->where('id','!=',$user->facility_id)
     ->where('province',$user->province)
     ->where('status',1)
     ->where('referral_used','yes')
-    ->orderBy('name','asc')
-    ->get();
+    ->orderBy('name','asc')->get();
 ?>
 
 <div class="modal fade" role="dialog" id="referFormModal">
@@ -16,16 +15,16 @@
                 <h4>REFER TO OTHER FACILITY</h4>
                 <hr />
                 <form method="post" id="referForm">
-                {{ csrf_field() }}
-                <div class="form-group">
-                    <label style="padding:0px;">REASON FOR REDIRECTION:</label>
-                    <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
-                </div>
-                <hr />
-                <div class="form-fotter pull-right">
-                    <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                    <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i> Send</button>
-                </div>
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label style="padding:0px;">REASON FOR REDIRECTION:</label>
+                        <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i> Send</button>
+                    </div>
                 </form>
                 <div class="clearfix"></div>
             </div>
