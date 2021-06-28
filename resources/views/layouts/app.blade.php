@@ -481,6 +481,7 @@
 @include('modal.duty')
 @include('modal.login')
 @include('modal.incoming')
+@include('modal.feedback')
 
 <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Go Top</button>
 <footer class="footer">
@@ -635,7 +636,8 @@
 @include('script.password')
 @include('script.duty')
 @include('script.desktop-notification')
-@include('script.notification')
+@include('script.notification_new')
+@include('script.feedback')
 
 @yield('js')
 

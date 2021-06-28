@@ -446,13 +446,11 @@ $user = Session::get('auth');
     @include('modal.seen')
     @include('modal.caller')
     @include('modal.cancel')
-    @include('modal.feedback')
     @include('modal.transfer')
 @endsection
 @include('script.firebase')
 
 @section('js')
-    @include('script.feedback')
     @include('script.referred')
     <script>
         @if(session()->has('issueReferral'))

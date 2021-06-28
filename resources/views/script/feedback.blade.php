@@ -25,6 +25,7 @@
     });
 
     function scrolldownFeedback(code){
+        console.log(code);
         var objDiv = document.getElementById(code);
 
         setTimeout(function () {
@@ -42,6 +43,25 @@
         scrolldownFeedback(code);
     }
 
+    function viewReco(data){
+        code = data.data("code");
+        console.log("viewReco");
+        $('.feedback_code').html(code);
+        $('.direct-chat-messages').attr('id',code);
+        $('#message').addClass("message input-"+code+"-{{ $user->id }}");
+
+        $("#"+code).html("Loading...");
+        var url = "<?php echo asset('doctor/feedback').'/'; ?>"+code;
+        $.get(url,function(data){
+            setTimeout(function(){
+                $("#"+code).html(data);
+                scrolldownFeedback(code);
+            },500);
+        });
+
+        $("#current_code").val(code);
+    }
+
     $('.btn-doh').on('click',function () {
         console.log('doh');
         code = $(this).data('code');
@@ -56,6 +76,7 @@
     });
 
     $('#feedbackForm').submit(function (e) {
+        console.log("feedback_send");
         e.preventDefault();
         var msg = $("#message").val();
         $("#message").val('').attr('placeholder','Sending...');
@@ -144,7 +165,7 @@
         });
     });
 
-    $('.direct-chat-messages').scroll(function() {
+    /*$('.direct-chat-messages').scroll(function() {
         var current_top_element = $('.direct-chat-messages').children().first();
         var previous_height = 0;
 
@@ -169,7 +190,7 @@
                 }
             })
         }
-    });
+    });*/
 
     feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();

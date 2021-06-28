@@ -165,7 +165,6 @@ $user = Session::get('auth');
     @include('modal.contact')
     @include('modal.seen')
     @include('modal.caller')
-    @include('modal.feedback')
 @endsection
 @section('css')
 
@@ -173,7 +172,6 @@ $user = Session::get('auth');
 
 @section('js')
     @include('script.referral')
-    @include('script.feedback')
 
     <script>
         $('.select2').select2();

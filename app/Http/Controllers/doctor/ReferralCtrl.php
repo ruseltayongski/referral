@@ -1127,11 +1127,6 @@ class ReferralCtrl extends Controller
         ]);
     }
 
-
-    public function feedbackAppend(){
-        return view('doctor.feedback_append');
-    }
-
     public function loadFeedback($code)
     {
         $id = Session::get('last_scroll_id');
@@ -1236,6 +1231,16 @@ class ReferralCtrl extends Controller
         return view('doctor.feedback_append',[
             "name" => $name,
             "message" => $req->message
+        ]);
+    }
+
+    public function receiverFeedback($user_id,$msg)
+    {
+        $user = User::find($user_id);
+        $name = ucwords(mb_strtolower($user->fname))." ".ucwords(mb_strtolower($user->lname));
+        return view('doctor.feedback_append',[
+            "name" => $name,
+            "message" => $msg
         ]);
     }
 

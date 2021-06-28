@@ -219,11 +219,54 @@ class ParamCtrl extends Controller
         return 0;
     }
 
-    public function getDoctorName($id){
-        $name = User::find($id);
-        $fname = ucwords(mb_strtolower($name->fname));
-        $lname = ucwords(mb_strtolower($name->lname));
 
-        return "$fname $lname";
+    public function getDoctorName($code,$user_id,$msg){
+        $user_send = User::find($user_id);
+        $user_receive = Session::get("auth");
+        $activity = Activity::where("code",$code)
+                    ->where(function($q) use($user_receive){
+                        $q->where("referred_from",$user_receive->facility_id)->orWhere("referred_to",$user_receive->facility_id);
+                    })
+                    ->orderBy("id","desc")
+                    ->first();
+
+        if($activity && $user_send->id != $user_receive->id){
+            $isNotify = "true";
+        }
+        else{
+            $isNotify = "false";
+        }
+        $redirect_track = asset("doctor/referred?referredCode=").$code;
+
+        $user_sender = User::find($user_id);
+        $name_sender = ucwords(mb_strtolower($user_sender->fname))." ".ucwords(mb_strtolower($user_send->lname));
+        $date_now = date('d M h:i a');
+        $picture_sender = url('resources/img/receiver.png');
+        $feedback_receiver = "<div class='direct-chat-msg left'>
+                                <div class='direct-chat-info clearfix'>
+                                    <span class='direct-chat-name pull-left'>$name_sender</span>
+                                    <span class='direct-chat-timestamp pull-right'>$date_now</span>
+                                </div>
+                                <img class='direct-chat-img' title='' src='$picture_sender' alt='Message User Image'>
+                                <div class='direct-chat-text'>
+                                    $msg
+                                </div>
+                            </div>";
+
+        return [
+            "code" => $code,
+            "picture" => url('resources/img/ro7.png'),
+            "isNotify" => $isNotify,
+            "content" => "<button class='btn btn-xs btn-info' onclick='viewReco($(this))' data-toggle='modal'
+                               data-target='#feedbackModal'
+                               data-code='$code'
+                               >
+                           <i class='fa fa-comments'></i> ReCo
+                       </button><a href='$redirect_track' class='btn btn-xs btn-warning' target='_blank'>
+                                                <i class='fa fa-stethoscope'></i> Track
+                                            </a>",
+            "feedback_receiver" => $feedback_receiver
+        ];
     }
+
 }

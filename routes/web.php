@@ -289,7 +289,7 @@ Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 
 Route::get('/fcm/send','FcmCtrl@send');
-Route::get('/doctor/name/{id}','ParamCtrl@getDoctorName');
+Route::get('/doctor/feedback_send/{id}/{user_id}/{msg}','ParamCtrl@getDoctorName');
 
 //MANAGE MCC PAGE
 Route::get('/mcc','doctor\HomeCtrl@index');
