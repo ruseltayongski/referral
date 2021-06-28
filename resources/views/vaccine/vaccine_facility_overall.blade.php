@@ -125,8 +125,7 @@
     $total_mild_overall_frst = $total_mild_svac_frst_grand + $total_mild_astra_frst_grand + $total_mild_sputnikv_frst_grand + $total_mild_pfizer_frst_grand; // TOTAL MILD OVERALL FIRST
     $total_mild_overall_scnd = $total_mild_svac_scnd_grand + $total_mild_astra_scnd_grand + $total_mild_sputnikv_scnd_grand + $total_mild_pfizer_scnd_grand; // TOTAL MILD OVERALL SECOND
 
-    $total_srs_overall_frst = $total_srs_svac_frst_grand + $total_srs_astra_frst_grand + $total_srs_sputnikv_frst_grand + $total_srs_pfizer_frst_grand; // TOTAL SERIOUS FIRST
-    $total_srs_overall_scnd = $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand + $total_srs_sputnikv_scnd_grand + $total_srs_pfizer_scnd_grand; // TOTAL SERIOUS SECOND
+
 
     $total_dfrd_overall_frst = $total_dfrd_svac_frst_grand + $total_dfrd_astra_frst_grand + $total_dfrd_sputnikv_frst_grand + $total_dfrd_pfizer_frst_grand; // TOTAL DEFERRED FIRST
     $total_dfrd_overall_scnd = $total_dfrd_svac_scnd_grand + $total_dfrd_astra_scnd_grand + $total_dfrd_sputnikv_scnd_grand + $total_dfrd_pfizer_scnd_grand; // TOTAL DEFERRED SECOND
@@ -221,6 +220,9 @@
 
     $consumption_rate_dashboard_first = number_format($total_c_rate_frst_grand,2);
     $consumption_rate_dashboard_second = number_format($total_c_rate_scnd_grand,2);
+
+    $total_srs_overall_frst = $total_srs_svac_frst_grand + $total_srs_astra_frst_grand + $total_srs_sputnikv_frst_grand + $total_srs_pfizer_frst_grand; // TOTAL SERIOUS FIRST
+    $total_srs_overall_scnd = $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand + $total_srs_sputnikv_scnd_grand + $total_srs_pfizer_scnd_grand; // TOTAL SERIOUS SECOND
 
 
     Session::put("sinovac_dashboard",$sinovac_dashboard);
@@ -342,15 +344,6 @@
             <span class="label label-success">
                 {{ $total_svac_a1_frst_grand }}
                 <?php Session::put('total_svac_a1_frst_excel',$total_svac_a1_frst_grand);?>
-
-
-
-                <!--diri lng sa taman diri lng sa kutob
-
-
-
-
-
             </span>
         </td> <!-- VACCINATED (A1) SINOVAC_FIRST -->
         <td>
@@ -455,7 +448,7 @@
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_svac_scnd_grand }}
-                <?php Session::put('total_vcted_svac_scnd_excel',$total_vcted_svac_scnd_grand);?>
+                <?php Session::put('total_vcted_svac_second_excel',$total_vcted_svac_scnd_grand);?>
             </span>
         </td> <!-- TOTAL VACCINATED SINOVAC_SECOND -->
         <td>
@@ -516,23 +509,23 @@
         </td> <!-- 1-5 -->
         <td rowspan="2">
             {{ $total_e_pop_a1_grand }}
-            <?php Session::put('total_e_pop_a1_excel',$total_e_pop_a1_grand);?>
+            <?php Session::put('total_e_pop_astra_a1_excel',$total_e_pop_a1_grand);?>
         </td>  <!--TOTAL ELIPOP ASTRA A1-->
         <td rowspan="2">
             {{ $total_e_pop_a2_grand }}
-            <?php Session::put('total_e_pop_a2_excel',$total_e_pop_a2_grand);?>
+            <?php Session::put('total_e_pop_astra_a2_excel',$total_e_pop_a2_grand);?>
         </td>   <!--TOTAL ELIPOP ASTRA A2-->
         <td rowspan="2">
             {{ $total_e_pop_a3_grand }}
-            <?php Session::put('total_e_pop_a3_excel',$total_e_pop_a3_grand);?>
+            <?php Session::put('total_e_pop_astra_a3_excel',$total_e_pop_a3_grand);?>
         </td>  <!--TOTAL ELIPOP ASTRA A3-->
         <td rowspan="2">
             {{ $total_e_pop_a4_grand }}
-            <?php Session::put('total_e_pop_a4_excel',$total_e_pop_a4_grand);?>
+            <?php Session::put('total_e_pop_astra_a4_excel',$total_e_pop_a4_grand);?>
         </td>  <!--TOTAL ELIPOP ASTRA A4-->
         <td rowspan="2">
             {{ $total_e_pop_grand }}
-            <?php Session::put('total_e_pop_excel',$total_e_pop_grand);?>
+            <?php Session::put('total_e_pop_astra_excel',$total_e_pop_grand);?>
         </td> <!--TOTAL ELI POP ASTRA-->
         <td rowspan="2" style="color:black">
             {{ $total_vallocated_astra_frst_grand }}
@@ -653,7 +646,7 @@
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_astra_scnd_grand }}
-                <?php Session::put('total_vcted_astra_scnd_excel',$total_vcted_astra_scnd_grand);?>
+                <?php Session::put('total_vcted_astra_second',$total_vcted_astra_scnd_grand);?>
             </span>
         </td>  <!-- TOTAL VACCINATED ASTRA_SECOND -->
         <td>
@@ -714,23 +707,23 @@
         </td> <!-- 1-5 -->
         <td rowspan="2">
             {{ $total_e_pop_a1_grand }}
-            <?php Session::put('total_e_pop_a1_excel',$total_e_pop_a1_grand);?>
+            <?php Session::put('total_e_pop_sputnikv_a1_excel',$total_e_pop_a1_grand);?>
         </td>  <!--TOTAL ELIPOP A1 SPUTNIKV-->
         <td rowspan="2">
             {{ $total_e_pop_a2_grand }}
-            <?php Session::put('total_e_pop_a2_excel',$total_e_pop_a2_grand);?>
+            <?php Session::put('total_e_pop_sputnikv_a2_excel',$total_e_pop_a2_grand);?>
         </td>   <!--TOTAL ELIPOP A2 SPUTNIKV-->
         <td rowspan="2">
             {{ $total_e_pop_a3_grand }}
-            <?php Session::put('total_e_pop_a3_excel',$total_e_pop_a3_grand);?>
+            <?php Session::put('total_e_pop_sputnikv_a3_excel',$total_e_pop_a3_grand);?>
         </td>  <!--TOTAL ELIPOP A3 SPUTNIKV-->
         <td rowspan="2">
             {{ $total_e_pop_a4_grand }}
-            <?php Session::put('total_e_pop_a4_excel',$total_e_pop_a4_grand);?>
+            <?php Session::put('total_e_pop_sputnikv_a4_excel',$total_e_pop_a4_grand);?>
         </td>  <!--TOTAL ELIPOP A4  SPUTNIKV-->
         <td rowspan="2">
             {{ $total_e_pop_grand }}
-            <?php Session::put('total_e_pop_excel',$total_e_pop_grand);?>
+            <?php Session::put('total_e_pop_sputnikv_excel',$total_e_pop_grand);?>
         </td> <!--TOTAL ELI POP  SPUTNIKV-->
         <td rowspan="2" style="color:black">
             {{ $total_vallocated_sputnikv_frst_grand }}
@@ -851,7 +844,7 @@
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_sputnikv_scnd_grand }}
-                <?php Session::put('total_vcted_sputnikv_scnd_excel',$total_vcted_sputnikv_scnd_grand);?>
+                <?php Session::put('total_vcted_sputnikv_second_excel',$total_vcted_sputnikv_scnd_grand);?>
             </span>
         </td>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
         <td>
@@ -912,23 +905,23 @@
         </td> <!-- 1-5 -->
         <td rowspan="2">
             {{ $total_e_pop_a1_grand }}
-            <?php Session::put('total_e_pop_a1_excel',$total_e_pop_a1_grand );?>
+            <?php Session::put('total_e_pop_pfizer_a1_excel',$total_e_pop_a1_grand );?>
         </td>  <!--TOTAL ELIPOP A1-->
         <td rowspan="2">
             {{ $total_e_pop_a2_grand }}
-            <?php Session::put('total_e_pop_a2_excel',$total_e_pop_a2_grand );?>
+            <?php Session::put('total_e_pop_pfizer_a2_excel',$total_e_pop_a2_grand );?>
         </td>   <!--TOTAL ELIPOP A1-->
         <td rowspan="2">
             {{ $total_e_pop_a3_grand }}
-            <?php Session::put('total_e_pop_a3_excel',$total_e_pop_a3_grand );?>
+            <?php Session::put('total_e_pop_pfizer_a3_excel',$total_e_pop_a3_grand );?>
         </td>  <!--TOTAL ELIPOP A1-->
         <td rowspan="2">
             {{ $total_e_pop_a4_grand }}
-            <?php Session::put('total_e_pop_a4_excel',$total_e_pop_a4_grand );?>
+            <?php Session::put('total_e_pop_pfizer_a4_excel',$total_e_pop_a4_grand );?>
         </td><!--TOTAL ELIPOP A1-->
         <td rowspan="2">
             {{ $total_e_pop_grand }}</td>
-             <?php Session::put('total_e_pop_excel',$total_e_pop_grand );?>
+             <?php Session::put('total_e_pop_pfizer_excel',$total_e_pop_grand );?>
         <!--//TOTAL ELI POP-->
         <td rowspan="2" style="color:black">
             {{ $total_vallocated_pfizer_frst_grand }}
@@ -940,7 +933,7 @@
         </td>  <!-- VACCINE ALLOCATED (SD) PFIZER_FIRST -->
         <td rowspan="2" style="color:black;">
             {{ $total_vallocated_frst_pfizer }}
-            <?php Session::put('total_vallocated_frst_excel',$total_vallocated_frst_pfizer );?>
+            <?php Session::put('total_vallocated_pfizer_excel',$total_vallocated_frst_pfizer );?>
         </td>  <!-- TOTAL VACCINE ALLOCATED PFIZER_FIRST -->
         <td style="color:black;">
             <span class="label label-success">
@@ -1049,7 +1042,7 @@
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_pfizer_scnd_grand }}
-                <?php Session::put('total_vcted_pfizer_scnd_excel',$total_vcted_pfizer_scnd_grand );?>
+                <?php Session::put('total_vcted_pfizer_second_excel',$total_vcted_pfizer_scnd_grand );?>
             </span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
         </td> <!-- 1-6 -->
         <td>
@@ -1127,31 +1120,31 @@
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{$total_vcted_a1_first_grand }}
-            <?php Session::put('total_vcted_a1_first_excel',$total_vcted_a1_first_grand );?>
+            <?php Session::put('total_vcted_grand_a1_first_excel',$total_vcted_a1_first_grand );?>
             </b> <!-- TOTAL VACCINATED (A1) -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_vcted_a2_first_grand }}
-             <?php Session::put('total_vcted_a2_first_excel',$total_vcted_a2_first_grand );?>
+             <?php Session::put('total_vcted_grand_a2_first_excel',$total_vcted_a2_first_grand );?>
             </b>  <!-- TOTAL VACCINATED (A2) -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{$total_vcted_a3_first_grand }}
-                <?php Session::put('total_vcted_a3_first_excel',$total_vcted_a3_first_grand );?>
+                <?php Session::put('total_vcted_grand_a3_first_excel',$total_vcted_a3_first_grand );?>
             </b> <!-- TOTAL VACCINATED (A3) -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{$total_vcted_a4_first_grand }}
-                <?php Session::put('total_vcted_a4_first_excel',$total_vcted_a4_first_grand );?>
+                <?php Session::put('total_vcted_grand_a4_first_excel',$total_vcted_a4_first_grand );?>
             </b> <!-- TOTAL VACCINATED (A4) -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_vcted_first_overall }}
-                <?php Session::put('total_vcted_first_overall_excel',$total_vcted_first_overall );?>
+                <?php Session::put('total_vcted_overall_frst_excel',$total_vcted_first_overall );?>
             </b>  <!-- TOTAL VACCINATED FIRST DOSE OVERALL-->
         </td>
         <td>
@@ -1163,7 +1156,7 @@
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_srs_overall_frst }}
-                <?php Session::put('total_srs_overall_frst_excel ',$total_srs_overall_frst );?>
+                <?php Session::put('total_srs_overall_frst_excel',$total_srs_overall_frst );?>
             </b>  <!-- TOTAL SERIOUS -->
         </td>
         <td>
@@ -1181,13 +1174,13 @@
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_wstge_overall_first }}
-                <?php Session::put('total_wstge_overall_first_excel',$total_wstge_overall_first );?>
+                <?php Session::put('total_wstge_overall_frst_excel',$total_wstge_overall_first );?>
             </b>  <!-- TOTAL WASTAGE -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ number_format($total_p_cvrge_overall_frst,2) }}%
-                <?php Session::put('total_p_cvrge_overall_frst_excel',number_format($total_p_cvrge_overall_frst,2) );?>
+                <?php Session::put('total_p_cvrge_frst_excel',number_format($total_p_cvrge_overall_frst,2) );?>
             </b>  <!-- PERCENT_COVERAGE_OVERALL_FIRST -->
         </td>
         <td>
@@ -1216,32 +1209,32 @@
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a1_grand }}
-                <?php Session::put('total_vcted_scnd_a1_excel',$total_vcted_scnd_a1_grand );?>
+                <?php Session::put('total_vcted_grand_a1_second_excel',$total_vcted_scnd_a1_grand );?>
             </b> <!-- TOTAL VACCINATED SECOND DOSE A1 -->
         </td>
         <td>
 
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a2_grand }}
-                <?php Session::put('total_vcted_scnd_a2_excel',$total_vcted_scnd_a2_grand );?>
+                <?php Session::put('total_vcted_grand_a2_second_excel',$total_vcted_scnd_a2_grand );?>
             </b> <!-- TOTAL VACCINATED SECOND DOSE A2 -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a3_grand }}
-                <?php Session::put('total_vcted_scnd_a3_excel',$total_vcted_scnd_a3_grand );?>
+                <?php Session::put('total_vcted_grand_a3_second_excel',$total_vcted_scnd_a3_grand );?>
             </b> <!-- TOTAL VACCINATED SECOND DOSE A3 -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a4_grand }}
-                <?php Session::put('total_vcted_scnd_a4_excel',$total_vcted_scnd_a4_grand );?>
+                <?php Session::put('total_vcted_grand_a4_second_excel',$total_vcted_scnd_a4_grand );?>
             </b> <!-- TOTAL VACCINATED SECOND DOSE A4-->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_overall }}</b>
-                 <?php Session::put('total_vcted_scnd_excel',$total_vcted_scnd_overall );?>
+                 <?php Session::put('total_vcted_overall_second_excel',$total_vcted_scnd_overall );?>
             <!-- //TOTAL VACCINATED SECOND DOSE OVERALL -->
         </td>
         <td>
@@ -1265,7 +1258,7 @@
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_rfsd_overall_scnd }}
-                <?php Session::put('total_rfsd_overall_scnd_excel',$total_rfsd_overall_scnd );?>
+                <?php Session::put('total_rfsd_overall_frst_excel',$total_rfsd_overall_scnd );?>
             </b> <!-- TOTAL REFUSED  2 -->
         </td>
         <td>
@@ -1277,7 +1270,7 @@
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ number_format($total_p_cvrge_overall_scnd,2) }}%
-                <?php Session::put('total_p_cvrge_overall_scnd_excel',number_format($total_p_cvrge_overall_scnd,2) );?>
+                <?php Session::put('total_p_cvrge_scnd_excel',number_format($total_p_cvrge_overall_scnd,2) );?>
             </b> <!-- PERCENT_COVERAGE_OVERALL_FIRST -->
         </td>
         <td>

@@ -98,23 +98,23 @@
             <td>{{ $first_dose_total }}</td> <!-- TOTAL VACCINATED FIRST REGION -->
             <td>{{ $second_dose_total }}</td> <!-- TOTAL VACCINATED SECOND REGION -->
             <td>{{ $total_refusal_first }}</td> <!--  REFUSED FIRST REGION -->
-            <td>{{$total_refusal_second}}</td> <!--  REFUSED SECOND REGION -->
-            <td>{{$total_deferred_first}}</td> <!--  DEFERRED FIRST REGION -->
-            <td>{{$total_deferred_second}}</td> <!--  DEFERRED SECOND REGION -->
-            <td>{{$wastage_sinovac_first}}</td> <!--  WASTAGE SINOVAC REGION -->
-            <td>{{$wastage_astra_first}}</td> <!--  WASTAGE ASTRA  REGION -->
-            <td>{{$wastage_sputnikv_first}}</td> <!--  WASTAGE SPUTNIKV  REGION -->
-            <td>{{$wastage_pfizer_first}}</td> <!--  WASTAGE PFIZER REGION -->
-            <td>{{$wastage_region}}</td>   <!-- TOTAL WASTAGE REGION -->
+            <td>{{ $total_refusal_second}}</td> <!--  REFUSED SECOND REGION -->
+            <td>{{ $total_deferred_first}}</td> <!--  DEFERRED FIRST REGION -->
+            <td>{{ $total_deferred_second}}</td> <!--  DEFERRED SECOND REGION -->
+            <td>{{ $wastage_sinovac_first}}</td> <!--  WASTAGE SINOVAC REGION -->
+            <td>{{ $wastage_astra_first}}</td> <!--  WASTAGE ASTRA  REGION -->
+            <td>{{ $wastage_sputnikv_first}}</td> <!--  WASTAGE SPUTNIKV  REGION -->
+            <td>{{ $wastage_pfizer_first}}</td> <!--  WASTAGE PFIZER REGION -->
+            <td>{{ $wastage_region}}</td>   <!-- TOTAL WASTAGE REGION -->
             <td>{{ $total_p_cvrge_sinovac_region_first }}%</td> <!-- TOTAL PERCENT COVERAGE SINOVAC FIRST REGION -->
-            <td>{{$total_p_cvrge_astra_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA FIRST REGION -->
-            <td>{{$total_p_cvrge_sputnikv_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION -->
-            <td>{{$total_p_cvrge_pfizer_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER FIRST REGION -->
+            <td>{{ $total_p_cvrge_astra_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA FIRST REGION -->
+            <td>{{ $total_p_cvrge_sputnikv_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION -->
+            <td>{{ $total_p_cvrge_pfizer_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER FIRST REGION -->
             <td>{{ $total_p_cvrge_region_first }}%</td> <!-- TOTAL PERCENT COVERAGE FIRST REGION -->
             <td>{{ $total_p_cvrge_sinovac_region_second }}%</td> <!-- TOTAL PERCENT COVERAGE SINOVAC SECOND REGION -->
-            <td>{{$total_p_cvrge_astra_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA SECOND REGION -->
-            <td>{{$total_p_cvrge_sputnikv_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION -->
-            <td>{{$total_p_cvrge_pfizer_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER SECOND REGION -->
+            <td>{{ $total_p_cvrge_astra_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA SECOND REGION -->
+            <td>{{ $total_p_cvrge_sputnikv_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION -->
+            <td>{{ $total_p_cvrge_pfizer_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER SECOND REGION -->
             <td>{{ $total_p_cvrge_region_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND REGION -->
             <td>{{ $c_rate_region_sinovac_first }}%</td>  <!-- CONSUMPTION RATE SINOVAC FIRST REGION -->
             <td>{{ $c_rate_region_astra_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST REGION -->
@@ -143,7 +143,7 @@
             <td>{{ $vcted_sputnikv_bohol_second }}</td> <!-- VACCINATED SPUTNIKV_SECOND BOHOL -->
             <td>{{ $vcted_pfizer_bohol_first }}</td> <!-- VACCINATED PFIZER_FIRST BOHOL -->
             <td>{{ $vcted_pfizer_bohol_second }}</td> <!-- VACCINATED PFIZER_SECOND BOHOL -->
-            <td>{{ $total_vcted_first_bohol}}</td> <!-- TOTAL VACCINATED FIRST BOHOL -->
+            <td>{{ $total_vcted_first_bohol }}</td> <!-- TOTAL VACCINATED FIRST BOHOL -->
             <td>{{ $total_vcted_second_bohol }}</td> <!-- TOTAL VACCINATED SECOND BOHOL -->
             <td>{{ $refused_first_bohol }}</td> <!--  REFUSED FIRST BOHOL -->
             <td>{{ $refused_second_bohol }}</td> <!--  REFUSED SECOND BOHOL -->
@@ -153,7 +153,7 @@
             <td>{{ $wastage_astra_bohol_first }}</td> <!--  WASTAGE ASTRA FIRST BOHOL -->
             <td>{{ $wastage_sputnikv_bohol_first }}</td> <!--  WASTAGE SPUTNIKV FIRST BOHOL -->
             <td>{{ $wastage_pfizer_bohol_first }}</td> <!--  WASTAGE PFIZER FIRST BOHOL -->
-            <td>{{$total_wastage_bohol}}</td> <!--  TOTAL WASTAGE FIRST BOHOL -->
+            <td>{{ $total_wastage_bohol}}</td> <!--  TOTAL WASTAGE FIRST BOHOL -->
             <td>{{ $p_cvrge_sinovac_bohol_first }}%</td> <!--  PERCENT COVERAGE SINOVAC FIRST BOHOL -->
             <td>{{ $p_cvrge_astra_bohol_first }}%</td> <!--  PERCENT COVERAGE ASTRA FIRST BOHOL -->
             <td>{{ $p_cvrge_sputnikv_bohol_first }}%</td> <!--  PERCENT COVERAGE SPUTNIKV FIRST BOHOL -->
@@ -201,7 +201,7 @@
             <td>{{ $wastage_astra_cebu_first }}</td> <!-- WASTAGE ASTRA CEBU -->
             <td>{{ $wastage_sputnikv_cebu_first }}</td> <!-- WASTAGE SPUTNIKV CEBU -->
             <td>{{ $wastage_pfizer_cebu_first }}</td> <!-- WASTAGE PFIZER CEBU -->
-            <td>{{$total_wastage_cebu}}</td> <!-- TOTAL WASTAGE CEBU -->
+            <td>{{ $total_wastage_cebu}}</td> <!-- TOTAL WASTAGE CEBU -->
             <td>{{ $p_cvrge_sinovac_cebu_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST CEBU -->
             <td>{{ $p_cvrge_astra_cebu_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST CEBU -->
             <td>{{ $p_cvrge_sputnikv_cebu_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU -->
@@ -249,7 +249,7 @@
             <td>{{ $wastage_astra_negros_first }}</td>  <!-- WASTAGE ASTRA NEGROS -->
             <td>{{ $wastage_sputnikv_negros_first }}</td> <!-- WASTAGE SPUTNIKV NEGROS -->
             <td>{{ $wastage_pfizer_negros_first }}</td> <!-- WASTAGE PFIZER NEGROS -->
-            <td>{{$total_wastage_negros}}</td> <!-- TOTAL WASTAGE NEGROS -->
+            <td>{{ $total_wastage_negros}}</td> <!-- TOTAL WASTAGE NEGROS -->
             <td>{{ $p_cvrge_sinovac_negros_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST NEGROS -->
             <td>{{ $p_cvrge_astra_negros_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST NEGROS -->
             <td>{{ $p_cvrge_sputnikv_negros_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST NEGROS -->
@@ -297,7 +297,7 @@
             <td>{{ $wastage_astra_siquijor_first }}</td> <!-- WASTAGE ASTRA SIQUIJOR -->
             <td>{{ $wastage_sputnikv_siquijor_first }}</td> <!-- WASTAGE SPUTNIKV SIQUIJOR -->
             <td>{{ $wastage_pfizer_siquijor_first }}</td> <!-- WASTAGE PFIZER SIQUIJOR -->
-            <td>{{$total_wastage_siquijor}}</td> <!-- TOTAL WASTAGE SIQUIJOR -->
+            <td>{{ $total_wastage_siquijor}}</td> <!-- TOTAL WASTAGE SIQUIJOR -->
             <td>{{ $p_cvrge_sinovac_siquijor_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_astra_siquijor_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_sputnikv_siquijor_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST SIQUIJOR -->
@@ -374,7 +374,7 @@
             <td>{{ $sputnikv_mandaue_facility }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV MANDAUE FACILITY -->
             <td>{{ $pfizer_mandaue_facility }}</td>  <!-- VACCINE ALLOCATED PFIZER MANDAUE FACILITY -->
             <td>{{ $total_mandaue_facility }}</td>  <!-- TOTAL VACCINE ALLOCATED MANDAUE FACILITY -->
-            <td><center>{{ $eli_pop_mandaue_facility }}</center></td>  <!-- ELIGIBLE POP MANDAUE FACILITY -->
+            <td>{{ $eli_pop_mandaue_facility }}</td>  <!-- ELIGIBLE POP MANDAUE FACILITY -->
             <td>{{ $vcted_sinovac_mandaue_facility_first }}</td> <!-- VACCINATED SINOVAC_FIRST MANDAUE FACILITY -->
             <td>{{ $vcted_sinovac_mandaue_facility_second }}</td> <!-- VACCINATED SINOVAC_SECOND MANDAUE FACILITY -->
             <td>{{ $vcted_astra_mandaue_facility_first }}</td>  <!-- VACCINATED ASTRA_FIRST MANDAUE FACILITY -->
