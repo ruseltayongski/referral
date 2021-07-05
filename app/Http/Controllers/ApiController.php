@@ -423,12 +423,13 @@ class ApiController extends Controller
         $referred_doctor->save();
 
         //refer patient
-        $unique_id = "$patient->id-$referring_facility->id-".date('ymdH');
-        $match = array(
-            'unique_id' => $unique_id
-        );
+        $unique_id = "$patient->id-$referring_facility->id-".date('ymdHis');
+        $user_code = str_pad($referring_facility->id,3,0,STR_PAD_LEFT);
+        $code = date('ymd').'-'.$user_code.'-'.date('His');
 
         $data = array(
+            'unique_id' => $unique_id,
+            'code' => $code,
             'referring_facility' => $referring_facility->id,
             'referred_to' => $referred_facility->id,
             'department_id' => $req->department_id,
@@ -444,16 +445,7 @@ class ApiController extends Controller
             'referred_md' => ($referred_doctor->id) ? $referred_doctor->id: 0,
         );
 
-        $form = PatientForm::updateOrCreate($match,$data);
-
-        $user_code = str_pad($referring_facility->id,3,0,STR_PAD_LEFT);
-        $code = date('ymd').'-'.$user_code.'-'.date('His');
-
-
-        PatientForm::where('unique_id',$unique_id)
-            ->update([
-                'code' => $code
-            ]);
+        $form = PatientForm::create($data);
         $type = 'normal';
         $this->addTracking($code,$patient->id,$referring_doctor,$referred_doctor,$req,$type,$form->id,'refer');
 
