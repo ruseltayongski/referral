@@ -1113,11 +1113,11 @@
     <tbody>
     <tr>
         <td>Total</td> <!-- 1-7 -->
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{ $total_e_pop_pfizer_a1_prov }}</td>
+        <td>{{ $total_e_pop_pfizer_a2_prov }}</td>
+        <td>{{ $total_e_pop_pfizer_a3_prov }}</td>
+        <td>{{ $total_e_pop_pfizer_a4_prov }}</td>
+        <td>{{ $total_e_pop_pfizer_prov }}</td>
         <td>
             {{ $total_vallocated_frst_prov }}
             <?php session::put('total_vallocated_frst_excel',$total_vallocated_frst_prov);?>

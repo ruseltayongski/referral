@@ -910,11 +910,11 @@
 
                                                 <tbody><tr>
                                                     <td>Total</td> <!-- 1-7 -->
-                                                    <td class=""></td> <!-- TOTAL_A1  -->
-                                                    <td class=""></td> <!-- TOTAL_A2 -->
-                                                    <td class=""></td> <!-- TOTAL_A3 -->
-                                                    <td class=""></td> <!-- TOTAL_A4 -->
-                                                    <td class=""></td> <!-- TOTAL_E_POP -->
+                                                    <td class="">{{ $total_epop_pfizer_a1 }}</td> <!-- TOTAL_A1 -->
+                                                    <td class="">{{ $total_epop_pfizer_a2 }}</td> <!-- TOTAL_A2 -->
+                                                    <td class="">{{ $total_epop_pfizer_a3 }}</td> <!-- TOTAL_A3 -->
+                                                    <td class="">{{ $total_epop_pfizer_a4 }}</td> <!-- TOTAL_A4 -->
+                                                    <td class="">{{ $total_epop_pfizer }}</td> <!-- TOTAL_E_POP -->
                                                     <td>
                                                         <b class="total_vallocated_frst{{ $row->id }}">{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
                                                     </td>

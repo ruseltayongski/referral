@@ -15,12 +15,23 @@ use Illuminate\Support\Facades\Session;
 
 class VaccineController extends Controller
 {
-    public $sinovac_bohol,$sinovac_cebu,$sinovac_negros,$sinovac_siquijor,$sinovac_cebu_facility,$sinovac_mandaue_facility,$sinovac_lapu_facility;
-    public $astra_bohol, $astra_cebu, $astra_negros, $astra_siquijor, $astra_cebu_facility, $astra_mandaue_facility, $astra_lapu_facility;
-    public $sputnikv_bohol, $sputnikv_cebu, $sputnikv_negros, $sputnikv_siquijor, $sputnikv_cebu_facility, $sputnikv_mandaue_facility, $sputnikv_lapu_facility;
-    public $pfizer_bohol, $pfizer_cebu, $pfizer_negros, $pfizer_siquijor, $pfizer_cebu_facility, $pfizer_mandaue_facility, $pfizer_lapu_facility;
-    public $sinovac_region, $astra_region, $sputnikv_region, $pfizer_region;
-    public $total_bohol, $total_cebu, $total_negros, $total_siquijor, $total_cebu_facility, $total_mandaue_facility, $total_lapu_facility, $total_region; //TOTAL REGION
+
+
+    public $sinovac_bohol_first, $sinovac_cebu_first, $sinovac_negros_first, $sinovac_siquijor_first, $sinovac_cebu_facility_first, $sinovac_mandaue_facility_first, $sinovac_lapu_facility_first;
+    public $sinovac_bohol_second, $sinovac_cebu_second, $sinovac_negros_second, $sinovac_siquijor_second, $sinovac_cebu_facility_second, $sinovac_mandaue_facility_second, $sinovac_lapu_facility_second;
+    public $astra_bohol_first, $astra_cebu_first, $astra_negros_first, $astra_siquijor_first, $astra_cebu_facility_first, $astra_mandaue_facility_first, $astra_lapu_facility_first;
+    public $astra_bohol_second, $astra_cebu_second, $astra_negros_second, $astra_siquijor_second, $astra_cebu_facility_second, $astra_mandaue_facility_second, $astra_lapu_facility_second;
+    public $sputnikv_bohol_first, $sputnikv_cebu_first, $sputnikv_negros_first, $sputnikv_siquijor_first, $sputnikv_cebu_facility_first, $sputnikv_mandaue_facility_first, $sputnikv_lapu_facility_first;
+    public $sputnikv_bohol_second, $sputnikv_cebu_second, $sputnikv_negros_second, $sputnikv_siquijor_second, $sputnikv_cebu_facility_second, $sputnikv_mandaue_facility_second, $sputnikv_lapu_facility_second;
+    public $pfizer_bohol_first, $pfizer_cebu_first, $pfizer_negros_first, $pfizer_siquijor_first, $pfizer_cebu_facility_first, $pfizer_mandaue_facility_first, $pfizer_lapu_facility_first;
+    public $pfizer_bohol_second, $pfizer_cebu_second, $pfizer_negros_second, $pfizer_siquijor_second, $pfizer_cebu_facility_second, $pfizer_mandaue_facility_second, $pfizer_lapu_facility_second;
+    public $sinovac_region_first, $sinovac_region_second, $astra_region_first, $astra_region_second, $sputnikv_region_first, $sputnikv_region_second, $pfizer_region_first, $pfizer_region_second;
+
+    public $total_bohol_first, $total_cebu_first, $total_negros_first, $total_siquijor_first, $total_cebu_facility_first, $total_mandaue_facility_first, $total_lapu_facility_first, $total_region_first; //TOTAL FIRST
+    public $total_bohol_second, $total_cebu_second, $total_negros_second, $total_siquijor_second, $total_cebu_facility_second, $total_mandaue_facility_second, $total_lapu_facility_second, $total_region_second; //TOTAL FIRST
+
+
+
     public $eli_pop_bohol, $eli_pop_cebu, $eli_pop_negros, $eli_pop_siquijor, $eli_pop_cebu_facility, $eli_pop_mandaue_facility, $eli_pop_lapu_facility; //ELIGIBLE POP SINOVAC
     public $vcted_sinovac_bohol_first, $vcted_sinovac_cebu_first, $vcted_sinovac_negros_first, $vcted_sinovac_siquijor_first,
            $vcted_sinovac_cebu_facility_first, $vcted_sinovac_mandaue_facility_first, $vcted_sinovac_lapu_facility_first; //VACCINATED_SINOVAC_FIRST
@@ -1143,51 +1154,92 @@ class VaccineController extends Controller
 
     public function tabValueDeclaration(){
         return [
-            "sinovac_bohol" => $this->sinovac_bohol,
-            "sinovac_cebu" => $this->sinovac_cebu,
-            "sinovac_negros" => $this->sinovac_negros,
-            "sinovac_siquijor" => $this->sinovac_siquijor,
-            "sinovac_cebu_facility" => $this->sinovac_cebu_facility,
-            "sinovac_mandaue_facility" => $this->sinovac_mandaue_facility,
-            "sinovac_lapu_facility" => $this->sinovac_lapu_facility,
-            "sinovac_region" => $this->sinovac_bohol + $this->sinovac_cebu + $this->sinovac_negros + $this->sinovac_siquijor + $this->sinovac_cebu_facility + $this->sinovac_mandaue_facility + $this->sinovac_lapu_facility,
+            "sinovac_bohol_first" => $this->sinovac_bohol_first,
+            "sinovac_bohol_second" => $this->sinovac_bohol_second,
+            "sinovac_cebu_first" => $this->sinovac_cebu_first,
+            "sinovac_cebu_second" => $this->sinovac_cebu_second,
+            "sinovac_negros_first" => $this->sinovac_negros_first,
+            "sinovac_negros_second" => $this->sinovac_negros_second,
+            "sinovac_siquijor_first" => $this->sinovac_siquijor_first,
+            "sinovac_siquijor_second" => $this->sinovac_siquijor_second,
+            "sinovac_cebu_facility_first" => $this->sinovac_cebu_facility_first,
+            "sinovac_cebu_facility_second" => $this->sinovac_cebu_facility_second,
+            "sinovac_mandaue_facility_first" => $this->sinovac_mandaue_facility_first,
+            "sinovac_mandaue_facility_second" => $this->sinovac_mandaue_facility_second,
+            "sinovac_lapu_facility_first" => $this->sinovac_lapu_facility_first,
+            "sinovac_lapu_facility_second" => $this->sinovac_lapu_facility_second,
+            "sinovac_region_first" => $this->sinovac_bohol_first + $this->sinovac_cebu_first + $this->sinovac_negros_first + $this->sinovac_siquijor_first + $this->sinovac_cebu_facility_first + $this->sinovac_mandaue_facility_first + $this->sinovac_lapu_facility_first,
+            "sinovac_region_second" => $this->sinovac_bohol_second + $this->sinovac_cebu_second + $this->sinovac_negros_second + $this->sinovac_siquijor_second + $this->sinovac_cebu_facility_second + $this->sinovac_mandaue_facility_second + $this->sinovac_lapu_facility_second,
 
-            "astra_bohol" => $this->astra_bohol,
-            "astra_cebu" => $this->astra_cebu,
-            "astra_negros" => $this->astra_negros,
-            "astra_siquijor" => $this->astra_siquijor,
-            "astra_cebu_facility" => $this->astra_cebu_facility,
-            "astra_mandaue_facility" => $this->astra_mandaue_facility,
-            "astra_lapu_facility" => $this->astra_lapu_facility,
-            "astra_region" => $this->astra_bohol + $this->astra_cebu + $this->astra_negros + $this->astra_siquijor + $this->astra_cebu_facility + $this->astra_mandaue_facility + $this->astra_lapu_facility,
+            "astra_bohol_first" => $this->astra_bohol_first,
+            "astra_bohol_second" => $this->astra_bohol_second,
+            "astra_cebu_first" => $this->astra_cebu_first,
+            "astra_cebu_second" => $this->astra_cebu_second,
+            "astra_negros_first" => $this->astra_negros_first,
+            "astra_negros_second" => $this->astra_negros_second,
+            "astra_siquijor_first" => $this->astra_siquijor_first,
+            "astra_siquijor_second" => $this->astra_siquijor_second,
+            "astra_cebu_facility_first" => $this->astra_cebu_facility_first,
+            "astra_cebu_facility_second" => $this->astra_cebu_facility_second,
+            "astra_mandaue_facility_first" => $this->astra_mandaue_facility_first,
+            "astra_mandaue_facility_second" => $this->astra_mandaue_facility_second,
+            "astra_lapu_facility_first" => $this->astra_lapu_facility_first,
+            "astra_lapu_facility_second" => $this->astra_lapu_facility_second,
+            "astra_region_first" => $this->astra_bohol_first + $this->astra_cebu_first + $this->astra_negros_first + $this->astra_siquijor_first + $this->astra_cebu_facility_first + $this->astra_mandaue_facility_first + $this->astra_lapu_facility_first,
+            "astra_region_second" => $this->astra_bohol_second + $this->astra_cebu_second + $this->astra_negros_second + $this->astra_siquijor_second + $this->astra_cebu_facility_second + $this->astra_mandaue_facility_second + $this->astra_lapu_facility_second,
 
-            "sputnikv_bohol" => $this->sputnikv_bohol,
-            "sputnikv_cebu" => $this->sputnikv_cebu,
-            "sputnikv_negros" => $this->sputnikv_negros,
-            "sputnikv_siquijor" => $this->sputnikv_siquijor,
-            "sputnikv_cebu_facility" => $this->sputnikv_cebu_facility,
-            "sputnikv_mandaue_facility" => $this->sputnikv_mandaue_facility,
-            "sputnikv_lapu_facility" => $this->sputnikv_lapu_facility,
-            "sputnikv_region" => $this->sputnikv_bohol + $this->sputnikv_cebu + $this->sputnikv_negros + $this->sputnikv_siquijor + $this->sputnikv_cebu_facility + $this->sputnikv_mandaue_facility + $this->sputnikv_lapu_facility,
+            "sputnikv_bohol_first" => $this->sputnikv_bohol_first,
+            "sputnikv_bohol_second" => $this->sputnikv_bohol_second,
+            "sputnikv_cebu_first" => $this->sputnikv_cebu_first,
+            "sputnikv_cebu_second" => $this->sputnikv_cebu_second,
+            "sputnikv_negros_first" => $this->sputnikv_negros_first,
+            "sputnikv_negros_second" => $this->sputnikv_negros_second,
+            "sputnikv_siquijor_first" => $this->sputnikv_siquijor_first,
+            "sputnikv_siquijor_second" => $this->sputnikv_siquijor_second,
+            "sputnikv_cebu_facility_first" => $this->sputnikv_cebu_facility_first,
+            "sputnikv_cebu_facility_second" => $this->sputnikv_cebu_facility_second,
+            "sputnikv_mandaue_facility_first" => $this->sputnikv_mandaue_facility_first,
+            "sputnikv_mandaue_facility_second" => $this->sputnikv_mandaue_facility_second,
+            "sputnikv_lapu_facility_first" => $this->sputnikv_lapu_facility_first,
+            "sputnikv_lapu_facility_second" => $this->sputnikv_lapu_facility_second,
+            "sputnikv_region_first" => $this->sputnikv_bohol_first + $this->sputnikv_cebu_first + $this->sputnikv_negros_first + $this->sputnikv_siquijor_first + $this->sputnikv_cebu_facility_first + $this->sputnikv_mandaue_facility_first + $this->sputnikv_lapu_facility_first,
+            "sputnikv_region_second" => $this->sputnikv_bohol_second + $this->sputnikv_cebu_second + $this->sputnikv_negros_second + $this->sputnikv_siquijor_second + $this->sputnikv_cebu_facility_second + $this->sputnikv_mandaue_facility_second + $this->sputnikv_lapu_facility_second,
+
+            "pfizer_bohol_first" => $this->pfizer_bohol_first,
+            "pfizer_bohol_second" => $this->pfizer_bohol_second,
+            "pfizer_cebu_first" => $this->pfizer_cebu_first,
+            "pfizer_cebu_second" => $this->pfizer_cebu_second,
+            "pfizer_negros_first" => $this->pfizer_negros_first,
+            "pfizer_negros_second" => $this->pfizer_negros_second,
+            "pfizer_siquijor_first" => $this->pfizer_siquijor_first,
+            "pfizer_siquijor_second" => $this->pfizer_siquijor_second,
+            "pfizer_cebu_facility_first" => $this->pfizer_cebu_facility_first,
+            "pfizer_cebu_facility_second" => $this->pfizer_cebu_facility_second,
+            "pfizer_mandaue_facility_first" => $this->pfizer_mandaue_facility_first,
+            "pfizer_mandaue_facility_second" => $this->pfizer_mandaue_facility_second,
+            "pfizer_lapu_facility_first" => $this->pfizer_lapu_facility_first,
+            "pfizer_lapu_facility_second" => $this->pfizer_lapu_facility_second,
+            "pfizer_region_first" => $this->pfizer_bohol_first + $this->pfizer_cebu_first + $this->pfizer_negros_first + $this->pfizer_siquijor_first + $this->pfizer_cebu_facility_first + $this->pfizer_mandaue_facility_first + $this->pfizer_lapu_facility_first,
+            "pfizer_region_second" => $this->pfizer_bohol_second + $this->pfizer_cebu_second + $this->pfizer_negros_second + $this->pfizer_siquijor_second + $this->pfizer_cebu_facility_second + $this->pfizer_mandaue_facility_second + $this->pfizer_lapu_facility_second,
 
 
-            "pfizer_bohol" => $this->pfizer_bohol,
-            "pfizer_cebu" => $this->pfizer_cebu,
-            "pfizer_negros" => $this->pfizer_negros,
-            "pfizer_siquijor" => $this->pfizer_siquijor,
-            "pfizer_cebu_facility" => $this->pfizer_cebu_facility,
-            "pfizer_mandaue_facility" => $this->pfizer_mandaue_facility,
-            "pfizer_lapu_facility" => $this->pfizer_lapu_facility,
-            "pfizer_region" => $this->pfizer_bohol + $this->pfizer_cebu + $this->pfizer_negros + $this->pfizer_siquijor + $this->pfizer_cebu_facility + $this->pfizer_mandaue_facility + $this->pfizer_lapu_facility,
 
-            "total_region" => $this->total_region,
-            "total_bohol" => $this->total_bohol,
-            "total_cebu" => $this->total_cebu,
-            "total_negros" => $this->total_negros,
-            "total_siquijor" => $this->total_siquijor,
-            "total_cebu_facility" => $this->total_cebu_facility,
-            "total_mandaue_facility" => $this->total_mandaue_facility,
-            "total_lapu_facility" => $this->total_lapu_facility,
+            "total_bohol_first" => $this->sinovac_bohol_first + $this->astra_bohol_first + $this->sputnikv_bohol_first + $this->pfizer_bohol_first,
+            "total_bohol_second" => $this->sinovac_bohol_second + $this->astra_bohol_second + $this->sputnikv_bohol_second + $this->pfizer_bohol_second,
+            "total_cebu_first" => $this->sinovac_cebu_first + $this->astra_cebu_first + $this->sputnikv_cebu_first + $this->pfizer_cebu_first,
+            "total_cebu_second" => $this->sinovac_cebu_second + $this->astra_cebu_second + $this->sputnikv_cebu_second + $this->pfizer_cebu_second,
+            "total_negros_first" =>  $this->sinovac_negros_first + $this->astra_negros_first + $this->sputnikv_negros_first + $this->pfizer_negros_first,
+            "total_negros_second" =>  $this->sinovac_negros_second + $this->astra_negros_second + $this->sputnikv_negros_second + $this->pfizer_negros_second,
+            "total_siquijor_first" => $this->sinovac_siquijor_first + $this->astra_siquijor_first + $this->sputnikv_siquijor_first + $this->pfizer_siquijor_first,
+            "total_siquijor_second" => $this->sinovac_siquijor_second + $this->astra_siquijor_second + $this->sputnikv_siquijor_second + $this->pfizer_siquijor_second,
+            "total_cebu_facility_first" =>  $this->sinovac_cebu_facility_first + $this->astra_cebu_facility_first + $this->sputnikv_cebu_facility_first + $this->pfizer_cebu_facility_first,
+            "total_cebu_facility_second" => $this->sinovac_cebu_facility_second + $this->astra_cebu_facility_second + $this->sputnikv_cebu_facility_second + $this->pfizer_cebu_facility_second,
+            "total_mandaue_facility_first" =>  $this->sinovac_mandaue_facility_first + $this->astra_mandaue_facility_first + $this->sputnikv_mandaue_facility_first + $this->pfizer_mandaue_facility_first,
+            "total_mandaue_facility_second" =>$this->sinovac_mandaue_facility_second + $this->astra_mandaue_facility_second + $this->sputnikv_mandaue_facility_second + $this->pfizer_mandaue_facility_second,
+            "total_lapu_facility_first" => $this->sinovac_lapu_facility_first + $this->astra_lapu_facility_first + $this->sputnikv_lapu_facility_first + $this->pfizer_lapu_facility_first,
+            "total_lapu_facility_second" => $this->sinovac_lapu_facility_second + $this->astra_lapu_facility_second + $this->sputnikv_lapu_facility_second + $this->pfizer_lapu_facility_second,
+            "total_region_first" => $this->sinovac_region_first + $this->astra_region_first +  $this->sputnikv_region_first +  $this->pfizer_region_first,
+            "total_region_second" => $this->sinovac_region_second + $this->astra_region_second +  $this->sputnikv_region_second +  $this->pfizer_region_second,
 
             //ELIGIBLE POP
             "eli_pop_bohol" => $this->eli_pop_bohol,
@@ -1625,43 +1677,77 @@ class VaccineController extends Controller
     }
 
     public function setPriority($priority){
-        //allocated
-        $this->sinovac_bohol = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_bohol"))->where("province_id",1)->first()->sinovac_bohol; //VACCINE ALLOCATED SINOVAC BOHOL
-        $this->sinovac_cebu = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_cebu"))->where("province_id",2)->first()->sinovac_cebu; //VACCINE ALLOCATED SINOVAC CEBU
-        $this->sinovac_negros = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_negros"))->where("province_id",3)->first()->sinovac_negros; //VACCINE ALLOCATED SINOVAC NEGROS
-        $this->sinovac_siquijor = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_siquijor"))->where("province_id",4)->first()->sinovac_siquijor; //VACCINE ALLOCATED SINOVAC SIQUIJOR
-        $this->sinovac_cebu_facility = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_cebu_facility"))->where("tricity_id",63)->first()->sinovac_cebu_facility; //VACCINE ALLOCATED SINOVAC CEBU FACILITY
-        $this->sinovac_mandaue_facility = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_mandaue_facility"))->where("tricity_id",80)->first()->sinovac_mandaue_facility; //VACCINE ALLOCATED SINOVAC MANDAUE_FACILITY
-        $this->sinovac_lapu_facility = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)+coalesce(sinovac_allocated_second,0)) as sinovac_lapu_facility"))->where("tricity_id",76)->first()->sinovac_lapu_facility; //VACCINE ALLOCATED SINOVAC LAPU-LAPU FACILITY
+        //allocated HAHAHAHAHA
 
-        $this->astra_bohol = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_bohol"))->where("province_id",1)->first()->astra_bohol; //VACCINE ALLOCATED ASTRA BOHOL
-        $this->astra_cebu = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_cebu"))->where("province_id",2)->first()->astra_cebu; //VACCINE ALLOCATED ASTRA CEBU
-        $this->astra_negros = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_negros"))->where("province_id",3)->first()->astra_negros; //VACCINE ALLOCATED ASTRA NEGROS
-        $this->astra_siquijor = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_siquijor"))->where("province_id",4)->first()->astra_siquijor; //VACCINE ALLOCATED ASTRA SIQUIKOR
-        $this->astra_cebu_facility = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_cebu_facility"))->where("tricity_id",63)->first()->astra_cebu_facility; //VACCINE ALLOCATED ASTRA CEBU FACILITY
-        $this->astra_mandaue_facility = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_mandaue_facility"))->where("tricity_id",80)->first()->astra_mandaue_facility; //VACCINE ALLOCATED ASTRA MANDAUE FACILITY
-        $this->astra_lapu_facility = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)+coalesce(astrazeneca_allocated_second,0)) as astra_lapu_facility"))->where("tricity_id",76)->first()->astra_lapu_facility; //VACCINE ALLOCATED ASTRA LAPU-LAPU FACILITY
+        $this->sinovac_bohol_first = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_bohol_first"))->where("province_id",1)->first()->sinovac_bohol_first; //VACCINE ALLOCATED SINOVAC BOHOL_FIRST
+        $this->sinovac_bohol_second = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_bohol_second"))->where("province_id",1)->first()->sinovac_bohol_second; //VACCINE ALLOCATED SINOVAC BOHOL_SECOND
+        $this->sinovac_cebu_first = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_cebu_first"))->where("province_id",2)->first()->sinovac_cebu_first; //VACCINE ALLOCATED SINOVAC CEBU_FIRST
+        $this->sinovac_cebu_second = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_cebu_second"))->where("province_id",2)->first()->sinovac_cebu_second; //VACCINE ALLOCATED SINOVAC CEBU_SECOND
+        $this->sinovac_negros_first = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_negros_first"))->where("province_id",3)->first()->sinovac_negros_first; //VACCINE ALLOCATED SINOVAC NEGROS_FIRST
+        $this->sinovac_negros_second = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_negros_second"))->where("province_id",3)->first()->sinovac_negros_second; //VACCINE ALLOCATED SINOVAC NEGROS_SECOND
+        $this->sinovac_siquijor_first = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_siquijor_first"))->where("province_id",4)->first()->sinovac_siquijor_first; //VACCINE ALLOCATED SINOVAC SIQUIJOR_FIRST
+        $this->sinovac_siquijor_second = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_siquijor_second"))->where("province_id",4)->first()->sinovac_siquijor_second; //VACCINE ALLOCATED SINOVAC SIQUIJOR_SECOND
+        $this->sinovac_cebu_facility_first = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_cebu_facility_first"))->where("tricity_id",63)->first()->sinovac_cebu_facility_first; //VACCINE ALLOCATED SINOVAC CEBU FACILITY_FIRST
+        $this->sinovac_cebu_facility_second = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_cebu_facility_second"))->where("tricity_id",63)->first()->sinovac_cebu_facility_second; //VACCINE ALLOCATED SINOVAC CEBU FACILITY_SECOND
+        $this->sinovac_mandaue_facility_first = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_mandaue_facility_first"))->where("tricity_id",80)->first()->sinovac_mandaue_facility_first; //VACCINE ALLOCATED SINOVAC MANDAUE_FACILITY_FIRST
+        $this->sinovac_mandaue_facility_second = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_mandaue_facility_second"))->where("tricity_id",80)->first()->sinovac_mandaue_facility_second; //VACCINE ALLOCATED SINOVAC MANDAUE_FACILITY_SECOND
+        $this->sinovac_lapu_facility_first = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_lapu_facility_first"))->where("tricity_id",76)->first()->sinovac_lapu_facility_first; //VACCINE ALLOCATED SINOVAC LAPU-LAPU FACILITY_FIRST
+        $this->sinovac_lapu_facility_second = Facility::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_lapu_facility_second"))->where("tricity_id",76)->first()->sinovac_lapu_facility_second; //VACCINE ALLOCATED SINOVAC LAPU-LAPU FACILITY_SECOND
 
-        $this->sputnikv_bohol = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_bohol"))->where("province_id",1)->first()->sputnikv_bohol; //VACCINE ALLOCATED SPUTNIKV BOHOL
-        $this->sputnikv_cebu = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_cebu"))->where("province_id",2)->first()->sputnikv_cebu; //VACCINE ALLOCATED SPUTNIKV CEBU
-        $this->sputnikv_negros = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_negros"))->where("province_id",3)->first()->sputnikv_negros; //VACCINE ALLOCATED SPUTNIKV NEGROS
-        $this->sputnikv_siquijor = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_siquijor"))->where("province_id",4)->first()->sputnikv_siquijor; //VACCINE ALLOCATED SPUTNIKV SIQUIJOR
-        $this->sputnikv_cebu_facility = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_cebu_facility"))->where("tricity_id",63)->first()->sputnikv_cebu_facility; //VACCINE ALLOCATED SPUTNIKV CEBU FACILITY
-        $this->sputnikv_mandaue_facility = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_mandaue_facility"))->where("tricity_id",80)->first()->sputnikv_mandaue_facility; //VACCINE ALLOCATED SPUTNIKV MANDAUAE FACILITY
-        $this->sputnikv_lapu_facility = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)+coalesce(sputnikv_allocated_second,0)) as sputnikv_lapu_facility"))->where("tricity_id",76)->first()->sputnikv_lapu_facility; //VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILTY
+        $this->astra_bohol_first = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_bohol_first"))->where("province_id",1)->first()->astra_bohol_first; //VACCINE ALLOCATED ASTRA BOHOL_FIRST
+        $this->astra_bohol_second = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_bohol_second"))->where("province_id",1)->first()->astra_bohol_second; //VACCINE ALLOCATED ASTRA BOHOL_SECOND
+        $this->astra_cebu_first = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_cebu_first"))->where("province_id",2)->first()->astra_cebu_first; //VACCINE ALLOCATED ASTRA CEBU_FIRST
+        $this->astra_cebu_second = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_cebu_second"))->where("province_id",2)->first()->astra_cebu_second; //VACCINE ALLOCATED ASTRA CEBU_SECOND
+        $this->astra_negros_first = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_negros_first"))->where("province_id",3)->first()->astra_negros_first; //VACCINE ALLOCATED ASTRA NEGROS_FIRST
+        $this->astra_negros_second = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_negros_second"))->where("province_id",3)->first()->astra_negros_second; //VACCINE ALLOCATED ASTRA NEGROS_SECOND
+        $this->astra_siquijor_first = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_siquijor_first"))->where("province_id",4)->first()->astra_siquijor_first; //VACCINE ALLOCATED ASTRA SIQUIJOR_FIRST
+        $this->astra_siquijor_second = Muncity::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_siquijor_second"))->where("province_id",4)->first()->astra_siquijor_second; //VACCINE ALLOCATED ASTRA SIQUIJOR_SECOND
+        $this->astra_cebu_facility_first = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_cebu_facility_first"))->where("tricity_id",63)->first()->astra_cebu_facility_first; //VACCINE ALLOCATED ASTRA CEBU FACILITY_FIRST
+        $this->astra_cebu_facility_second = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_cebu_facility_second"))->where("tricity_id",63)->first()->astra_cebu_facility_second; //VACCINE ALLOCATED ASTRA CEBU FACILITY_SECOND
+        $this->astra_mandaue_facility_first = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_mandaue_facility_first"))->where("tricity_id",80)->first()->astra_mandaue_facility_first; //VACCINE ALLOCATED ASTRA MANDAUE_FACILITY_FIRST
+        $this->astra_mandaue_facility_second = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_mandaue_facility_second"))->where("tricity_id",80)->first()->astra_mandaue_facility_second; //VACCINE ALLOCATED ASTRA MANDAUE_FACILITY_SECOND
+        $this->astra_lapu_facility_first = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_first,0)) as astra_lapu_facility_first"))->where("tricity_id",76)->first()->astra_lapu_facility_first; //VACCINE ALLOCATED ASTRA LAPU-LAPU FACILITY_FIRST
+        $this->astra_lapu_facility_second = Facility::select(DB::raw("SUM(coalesce(astrazeneca_allocated_second,0)) as astra_lapu_facility_second"))->where("tricity_id",76)->first()->astra_lapu_facility_second; //VACCINE ALLOCATED ASTRA LAPU-LAPU FACILITY_SECOND
 
-        $this->pfizer_bohol = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_bohol"))->where("province_id",1)->first()->pfizer_bohol; //VACCINE ALLOCATED PFIZER BOHOL
-        $this->pfizer_cebu = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_cebu"))->where("province_id",2)->first()->pfizer_cebu; //VACCINE ALLOCATED PFIZER CEBU
-        $this->pfizer_negros = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_negros"))->where("province_id",3)->first()->pfizer_negros; //VACCINE ALLOCATED PFIZER NEGROS
-        $this->pfizer_siquijor = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_siquijor"))->where("province_id",4)->first()->pfizer_siquijor; //VACCINE ALLOCATED PFIZER SIQUIJOR
-        $this->pfizer_cebu_facility = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_cebu_facility"))->where("tricity_id",63)->first()->pfizer_cebu_facility; //VACCINE ALLOCATED PFIZER CEBU FACILITY
-        $this->pfizer_mandaue_facility = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_mandaue_facility"))->where("tricity_id",80)->first()->pfizer_mandaue_facility; //VACCINE ALLOCATED PFIZER MANDAUE FACILITY
-        $this->pfizer_lapu_facility = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)+coalesce(pfizer_allocated_second,0)) as pfizer_lapu_facility"))->where("tricity_id",76)->first()->pfizer_lapu_facility; //VACCINE ALLOCATED PFIZER LAPU-LAPU FACILITY
+        $this->sputnikv_bohol_first = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_bohol_first"))->where("province_id",1)->first()->sputnikv_bohol_first; //VACCINE ALLOCATED SPUTNIKV BOHOL_FIRST
+        $this->sputnikv_bohol_second = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_bohol_second"))->where("province_id",1)->first()->sputnikv_bohol_second; //VACCINE ALLOCATED SPUTNIKV BOHOL_SECOND
+        $this->sputnikv_cebu_first = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_cebu_first"))->where("province_id",2)->first()->sputnikv_cebu_first; //VACCINE ALLOCATED SPUTNIKV CEBU_FIRST
+        $this->sputnikv_cebu_second = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_cebu_second"))->where("province_id",2)->first()->sputnikv_cebu_second; //VACCINE ALLOCATED SPUTNIKV CEBU_SECOND
+        $this->sputnikv_negros_first = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_negros_first"))->where("province_id",3)->first()->sputnikv_negros_first; //VACCINE ALLOCATED SPUTNIKV NEGROS_FIRST
+        $this->sputnikv_negros_second = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_negros_second"))->where("province_id",3)->first()->sputnikv_negros_second; //VACCINE ALLOCATED SPUTNIKV NEGROS_SECOND
+        $this->sputnikv_siquijor_first = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_siquijor_first"))->where("province_id",4)->first()->sputnikv_siquijor_first; //VACCINE ALLOCATED SPUTNIKV SIQUIJOR_FIRST
+        $this->sputnikv_siquijor_second = Muncity::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_siquijor_second"))->where("province_id",4)->first()->sputnikv_siquijor_second; //VACCINE ALLOCATED SPUTNIKV SIQUIJOR_SECOND
+        $this->sputnikv_cebu_facility_first = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_cebu_facility_first"))->where("tricity_id",63)->first()->sputnikv_cebu_facility_first; //VACCINE ALLOCATED SPUTNIKV CEBU FACILITY_FIRST
+        $this->sputnikv_cebu_facility_second = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_cebu_facility_second"))->where("tricity_id",63)->first()->sputnikv_cebu_facility_second; //VACCINE ALLOCATED SPUTNIKV CEBU FACILITY_SECOND
+        $this->sputnikv_mandaue_facility_first = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_mandaue_facility_first"))->where("tricity_id",80)->first()->sputnikv_mandaue_facility_first; //VACCINE ALLOCATED SPUTNIKV MANDAUE_FACILITY_FIRST
+        $this->sputnikv_mandaue_facility_second = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_mandaue_facility_second"))->where("tricity_id",80)->first()->sputnikv_mandaue_facility_second; //VACCINE ALLOCATED SPUTNIKV MANDAUE_FACILITY_SECOND
+        $this->sputnikv_lapu_facility_first = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_first,0)) as sputnikv_lapu_facility_first"))->where("tricity_id",76)->first()->sputnikv_lapu_facility_first; //VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY_FIRST
+        $this->sputnikv_lapu_facility_second = Facility::select(DB::raw("SUM(coalesce(sputnikv_allocated_second,0)) as sputnikv_lapu_facility_second"))->where("tricity_id",76)->first()->sputnikv_lapu_facility_second; //VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY_SECOND
 
-        $this->sinovac_region = $this->sinovac_bohol + $this->sinovac_cebu + $this->sinovac_negros + $this->sinovac_siquijor + $this->sinovac_cebu_facility + $this->sinovac_mandaue_facility + $this->sinovac_lapu_facility; //VACCINE ALLOCATED SINOVAC REGION
-        $this->astra_region = $this->astra_bohol + $this->astra_cebu + $this->astra_negros + $this->astra_siquijor + $this->astra_cebu_facility + $this->astra_mandaue_facility + $this->astra_lapu_facility; //VACCINE ALLOCATED ASTRA REGION
-        $this->sputnikv_region = $this->sputnikv_bohol + $this->sputnikv_cebu + $this->sputnikv_negros + $this->sputnikv_siquijor + $this->sputnikv_cebu_facility + $this->sputnikv_mandaue_facility + $this->sputnikv_lapu_facility; //VACCINE ALLOCATED SPUTNIKV REGION
-        $this->pfizer_region = $this->pfizer_bohol + $this->pfizer_cebu + $this->pfizer_negros + $this->pfizer_siquijor + $this->pfizer_cebu_facility + $this->pfizer_mandaue_facility + $this->pfizer_lapu_facility; //VACCINE ALLOCATED PFIZER REGION
+        $this->pfizer_bohol_first = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_bohol_first"))->where("province_id",1)->first()->pfizer_bohol_first; //VACCINE ALLOCATED PFIZER BOHOL_FIRST
+        $this->pfizer_bohol_second = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_bohol_second"))->where("province_id",1)->first()->pfizer_bohol_second; //VACCINE ALLOCATED PFIZER BOHOL_SECOND
+        $this->pfizer_cebu_first = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_cebu_first"))->where("province_id",2)->first()->pfizer_cebu_first; //VACCINE ALLOCATED PFIZER CEBU_FIRST
+        $this->pfizer_cebu_second = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_cebu_second"))->where("province_id",2)->first()->pfizer_cebu_second; //VACCINE ALLOCATED PFIZER CEBU_SECOND
+        $this->pfizer_negros_first = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_negros_first"))->where("province_id",3)->first()->pfizer_negros_first; //VACCINE ALLOCATED PFIZER NEGROS_FIRST
+        $this->pfizer_negros_second = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_negros_second"))->where("province_id",3)->first()->pfizer_negros_second; //VACCINE ALLOCATED PFIZER NEGROS_SECOND
+        $this->pfizer_siquijor_first = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_siquijor_first"))->where("province_id",4)->first()->pfizer_siquijor_first; //VACCINE ALLOCATED PFIZER SIQUIJOR_FIRST
+        $this->pfizer_siquijor_second = Muncity::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_siquijor_second"))->where("province_id",4)->first()->pfizer_siquijor_second; //VACCINE ALLOCATED PFIZER SIQUIJOR_SECOND
+        $this->pfizer_cebu_facility_first = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_cebu_facility_first"))->where("tricity_id",63)->first()->pfizer_cebu_facility_first; //VACCINE ALLOCATED PFIZER CEBU FACILITY_FIRST
+        $this->pfizer_cebu_facility_second = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_cebu_facility_second"))->where("tricity_id",63)->first()->pfizer_cebu_facility_second; //VACCINE ALLOCATED PFIZER CEBU FACILITY_SECOND
+        $this->pfizer_mandaue_facility_first = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_mandaue_facility_first"))->where("tricity_id",80)->first()->pfizer_mandaue_facility_first; //VACCINE ALLOCATED PFIZER MANDAUE_FACILITY_FIRST
+        $this->pfizer_mandaue_facility_second = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_mandaue_facility_second"))->where("tricity_id",80)->first()->pfizer_mandaue_facility_second; //VACCINE ALLOCATED PFIZER MANDAUE_FACILITY_SECOND
+        $this->pfizer_lapu_facility_first = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_first,0)) as pfizer_lapu_facility_first"))->where("tricity_id",76)->first()->pfizer_lapu_facility_first; //VACCINE ALLOCATED PFIZER LAPU-LAPU FACILITY_FIRST
+        $this->pfizer_lapu_facility_second = Facility::select(DB::raw("SUM(coalesce(pfizer_allocated_second,0)) as pfizer_lapu_facility_second"))->where("tricity_id",76)->first()->pfizer_lapu_facility_second; //VACCINE ALLOCATED PFIZER LAPU-LAPU FACILITY_SECOND
+
+        $this->sinovac_region_first = $this->sinovac_bohol_first + $this->sinovac_cebu_first + $this->sinovac_negros_first + $this->sinovac_siquijor_first + $this->sinovac_cebu_facility_first + $this->sinovac_mandaue_facility_first + $this->sinovac_lapu_facility_first; //VACCINE ALLOCATED SINOVAC REGION FIRST
+        $this->sinovac_region_second = $this->sinovac_bohol_second + $this->sinovac_cebu_second + $this->sinovac_negros_second + $this->sinovac_siquijor_second + $this->sinovac_cebu_facility_second + $this->sinovac_mandaue_facility_second + $this->sinovac_lapu_facility_second; //VACCINE ALLOCATED SINOVAC REGION SECOND
+        $this->astra_region_first = $this->astra_bohol_first + $this->astra_cebu_first + $this->astra_negros_first + $this->astra_siquijor_first + $this->astra_cebu_facility_first + $this->astra_mandaue_facility_first + $this->astra_lapu_facility_first; //VACCINE ALLOCATED ASTRA REGION FIRST
+        $this->astra_region_second = $this->astra_bohol_second + $this->astra_cebu_second + $this->astra_negros_second + $this->astra_siquijor_second + $this->astra_cebu_facility_second + $this->astra_mandaue_facility_second + $this->astra_lapu_facility_second; //VACCINE ALLOCATED ASTRA REGION SECOND
+        $this->sputnikv_region_first = $this->sputnikv_bohol_first + $this->sputnikv_cebu_first + $this->sputnikv_negros_first + $this->sputnikv_siquijor_first + $this->sputnikv_cebu_facility_first + $this->sputnikv_mandaue_facility_first + $this->sputnikv_lapu_facility_first; //VACCINE ALLOCATED SPUTNIKV REGION FIRST
+        $this->sputnikv_region_second = $this->sputnikv_bohol_second + $this->sputnikv_cebu_second + $this->sputnikv_negros_second + $this->sputnikv_siquijor_second + $this->sputnikv_cebu_facility_second + $this->sputnikv_mandaue_facility_second + $this->sputnikv_lapu_facility_second; //VACCINE ALLOCATED SPUTNIKV REGION SECOND
+        $this->pfizer_region_first = $this->pfizer_bohol_first + $this->pfizer_cebu_first + $this->pfizer_negros_first + $this->pfizer_siquijor_first + $this->pfizer_cebu_facility_first + $this->pfizer_mandaue_facility_first + $this->pfizer_lapu_facility_first; //VACCINE ALLOCATED PFIZER REGION FIRST
+        $this->pfizer_region_second = $this->pfizer_bohol_second + $this->pfizer_cebu_second + $this->pfizer_negros_second + $this->pfizer_siquijor_second + $this->pfizer_cebu_facility_second + $this->pfizer_mandaue_facility_second + $this->pfizer_lapu_facility_second; //VACCINE ALLOCATED PFIZER REGION SECOND
+
 
         //ELIGIBLE POP
         $this->eli_pop_bohol = Muncity::select(DB::raw("SUM(coalesce($priority,0)) as eli_pop_bohol"))->where("province_id",1)->first()->eli_pop_bohol; //TOTAL ELIGIBLE POP BOHOL
@@ -2281,114 +2367,114 @@ class VaccineController extends Controller
         $this->wastage_region = $this->wastage_sinovac_first + $this->wastage_astra_first + $this->wastage_sputnikv_first + $this->wastage_pfizer_first; //TOTAL WASTAGE REGION
 
         //CONSUMPTION_RATE_SINOVAC_FIRST
-        $this->c_rate_sinovac_bohol_first = number_format($this->vcted_sinovac_bohol_first / $this->sinovac_bohol * 100,2); //CONSUMPTION RATE SINOVAC FIRST BOHOL
-        $this->c_rate_sinovac_cebu_first = number_format($this->vcted_sinovac_cebu_first / $this->sinovac_cebu * 100,2); //CONSUMPTION RATE SINOVAC FIRST CEBU
-        $this->c_rate_sinovac_negros_first = number_format($this->vcted_sinovac_negros_first / $this->sinovac_negros * 100,2); //CONSUMPTION RATE SINOVAC FIRST NEGROS
-        $this->c_rate_sinovac_siquijor_first = number_format($this->vcted_sinovac_siquijor_first / $this->sinovac_siquijor * 100,2); //CONSUMPTION RATE SINOVAC FIRST SIQUIJOR
-        $this->c_rate_sinovac_cebu_facility_first = number_format($this->vcted_sinovac_cebu_facility_first / $this->sinovac_cebu_facility * 100,2); //CONSUMPTION RATE SINOVAC FIRST CEBU FACILITY
-        $this->c_rate_sinovac_mandaue_facility_first = number_format($this->vcted_sinovac_mandaue_facility_first / $this->sinovac_mandaue_facility * 100,2); //CONSUMPTION RATE SINOVAC FIRST MANDAUE FACILITY
-        $this->c_rate_sinovac_lapu_facility_first = number_format($this->vcted_sinovac_lapu_facility_first / $this->sinovac_lapu_facility * 100,2); //CONSUMPTION RATE SINOVAC FIRST LAPU-LAPU FACILITY
+        $this->c_rate_sinovac_bohol_first = number_format($this->vcted_sinovac_bohol_first / $this->sinovac_bohol_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST BOHOL
+        $this->c_rate_sinovac_cebu_first = number_format($this->vcted_sinovac_cebu_first / $this->sinovac_cebu_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST CEBU
+        $this->c_rate_sinovac_negros_first = number_format($this->vcted_sinovac_negros_first / $this->sinovac_negros_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST NEGROS
+        $this->c_rate_sinovac_siquijor_first = number_format($this->vcted_sinovac_siquijor_first / $this->sinovac_siquijor_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST SIQUIJOR
+        $this->c_rate_sinovac_cebu_facility_first = number_format($this->vcted_sinovac_cebu_facility_first / $this->sinovac_cebu_facility_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST CEBU FACILITY
+        $this->c_rate_sinovac_mandaue_facility_first = number_format($this->vcted_sinovac_mandaue_facility_first / $this->sinovac_mandaue_facility_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST MANDAUE FACILITY
+        $this->c_rate_sinovac_lapu_facility_first = number_format($this->vcted_sinovac_lapu_facility_first / $this->sinovac_lapu_facility_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST LAPU-LAPU FACILITY
 
         //CONSUMPTION_RATE_ASTRAZENECA_FIRST
-        $this->c_rate_astra_bohol_first = number_format($this->vcted_astra_bohol_first / $this->astra_bohol * 100,2); //CONSUMPTION RATE ASTRA FIRST BOHOL
-        $this->c_rate_astra_cebu_first = number_format($this->vcted_astra_cebu_first / $this->astra_cebu * 100,2); //CONSUMPTION RATE ASTRA FIRST CEBU
-        $this->c_rate_astra_negros_first = number_format($this->vcted_astra_negros_first / $this->astra_negros * 100,2); //CONSUMPTION RATE ASTRA FIRST NEGROS
-        $this->c_rate_astra_siquijor_first = number_format($this->vcted_astra_siquijor_first / $this->astra_siquijor * 100,2); //CONSUMPTION RATE ASTRA FIRST SIQUIJOR
-        $this->c_rate_astra_cebu_facility_first = number_format($this->vcted_astra_cebu_facility_first / $this->astra_cebu_facility * 100,2); //CONSUMPTION RATE ASTRA FIRST CEBU FACILITY
-        $this->c_rate_astra_mandaue_facility_first = number_format($this->vcted_astra_mandaue_facility_first / $this->astra_mandaue_facility * 100,2); //CONSUMPTION RATE ASTRA FIRST MANDAUE FACILITY
-        $this->c_rate_astra_lapu_facility_first = number_format($this->vcted_astra_lapu_facility_first / $this->astra_lapu_facility * 100,2); //CONSUMPTION RATE ASTRA FIRST LAPU-LAPU
+        $this->c_rate_astra_bohol_first = number_format($this->vcted_astra_bohol_first / $this->astra_bohol_first * 100,2); //CONSUMPTION RATE ASTRA FIRST BOHOL
+        $this->c_rate_astra_cebu_first = number_format($this->vcted_astra_cebu_first / $this->astra_cebu_first * 100,2); //CONSUMPTION RATE ASTRA FIRST CEBU
+        $this->c_rate_astra_negros_first = number_format($this->vcted_astra_negros_first / $this->astra_negros_first * 100,2); //CONSUMPTION RATE ASTRA FIRST NEGROS
+        $this->c_rate_astra_siquijor_first = number_format($this->vcted_astra_siquijor_first / $this->astra_siquijor_first * 100,2); //CONSUMPTION RATE ASTRA FIRST SIQUIJOR
+        $this->c_rate_astra_cebu_facility_first = number_format($this->vcted_astra_cebu_facility_first / $this->astra_cebu_facility_first * 100,2); //CONSUMPTION RATE ASTRA FIRST CEBU FACILITY
+        $this->c_rate_astra_mandaue_facility_first = number_format($this->vcted_astra_mandaue_facility_first / $this->astra_mandaue_facility_first * 100,2); //CONSUMPTION RATE ASTRA FIRST MANDAUE FACILITY
+        $this->c_rate_astra_lapu_facility_first = number_format($this->vcted_astra_lapu_facility_first / $this->astra_lapu_facility_first * 100,2); //CONSUMPTION RATE ASTRA FIRST LAPU-LAPU
 
         //CONSUMPTION_RATE_SPUTNIKV_FIRST
-        $this->c_rate_sputnikv_bohol_first = number_format($this->vcted_sputnikv_bohol_first / $this->sputnikv_bohol * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST BOHOL
-        $this->c_rate_sputnikv_cebu_first = number_format($this->vcted_sputnikv_cebu_first / $this->sputnikv_cebu * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST CEBU
-        $this->c_rate_sputnikv_negros_first = number_format($this->vcted_sputnikv_negros_first / $this->sputnikv_negros * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST NEGROS
-        $this->c_rate_sputnikv_siquijor_first = number_format($this->vcted_sputnikv_siquijor_first / $this->sputnikv_siquijor * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST SIQUIJOR
-        $this->c_rate_sputnikv_cebu_facility_first = number_format($this->vcted_sputnikv_cebu_facility_first / $this->sputnikv_cebu_facility * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST CEBU FACILITY
-        $this->c_rate_sputnikv_mandaue_facility_first = number_format($this->vcted_sputnikv_mandaue_facility_first / $this->sputnikv_mandaue_facility * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST MANDAUE FACILITY
-        $this->c_rate_sputnikv_lapu_facility_first = number_format($this->vcted_sputnikv_lapu_facility_first / $this->sputnikv_lapu_facility * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST LAPU-LAPU
+        $this->c_rate_sputnikv_bohol_first = number_format($this->vcted_sputnikv_bohol_first / $this->sputnikv_bohol_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST BOHOL
+        $this->c_rate_sputnikv_cebu_first = number_format($this->vcted_sputnikv_cebu_first / $this->sputnikv_cebu_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST CEBU
+        $this->c_rate_sputnikv_negros_first = number_format($this->vcted_sputnikv_negros_first / $this->sputnikv_negros_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST NEGROS
+        $this->c_rate_sputnikv_siquijor_first = number_format($this->vcted_sputnikv_siquijor_first / $this->sputnikv_siquijor_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST SIQUIJOR
+        $this->c_rate_sputnikv_cebu_facility_first = number_format($this->vcted_sputnikv_cebu_facility_first / $this->sputnikv_cebu_facility_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST CEBU FACILITY
+        $this->c_rate_sputnikv_mandaue_facility_first = number_format($this->vcted_sputnikv_mandaue_facility_first / $this->sputnikv_mandaue_facility_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST MANDAUE FACILITY
+        $this->c_rate_sputnikv_lapu_facility_first = number_format($this->vcted_sputnikv_lapu_facility_first / $this->sputnikv_lapu_facility_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST LAPU-LAPU
 
         //CONSUMPTION_RATE_PFIZER_FIRST
-        $this->c_rate_pfizer_bohol_first = number_format($this->vcted_pfizer_bohol_first / $this->pfizer_bohol * 100,2); //CONSUMPTION RATE PFIZER FIRST BOHOL
-        $this->c_rate_pfizer_cebu_first = number_format($this->vcted_pfizer_cebu_first / $this->pfizer_cebu * 100,2); //CONSUMPTION RATE PFIZER FIRST CEBU
-        $this->c_rate_pfizer_negros_first = number_format($this->vcted_pfizer_negros_first / $this->pfizer_negros * 100,2); //CONSUMPTION RATE PFIZER FIRST NEGROS
-        $this->c_rate_pfizer_siquijor_first = number_format($this->vcted_pfizer_siquijor_first / $this->pfizer_siquijor * 100,2); //CONSUMPTION RATE PFIZER FIRST SIQUIJOR
-        $this->c_rate_pfizer_cebu_facility_first = number_format($this->vcted_pfizer_cebu_facility_first / $this->pfizer_cebu_facility * 100,2); //CONSUMPTION RATE PFIZER FIRST CEBU FACILITY
-        $this->c_rate_pfizer_mandaue_facility_first = number_format($this->vcted_pfizer_mandaue_facility_first / $this->pfizer_mandaue_facility * 100,2); //CONSUMPTION RATE PFIZER FIRST MANDAUE FACILITY
-        $this->c_rate_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $this->pfizer_lapu_facility * 100,2); //CONSUMPTION RATE PFIZER FIRST LAPU-LAPU
+        $this->c_rate_pfizer_bohol_first = number_format($this->vcted_pfizer_bohol_first / $this->pfizer_bohol_first * 100,2); //CONSUMPTION RATE PFIZER FIRST BOHOL
+        $this->c_rate_pfizer_cebu_first = number_format($this->vcted_pfizer_cebu_first / $this->pfizer_cebu_first * 100,2); //CONSUMPTION RATE PFIZER FIRST CEBU
+        $this->c_rate_pfizer_negros_first = number_format($this->vcted_pfizer_negros_first / $this->pfizer_negros_first * 100,2); //CONSUMPTION RATE PFIZER FIRST NEGROS
+        $this->c_rate_pfizer_siquijor_first = number_format($this->vcted_pfizer_siquijor_first / $this->pfizer_siquijor_first * 100,2); //CONSUMPTION RATE PFIZER FIRST SIQUIJOR
+        $this->c_rate_pfizer_cebu_facility_first = number_format($this->vcted_pfizer_cebu_facility_first / $this->pfizer_cebu_facility_first * 100,2); //CONSUMPTION RATE PFIZER FIRST CEBU FACILITY
+        $this->c_rate_pfizer_mandaue_facility_first = number_format($this->vcted_pfizer_mandaue_facility_first / $this->pfizer_mandaue_facility_first * 100,2); //CONSUMPTION RATE PFIZER FIRST MANDAUE FACILITY
+        $this->c_rate_pfizer_lapu_facility_first = number_format($this->vcted_pfizer_lapu_facility_first / $this->pfizer_lapu_facility_first * 100,2); //CONSUMPTION RATE PFIZER FIRST LAPU-LAPU
 
         //TOTAL_CONSUMPTION_RATE_FIRST
-        $this->total_c_rate_bohol_first = number_format($this->total_vcted_first_bohol / $this->total_bohol * 100,2); //TOTAL CONSUMPTION RATE FIRST BOHOL
-        $this->total_c_rate_cebu_first = number_format($this->total_vcted_first_cebu / $this->total_cebu * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU
-        $this->total_c_rate_negros_first = number_format($this->total_vcted_first_negros / $this->total_negros * 100,2); //TOTAL CONSUMPTION RATE FIRST NEGROS
-        $this->total_c_rate_siquijor_first = number_format($this->total_vcted_first_siquijor / $this->total_siquijor * 100,2); //TOTAL CONSUMPTION RATE FIRST SIQUIJOR
-        $this->total_c_rate_cebu_facility_first = number_format($this->total_vcted_cebu_facility_first / $this->total_cebu_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU FACILITY
-        $this->total_c_rate_mandaue_facility_first = number_format($this->total_vcted_mandaue_facility_first / $this->total_mandaue_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST MANDAUE FACILITY
-        $this->total_c_rate_lapu_facility_first = number_format($this->total_vcted_lapu_facility_first / $this->total_lapu_facility * 100,2); //TOTAL CONSUMPTION RATE FIRST LAPU-LAPU FACILITY
+        $this->total_c_rate_bohol_first = number_format($this->total_vcted_first_bohol / $this->total_bohol_first * 100,2); //TOTAL CONSUMPTION RATE FIRST BOHOL
+        $this->total_c_rate_cebu_first = number_format($this->total_vcted_first_cebu / $this->total_cebu_first * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU
+        $this->total_c_rate_negros_first = number_format($this->total_vcted_first_negros / $this->total_negros_first * 100,2); //TOTAL CONSUMPTION RATE FIRST NEGROS
+        $this->total_c_rate_siquijor_first = number_format($this->total_vcted_first_siquijor / $this->total_siquijor_first * 100,2); //TOTAL CONSUMPTION RATE FIRST SIQUIJOR
+        $this->total_c_rate_cebu_facility_first = number_format($this->total_vcted_cebu_facility_first / $this->total_cebu_facility_first * 100,2); //TOTAL CONSUMPTION RATE FIRST CEBU FACILITY
+        $this->total_c_rate_mandaue_facility_first = number_format($this->total_vcted_mandaue_facility_first / $this->total_mandaue_facility_first * 100,2); //TOTAL CONSUMPTION RATE FIRST MANDAUE FACILITY
+        $this->total_c_rate_lapu_facility_first = number_format($this->total_vcted_lapu_facility_first / $this->total_lapu_facility_first * 100,2); //TOTAL CONSUMPTION RATE FIRST LAPU-LAPU FACILITY
 
-        //CONSUMPTION_RATE_REGION_FIRST //DEARA
-        $this->c_rate_region_sinovac_first = number_format($this->region_sinovac_first_dose / $this->sinovac_region * 100,2); //CONSUMPTION RATE SINOVAC FIRST REGION
-        $this->c_rate_region_astra_first = number_format($this->region_astra_first_dose / $this->astra_region * 100,2); //CONSUMPTION RATE ASTRA FIRST REGION
-        $this->c_rate_region_sputnikv_first = number_format($this->region_sputnikv_first_dose / $this->sputnikv_region * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST REGION
-        $this->c_rate_region_pfizer_first =number_format($this->region_pfizer_first_dose / $this->pfizer_region * 100,2); //CONSUMPTION RATE PFIZER FIRST REGION
+        //CONSUMPTION_RATE_REGION_FIRST
+        $this->c_rate_region_sinovac_first = number_format($this->region_sinovac_first_dose / $this->sinovac_region_first * 100,2); //CONSUMPTION RATE SINOVAC FIRST REGION
+        $this->c_rate_region_astra_first = number_format($this->region_astra_first_dose / $this->astra_region_first * 100,2); //CONSUMPTION RATE ASTRA FIRST REGION
+        $this->c_rate_region_sputnikv_first = number_format($this->region_sputnikv_first_dose / $this->sputnikv_region_first * 100,2); //CONSUMPTION RATE SPUTNIKV FIRST REGION
+        $this->c_rate_region_pfizer_first =number_format($this->region_pfizer_first_dose / $this->pfizer_region_first * 100,2); //CONSUMPTION RATE PFIZER FIRST REGION
 
         //TOTAL_C_RATE_REGION_FIRST
-        $this->total_c_rate_region_first = number_format($this->first_dose_total / $this->total_region * 100,2 ); //TOTAL CONSUMPTION RATE FIRST REGION
+        $this->total_c_rate_region_first = number_format($this->first_dose_total / $this->total_region_first * 100,2 ); //TOTAL CONSUMPTION RATE FIRST REGION
 
 
         //CONSUMPTION_RATE_SINOVAC_SECOND
-        $this->c_rate_sinovac_bohol_second = number_format($this->vcted_sinovac_bohol_second / $this->sinovac_bohol * 100,2); //CONSUMPTION RATE SINOVAC SECOND BOHOL
-        $this->c_rate_sinovac_cebu_second = number_format($this->vcted_sinovac_cebu_second / $this->sinovac_cebu * 100,2); //CONSUMPTION RATE SINOVAC SECOND CEBU
-        $this->c_rate_sinovac_negros_second = number_format($this->vcted_sinovac_negros_second / $this->sinovac_negros * 100,2); //CONSUMPTION RATE SINOVAC SECOND NEGROS
-        $this->c_rate_sinovac_siquijor_second = number_format($this->vcted_sinovac_siquijor_second / $this->sinovac_siquijor * 100,2); //CONSUMPTION RATE SINOVAC SECOND SIQUIJOR
-        $this->c_rate_sinovac_cebu_facility_second = number_format($this->vcted_sinovac_cebu_facility_second / $this->sinovac_cebu_facility * 100,2); //CONSUMPTION RATE SINOVAC SECOND CEBU FACILITY
-        $this->c_rate_sinovac_mandaue_facility_second = number_format($this->vcted_sinovac_mandaue_facility_second / $this->sinovac_mandaue_facility * 100,2); //CONSUMPTION RATE SINOVAC SECOND MANDAUE FACILITY
-        $this->c_rate_sinovac_lapu_facility_second = number_format($this->vcted_sinovac_lapu_facility_second / $this->sinovac_lapu_facility * 100,2); //CONSUMPTION RATE SINOVAC SECOND LAPU-LAPU
+        $this->c_rate_sinovac_bohol_second = number_format($this->vcted_sinovac_bohol_second / $this->sinovac_bohol_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND BOHOL
+        $this->c_rate_sinovac_cebu_second = number_format($this->vcted_sinovac_cebu_second / $this->sinovac_cebu_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND CEBU
+        $this->c_rate_sinovac_negros_second = number_format($this->vcted_sinovac_negros_second / $this->sinovac_negros_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND NEGROS
+        $this->c_rate_sinovac_siquijor_second = number_format($this->vcted_sinovac_siquijor_second / $this->sinovac_siquijor_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND SIQUIJOR
+        $this->c_rate_sinovac_cebu_facility_second = number_format($this->vcted_sinovac_cebu_facility_second / $this->sinovac_cebu_facility_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND CEBU FACILITY
+        $this->c_rate_sinovac_mandaue_facility_second = number_format($this->vcted_sinovac_mandaue_facility_second / $this->sinovac_mandaue_facility_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND MANDAUE FACILITY
+        $this->c_rate_sinovac_lapu_facility_second = number_format($this->vcted_sinovac_lapu_facility_second / $this->sinovac_lapu_facility_second * 100,2); //CONSUMPTION RATE SINOVAC SECOND LAPU-LAPU
 
         //CONSUMPTION_RATE_ASTRAZENECA_SECOND
-        $this->c_rate_astra_bohol_second = number_format($this->vcted_astra_bohol_second / $this->astra_bohol * 100,2); //CONSUMPTION RATE ASTRA SECOND BOHOL
-        $this->c_rate_astra_cebu_second = number_format($this->vcted_astra_cebu_second / $this->astra_cebu * 100,2); //CONSUMPTION RATE ASTRA SECOND CEBU
-        $this->c_rate_astra_negros_second = number_format($this->vcted_astra_negros_second / $this->astra_negros * 100,2); //CONSUMPTION RATE ASTRA SECOND NEGROS
-        $this->c_rate_astra_siquijor_second = number_format($this->vcted_astra_siquijor_second / $this->astra_siquijor * 100,2); //CONSUMPTION RATE ASTRA SECOND SIQUIJOR
-        $this->c_rate_astra_cebu_facility_second = number_format($this->vcted_astra_cebu_facility_second / $this->astra_cebu_facility * 100,2); //CONSUMPTION RATE ASTRA SECOND CEBU FACILITY
-        $this->c_rate_astra_mandaue_facility_second = number_format($this->vcted_astra_mandaue_facility_second / $this->astra_mandaue_facility * 100,2); //CONSUMPTION RATE ASTRA SECOND MANDAUE FACILITY
-        $this->c_rate_astra_lapu_facility_second = number_format($this->vcted_astra_lapu_facility_second / $this->astra_lapu_facility * 100,2); //CONSUMPTION RATE ASTRA SECOND LAPU-LAPU
+        $this->c_rate_astra_bohol_second = number_format($this->vcted_astra_bohol_second / $this->astra_bohol_second * 100,2); //CONSUMPTION RATE ASTRA SECOND BOHOL
+        $this->c_rate_astra_cebu_second = number_format($this->vcted_astra_cebu_second / $this->astra_cebu_second * 100,2); //CONSUMPTION RATE ASTRA SECOND CEBU
+        $this->c_rate_astra_negros_second = number_format($this->vcted_astra_negros_second / $this->astra_negros_second * 100,2); //CONSUMPTION RATE ASTRA SECOND NEGROS
+        $this->c_rate_astra_siquijor_second = number_format($this->vcted_astra_siquijor_second / $this->astra_siquijor_second * 100,2); //CONSUMPTION RATE ASTRA SECOND SIQUIJOR
+        $this->c_rate_astra_cebu_facility_second = number_format($this->vcted_astra_cebu_facility_second / $this->astra_cebu_facility_second * 100,2); //CONSUMPTION RATE ASTRA SECOND CEBU FACILITY
+        $this->c_rate_astra_mandaue_facility_second = number_format($this->vcted_astra_mandaue_facility_second / $this->astra_mandaue_facility_second * 100,2); //CONSUMPTION RATE ASTRA SECOND MANDAUE FACILITY
+        $this->c_rate_astra_lapu_facility_second = number_format($this->vcted_astra_lapu_facility_second / $this->astra_lapu_facility_second * 100,2); //CONSUMPTION RATE ASTRA SECOND LAPU-LAPU
 
         //CONSUMPTION_RATE_SPUTNIKV_SECOND
-        $this->c_rate_sputnikv_bohol_second = number_format($this->vcted_sputnikv_bohol_second / $this->sputnikv_bohol * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND BOHOL
-        $this->c_rate_sputnikv_cebu_second = number_format($this->vcted_sputnikv_cebu_second / $this->sputnikv_cebu * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND CEBU
-        $this->c_rate_sputnikv_negros_second = number_format($this->vcted_sputnikv_negros_second / $this->sputnikv_negros * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND NEGROS
-        $this->c_rate_sputnikv_siquijor_second = number_format($this->vcted_sputnikv_siquijor_second / $this->sputnikv_siquijor * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND SIQUIJOR
-        $this->c_rate_sputnikv_cebu_facility_second = number_format($this->vcted_sputnikv_cebu_facility_second / $this->sputnikv_cebu_facility * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND CEBU FACILITY
-        $this->c_rate_sputnikv_mandaue_facility_second = number_format($this->vcted_sputnikv_mandaue_facility_second / $this->sputnikv_mandaue_facility * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND MANDAUE FACILITY
-        $this->c_rate_sputnikv_lapu_facility_second = number_format($this->vcted_sputnikv_lapu_facility_second / $this->sputnikv_mandaue_facility * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND LAPU-LAPU FACILITY
+        $this->c_rate_sputnikv_bohol_second = number_format($this->vcted_sputnikv_bohol_second / $this->sputnikv_bohol_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND BOHOL
+        $this->c_rate_sputnikv_cebu_second = number_format($this->vcted_sputnikv_cebu_second / $this->sputnikv_cebu_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND CEBU
+        $this->c_rate_sputnikv_negros_second = number_format($this->vcted_sputnikv_negros_second / $this->sputnikv_negros_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND NEGROS
+        $this->c_rate_sputnikv_siquijor_second = number_format($this->vcted_sputnikv_siquijor_second / $this->sputnikv_siquijor_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND SIQUIJOR
+        $this->c_rate_sputnikv_cebu_facility_second = number_format($this->vcted_sputnikv_cebu_facility_second / $this->sputnikv_cebu_facility_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND CEBU FACILITY
+        $this->c_rate_sputnikv_mandaue_facility_second = number_format($this->vcted_sputnikv_mandaue_facility_second / $this->sputnikv_mandaue_facility_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND MANDAUE FACILITY
+        $this->c_rate_sputnikv_lapu_facility_second = number_format($this->vcted_sputnikv_lapu_facility_second / $this->sputnikv_mandaue_facility_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND LAPU-LAPU FACILITY
 
 
         //CONSUMPTION_RATE_PFIZER_SECOND
-        $this->c_rate_pfizer_bohol_second = number_format($this->vcted_pfizer_bohol_second / $this->pfizer_bohol * 100,2); //CONSUMPTION RATE PFIZER SECOND BOHOL
-        $this->c_rate_pfizer_cebu_second = number_format($this->vcted_pfizer_cebu_second / $this->pfizer_cebu * 100,2); //CONSUMPTION RATE PFIZER SECOND CEBU
-        $this->c_rate_pfizer_negros_second = number_format($this->vcted_pfizer_negros_second / $this->pfizer_negros * 100,2); //CONSUMPTION RATE PFIZER SECOND NEGROS
-        $this->c_rate_pfizer_siquijor_second = number_format($this->vcted_pfizer_siquijor_second / $this->pfizer_siquijor * 100,2); //CONSUMPTION RATE PFIZER SECOND SIQUIJOR
-        $this->c_rate_pfizer_cebu_facility_second = number_format($this->vcted_pfizer_cebu_facility_second / $this->pfizer_cebu_facility * 100,2); //CONSUMPTION RATE PFIZER SECOND CEBU FACILITY
-        $this->c_rate_pfizer_mandaue_facility_second = number_format($this->vcted_pfizer_mandaue_facility_second / $this->pfizer_mandaue_facility * 100,2); //CONSUMPTION RATE PFIZER SECOND MANDAUE FACILITY
-        $this->c_rate_pfizer_lapu_facility_second = number_format($this->vcted_pfizer_lapu_facility_second / $this->pfizer_mandaue_facility * 100,2); //CONSUMPTION RATE PFIZER SECOND LAPU-LAPU FACILITY
+        $this->c_rate_pfizer_bohol_second = number_format($this->vcted_pfizer_bohol_second / $this->pfizer_bohol_second * 100,2); //CONSUMPTION RATE PFIZER SECOND BOHOL
+        $this->c_rate_pfizer_cebu_second = number_format($this->vcted_pfizer_cebu_second / $this->pfizer_cebu_second * 100,2); //CONSUMPTION RATE PFIZER SECOND CEBU
+        $this->c_rate_pfizer_negros_second = number_format($this->vcted_pfizer_negros_second / $this->pfizer_negros_second * 100,2); //CONSUMPTION RATE PFIZER SECOND NEGROS
+        $this->c_rate_pfizer_siquijor_second = number_format($this->vcted_pfizer_siquijor_second / $this->pfizer_siquijor_second * 100,2); //CONSUMPTION RATE PFIZER SECOND SIQUIJOR
+        $this->c_rate_pfizer_cebu_facility_second = number_format($this->vcted_pfizer_cebu_facility_second / $this->pfizer_cebu_facility_second * 100,2); //CONSUMPTION RATE PFIZER SECOND CEBU FACILITY
+        $this->c_rate_pfizer_mandaue_facility_second = number_format($this->vcted_pfizer_mandaue_facility_second / $this->pfizer_mandaue_facility_second * 100,2); //CONSUMPTION RATE PFIZER SECOND MANDAUE FACILITY
+        $this->c_rate_pfizer_lapu_facility_second = number_format($this->vcted_pfizer_lapu_facility_second / $this->pfizer_mandaue_facility_second * 100,2); //CONSUMPTION RATE PFIZER SECOND LAPU-LAPU FACILITY
 
 
         //TOTAL_CONSUMPTION_RATE_SECOND
-        $this->total_c_rate_bohol_second = number_format($this->total_vcted_second_bohol / $this->total_bohol * 100,2); //TOTAL CONSUMPTION RATE SECOND BOHOL
-        $this->total_c_rate_cebu_second = number_format($this->total_vcted_second_cebu / $this->total_cebu * 100,2); //TOTAL CONSUMPTION RATE SECOND CEBU
-        $this->total_c_rate_negros_second = number_format($this->total_vcted_second_negros / $this->total_negros * 100,2); //TOTAL CONSUMPTION RATE SECOND NEGROS
-        $this->total_c_rate_siquijor_second = number_format($this->total_vcted_second_siquijor / $this->total_siquijor * 100,2); //TOTAL CONSUMPTION RATE SECOND SIQUIJOR
-        $this->total_c_rate_cebu_facility_second = number_format($this->total_vcted_cebu_facility_second / $this->total_cebu_facility * 100,2);  //TOTAL CONSUMPTION RATE SECOND CEBU FACILITY
-        $this->total_c_rate_mandaue_facility_second = number_format($this->total_vcted_mandaue_facility_second / $this->total_mandaue_facility * 100,2); //TOTAL CONSUMPTION RATE SECOND MANDAUE FACILITY
-        $this->total_c_rate_lapu_facility_second =  number_format($this->total_vcted_lapu_facility_second / $this->total_lapu_facility * 100,2); //TOTAL CONSUMPTION RATE SECOND LAPU-LAPU FACI
+        $this->total_c_rate_bohol_second = number_format($this->total_vcted_second_bohol / $this->total_bohol_second * 100,2); //TOTAL CONSUMPTION RATE SECOND BOHOL
+        $this->total_c_rate_cebu_second = number_format($this->total_vcted_second_cebu / $this->total_cebu_second * 100,2); //TOTAL CONSUMPTION RATE SECOND CEBU
+        $this->total_c_rate_negros_second = number_format($this->total_vcted_second_negros / $this->total_negros_second * 100,2); //TOTAL CONSUMPTION RATE SECOND NEGROS
+        $this->total_c_rate_siquijor_second = number_format($this->total_vcted_second_siquijor / $this->total_siquijor_second * 100,2); //TOTAL CONSUMPTION RATE SECOND SIQUIJOR
+        $this->total_c_rate_cebu_facility_second = number_format($this->total_vcted_cebu_facility_second / $this->total_cebu_facility_second * 100,2);  //TOTAL CONSUMPTION RATE SECOND CEBU FACILITY
+        $this->total_c_rate_mandaue_facility_second = number_format($this->total_vcted_mandaue_facility_second / $this->total_mandaue_facility_second * 100,2); //TOTAL CONSUMPTION RATE SECOND MANDAUE FACILITY
+        $this->total_c_rate_lapu_facility_second =  number_format($this->total_vcted_lapu_facility_second / $this->total_lapu_facility_second * 100,2); //TOTAL CONSUMPTION RATE SECOND LAPU-LAPU FACI
 
         //CONSUMPTION_RATE_REGION_SECOND
-        $this->c_rate_region_sinovac_second = number_format($this->region_sinovac_second_dose / $this->sinovac_region * 100,2);  //CONSUMPTION RATE SINOVAC SECOND REGION
-        $this->c_rate_region_astra_second = number_format($this->region_astra_second_dose / $this->astra_region * 100,2); //CONSUMPTION RATE ASTRA SECOND REGION
-        $this->c_rate_region_sputnikv_second = number_format($this->region_sputnikv_second_dose / $this->sputnikv_region * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND REGION
-        $this->c_rate_region_pfizer_second =  number_format($this->region_pfizer_second_dose / $this->pfizer_region * 100,2); //CONSUMPTION RATE PFIZER SECOND REGION
+        $this->c_rate_region_sinovac_second = number_format($this->region_sinovac_second_dose / $this->sinovac_region_second * 100,2);  //CONSUMPTION RATE SINOVAC SECOND REGION
+        $this->c_rate_region_astra_second = number_format($this->region_astra_second_dose / $this->astra_region_second * 100,2); //CONSUMPTION RATE ASTRA SECOND REGION
+        $this->c_rate_region_sputnikv_second = number_format($this->region_sputnikv_second_dose / $this->sputnikv_region_second * 100,2); //CONSUMPTION RATE SPUTNIKV SECOND REGION
+        $this->c_rate_region_pfizer_second =  number_format($this->region_pfizer_second_dose / $this->pfizer_region_second * 100,2); //CONSUMPTION RATE PFIZER SECOND REGION
         //TOTAL_C_RATE_REGION_SECOND
-        $this->total_c_rate_region_second = number_format($this->second_dose_total / $this->total_region * 100,2 ); //TOTAL CONSUMPTION RATE SECOND REGION
+        $this->total_c_rate_region_second = number_format($this->second_dose_total / $this->total_region_second * 100,2 ); //TOTAL CONSUMPTION RATE SECOND REGION
 
 
         //priority_set

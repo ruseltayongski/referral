@@ -349,7 +349,9 @@
 
                                     $total_vallocated_svac = $total_vallocated_svac_frst + $total_vallocated_svac_scnd; //TOTAL VACCINE ALLOCATED_SINOVAC
                                     $total_vallocated_astra = $total_vallocated_astra_frst + $total_vallocated_astra_scnd; //TOTAL VACCINE ALLOCATED_ASTRA
-                                    $total_vallocated  = $total_vallocated_svac + $total_vallocated_astra; //TOTAL_VACCINE_ALLOCATED
+                                    $total_vallocated_sputnikv = $total_vallocated_sputnikv_frst + $total_vallocated_sputnikv_scnd; //TOTAL VACCINE ALLOCATED_SPUTNIKV
+                                    $total_vallocated_pfizer = $total_vallocated_pfizer_frst + $total_vallocated_pfizer_scnd; //TOTAL VACCINE ALLOCATED_SPUTNIKV
+                                    $total_vallocated  = $total_vallocated_svac + $total_vallocated_astra + $total_vallocated_sputnikv + $total_vallocated_pfizer ; //TOTAL_VACCINE_ALLOCATED
 
                                     $total_vallocated_frst =  $total_vallocated_svac_frst + $total_vallocated_astra_frst + $total_vallocated_sputnikv_frst + $total_vallocated_pfizer_frst; //TOTAL_VACCINE_ALLOCATED_FIRST
                                     $total_vallocated_scnd = $total_vallocated_svac_scnd + $total_vallocated_astra_scnd + $total_vallocated_sputnikv_scnd + $total_vallocated_pfizer_scnd ; //TOTAL_VACCINE_ALLOCATED_SECOND
@@ -911,11 +913,11 @@
                                             <tbody>
                                             <tr>
                                                 <td>Total</td> <!-- 1-7 -->
-                                                <td></td> <!-- TOTAL_ELIGIBLE_POP_A1  -->
-                                                <td></td> <!-- TOTAL_ELIGIBLE_POP_A2  -->
-                                                <td></td> <!-- TOTAL_ELIGIBLE_POP_A3  -->
-                                                <td></td> <!-- TOTAL_ELIGIBLE_POP_A4  -->
-                                                <td></td> <!-- TOTAL_ELIGBLE_POP_OVERALL -->
+                                                <td>{{ $total_epop_pfizer_a1 }}</td> <!-- TOTAL_ELIGIBLE_POP_A1 -->
+                                                <td>{{ $total_epop_pfizer_a2 }}</td> <!-- TOTAL_ELIGIBLE_POP_A2  -->
+                                                <td>{{ $total_epop_pfizer_a3 }}</td> <!-- TOTAL_ELIGIBLE_POP_A3  -->
+                                                <td>{{ $total_epop_pfizer_a4 }}</td> <!-- TOTAL_ELIGIBLE_POP_A4  -->
+                                                <td>{{ $total_epop_pfizer }}</td> <!-- TOTAL_ELIGBLE_POP_OVERALL -->
                                                 <td>
                                                     <b class="total_vallocated_frst{{ $row->id }}">{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
                                                 </td>

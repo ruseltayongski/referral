@@ -1100,11 +1100,11 @@
     <tbody>
     <tr>
         <td>Total</td> <!-- 1-7 -->
-        <td></td> <!-- TOTAL A1 -->
-        <td></td> <!-- TOTAL A2 -->
-        <td></td> <!-- TOTAL A3 -->
-        <td></td> <!-- TOTAL A4 -->
-        <td></td> <!-- TOTAL E POP  -->
+        <td>{{ $total_e_pop_a1_grand }}</td> <!-- TOTAL A1  -->
+        <td>{{ $total_e_pop_a2_grand }}</td> <!-- TOTAL A2 -->
+        <td>{{ $total_e_pop_a3_grand }}</td> <!-- TOTAL A3 -->
+        <td>{{ $total_e_pop_a4_grand }}</td> <!-- TOTAL A4 -->
+        <td>{{ $total_e_pop_grand }}</td> <!-- TOTAL E POP  -->
         <td>
             {{ $total_vallocated_frst_grand }}
             <?php Session::put('total_vallocated_frst_excel',$total_vallocated_frst_grand );?>
