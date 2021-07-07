@@ -456,9 +456,9 @@
                                                         {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100,2) }}%   </b>
                                                 </h5>
                                             </button>
-                                            <button class="btn" style="color: black;" type="button">
+                                           {{-- <button class="btn" style="color: black;" type="button">
                                                 <h5>Sort By: <b style="font-size: 18px; color:#00a65a;" class="sort_by"> </b></h5>
-                                            </button>
+                                            </button>--}}
                                             <br>
                                     </td>
                                 </tr>

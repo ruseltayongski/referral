@@ -457,19 +457,19 @@
     <tr>
         <td>Total</td> <!-- 1-7 -->
         <td>
-            <b></b>  <!-- TOTAL_A1_FIRST -->
+            <b>{{ $total_epop_pfizer_a1 }}</b>  <!-- TOTAL_A1_FIRST -->
         </td>
         <td>
-            <b></b>  <!-- TOTAL_A2_FIRST -->
+            <b>{{ $total_epop_pfizer_a2 }}</b>  <!-- TOTAL_A2_FIRST -->
         </td>
         <td>
-            <b></b>  <!-- TOTAL_A3_FIRST -->
+            <b>{{ $total_epop_pfizer_a3 }}</b>  <!-- TOTAL_A3_FIRST -->
         </td>
         <td>
-            <b></b>  <!-- TOTAL_A4_FIRST -->
+            <b>{{ $total_epop_pfizer_a4 }}</b>  <!-- TOTAL_A4_FIRST -->
         </td>
         <td>
-            <b></b>  <!-- TOTAL_ELI_POP  -->
+            <b>{{ $total_epop_pfizer }}</b>  <!-- TOTAL_ELI_POP  -->
         </td>
         <td >
             <b>{{ $total_vallocated_frst }}</b>  <!-- TOTAL ALLOCATED_FIRST -->
