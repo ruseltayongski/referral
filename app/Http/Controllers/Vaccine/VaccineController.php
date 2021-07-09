@@ -411,6 +411,7 @@ class VaccineController extends Controller
     }
     public function vaccineFacility($tri_city,Request $request)
     {
+        $tricity_id = 0;
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -420,13 +421,16 @@ class VaccineController extends Controller
         }
 
         if($tri_city == 'cebu'){
+            $tricity_id = 63;
             $this->TargetCompletionFacility("63");
         }
         elseif($tri_city == 'mandaue'){
             $this->TargetCompletionFacility("80");
+            $tricity_id = 80;
         }
         elseif($tri_city == 'lapu'){
             $this->TargetCompletionFacility("76");
+            $tricity_id = 76;
         }
 
         $facility = $this->data_facility->orderBy("name","asc")
@@ -471,26 +475,24 @@ class VaccineController extends Controller
             'astra_completion' => $this->astra_completion,
             'sputnikv_completion' => $this->sputnikv_completion,
             'pfizer_completion' => $this->pfizer_completion,
-        ]);
-    }
-
-    public function vaccinatedContent()
-    {
-        $province = Province::get();
-        $muncity = Muncity::get();
-        $facility = Facility::get();
-
-        return view("vaccine.vaccinated_content", [
-            "province" => $province,
-            "muncity" => $muncity,
-            "facility" => $facility,
-
+            'tricity_id' => $tricity_id,
         ]);
     }
 
     public function vaccinatedContentMunicipality(Request $request)
     {
-        $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$request->muncity_id)->whereBetween("date_first",[$request->date_start,$request->date_end])->orderBy('date_first','asc')->paginate(8);
+
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $vaccine_accomplishment = VaccineAccomplished::where('muncity_id',$request->muncity_id)
+            ->where(function($query) use($date_start,$date_end){
+                $query->whereBetween("date_first",[$date_start,$date_end])
+                    ->orWhereBetween("date_second",[$date_start,$date_end]);
+            })
+            ->orderBy('id','asc')
+            ->paginate(8);
+
+
         $data = [
             "province_id" => $request->province_id,
             "muncity_id" => $request->muncity_id,
@@ -690,8 +692,13 @@ class VaccineController extends Controller
     }
 
     public function vaccinatedFacilityContent(Request $request){
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
         $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$request->facility_id)
-                            ->whereBetween("date_first",[$request->date_start,$request->date_end])
+                            ->where(function($query) use($date_start,$date_end){
+                                $query->whereBetween("date_first",[$date_start,$date_end])
+                                ->orWhereBetween("date_second",[$date_start,$date_end]);
+                            })
                             ->orderBy('id','asc')
                             ->paginate(8);
 
@@ -936,7 +943,6 @@ class VaccineController extends Controller
     {
         $user_id = Session::get('auth')->id;
         $count = 0;
-
         foreach ($request->typeof_vaccine as $row){
             $vaccine = new VaccineAccomplished();
             VaccineAccomplished::where("id",$request->vaccine_id[$count])->delete();
@@ -1678,7 +1684,7 @@ class VaccineController extends Controller
     }
 
     public function setPriority($priority){
-        //allocated HAHAHAHAHA
+        //allocated
 
         $this->sinovac_bohol_first = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_first,0)) as sinovac_bohol_first"))->where("province_id",1)->first()->sinovac_bohol_first; //VACCINE ALLOCATED SINOVAC BOHOL_FIRST
         $this->sinovac_bohol_second = Muncity::select(DB::raw("SUM(coalesce(sinovac_allocated_second,0)) as sinovac_bohol_second"))->where("province_id",1)->first()->sinovac_bohol_second; //VACCINE ALLOCATED SINOVAC BOHOL_SECOND

@@ -416,7 +416,7 @@
                     <input type="text" name="mild_second[]" value="<?php if(isset($vaccine->mild_second)) echo $vaccine->mild_second ?>" class="form-control">
                 </td>
                 <td style="width: 5%">
-                    <input type="text" name="serious_second[]" value="<?php if(isset($vaccine->serious_first)) echo $vaccine->serious_second ?>" class="form-control">
+                    <input type="text" name="serious_second[]" value="<?php if(isset($vaccine->serious_second)) echo $vaccine->serious_second ?>" class="form-control">
                 </td>
                 <td>
                     <input type="text" name="refused_second[]" value="<?php if(isset($vaccine->refused_second)) echo $vaccine->refused_second ?>" class="form-control">

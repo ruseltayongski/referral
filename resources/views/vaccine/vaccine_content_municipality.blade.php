@@ -465,13 +465,13 @@
             <b>{{ $total_epop_pfizer_a2 }}</b>  <!-- TOTAL A2 FIRST -->
         </td>
         <td>
-            <b>{{ $total_epop_pfizer_a3 }}</b>  <!-- TOTAL A3 FIRST -->
+            <b>{{ $total_epop_pfizer_a1 }}</b>  <!-- TOTAL A3 FIRST -->
         </td>
         <td>
-            <b>{{ $total_epop_pfizer_a4 }}</b>  <!-- TOTAL A4 FIRST -->
+            <b></b>  <!-- TOTAL A4 FIRST -->
         </td>
         <td>
-           <b>{{ $total_epop_pfizer }}</b>  <!-- TOTAL_ELI_POP  -->
+           <b></b>  <!-- TOTAL_ELI_POP  -->
         </td>
         <td >
            <b>{{ $total_vallocated_frst }}</b>  <!-- TOTAL ALLOCATED_FIRST -->

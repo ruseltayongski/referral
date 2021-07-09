@@ -614,7 +614,8 @@
             '            <option value="b6" disabled>B6</option>\n' +
             '            <option value="c"  disabled >C</option>\n' +
             '        </select>\n' +
-            '       <br><br><input type="text" name="no_eli_pop[]" id="no_eli_pop'+count+'" class="form-control" readonly>\n' +
+            '       <br><br>' +
+            '      <input type="text" name="no_eli_pop[]" id="no_eli_pop'+count+'" class="form-control" readonly>\n' +
             '    </td>\n' +
             '    <td style="width: 5%">\n' +
             '        <input type="text" name="vaccinated_first[]" class="form-control">\n' +

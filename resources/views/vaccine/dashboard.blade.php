@@ -412,7 +412,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
-                    yValueFormatString:"#,##0.#"%"",
+                    yValueFormatString:"#.##0.#"%"",
                     dataPoints: [
                         { label: "First Dose", y: consumption_rate_first, color:"#00a65a" },
                         { label: "Second Dose", y: consumption_rate_second, color:"#f39c12" },

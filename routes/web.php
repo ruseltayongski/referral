@@ -476,7 +476,6 @@ Route::get('map','doctor\HomeCtrl@viewMap');
 //vaccine
 Route::get('vaccine','Vaccine\VaccineController@index');
 Route::match(['GET',['POST']],'vaccine/vaccineview/{province_id}','Vaccine\VaccineController@vaccineView');
-Route::get('vaccine/vaccinated_content','Vaccine\VaccineController@vaccinatedContent');
 Route::post('vaccine/vaccinated/municipality/content','Vaccine\VaccineController@vaccinatedContentMunicipality');
 Route::post('vaccine/saved','Vaccine\VaccineController@vaccineSaved');
 Route::get('vaccine/update_view/{id}','Vaccine\VaccineController@vaccineUpdateView');
