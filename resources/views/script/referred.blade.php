@@ -300,8 +300,7 @@
         var referred_to = $('#referredForm').find('.new_facility').val();
         var department_name = $('.select_department_referred :selected').text();
         var department_id = $('.select_department_referred').val();
-        console.log(activity_id);
-        /*$(this).ajaxSubmit({
+        $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/redirect/') }}/"+activity_id,
             type: 'POST',
             success: function(data){
@@ -374,7 +373,7 @@
             error: function(){
                 $('#serverModal').modal();
             }
-        });*/
+        });
     });
 </script>
 

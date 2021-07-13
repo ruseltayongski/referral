@@ -31,6 +31,8 @@
                                 <th>Incoming</th>
                                 <th>Accepted</th>
                                 <th>Redirected</th>
+                                <th>Cancelled</th>
+                                <th>Transferred</th>
                                 <th>Seen only</th>
                                 <th>Not Seen</th>
                             </tr>
@@ -71,6 +73,8 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $row->redirected }}</span><br><br>
                                     </td>
+                                    <td>pending</td>
+                                    <td>pending</td>
                                     <?php
                                         $seen_only = $row->seen_total - $row->accepted - $row->redirected;
                                         $seen_only = $seen_only <= 0 ? 0 : $seen_only;
@@ -80,7 +84,6 @@
                                     </td>
                                     <?php
                                         $not_seen = $row->incoming - $row->seen_total;
-                                        //$not_seen = $not_seen <= 0 ? 0 : $not_seen;
                                     ?>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
