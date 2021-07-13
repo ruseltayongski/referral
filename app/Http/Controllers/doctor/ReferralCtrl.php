@@ -903,11 +903,6 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        Activity::where('id',$activity_id)
-            ->update([
-                'referred_to' => $user->facility_id,
-                'department_id' => 1
-            ]);
         $track = Activity::select('activity.*','tracking.type','tracking.form_id')
                 ->join('tracking','tracking.code','=','activity.code')
                 ->where('activity.id',$activity_id)
