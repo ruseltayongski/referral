@@ -1047,7 +1047,7 @@ class ReferralCtrl extends Controller
             'code' => $track->code,
             'patient_id' => $track->patient_id,
             'date_referred' => $date,
-            'referred_from' => $track->referred_to,
+            'referred_from' => $track->referred_from,
             'referred_to' => 0,
             'action_md' => $user->id,
             'remarks' => $req->reason,
