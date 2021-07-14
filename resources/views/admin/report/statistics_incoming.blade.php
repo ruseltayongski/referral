@@ -73,7 +73,10 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $row->redirected }}</span><br><br>
                                     </td>
-                                    <td>pending</td>
+                                    <td>
+                                        <span class="text-blue" style="font-size: 15pt;">
+                                            {{ $row->cancelled }}
+                                        </span><br><br></td>
                                     <td>pending</td>
                                     <?php
                                         $seen_only = $row->seen_total - $row->accepted - $row->redirected;

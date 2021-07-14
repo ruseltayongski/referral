@@ -1041,7 +1041,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($id);
-        $activity = Activity::where("code".$track->code)->where(function($q){
+        $activity = Activity::where("code",$track->code)->where(function($q){
             $q->where("status","referred")
               ->orWhere("status","redirected")
               ->orWhere("status","transferred");
