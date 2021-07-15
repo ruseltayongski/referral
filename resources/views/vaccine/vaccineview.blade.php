@@ -1930,7 +1930,7 @@
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
-                    yValueFormatString:"#,##0.#"%"",
+                    yValueFormatString:"##0.00\"%\"",
                     dataPoints: [
                         { label: "First Dose", y: percent_coverage_firstdose, color:"#00a65a" },
                         { label: "Second Dose", y: percent_coverage_seconddose, color:"#f39c12" },
@@ -1954,7 +1954,7 @@
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
-                    yValueFormatString:"#,##0.#"%"",
+                    yValueFormatString:"##0.00\"%\"",
                     dataPoints: [
                         { label: "First Dose", y: consumption_rate_firstdose, color:"#00a65a" },
                         { label: "Second Dose", y: consumption_rate_secondddose, color:"#f39c12" },

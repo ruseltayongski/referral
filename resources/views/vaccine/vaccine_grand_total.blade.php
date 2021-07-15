@@ -335,11 +335,11 @@
     $sputnikv_dashboard = $total_vcted_sputnikv_frst + $total_vcted_sputnikv_second;
     $pfizer_dashboard = $total_vcted_pfizer_frst + $total_vcted_pfizer_second;
 
-    $percent_coverage_firstdose =  number_format($total_p_cvrge_frst_prov,2);
-    $percent_coverage_seconddose = number_format($total_p_cvrge_scnd_prov,2);
+    $percent_coverage_firstdose = $total_p_cvrge_frst_prov;
+    $percent_coverage_seconddose = $total_p_cvrge_scnd_prov;
 
-    $consumption_rate_firstdose = number_format($total_c_rate_frst_prov,2);
-    $consumption_rate_seconddose = number_format($total_c_rate_scnd_prov,2);
+    $consumption_rate_firstdose = $total_c_rate_frst_prov;
+    $consumption_rate_seconddose = $total_c_rate_scnd_prov;
 
     $a1_dashboard = $total_vcted_grand_a1_first + $total_vcted_grand_a1_second;
     $a2_dashboard = $total_vcted_grand_a2_first + $total_vcted_grand_a2_second;

@@ -289,14 +289,14 @@
     $b3_dashboard = $total_vcted_b3_first_grand + $total_vcted_scnd_b3_grand;
     $b4_dashboard = $total_vcted_b4_first_grand + $total_vcted_scnd_b4_grand;
 
-    $percent_coverage_dashboard_first =  number_format($total_p_cvrge_overall_frst,2);
-    $percent_coverage_dashboard_second = number_format($total_p_cvrge_overall_scnd,2);
+    $percent_coverage_dashboard_first =  $total_p_cvrge_overall_frst;
+    $percent_coverage_dashboard_second = $total_p_cvrge_overall_scnd;
 
     $total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
     $total_c_rate_scnd_grand = $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
 
-    $consumption_rate_dashboard_first = number_format($total_c_rate_frst_grand,2);
-    $consumption_rate_dashboard_second = number_format($total_c_rate_scnd_grand,2);
+    $consumption_rate_dashboard_first = $total_c_rate_frst_grand;
+    $consumption_rate_dashboard_second = $total_c_rate_scnd_grand;
 
     $total_srs_overall_frst = $total_srs_svac_frst_grand + $total_srs_astra_frst_grand + $total_srs_sputnikv_frst_grand + $total_srs_pfizer_frst_grand; // TOTAL SERIOUS FIRST
     $total_srs_overall_scnd = $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand + $total_srs_sputnikv_scnd_grand + $total_srs_pfizer_scnd_grand; // TOTAL SERIOUS SECOND

@@ -1922,7 +1922,7 @@
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
-                    yValueFormatString:"#,##0.#"%"",
+                    yValueFormatString:"##0.00\"%\"",
                     dataPoints: [
                         { label: "First Dose", y: percent_coverage_dashboard_first, color:"#00a65a" },
                         { label: "Second Dose", y: percent_coverage_dashboard_second, color:"#f39c12" },
@@ -1950,7 +1950,7 @@
                     showInLegend: "true",
                     legendText: "{label}",
                     indexLabel: "{label} ({y}%)",
-                    yValueFormatString:"#,##0.#"%"",
+                    yValueFormatString:"##0.00\"%\"",
                     dataPoints: [
                         { label: "First Dose", y: consumption_rate_dashboard_first, color:"#00a65a" },
                         { label: "Second Dose", y: consumption_rate_dashboard_second, color:"#f39c12" },
