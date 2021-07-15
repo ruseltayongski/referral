@@ -424,7 +424,8 @@ class ReferralCtrl extends Controller
                         ->orwhere('tracking.status','discharged')
                         ->orwhere('tracking.status','cancelled')
                         ->orwhere('tracking.status','archived')
-                        ->orwhere('tracking.status','rejected');
+                        ->orwhere('tracking.status','rejected')
+                        ->orWhere('tracking.status','redirected');
                 });
             if($search){
                 $data = $data->where(function($q) use ($search){
@@ -903,11 +904,6 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        Activity::where('id',$activity_id)
-            ->update([
-                'referred_to' => $user->facility_id,
-                'department_id' => 1
-            ]);
         $track = Activity::select('activity.*','tracking.type','tracking.form_id')
                 ->join('tracking','tracking.code','=','activity.code')
                 ->where('activity.id',$activity_id)
@@ -916,7 +912,7 @@ class ReferralCtrl extends Controller
             'code' => $track->code,
             'patient_id' => $track->patient_id,
             'date_referred' => $date,
-            'referred_from' => $track->referred_to,
+            'referred_from' => $user->facility_id,
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
             'remarks' => '',
@@ -934,11 +930,11 @@ class ReferralCtrl extends Controller
                 'department_id' => $req->department,
                 'date_arrived' => '',
                 'date_seen' => '',
-                'referred_from' => $track->referred_to,
+                'referred_from' => $user->facility_id,
                 'referred_to' => $req->facility,
                 'remarks' => '',
                 'referring_md' => $user->id,
-                'status' => 'referred'
+                'status' => 'redirected'
             ]);
         }
 
@@ -1042,18 +1038,22 @@ class ReferralCtrl extends Controller
 
     public function cancelReferral(Request $req, $id)
     {
-        $tracking = Tracking::find($id);
-        print_r($tracking);
-
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($id);
+        $activity = Activity::where("code",$track->code)->where(function($q){
+            $q->where("status","referred")
+              ->orWhere("status","redirected")
+              ->orWhere("status","transferred");
+        })
+        ->orderBy("id","desc")
+        ->first();
         $data = array(
-            'code' => $track->code,
-            'patient_id' => $track->patient_id,
+            'code' => $activity->code,
+            'patient_id' => $activity->patient_id,
             'date_referred' => $date,
-            'referred_from' => $track->referred_to,
-            'referred_to' => 0,
+            'referred_from' => $activity->referred_from,
+            'referred_to' => $activity->referred_to,
             'action_md' => $user->id,
             'remarks' => $req->reason,
             'status' => 'cancelled'
@@ -1064,6 +1064,7 @@ class ReferralCtrl extends Controller
             ->update([
                 'status' => 'cancelled'
             ]);
+
         return redirect()->back();
     }
 
