@@ -124,213 +124,213 @@
             </div>
         </div>
     </div>
-        <div class="row" style="padding-left: 1%;padding-right: 1%">
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe" ><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A1)</b> </span>
-                        <span class="info-box-number">+{{ number_format($a1_target) }}</span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a1_completion }}%; background-color: #514f4f;"></div>
-                        </div>
-                        <span class="progress-description">
-                    {{ $a1_completion }}% Goal Completion
-                </span>
+    <div class="row" style="padding-left: 1%;padding-right: 1%">
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe" ><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A1)</b> </span>
+                    <span class="info-box-number">+{{ number_format($a1_target) }}</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a1_completion }}%; background-color: #514f4f;"></div>
                     </div>
-                    <!-- /.info-box-content -->
+                    <span class="progress-description">
+                {{ $a1_completion }}% Goal Completion
+            </span>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde" >
-                    <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A2)</b> </span>
-                        <span class="info-box-number">+{{ number_format($a2_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a2_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $a2_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-
-
-
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A3)</b> </span>
-                        <span class="info-box-number">+{{ number_format($a3_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a3_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $a3_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A4)</b> </span>
-                        <span class="info-box-number">+{{ number_format($a4_target) }}</span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $a4_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A5)</b> </span>
-                        <span class="info-box-number">+{{ number_format($a5_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $a5_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B1)</b> </span>
-                        <span class="info-box-number">+{{ number_format($b1_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $b1_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B2)</b> </span>
-                        <span class="info-box-number">+{{ number_format($b2_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $b2_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B3)</b> </span>
-                        <span class="info-box-number">+{{ number_format($b3_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $b3_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B4)</b> </span>
-                        <span class="info-box-number">+{{ number_format($b4_target) }}</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        {{ $b4_completion }}% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B5)</b> </span>
-                        <span class="info-box-number">+0</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        0% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #d0fffe">
-                    <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B6)</b> </span>
-                        <span class="info-box-number">+0</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        0% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-box" style="background-color: #e4ffde">
-                    <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(C)</b> </span>
-                        <span class="info-box-number">+0</span>
-
-                        <div class="progress">
-                            <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
-                        </div>
-                        <span class="progress-description">
-                        0% Goal Completion
-                    </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
+                <!-- /.info-box-content -->
             </div>
         </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde" >
+                <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A2)</b> </span>
+                    <span class="info-box-number">+{{ number_format($a2_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a2_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $a2_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+
+
+
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A3)</b> </span>
+                    <span class="info-box-number">+{{ number_format($a3_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a3_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $a3_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde">
+                <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A4)</b> </span>
+                    <span class="info-box-number">+{{ number_format($a4_target) }}</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $a4_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(A5)</b> </span>
+                    <span class="info-box-number">+{{ number_format($a5_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $a5_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde">
+                <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B1)</b> </span>
+                    <span class="info-box-number">+{{ number_format($b1_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $b1_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B2)</b> </span>
+                    <span class="info-box-number">+{{ number_format($b2_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $b2_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde">
+                <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B3)</b> </span>
+                    <span class="info-box-number">+{{ number_format($b3_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $b3_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B4)</b> </span>
+                    <span class="info-box-number">+{{ number_format($b4_target) }}</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    {{ $b4_completion }}% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde">
+                <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B5)</b> </span>
+                    <span class="info-box-number">+0</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    0% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #d0fffe">
+                <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(B6)</b> </span>
+                    <span class="info-box-number">+0</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    0% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="info-box" style="background-color: #e4ffde">
+                <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text" style="font-size: 9.5pt;">Target vaccination  <b>(C)</b> </span>
+                    <span class="info-box-number">+0</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                    </div>
+                    <span class="progress-description">
+                    0% Goal Completion
+                </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+    </div>
         <div class="box-body">
             @if(count($data)>0)
                 <div class="row">
@@ -1473,29 +1473,28 @@
     </div>
 
 
-    <div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
-        <div class="modal-dialog modal-lg modal_w" role="document">
-            <div class="modal-content">
-                <div class="modal-body vaccinated_content_municipality">
+<div class="modal fade"  role="dialog" data-backdrop="static" data-keyboard="false" id="vaccine_modal_municipality" style="min-width: 100%">
+    <div class="modal-dialog modal-lg modal_w" role="document">
+        <div class="modal-content">
+            <div class="modal-body vaccinated_content_municipality">
 
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div><!-- /.modal-content -->
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
-    <div class="modal fade" role="dialog" id="vaccine_modal_allocated">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-body vaccine_allocated_modal">
-                    <center>
-                        <img src="{{ asset('resources/img/loading.gif') }}" alt="">
-                    </center>
-                </div><!-- /.modal-content -->
-            </div>
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-</div>
+<div class="modal fade" role="dialog" id="vaccine_modal_allocated">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body vaccine_allocated_modal">
+                <center>
+                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                </center>
+            </div><!-- /.modal-content -->
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 @include('admin.modal.facility_modal')
 
