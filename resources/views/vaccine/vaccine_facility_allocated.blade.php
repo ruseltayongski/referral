@@ -13,10 +13,10 @@
         <label>Facility Name:</label>
         <input type="text" class="form-control" value="@if(isset($facility->name)){{ $facility->name }}@endif" autofocus name="name" readonly>
     </div>
-    <div class="form-group">
+    {{--<div class="form-group">
         <label>FacilityCode:</label>
         <input type="text" class="form-control" value="@if(isset($facility->facility_code)){{ $facility->facility_code }}@endif" name="facility_code" readonly>
-    </div>
+    </div>--}}
     <div class="form-group">
       <label style="margin-left: -3%;">Sinovac Allocated</label>
         <div class="row">

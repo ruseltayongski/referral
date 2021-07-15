@@ -508,6 +508,11 @@ Route::get('vaccine/tab5/report','Vaccine\VaccineController@vaccineTab5Report');
 Route::get('vaccine/tab6/report','Vaccine\VaccineController@vaccineTab6Report');//tab6
 Route::get('vaccine/tab7/report','Vaccine\VaccineController@vaccineTab7Report');//tab7
 Route::get('vaccine/tab8/report','Vaccine\VaccineController@vaccineTab8Report');//tab8
+Route::get('vaccine/tab9/report','Vaccine\VaccineController@vaccineTab9Report');//tab9
+Route::get('vaccine/tab10/report','Vaccine\VaccineController@vaccineTab10Report');//tab10
+Route::get('vaccine/tab11/report','Vaccine\VaccineController@vaccineTab11Report');//tab11
+Route::get('vaccine/tab12/report','Vaccine\VaccineController@vaccineTab12Report');//tab12
+Route::get('vaccine/tab13/report','Vaccine\VaccineController@vaccineTab13Report');//tab13
 
 
 

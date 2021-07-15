@@ -28,12 +28,13 @@
      </button>
 </form>
 @if(count($vaccine_accomplishment) > 0)
+<div class="table-responsive">
 <table style="font-size: 10pt;" class="table table-striped" border="2">
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-        <th colspan="5"><center>Eligible Population</center></th>
+        <th colspan="10"><center>Eligible Population</center></th>
         <th colspan="3">Vaccine Allocated</th>
-        <th colspan="5"><center>Total Vaccinated</center></th>
+        <th colspan="10"><center>Total Vaccinated</center></th>
         <th>Mild</th>
         <th>Serious</th>
         <th>Deferred</th>
@@ -49,6 +50,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <th>1st</th>
         <th>2nd</th>
@@ -57,6 +63,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <td></td>
         <td></td>
@@ -77,9 +88,14 @@
 
         </td> <!-- 1-3 -->
         <td rowspan="2">{{ $total_epop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
-        <td rowspan="2">{{$total_epop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a3 }}</td> <!-- A3 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a4 }}</td> <!-- A4 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_a5 }}</td> <!-- A5 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_b1 }}</td> <!-- B1 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_b2 }}</td> <!-- B2 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_b3 }}</td> <!-- B3 SINOVAC FIRST -->
+        <td rowspan="2">{{ $total_epop_svac_b4 }}</td> <!-- B4 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
         <td rowspan="2">{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRST -->
@@ -94,7 +110,22 @@
             <span class="label label-success">{{ $total_svac_a3_frst }}</span> <!-- VACCINATED (A3) SINOVAC FIRST -->
         </td>
         <td>
-            <span class="label label-success"> {{ $total_svac_a4_frst }}</span> <!-- VACCINATED (A4) SINOVAC FIRST -->
+            <span class="label label-success">{{ $total_svac_a4_frst }}</span> <!-- VACCINATED (A4) SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_svac_a5_frst }}</span> <!-- VACCINATED (A5) SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_svac_b1_frst }}</span> <!-- VACCINATED (B1) SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_svac_b2_frst }}</span> <!-- VACCINATED (B2) SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_svac_b3_frst }}</span> <!-- VACCINATED (B3) SINOVAC FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_svac_b4_frst }}</span> <!-- VACCINATED (B4) SINOVAC FIRST -->
         </td>
         <td>
             <span class="label label-success">{{ $total_vcted_svac_frst }}</span>  <!-- TOTAL VACCINATED SINOVAC FIRST -->
@@ -138,6 +169,21 @@
             <span class="label label-warning">{{ $total_svac_a4_scnd }} </span> <!-- VACCINATED (A4) SINOVAC SECOND -->
         </td>
         <td>
+            <span class="label label-warning">{{ $total_svac_a5_scnd }} </span> <!-- VACCINATED (A5) SINOVAC SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_svac_b1_scnd }} </span> <!-- VACCINATED (B1) SINOVAC SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_svac_b2_scnd }} </span> <!-- VACCINATED (B2) SINOVAC SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_svac_b3_scnd }} </span> <!-- VACCINATED (B3) SINOVAC SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_svac_b4_scnd }} </span> <!-- VACCINATED (B4) SINOVAC SECOND -->
+        </td>
+        <td>
             <span class="label label-warning">{{ $total_vcted_svac_scnd }}</span> <!-- TOTAL VACCINATED SINOVAC SECOND -->
         </td> <!-- 1-4 -->
         <td>
@@ -156,7 +202,6 @@
             <span class="label label-warning">{{ $total_wstge_svac_scnd }}</span> <!-- WASTAGE SINOVAC SECOND -->
         </td>
         <td>
-
             <span class="label label-warning">{{ number_format($p_cvrge_svac_scnd,2) }}%</span> <!-- PERCENT COVERAGE SINOVAC SECOND -->
         </td>
         <td>
@@ -174,10 +219,15 @@
     <tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #f2fcac">
             <td rowspan="2"></td> <!-- 1-5 -->
-            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- Frontline(A1) ASTRA -->
-            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- SENIOR(A2) ASTRA -->
-            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3 }}</td>
-            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a4 }}</td>
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- (A1) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- (A2) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3 }}</td>  <!-- (A3) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a4 }}</td>  <!-- (A4) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_a5 }}</td>  <!-- (A5) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_b1 }}</td>  <!-- (B1) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_b2 }}</td>  <!-- (B2) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_b3 }}</td>  <!-- (B3) ASTRA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_astra_b4 }}</td>  <!-- (B4) ASTRA -->
             <td rowspan="2" style="color:black;">{{ $total_epop_astra }}</td>  <!-- ELIPOP TOTAL ASTRA FIRST  -->
             <td rowspan="2" style="color:black;">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED(FD) ASTRA FIRST -->
             <td rowspan="2" style="color: black;">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) ASTRA FIRST -->
@@ -193,6 +243,21 @@
             </td>
             <td>
                 <span class="label label-success">{{ $total_astra_a4_frst }} </span> <!-- VACCINATED (A4) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_a5_frst }} </span> <!-- VACCINATED (A5) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_b1_frst }} </span> <!-- VACCINATED (B1) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_b2_frst }} </span> <!-- VACCINATED (B2) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_b3_frst }} </span> <!-- VACCINATED (B3) ASTRA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_astra_b4_frst }} </span> <!-- VACCINATED (B4) ASTRA FIRST -->
             </td>
             <td>
                 <span class="label label-success">{{ $total_vcted_astra_frst }}</span> <!-- TOTAL VACCINATED  ASTRA FIRST -->
@@ -236,6 +301,21 @@
                 <span class="label label-warning">{{ $total_astra_a4_scnd }}</span> <!-- VACCINATED (A4) ASTRA SECOND -->
             </td>
             <td>
+                <span class="label label-warning">{{ $total_astra_a5_scnd }}</span> <!-- VACCINATED (A5) ASTRA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_astra_b1_scnd }}</span> <!-- VACCINATED (B1) ASTRA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_astra_b2_scnd }}</span> <!-- VACCINATED (B2) ASTRA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_astra_b3_scnd }}</span> <!-- VACCINATED (B3) ASTRA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_astra_b4_scnd }}</span> <!-- VACCINATED (B4) ASTRA SECOND -->
+            </td>
+            <td>
                 <span class="label label-warning">{{ $total_vcted_astra_scnd }}</span> <!-- TOTAL VACCINATED ASTRA SECOND -->
             </td> <!-- 1-6 -->
             <td>
@@ -274,6 +354,11 @@
         <td rowspan="2">{{ $total_epop_sputnikv_a2 }}</td> <!-- A2 SPUTNIKV  FIRST -->
         <td rowspan="2">{{ $total_epop_sputnikv_a3 }}</td> <!-- A3 SPUTNIKV  FIRST -->
         <td rowspan="2">{{ $total_epop_sputnikv_a4 }}</td> <!-- A4 SPUTNIKV FIRST -->
+        <td rowspan="2">{{ $total_epop_sputnikv_a5 }}</td> <!-- A5 SPUTNIKV FIRST -->
+        <td rowspan="2">{{ $total_epop_sputnikv_b1 }}</td> <!-- B1 SPUTNIKV FIRST -->
+        <td rowspan="2">{{ $total_epop_sputnikv_b2 }}</td> <!-- B2 SPUTNIKV FIRST -->
+        <td rowspan="2">{{ $total_epop_sputnikv_b3 }}</td> <!-- B3 SPUTNIKV FIRST -->
+        <td rowspan="2">{{ $total_epop_sputnikv_b4 }}</td> <!-- B4 SPUTNIKV FIRST -->
         <td rowspan="2">{{ $total_epop_sputnikv }}</td> <!-- ELIPOP TOTAL SPUTNIKV  FIRST  -->
         <td rowspan="2">{{ $total_vallocated_sputnikv_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SPUTNIKV  FIRST -->
         <td rowspan="2">{{ $total_vallocated_sputnikv_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SPUTNIKV  FIRST -->
@@ -289,6 +374,21 @@
         </td>
         <td>
             <span class="label label-success">{{ $total_sputnikv_a4_frst }}</span> <!-- VACCINATED (A4) SPUTNIKV  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_sputnikv_a5_frst }}</span> <!-- VACCINATED (A5) SPUTNIKV  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_sputnikv_b1_frst }}</span> <!-- VACCINATED (B1) SPUTNIKV  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_sputnikv_b2_frst }}</span> <!-- VACCINATED (B2) SPUTNIKV  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_sputnikv_b3_frst }}</span> <!-- VACCINATED (B3) SPUTNIKV  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_sputnikv_b4_frst }}</span> <!-- VACCINATED (B4) SPUTNIKV  FIRST -->
         </td>
         <td>
             <span class="label label-success">{{ $total_vcted_sputnikv_frst }}</span>  <!-- TOTAL VACCINATED SPUTNIKV  FIRST -->
@@ -332,6 +432,21 @@
             <span class="label label-warning">{{ $total_sputnikv_a4_scnd }}</span> <!-- VACCINATED (A4) SPUTNIKV SECOND -->
         </td>
         <td>
+            <span class="label label-warning">{{ $total_sputnikv_a5_scnd }}</span> <!-- VACCINATED (A5) SPUTNIKV SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_sputnikv_b1_scnd }}</span> <!-- VACCINATED (B1) SPUTNIKV SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_sputnikv_b2_scnd }}</span> <!-- VACCINATED (B2) SPUTNIKV SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_sputnikv_b3_scnd }}</span> <!-- VACCINATED (B3) SPUTNIKV SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_sputnikv_b4_scnd }}</span> <!-- VACCINATED (B4) SPUTNIKV SECOND -->
+        </td>
+        <td>
             <span class="label label-warning">{{ $total_vcted_sputnikv_scnd }}</span> <!-- TOTAL VACCINATED SPUTNIKV SECOND -->
         </td> <!-- 1-6 -->
         <td>
@@ -369,6 +484,11 @@
         <td rowspan="2">{{ $total_epop_pfizer_a2 }}</td> <!-- A2 PFIZER  FIRST -->
         <td rowspan="2">{{ $total_epop_pfizer_a3 }}</td> <!-- A3 PFIZER FIRST -->
         <td rowspan="2">{{ $total_epop_pfizer_a4 }}</td> <!-- A4 PFIZER FIRST -->
+        <td rowspan="2">{{ $total_epop_pfizer_a5 }}</td> <!-- A5 PFIZER FIRST -->
+        <td rowspan="2">{{ $total_epop_pfizer_b1 }}</td> <!-- B1 PFIZER FIRST -->
+        <td rowspan="2">{{ $total_epop_pfizer_b2 }}</td> <!-- B2 PFIZER FIRST -->
+        <td rowspan="2">{{ $total_epop_pfizer_b3 }}</td> <!-- B3 PFIZER FIRST -->
+        <td rowspan="2">{{ $total_epop_pfizer_b4 }}</td> <!-- B4 PFIZER FIRST -->
         <td rowspan="2">{{ $total_epop_pfizer }}</td> <!-- ELIPOP TOTAL PFIZER  FIRST  -->
         <td rowspan="2">{{ $total_vallocated_pfizer_frst }}</td>  <!-- VACCINE ALLOCATED(FD) PFIZER  FIRST -->
         <td rowspan="2">{{ $total_vallocated_pfizer_scnd }}</td> <!-- VACCINE ALLOCATED(SD) PFIZER  FIRST -->
@@ -384,6 +504,21 @@
         </td>
         <td>
             <span class="label label-success">{{ $total_pfizer_a4_frst }}</span> <!-- VACCINATED (A4) PFIZER  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_pfizer_a5_frst }}</span> <!-- VACCINATED (A5) PFIZER  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_pfizer_b1_frst }}</span> <!-- VACCINATED (B1) PFIZER  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_pfizer_b2_frst }}</span> <!-- VACCINATED (B2) PFIZER  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_pfizer_b3_frst }}</span> <!-- VACCINATED (B3) PFIZER  FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ $total_pfizer_b4_frst }}</span> <!-- VACCINATED (B4) PFIZER  FIRST -->
         </td>
         <td>
             <span class="label label-success">{{ $total_vcted_pfizer_frst }}</span>  <!-- TOTAL VACCINATED PFIZER  FIRST -->
@@ -427,6 +562,21 @@
             <span class="label label-warning">{{ $total_pfizer_a4_scnd }}</span> <!-- VACCINATED (A4) PFIZER SECOND -->
         </td>
         <td>
+            <span class="label label-warning">{{ $total_pfizer_a5_scnd }}</span> <!-- VACCINATED (A5) PFIZER SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_pfizer_b1_scnd }}</span> <!-- VACCINATED (B1) PFIZER SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_pfizer_b2_scnd }}</span> <!-- VACCINATED (B2) PFIZER SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_pfizer_b3_scnd }}</span> <!-- VACCINATED (B3) PFIZER SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ $total_pfizer_b4_scnd }}</span> <!-- VACCINATED (B4) PFIZER SECOND -->
+        </td>
+        <td>
             <span class="label label-warning">{{ $total_vcted_pfizer_scnd }}</span> <!-- TOTAL VACCINATED PFIZER SECOND -->
         </td> <!-- 1-6 -->
         <td>
@@ -465,15 +615,28 @@
             <b>{{ $total_epop_pfizer_a2 }}</b>  <!-- TOTAL A2 FIRST -->
         </td>
         <td>
-            <b>{{ $total_epop_pfizer_a1 }}</b>  <!-- TOTAL A3 FIRST -->
+            <b>{{ $total_epop_pfizer_a3 }}</b>  <!-- TOTAL A3 FIRST -->
         </td>
         <td>
-            <b></b>  <!-- TOTAL A4 FIRST -->
+            <b>{{ $total_epop_pfizer_a4 }}</b>  <!-- TOTAL A4 FIRST -->
         </td>
         <td>
-           <b></b>  <!-- TOTAL_ELI_POP  -->
+            <b>{{ $total_epop_pfizer_a5 }}</b>  <!-- TOTAL A5 FIRST -->
         </td>
-        <td >
+        <td>
+            <b>{{ $total_epop_pfizer_b1 }}</b>  <!-- TOTAL B1 FIRST -->
+        </td>
+        <td>
+            <b>{{ $total_epop_pfizer_b2 }}</b>  <!-- TOTAL B2 FIRST -->
+        </td>
+        <td>
+            <b>{{ $total_epop_pfizer_b3 }}</b>  <!-- TOTAL B3 FIRST -->
+        </td>
+        <td>
+            <b>{{ $total_epop_pfizer_b4 }}</b>  <!-- TOTAL B4 FIRST -->
+        </td>
+        <td><b>{{ $total_epop_pfizer }}</b></td>
+        <td>
            <b>{{ $total_vallocated_frst }}</b>  <!-- TOTAL ALLOCATED_FIRST -->
         </td>
         <td >
@@ -493,6 +656,21 @@
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_a4 }}</b>  <!-- TOTAL_A4   -->
+        </td>
+        <td>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_a5 }}</b>  <!-- TOTAL_A5   -->
+        </td>
+        <td>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_b1 }}</b>  <!-- TOTAL_B1   -->
+        </td>
+        <td>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_b2 }}</b>  <!-- TOTAL_B2   -->
+        </td>
+        <td>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_b3 }}</b>  <!-- TOTAL_B3   -->
+        </td>
+        <td>
+            <b class="label label-success" style="margin-right: 5%">{{ $total_b4 }}</b>  <!-- TOTAL_B4   -->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_vcted_frst }}</b>  <!-- TOTAL_VACCINATED  -->
@@ -532,6 +710,11 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a1}}</b> <!-- TOTAL_A1   -->
         </td>
@@ -542,7 +725,22 @@
             <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a3}}</b> <!-- TOTAL_A3   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a4}}</b> <!-- TOTAL_A4   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_a4 }}</b> <!-- TOTAL_A4   -->
+        </td>
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_a5}}</b> <!-- TOTAL_A5   -->
+        </td>
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_b1}}</b> <!-- TOTAL_B1   -->
+        </td>
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_b2}}</b> <!-- TOTAL_B2   -->
+        </td>
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_b3}}</b> <!-- TOTAL_B3   -->
+        </td>
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">{{$total_overall_b4}}</b> <!-- TOTAL_B4   -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{ $total_vcted_scnd }}</b> <!-- TOTAL_VACCINATED 2   -->
@@ -573,6 +771,7 @@
         </td>
     </tr>
 </table>
+</div>
 @else
     <div class="alert alert-warning">
         <div class="text-warning">No data!</div>
@@ -607,11 +806,11 @@
             '            <option value="a2" >A2</option>\n' +
             '            <option value="a3" >A3</option>\n' +
             '            <option value="a4" >A4</option>\n' +
-            '            <option value="a5" disabled>A5</option>\n' +
-            '            <option value="b1" disabled>B1</option>\n' +
-            '            <option value="b2" disabled>B2</option>\n' +
-            '            <option value="b3" disabled>B3</option>\n' +
-            '            <option value="b4" disabled >B4</option>\n' +
+            '            <option value="a5" >A5</option>\n' +
+            '            <option value="b1" >B1</option>\n' +
+            '            <option value="b2" >B2</option>\n' +
+            '            <option value="b3" >B3</option>\n' +
+            '            <option value="b4" >B4</option>\n' +
             '            <option value="b5" disabled>B5</option>\n' +
             '            <option value="b6" disabled>B6</option>\n' +
             '            <option value="c"  disabled>C</option>\n' +

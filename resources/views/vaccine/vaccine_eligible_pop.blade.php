@@ -13,32 +13,74 @@
         <label>Municipality Name:</label>
         <input type="text" class="form-control" value="@if(isset($muncity->description)){{ $muncity->description }}@endif" autofocus name="description" readonly>
     </div>
-    <div class="form-group">
+   {{-- <div class="form-group">
         <label>Municipality Code:</label>
         <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code" readonly>
+    </div>--}}
+    <div class="form-group">
+            <div class="col-md-6">
+                <label>A1</label>
+                <input type="text" class="form-control" value="@if(isset($muncity->a1)){{ $muncity->a1 }}@endif" name="a1" required>
+            </div>
     </div>
     <div class="form-group">
-        <label>A1</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->a1)){{ $muncity->a1 }}@endif" name="a1" required>
+            <div class="col-md-6">
+                <label>A2</label>
+                <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a2 }}@endif" name="a2" required>
+            </div>
     </div>
     <div class="form-group">
-        <label>A2</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a2 }}@endif" name="a2" required>
+        <div class="col-md-6">
+            <label>A3</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->a3)){{ $muncity->a3 }}@endif" name="a3" required>
+        </div>
     </div>
     <div class="form-group">
-        <label>A3</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a3 }}@endif" name="a3" required>
+        <div class="col-md-6">
+            <label>A4</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->a4)){{ $muncity->a4 }}@endif" name="a4" required>
+        </div>
     </div>
     <div class="form-group">
-        <label>A4</label>
-        <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a4 }}@endif" name="a4" required>
+        <div class="col-md-6">
+            <label>A5</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->a5)){{ $muncity->a5 }}@endif" name="a5" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <label>B1</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->b1)){{ $muncity->b1 }}@endif" name="b1" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <label>B2</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->b2)){{ $muncity->b2 }}@endif" name="b2" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <label>B3</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->b3)){{ $muncity->b3 }}@endif" name="b3" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <label>B4</label>
+            <input type="text" class="form-control" value="@if(isset($muncity->b4)){{ $muncity->b4 }}@endif" name="b4" required>
+        </div>
     </div>
     <div class="modal-footer">
+
+    </div>
+    <br>
+    <div style="margin-left: 45%">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-    @if(isset($muncity->id))
+        @if(isset($muncity->id))
         <!-- <a href="#municipality_delete" data-toggle="modal" class="btn btn-danger btn-sm btn-flat" onclick="MunicipalityDelete('<?php echo $muncity->id; ?>')">
-                <i class="fa fa-trash"></i> Remove
-            </a> -->
+                    <i class="fa fa-trash"></i> Remove
+                </a> -->
         @endif
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
     </div>
