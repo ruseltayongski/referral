@@ -606,7 +606,7 @@
                                 $total_vcted_a2_first = $total_svac_a2_frst + $total_astra_a2_frst + $total_sputnikv_a2_frst + $total_pfizer_a2_frst; //VACCINATED A2
                                 $total_vcted_a3_first = $total_svac_a3_frst + $total_astra_a3_frst + $total_sputnikv_a3_frst + $total_pfizer_a3_frst; //VACCINATED A3
                                 $total_vcted_a4_first = $total_svac_a4_frst + $total_astra_a4_frst + $total_sputnikv_a4_frst + $total_pfizer_a4_frst; //VACCINATED A4
-                                $total_vcted_a5_first = $total_svac_a5_frst + $total_astra_a4_frst + $total_sputnikv_a5_frst + $total_pfizer_a5_frst; //VACCINATED A5
+                                $total_vcted_a5_first = $total_svac_a5_frst + $total_astra_a5_frst + $total_sputnikv_a5_frst + $total_pfizer_a5_frst; //VACCINATED A5
                                 $total_vcted_b1_first = $total_svac_b1_frst + $total_astra_b1_frst + $total_sputnikv_b1_frst + $total_pfizer_b1_frst; //VACCINATED B1
                                 $total_vcted_b2_first = $total_svac_b2_frst + $total_astra_b2_frst + $total_sputnikv_b2_frst + $total_pfizer_b2_frst; //VACCINATED B2
                                 $total_vcted_b3_first = $total_svac_b3_frst + $total_astra_b3_frst + $total_sputnikv_b3_frst + $total_pfizer_b3_frst; //VACCINATED B3
