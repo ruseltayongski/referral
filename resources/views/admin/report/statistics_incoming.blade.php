@@ -89,7 +89,7 @@
                                         $not_seen = $row->incoming - $row->seen_total;
                                     ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen > 0 ? $not_seen : 0 }}</span><br><br>
                                     </td>
                                 </tr>
                             @endforeach
