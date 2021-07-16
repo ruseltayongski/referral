@@ -1432,7 +1432,9 @@
                         <div>
                             {{ $data->links() }}
                         </div>
+                        <div class="table-responsive">
                         @include('vaccine.vaccine_facility_overall')
+                        </div>
                     </div>
                     <div class="col-md-3" style="padding-right: 2%">
                         <div id="chartContainer1" style="height: 370px; width: 100%;"></div><br><br><br>
