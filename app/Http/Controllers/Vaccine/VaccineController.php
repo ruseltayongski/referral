@@ -30,8 +30,6 @@ class VaccineController extends Controller
     public $total_bohol_first, $total_cebu_first, $total_negros_first, $total_siquijor_first, $total_cebu_facility_first, $total_mandaue_facility_first, $total_lapu_facility_first, $total_region_first; //TOTAL FIRST
     public $total_bohol_second, $total_cebu_second, $total_negros_second, $total_siquijor_second, $total_cebu_facility_second, $total_mandaue_facility_second, $total_lapu_facility_second, $total_region_second; //TOTAL FIRST
 
-
-
     public $eli_pop_bohol, $eli_pop_cebu, $eli_pop_negros, $eli_pop_siquijor, $eli_pop_cebu_facility, $eli_pop_mandaue_facility, $eli_pop_lapu_facility; //ELIGIBLE POP SINOVAC
     public $vcted_sinovac_bohol_first, $vcted_sinovac_cebu_first, $vcted_sinovac_negros_first, $vcted_sinovac_siquijor_first,
            $vcted_sinovac_cebu_facility_first, $vcted_sinovac_mandaue_facility_first, $vcted_sinovac_lapu_facility_first; //VACCINATED_SINOVAC_FIRST
@@ -130,12 +128,11 @@ class VaccineController extends Controller
     //for grand variable
 
     public $data_facility;  //DATA FACILITY
-    public $a1_target_facility, $a2_target_facility, $a3_target_facility, $a4_target_facility; //TARGET FACILITY
-    public $a1_completion_facility, $a2_completion_facility, $a3_completion_facility, $a4_completion_facility; //COMPLETION FACILITY
-    public $a1_vaccinated_facility ,  $a2_vaccinated_facility, $a3_vaccinated_facility, $a4_vaccinated_facility; //VACCINATED FACILITY
+    public $a1_target_facility, $a2_target_facility, $a3_target_facility, $a4_target_facility, $a5_target_facility, $b1_target_facility, $b2_target_facility,$b3_target_facility, $b4_target_facility; //TARGET FACILITY
+    public $a1_completion_facility, $a2_completion_facility, $a3_completion_facility, $a4_completion_facility, $a5_completion_facility, $b1_completion_facility, $b2_completion_facility, $b3_completion_facility, $b4_completion_facility; //COMPLETION FACILITY
+    public $a1_vaccinated_facility ,  $a2_vaccinated_facility, $a3_vaccinated_facility, $a4_vaccinated_facility, $a5_vaccinated_facility, $b1_vaccinated_facility, $b2_vaccinated_facility, $b3_vaccinated_facility, $b4_vaccinated_facility; //VACCINATED FACILITY
     public $sinovac_allocated_facility ,  $astra_allocated_facility, $sputnikv_allocated_facility, $pfizer_allocated_facility; //VACCINATED FACILITY
     public $sinovac_completion ,  $astra_completion, $sputnikv_completion, $pfizer_completion; //VACCINATED FACILITY
-
 
 
     public function index(Request $request)
@@ -152,25 +149,52 @@ class VaccineController extends Controller
         $a2_target = Muncity::select(DB::raw("sum(coalesce(a2,0)) as a2_target"))->first()->a2_target;
         $a3_target = Muncity::select(DB::raw("sum(coalesce(a3,0)) as a3_target"))->first()->a3_target;
         $a4_target = Muncity::select(DB::raw("sum(coalesce(a4,0)) as a4_target"))->first()->a4_target;
+        $a5_target = Muncity::select(DB::raw("sum(coalesce(a5,0)) as a5_target"))->first()->a5_target;
+        $b1_target = Muncity::select(DB::raw("sum(coalesce(b1,0)) as b1_target"))->first()->b1_target;
+        $b2_target = Muncity::select(DB::raw("sum(coalesce(b2,0)) as b2_target"))->first()->b2_target;
+        $b3_target = Muncity::select(DB::raw("sum(coalesce(b3,0)) as b3_target"))->first()->b3_target;
+        $b4_target = Muncity::select(DB::raw("sum(coalesce(b4,0)) as b4_target"))->first()->b4_target;
 
         $a1_target_facility = Facility::select(DB::raw("sum(coalesce(a1,0)) as a1_target_facility"))->first()->a1_target_facility;
         $a2_target_facility = Facility::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->first()->a2_target_facility;
         $a3_target_facility = Facility::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->first()->a3_target_facility;
         $a4_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as a4_target_facility"))->first()->a4_target_facility;
+        $a5_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as a5_target_facility"))->first()->a5_target_facility;
+        $b1_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as b1_target_facility"))->first()->b1_target_facility;
+        $b2_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as b2_target_facility"))->first()->b2_target_facility;
+        $b3_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as b3_target_facility"))->first()->b3_target_facility;
+        $b4_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as b4_target_facility"))->first()->b4_target_facility;
 
         $a1_target = $a1_target + $a1_target_facility;
         $a2_target = $a2_target + $a2_target_facility;
         $a3_target = $a3_target + $a3_target_facility;
         $a4_target = $a4_target + $a4_target_facility;
+        $a5_target = $a5_target + $a5_target_facility;
+        $b1_target = $b1_target + $b1_target_facility;
+        $b2_target = $b2_target + $b2_target_facility;
+        $b3_target = $b3_target + $b3_target_facility;
+        $b4_target = $b4_target + $b4_target_facility;
 
         $a1_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a1_completion"))->where("priority","a1")->first()->a1_completion;
         $a2_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a2_completion"))->where("priority","a2")->first()->a2_completion;
         $a3_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a3_completion"))->where("priority","a3")->first()->a3_completion;
         $a4_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a4_completion"))->where("priority","a4")->first()->a4_completion;
+        $a5_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a5_completion"))->where("priority","a5")->first()->a5_completion;
+        $b1_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b1_completion"))->where("priority","b1")->first()->b1_completion;
+        $b2_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b2_completion"))->where("priority","b2")->first()->b2_completion;
+        $b3_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b3_completion"))->where("priority","b3")->first()->b3_completion;
+        $b4_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b4_completion"))->where("priority","b4")->first()->b4_completion;
+
+
         $a1_completion = number_format($a1_completion / $a1_target * 100,2);
         $a2_completion = number_format($a2_completion / $a2_target * 100,2);
         $a3_completion = number_format($a3_completion / $a3_target * 100,2);
         $a4_completion = number_format($a4_completion / $a4_target * 100,2);
+        $a5_completion = number_format($a5_completion / $a5_target * 100,2);
+        $b1_completion = number_format($b1_completion / $b1_target * 100,2);
+        $b2_completion = number_format($b2_completion / $b2_target * 100,2);
+        $b3_completion = number_format($b3_completion / $b3_target * 100,2);
+        $b4_completion = number_format($b4_completion / $b4_target * 100,2);
 
         for($i=1; $i<=12; $i++)
         {
@@ -251,10 +275,20 @@ class VaccineController extends Controller
             "a2_target" => $a2_target,
             "a3_target" => $a3_target,
             "a4_target" => $a4_target,
+            "a5_target" => $a5_target,
+            "b1_target" => $b1_target,
+            "b2_target" => $b2_target,
+            "b3_target" => $b3_target,
+            "b4_target" => $b4_target,
             "a1_completion" => $a1_completion,
             "a2_completion" => $a2_completion,
             "a3_completion" => $a3_completion,
             "a4_completion" => $a4_completion,
+            "a5_completion" => $a5_completion,
+            "b1_completion" => $b1_completion,
+            "b2_completion" => $b2_completion,
+            "b3_completion" => $b3_completion,
+            "b4_completion" => $b4_completion,
             "date_start" => $date_start,
             "date_end" => $date_end
         ]);
@@ -266,15 +300,31 @@ class VaccineController extends Controller
         $a2_target = Muncity::select(DB::raw("sum(coalesce(a2,0)) as a2_target"))->where("province_id",$province_id)->first()->a2_target;
         $a3_target = Muncity::select(DB::raw("sum(coalesce(a3,0)) as a3_target"))->where("province_id",$province_id)->first()->a3_target;
         $a4_target = Muncity::select(DB::raw("sum(coalesce(a4,0)) as a4_target"))->where("province_id",$province_id)->first()->a4_target;
+        $a5_target = Muncity::select(DB::raw("sum(coalesce(a5,0)) as a5_target"))->where("province_id",$province_id)->first()->a5_target;
+        $b1_target = Muncity::select(DB::raw("sum(coalesce(b1,0)) as b1_target"))->where("province_id",$province_id)->first()->b1_target;
+        $b2_target = Muncity::select(DB::raw("sum(coalesce(b2,0)) as b2_target"))->where("province_id",$province_id)->first()->b2_target;
+        $b3_target = Muncity::select(DB::raw("sum(coalesce(b3,0)) as b3_target"))->where("province_id",$province_id)->first()->b3_target;
+        $b4_target = Muncity::select(DB::raw("sum(coalesce(b4,0)) as b4_target"))->where("province_id",$province_id)->first()->b4_target;
 
         $a1_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a1_completion"))->where("province_id",$province_id)->where("priority","a1")->first()->a1_completion;
         $a2_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a2_completion"))->where("province_id",$province_id)->where("priority","a2")->first()->a2_completion;
         $a3_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a3_completion"))->where("province_id",$province_id)->where("priority","a3")->first()->a3_completion;
         $a4_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a4_completion"))->where("province_id",$province_id)->where("priority","a4")->first()->a4_completion;
+        $a5_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as a5_completion"))->where("province_id",$province_id)->where("priority","a5")->first()->a5_completion;
+        $b1_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b1_completion"))->where("province_id",$province_id)->where("priority","b1")->first()->b1_completion;
+        $b2_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b2_completion"))->where("province_id",$province_id)->where("priority","b2")->first()->b2_completion;
+        $b3_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b3_completion"))->where("province_id",$province_id)->where("priority","b3")->first()->b3_completion;
+        $b4_completion = VaccineAccomplished::select(DB::raw("sum(coalesce(vaccinated_second,0)) as b4_completion"))->where("province_id",$province_id)->where("priority","b4")->first()->b4_completion;
+
         $a1_completion = number_format($a1_completion / $a1_target * 100,2);
         $a2_completion = number_format($a2_completion / $a2_target * 100,2);
         $a3_completion = number_format($a3_completion / $a3_target * 100,2);
         $a4_completion = number_format($a4_completion / $a4_target * 100,2);
+        $a5_completion = number_format($a5_completion / $a5_target * 100,2);
+        $b1_completion = number_format($b1_completion / $b1_target * 100,2);
+        $b2_completion = number_format($b2_completion / $b2_target * 100,2);
+        $b3_completion = number_format($b3_completion / $b3_target * 100,2);
+        $b4_completion = number_format($b4_completion / $b4_target * 100,2);
 
         $sinovac_allocated = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(sinovac_allocated_second,0)) as sinovac_allocated"))->where("province_id",$province_id)->first()->sinovac_allocated;
         $astra_allocated = Muncity::select(DB::raw("sum(COALESCE(astrazeneca_allocated_first,0)+COALESCE(astrazeneca_allocated_second,0)) as astra_allocated"))->where("province_id",$province_id)->first()->astra_allocated;
@@ -338,10 +388,20 @@ class VaccineController extends Controller
             'a2_target' => $a2_target,
             'a3_target' => $a3_target,
             'a4_target' => $a4_target,
+            'a5_target' => $a5_target,
+            'b1_target' => $b1_target,
+            'b2_target' => $b2_target,
+            'b3_target' => $b3_target,
+            'b4_target' => $b4_target,
             'a1_completion' => $a1_completion,
             'a2_completion' => $a2_completion,
             'a3_completion' => $a3_completion,
             'a4_completion' => $a4_completion,
+            'a5_completion' => $a5_completion,
+            'b1_completion' => $b1_completion,
+            'b2_completion' => $b2_completion,
+            'b3_completion' => $b3_completion,
+            'b4_completion' => $b4_completion,
             'sinovac_allocated' => $sinovac_allocated,
             'astra_allocated' => $astra_allocated,
             'sputnikv_allocated' => $sputnikv_allocated,
@@ -361,6 +421,11 @@ class VaccineController extends Controller
         $this->a2_target_facility = Facility::select(DB::raw("sum(coalesce(a2,0)) as a2_target_facility"))->where("tricity_id",63)->first()->a2_target_facility;
         $this->a3_target_facility = Facility::select(DB::raw("sum(coalesce(a3,0)) as a3_target_facility"))->where("tricity_id",63)->first()->a3_target_facility;
         $this->a4_target_facility = Facility::select(DB::raw("sum(coalesce(a4,0)) as a4_target_facility"))->where("tricity_id",63)->first()->a4_target_facility;
+        $this->a5_target_facility = Facility::select(DB::raw("sum(coalesce(a5,0)) as a5_target_facility"))->where("tricity_id",63)->first()->a5_target_facility;
+        $this->b1_target_facility = Facility::select(DB::raw("sum(coalesce(b1,0)) as b1_target_facility"))->where("tricity_id",63)->first()->b1_target_facility;
+        $this->b2_target_facility = Facility::select(DB::raw("sum(coalesce(b2,0)) as b2_target_facility"))->where("tricity_id",63)->first()->b2_target_facility;
+        $this->b3_target_facility = Facility::select(DB::raw("sum(coalesce(b3,0)) as b3_target_facility"))->where("tricity_id",63)->first()->b3_target_facility;
+        $this->b4_target_facility = Facility::select(DB::raw("sum(coalesce(b4,0)) as b4_target_facility"))->where("tricity_id",63)->first()->b4_target_facility;
 
 
         $this->a1_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a1_vaccinated_facility"))
@@ -369,12 +434,14 @@ class VaccineController extends Controller
             ->where("vaccine_accomplish.priority","a1")
             ->first()
             ->a1_vaccinated_facility;
+
         $this->a2_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a2_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
             ->where("facility.tricity_id","=",$muncity_id)
             ->where("vaccine_accomplish.priority","a2")
             ->first()
             ->a2_vaccinated_facility;
+
         $this->a3_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a3_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
             ->where("facility.tricity_id","=",$muncity_id)
@@ -385,14 +452,54 @@ class VaccineController extends Controller
         $this->a4_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a4_vaccinated_facility"))
             ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
             ->where("facility.tricity_id","=",$muncity_id)
-            ->where("vaccine_accomplish.priority","a3")
+            ->where("vaccine_accomplish.priority","a4")
             ->first()
             ->a4_vaccinated_facility;
+
+        $this->a5_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as a5_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",$muncity_id)
+            ->where("vaccine_accomplish.priority","a5")
+            ->first()
+            ->a5_vaccinated_facility;
+
+        $this->b1_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as b1_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",$muncity_id)
+            ->where("vaccine_accomplish.priority","b1")
+            ->first()
+            ->b1_vaccinated_facility;
+
+        $this->b2_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as b2_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",$muncity_id)
+            ->where("vaccine_accomplish.priority","b2")
+            ->first()
+            ->b2_vaccinated_facility;
+
+        $this->b3_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as b3_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",$muncity_id)
+            ->where("vaccine_accomplish.priority","b3")
+            ->first()
+            ->b3_vaccinated_facility;
+
+        $this->b4_vaccinated_facility = Facility::select(DB::raw("SUM(coalesce(vaccine_accomplish.vaccinated_second,0)) as b4_vaccinated_facility"))
+            ->leftJoin("vaccine_accomplish","vaccine_accomplish.facility_id","=","facility.id")
+            ->where("facility.tricity_id","=",$muncity_id)
+            ->where("vaccine_accomplish.priority","b4")
+            ->first()
+            ->b4_vaccinated_facility;
 
         $this->a1_completion_facility = number_format($this->a1_vaccinated_facility / $this->a1_target_facility * 100,2);
         $this->a2_completion_facility = number_format($this->a2_vaccinated_facility / $this->a2_target_facility * 100,2);
         $this->a3_completion_facility = number_format($this->a3_vaccinated_facility / $this->a3_target_facility * 100,2);
         $this->a4_completion_facility = number_format($this->a4_vaccinated_facility / $this->a4_target_facility * 100,2);
+        $this->a5_completion_facility = number_format($this->a5_vaccinated_facility / $this->a5_target_facility * 100,2);
+        $this->b1_completion_facility = number_format($this->b1_vaccinated_facility / $this->b1_target_facility * 100,2);
+        $this->b2_completion_facility = number_format($this->b2_vaccinated_facility / $this->b2_target_facility * 100,2);
+        $this->b3_completion_facility = number_format($this->b3_vaccinated_facility / $this->b3_target_facility * 100,2);
+        $this->b4_completion_facility = number_format($this->b4_vaccinated_facility / $this->b4_target_facility * 100,2);
 
         $this->sinovac_allocated_facility = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(sinovac_allocated_second,0)) as sinovac_allocated_facility"))->where("tricity_id",$muncity_id)->first()->sinovac_allocated_facility;
         $this->astra_allocated_facility = Facility::select(DB::raw("sum(COALESCE(astrazeneca_allocated_first,0)+COALESCE(astrazeneca_allocated_second,0)) as astra_allocated_facility"))->where("tricity_id",$muncity_id)->first()->astra_allocated_facility;
@@ -459,14 +566,29 @@ class VaccineController extends Controller
             'a2_target_facility'  =>  $this->a2_target_facility,
             'a3_target_facility'  =>  $this->a3_target_facility,
             'a4_target_facility'  =>  $this->a4_target_facility,
+            'a5_target_facility'  =>  $this->a5_target_facility,
+            'b1_target_facility'  =>  $this->b1_target_facility,
+            'b2_target_facility'  =>  $this->b2_target_facility,
+            'b3_target_facility'  =>  $this->b3_target_facility,
+            'b4_target_facility'  =>  $this->b4_target_facility,
             'a1_vaccinated_facility'  =>  $this->a1_vaccinated_facility,
             'a2_vaccinated_facility'  =>  $this->a2_vaccinated_facility,
             'a3_vaccinated_facility'  =>  $this->a3_vaccinated_facility,
             'a4_vaccinated_facility'  =>  $this->a4_vaccinated_facility,
+            'a5_vaccinated_facility'  =>  $this->a5_vaccinated_facility,
+            'b1_vaccinated_facility'  =>  $this->b1_vaccinated_facility,
+            'b2_vaccinated_facility'  =>  $this->b2_vaccinated_facility,
+            'b3_vaccinated_facility'  =>  $this->b3_vaccinated_facility,
+            'b4_vaccinated_facility'  =>  $this->b4_vaccinated_facility,
             'a1_completion_facility'  =>  $this->a1_completion_facility,
             'a2_completion_facility'  =>  $this->a2_completion_facility,
             'a3_completion_facility'  =>  $this->a3_completion_facility,
             'a4_completion_facility'  =>  $this->a4_completion_facility,
+            'a5_completion_facility'  =>  $this->a5_completion_facility,
+            'b1_completion_facility'  =>  $this->b1_completion_facility,
+            'b2_completion_facility'  =>  $this->b2_completion_facility,
+            'b3_completion_facility'  =>  $this->b3_completion_facility,
+            'b4_completion_facility'  =>  $this->b4_completion_facility,
             'sinovac_allocated_facility'  => $this->sinovac_allocated_facility,
             'astra_allocated_facility'  => $this->astra_allocated_facility,
             'sputnikv_allocated_facility'  => $this->sputnikv_allocated_facility,
@@ -505,6 +627,11 @@ class VaccineController extends Controller
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
             "total_epop_svac_a3" => $request->total_epop_svac_a3,
             "total_epop_svac_a4" => $request->total_epop_svac_a4,
+            "total_epop_svac_a5" => $request->total_epop_svac_a5,
+            "total_epop_svac_b1" => $request->total_epop_svac_b1,
+            "total_epop_svac_b2" => $request->total_epop_svac_b2,
+            "total_epop_svac_b3" => $request->total_epop_svac_b3,
+            "total_epop_svac_b4" => $request->total_epop_svac_b4,
             "total_epop_svac" => $request->total_epop_svac,
             "total_vallocated_svac_frst" => $request->total_vallocated_svac_frst,
             "total_vallocated_svac_scnd" => $request->total_vallocated_svac_scnd,
@@ -513,6 +640,11 @@ class VaccineController extends Controller
             "total_svac_a2_frst" => $request->total_svac_a2_frst,
             "total_svac_a3_frst" => $request->total_svac_a3_frst,
             "total_svac_a4_frst" => $request->total_svac_a4_frst,
+            "total_svac_a5_frst" => $request->total_svac_a5_frst,
+            "total_svac_b1_frst" => $request->total_svac_b1_frst,
+            "total_svac_b2_frst" => $request->total_svac_b2_frst,
+            "total_svac_b3_frst" => $request->total_svac_b3_frst,
+            "total_svac_b4_frst" => $request->total_svac_b4_frst,
             "total_vcted_svac_frst" => $request->total_vcted_svac_frst,
             "total_mild_svac_frst" => $request->total_mild_svac_frst,
             "total_srs_svac_frst" => $request->total_srs_svac_frst,
@@ -527,6 +659,11 @@ class VaccineController extends Controller
             "total_svac_a2_scnd" => $request->total_svac_a2_scnd,
             "total_svac_a3_scnd" => $request->total_svac_a3_scnd,
             "total_svac_a4_scnd" => $request->total_svac_a4_scnd,
+            "total_svac_a5_scnd" => $request->total_svac_a5_scnd,
+            "total_svac_b1_scnd" => $request->total_svac_b1_scnd,
+            "total_svac_b2_scnd" => $request->total_svac_b2_scnd,
+            "total_svac_b3_scnd" => $request->total_svac_b3_scnd,
+            "total_svac_b4_scnd" => $request->total_svac_b4_scnd,
             "total_vcted_svac_scnd" => $request->total_vcted_svac_scnd,
             "total_mild_svac_scnd" => $request->total_mild_svac_scnd,
             "total_srs_svac_scnd" => $request->total_srs_svac_scnd,
@@ -543,6 +680,11 @@ class VaccineController extends Controller
             "total_epop_astra_a2" => $request->total_epop_astra_a2,
             "total_epop_astra_a3" => $request->total_epop_astra_a3,
             "total_epop_astra_a4" => $request->total_epop_astra_a4,
+            "total_epop_astra_a5" => $request->total_epop_astra_a5,
+            "total_epop_astra_b1" => $request->total_epop_astra_b1,
+            "total_epop_astra_b2" => $request->total_epop_astra_b2,
+            "total_epop_astra_b3" => $request->total_epop_astra_b3,
+            "total_epop_astra_b4" => $request->total_epop_astra_b4,
             "total_epop_astra" => $request->total_epop_astra,
 
             "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
@@ -552,6 +694,11 @@ class VaccineController extends Controller
             "total_astra_a2_frst" => $request->total_astra_a2_frst,
             "total_astra_a3_frst" => $request->total_astra_a3_frst,
             "total_astra_a4_frst" => $request->total_astra_a4_frst,
+            "total_astra_a5_frst" => $request->total_astra_a5_frst,
+            "total_astra_b1_frst" => $request->total_astra_b1_frst,
+            "total_astra_b2_frst" => $request->total_astra_b2_frst,
+            "total_astra_b3_frst" => $request->total_astra_b3_frst,
+            "total_astra_b4_frst" => $request->total_astra_b4_frst,
             "total_vcted_astra_frst" => $request->total_vcted_astra_frst,
             "total_mild_astra_frst" => $request->total_mild_astra_frst,
             "total_srs_astra_frst" => $request->total_srs_astra_frst,
@@ -566,6 +713,11 @@ class VaccineController extends Controller
             "total_astra_a2_scnd" => $request->total_astra_a2_scnd,
             "total_astra_a3_scnd" => $request->total_astra_a3_scnd,
             "total_astra_a4_scnd" => $request->total_astra_a4_scnd,
+            "total_astra_a5_scnd" => $request->total_astra_a5_scnd,
+            "total_astra_b1_scnd" => $request->total_astra_b1_scnd,
+            "total_astra_b2_scnd" => $request->total_astra_b2_scnd,
+            "total_astra_b3_scnd" => $request->total_astra_b3_scnd,
+            "total_astra_b4_scnd" => $request->total_astra_b4_scnd,
             "total_vcted_astra_scnd" => $request->total_vcted_astra_scnd,
             "total_mild_astra_scnd" => $request->total_mild_astra_scnd,
             "total_srs_astra_scnd" => $request->total_srs_astra_scnd,
@@ -582,6 +734,11 @@ class VaccineController extends Controller
             "total_epop_sputnikv_a2" => $request->total_epop_sputnikv_a2,
             "total_epop_sputnikv_a3" => $request->total_epop_sputnikv_a3,
             "total_epop_sputnikv_a4" => $request->total_epop_sputnikv_a4,
+            "total_epop_sputnikv_a5" => $request->total_epop_sputnikv_a5,
+            "total_epop_sputnikv_b1" => $request->total_epop_sputnikv_b1,
+            "total_epop_sputnikv_b2" => $request->total_epop_sputnikv_b2,
+            "total_epop_sputnikv_b3" => $request->total_epop_sputnikv_b3,
+            "total_epop_sputnikv_b4" => $request->total_epop_sputnikv_b4,
             "total_epop_sputnikv" => $request->total_epop_sputnikv,
             "total_vallocated_sputnikv_frst" => $request->total_vallocated_sputnikv_frst,
             "total_vallocated_sputnikv_scnd" => $request->total_vallocated_sputnikv_scnd,
@@ -590,6 +747,11 @@ class VaccineController extends Controller
             "total_sputnikv_a2_frst" => $request->total_sputnikv_a2_frst,
             "total_sputnikv_a3_frst" => $request->total_sputnikv_a3_frst,
             "total_sputnikv_a4_frst" => $request->total_sputnikv_a4_frst,
+            "total_sputnikv_a5_frst" => $request->total_sputnikv_a5_frst,
+            "total_sputnikv_b1_frst" => $request->total_sputnikv_b1_frst,
+            "total_sputnikv_b2_frst" => $request->total_sputnikv_b2_frst,
+            "total_sputnikv_b3_frst" => $request->total_sputnikv_b3_frst,
+            "total_sputnikv_b4_frst" => $request->total_sputnikv_b4_frst,
             "total_vcted_sputnikv_frst" => $request->total_vcted_sputnikv_frst,
             "total_mild_sputnikv_frst" => $request->total_mild_sputnikv_frst,
             "total_srs_sputnikv_frst" => $request->total_srs_sputnikv_frst,
@@ -604,6 +766,11 @@ class VaccineController extends Controller
             "total_sputnikv_a2_scnd" => $request->total_sputnikv_a2_scnd,
             "total_sputnikv_a3_scnd" => $request->total_sputnikv_a3_scnd,
             "total_sputnikv_a4_scnd" => $request->total_sputnikv_a4_scnd,
+            "total_sputnikv_a5_scnd" => $request->total_sputnikv_a5_scnd,
+            "total_sputnikv_b1_scnd" => $request->total_sputnikv_b1_scnd,
+            "total_sputnikv_b2_scnd" => $request->total_sputnikv_b2_scnd,
+            "total_sputnikv_b3_scnd" => $request->total_sputnikv_b3_scnd,
+            "total_sputnikv_b4_scnd" => $request->total_sputnikv_b4_scnd,
             "total_vcted_sputnikv_scnd" => $request->total_vcted_sputnikv_scnd,
             "total_mild_sputnikv_scnd" => $request->total_mild_sputnikv_scnd,
             "total_srs_sputnikv_scnd" => $request->total_srs_sputnikv_scnd,
@@ -620,6 +787,11 @@ class VaccineController extends Controller
             "total_epop_pfizer_a2" => $request->total_epop_pfizer_a2,
             "total_epop_pfizer_a3" => $request->total_epop_pfizer_a3,
             "total_epop_pfizer_a4" => $request->total_epop_pfizer_a4,
+            "total_epop_pfizer_a5" => $request->total_epop_pfizer_a5,
+            "total_epop_pfizer_b1" => $request->total_epop_pfizer_b1,
+            "total_epop_pfizer_b2" => $request->total_epop_pfizer_b2,
+            "total_epop_pfizer_b3" => $request->total_epop_pfizer_b3,
+            "total_epop_pfizer_b4" => $request->total_epop_pfizer_b4,
             "total_epop_pfizer" => $request->total_epop_pfizer,
             "total_vallocated_pfizer_frst" => $request->total_vallocated_pfizer_frst,
             "total_vallocated_pfizer_scnd" => $request->total_vallocated_pfizer_scnd,
@@ -628,6 +800,11 @@ class VaccineController extends Controller
             "total_pfizer_a2_frst" => $request->total_pfizer_a2_frst,
             "total_pfizer_a3_frst" => $request->total_pfizer_a3_frst,
             "total_pfizer_a4_frst" => $request->total_pfizer_a4_frst,
+            "total_pfizer_a5_frst" => $request->total_pfizer_a5_frst,
+            "total_pfizer_b1_frst" => $request->total_pfizer_b1_frst,
+            "total_pfizer_b2_frst" => $request->total_pfizer_b2_frst,
+            "total_pfizer_b3_frst" => $request->total_pfizer_b3_frst,
+            "total_pfizer_b4_frst" => $request->total_pfizer_b4_frst,
             "total_vcted_pfizer_frst" => $request->total_vcted_pfizer_frst,
             "total_mild_pfizer_frst" => $request->total_mild_pfizer_frst,
             "total_srs_pfizer_frst" => $request->total_srs_pfizer_frst,
@@ -642,6 +819,11 @@ class VaccineController extends Controller
             "total_pfizer_a2_scnd" => $request->total_pfizer_a2_scnd,
             "total_pfizer_a3_scnd" => $request->total_pfizer_a3_scnd,
             "total_pfizer_a4_scnd" => $request->total_pfizer_a4_scnd,
+            "total_pfizer_a5_scnd" => $request->total_pfizer_a5_scnd,
+            "total_pfizer_b1_scnd" => $request->total_pfizer_b1_scnd,
+            "total_pfizer_b2_scnd" => $request->total_pfizer_b2_scnd,
+            "total_pfizer_b3_scnd" => $request->total_pfizer_b3_scnd,
+            "total_pfizer_b4_scnd" => $request->total_pfizer_b4_scnd,
             "total_vcted_pfizer_scnd" => $request->total_vcted_pfizer_scnd,
             "total_mild_pfizer_scnd" => $request->total_mild_pfizer_scnd,
             "total_srs_pfizer_scnd" => $request->total_srs_pfizer_scnd,
@@ -660,6 +842,11 @@ class VaccineController extends Controller
             "total_a2" => $request->total_a2,
             "total_a3" => $request->total_a3,
             "total_a4" => $request->total_a4,
+            "total_a5" => $request->total_a5,
+            "total_b1" => $request->total_b1,
+            "total_b2" => $request->total_b2,
+            "total_b3" => $request->total_b3,
+            "total_b4" => $request->total_b4,
             "total_vcted_frst" => $request->total_vcted_frst,
             "total_mild" => $request->total_mild,
             "total_serious" => $request->total_serious,
@@ -674,6 +861,11 @@ class VaccineController extends Controller
             "total_overall_a2" => $request->total_overall_a2,
             "total_overall_a3" => $request->total_overall_a3,
             "total_overall_a4" => $request->total_overall_a4,
+            "total_overall_a5" => $request->total_overall_a5,
+            "total_overall_b1" => $request->total_overall_b1,
+            "total_overall_b2" => $request->total_overall_b2,
+            "total_overall_b3" => $request->total_overall_b3,
+            "total_overall_b4" => $request->total_overall_b4,
             "total_vcted_scnd" => $request->total_vcted_scnd,
             "total_overall_mild" => $request->total_overall_mild,
             "total_overall_serious" => $request->total_overall_serious,
@@ -712,6 +904,11 @@ class VaccineController extends Controller
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
             "total_epop_svac_a3" => $request->total_epop_svac_a3,
             "total_epop_svac_a4" => $request->total_epop_svac_a4,
+            "total_epop_svac_a5" => $request->total_epop_svac_a5,
+            "total_epop_svac_b1" => $request->total_epop_svac_b1,
+            "total_epop_svac_b2" => $request->total_epop_svac_b2,
+            "total_epop_svac_b3" => $request->total_epop_svac_b3,
+            "total_epop_svac_b4" => $request->total_epop_svac_b4,
             "total_epop_svac" => $request->total_epop_svac,
             "total_vallocated_svac_frst" => $request->total_vallocated_svac_frst,
             "total_vallocated_svac_scnd" => $request->total_vallocated_svac_scnd,
@@ -720,6 +917,11 @@ class VaccineController extends Controller
             "total_svac_a2_frst" => $request->total_svac_a2_frst,
             "total_svac_a3_frst" => $request->total_svac_a3_frst,
             "total_svac_a4_frst" => $request->total_svac_a4_frst,
+            "total_svac_a5_frst" => $request->total_svac_a5_frst,
+            "total_svac_b1_frst" => $request->total_svac_b1_frst,
+            "total_svac_b2_frst" => $request->total_svac_b2_frst,
+            "total_svac_b3_frst" => $request->total_svac_b3_frst,
+            "total_svac_b4_frst" => $request->total_svac_b4_frst,
             "total_vcted_svac_frst" => $request->total_vcted_svac_frst,
             "total_mild_svac_frst" => $request->total_mild_svac_frst,
             "total_srs_svac_frst" => $request->total_srs_svac_frst,
@@ -734,6 +936,11 @@ class VaccineController extends Controller
             "total_svac_a2_scnd" => $request->total_svac_a2_scnd,
             "total_svac_a3_scnd" => $request->total_svac_a3_scnd,
             "total_svac_a4_scnd" => $request->total_svac_a4_scnd,
+            "total_svac_a5_scnd" => $request->total_svac_a5_scnd,
+            "total_svac_b1_scnd" => $request->total_svac_b1_scnd,
+            "total_svac_b2_scnd" => $request->total_svac_b2_scnd,
+            "total_svac_b3_scnd" => $request->total_svac_b3_scnd,
+            "total_svac_b4_scnd" => $request->total_svac_b4_scnd,
             "total_vcted_svac_scnd" => $request->total_vcted_svac_scnd,
             "total_mild_svac_scnd" => $request->total_mild_svac_scnd,
             "total_srs_svac_scnd" => $request->total_srs_svac_scnd,
@@ -749,6 +956,11 @@ class VaccineController extends Controller
             "total_epop_astra_a2" => $request->total_epop_astra_a2,
             "total_epop_astra_a3" => $request->total_epop_astra_a3,
             "total_epop_astra_a4" => $request->total_epop_astra_a4,
+            "total_epop_astra_a5" => $request->total_epop_astra_a5,
+            "total_epop_astra_b1" => $request->total_epop_astra_b1,
+            "total_epop_astra_b2" => $request->total_epop_astra_b2,
+            "total_epop_astra_b3" => $request->total_epop_astra_b3,
+            "total_epop_astra_b4" => $request->total_epop_astra_b4,
             "total_epop_astra" => $request->total_epop_astra,
             "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
             "total_vallocated_astra_scnd" => $request->total_vallocated_astra_scnd,
@@ -757,6 +969,11 @@ class VaccineController extends Controller
             "total_astra_a2_frst" => $request->total_astra_a2_frst,
             "total_astra_a3_frst" => $request->total_astra_a3_frst,
             "total_astra_a4_frst" => $request->total_astra_a4_frst,
+            "total_astra_a5_frst" => $request->total_astra_a5_frst,
+            "total_astra_b1_frst" => $request->total_astra_b1_frst,
+            "total_astra_b2_frst" => $request->total_astra_b2_frst,
+            "total_astra_b3_frst" => $request->total_astra_b3_frst,
+            "total_astra_b4_frst" => $request->total_astra_b4_frst,
             "total_vcted_astra_frst" => $request->total_vcted_astra_frst,
             "total_mild_astra_frst" => $request->total_mild_astra_frst,
             "total_srs_astra_frst" => $request->total_srs_astra_frst,
@@ -766,11 +983,15 @@ class VaccineController extends Controller
             "p_cvrge_astra_frst" => $request->p_cvrge_astra_frst,
             "total_c_rate_astra_frst" => $request->total_c_rate_astra_frst,
             "total_r_unvcted_frst_astra" => $request->total_r_unvcted_frst_astra,
-
             "total_astra_a1_scnd" => $request->total_astra_a1_scnd,
             "total_astra_a2_scnd" => $request->total_astra_a2_scnd,
             "total_astra_a3_scnd" => $request->total_astra_a3_scnd,
             "total_astra_a4_scnd" => $request->total_astra_a4_scnd,
+            "total_astra_a5_scnd" => $request->total_astra_a5_scnd,
+            "total_astra_b1_scnd" => $request->total_astra_b1_scnd,
+            "total_astra_b2_scnd" => $request->total_astra_b2_scnd,
+            "total_astra_b3_scnd" => $request->total_astra_b3_scnd,
+            "total_astra_b4_scnd" => $request->total_astra_b4_scnd,
             "total_vcted_astra_scnd" => $request->total_vcted_astra_scnd,
             "total_mild_astra_scnd" => $request->total_mild_astra_scnd,
             "total_srs_astra_scnd" => $request->total_srs_astra_scnd,
@@ -786,6 +1007,11 @@ class VaccineController extends Controller
             "total_epop_sputnikv_a2" => $request->total_epop_sputnikv_a2,
             "total_epop_sputnikv_a3" => $request->total_epop_sputnikv_a3,
             "total_epop_sputnikv_a4" => $request->total_epop_sputnikv_a4,
+            "total_epop_sputnikv_a5" => $request->total_epop_sputnikv_a5,
+            "total_epop_sputnikv_b1" => $request->total_epop_sputnikv_b1,
+            "total_epop_sputnikv_b2" => $request->total_epop_sputnikv_b2,
+            "total_epop_sputnikv_b3" => $request->total_epop_sputnikv_b3,
+            "total_epop_sputnikv_b4" => $request->total_epop_sputnikv_b4,
             "total_epop_sputnikv" => $request->total_epop_sputnikv,
             "total_vallocated_sputnikv_frst" => $request->total_vallocated_sputnikv_frst,
             "total_vallocated_sputnikv_scnd" => $request->total_vallocated_sputnikv_scnd,
@@ -794,6 +1020,11 @@ class VaccineController extends Controller
             "total_sputnikv_a2_frst" => $request->total_sputnikv_a2_frst,
             "total_sputnikv_a3_frst" => $request->total_sputnikv_a3_frst,
             "total_sputnikv_a4_frst" => $request->total_sputnikv_a4_frst,
+            "total_sputnikv_a5_frst" => $request->total_sputnikv_a5_frst,
+            "total_sputnikv_b1_frst" => $request->total_sputnikv_b1_frst,
+            "total_sputnikv_b2_frst" => $request->total_sputnikv_b2_frst,
+            "total_sputnikv_b3_frst" => $request->total_sputnikv_b3_frst,
+            "total_sputnikv_b4_frst" => $request->total_sputnikv_b4_frst,
             "total_vcted_sputnikv_frst" => $request->total_vcted_sputnikv_frst,
             "total_mild_sputnikv_frst" => $request->total_mild_sputnikv_frst,
             "total_srs_sputnikv_frst" => $request->total_srs_sputnikv_frst,
@@ -808,6 +1039,11 @@ class VaccineController extends Controller
             "total_sputnikv_a2_scnd" => $request->total_sputnikv_a2_scnd,
             "total_sputnikv_a3_scnd" => $request->total_sputnikv_a3_scnd,
             "total_sputnikv_a4_scnd" => $request->total_sputnikv_a4_scnd,
+            "total_sputnikv_a5_scnd" => $request->total_sputnikv_a5_scnd,
+            "total_sputnikv_b1_scnd" => $request->total_sputnikv_b1_scnd,
+            "total_sputnikv_b2_scnd" => $request->total_sputnikv_b2_scnd,
+            "total_sputnikv_b3_scnd" => $request->total_sputnikv_b3_scnd,
+            "total_sputnikv_b4_scnd" => $request->total_sputnikv_b4_scnd,
             "total_vcted_sputnikv_scnd" => $request->total_vcted_sputnikv_scnd,
             "total_mild_sputnikv_scnd" => $request->total_mild_sputnikv_scnd,
             "total_srs_sputnikv_scnd" => $request->total_srs_sputnikv_scnd,
@@ -824,6 +1060,11 @@ class VaccineController extends Controller
             "total_epop_pfizer_a2" => $request->total_epop_pfizer_a2,
             "total_epop_pfizer_a3" => $request->total_epop_pfizer_a3,
             "total_epop_pfizer_a4" => $request->total_epop_pfizer_a4,
+            "total_epop_pfizer_a5" => $request->total_epop_pfizer_a5,
+            "total_epop_pfizer_b1" => $request->total_epop_pfizer_b1,
+            "total_epop_pfizer_b2" => $request->total_epop_pfizer_b2,
+            "total_epop_pfizer_b3" => $request->total_epop_pfizer_b3,
+            "total_epop_pfizer_b4" => $request->total_epop_pfizer_b4,
             "total_epop_pfizer" => $request->total_epop_pfizer,
             "total_vallocated_pfizer_frst" => $request->total_vallocated_pfizer_frst,
             "total_vallocated_pfizer_scnd" => $request->total_vallocated_pfizer_scnd,
@@ -832,6 +1073,11 @@ class VaccineController extends Controller
             "total_pfizer_a2_frst" => $request->total_pfizer_a2_frst,
             "total_pfizer_a3_frst" => $request->total_pfizer_a3_frst,
             "total_pfizer_a4_frst" => $request->total_pfizer_a4_frst,
+            "total_pfizer_a5_frst" => $request->total_pfizer_a5_frst,
+            "total_pfizer_b1_frst" => $request->total_pfizer_b1_frst,
+            "total_pfizer_b2_frst" => $request->total_pfizer_b2_frst,
+            "total_pfizer_b3_frst" => $request->total_pfizer_b3_frst,
+            "total_pfizer_b4_frst" => $request->total_pfizer_b4_frst,
             "total_vcted_pfizer_frst" => $request->total_vcted_pfizer_frst,
             "total_mild_pfizer_frst" => $request->total_mild_pfizer_frst,
             "total_srs_pfizer_frst" => $request->total_srs_pfizer_frst,
@@ -846,6 +1092,11 @@ class VaccineController extends Controller
             "total_pfizer_a2_scnd" => $request->total_pfizer_a2_scnd,
             "total_pfizer_a3_scnd" => $request->total_pfizer_a3_scnd,
             "total_pfizer_a4_scnd" => $request->total_pfizer_a4_scnd,
+            "total_pfizer_a5_scnd" => $request->total_pfizer_a5_scnd,
+            "total_pfizer_b1_scnd" => $request->total_pfizer_b1_scnd,
+            "total_pfizer_b2_scnd" => $request->total_pfizer_b2_scnd,
+            "total_pfizer_b3_scnd" => $request->total_pfizer_b3_scnd,
+            "total_pfizer_b4_scnd" => $request->total_pfizer_b4_scnd,
             "total_vcted_pfizer_scnd" => $request->total_vcted_pfizer_scnd,
             "total_mild_pfizer_scnd" => $request->total_mild_pfizer_scnd,
             "total_srs_pfizer_scnd" => $request->total_srs_pfizer_scnd,
@@ -864,6 +1115,11 @@ class VaccineController extends Controller
             "total_overall_a2_first" => $request->total_overall_a2_first,
             "total_overall_a3_first" => $request->total_overall_a3_first,
             "total_overall_a4_first" => $request->total_overall_a4_first,
+            "total_overall_a5_first" => $request->total_overall_a5_first,
+            "total_overall_b1_first" => $request->total_overall_b1_first,
+            "total_overall_b2_first" => $request->total_overall_b2_first,
+            "total_overall_b3_first" => $request->total_overall_b3_first,
+            "total_overall_b4_first" => $request->total_overall_b4_first,
             "total_vcted_frst" => $request->total_vcted_frst,
             "total_overall_mild_first" => $request->total_overall_mild_first,
             "total_overall_serious_first" => $request->total_overall_serious_first,
@@ -878,6 +1134,11 @@ class VaccineController extends Controller
             "total_overall_a2_second" => $request->total_overall_a2_second,
             "total_overall_a3_second" => $request->total_overall_a3_second,
             "total_overall_a4_second" => $request->total_overall_a4_second,
+            "total_overall_a5_second" => $request->total_overall_a5_second,
+            "total_overall_b1_second" => $request->total_overall_b1_second,
+            "total_overall_b2_second" => $request->total_overall_b2_second,
+            "total_overall_b3_second" => $request->total_overall_b3_second,
+            "total_overall_b4_second" => $request->total_overall_b4_second,
             "total_vcted_scnd" => $request->total_vcted_scnd,
             "total_overall_mild_second" => $request->total_overall_mild_second,
             "total_overall_serious_second" => $request->total_overall_serious_second,
@@ -1037,6 +1298,16 @@ class VaccineController extends Controller
             return $no_eli_pop->a3;
         elseif($priority == 'a4')
             return $no_eli_pop->a4;
+        elseif($priority == 'a5')
+            return $no_eli_pop->a5;
+        elseif($priority == 'b1')
+            return $no_eli_pop->b1;
+        elseif($priority == 'b2')
+            return $no_eli_pop->b2;
+        elseif($priority == 'b3')
+            return $no_eli_pop->b3;
+        elseif($priority == 'b4')
+            return $no_eli_pop->b4;
     }
 
     public function getEliPopFacility($facility_id,$priority){
@@ -1049,6 +1320,16 @@ class VaccineController extends Controller
             return $no_eli_pop->a3;
         elseif($priority == 'a4')
             return $no_eli_pop->a4;
+        elseif($priority == 'a5')
+            return $no_eli_pop->a5;
+        elseif($priority == 'b1')
+            return $no_eli_pop->b1;
+        elseif($priority == 'b2')
+            return $no_eli_pop->b2;
+        elseif($priority == 'b3')
+            return $no_eli_pop->b4;
+        elseif($priority == 'b4')
+            return $no_eli_pop->b4;
     }
 
     public function getVaccineAllocated($muncity_id,$typeof_vaccine){
@@ -1227,8 +1508,6 @@ class VaccineController extends Controller
             "pfizer_lapu_facility_second" => $this->pfizer_lapu_facility_second,
             "pfizer_region_first" => $this->pfizer_bohol_first + $this->pfizer_cebu_first + $this->pfizer_negros_first + $this->pfizer_siquijor_first + $this->pfizer_cebu_facility_first + $this->pfizer_mandaue_facility_first + $this->pfizer_lapu_facility_first,
             "pfizer_region_second" => $this->pfizer_bohol_second + $this->pfizer_cebu_second + $this->pfizer_negros_second + $this->pfizer_siquijor_second + $this->pfizer_cebu_facility_second + $this->pfizer_mandaue_facility_second + $this->pfizer_lapu_facility_second,
-
-
 
             "total_bohol_first" => $this->total_bohol_first,
             "total_bohol_second" => $this->total_bohol_second,
@@ -2524,6 +2803,33 @@ class VaccineController extends Controller
 
     public function vaccineTab8Report()
     {
+        $this->setPriority("a5");
+        return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
+    }
+    public function vaccineTab9Report()
+    {
+        $this->setPriority("b1");
+        return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
+    }
+    public function vaccineTab10Report()
+    {
+        $this->setPriority("b2");
+        return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
+    }
+    public function vaccineTab11Report()
+    {
+        $this->setPriority("b3");
+        return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
+    }
+    public function vaccineTab12Report()
+    {
+        $this->setPriority("b4");
+        return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
+    }
+
+
+    public function vaccineTab13Report()
+    {
         $this->setPriority("a1");
         $total_elipop_region = $this->total_elipop_region;
         $eli_pop_bohol = $this->eli_pop_bohol;
@@ -3172,6 +3478,836 @@ class VaccineController extends Controller
         $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
         $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
         $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+        $this->setPriority("a5");
+        $total_elipop_region += $this->total_elipop_region;
+        $eli_pop_cebu += $this->eli_pop_cebu;
+        $eli_pop_bohol += $this->eli_pop_bohol;
+        $eli_pop_negros += $this->eli_pop_negros;
+        $eli_pop_siquijor += $this->eli_pop_siquijor;
+        $eli_pop_cebu_facility += $this->eli_pop_cebu_facility;
+        $eli_pop_mandaue_facility += $this->eli_pop_mandaue_facility;
+        $eli_pop_lapu_facility += $this->eli_pop_lapu_facility;
+        $region_sinovac_first_dose += $this->region_sinovac_first_dose;
+        $region_sinovac_second_dose += $this->region_sinovac_second_dose;
+        $region_astra_first_dose += $this->region_astra_first_dose;
+        $region_astra_second_dose += $this->region_astra_second_dose;
+        $region_sputnikv_first_dose += $this->region_sputnikv_first_dose;
+        $region_sputnikv_second_dose += $this->region_sputnikv_second_dose;
+        $region_pfizer_first_dose += $this->region_pfizer_first_dose;
+        $region_pfizer_second_dose += $this->region_pfizer_second_dose;
+
+        //VACCINATED SINOVAC A5
+        $vcted_sinovac_bohol_first += $this->vcted_sinovac_bohol_first;
+        $vcted_sinovac_bohol_second += $this->vcted_sinovac_bohol_second;
+        $vcted_sinovac_cebu_first += $this->vcted_sinovac_cebu_first;
+        $vcted_sinovac_cebu_second += $this->vcted_sinovac_cebu_second;
+        $vcted_sinovac_negros_first += $this->vcted_sinovac_negros_first;
+        $vcted_sinovac_negros_second += $this->vcted_sinovac_negros_second;
+        $vcted_sinovac_siquijor_first += $this->vcted_sinovac_siquijor_first;
+        $vcted_sinovac_siquijor_second += $this->vcted_sinovac_siquijor_second;
+        $vcted_sinovac_cebu_facility_first += $this->vcted_sinovac_cebu_facility_first;
+        $vcted_sinovac_cebu_facility_second += $this->vcted_sinovac_cebu_facility_second;
+        $vcted_sinovac_mandaue_facility_first += $this->vcted_sinovac_mandaue_facility_first;
+        $vcted_sinovac_mandaue_facility_second += $this->vcted_sinovac_mandaue_facility_second;
+        $vcted_sinovac_lapu_facility_first += $this->vcted_sinovac_lapu_facility_first;
+        $vcted_sinovac_lapu_facility_second += $this->vcted_sinovac_lapu_facility_second;
+
+        //VACCINATED ASTRA A5
+        $vcted_astra_bohol_first += $this->vcted_astra_bohol_first;
+        $vcted_astra_bohol_second += $this->vcted_astra_bohol_second;
+        $vcted_astra_cebu_first += $this->vcted_astra_cebu_first;
+        $vcted_astra_cebu_second += $this->vcted_astra_cebu_second;
+        $vcted_astra_negros_first += $this->vcted_astra_negros_first;
+        $vcted_astra_negros_second += $this->vcted_astra_negros_second;
+        $vcted_astra_siquijor_first += $this->vcted_astra_siquijor_first;
+        $vcted_astra_siquijor_second += $this->vcted_astra_siquijor_second;
+        $vcted_astra_cebu_facility_first += $this->vcted_astra_cebu_facility_first;
+        $vcted_astra_cebu_facility_second += $this->vcted_astra_cebu_facility_second;
+        $vcted_astra_mandaue_facility_first += $this->vcted_astra_mandaue_facility_first;
+        $vcted_astra_mandaue_facility_second += $this->vcted_astra_mandaue_facility_second;
+        $vcted_astra_lapu_facility_first += $this->vcted_astra_lapu_facility_first;
+        $vcted_astra_lapu_facility_second += $this->vcted_astra_lapu_facility_second;
+
+        //VACCINATED SPUTNIKV A5
+        $vcted_sputnikv_bohol_first += $this->vcted_sputnikv_bohol_first;
+        $vcted_sputnikv_bohol_second += $this->vcted_sputnikv_bohol_second;
+        $vcted_sputnikv_cebu_first += $this->vcted_sputnikv_cebu_first;
+        $vcted_sputnikv_cebu_second += $this->vcted_sputnikv_cebu_second;
+        $vcted_sputnikv_negros_first += $this->vcted_sputnikv_negros_first;
+        $vcted_sputnikv_negros_second += $this->vcted_sputnikv_negros_second;
+        $vcted_sputnikv_siquijor_first += $this->vcted_sputnikv_siquijor_first;
+        $vcted_sputnikv_siquijor_second += $this->vcted_sputnikv_siquijor_second;
+        $vcted_sputnikv_cebu_facility_first += $this->vcted_sputnikv_cebu_facility_first;
+        $vcted_sputnikv_cebu_facility_second += $this->vcted_sputnikv_cebu_facility_second;
+        $vcted_sputnikv_mandaue_facility_first += $this->vcted_sputnikv_mandaue_facility_first;
+        $vcted_sputnikv_mandaue_facility_second += $this->vcted_sputnikv_mandaue_facility_second;
+        $vcted_sputnikv_lapu_facility_first += $this->vcted_sputnikv_lapu_facility_first;
+        $vcted_sputnikv_lapu_facility_second += $this->vcted_sputnikv_lapu_facility_second;
+
+        //VACCINATED PFIZER A5
+        $vcted_pfizer_bohol_first += $this->vcted_pfizer_bohol_first;
+        $vcted_pfizer_bohol_second += $this->vcted_pfizer_bohol_second;
+        $vcted_pfizer_cebu_first += $this->vcted_pfizer_cebu_first;
+        $vcted_pfizer_cebu_second += $this->vcted_pfizer_cebu_second;
+        $vcted_pfizer_negros_first += $this->vcted_pfizer_negros_first;
+        $vcted_pfizer_negros_second += $this->vcted_pfizer_negros_second;
+        $vcted_pfizer_siquijor_first += $this->vcted_pfizer_siquijor_first;
+        $vcted_pfizer_siquijor_second += $this->vcted_pfizer_siquijor_second;
+        $vcted_pfizer_cebu_facility_first += $this->vcted_pfizer_cebu_facility_first;
+        $vcted_pfizer_cebu_facility_second += $this->vcted_pfizer_cebu_facility_second;
+        $vcted_pfizer_mandaue_facility_first += $this->vcted_pfizer_mandaue_facility_first;
+        $vcted_pfizer_mandaue_facility_second += $this->vcted_pfizer_mandaue_facility_second;
+        $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
+        $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
+
+
+        //TOTAL REFUSED FIRST A5
+        $total_refusal_first += $this->total_refusal_first;
+        $refused_first_bohol += $this->refused_first_bohol;
+        $refused_first_cebu += $this->refused_first_cebu;
+        $refused_first_negros += $this->refused_first_negros;
+        $refused_first_siquijor += $this->refused_first_siquijor;
+        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
+        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
+        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
+
+        //TOTAL REFUSED SECOND A5
+        $total_refusal_second += $this->total_refusal_second;
+        $refused_second_bohol += $this->refused_second_bohol;
+        $refused_second_cebu += $this->refused_second_cebu;
+        $refused_second_negros += $this->refused_second_negros;
+        $refused_second_siquijor += $this->refused_second_siquijor;
+        $refused_cebu_facility_second += $this->refused_cebu_facility_second;
+        $refused_mandaue_facility_second += $this->refused_mandaue_facility_second;
+        $refused_lapu_facility_second += $this->refused_lapu_facility_second;
+
+        //TOTAL DEFERRED FIRST A5
+        $total_deferred_first += $this->total_deferred_first;
+        $deferred_first_bohol += $this->deferred_first_bohol;
+        $deferred_first_cebu += $this->deferred_first_cebu;
+        $deferred_first_negros += $this->deferred_first_negros;
+        $deferred_first_siquijor += $this->deferred_first_siquijor;
+        $deferred_cebu_facility_first += $this->deferred_cebu_facility_first;
+        $deferred_mandaue_facility_first += $this->deferred_mandaue_facility_first;
+        $deferred_lapu_facility_first += $this->deferred_lapu_facility_first;
+
+        //TOTAL DEFERRED SECOND A5
+        $total_deferred_second += $this->total_deferred_second;
+        $deferred_second_bohol += $this->deferred_second_bohol;
+        $deferred_second_cebu += $this->deferred_second_cebu;
+        $deferred_second_negros += $this->deferred_second_negros;
+        $deferred_second_siquijor += $this->deferred_second_siquijor;
+        $deferred_cebu_facility_second += $this->deferred_cebu_facility_second;
+        $deferred_mandaue_facility_second += $this->deferred_mandaue_facility_second;
+        $deferred_lapu_facility_second += $this->deferred_lapu_facility_second;
+
+        //TOTAL WASTAGE A5
+        $wastage_sinovac_first += $this->wastage_sinovac_first;
+        $wastage_astra_first += $this->wastage_astra_first;
+        $wastage_sputnikv_first += $this->wastage_sputnikv_first;
+        $wastage_pfizer_first += $this->wastage_pfizer_first;
+
+        //WASTAGE SINOVAC A5
+        $wastage_sinovac_bohol_first += $this->wastage_sinovac_bohol_first;
+        $wastage_sinovac_cebu_first += $this->wastage_sinovac_cebu_first;
+        $wastage_sinovac_negros_first += $this->wastage_sinovac_negros_first;
+        $wastage_sinovac_siquijor_first += $this->wastage_sinovac_siquijor_first;
+        $wastage_sinovac_cebu_facility_first += $this->wastage_sinovac_cebu_facility_first;
+        $wastage_sinovac_mandaue_facility_first += $this->wastage_sinovac_mandaue_facility_first;
+        $wastage_sinovac_lapu_facility_first += $this->wastage_sinovac_lapu_facility_first;
+
+        //WASTAGE ASTRA A5
+        $wastage_astra_bohol_first += $this->wastage_astra_bohol_first;
+        $wastage_astra_cebu_first += $this->wastage_astra_cebu_first;
+        $wastage_astra_negros_first += $this->wastage_astra_negros_first;
+        $wastage_astra_siquijor_first += $this->wastage_astra_siquijor_first;
+        $wastage_astra_cebu_facility_first += $this->wastage_astra_cebu_facility_first;
+        $wastage_astra_mandaue_facility_first += $this->wastage_astra_mandaue_facility_first;
+        $wastage_astra_lapu_facility_first += $this->wastage_astra_lapu_facility_first;
+
+        //WASTAGE SPUTNIKV A5
+        $wastage_sputnikv_bohol_first += $this->wastage_sputnikv_bohol_first;
+        $wastage_sputnikv_cebu_first += $this->wastage_sputnikv_cebu_first;
+        $wastage_sputnikv_negros_first += $this->wastage_sputnikv_negros_first;
+        $wastage_sputnikv_siquijor_first += $this->wastage_sputnikv_siquijor_first;
+        $wastage_sputnikv_cebu_facility_first += $this->wastage_sputnikv_cebu_facility_first;
+        $wastage_sputnikv_mandaue_facility_first += $this->wastage_sputnikv_mandaue_facility_first;
+        $wastage_sputnikv_lapu_facility_first += $this->wastage_sputnikv_lapu_facility_first;
+
+        //WASTAGE PFIZER A5
+        $wastage_pfizer_bohol_first += $this->wastage_pfizer_bohol_first;
+        $wastage_pfizer_cebu_first += $this->wastage_pfizer_cebu_first;
+        $wastage_pfizer_negros_first += $this->wastage_pfizer_negros_first;
+        $wastage_pfizer_siquijor_first += $this->wastage_pfizer_siquijor_first;
+        $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
+        $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
+        $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+        $this->setPriority("b1");
+        $total_elipop_region += $this->total_elipop_region;
+        $eli_pop_cebu += $this->eli_pop_cebu;
+        $eli_pop_bohol += $this->eli_pop_bohol;
+        $eli_pop_negros += $this->eli_pop_negros;
+        $eli_pop_siquijor += $this->eli_pop_siquijor;
+        $eli_pop_cebu_facility += $this->eli_pop_cebu_facility;
+        $eli_pop_mandaue_facility += $this->eli_pop_mandaue_facility;
+        $eli_pop_lapu_facility += $this->eli_pop_lapu_facility;
+        $region_sinovac_first_dose += $this->region_sinovac_first_dose;
+        $region_sinovac_second_dose += $this->region_sinovac_second_dose;
+        $region_astra_first_dose += $this->region_astra_first_dose;
+        $region_astra_second_dose += $this->region_astra_second_dose;
+        $region_sputnikv_first_dose += $this->region_sputnikv_first_dose;
+        $region_sputnikv_second_dose += $this->region_sputnikv_second_dose;
+        $region_pfizer_first_dose += $this->region_pfizer_first_dose;
+        $region_pfizer_second_dose += $this->region_pfizer_second_dose;
+
+        //VACCINATED SINOVAC B1
+        $vcted_sinovac_bohol_first += $this->vcted_sinovac_bohol_first;
+        $vcted_sinovac_bohol_second += $this->vcted_sinovac_bohol_second;
+        $vcted_sinovac_cebu_first += $this->vcted_sinovac_cebu_first;
+        $vcted_sinovac_cebu_second += $this->vcted_sinovac_cebu_second;
+        $vcted_sinovac_negros_first += $this->vcted_sinovac_negros_first;
+        $vcted_sinovac_negros_second += $this->vcted_sinovac_negros_second;
+        $vcted_sinovac_siquijor_first += $this->vcted_sinovac_siquijor_first;
+        $vcted_sinovac_siquijor_second += $this->vcted_sinovac_siquijor_second;
+        $vcted_sinovac_cebu_facility_first += $this->vcted_sinovac_cebu_facility_first;
+        $vcted_sinovac_cebu_facility_second += $this->vcted_sinovac_cebu_facility_second;
+        $vcted_sinovac_mandaue_facility_first += $this->vcted_sinovac_mandaue_facility_first;
+        $vcted_sinovac_mandaue_facility_second += $this->vcted_sinovac_mandaue_facility_second;
+        $vcted_sinovac_lapu_facility_first += $this->vcted_sinovac_lapu_facility_first;
+        $vcted_sinovac_lapu_facility_second += $this->vcted_sinovac_lapu_facility_second;
+
+        //VACCINATED ASTRA B1
+        $vcted_astra_bohol_first += $this->vcted_astra_bohol_first;
+        $vcted_astra_bohol_second += $this->vcted_astra_bohol_second;
+        $vcted_astra_cebu_first += $this->vcted_astra_cebu_first;
+        $vcted_astra_cebu_second += $this->vcted_astra_cebu_second;
+        $vcted_astra_negros_first += $this->vcted_astra_negros_first;
+        $vcted_astra_negros_second += $this->vcted_astra_negros_second;
+        $vcted_astra_siquijor_first += $this->vcted_astra_siquijor_first;
+        $vcted_astra_siquijor_second += $this->vcted_astra_siquijor_second;
+        $vcted_astra_cebu_facility_first += $this->vcted_astra_cebu_facility_first;
+        $vcted_astra_cebu_facility_second += $this->vcted_astra_cebu_facility_second;
+        $vcted_astra_mandaue_facility_first += $this->vcted_astra_mandaue_facility_first;
+        $vcted_astra_mandaue_facility_second += $this->vcted_astra_mandaue_facility_second;
+        $vcted_astra_lapu_facility_first += $this->vcted_astra_lapu_facility_first;
+        $vcted_astra_lapu_facility_second += $this->vcted_astra_lapu_facility_second;
+
+        //VACCINATED SPUTNIKV B1
+        $vcted_sputnikv_bohol_first += $this->vcted_sputnikv_bohol_first;
+        $vcted_sputnikv_bohol_second += $this->vcted_sputnikv_bohol_second;
+        $vcted_sputnikv_cebu_first += $this->vcted_sputnikv_cebu_first;
+        $vcted_sputnikv_cebu_second += $this->vcted_sputnikv_cebu_second;
+        $vcted_sputnikv_negros_first += $this->vcted_sputnikv_negros_first;
+        $vcted_sputnikv_negros_second += $this->vcted_sputnikv_negros_second;
+        $vcted_sputnikv_siquijor_first += $this->vcted_sputnikv_siquijor_first;
+        $vcted_sputnikv_siquijor_second += $this->vcted_sputnikv_siquijor_second;
+        $vcted_sputnikv_cebu_facility_first += $this->vcted_sputnikv_cebu_facility_first;
+        $vcted_sputnikv_cebu_facility_second += $this->vcted_sputnikv_cebu_facility_second;
+        $vcted_sputnikv_mandaue_facility_first += $this->vcted_sputnikv_mandaue_facility_first;
+        $vcted_sputnikv_mandaue_facility_second += $this->vcted_sputnikv_mandaue_facility_second;
+        $vcted_sputnikv_lapu_facility_first += $this->vcted_sputnikv_lapu_facility_first;
+        $vcted_sputnikv_lapu_facility_second += $this->vcted_sputnikv_lapu_facility_second;
+
+        //VACCINATED PFIZER B1
+        $vcted_pfizer_bohol_first += $this->vcted_pfizer_bohol_first;
+        $vcted_pfizer_bohol_second += $this->vcted_pfizer_bohol_second;
+        $vcted_pfizer_cebu_first += $this->vcted_pfizer_cebu_first;
+        $vcted_pfizer_cebu_second += $this->vcted_pfizer_cebu_second;
+        $vcted_pfizer_negros_first += $this->vcted_pfizer_negros_first;
+        $vcted_pfizer_negros_second += $this->vcted_pfizer_negros_second;
+        $vcted_pfizer_siquijor_first += $this->vcted_pfizer_siquijor_first;
+        $vcted_pfizer_siquijor_second += $this->vcted_pfizer_siquijor_second;
+        $vcted_pfizer_cebu_facility_first += $this->vcted_pfizer_cebu_facility_first;
+        $vcted_pfizer_cebu_facility_second += $this->vcted_pfizer_cebu_facility_second;
+        $vcted_pfizer_mandaue_facility_first += $this->vcted_pfizer_mandaue_facility_first;
+        $vcted_pfizer_mandaue_facility_second += $this->vcted_pfizer_mandaue_facility_second;
+        $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
+        $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
+
+
+        //TOTAL REFUSED FIRST B1
+        $total_refusal_first += $this->total_refusal_first;
+        $refused_first_bohol += $this->refused_first_bohol;
+        $refused_first_cebu += $this->refused_first_cebu;
+        $refused_first_negros += $this->refused_first_negros;
+        $refused_first_siquijor += $this->refused_first_siquijor;
+        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
+        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
+        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
+
+        //TOTAL REFUSED SECOND B1
+        $total_refusal_second += $this->total_refusal_second;
+        $refused_second_bohol += $this->refused_second_bohol;
+        $refused_second_cebu += $this->refused_second_cebu;
+        $refused_second_negros += $this->refused_second_negros;
+        $refused_second_siquijor += $this->refused_second_siquijor;
+        $refused_cebu_facility_second += $this->refused_cebu_facility_second;
+        $refused_mandaue_facility_second += $this->refused_mandaue_facility_second;
+        $refused_lapu_facility_second += $this->refused_lapu_facility_second;
+
+        //TOTAL DEFERRED FIRST B1
+        $total_deferred_first += $this->total_deferred_first;
+        $deferred_first_bohol += $this->deferred_first_bohol;
+        $deferred_first_cebu += $this->deferred_first_cebu;
+        $deferred_first_negros += $this->deferred_first_negros;
+        $deferred_first_siquijor += $this->deferred_first_siquijor;
+        $deferred_cebu_facility_first += $this->deferred_cebu_facility_first;
+        $deferred_mandaue_facility_first += $this->deferred_mandaue_facility_first;
+        $deferred_lapu_facility_first += $this->deferred_lapu_facility_first;
+
+        //TOTAL DEFERRED SECOND B1
+        $total_deferred_second += $this->total_deferred_second;
+        $deferred_second_bohol += $this->deferred_second_bohol;
+        $deferred_second_cebu += $this->deferred_second_cebu;
+        $deferred_second_negros += $this->deferred_second_negros;
+        $deferred_second_siquijor += $this->deferred_second_siquijor;
+        $deferred_cebu_facility_second += $this->deferred_cebu_facility_second;
+        $deferred_mandaue_facility_second += $this->deferred_mandaue_facility_second;
+        $deferred_lapu_facility_second += $this->deferred_lapu_facility_second;
+
+        //TOTAL WASTAGE B1
+        $wastage_sinovac_first += $this->wastage_sinovac_first;
+        $wastage_astra_first += $this->wastage_astra_first;
+        $wastage_sputnikv_first += $this->wastage_sputnikv_first;
+        $wastage_pfizer_first += $this->wastage_pfizer_first;
+
+        //WASTAGE SINOVAC B1
+        $wastage_sinovac_bohol_first += $this->wastage_sinovac_bohol_first;
+        $wastage_sinovac_cebu_first += $this->wastage_sinovac_cebu_first;
+        $wastage_sinovac_negros_first += $this->wastage_sinovac_negros_first;
+        $wastage_sinovac_siquijor_first += $this->wastage_sinovac_siquijor_first;
+        $wastage_sinovac_cebu_facility_first += $this->wastage_sinovac_cebu_facility_first;
+        $wastage_sinovac_mandaue_facility_first += $this->wastage_sinovac_mandaue_facility_first;
+        $wastage_sinovac_lapu_facility_first += $this->wastage_sinovac_lapu_facility_first;
+
+        //WASTAGE ASTRA B1
+        $wastage_astra_bohol_first += $this->wastage_astra_bohol_first;
+        $wastage_astra_cebu_first += $this->wastage_astra_cebu_first;
+        $wastage_astra_negros_first += $this->wastage_astra_negros_first;
+        $wastage_astra_siquijor_first += $this->wastage_astra_siquijor_first;
+        $wastage_astra_cebu_facility_first += $this->wastage_astra_cebu_facility_first;
+        $wastage_astra_mandaue_facility_first += $this->wastage_astra_mandaue_facility_first;
+        $wastage_astra_lapu_facility_first += $this->wastage_astra_lapu_facility_first;
+
+        //WASTAGE SPUTNIKV B1
+        $wastage_sputnikv_bohol_first += $this->wastage_sputnikv_bohol_first;
+        $wastage_sputnikv_cebu_first += $this->wastage_sputnikv_cebu_first;
+        $wastage_sputnikv_negros_first += $this->wastage_sputnikv_negros_first;
+        $wastage_sputnikv_siquijor_first += $this->wastage_sputnikv_siquijor_first;
+        $wastage_sputnikv_cebu_facility_first += $this->wastage_sputnikv_cebu_facility_first;
+        $wastage_sputnikv_mandaue_facility_first += $this->wastage_sputnikv_mandaue_facility_first;
+        $wastage_sputnikv_lapu_facility_first += $this->wastage_sputnikv_lapu_facility_first;
+
+        //WASTAGE PFIZER B1
+        $wastage_pfizer_bohol_first += $this->wastage_pfizer_bohol_first;
+        $wastage_pfizer_cebu_first += $this->wastage_pfizer_cebu_first;
+        $wastage_pfizer_negros_first += $this->wastage_pfizer_negros_first;
+        $wastage_pfizer_siquijor_first += $this->wastage_pfizer_siquijor_first;
+        $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
+        $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
+        $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+
+        $this->setPriority("b2");
+        $total_elipop_region += $this->total_elipop_region;
+        $eli_pop_cebu += $this->eli_pop_cebu;
+        $eli_pop_bohol += $this->eli_pop_bohol;
+        $eli_pop_negros += $this->eli_pop_negros;
+        $eli_pop_siquijor += $this->eli_pop_siquijor;
+        $eli_pop_cebu_facility += $this->eli_pop_cebu_facility;
+        $eli_pop_mandaue_facility += $this->eli_pop_mandaue_facility;
+        $eli_pop_lapu_facility += $this->eli_pop_lapu_facility;
+        $region_sinovac_first_dose += $this->region_sinovac_first_dose;
+        $region_sinovac_second_dose += $this->region_sinovac_second_dose;
+        $region_astra_first_dose += $this->region_astra_first_dose;
+        $region_astra_second_dose += $this->region_astra_second_dose;
+        $region_sputnikv_first_dose += $this->region_sputnikv_first_dose;
+        $region_sputnikv_second_dose += $this->region_sputnikv_second_dose;
+        $region_pfizer_first_dose += $this->region_pfizer_first_dose;
+        $region_pfizer_second_dose += $this->region_pfizer_second_dose;
+
+        //VACCINATED SINOVAC B2
+        $vcted_sinovac_bohol_first += $this->vcted_sinovac_bohol_first;
+        $vcted_sinovac_bohol_second += $this->vcted_sinovac_bohol_second;
+        $vcted_sinovac_cebu_first += $this->vcted_sinovac_cebu_first;
+        $vcted_sinovac_cebu_second += $this->vcted_sinovac_cebu_second;
+        $vcted_sinovac_negros_first += $this->vcted_sinovac_negros_first;
+        $vcted_sinovac_negros_second += $this->vcted_sinovac_negros_second;
+        $vcted_sinovac_siquijor_first += $this->vcted_sinovac_siquijor_first;
+        $vcted_sinovac_siquijor_second += $this->vcted_sinovac_siquijor_second;
+        $vcted_sinovac_cebu_facility_first += $this->vcted_sinovac_cebu_facility_first;
+        $vcted_sinovac_cebu_facility_second += $this->vcted_sinovac_cebu_facility_second;
+        $vcted_sinovac_mandaue_facility_first += $this->vcted_sinovac_mandaue_facility_first;
+        $vcted_sinovac_mandaue_facility_second += $this->vcted_sinovac_mandaue_facility_second;
+        $vcted_sinovac_lapu_facility_first += $this->vcted_sinovac_lapu_facility_first;
+        $vcted_sinovac_lapu_facility_second += $this->vcted_sinovac_lapu_facility_second;
+
+        //VACCINATED ASTRA B2
+        $vcted_astra_bohol_first += $this->vcted_astra_bohol_first;
+        $vcted_astra_bohol_second += $this->vcted_astra_bohol_second;
+        $vcted_astra_cebu_first += $this->vcted_astra_cebu_first;
+        $vcted_astra_cebu_second += $this->vcted_astra_cebu_second;
+        $vcted_astra_negros_first += $this->vcted_astra_negros_first;
+        $vcted_astra_negros_second += $this->vcted_astra_negros_second;
+        $vcted_astra_siquijor_first += $this->vcted_astra_siquijor_first;
+        $vcted_astra_siquijor_second += $this->vcted_astra_siquijor_second;
+        $vcted_astra_cebu_facility_first += $this->vcted_astra_cebu_facility_first;
+        $vcted_astra_cebu_facility_second += $this->vcted_astra_cebu_facility_second;
+        $vcted_astra_mandaue_facility_first += $this->vcted_astra_mandaue_facility_first;
+        $vcted_astra_mandaue_facility_second += $this->vcted_astra_mandaue_facility_second;
+        $vcted_astra_lapu_facility_first += $this->vcted_astra_lapu_facility_first;
+        $vcted_astra_lapu_facility_second += $this->vcted_astra_lapu_facility_second;
+
+        //VACCINATED SPUTNIKV B2
+        $vcted_sputnikv_bohol_first += $this->vcted_sputnikv_bohol_first;
+        $vcted_sputnikv_bohol_second += $this->vcted_sputnikv_bohol_second;
+        $vcted_sputnikv_cebu_first += $this->vcted_sputnikv_cebu_first;
+        $vcted_sputnikv_cebu_second += $this->vcted_sputnikv_cebu_second;
+        $vcted_sputnikv_negros_first += $this->vcted_sputnikv_negros_first;
+        $vcted_sputnikv_negros_second += $this->vcted_sputnikv_negros_second;
+        $vcted_sputnikv_siquijor_first += $this->vcted_sputnikv_siquijor_first;
+        $vcted_sputnikv_siquijor_second += $this->vcted_sputnikv_siquijor_second;
+        $vcted_sputnikv_cebu_facility_first += $this->vcted_sputnikv_cebu_facility_first;
+        $vcted_sputnikv_cebu_facility_second += $this->vcted_sputnikv_cebu_facility_second;
+        $vcted_sputnikv_mandaue_facility_first += $this->vcted_sputnikv_mandaue_facility_first;
+        $vcted_sputnikv_mandaue_facility_second += $this->vcted_sputnikv_mandaue_facility_second;
+        $vcted_sputnikv_lapu_facility_first += $this->vcted_sputnikv_lapu_facility_first;
+        $vcted_sputnikv_lapu_facility_second += $this->vcted_sputnikv_lapu_facility_second;
+
+        //VACCINATED PFIZER B2
+        $vcted_pfizer_bohol_first += $this->vcted_pfizer_bohol_first;
+        $vcted_pfizer_bohol_second += $this->vcted_pfizer_bohol_second;
+        $vcted_pfizer_cebu_first += $this->vcted_pfizer_cebu_first;
+        $vcted_pfizer_cebu_second += $this->vcted_pfizer_cebu_second;
+        $vcted_pfizer_negros_first += $this->vcted_pfizer_negros_first;
+        $vcted_pfizer_negros_second += $this->vcted_pfizer_negros_second;
+        $vcted_pfizer_siquijor_first += $this->vcted_pfizer_siquijor_first;
+        $vcted_pfizer_siquijor_second += $this->vcted_pfizer_siquijor_second;
+        $vcted_pfizer_cebu_facility_first += $this->vcted_pfizer_cebu_facility_first;
+        $vcted_pfizer_cebu_facility_second += $this->vcted_pfizer_cebu_facility_second;
+        $vcted_pfizer_mandaue_facility_first += $this->vcted_pfizer_mandaue_facility_first;
+        $vcted_pfizer_mandaue_facility_second += $this->vcted_pfizer_mandaue_facility_second;
+        $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
+        $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
+
+
+        //TOTAL REFUSED FIRST B2
+        $total_refusal_first += $this->total_refusal_first;
+        $refused_first_bohol += $this->refused_first_bohol;
+        $refused_first_cebu += $this->refused_first_cebu;
+        $refused_first_negros += $this->refused_first_negros;
+        $refused_first_siquijor += $this->refused_first_siquijor;
+        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
+        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
+        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
+
+        //TOTAL REFUSED SECOND B2
+        $total_refusal_second += $this->total_refusal_second;
+        $refused_second_bohol += $this->refused_second_bohol;
+        $refused_second_cebu += $this->refused_second_cebu;
+        $refused_second_negros += $this->refused_second_negros;
+        $refused_second_siquijor += $this->refused_second_siquijor;
+        $refused_cebu_facility_second += $this->refused_cebu_facility_second;
+        $refused_mandaue_facility_second += $this->refused_mandaue_facility_second;
+        $refused_lapu_facility_second += $this->refused_lapu_facility_second;
+
+        //TOTAL DEFERRED FIRST B2
+        $total_deferred_first += $this->total_deferred_first;
+        $deferred_first_bohol += $this->deferred_first_bohol;
+        $deferred_first_cebu += $this->deferred_first_cebu;
+        $deferred_first_negros += $this->deferred_first_negros;
+        $deferred_first_siquijor += $this->deferred_first_siquijor;
+        $deferred_cebu_facility_first += $this->deferred_cebu_facility_first;
+        $deferred_mandaue_facility_first += $this->deferred_mandaue_facility_first;
+        $deferred_lapu_facility_first += $this->deferred_lapu_facility_first;
+
+        //TOTAL DEFERRED SECOND B2
+        $total_deferred_second += $this->total_deferred_second;
+        $deferred_second_bohol += $this->deferred_second_bohol;
+        $deferred_second_cebu += $this->deferred_second_cebu;
+        $deferred_second_negros += $this->deferred_second_negros;
+        $deferred_second_siquijor += $this->deferred_second_siquijor;
+        $deferred_cebu_facility_second += $this->deferred_cebu_facility_second;
+        $deferred_mandaue_facility_second += $this->deferred_mandaue_facility_second;
+        $deferred_lapu_facility_second += $this->deferred_lapu_facility_second;
+
+        //TOTAL WASTAGE B2
+        $wastage_sinovac_first += $this->wastage_sinovac_first;
+        $wastage_astra_first += $this->wastage_astra_first;
+        $wastage_sputnikv_first += $this->wastage_sputnikv_first;
+        $wastage_pfizer_first += $this->wastage_pfizer_first;
+
+        //WASTAGE SINOVAC B2
+        $wastage_sinovac_bohol_first += $this->wastage_sinovac_bohol_first;
+        $wastage_sinovac_cebu_first += $this->wastage_sinovac_cebu_first;
+        $wastage_sinovac_negros_first += $this->wastage_sinovac_negros_first;
+        $wastage_sinovac_siquijor_first += $this->wastage_sinovac_siquijor_first;
+        $wastage_sinovac_cebu_facility_first += $this->wastage_sinovac_cebu_facility_first;
+        $wastage_sinovac_mandaue_facility_first += $this->wastage_sinovac_mandaue_facility_first;
+        $wastage_sinovac_lapu_facility_first += $this->wastage_sinovac_lapu_facility_first;
+
+        //WASTAGE ASTRA B2
+        $wastage_astra_bohol_first += $this->wastage_astra_bohol_first;
+        $wastage_astra_cebu_first += $this->wastage_astra_cebu_first;
+        $wastage_astra_negros_first += $this->wastage_astra_negros_first;
+        $wastage_astra_siquijor_first += $this->wastage_astra_siquijor_first;
+        $wastage_astra_cebu_facility_first += $this->wastage_astra_cebu_facility_first;
+        $wastage_astra_mandaue_facility_first += $this->wastage_astra_mandaue_facility_first;
+        $wastage_astra_lapu_facility_first += $this->wastage_astra_lapu_facility_first;
+
+        //WASTAGE SPUTNIKV B2
+        $wastage_sputnikv_bohol_first += $this->wastage_sputnikv_bohol_first;
+        $wastage_sputnikv_cebu_first += $this->wastage_sputnikv_cebu_first;
+        $wastage_sputnikv_negros_first += $this->wastage_sputnikv_negros_first;
+        $wastage_sputnikv_siquijor_first += $this->wastage_sputnikv_siquijor_first;
+        $wastage_sputnikv_cebu_facility_first += $this->wastage_sputnikv_cebu_facility_first;
+        $wastage_sputnikv_mandaue_facility_first += $this->wastage_sputnikv_mandaue_facility_first;
+        $wastage_sputnikv_lapu_facility_first += $this->wastage_sputnikv_lapu_facility_first;
+
+        //WASTAGE PFIZER B2
+        $wastage_pfizer_bohol_first += $this->wastage_pfizer_bohol_first;
+        $wastage_pfizer_cebu_first += $this->wastage_pfizer_cebu_first;
+        $wastage_pfizer_negros_first += $this->wastage_pfizer_negros_first;
+        $wastage_pfizer_siquijor_first += $this->wastage_pfizer_siquijor_first;
+        $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
+        $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
+        $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+
+        $this->setPriority("b3");
+        $total_elipop_region += $this->total_elipop_region;
+        $eli_pop_cebu += $this->eli_pop_cebu;
+        $eli_pop_bohol += $this->eli_pop_bohol;
+        $eli_pop_negros += $this->eli_pop_negros;
+        $eli_pop_siquijor += $this->eli_pop_siquijor;
+        $eli_pop_cebu_facility += $this->eli_pop_cebu_facility;
+        $eli_pop_mandaue_facility += $this->eli_pop_mandaue_facility;
+        $eli_pop_lapu_facility += $this->eli_pop_lapu_facility;
+        $region_sinovac_first_dose += $this->region_sinovac_first_dose;
+        $region_sinovac_second_dose += $this->region_sinovac_second_dose;
+        $region_astra_first_dose += $this->region_astra_first_dose;
+        $region_astra_second_dose += $this->region_astra_second_dose;
+        $region_sputnikv_first_dose += $this->region_sputnikv_first_dose;
+        $region_sputnikv_second_dose += $this->region_sputnikv_second_dose;
+        $region_pfizer_first_dose += $this->region_pfizer_first_dose;
+        $region_pfizer_second_dose += $this->region_pfizer_second_dose;
+
+        //VACCINATED SINOVAC B3
+        $vcted_sinovac_bohol_first += $this->vcted_sinovac_bohol_first;
+        $vcted_sinovac_bohol_second += $this->vcted_sinovac_bohol_second;
+        $vcted_sinovac_cebu_first += $this->vcted_sinovac_cebu_first;
+        $vcted_sinovac_cebu_second += $this->vcted_sinovac_cebu_second;
+        $vcted_sinovac_negros_first += $this->vcted_sinovac_negros_first;
+        $vcted_sinovac_negros_second += $this->vcted_sinovac_negros_second;
+        $vcted_sinovac_siquijor_first += $this->vcted_sinovac_siquijor_first;
+        $vcted_sinovac_siquijor_second += $this->vcted_sinovac_siquijor_second;
+        $vcted_sinovac_cebu_facility_first += $this->vcted_sinovac_cebu_facility_first;
+        $vcted_sinovac_cebu_facility_second += $this->vcted_sinovac_cebu_facility_second;
+        $vcted_sinovac_mandaue_facility_first += $this->vcted_sinovac_mandaue_facility_first;
+        $vcted_sinovac_mandaue_facility_second += $this->vcted_sinovac_mandaue_facility_second;
+        $vcted_sinovac_lapu_facility_first += $this->vcted_sinovac_lapu_facility_first;
+        $vcted_sinovac_lapu_facility_second += $this->vcted_sinovac_lapu_facility_second;
+
+        //VACCINATED ASTRA B3
+        $vcted_astra_bohol_first += $this->vcted_astra_bohol_first;
+        $vcted_astra_bohol_second += $this->vcted_astra_bohol_second;
+        $vcted_astra_cebu_first += $this->vcted_astra_cebu_first;
+        $vcted_astra_cebu_second += $this->vcted_astra_cebu_second;
+        $vcted_astra_negros_first += $this->vcted_astra_negros_first;
+        $vcted_astra_negros_second += $this->vcted_astra_negros_second;
+        $vcted_astra_siquijor_first += $this->vcted_astra_siquijor_first;
+        $vcted_astra_siquijor_second += $this->vcted_astra_siquijor_second;
+        $vcted_astra_cebu_facility_first += $this->vcted_astra_cebu_facility_first;
+        $vcted_astra_cebu_facility_second += $this->vcted_astra_cebu_facility_second;
+        $vcted_astra_mandaue_facility_first += $this->vcted_astra_mandaue_facility_first;
+        $vcted_astra_mandaue_facility_second += $this->vcted_astra_mandaue_facility_second;
+        $vcted_astra_lapu_facility_first += $this->vcted_astra_lapu_facility_first;
+        $vcted_astra_lapu_facility_second += $this->vcted_astra_lapu_facility_second;
+
+        //VACCINATED SPUTNIKV B3
+        $vcted_sputnikv_bohol_first += $this->vcted_sputnikv_bohol_first;
+        $vcted_sputnikv_bohol_second += $this->vcted_sputnikv_bohol_second;
+        $vcted_sputnikv_cebu_first += $this->vcted_sputnikv_cebu_first;
+        $vcted_sputnikv_cebu_second += $this->vcted_sputnikv_cebu_second;
+        $vcted_sputnikv_negros_first += $this->vcted_sputnikv_negros_first;
+        $vcted_sputnikv_negros_second += $this->vcted_sputnikv_negros_second;
+        $vcted_sputnikv_siquijor_first += $this->vcted_sputnikv_siquijor_first;
+        $vcted_sputnikv_siquijor_second += $this->vcted_sputnikv_siquijor_second;
+        $vcted_sputnikv_cebu_facility_first += $this->vcted_sputnikv_cebu_facility_first;
+        $vcted_sputnikv_cebu_facility_second += $this->vcted_sputnikv_cebu_facility_second;
+        $vcted_sputnikv_mandaue_facility_first += $this->vcted_sputnikv_mandaue_facility_first;
+        $vcted_sputnikv_mandaue_facility_second += $this->vcted_sputnikv_mandaue_facility_second;
+        $vcted_sputnikv_lapu_facility_first += $this->vcted_sputnikv_lapu_facility_first;
+        $vcted_sputnikv_lapu_facility_second += $this->vcted_sputnikv_lapu_facility_second;
+
+        //VACCINATED PFIZER B3
+        $vcted_pfizer_bohol_first += $this->vcted_pfizer_bohol_first;
+        $vcted_pfizer_bohol_second += $this->vcted_pfizer_bohol_second;
+        $vcted_pfizer_cebu_first += $this->vcted_pfizer_cebu_first;
+        $vcted_pfizer_cebu_second += $this->vcted_pfizer_cebu_second;
+        $vcted_pfizer_negros_first += $this->vcted_pfizer_negros_first;
+        $vcted_pfizer_negros_second += $this->vcted_pfizer_negros_second;
+        $vcted_pfizer_siquijor_first += $this->vcted_pfizer_siquijor_first;
+        $vcted_pfizer_siquijor_second += $this->vcted_pfizer_siquijor_second;
+        $vcted_pfizer_cebu_facility_first += $this->vcted_pfizer_cebu_facility_first;
+        $vcted_pfizer_cebu_facility_second += $this->vcted_pfizer_cebu_facility_second;
+        $vcted_pfizer_mandaue_facility_first += $this->vcted_pfizer_mandaue_facility_first;
+        $vcted_pfizer_mandaue_facility_second += $this->vcted_pfizer_mandaue_facility_second;
+        $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
+        $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
+
+
+        //TOTAL REFUSED FIRST B3
+        $total_refusal_first += $this->total_refusal_first;
+        $refused_first_bohol += $this->refused_first_bohol;
+        $refused_first_cebu += $this->refused_first_cebu;
+        $refused_first_negros += $this->refused_first_negros;
+        $refused_first_siquijor += $this->refused_first_siquijor;
+        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
+        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
+        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
+
+        //TOTAL REFUSED SECOND B3
+        $total_refusal_second += $this->total_refusal_second;
+        $refused_second_bohol += $this->refused_second_bohol;
+        $refused_second_cebu += $this->refused_second_cebu;
+        $refused_second_negros += $this->refused_second_negros;
+        $refused_second_siquijor += $this->refused_second_siquijor;
+        $refused_cebu_facility_second += $this->refused_cebu_facility_second;
+        $refused_mandaue_facility_second += $this->refused_mandaue_facility_second;
+        $refused_lapu_facility_second += $this->refused_lapu_facility_second;
+
+        //TOTAL DEFERRED FIRST B3
+        $total_deferred_first += $this->total_deferred_first;
+        $deferred_first_bohol += $this->deferred_first_bohol;
+        $deferred_first_cebu += $this->deferred_first_cebu;
+        $deferred_first_negros += $this->deferred_first_negros;
+        $deferred_first_siquijor += $this->deferred_first_siquijor;
+        $deferred_cebu_facility_first += $this->deferred_cebu_facility_first;
+        $deferred_mandaue_facility_first += $this->deferred_mandaue_facility_first;
+        $deferred_lapu_facility_first += $this->deferred_lapu_facility_first;
+
+        //TOTAL DEFERRED SECOND B3
+        $total_deferred_second += $this->total_deferred_second;
+        $deferred_second_bohol += $this->deferred_second_bohol;
+        $deferred_second_cebu += $this->deferred_second_cebu;
+        $deferred_second_negros += $this->deferred_second_negros;
+        $deferred_second_siquijor += $this->deferred_second_siquijor;
+        $deferred_cebu_facility_second += $this->deferred_cebu_facility_second;
+        $deferred_mandaue_facility_second += $this->deferred_mandaue_facility_second;
+        $deferred_lapu_facility_second += $this->deferred_lapu_facility_second;
+
+        //TOTAL WASTAGE B3
+        $wastage_sinovac_first += $this->wastage_sinovac_first;
+        $wastage_astra_first += $this->wastage_astra_first;
+        $wastage_sputnikv_first += $this->wastage_sputnikv_first;
+        $wastage_pfizer_first += $this->wastage_pfizer_first;
+
+        //WASTAGE SINOVAC B3
+        $wastage_sinovac_bohol_first += $this->wastage_sinovac_bohol_first;
+        $wastage_sinovac_cebu_first += $this->wastage_sinovac_cebu_first;
+        $wastage_sinovac_negros_first += $this->wastage_sinovac_negros_first;
+        $wastage_sinovac_siquijor_first += $this->wastage_sinovac_siquijor_first;
+        $wastage_sinovac_cebu_facility_first += $this->wastage_sinovac_cebu_facility_first;
+        $wastage_sinovac_mandaue_facility_first += $this->wastage_sinovac_mandaue_facility_first;
+        $wastage_sinovac_lapu_facility_first += $this->wastage_sinovac_lapu_facility_first;
+
+        //WASTAGE ASTRA B3
+        $wastage_astra_bohol_first += $this->wastage_astra_bohol_first;
+        $wastage_astra_cebu_first += $this->wastage_astra_cebu_first;
+        $wastage_astra_negros_first += $this->wastage_astra_negros_first;
+        $wastage_astra_siquijor_first += $this->wastage_astra_siquijor_first;
+        $wastage_astra_cebu_facility_first += $this->wastage_astra_cebu_facility_first;
+        $wastage_astra_mandaue_facility_first += $this->wastage_astra_mandaue_facility_first;
+        $wastage_astra_lapu_facility_first += $this->wastage_astra_lapu_facility_first;
+
+        //WASTAGE SPUTNIKV B3
+        $wastage_sputnikv_bohol_first += $this->wastage_sputnikv_bohol_first;
+        $wastage_sputnikv_cebu_first += $this->wastage_sputnikv_cebu_first;
+        $wastage_sputnikv_negros_first += $this->wastage_sputnikv_negros_first;
+        $wastage_sputnikv_siquijor_first += $this->wastage_sputnikv_siquijor_first;
+        $wastage_sputnikv_cebu_facility_first += $this->wastage_sputnikv_cebu_facility_first;
+        $wastage_sputnikv_mandaue_facility_first += $this->wastage_sputnikv_mandaue_facility_first;
+        $wastage_sputnikv_lapu_facility_first += $this->wastage_sputnikv_lapu_facility_first;
+
+        //WASTAGE PFIZER B3
+        $wastage_pfizer_bohol_first += $this->wastage_pfizer_bohol_first;
+        $wastage_pfizer_cebu_first += $this->wastage_pfizer_cebu_first;
+        $wastage_pfizer_negros_first += $this->wastage_pfizer_negros_first;
+        $wastage_pfizer_siquijor_first += $this->wastage_pfizer_siquijor_first;
+        $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
+        $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
+        $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+
+        $this->setPriority("b4");
+        $total_elipop_region += $this->total_elipop_region;
+        $eli_pop_cebu += $this->eli_pop_cebu;
+        $eli_pop_bohol += $this->eli_pop_bohol;
+        $eli_pop_negros += $this->eli_pop_negros;
+        $eli_pop_siquijor += $this->eli_pop_siquijor;
+        $eli_pop_cebu_facility += $this->eli_pop_cebu_facility;
+        $eli_pop_mandaue_facility += $this->eli_pop_mandaue_facility;
+        $eli_pop_lapu_facility += $this->eli_pop_lapu_facility;
+        $region_sinovac_first_dose += $this->region_sinovac_first_dose;
+        $region_sinovac_second_dose += $this->region_sinovac_second_dose;
+        $region_astra_first_dose += $this->region_astra_first_dose;
+        $region_astra_second_dose += $this->region_astra_second_dose;
+        $region_sputnikv_first_dose += $this->region_sputnikv_first_dose;
+        $region_sputnikv_second_dose += $this->region_sputnikv_second_dose;
+        $region_pfizer_first_dose += $this->region_pfizer_first_dose;
+        $region_pfizer_second_dose += $this->region_pfizer_second_dose;
+
+        //VACCINATED SINOVAC B4
+        $vcted_sinovac_bohol_first += $this->vcted_sinovac_bohol_first;
+        $vcted_sinovac_bohol_second += $this->vcted_sinovac_bohol_second;
+        $vcted_sinovac_cebu_first += $this->vcted_sinovac_cebu_first;
+        $vcted_sinovac_cebu_second += $this->vcted_sinovac_cebu_second;
+        $vcted_sinovac_negros_first += $this->vcted_sinovac_negros_first;
+        $vcted_sinovac_negros_second += $this->vcted_sinovac_negros_second;
+        $vcted_sinovac_siquijor_first += $this->vcted_sinovac_siquijor_first;
+        $vcted_sinovac_siquijor_second += $this->vcted_sinovac_siquijor_second;
+        $vcted_sinovac_cebu_facility_first += $this->vcted_sinovac_cebu_facility_first;
+        $vcted_sinovac_cebu_facility_second += $this->vcted_sinovac_cebu_facility_second;
+        $vcted_sinovac_mandaue_facility_first += $this->vcted_sinovac_mandaue_facility_first;
+        $vcted_sinovac_mandaue_facility_second += $this->vcted_sinovac_mandaue_facility_second;
+        $vcted_sinovac_lapu_facility_first += $this->vcted_sinovac_lapu_facility_first;
+        $vcted_sinovac_lapu_facility_second += $this->vcted_sinovac_lapu_facility_second;
+
+        //VACCINATED ASTRA B4
+        $vcted_astra_bohol_first += $this->vcted_astra_bohol_first;
+        $vcted_astra_bohol_second += $this->vcted_astra_bohol_second;
+        $vcted_astra_cebu_first += $this->vcted_astra_cebu_first;
+        $vcted_astra_cebu_second += $this->vcted_astra_cebu_second;
+        $vcted_astra_negros_first += $this->vcted_astra_negros_first;
+        $vcted_astra_negros_second += $this->vcted_astra_negros_second;
+        $vcted_astra_siquijor_first += $this->vcted_astra_siquijor_first;
+        $vcted_astra_siquijor_second += $this->vcted_astra_siquijor_second;
+        $vcted_astra_cebu_facility_first += $this->vcted_astra_cebu_facility_first;
+        $vcted_astra_cebu_facility_second += $this->vcted_astra_cebu_facility_second;
+        $vcted_astra_mandaue_facility_first += $this->vcted_astra_mandaue_facility_first;
+        $vcted_astra_mandaue_facility_second += $this->vcted_astra_mandaue_facility_second;
+        $vcted_astra_lapu_facility_first += $this->vcted_astra_lapu_facility_first;
+        $vcted_astra_lapu_facility_second += $this->vcted_astra_lapu_facility_second;
+
+        //VACCINATED SPUTNIKV B4
+        $vcted_sputnikv_bohol_first += $this->vcted_sputnikv_bohol_first;
+        $vcted_sputnikv_bohol_second += $this->vcted_sputnikv_bohol_second;
+        $vcted_sputnikv_cebu_first += $this->vcted_sputnikv_cebu_first;
+        $vcted_sputnikv_cebu_second += $this->vcted_sputnikv_cebu_second;
+        $vcted_sputnikv_negros_first += $this->vcted_sputnikv_negros_first;
+        $vcted_sputnikv_negros_second += $this->vcted_sputnikv_negros_second;
+        $vcted_sputnikv_siquijor_first += $this->vcted_sputnikv_siquijor_first;
+        $vcted_sputnikv_siquijor_second += $this->vcted_sputnikv_siquijor_second;
+        $vcted_sputnikv_cebu_facility_first += $this->vcted_sputnikv_cebu_facility_first;
+        $vcted_sputnikv_cebu_facility_second += $this->vcted_sputnikv_cebu_facility_second;
+        $vcted_sputnikv_mandaue_facility_first += $this->vcted_sputnikv_mandaue_facility_first;
+        $vcted_sputnikv_mandaue_facility_second += $this->vcted_sputnikv_mandaue_facility_second;
+        $vcted_sputnikv_lapu_facility_first += $this->vcted_sputnikv_lapu_facility_first;
+        $vcted_sputnikv_lapu_facility_second += $this->vcted_sputnikv_lapu_facility_second;
+
+        //VACCINATED PFIZER B4
+        $vcted_pfizer_bohol_first += $this->vcted_pfizer_bohol_first;
+        $vcted_pfizer_bohol_second += $this->vcted_pfizer_bohol_second;
+        $vcted_pfizer_cebu_first += $this->vcted_pfizer_cebu_first;
+        $vcted_pfizer_cebu_second += $this->vcted_pfizer_cebu_second;
+        $vcted_pfizer_negros_first += $this->vcted_pfizer_negros_first;
+        $vcted_pfizer_negros_second += $this->vcted_pfizer_negros_second;
+        $vcted_pfizer_siquijor_first += $this->vcted_pfizer_siquijor_first;
+        $vcted_pfizer_siquijor_second += $this->vcted_pfizer_siquijor_second;
+        $vcted_pfizer_cebu_facility_first += $this->vcted_pfizer_cebu_facility_first;
+        $vcted_pfizer_cebu_facility_second += $this->vcted_pfizer_cebu_facility_second;
+        $vcted_pfizer_mandaue_facility_first += $this->vcted_pfizer_mandaue_facility_first;
+        $vcted_pfizer_mandaue_facility_second += $this->vcted_pfizer_mandaue_facility_second;
+        $vcted_pfizer_lapu_facility_first += $this->vcted_pfizer_lapu_facility_first;
+        $vcted_pfizer_lapu_facility_second += $this->vcted_pfizer_lapu_facility_second;
+
+
+        //TOTAL REFUSED FIRST B4
+        $total_refusal_first += $this->total_refusal_first;
+        $refused_first_bohol += $this->refused_first_bohol;
+        $refused_first_cebu += $this->refused_first_cebu;
+        $refused_first_negros += $this->refused_first_negros;
+        $refused_first_siquijor += $this->refused_first_siquijor;
+        $refused_cebu_facility_first += $this->refused_cebu_facility_first;
+        $refused_mandaue_facility_first += $this->refused_mandaue_facility_first;
+        $refused_lapu_facility_first += $this->refused_lapu_facility_first;
+
+        //TOTAL REFUSED SECOND B4
+        $total_refusal_second += $this->total_refusal_second;
+        $refused_second_bohol += $this->refused_second_bohol;
+        $refused_second_cebu += $this->refused_second_cebu;
+        $refused_second_negros += $this->refused_second_negros;
+        $refused_second_siquijor += $this->refused_second_siquijor;
+        $refused_cebu_facility_second += $this->refused_cebu_facility_second;
+        $refused_mandaue_facility_second += $this->refused_mandaue_facility_second;
+        $refused_lapu_facility_second += $this->refused_lapu_facility_second;
+
+        //TOTAL DEFERRED FIRST B4
+        $total_deferred_first += $this->total_deferred_first;
+        $deferred_first_bohol += $this->deferred_first_bohol;
+        $deferred_first_cebu += $this->deferred_first_cebu;
+        $deferred_first_negros += $this->deferred_first_negros;
+        $deferred_first_siquijor += $this->deferred_first_siquijor;
+        $deferred_cebu_facility_first += $this->deferred_cebu_facility_first;
+        $deferred_mandaue_facility_first += $this->deferred_mandaue_facility_first;
+        $deferred_lapu_facility_first += $this->deferred_lapu_facility_first;
+
+        //TOTAL DEFERRED SECOND B4
+        $total_deferred_second += $this->total_deferred_second;
+        $deferred_second_bohol += $this->deferred_second_bohol;
+        $deferred_second_cebu += $this->deferred_second_cebu;
+        $deferred_second_negros += $this->deferred_second_negros;
+        $deferred_second_siquijor += $this->deferred_second_siquijor;
+        $deferred_cebu_facility_second += $this->deferred_cebu_facility_second;
+        $deferred_mandaue_facility_second += $this->deferred_mandaue_facility_second;
+        $deferred_lapu_facility_second += $this->deferred_lapu_facility_second;
+
+        //TOTAL WASTAGE B4
+        $wastage_sinovac_first += $this->wastage_sinovac_first;
+        $wastage_astra_first += $this->wastage_astra_first;
+        $wastage_sputnikv_first += $this->wastage_sputnikv_first;
+        $wastage_pfizer_first += $this->wastage_pfizer_first;
+
+        //WASTAGE SINOVAC B4
+        $wastage_sinovac_bohol_first += $this->wastage_sinovac_bohol_first;
+        $wastage_sinovac_cebu_first += $this->wastage_sinovac_cebu_first;
+        $wastage_sinovac_negros_first += $this->wastage_sinovac_negros_first;
+        $wastage_sinovac_siquijor_first += $this->wastage_sinovac_siquijor_first;
+        $wastage_sinovac_cebu_facility_first += $this->wastage_sinovac_cebu_facility_first;
+        $wastage_sinovac_mandaue_facility_first += $this->wastage_sinovac_mandaue_facility_first;
+        $wastage_sinovac_lapu_facility_first += $this->wastage_sinovac_lapu_facility_first;
+
+        //WASTAGE ASTRA B4
+        $wastage_astra_bohol_first += $this->wastage_astra_bohol_first;
+        $wastage_astra_cebu_first += $this->wastage_astra_cebu_first;
+        $wastage_astra_negros_first += $this->wastage_astra_negros_first;
+        $wastage_astra_siquijor_first += $this->wastage_astra_siquijor_first;
+        $wastage_astra_cebu_facility_first += $this->wastage_astra_cebu_facility_first;
+        $wastage_astra_mandaue_facility_first += $this->wastage_astra_mandaue_facility_first;
+        $wastage_astra_lapu_facility_first += $this->wastage_astra_lapu_facility_first;
+
+        //WASTAGE SPUTNIKV B4
+        $wastage_sputnikv_bohol_first += $this->wastage_sputnikv_bohol_first;
+        $wastage_sputnikv_cebu_first += $this->wastage_sputnikv_cebu_first;
+        $wastage_sputnikv_negros_first += $this->wastage_sputnikv_negros_first;
+        $wastage_sputnikv_siquijor_first += $this->wastage_sputnikv_siquijor_first;
+        $wastage_sputnikv_cebu_facility_first += $this->wastage_sputnikv_cebu_facility_first;
+        $wastage_sputnikv_mandaue_facility_first += $this->wastage_sputnikv_mandaue_facility_first;
+        $wastage_sputnikv_lapu_facility_first += $this->wastage_sputnikv_lapu_facility_first;
+
+        //WASTAGE PFIZER B4
+        $wastage_pfizer_bohol_first += $this->wastage_pfizer_bohol_first;
+        $wastage_pfizer_cebu_first += $this->wastage_pfizer_cebu_first;
+        $wastage_pfizer_negros_first += $this->wastage_pfizer_negros_first;
+        $wastage_pfizer_siquijor_first += $this->wastage_pfizer_siquijor_first;
+        $wastage_pfizer_cebu_facility_first += $this->wastage_pfizer_cebu_facility_first;
+        $wastage_pfizer_mandaue_facility_first += $this->wastage_pfizer_mandaue_facility_first;
+        $wastage_pfizer_lapu_facility_first += $this->wastage_pfizer_lapu_facility_first;
+
+
 
         //GRAND OVERALL
         $this->total_elipop_region = $total_elipop_region;

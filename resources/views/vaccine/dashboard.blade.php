@@ -62,7 +62,12 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         <li class=""><a href="#tab5" data-toggle="tab" aria-expanded="false" onclick="tab5();">Eligible Pop.(A2)</a></li>
                         <li class=""><a href="#tab6" data-toggle="tab" aria-expanded="false" onclick="tab6();">Eligible Pop.(A3)</a></li>
                         <li class=""><a href="#tab7" data-toggle="tab" aria-expanded="false" onclick="tab7();">Eligible Pop.(A4)</a></li>
-                        <li class=""><a href="#tab8" data-toggle="tab" aria-expanded="false" onclick="tab8();">Grand Total</a></li>
+                        <li class=""><a href="#tab8" data-toggle="tab" aria-expanded="false" onclick="tab8();">Eligible Pop.(A5)</a></li>
+                        <li class=""><a href="#tab9" data-toggle="tab" aria-expanded="false" onclick="tab9();">Eligible Pop.(B1)</a></li>
+                        <li class=""><a href="#tab10" data-toggle="tab" aria-expanded="false" onclick="tab10();">Eligible Pop.(B2)</a></li>
+                        <li class=""><a href="#tab11" data-toggle="tab" aria-expanded="false" onclick="tab11();">Eligible Pop.(B3)</a></li>
+                        <li class=""><a href="#tab12" data-toggle="tab" aria-expanded="false" onclick="tab12();">Eligible Pop.(B4)</a></li>
+                        <li class=""><a href="#tab13" data-toggle="tab" aria-expanded="false" onclick="tab13();">Grand Total</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
@@ -117,77 +122,209 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 </div>
                             </div>
 
-                            <h3 class="page-header">Monthly Activity</h3>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="chart">
-                                        <canvas id="barChart"></canvas>
+                            <div class="row" style="padding-left: 1%;padding-right: 1%">
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe" ><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination <b>(A1)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($a1_target) }}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a1_completion }}%; background-color: #514f4f;"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                            {{ $a1_completion }}% Goal Completion
+                                        </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="info-box bg-yellow">
-                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde" >
+                                        <span class="info-box-icon" style="background-color: #e4ffde" ><i class="ion ion-ios-medkit-outline"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Target vaccination for A1</span>
-                                            <span class="info-box-number">{{ number_format($a1_target) }}</span>
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(A2)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($a2_target) }}</span>
 
                                             <div class="progress">
-                                                <div class="progress-bar" style="width: {{ $a1_completion }}%"></div>
+                                                <div class="progress-bar" style="width: {{ $a2_completion }}%; background-color: #514f4f"></div>
                                             </div>
-                                            <span class="progress-description">
-                                                {{ $a1_completion }}% Goal Completion
-                                            </span>
+                                                <span class="progress-description">
+                                                         {{ $a2_completion }}% Goal Completion
+                                                </span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
-
-                                    <div class="info-box bg-green">
-                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
-
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Target vaccination for A2</span>
-                                            <span class="info-box-number">{{ number_format($a2_target) }}</span>
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(A3)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($a3_target) }}</span>
 
                                             <div class="progress">
-                                                <div class="progress-bar" style="width: {{ $a2_completion }}%"></div>
+                                                <div class="progress-bar" style="width: {{ $a3_completion }}%; background-color: #514f4f"></div>
                                             </div>
-                                            <span class="progress-description">
-                                                {{ $a2_completion }}% Goal Completion
-                                            </span>
+                                                <span class="progress-description">
+                                                    {{ $a3_completion }}% Goal Completion
+                                                </span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
-
-                                    <div class="info-box bg-aqua">
-                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde">
+                                        <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Target vaccination for A3</span>
-                                            <span class="info-box-number">{{ number_format($a3_target) }}</span>
-
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(A4)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($a4_target) }}</span>
                                             <div class="progress">
-                                                <div class="progress-bar" style="width: {{ $a3_completion }}%"></div>
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
                                             </div>
-                                            <span class="progress-description">
-                                                {{ $a3_completion }}% Goal Completion
-                                            </span>
+                                                <span class="progress-description">
+                                                     {{ $a4_completion }}% Goal Completion
+                                                </span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
-
-                                    <div class="info-box bg-red">
-                                        <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles"></i></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Targer vaccination for A4</span>
-                                            <span class="info-box-number">{{ number_format($a4_target) }}</span>
-
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(A5)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($a5_target) }}</span>
                                             <div class="progress">
-                                                <div class="progress-bar" style="width: {{ $a4_completion }}%"></div>
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
                                             </div>
-                                            <span class="progress-description">
-                                                {{ $a4_completion }}% Goal Completion
-                                            </span>
+                                                <span class="progress-description">
+                                                    {{ $a5_completion }}% Goal Completion
+                                                </span>
                                         </div>
                                         <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde">
+                                        <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B1)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($b1_target) }}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    {{ $b1_completion }}% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B2)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($b2_target) }}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    {{ $b2_completion }}% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde">
+                                        <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B3)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($b3_target) }}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    {{ $b3_completion }}% Goal Completion
+                                               </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B4)</b> </span>
+                                            <span class="info-box-number">+{{ number_format($b4_target) }}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ $a4_completion }}%; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    {{ $b4_completion }}% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde">
+                                        <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B5)</b> </span>
+                                            <span class="info-box-number">+0</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                 0% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #d0fffe">
+                                        <span class="info-box-icon" style="background-color: #d0fffe"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(B6)</b> </span>
+                                            <span class="info-box-number">+0</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    0% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="info-box" style="background-color: #e4ffde">
+                                        <span class="info-box-icon" style="background-color: #e4ffde"><i class="ion ion-ios-medkit-outline"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text" style="font-size: 10.5pt;">Target vaccination  <b>(C)</b> </span>
+                                            <span class="info-box-number">+0</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: %; background-color: #514f4f"></div>
+                                            </div>
+                                                <span class="progress-description">
+                                                    0% Goal Completion
+                                                </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <h3 class="page-header">Monthly Activity</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="chart">
+                                        <canvas id="barChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -239,6 +376,41 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         <div class="tab-pane" id="tab8">
                             <div style="width: 100%">
                                 <div class="jim-content row tab_content8">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab9">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content9">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab10">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content10">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab11">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content11">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab12">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content12">
+                                    Under Development
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab13">
+                            <div style="width: 100%">
+                                <div class="jim-content row tab_content13">
                                     Under Development
                                 </div>
                             </div>
@@ -352,6 +524,66 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             $.get("<?php echo asset('vaccine/tab8/report'); ?>",function(data){
                 setTimeout(function(){
                     $(".tab_content8").html(data);
+                },500);
+            });
+        }
+
+        function tab9(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content9").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab9/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content9").html(data);
+                },500);
+            });
+        }
+
+        function tab10(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content10").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab10/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content10").html(data);
+                },500);
+            });
+        }
+
+        function tab11(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content11").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab11/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content11").html(data);
+                },500);
+            });
+        }
+
+        function tab12(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content12").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab12/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content12").html(data);
+                },500);
+            });
+        }
+
+        function tab13(){
+            var path_gif_content = "<?php echo asset('resources/img/loading.gif'); ?>";
+            var loading_content = '<center><img src="'+path_gif_content+'" alt="" style="width: 30%;"></center>';
+
+            $(".tab_content13").html(loading_content);
+            $.get("<?php echo asset('vaccine/tab13/report'); ?>",function(data){
+                setTimeout(function(){
+                    $(".tab_content13").html(data);
                 },500);
             });
         }

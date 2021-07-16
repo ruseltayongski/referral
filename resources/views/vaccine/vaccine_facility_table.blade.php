@@ -30,6 +30,16 @@
         $total_e_pop_svac_a3_flag = true;
         $total_e_pop_svac_a4 = 0;
         $total_e_pop_svac_a4_flag = true;
+        $total_e_pop_svac_a5 = 0;
+        $total_e_pop_svac_a5_flag = true;
+        $total_e_pop_svac_b1 = 0;
+        $total_e_pop_svac_b1_flag = true;
+        $total_e_pop_svac_b2 = 0;
+        $total_e_pop_svac_b2_flag = true;
+        $total_e_pop_svac_b3 = 0;
+        $total_e_pop_svac_b3_flag = true;
+        $total_e_pop_svac_b4 = 0;
+        $total_e_pop_svac_b4_flag = true;
 
         $total_vallocated_svac = 0;
         $total_vallocated_svac_flag = true;
@@ -60,6 +70,16 @@
         $total_e_pop_astra_a3_flag = true;
         $total_e_pop_astra_a4 = 0;
         $total_e_pop_astra_a4_flag = true;
+        $total_e_pop_astra_a5 = 0;
+        $total_e_pop_astra_a5_flag = true;
+        $total_e_pop_astra_b1 = 0;
+        $total_e_pop_astra_b1_flag = true;
+        $total_e_pop_astra_b2 = 0;
+        $total_e_pop_astra_b2_flag = true;
+        $total_e_pop_astra_b3 = 0;
+        $total_e_pop_astra_b3_flag = true;
+        $total_e_pop_astra_b4 = 0;
+        $total_e_pop_astra_b4_flag = true;
 
 
         $total_vallocated_astra = 0;
@@ -88,7 +108,16 @@
         $total_e_pop_sputnikv_a3_flag = true;
         $total_e_pop_sputnikv_a4 = 0;
         $total_e_pop_sputnikv_a4_flag = true;
-
+        $total_e_pop_sputnikv_a5 = 0;
+        $total_e_pop_sputnikv_a5_flag = true;
+        $total_e_pop_sputnikv_b1 = 0;
+        $total_e_pop_sputnikv_b1_flag = true;
+        $total_e_pop_sputnikv_b2 = 0;
+        $total_e_pop_sputnikv_b2_flag = true;
+        $total_e_pop_sputnikv_b3 = 0;
+        $total_e_pop_sputnikv_b3flag = true;
+        $total_e_pop_sputnikv_b4 = 0;
+        $total_e_pop_sputnikv_b4_flag = true;
 
         $total_vallocated_sputnikv = 0;
         $total_vallocated_sputnikv_flag = true;
@@ -116,6 +145,16 @@
         $total_e_pop_pfizer_a3_flag = true;
         $total_e_pop_pfizer_a4 = 0;
         $total_e_pop_pfizer_a4_flag = true;
+        $total_e_pop_pfizer_a5 = 0;
+        $total_e_pop_pfizer_a5_flag = true;
+        $total_e_pop_pfizer_b1 = 0;
+        $total_e_pop_pfizer_b1_flag = true;
+        $total_e_pop_pfizer_b2 = 0;
+        $total_e_pop_pfizer_b2_flag = true;
+        $total_e_pop_pfizer_b3 = 0;
+        $total_e_pop_pfizer_b3_flag = true;
+        $total_e_pop_pfizer_b4 = 0;
+        $total_e_pop_pfizer_b4_flag = true;
 
         $total_vallocated_pfizer = 0;
         $total_vallocated_pfizer_flag = true;
@@ -139,40 +178,84 @@
         $total_svac_a2_frst = 0;
         $total_svac_a3_frst = 0;
         $total_svac_a4_frst = 0;
+        $total_svac_a5_frst = 0;
+        $total_svac_b1_frst = 0;
+        $total_svac_b2_frst = 0;
+        $total_svac_b3_frst = 0;
+        $total_svac_b4_frst = 0;
+
         $total_svac_a1_scnd = 0;
         $total_svac_a2_scnd = 0;
         $total_svac_a3_scnd = 0;
         $total_svac_a4_scnd = 0;
+        $total_svac_a5_scnd = 0;
+        $total_svac_b1_scnd = 0;
+        $total_svac_b2_scnd = 0;
+        $total_svac_b3_scnd = 0;
+        $total_svac_b4_scnd = 0;
 
         //ASTRAZENECA
         $total_astra_a1_frst = 0;
         $total_astra_a2_frst = 0;
         $total_astra_a3_frst = 0;
         $total_astra_a4_frst = 0;
+        $total_astra_a5_frst = 0;
+        $total_astra_b1_frst = 0;
+        $total_astra_b2_frst = 0;
+        $total_astra_b3_frst = 0;
+        $total_astra_b4_frst = 0;
+
         $total_astra_a1_scnd = 0;
         $total_astra_a2_scnd = 0;
         $total_astra_a3_scnd = 0;
         $total_astra_a4_scnd = 0;
+        $total_astra_a5_scnd = 0;
+        $total_astra_b1_scnd = 0;
+        $total_astra_b2_scnd = 0;
+        $total_astra_b3_scnd = 0;
+        $total_astra_b4_scnd = 0;
 
-        //ASTRAZENECA
+        //SPUTNIKV
         $total_sputnikv_a1_frst = 0;
         $total_sputnikv_a2_frst = 0;
         $total_sputnikv_a3_frst = 0;
         $total_sputnikv_a4_frst = 0;
+        $total_sputnikv_a5_frst = 0;
+        $total_sputnikv_b1_frst = 0;
+        $total_sputnikv_b2_frst = 0;
+        $total_sputnikv_b3_frst = 0;
+        $total_sputnikv_b4_frst = 0;
+
         $total_sputnikv_a1_scnd = 0;
         $total_sputnikv_a2_scnd = 0;
         $total_sputnikv_a3_scnd = 0;
         $total_sputnikv_a4_scnd = 0;
+        $total_sputnikv_a5_scnd = 0;
+        $total_sputnikv_b1_scnd = 0;
+        $total_sputnikv_b2_scnd = 0;
+        $total_sputnikv_b3_scnd = 0;
+        $total_sputnikv_b4_scnd = 0;
 
-        //ASTRAZENECA
+        //PFIZER
         $total_pfizer_a1_frst = 0;
         $total_pfizer_a2_frst = 0;
         $total_pfizer_a3_frst = 0;
         $total_pfizer_a4_frst = 0;
+        $total_pfizer_a5_frst = 0;
+        $total_pfizer_b1_frst = 0;
+        $total_pfizer_b2_frst = 0;
+        $total_pfizer_b3_frst = 0;
+        $total_pfizer_b4_frst = 0;
+
         $total_pfizer_a1_scnd = 0;
         $total_pfizer_a2_scnd = 0;
         $total_pfizer_a3_scnd = 0;
         $total_pfizer_a4_scnd = 0;
+        $total_pfizer_a5_scnd = 0;
+        $total_pfizer_b1_scnd = 0;
+        $total_pfizer_b2_scnd = 0;
+        $total_pfizer_b3_scnd = 0;
+        $total_pfizer_b4_scnd = 0;
 
         ?>
         @if(count($vaccine_accomplishment)>0)
@@ -194,6 +277,26 @@
                 elseif($vaccine->priority == 'a4'){
                     $facility = \App\Facility::find($vaccine->facility_id);
                     $vaccine->no_eli_pop = $facility->a4;
+                }
+                elseif($vaccine->priority == 'a5'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->a5;
+                }
+                elseif($vaccine->priority == 'b1'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->b1;
+                }
+                elseif($vaccine->priority == 'b2'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->b2;
+                }
+                elseif($vaccine->priority == 'b3'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->b3;
+                }
+                elseif($vaccine->priority == 'b4'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->no_eli_pop = $facility->b4;
                 }
 
                 if($vaccine->typeof_vaccine == 'Sinovac'){
@@ -217,6 +320,11 @@
                     $total_e_pop_svac_a2 = $facility->a2; //A2 SINOVAC
                     $total_e_pop_svac_a3 = $facility->a3; //A3 SINOVAC
                     $total_e_pop_svac_a4 = $facility->a4; //A4 SINOVAC
+                    $total_e_pop_svac_a5 = $facility->a5; //A5 SINOVAC
+                    $total_e_pop_svac_b1 = $facility->b1; //B1 SINOVAC
+                    $total_e_pop_svac_b2 = $facility->b2; //B2 SINOVAC
+                    $total_e_pop_svac_b3 = $facility->b3; //B3 SINOVAC
+                    $total_e_pop_svac_b4 = $facility->b4; //B4 SINOVAC
                     if($vaccine->priority == "a1"){
                         $total_svac_a1_frst += $vaccine->vaccinated_first; //VACCINATED (A1) SINOVAC FIRST
                         $total_svac_a1_scnd += $vaccine->vaccinated_second; //VACCINATED (A1) SINOVAC SECOND
@@ -224,17 +332,34 @@
                     elseif($vaccine->priority == "a2"){
                         $total_svac_a2_frst += $vaccine->vaccinated_first; //VACCINATED (A2) SINOVAC FIRST
                         $total_svac_a2_scnd += $vaccine->vaccinated_second; //VACCINATED (A2) SINOVAC SECOND
-
                     }
                     elseif($vaccine->priority == "a3"){
                         $total_svac_a3_frst += $vaccine->vaccinated_first; //VACCINATED (A3) SINOVAC FIRST
                         $total_svac_a3_scnd += $vaccine->vaccinated_second; //VACCINATED (A3) SINOVAC SECOND
-
                     }
                     elseif($vaccine->priority == "a4"){
                         $total_svac_a4_frst += $vaccine->vaccinated_first; //VACCINATED (A4) SINOVAC FIRST
                         $total_svac_a4_scnd += $vaccine->vaccinated_second; //VACCINATED (A4) SINOVAC SECOND
-
+                    }
+                    elseif($vaccine->priority == "a5"){
+                        $total_svac_a5_frst += $vaccine->vaccinated_first; //VACCINATED (A5) SINOVAC FIRST
+                        $total_svac_a5_scnd += $vaccine->vaccinated_second; //VACCINATED (A5) SINOVAC SECOND
+                    }
+                    elseif($vaccine->priority == "b1"){
+                        $total_svac_b1_frst += $vaccine->vaccinated_first; //VACCINATED (B1) SINOVAC FIRST
+                        $total_svac_b1_scnd += $vaccine->vaccinated_second; //VACCINATED (B1) SINOVAC SECOND
+                    }
+                    elseif($vaccine->priority == "b2"){
+                        $total_svac_b2_frst += $vaccine->vaccinated_first; //VACCINATED (B2) SINOVAC FIRST
+                        $total_svac_b2_scnd += $vaccine->vaccinated_second; //VACCINATED (B2) SINOVAC SECOND
+                    }
+                    elseif($vaccine->priority == "b3"){
+                        $total_svac_b3_frst += $vaccine->vaccinated_first; //VACCINATED (B3) SINOVAC FIRST
+                        $total_svac_b3_scnd += $vaccine->vaccinated_second; //VACCINATED (B3) SINOVAC SECOND
+                    }
+                    elseif($vaccine->priority == "b4"){
+                        $total_svac_b4_frst += $vaccine->vaccinated_first; //VACCINATED (B4) SINOVAC FIRST
+                        $total_svac_b4_scnd += $vaccine->vaccinated_second; //VACCINATED (B4) SINOVAC SECOND
                     }
                     if($total_vallocated_svac_flag){
                         $total_vallocated_svac += $vaccine->vaccine_allocated;
@@ -259,6 +384,11 @@
                     $total_e_pop_astra_a2 = $facility->a2;
                     $total_e_pop_astra_a3 = $facility->a3;
                     $total_e_pop_astra_a4 = $facility->a4;
+                    $total_e_pop_astra_a5 = $facility->a5;
+                    $total_e_pop_astra_b1 = $facility->b1;
+                    $total_e_pop_astra_b2 = $facility->b2;
+                    $total_e_pop_astra_b3 = $facility->b3;
+                    $total_e_pop_astra_b4 = $facility->b4;
                     if($vaccine->priority == "a1"){
                         $total_astra_a1_frst += $vaccine->vaccinated_first; // VACCINATED (A1) ASTRA FIRST
                         $total_astra_a1_scnd += $vaccine->vaccinated_second; //VACCINATED (A1) ASTRA SECOND
@@ -274,6 +404,26 @@
                     elseif($vaccine->priority == "a4" ){
                         $total_astra_a4_frst += $vaccine->vaccinated_first; //VACCINATED (A4) ASTRA FIRST
                         $total_astra_a4_scnd += $vaccine->vaccinated_second; //VACCINATED (A4) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "a5" ){
+                        $total_astra_a5_frst += $vaccine->vaccinated_first; //VACCINATED (A5) ASTRA FIRST
+                        $total_astra_a5_scnd += $vaccine->vaccinated_second; //VACCINATED (A5) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "b1" ){
+                        $total_astra_b1_frst += $vaccine->vaccinated_first; //VACCINATED (B1) ASTRA FIRST
+                        $total_astra_b1_scnd += $vaccine->vaccinated_second; //VACCINATED (B1) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "b2" ){
+                        $total_astra_b2_frst += $vaccine->vaccinated_first; //VACCINATED (B2) ASTRA FIRST
+                        $total_astra_b2_scnd += $vaccine->vaccinated_second; //VACCINATED (B2) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "b3" ){
+                        $total_astra_b3_frst += $vaccine->vaccinated_first; //VACCINATED (B3) ASTRA FIRST
+                        $total_astra_b3_scnd += $vaccine->vaccinated_second; //VACCINATED (B3) ASTRA SECOND
+                    }
+                    elseif($vaccine->priority == "b4" ){
+                        $total_astra_b4_frst += $vaccine->vaccinated_first; //VACCINATED (B4) ASTRA FIRST
+                        $total_astra_b4_scnd += $vaccine->vaccinated_second; //VACCINATED (B4) ASTRA SECOND
                     }
                     if($total_vallocated_astra_flag){
                         $total_vallocated_astra += $vaccine->vaccine_allocated;
@@ -295,17 +445,19 @@
 
                 }
 
-
-
                 $total_allocated_overall_svac_frst = $total_vallocated_svac_frst + $total_vallocated_svac_scnd; //VACCINE ALLOCATED TOTAL SINOVAC
                 $total_allocated_overall_astra_frst = $total_vallocated_astra_frst + $total_vallocated_astra_scnd; //TOTAL VACCINE ALLOCATED ASTRA FIRST
 
+                $total_e_pop_svac = $total_e_pop_svac_a1 + $total_e_pop_svac_a2 + $total_e_pop_svac_a3 + $total_e_pop_svac_a4 + $total_e_pop_svac_a5 +
+                                    $total_e_pop_svac_b1 + $total_e_pop_svac_b2 + $total_e_pop_svac_b3 + $total_e_pop_svac_b4 ;  //ELIPOP TOTAL SINOVAC FIRST
+                $total_e_pop_astra = $total_e_pop_astra_a1 + $total_e_pop_astra_a2 + $total_e_pop_astra_a3 + $total_e_pop_astra_a4 + $total_e_pop_astra_a5 +
+                                     $total_e_pop_astra_b1 + $total_e_pop_astra_b2 + $total_e_pop_astra_b3 + $total_e_pop_astra_b4;  //ELIPOP TOTAL ASTRA FIRST
+                $total_e_pop_sputnikv = $total_e_pop_sputnikv_a1 + $total_e_pop_sputnikv_a2 + $total_e_pop_sputnikv_a3 + $total_e_pop_sputnikv_a4 + $total_e_pop_sputnikv_a5 +
+                                        $total_e_pop_sputnikv_b1 + $total_e_pop_sputnikv_b2 + $total_e_pop_sputnikv_b3 + $total_e_pop_sputnikv_b4;  //ELIPOP TOTAL SPUTNIKV FIRST
+                $total_e_pop_pfizer = $total_e_pop_pfizer_a1 + $total_e_pop_pfizer_a2 + $total_e_pop_pfizer_a3 + $total_e_pop_pfizer_a4 + $total_e_pop_pfizer_a5 +
+                                        $total_e_pop_pfizer_b1 + $total_e_pop_pfizer_b2 + $total_e_pop_pfizer_b3 + $total_e_pop_pfizer_b4;  //ELIPOP TOTAL SPUTNIKV FIRST
 
-
-
-                $total_e_pop_svac = $total_e_pop_svac_a1 + $total_e_pop_svac_a2 + $total_e_pop_svac_a3 + $total_e_pop_svac_a4 ;  //ELIPOP TOTAL SINOVAC FIRST
-                $total_e_pop_astra = $total_e_pop_astra_a1 + $total_e_pop_astra_a2 + $total_e_pop_astra_a3 + $total_e_pop_astra_a4;  //ELIPOP TOTAL ASTRA FIRST
-                $total_e_pop = $facility->a1 + $facility->a2 + $facility->a3 + $facility->a4; //TOTAL_ELI_POP
+                $total_e_pop = $facility->a1 + $facility->a2 + $facility->a3 + $facility->a4 + $facility->a5 + $facility->b1 + $facility->b2 + $facility->b3 + $facility->b4; //TOTAL_ELI_POP
 
                 $p_cvrge_astra_frst = ($total_vcted_astra_frst / $total_e_pop_astra) * 100; //PERCENT COVERAGE ASTRA FIRST
                 $p_cvrge_astra_scnd = ($total_vcted_astra_scnd / $total_e_pop_astra) * 100; //PERCENT COVERAGE ASTRA SECOND
@@ -368,7 +520,7 @@
                             <option value="">Select Option</option>
                             <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                             <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                            <option value="Sputnikv" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sputnikv')echo 'selected';} ?>>Sputnikv</option>
+                            <option value="SputnikV" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'SputnikV')echo 'selected';} ?>>Sputnik V</option>
                             <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                         </select>
                         <br><br>
@@ -384,15 +536,15 @@
                     <td style="width: 15%" rowspan="2">
                         <select name="priority[]" id="priority{{ $vaccine->id.$vaccine->encoded_by }}" class="select2" onchange="getEliPop('<?php echo $facility_id; ?>','<?php echo $vaccine->id.$vaccine->encoded_by; ?>')">
                             <option value="">Select Priority</option>
-                            <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?>>A1</option>
-                            <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?>>A2</option>
+                            <option value="a1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a1')echo 'selected';} ?> >A1</option>
+                            <option value="a2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a2')echo 'selected';} ?> >A2</option>
                             <option value="a3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a3')echo 'selected';} ?> >A3</option>
                             <option value="a4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a4')echo 'selected';} ?> >A4</option>
-                            <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> disabled>A5</option>
-                            <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b1')echo 'selected';} ?> disabled>B1</option>
-                            <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b2')echo 'selected';} ?> disabled>B2</option>
-                            <option value="b3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b3')echo 'selected';} ?> disabled>B3</option>
-                            <option value="b4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b4')echo 'selected';} ?> disabled >B4</option>
+                            <option value="a5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'a5')echo 'selected';} ?> >A5</option>
+                            <option value="b1" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b1')echo 'selected';} ?> >B1</option>
+                            <option value="b2" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b2')echo 'selected';} ?> >B2</option>
+                            <option value="b3" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b3')echo 'selected';} ?> >B3</option>
+                            <option value="b4" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b4')echo 'selected';} ?>  >B4</option>
                             <option value="b5" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b5')echo 'selected';} ?> disabled>B5</option>
                             <option value="b6" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'b6')echo 'selected';} ?> disabled>B6</option>
                             <option value="c" <?php if(isset($vaccine->priority)){if($vaccine->priority == 'C')echo 'selected';} ?> disabled >C</option>

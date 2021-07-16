@@ -8,12 +8,17 @@
         return 0;
     }
     //ELIGIBLE POP SINOVAC
-    $total_e_pop_a1_grand = \App\Facility::select(DB::raw("sum(COALESCE(a1,0)) as a1"))->where("tricity_id",$tricity_id)->first()->a1; //TOTAL ELIPOP A1
-    $total_e_pop_a2_grand  = \App\Facility::select(DB::raw("sum(COALESCE(a2,0)) as a2"))->where("tricity_id",$tricity_id)->first()->a2; ///TOTAL ELIPOP A2
+    $total_e_pop_a1_grand =  \App\Facility::select(DB::raw("sum(COALESCE(a1,0)) as a1"))->where("tricity_id",$tricity_id)->first()->a1;  //TOTAL ELIPOP A1
+    $total_e_pop_a2_grand  = \App\Facility::select(DB::raw("sum(COALESCE(a2,0)) as a2"))->where("tricity_id",$tricity_id)->first()->a2; //TOTAL ELIPOP A2
     $total_e_pop_a3_grand  = \App\Facility::select(DB::raw("sum(COALESCE(a3,0)) as a3"))->where("tricity_id",$tricity_id)->first()->a3; //TOTAL ELIPOP A3
     $total_e_pop_a4_grand  = \App\Facility::select(DB::raw("sum(COALESCE(a4,0)) as a4"))->where("tricity_id",$tricity_id)->first()->a4; //TOTAL ELIPOP A4
-    $total_e_pop_grand = $total_e_pop_a1_grand + $total_e_pop_a2_grand + $total_e_pop_a3_grand + $total_e_pop_a4_grand ; //TOTAL ELI POP
-
+    $total_e_pop_a5_grand  = \App\Facility::select(DB::raw("sum(COALESCE(a5,0)) as a5"))->where("tricity_id",$tricity_id)->first()->a5; //TOTAL ELIPOP A5
+    $total_e_pop_b1_grand  = \App\Facility::select(DB::raw("sum(COALESCE(b1,0)) as b1"))->where("tricity_id",$tricity_id)->first()->b1; //TOTAL ELIPOP B1
+    $total_e_pop_b2_grand  = \App\Facility::select(DB::raw("sum(COALESCE(b2,0)) as b2"))->where("tricity_id",$tricity_id)->first()->b2; //TOTAL ELIPOP B2
+    $total_e_pop_b3_grand  = \App\Facility::select(DB::raw("sum(COALESCE(b3,0)) as b3"))->where("tricity_id",$tricity_id)->first()->b3; //TOTAL ELIPOP B3
+    $total_e_pop_b4_grand  = \App\Facility::select(DB::raw("sum(COALESCE(b4,0)) as b4"))->where("tricity_id",$tricity_id)->first()->b4; //TOTAL ELIPOP B4
+    $total_e_pop_grand = $total_e_pop_a1_grand + $total_e_pop_a2_grand + $total_e_pop_a3_grand + $total_e_pop_a4_grand + $total_e_pop_a5_grand +
+                         $total_e_pop_b1_grand + $total_e_pop_b2_grand + $total_e_pop_b3_grand + $total_e_pop_b4_grand; //TOTAL ELI POP
 
     //VACCINE_ALLOCATED
     $total_vallocated_svac_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? \App\Facility::select(\DB::raw("SUM(COALESCE(sinovac_allocated_first,0)) as sinovac_allocated_first"))->where("tricity_id",$tricity_id)->first()->sinovac_allocated_first :0; //VACCINE ALLOCATED (FD) SINOVAC_FIRST
@@ -25,45 +30,92 @@
     $total_vallocated_pfizer_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \App\Facility::select(\DB::raw("SUM(COALESCE(pfizer_allocated_first,0)) as pfizer_allocated_first"))->where("tricity_id",$tricity_id)->first()->pfizer_allocated_first :0; //VACCINE ALLOCATED (FD) PFIZER_FIRST
     $total_vallocated_pfizer_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? \App\Facility::select(\DB::raw("SUM(COALESCE(pfizer_allocated_second,0)) as pfizer_allocated_second"))->where("tricity_id",$tricity_id)->first()->pfizer_allocated_second :0; //VACCINE ALLOCATED (SD) PFIZER_FIRST
 
-    //SINOVAC
+    //SINOVAC FIRST
     $total_svac_a1_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A1) SINOVAC_FIRST
     $total_svac_a2_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A2) SINOVAC_FIRST
     $total_svac_a3_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A3) SINOVAC_FIRST
     $total_svac_a4_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A4) SINOVAC_FIRST
+    $total_svac_a5_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A5) SINOVAC_FIRST
+    $total_svac_b1_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B1) SINOVAC_FIRST
+    $total_svac_b2_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B2) SINOVAC_FIRST
+    $total_svac_b3_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B3) SINOVAC_FIRST
+    $total_svac_b4_frst_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B4) SINOVAC_FIRST
+
+
+    //SINOVAC SECOND
     $total_svac_a1_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A1) SINOVAC_SECOND
     $total_svac_a2_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A2) SINOVAC_SECOND
     $total_svac_a3_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A3) SINOVAC_SECOND
     $total_svac_a4_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A4) SINOVAC_SECOND
+    $total_svac_a5_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A5) SINOVAC_SECOND
+    $total_svac_b1_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B1) SINOVAC_SECOND
+    $total_svac_b2_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B2) SINOVAC_SECOND
+    $total_svac_b3_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B3) SINOVAC_SECOND
+    $total_svac_b4_scnd_grand = $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B4) SINOVAC_SECOND
 
-    //ASTRAZENECA
+    //ASTRAZENECA FIRST
     $total_astra_a1_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A1) ASTRAZENECA_FIRST
     $total_astra_a2_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A2) ASTRAZENECA_FIRST
     $total_astra_a3_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A3) ASTRAZENECA_FIRST
     $total_astra_a4_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A4) ASTRAZENECA_FIRST
+    $total_astra_a5_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A5) ASTRAZENECA_FIRST
+    $total_astra_b1_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B1) ASTRAZENECA_FIRST
+    $total_astra_b2_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B2) ASTRAZENECA_FIRST
+    $total_astra_b3_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B3) ASTRAZENECA_FIRST
+    $total_astra_b4_frst_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B4) ASTRAZENECA_FIRST
+
+    //ASTRAZENECA SECOND
     $total_astra_a1_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A1) ASTRAZENECA_SECOND
     $total_astra_a2_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A2) ASTRAZENECA_SECOND
     $total_astra_a3_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A3) ASTRAZENECA_SECOND
-    $total_astra_a4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second):0; //VACCINATED (A4) ASTRAZENECA_SECOND
+    $total_astra_a4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A4) ASTRAZENECA_SECOND
+    $total_astra_a5_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A5) ASTRAZENECA_SECOND
+    $total_astra_b1_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_second ):0; //VACCINATED (B1) ASTRAZENECA_SECOND
+    $total_astra_b2_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B2) ASTRAZENECA_SECOND
+    $total_astra_b3_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B3) ASTRAZENECA_SECOND
+    $total_astra_b4_scnd_grand = $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B4) ASTRAZENECA_SECOND
 
-    //SPUTNIKV
+    //SPUTNIKV FIRST
     $total_sputnikv_a1_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A1) SPUTNIKV_FIRST
     $total_sputnikv_a2_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A2) SPUTNIKV_FIRST
     $total_sputnikv_a3_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A3) SPUTNIKV_FIRST
     $total_sputnikv_a4_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A4) SPUTNIKV_FIRST
+    $total_sputnikv_a5_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A5) SPUTNIKV_FIRST
+    $total_sputnikv_b1_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B1) SPUTNIKV_FIRST
+    $total_sputnikv_b2_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B2) SPUTNIKV_FIRST
+    $total_sputnikv_b3_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B3) SPUTNIKV_FIRST
+    $total_sputnikv_b4_frst_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B4) SPUTNIKV_FIRST
+    //SPUTNIK SECOND
     $total_sputnikv_a1_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A1) SPUTNIKV_SECOND
     $total_sputnikv_a2_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A2) SPUTNIKV_SECOND
     $total_sputnikv_a3_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A3) SPUTNIKV_SECOND
-    $total_sputnikv_a4_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A4) SPUTNIKV_SECOND
+    $total_sputnikv_a4_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A4) SPUTNIKV_SECOND
+    $total_sputnikv_a5_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A5) SPUTNIKV_SECOND
+    $total_sputnikv_b1_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B1) SPUTNIKV_SECOND
+    $total_sputnikv_b2_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B2) SPUTNIKV_SECOND
+    $total_sputnikv_b3_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B3) SPUTNIKV_SECOND
+    $total_sputnikv_b4_scnd_grand = $typeof_vaccine_filter == "SputnikV" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B4) SPUTNIKV_SECOND
 
-    //PFIZER
+    //PFIZER FIRST
     $total_pfizer_a1_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A1) PFIZER_FIRST
     $total_pfizer_a2_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A2) PFIZER_FIRST
-    $total_pfizer_a3_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_first):0; //VACCINATED (A3) PFIZER_FIRST
+    $total_pfizer_a3_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A3) PFIZER_FIRST
     $total_pfizer_a4_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A4) PFIZER_FIRST
+    $total_pfizer_a5_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (A5) PFIZER_FIRST
+    $total_pfizer_b1_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B1) PFIZER_FIRST
+    $total_pfizer_b2_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B2) PFIZER_FIRST
+    $total_pfizer_b3_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B3) PFIZER_FIRST
+    $total_pfizer_b4_frst_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_first) :0; //VACCINATED (B4) PFIZER_FIRST
+    //PFIZER SECOND
     $total_pfizer_a1_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A1) PFIZER_SECOND
     $total_pfizer_a2_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A2) PFIZER_SECOND
     $total_pfizer_a3_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A3) PFIZER_SECOND
     $total_pfizer_a4_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A4) PFIZER_SECOND
+    $total_pfizer_a5_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (A5) PFIZER_SECOND
+    $total_pfizer_b1_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B1) PFIZER_SECOND
+    $total_pfizer_b2_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B2) PFIZER_SECOND
+    $total_pfizer_b3_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B3) PFIZER_SECOND
+    $total_pfizer_b4_scnd_grand = $typeof_vaccine_filter == "Pfizer" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$province_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->where("muncity_id",$muncity_id)->first()->vaccinated_second) :0; //VACCINATED (B4) PFIZER_SECOND
 
     $total_mild_svac_frst_grand =  $typeof_vaccine_filter == "Sinovac" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$province_id)->where("typeof_vaccine","Sinovac")->where("muncity_id",$muncity_id)->first()->mild_first) :0; //MILD SINOVAC_FIRST
     $total_mild_astra_frst_grand =  $typeof_vaccine_filter == "Astrazeneca" || empty($typeof_vaccine_filter) ? convertToZero (\App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$province_id)->where("typeof_vaccine","Astrazeneca")->where("muncity_id",$muncity_id)->first()->mild_first) :0; //MILD ASTRA_FIRST
@@ -140,29 +192,49 @@
     $total_wstge_overall_scnd = $total_wstge_svac_scnd_grand + $total_wstge_astra_scnd_grand + $total_wstge_sputnikv_scnd_grand + $total_wstge_pfizer_scnd_grand; // TOTAL WASTAGE SECOND
 
 
-    $total_vcted_svac_frst_grand = $total_svac_a1_frst_grand + $total_svac_a2_frst_grand + $total_svac_a3_frst_grand + $total_svac_a4_frst_grand; //TOTAL VACCINATED SINOVAC_FIRST
-    $total_vcted_svac_scnd_grand = $total_svac_a1_scnd_grand + $total_svac_a2_scnd_grand + $total_svac_a3_scnd_grand + $total_svac_a4_scnd_grand; //TOTAL VACCINATED SINOVAC_SECOND
-    $total_vcted_astra_frst_grand = $total_astra_a1_frst_grand + $total_astra_a2_frst_grand + $total_astra_a3_frst_grand + $total_astra_a4_frst_grand; // TOTAL VACCINATED ASTRA_FIRST
-    $total_vcted_astra_scnd_grand = $total_astra_a1_scnd_grand + $total_astra_a2_scnd_grand + $total_astra_a3_scnd_grand + $total_astra_a4_scnd_grand; //TOTAL VACCINATED ASTRA_SECOND
-    $total_vcted_sputnikv_frst_grand = $total_sputnikv_a1_frst_grand + $total_sputnikv_a2_frst_grand + $total_sputnikv_a3_frst_grand + $total_sputnikv_a4_frst_grand; //TOTAL VACCINATED SPUTNIKV_FIRST
-    $total_vcted_sputnikv_scnd_grand = $total_sputnikv_a1_scnd_grand + $total_sputnikv_a2_scnd_grand + $total_sputnikv_a3_scnd_grand + $total_sputnikv_a4_scnd_grand; //TOTAL VACCINATED SPUTNIKV_SECOND
-    $total_vcted_pfizer_frst_grand = $total_pfizer_a1_frst_grand + $total_pfizer_a2_frst_grand + $total_pfizer_a3_frst_grand + $total_pfizer_a4_frst_grand; //TOTAL VACCINATED PFIZER_FIRST
-    $total_vcted_pfizer_scnd_grand = $total_pfizer_a1_scnd_grand + $total_pfizer_a2_scnd_grand + $total_pfizer_a3_scnd_grand + $total_pfizer_a4_scnd_grand; //TOTAL VACCINATED PFIZER_SECOND
+    $total_vcted_svac_frst_grand = $total_svac_a1_frst_grand + $total_svac_a2_frst_grand + $total_svac_a3_frst_grand + $total_svac_a4_frst_grand + $total_svac_a5_frst_grand +
+                                   $total_svac_b1_frst_grand + $total_svac_b2_frst_grand + $total_svac_b3_frst_grand + $total_svac_b4_frst_grand; //TOTAL VACCINATED SINOVAC_FIRST
+    $total_vcted_svac_scnd_grand = $total_svac_a1_scnd_grand + $total_svac_a2_scnd_grand + $total_svac_a3_scnd_grand + $total_svac_a4_scnd_grand + $total_svac_a5_scnd_grand +
+                                   $total_svac_b1_scnd_grand + $total_svac_b2_scnd_grand + $total_svac_b3_scnd_grand + $total_svac_b4_scnd_grand; //TOTAL VACCINATED SINOVAC_SECOND
+    $total_vcted_astra_frst_grand = $total_astra_a1_frst_grand + $total_astra_a2_frst_grand + $total_astra_a3_frst_grand + $total_astra_a4_frst_grand + $total_astra_a5_frst_grand +
+                                    $total_astra_b1_frst_grand + $total_astra_b2_frst_grand + $total_astra_b3_frst_grand + $total_astra_b4_frst_grand; // TOTAL VACCINATED ASTRA_FIRST
+    $total_vcted_astra_scnd_grand = $total_astra_a1_scnd_grand + $total_astra_a2_scnd_grand + $total_astra_a3_scnd_grand + $total_astra_a4_scnd_grand + $total_astra_a5_scnd_grand +
+                                    $total_astra_b1_scnd_grand + $total_astra_b2_scnd_grand + $total_astra_b3_scnd_grand + $total_astra_b4_scnd_grand; //TOTAL VACCINATED ASTRA_SECOND
+    $total_vcted_sputnikv_frst_grand = $total_sputnikv_a1_frst_grand + $total_sputnikv_a2_frst_grand + $total_sputnikv_a3_frst_grand + $total_sputnikv_a4_frst_grand + $total_sputnikv_a5_frst_grand +
+                                       $total_sputnikv_b1_frst_grand + $total_sputnikv_b2_frst_grand + $total_sputnikv_b3_frst_grand + $total_sputnikv_b4_frst_grand; //TOTAL VACCINATED SPUTNIKV_FIRST
+    $total_vcted_sputnikv_scnd_grand = $total_sputnikv_a1_scnd_grand + $total_sputnikv_a2_scnd_grand + $total_sputnikv_a3_scnd_grand + $total_sputnikv_a4_scnd_grand + $total_sputnikv_a5_scnd_grand +
+                                       $total_sputnikv_b1_scnd_grand + $total_sputnikv_b2_scnd_grand + $total_sputnikv_b3_scnd_grand + $total_sputnikv_b4_scnd_grand; //TOTAL VACCINATED SPUTNIKV_SECOND
+    $total_vcted_pfizer_frst_grand = $total_pfizer_a1_frst_grand + $total_pfizer_a2_frst_grand + $total_pfizer_a3_frst_grand + $total_pfizer_a4_frst_grand + $total_pfizer_a5_frst_grand +
+                                     $total_pfizer_b1_frst_grand + $total_pfizer_b2_frst_grand + $total_pfizer_b3_frst_grand + $total_pfizer_b4_frst_grand; //TOTAL VACCINATED PFIZER_FIRST
+    $total_vcted_pfizer_scnd_grand = $total_pfizer_a1_scnd_grand + $total_pfizer_a2_scnd_grand + $total_pfizer_a3_scnd_grand + $total_pfizer_a4_scnd_grand + $total_pfizer_a5_scnd_grand +
+                                     $total_pfizer_b1_scnd_grand + $total_pfizer_b2_scnd_grand + $total_pfizer_b3_scnd_grand + $total_pfizer_b4_scnd_grand; //TOTAL VACCINATED PFIZER_SECOND
 
     $total_vcted_a1_first_grand = $total_svac_a1_frst_grand + $total_astra_a1_frst_grand + $total_sputnikv_a1_frst_grand + $total_pfizer_a1_frst_grand; //TOTAL VACCINATED (A1)
     $total_vcted_a2_first_grand = $total_svac_a2_frst_grand + $total_astra_a2_frst_grand + $total_sputnikv_a2_frst_grand + $total_pfizer_a2_frst_grand; //TOTAL VACCINATED (A2)
     $total_vcted_a3_first_grand = $total_svac_a3_frst_grand + $total_astra_a3_frst_grand + $total_sputnikv_a3_frst_grand + $total_pfizer_a3_frst_grand; //TOTAL VACCINATED (A3)
     $total_vcted_a4_first_grand = $total_svac_a4_frst_grand + $total_astra_a4_frst_grand + $total_sputnikv_a4_frst_grand + $total_pfizer_a4_frst_grand; //TOTAL VACCINATED (A4)
+    $total_vcted_a5_first_grand = $total_svac_a5_frst_grand + $total_astra_a5_frst_grand + $total_sputnikv_a5_frst_grand + $total_pfizer_a5_frst_grand; //TOTAL VACCINATED (A5)
+    $total_vcted_b1_first_grand = $total_svac_b1_frst_grand + $total_astra_b1_frst_grand + $total_sputnikv_b1_frst_grand + $total_pfizer_b1_frst_grand; //TOTAL VACCINATED (B1)
+    $total_vcted_b2_first_grand = $total_svac_b2_frst_grand + $total_astra_b2_frst_grand + $total_sputnikv_b2_frst_grand + $total_pfizer_b2_frst_grand; //TOTAL VACCINATED (B2)
+    $total_vcted_b3_first_grand = $total_svac_b3_frst_grand + $total_astra_b3_frst_grand + $total_sputnikv_b3_frst_grand + $total_pfizer_b3_frst_grand; //TOTAL VACCINATED (B3)
+    $total_vcted_b4_first_grand = $total_svac_b4_frst_grand + $total_astra_b4_frst_grand + $total_sputnikv_b4_frst_grand + $total_pfizer_b4_frst_grand; //TOTAL VACCINATED (B4)
 
 
-    $total_vcted_first_overall =  $total_vcted_a1_first_grand + $total_vcted_a2_first_grand + $total_vcted_a3_first_grand + $total_vcted_a4_first_grand; //TOTAL VACCINATED FIRST DOSE OVERALL
+    $total_vcted_first_overall =  $total_vcted_a1_first_grand + $total_vcted_a2_first_grand + $total_vcted_a3_first_grand + $total_vcted_a4_first_grand + $total_vcted_a5_first_grand +
+        $total_vcted_b1_first_grand + $total_vcted_b2_first_grand + $total_vcted_b3_first_grand + $total_vcted_b4_first_grand; //TOTAL VACCINATED FIRST DOSE OVERALL
 
     $total_vcted_scnd_a1_grand = $total_svac_a1_scnd_grand + $total_astra_a1_scnd_grand + $total_sputnikv_a1_scnd_grand + $total_pfizer_a1_scnd_grand; //TOTAL VACCINATED SECOND DOSE A1
     $total_vcted_scnd_a2_grand = $total_svac_a2_scnd_grand + $total_astra_a2_scnd_grand + $total_sputnikv_a2_scnd_grand + $total_pfizer_a2_scnd_grand; //TOTAL VACCINATED SECOND DOSE A2
     $total_vcted_scnd_a3_grand = $total_svac_a3_scnd_grand + $total_astra_a3_scnd_grand + $total_sputnikv_a3_scnd_grand + $total_pfizer_a3_scnd_grand; //TOTAL VACCINATED SECOND DOSE A3
     $total_vcted_scnd_a4_grand = $total_svac_a4_scnd_grand + $total_astra_a4_scnd_grand + $total_sputnikv_a4_scnd_grand + $total_pfizer_a4_scnd_grand; //TOTAL VACCINATED SECOND DOSE A4
+    $total_vcted_scnd_a5_grand = $total_svac_a5_scnd_grand + $total_astra_a5_scnd_grand + $total_sputnikv_a5_scnd_grand + $total_pfizer_a5_scnd_grand; //TOTAL VACCINATED SECOND DOSE A5
+    $total_vcted_scnd_b1_grand = $total_svac_b1_scnd_grand + $total_astra_b1_scnd_grand + $total_sputnikv_b1_scnd_grand + $total_pfizer_b1_scnd_grand; //TOTAL VACCINATED SECOND DOSE B1
+    $total_vcted_scnd_b2_grand = $total_svac_b2_scnd_grand + $total_astra_b2_scnd_grand + $total_sputnikv_b2_scnd_grand + $total_pfizer_b2_scnd_grand; //TOTAL VACCINATED SECOND DOSE B2
+    $total_vcted_scnd_b3_grand = $total_svac_b3_scnd_grand + $total_astra_b3_scnd_grand + $total_sputnikv_b3_scnd_grand + $total_pfizer_b3_scnd_grand; //TOTAL VACCINATED SECOND DOSE B3
+    $total_vcted_scnd_b4_grand = $total_svac_b4_scnd_grand + $total_astra_b4_scnd_grand + $total_sputnikv_b4_scnd_grand + $total_pfizer_b4_scnd_grand; //TOTAL VACCINATED SECOND DOSE B4
 
-    $total_vcted_scnd_overall =  $total_vcted_scnd_a1_grand + $total_vcted_scnd_a2_grand + $total_vcted_scnd_a3_grand + $total_vcted_scnd_a4_grand; //TOTAL VACCINATED SECOND DOSE OVERALL
+    $total_vcted_scnd_overall = $total_vcted_scnd_a1_grand + $total_vcted_scnd_a2_grand + $total_vcted_scnd_a3_grand + $total_vcted_scnd_a4_grand + $total_vcted_scnd_a5_grand +
+                                $total_vcted_scnd_b1_grand + $total_vcted_scnd_b2_grand + $total_vcted_scnd_b3_grand + $total_vcted_scnd_b4_grand; //TOTAL VACCINATED SECOND DOSE OVERALL
 
     $total_rfsd_frst_grand = $total_rfsd_svac_frst_grand + $total_rfsd_astra_frst_grand + $total_rfsd_sputnikv_frst_grand + $total_rfsd_pfizer_frst_grand; //TOTAL REFUSED
     $total_rfsd_scnd_grand = $total_rfsd_svac_scnd_grand + $total_rfsd_astra_scnd_grand + $total_rfsd_sputnikv_scnd_grand + $total_rfsd_pfizer_scnd_grand; //TOTAL REFUSED  2
@@ -189,7 +261,6 @@
     $total_c_rate_sputnikv_scnd_grand = $total_vcted_sputnikv_scnd_grand / $total_vallocated_sputnikv_scnd_grand * 100; //CONSUMPTION RATE SPUTNIKV_SECOND goods
     $total_c_rate_pfizer_scnd_grand = $total_vcted_pfizer_scnd_grand / $total_vallocated_pfizer_scnd_grand * 100; //CONSUMPTION RATE PFIZER SECOND goods
 
-
     //REMAINING UNVACCINATED
     $total_r_unvcted_frst_svac_grand = $total_e_pop_grand - $total_vcted_svac_frst_grand - $total_rfsd_svac_frst_grand; //REMAINING UNVACCINATED SINOVAC_FIRST goods
     $total_r_unvcted_frst_astra_grand = $total_e_pop_grand - $total_vcted_astra_frst_grand - $total_rfsd_astra_frst_grand; //REMAINUNG UNVACCINATED ASTRA_FIRST goods
@@ -203,21 +274,23 @@
     $total_r_unvcted_all_frst_grand = $total_e_pop_grand - $total_vcted_first_overall - $total_rfsd_frst_grand; //TOTAL REMAINUNG UNVACCINATED goods //
     $total_r_unvcted_all_scnd_grand = $total_e_pop_grand - $total_vcted_scnd_overall - $total_rfsd_scnd_grand; //TOTAL REMAINING UNVACCIANTED  2 goods
 
-
     $sinovac_dashboard = $total_vcted_svac_frst_grand + $total_vcted_svac_scnd_grand;
     $astra_dashboard = $total_vcted_astra_frst_grand + $total_vcted_astra_scnd_grand;
     $sputnikv_dashboard = $total_vcted_sputnikv_frst_grand + $total_vcted_sputnikv_scnd_grand;
     $pfizer_dashboard = $total_vcted_pfizer_frst_grand + $total_vcted_pfizer_scnd_grand;
 
-
-
     $a1_dashboard = $total_vcted_a1_first_grand + $total_vcted_scnd_a1_grand;
     $a2_dashboard = $total_vcted_a2_first_grand + $total_vcted_scnd_a2_grand;
     $a3_dashboard = $total_vcted_a3_first_grand + $total_vcted_scnd_a3_grand;
     $a4_dashboard = $total_vcted_a4_first_grand + $total_vcted_scnd_a4_grand;
+    $a5_dashboard = $total_vcted_a5_first_grand + $total_vcted_scnd_a5_grand;
+    $b1_dashboard = $total_vcted_b1_first_grand + $total_vcted_scnd_b1_grand;
+    $b2_dashboard = $total_vcted_b2_first_grand + $total_vcted_scnd_b2_grand;
+    $b3_dashboard = $total_vcted_b3_first_grand + $total_vcted_scnd_b3_grand;
+    $b4_dashboard = $total_vcted_b4_first_grand + $total_vcted_scnd_b4_grand;
+
     $percent_coverage_dashboard_first =  $total_p_cvrge_overall_frst;
     $percent_coverage_dashboard_second = $total_p_cvrge_overall_scnd;
-
 
     $total_c_rate_frst_grand = $total_vcted_first_overall / $total_vallocated_frst_grand * 100; //TOTAL CONSUMPTION RATE goods
     $total_c_rate_scnd_grand = $total_vcted_scnd_overall / $total_vallocated_scnd_grand * 100; //TOTAL CONSUMPTION RATE  2 goods
@@ -228,7 +301,6 @@
     $total_srs_overall_frst = $total_srs_svac_frst_grand + $total_srs_astra_frst_grand + $total_srs_sputnikv_frst_grand + $total_srs_pfizer_frst_grand; // TOTAL SERIOUS FIRST
     $total_srs_overall_scnd = $total_srs_svac_scnd_grand + $total_srs_astra_scnd_grand + $total_srs_sputnikv_scnd_grand + $total_srs_pfizer_scnd_grand; // TOTAL SERIOUS SECOND
 
-
     Session::put("sinovac_dashboard",$sinovac_dashboard);
     Session::put("astra_dashboard",$astra_dashboard);
     Session::put("sputnikv_dashboard",$sputnikv_dashboard);
@@ -237,6 +309,11 @@
     Session::put("a2_dashboard",$a2_dashboard);
     Session::put("a3_dashboard",$a3_dashboard);
     Session::put("a4_dashboard",$a4_dashboard);
+    Session::put("a5_dashboard",$a5_dashboard);
+    Session::put("b1_dashboard",$b1_dashboard);
+    Session::put("b2_dashboard",$b2_dashboard);
+    Session::put("b3_dashboard",$b3_dashboard);
+    Session::put("b4_dashboard",$b4_dashboard);
     Session::put("percent_coverage_dashboard_first",$percent_coverage_dashboard_first);
     Session::put("percent_coverage_dashboard_second",$percent_coverage_dashboard_second);
     Session::put("consumption_rate_dashboard_first",$consumption_rate_dashboard_first);
@@ -256,11 +333,12 @@
     <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer_grand" aria-expanded="false" aria-controls="collapse_pfizer_grandtotal">
         <b>Pfizer</b>
     </button>
+
 <table style="font-size: 8pt;" class="table" border="2">
     <tbody>
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-        <th colspan="5">
+        <th colspan="10">
             <center>
                 <a style="color:black"> Eligible Population</a>
             </center>
@@ -270,7 +348,7 @@
                 <a style="color:black"> Vaccine Allocated</a>
             </center>
         </th>
-        <th colspan="5"><center>Total Vaccinated </center></th>
+        <th colspan="10"><center>Total Vaccinated </center></th>
         <th>Mild</th>
         <th>Serious</th>
         <th>Deferred</th>
@@ -286,6 +364,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <th>1st</th>
         <th>2nd</th>
@@ -294,6 +377,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <td></td>
         <td></td>
@@ -327,7 +415,27 @@
         <td rowspan="2">
             {{ $total_e_pop_a4_grand }}
             <?php  Session::put('total_e_pop_svac_a4_excel',$total_e_pop_a4_grand);?>
-        </td> <!--TOTAL ELIPOP A2-->
+        </td> <!--TOTAL ELIPOP A4-->
+        <td rowspan="2">
+            {{ $total_e_pop_a5_grand }}
+            <?php  Session::put('total_e_pop_svac_a5_excel',$total_e_pop_a5_grand);?>
+        </td>  <!--TOTAL ELIPOP A5-->
+        <td rowspan="2">
+            {{ $total_e_pop_b1_grand }}
+            <?php  Session::put('total_e_pop_svac_b1_excel',$total_e_pop_b1_grand);?>
+        </td>  <!--TOTAL ELIPOP B1-->
+        <td rowspan="2">
+            {{ $total_e_pop_b2_grand }}
+            <?php  Session::put('total_e_pop_svac_b2_excel',$total_e_pop_b2_grand);?>
+        </td>
+        <td rowspan="2">
+            {{ $total_e_pop_b3_grand }}
+            <?php  Session::put('total_e_pop_svac_b3_excel',$total_e_pop_b3_grand);?>
+        </td>
+        <td rowspan="2">
+            {{ $total_e_pop_b4_grand }}
+            <?php  Session::put('total_e_pop_svac_b4_excel',$total_e_pop_b4_grand);?>
+        </td>
         <td rowspan="2">
             {{ $total_e_pop_grand}}
             <?php  Session::put('total_e_pop_svac_excel',$total_e_pop_grand);?>
@@ -368,6 +476,36 @@
                 <?php Session::put('total_svac_a4_frst_excel',$total_svac_a4_frst_grand);?>
             </span>
         </td>  <!-- VACCINATED (A4) SINOVAC_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_svac_a5_frst_grand }}
+                 <?php Session::put('total_svac_a5_frst_excel',$total_svac_a5_frst_grand);?>
+            </span>
+        </td>   <!-- VACCINATED (A5) SINOVAC_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_svac_b1_frst_grand }}
+                 <?php Session::put('total_svac_b1_frst_excel',$total_svac_b1_frst_grand);?>
+            </span>
+        </td>  <!-- VACCINATED (B1) SINOVAC_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_svac_b2_frst_grand }}
+                 <?php Session::put('total_svac_b2_frst_excel',$total_svac_b2_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B2) SINOVAC_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_svac_b3_frst_grand }}
+                 <?php Session::put('total_svac_b2_frst_excel',$total_svac_b3_frst_grand);?>
+            </span> <!-- VACCINATED (B3) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">
+                {{ $total_svac_b4_frst_grand }}
+                <?php Session::put('total_svac_b4_frst_excel',$total_svac_b4_frst_grand);?>
+            </span> <!-- VACCINATED (B4) SINOVAC_FIRST -->
+        </td>
         <td>
             <span class="label label-success">
                 {{ $total_vcted_svac_frst_grand }}
@@ -447,8 +585,38 @@
             <span class="label label-warning">
                 {{ $total_svac_a4_scnd_grand }}
                 <?php Session::put('total_svac_a4_scnd_excel',$total_svac_a4_scnd_grand);?>
-            </span> <!-- VACCINATED (A4) SINOVAC_SECOND -->
-        </td>
+            </span>
+        </td>   <!-- VACCINATED (A4) SINOVAC_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_svac_a5_scnd_grand }}
+                <?php Session::put('total_svac_a5_scnd_excel',$total_svac_a5_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (A5) SINOVAC_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_svac_b1_scnd_grand }}
+                <?php Session::put('total_svac_b1_scnd_excel',$total_svac_b1_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B1) SINOVAC_SECOND -->
+        <td>
+             <span class="label label-warning">
+                {{ $total_svac_b2_scnd_grand }}
+                 <?php Session::put('total_svac_b2_scnd_excel',$total_svac_b2_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B2) SINOVAC_SECOND -->
+        <td>
+             <span class="label label-warning">
+                {{ $total_svac_b3_scnd_grand }}
+                 <?php Session::put('total_svac_b3_scnd_excel',$total_svac_b3_scnd_grand);?>
+            </span>
+        </td>  <!-- VACCINATED (B3) SINOVAC_SECOND -->
+        <td>
+             <span class="label label-warning">
+                {{ $total_svac_b3_scnd_grand }}
+                 <?php Session::put('total_svac_b3_scnd_excel',$total_svac_b3_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B4) SINOVAC_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_svac_scnd_grand }}
@@ -528,6 +696,26 @@
             <?php Session::put('total_e_pop_astra_a4_excel',$total_e_pop_a4_grand);?>
         </td>  <!--TOTAL ELIPOP ASTRA A4-->
         <td rowspan="2">
+            {{ $total_e_pop_a5_grand }}
+            <?php Session::put('total_e_pop_astra_a5_excel',$total_e_pop_a5_grand);?>
+        </td> <!--TOTAL ELIPOP ASTRA A5-->
+        <td rowspan="2">
+            {{ $total_e_pop_b1_grand }}
+            <?php Session::put('total_e_pop_astra_b1_excel',$total_e_pop_b1_grand);?>
+        </td> <!--TOTAL ELIPOP ASTRA B1-->
+        <td rowspan="2">
+            {{ $total_e_pop_b2_grand }}
+            <?php Session::put('total_e_pop_astra_b2_excel',$total_e_pop_b2_grand);?>
+        </td> <!--TOTAL ELIPOP ASTRA B2-->
+        <td rowspan="2">
+            {{ $total_e_pop_b3_grand }}
+            <?php Session::put('total_e_pop_astra_b3_excel',$total_e_pop_b3_grand);?>
+        </td> <!--TOTAL ELIPOP ASTRA B3-->
+        <td rowspan="2">
+            {{ $total_e_pop_b4_grand }}
+            <?php Session::put('total_e_pop_astra_b4_excel',$total_e_pop_b4_grand);?>
+        </td>  <!--TOTAL ELIPOP ASTRA B4-->
+        <td rowspan="2">
             {{ $total_e_pop_grand }}
             <?php Session::put('total_e_pop_astra_excel',$total_e_pop_grand);?>
         </td> <!--TOTAL ELI POP ASTRA-->
@@ -567,6 +755,36 @@
                 <?php Session::put('total_astra_a4_frst_excel',$total_astra_a4_frst_grand);?>
             </span>
         </td> <!-- VACCINATED (A4) ASTRA_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_astra_a5_frst_grand }}
+                 <?php Session::put('total_astra_a5_frst_excel',$total_astra_a5_frst_grand);?>
+            </span>
+        </td>  <!-- VACCINATED (A5) ASTRA_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_astra_b1_frst_grand }}
+                 <?php Session::put('total_astra_b1_frst_excel',$total_astra_b1_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B1) ASTRA_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_astra_b2_frst_grand }}
+                 <?php Session::put('total_astra_b2_frst_excel',$total_astra_b2_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B2) ASTRA_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_astra_b3_frst_grand }}
+                 <?php Session::put('total_astra_b3_frst_excel',$total_astra_b3_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B3) ASTRA_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_astra_b4_frst_grand }}
+                 <?php Session::put('total_astra_b4_frst_excel',$total_astra_b4_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B4) ASTRA_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_vcted_astra_frst_grand }}
@@ -649,6 +867,36 @@
         </td>  <!-- VACCINATED (A4) ASTRA_SECOND -->
         <td>
             <span class="label label-warning">
+                {{ $total_astra_a5_scnd_grand }}
+                <?php Session::put('total_astra_a5_scnd_excel',$total_astra_a5_scnd_grand);?>
+            </span>
+        </td>  <!-- VACCINATED (A5) ASTRA_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_astra_b1_scnd_grand }}
+                <?php Session::put('total_astra_b1_scnd_excel',$total_astra_b1_scnd_grand);?>
+            </span> <!-- VACCINATED (B1) ASTRA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">
+                {{ $total_astra_b2_scnd_grand }}
+                <?php Session::put('total_astra_b2_scnd_excel',$total_astra_b2_scnd_grand);?>
+            </span> <!-- VACCINATED (B2) ASTRA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">
+                {{ $total_astra_b3_scnd_grand }}
+                <?php Session::put('total_astra_b3_scnd_excel',$total_astra_b3_scnd_grand);?>
+            </span> <!-- VACCINATED (B3) ASTRA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">
+                {{ $total_astra_b4_scnd_grand }}
+                <?php Session::put('total_astra_b4_scnd_excel',$total_astra_b4_scnd_grand);?>
+            </span> <!-- VACCINATED (B4) ASTRA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">
                 {{ $total_vcted_astra_scnd_grand }}
                 <?php Session::put('total_vcted_astra_second',$total_vcted_astra_scnd_grand);?>
             </span>
@@ -726,6 +974,26 @@
             <?php Session::put('total_e_pop_sputnikv_a4_excel',$total_e_pop_a4_grand);?>
         </td>  <!--TOTAL ELIPOP A4  SPUTNIKV-->
         <td rowspan="2">
+            {{ $total_e_pop_a5_grand }}
+            <?php Session::put('total_e_pop_sputnikv_a5_excel',$total_e_pop_a5_grand);?>
+        </td>  <!--TOTAL ELIPOP A5  SPUTNIKV-->
+        <td rowspan="2">
+            {{ $total_e_pop_b1_grand }}
+            <?php Session::put('total_e_pop_sputnikv_b1_excel',$total_e_pop_b1_grand);?>
+        </td> <!--TOTAL ELIPOP B1 SPUTNIKV-->
+        <td rowspan="2">
+            {{ $total_e_pop_b2_grand }}
+            <?php Session::put('total_e_pop_sputnikv_b2_excel',$total_e_pop_b2_grand);?>
+        </td>  <!--TOTAL ELIPOP B2 SPUTNIKV-->
+        <td rowspan="2">
+            {{ $total_e_pop_b3_grand }}
+            <?php Session::put('total_e_pop_sputnikv_b3_excel',$total_e_pop_b3_grand);?>
+        </td> <!--TOTAL ELIPOP B3 SPUTNIKV-->
+        <td rowspan="2">
+            {{ $total_e_pop_b4_grand }}
+            <?php Session::put('total_e_pop_sputnikv_b4_excel',$total_e_pop_b4_grand);?>
+        </td> <!--TOTAL ELIPOP B4 SPUTNIKV-->
+        <td rowspan="2">
             {{ $total_e_pop_grand }}
             <?php Session::put('total_e_pop_sputnikv_excel',$total_e_pop_grand);?>
         </td> <!--TOTAL ELI POP  SPUTNIKV-->
@@ -765,6 +1033,36 @@
                 <?php Session::put('total_sputnikv_a4_frst_excel',$total_sputnikv_a4_frst_grand);?>
             </span>
         </td> <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
+        <td>
+              <span class="label label-success">
+                {{ $total_sputnikv_a5_frst_grand }}
+                  <?php Session::put('total_sputnikv_a5_frst_excel',$total_sputnikv_a5_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (A5) SPUTNIKV_FIRST -->
+        <td>
+              <span class="label label-success">
+                {{ $total_sputnikv_b1_frst_grand }}
+                  <?php Session::put('total_sputnikv_b1_frst_excel',$total_sputnikv_b1_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B1) SPUTNIKV_FIRST -->
+        <td>
+              <span class="label label-success">
+                {{ $total_sputnikv_b2_frst_grand }}
+                  <?php Session::put('total_sputnikv_b2_frst_excel',$total_sputnikv_b2_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B2) SPUTNIKV_FIRST -->
+        <td>
+              <span class="label label-success">
+                {{ $total_sputnikv_b3_frst_grand }}
+                  <?php Session::put('total_sputnikv_b3_frst_excel',$total_sputnikv_b3_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B3) SPUTNIKV_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_sputnikv_b4_frst_grand }}
+                 <?php Session::put('total_sputnikv_b4_frst_excel',$total_sputnikv_b4_frst_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B4) SPUTNIKV_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_vcted_sputnikv_frst_grand }}
@@ -847,6 +1145,36 @@
         </td>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
         <td>
             <span class="label label-warning">
+                {{ $total_sputnikv_a5_scnd_grand }}
+                <?php Session::put('total_sputnikv_a5_scnd_excel',$total_sputnikv_a5_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (A5) SPUTNIKV_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_sputnikv_b1_scnd_grand }}
+                <?php Session::put('total_sputnikv_b1_scnd_excel',$total_sputnikv_b1_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B1) SPUTNIKV_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_sputnikv_b2_scnd_grand }}
+                <?php Session::put('total_sputnikv_b2_scnd_excel',$total_sputnikv_b2_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B2) SPUTNIKV_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_sputnikv_b3_scnd_grand }}
+                <?php Session::put('total_sputnikv_b3_scnd_excel',$total_sputnikv_b3_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B3) SPUTNIKV_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_sputnikv_b4_scnd_grand }}
+                <?php Session::put('total_sputnikv_b4_scnd_excel',$total_sputnikv_b4_scnd_grand);?>
+            </span>
+        </td> <!-- VACCINATED (B4) SPUTNIKV_SECOND -->
+        <td>
+            <span class="label label-warning">
                 {{ $total_vcted_sputnikv_scnd_grand }}
                 <?php Session::put('total_vcted_sputnikv_second_excel',$total_vcted_sputnikv_scnd_grand);?>
             </span>
@@ -914,19 +1242,39 @@
         <td rowspan="2">
             {{ $total_e_pop_a2_grand }}
             <?php Session::put('total_e_pop_pfizer_a2_excel',$total_e_pop_a2_grand );?>
-        </td>   <!--TOTAL ELIPOP A1-->
+        </td>   <!--TOTAL ELIPOP A2-->
         <td rowspan="2">
             {{ $total_e_pop_a3_grand }}
             <?php Session::put('total_e_pop_pfizer_a3_excel',$total_e_pop_a3_grand );?>
-        </td>  <!--TOTAL ELIPOP A1-->
+        </td>  <!--TOTAL ELIPOP A3-->
         <td rowspan="2">
             {{ $total_e_pop_a4_grand }}
             <?php Session::put('total_e_pop_pfizer_a4_excel',$total_e_pop_a4_grand );?>
-        </td><!--TOTAL ELIPOP A1-->
+        </td> <!--TOTAL ELIPOP A4-->
         <td rowspan="2">
-            {{ $total_e_pop_grand }}</td>
+            {{ $total_e_pop_a5_grand }}
+            <?php Session::put('total_e_pop_pfizer_a5_excel',$total_e_pop_a5_grand );?>
+        </td> <!--TOTAL ELIPOP A5-->
+        <td rowspan="2">
+            {{ $total_e_pop_b1_grand }}
+            <?php Session::put('total_e_pop_pfizer_b1_excel',$total_e_pop_b1_grand );?>
+        </td> <!--TOTAL ELIPOP B1-->
+        <td rowspan="2">
+            {{ $total_e_pop_b2_grand }}
+            <?php Session::put('total_e_pop_pfizer_b2_excel',$total_e_pop_b2_grand );?>
+        </td> <!--TOTAL ELIPOP B2-->
+        <td rowspan="2">
+            {{ $total_e_pop_b3_grand }}
+            <?php Session::put('total_e_pop_pfizer_b3_excel',$total_e_pop_b3_grand );?>
+        </td> <!--TOTAL ELIPOP B3-->
+        <td rowspan="2">
+            {{ $total_e_pop_b4_grand }}
+            <?php Session::put('total_e_pop_pfizer_b4_excel',$total_e_pop_b4_grand );?>
+        </td> <!--TOTAL ELIPOP B4-->
+        <td rowspan="2">
+            {{ $total_e_pop_grand }}
              <?php Session::put('total_e_pop_pfizer_excel',$total_e_pop_grand );?>
-        <!--//TOTAL ELI POP-->
+        </td><!--//TOTAL ELI POP-->
         <td rowspan="2" style="color:black">
             {{ $total_vallocated_pfizer_frst_grand }}
             <?php Session::put('total_vallocated_pfizer_frst_excel',$total_vallocated_pfizer_frst_grand );?>
@@ -943,160 +1291,220 @@
             <span class="label label-success">
                 {{ $total_pfizer_a1_frst_grand }}
                 <?php Session::put('total_pfizer_a1_frst_excel',$total_pfizer_a1_frst_grand );?>
-            </span>  <!-- VACCINATED (A1) PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A1) PFIZER_FIRST -->
         <td style="color:black">
             <span class="label label-success">
                 {{ $total_pfizer_a2_frst_grand }}
                 <?php Session::put('total_pfizer_a2_frst_excel',$total_pfizer_a2_frst_grand );?>
-            </span> <!-- VACCINATED (A2) PFIZER_FIRST -->
-        </td>
+            </span>
+        </td>  <!-- VACCINATED (A2) PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_pfizer_a3_frst_grand }}
                 <?php Session::put('total_pfizer_a3_frst_excel',$total_pfizer_a3_frst_grand );?>
-            </span> <!-- VACCINATED (A3) PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A3) PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_pfizer_a4_frst_grand }}
                 <?php Session::put('total_pfizer_a4_frst_excel',$total_pfizer_a4_frst_grand );?>
-            </span> <!-- VACCINATED (A4) PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A4) PFIZER_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_pfizer_a5_frst_grand }}
+                 <?php Session::put('total_pfizer_a5_frst_excel',$total_pfizer_a5_frst_grand );?>
+            </span>
+        </td> <!-- VACCINATED (A5) PFIZER_FIRST -->
+        <td>
+            <span class="label label-success">
+                {{ $total_pfizer_b1_frst_grand }}
+                <?php Session::put('total_pfizer_b1_frst_excel',$total_pfizer_b1_frst_grand );?>
+            </span>
+        </td> <!-- VACCINATED (B1) PFIZER_FIRST -->
+        <td>
+            <span class="label label-success">
+                {{ $total_pfizer_b2_frst_grand }}
+                <?php Session::put('total_pfizer_b2_frst_excel',$total_pfizer_b2_frst_grand );?>
+            </span>
+        </td>  <!-- VACCINATED (B2) PFIZER_FIRST -->
+        <td>
+            <span class="label label-success">
+                {{ $total_pfizer_b3_frst_grand }}
+                <?php Session::put('total_pfizer_b3_frst_excel',$total_pfizer_b3_frst_grand );?>
+            </span>
+        </td> <!-- VACCINATED (B3) PFIZER_FIRST -->
+        <td>
+             <span class="label label-success">
+                {{ $total_pfizer_b4_frst_grand }}
+                 <?php Session::put('total_pfizer_b4_frst_excel',$total_pfizer_b4_frst_grand );?>
+            </span>
+        </td> <!-- VACCINATED (B4) PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_vcted_pfizer_frst_grand }}
                 <?php Session::put('total_vcted_pfizer_frst_excel',$total_vcted_pfizer_frst_grand );?>
-            </span> <!-- TOTAL VACCINATED PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- TOTAL VACCINATED PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_mild_pfizer_frst_grand }}
                 <?php Session::put('total_mild_pfizer_frst_excel',$total_mild_pfizer_frst_grand );?>
-            </span> <!-- MILD PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- MILD PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_srs_pfizer_frst_grand }}
                 <?php Session::put('total_srs_pfizer_frst_excel',$total_srs_pfizer_frst_grand );?>
-            </span> <!-- SERIOUS PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- SERIOUS PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_dfrd_pfizer_frst_grand }}
                 <?php Session::put('total_dfrd_pfizer_frst_excel',$total_dfrd_pfizer_frst_grand );?>
-            </span> <!-- DEFERRED PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- DEFERRED PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_rfsd_pfizer_frst_grand }}
                 <?php Session::put('total_rfsd_pfizer_frst_excel',$total_rfsd_pfizer_frst_grand );?>
-            </span> <!-- REFUSED PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- REFUSED PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_wstge_pfizer_frst_grand }}
                 <?php Session::put('total_wstge_pfizer_frst_excel',$total_wstge_pfizer_frst_grand );?>
-            </span> <!-- WASTAGE PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- WASTAGE PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ number_format($total_p_cvrge_pfizer_frst_grand,2) }}%
                 <?php Session::put('total_p_cvrge_pfizer_frst_excel',number_format($total_p_cvrge_pfizer_frst_grand,2));?>
-            </span> <!-- PERCENT_COVERAGE PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- PERCENT_COVERAGE PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ number_format($total_c_rate_pfizer_frst_grand,2) }}%
                 <?php Session::put('total_c_rate_pfizer_frst_excel',number_format($total_c_rate_pfizer_frst_grand,2));?>
-            </span> <!-- CONSUMPTION RATE PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- CONSUMPTION RATE PFIZER_FIRST -->
         <td>
             <span class="label label-success">
                 {{ $total_r_unvcted_frst_pfizer_grand }}
                 <?php Session::put('total_r_unvcted_frst_pfizer_excel',$total_r_unvcted_frst_pfizer_grand );?>
-            </span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
-        </td>
+            </span>
+        </td> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
     </tr>
     <tr style="background-color: #8fe7fd">
         <td style="color: black;">
             <span class="label label-warning">
                 {{ $total_pfizer_a1_scnd_grand }}
                 <?php Session::put('total_pfizer_a1_scnd_excel',$total_pfizer_a1_scnd_grand );?>
-            </span>  <!-- VACCINATED (A1) PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A1) PFIZER_SECOND -->
         <td style="color:black;">
             <span class="label label-warning">
                 {{ $total_pfizer_a2_scnd_grand }}
                 <?php Session::put('total_pfizer_a2_scnd_excel',$total_pfizer_a2_scnd_grand );?>
-            </span>  <!-- VACCINATED (A2) PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A2) PFIZER_SECOND -->
         <td style="color:black;">
             <span class="label label-warning">
                 {{ $total_pfizer_a3_scnd_grand }}
                 <?php Session::put('total_pfizer_a3_scnd_excel',$total_pfizer_a3_scnd_grand );?>
-            </span>  <!-- VACCINATED (A3) PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A3) PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_pfizer_a4_scnd_grand }}
                 <?php Session::put('total_pfizer_a4_scnd_excel',$total_pfizer_a4_scnd_grand );?>
-            </span>  <!-- VACCINATED (A4) PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- VACCINATED (A4) PFIZER_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_pfizer_a5_scnd_grand }}
+                <?php Session::put('total_pfizer_a5_scnd_excel',$total_pfizer_a5_scnd_grand );?>
+            </span>
+        </td> <!-- VACCINATED (A5) PFIZER_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_pfizer_b1_scnd_grand }}
+                <?php Session::put('total_pfizer_b1_scnd_excel',$total_pfizer_b1_scnd_grand );?>
+            </span>
+        </td>  <!-- VACCINATED (B1) PFIZER_SECOND -->
+        <td>
+            <span class="label label-warning">
+                {{ $total_pfizer_b2_scnd_grand }}
+                <?php Session::put('total_pfizer_b2_scnd_excel',$total_pfizer_b2_scnd_grand );?>
+            </span>
+        </td>  <!-- VACCINATED (B2) PFIZER_SECOND -->
+        <td>
+             <span class="label label-warning">
+                {{ $total_pfizer_b3_scnd_grand }}
+                 <?php Session::put('total_pfizer_b3_scnd_excel',$total_pfizer_b3_scnd_grand );?>
+            </span>
+        </td>  <!-- VACCINATED (B3) PFIZER_SECOND -->
+        <td>
+             <span class="label label-warning">
+                {{ $total_pfizer_b4_scnd_grand }}
+                 <?php Session::put('total_pfizer_b4_scnd_excel',$total_pfizer_b4_scnd_grand );?>
+            </span>
+        </td>  <!-- VACCINATED (B4) PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_vcted_pfizer_scnd_grand }}
                 <?php Session::put('total_vcted_pfizer_second_excel',$total_vcted_pfizer_scnd_grand );?>
-            </span>  <!-- TOTAL VACCINATED PFIZER_SECOND -->
-        </td> <!-- 1-6 -->
+            </span>
+        </td> <!-- TOTAL VACCINATED PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_mild_pfizer_scnd_grand }}
                 <?php Session::put('total_mild_pfizer_scnd_excel',$total_mild_pfizer_scnd_grand );?>
-            </span>  <!-- MILD PFIZER_SECOND -->
-        </td>
+            </span>
+        </td>  <!-- MILD PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_srs_pfizer_scnd_grand }}
                 <?php Session::put('total_srs_pfizer_scnd_excel',$total_srs_pfizer_scnd_grand );?>
-            </span> <!-- SERIOUS PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- SERIOUS PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_dfrd_pfizer_scnd_grand }}
                 <?php Session::put('total_dfrd_pfizer_scnd_excel',$total_dfrd_pfizer_scnd_grand );?>
-            </span> <!-- DEFERRED PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- DEFERRED PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_rfsd_pfizer_scnd_grand }}
                 <?php Session::put('total_rfsd_pfizer_scnd_excel',$total_rfsd_pfizer_scnd_grand );?>
-            </span> <!-- REFUSED PFIZER_SECOND -->
-        </td>
+            </span>
+        </td>  <!-- REFUSED PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_wstge_pfizer_scnd_grand }}
                 <?php Session::put('total_wstge_pfizer_scnd_excel',$total_wstge_pfizer_scnd_grand );?>
-            </span> <!-- WASTAGE PFIZER_SECOND -->
-        </td>
+            </span>
+        </td>  <!-- WASTAGE PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ number_format($total_p_cvrge_pfizer_scnd_grand,2) }}%
                 <?php Session::put('total_p_cvrge_pfizer_scnd_excel',number_format($total_p_cvrge_pfizer_scnd_grand,2) );?>
-            </span> <!-- PERCENT COVERAGE PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- PERCENT COVERAGE PFIZER_SECOND -->
         <td>
             <span class="label label-warning">
                 {{ number_format($total_c_rate_pfizer_scnd_grand,2) }}%
                 <?php Session::put('total_c_rate_pfizer_scnd_excel',number_format($total_c_rate_pfizer_scnd_grand,2) );?>
-            </span> <!-- CONSUMPTION RATE PFIZER SECOND -->
-        </td>
+            </span>
+        </td> <!-- CONSUMPTION RATE PFIZER SECOND -->
         <td>
             <span class="label label-warning">
                 {{ $total_r_unvcted_scnd_pfizer_grand }}
                 <?php Session::put('total_r_unvcted_scnd_pfizer_excel',$total_r_unvcted_scnd_pfizer_grand );?>
-            </span> <!-- REMAINING UNVACCINATED PFIZER_SECOND -->
-        </td>
+            </span>
+        </td> <!-- CONSUMPTION RATE PFIZER SECOND -->
     </tr>
     </tbody>
 
@@ -1108,6 +1516,11 @@
         <td>{{ $total_e_pop_a2_grand }}</td> <!-- TOTAL A2 -->
         <td>{{ $total_e_pop_a3_grand }}</td> <!-- TOTAL A3 -->
         <td>{{ $total_e_pop_a4_grand }}</td> <!-- TOTAL A4 -->
+        <td>{{ $total_e_pop_a5_grand }}</td> <!-- TOTAL A5 -->
+        <td>{{ $total_e_pop_b1_grand }}</td> <!-- TOTAL B1 -->
+        <td>{{ $total_e_pop_b2_grand }}</td> <!-- TOTAL B2 -->
+        <td>{{ $total_e_pop_b3_grand }}</td> <!-- TOTAL B3 -->
+        <td>{{ $total_e_pop_b4_grand }}</td> <!-- TOTAL B4 -->
         <td>{{ $total_e_pop_grand }}</td> <!-- TOTAL E POP  -->
         <td>
             {{ $total_vallocated_frst_grand }}
@@ -1143,65 +1556,100 @@
             <b class="label label-success" style="margin-right: 5%">
                 {{$total_vcted_a4_first_grand }}
                 <?php Session::put('total_vcted_grand_a4_first_excel',$total_vcted_a4_first_grand );?>
-            </b> <!-- TOTAL VACCINATED (A4) -->
-        </td>
+            </b>
+        </td> <!-- TOTAL VACCINATED (A4) -->
+        <td>
+            <b class="label label-success" style="margin-right: 5%">
+                {{$total_vcted_a5_first_grand }}
+                <?php Session::put('total_vcted_grand_a5_first_excel',$total_vcted_a5_first_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED (A5) -->
+        <td>
+            <b class="label label-success" style="margin-right: 5%">
+                {{$total_vcted_b1_first_grand }}
+                <?php Session::put('total_vcted_grand_b1_first_excel',$total_vcted_b1_first_grand );?>
+            </b>
+        </td>  <!-- TOTAL VACCINATED (B1) -->
+        <td>
+            <b class="label label-success" style="margin-right: 5%">
+                {{$total_vcted_b2_first_grand }}
+                <?php Session::put('total_vcted_grand_b2_first_excel',$total_vcted_b2_first_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED (B2) -->
+        <td>
+            <b class="label label-success" style="margin-right: 5%">
+                {{$total_vcted_b3_first_grand }}
+                <?php Session::put('total_vcted_grand_b3_first_excel',$total_vcted_b3_first_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED (B3) -->
+        <td>
+            <b class="label label-success" style="margin-right: 5%">
+                {{$total_vcted_b4_first_grand }}
+                <?php Session::put('total_vcted_grand_b4_first_excel',$total_vcted_b4_first_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED (B4) -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_vcted_first_overall }}
                 <?php Session::put('total_vcted_overall_frst_excel',$total_vcted_first_overall );?>
-            </b>  <!-- TOTAL VACCINATED FIRST DOSE OVERALL-->
-        </td>
+            </b>
+        </td> <!-- TOTAL VACCINATED FIRST DOSE OVERALL-->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_mild_overall_frst }}
                 <?php Session::put('total_mild_overall_frst_excel',$total_mild_overall_frst );?>
-            </b>  <!--  TOTAL MILD-->
-        </td>
+            </b>
+        </td> <!--  TOTAL MILD-->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_srs_overall_frst }}
                 <?php Session::put('total_srs_overall_frst_excel',$total_srs_overall_frst );?>
-            </b>  <!-- TOTAL SERIOUS -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL SERIOUS -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_dfrd_overall_frst }}
                 <?php Session::put('total_dfrd_overall_frst_excel',$total_dfrd_overall_frst );?>
-            </b>  <!-- TOTAL DEFERRED -->
-        </td>
+            </b>
+        </td> <!-- TOTAL DEFERRED -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_rfsd_overall_frst }}
                 <?php Session::put('total_rfsd_overall_frst_excel',$total_rfsd_overall_frst );?>
-            </b>  <!-- TOTAL REFUSED -->
-        </td>
+            </b>
+        </td> <!-- TOTAL REFUSED -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_wstge_overall_first }}
                 <?php Session::put('total_wstge_overall_frst_excel',$total_wstge_overall_first );?>
-            </b>  <!-- TOTAL WASTAGE -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL WASTAGE -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ number_format($total_p_cvrge_overall_frst,2) }}%
                 <?php Session::put('total_p_cvrge_frst_excel',number_format($total_p_cvrge_overall_frst,2) );?>
-            </b>  <!-- PERCENT_COVERAGE_OVERALL_FIRST -->
-        </td>
+            </b>
+        </td> <!-- PERCENT_COVERAGE_OVERALL_FIRST -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ number_format($total_c_rate_frst_grand,2) }}%
                 <?php Session::put('total_c_rate_frst_excel',$total_c_rate_frst_grand );?>
-            </b>  <!-- TOTAL CONSUMPTION RATE -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL CONSUMPTION RATE -->
         <td>
             <b class="label label-success" style="margin-right: 5%">
                 {{ $total_r_unvcted_all_frst_grand }}
                 <?php Session::put('total_r_unvcted_all_frst_excel',$total_r_unvcted_all_frst_grand );?>
-            </b>  <!-- TOTAL REMAINUNG UNVACCINATED  -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL REMAINUNG UNVACCINATED  -->
     </tr>
     <tr>
         <td></td> <!-- 1-7 -->
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -1214,27 +1662,57 @@
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a1_grand }}
                 <?php Session::put('total_vcted_grand_a1_second_excel',$total_vcted_scnd_a1_grand );?>
-            </b> <!-- TOTAL VACCINATED SECOND DOSE A1 -->
-        </td>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE A1 -->
         <td>
 
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a2_grand }}
                 <?php Session::put('total_vcted_grand_a2_second_excel',$total_vcted_scnd_a2_grand );?>
-            </b> <!-- TOTAL VACCINATED SECOND DOSE A2 -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL VACCINATED SECOND DOSE A2 -->
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a3_grand }}
                 <?php Session::put('total_vcted_grand_a3_second_excel',$total_vcted_scnd_a3_grand );?>
-            </b> <!-- TOTAL VACCINATED SECOND DOSE A3 -->
-        </td>
+            </b>
+        </td>  <!-- TOTAL VACCINATED SECOND DOSE A3 -->
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_a4_grand }}
                 <?php Session::put('total_vcted_grand_a4_second_excel',$total_vcted_scnd_a4_grand );?>
-            </b> <!-- TOTAL VACCINATED SECOND DOSE A4-->
-        </td>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE A4-->
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">
+                {{ $total_vcted_scnd_a5_grand }}
+                <?php Session::put('total_vcted_grand_a5_second_excel',$total_vcted_scnd_a5_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE A5 -->
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">
+                {{ $total_vcted_scnd_b1_grand }}
+                <?php Session::put('total_vcted_grand_b1_second_excel',$total_vcted_scnd_b1_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE B1 -->
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">
+                {{ $total_vcted_scnd_b2_grand }}
+                <?php Session::put('total_vcted_grand_b2_second_excel',$total_vcted_scnd_b2_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE B2 -->
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">
+                {{ $total_vcted_scnd_b3_grand }}
+                <?php Session::put('total_vcted_grand_b3_second_excel',$total_vcted_scnd_b3_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE B3 -->
+        <td>
+            <b class="label label-warning" style="margin-right: 5%">
+                {{ $total_vcted_scnd_b4_grand }}
+                <?php Session::put('total_vcted_grand_b4_second_excel',$total_vcted_scnd_b4_grand );?>
+            </b>
+        </td> <!-- TOTAL VACCINATED SECOND DOSE B4 -->
         <td>
             <b class="label label-warning" style="margin-right: 5%">
                 {{ $total_vcted_scnd_overall }}</b>

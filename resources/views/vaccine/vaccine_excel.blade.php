@@ -4,7 +4,7 @@
     <tbody>
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
-        <th colspan="5">
+        <th colspan="10">
             <center>
                 <a style="color:black"> Eligible Population</a>
             </center>
@@ -14,7 +14,7 @@
                 <a style="color:black"> Vaccine Allocated</a>
             </center>
         </th>
-        <th colspan="5"><center>Total Vaccinated </center></th>
+        <th colspan="10"><center>Total Vaccinated </center></th>
         <th>Mild</th>
         <th>Serious</th>
         <th>Deferred</th>
@@ -30,6 +30,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <th>1st</th>
         <th>2nd</th>
@@ -38,6 +43,11 @@
         <th>A2</th>
         <th>A3</th>
         <th>A4</th>
+        <th>A5</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>B4</th>
         <th>Total</th>
         <td></td>
         <td></td>
@@ -60,8 +70,12 @@
         <td rowspan="2">{{ Session::get('total_e_pop_svac_a2_excel') }}</td><!-- A2 SINOVAC_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_svac_a3_excel') }}</td><!-- A3 SINOVAC_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_svac_a4_excel') }}</td><!-- A4 SINOVAC_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_svac_excel') }} <!-- TOTAL ELI POP SINOVAC_FIRST -->
-        </td>
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_a5_excel') }}</td><!-- A5 SINOVAC_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_b1_excel') }}</td><!-- B1 SINOVAC_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_b2_excel') }}</td><!-- B2 SINOVAC_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_b3_excel') }}</td><!-- B3 SINOVAC_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_b4_excel') }}</td><!-- B4 SINOVAC_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_svac_excel') }} </td> <!-- TOTAL ELI POP SINOVAC_FIRST -->
         <td rowspan="2">{{ Session::get('total_vallocated_svac_frst_excel') }} </td> <!-- VACCINE ALLOCATED (FD) SINOVAC_FIRST -->
         <td rowspan="2">{{ Session::get('total_vallocated_svac_scnd_excel') }} </td>  <!-- VACCINE ALLOCATED (SD) SINOVAC_FIRST -->
         <td rowspan="2"> {{ Session::get('total_vallocated_frst_svac_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED SINOVAC_FIRST -->
@@ -76,6 +90,21 @@
         </td>
         <td>
             <span class="label label-success">{{ Session::get('total_svac_a4_frst_excel') }}</span>  <!-- VACCINATED (A4) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_svac_a5_frst_excel') }}</span>  <!-- VACCINATED (A5) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_svac_b1_frst_excel') }}</span>  <!-- VACCINATED (B1) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_svac_b2_frst_excel') }}</span>  <!-- VACCINATED (B2) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_svac_b3_frst_excel') }}</span>  <!-- VACCINATED (B3) SINOVAC_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_svac_b4_frst_excel') }}</span>  <!-- VACCINATED (B4) SINOVAC_FIRST -->
         </td>
         <td>
             <span class="label label-success"> {{ Session::get('total_vcted_svac_frst_excel') }}</span>  <!-- TOTAL VACCINATED SINOVAC_FIRST -->
@@ -119,6 +148,21 @@
             <span class="label label-warning">{{ Session::get('total_svac_a4_scnd_excel') }}</span> <!-- VACCINATED (A4) SINOVAC_SECOND -->
         </td>
         <td>
+            <span class="label label-warning">{{ Session::get('total_svac_a5_scnd_excel') }}</span> <!-- VACCINATED (A5) SINOVAC_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_svac_b1_scnd_excel') }}</span> <!-- VACCINATED (B1) SINOVAC_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_svac_b2_scnd_excel') }}</span> <!-- VACCINATED (B2) SINOVAC_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_svac_b3_scnd_excel') }}</span> <!-- VACCINATED (B3) SINOVAC_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_svac_b4_scnd_excel') }}</span> <!-- VACCINATED (B4) SINOVAC_SECOND -->
+        </td>
+        <td>
             <span class="label label-warning">{{ Session::get('total_vcted_svac_second_excel') }}</span> <!-- TOTAL VACCINATED SINOVAC_SECOND -->
         </td> <!-- 1-4 -->
         <td>
@@ -154,8 +198,13 @@
         </td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a1_excel') }}</td>  <!-- A1 ASTRA_FIRST -->
         <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a2_excel') }}</td>  <!-- A2 ASTRA_FIRST-->
-        <td rowspan="2">{{ Session::get('total_e_pop_astra_a3_excel') }}</td>  <!-- A3 ASTRA_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_astra_a4_excel') }}</td>  <!-- A4 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a3_excel') }}</td>  <!-- A3 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a4_excel') }}</td>  <!-- A4 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a5_excel') }}</td>  <!-- A5 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_b1_excel') }}</td>  <!-- B1 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_b2_excel') }}</td>  <!-- B2 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_b3_excel') }}</td>  <!-- B3 ASTRA_FIRST -->
+        <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_b4_excel') }}</td>  <!-- B4 ASTRA_FIRST -->
         <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_excel') }} <!-- TOTAL E POP ASTRA_FIRST --></td>
         <td rowspan="2" style="color:black">{{ Session::get('total_vallocated_astra_frst_excel') }}</td> <!-- VACCINE_ALLOCATED (FD) ASTRA_FIRST-->
         <td rowspan="2" style="color:black">{{ Session::get('total_vallocated_astra_scnd_excel') }}</td>  <!-- VACCINE ALLOCATED (SD) ASTRA_FIRST -->
@@ -172,6 +221,9 @@
         <td>
             <span class="label label-success">{{ Session::get('total_astra_a4_frst_excel') }}</span> <!-- VACCINATED (A4) ASTRA_FIRST -->
         </td>
+
+        <!-- DIRI SA MI KUTOB!-->
+        
         <td>
             <span class="label label-success">{{ Session::get('total_vcted_astra_frst_excel') }}</span> <!-- TOTAL VACCINATED ASTRA_FIRST -->
         </td>

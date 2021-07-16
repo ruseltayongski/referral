@@ -13,10 +13,10 @@
         <label>Municipality Name:</label>
         <input type="text" class="form-control" value="@if(isset($muncity->description)){{ $muncity->description }}@endif" autofocus name="description" readonly>
     </div>
-    <div class="form-group">
+    {{--<div class="form-group">
         <label>Municipality Code:</label>
         <input type="text" class="form-control" value="@if(isset($muncity->muncity_code)){{ $muncity->muncity_code }}@endif" name="muncity_code" readonly>
-    </div>
+    </div>--}}
     <div class="form-group">
         <label style="margin-left: -3%;">Sinovac Allocated</label>
         <div class="row">
