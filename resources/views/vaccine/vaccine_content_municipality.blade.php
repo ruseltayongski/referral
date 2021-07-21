@@ -901,12 +901,17 @@
 
         function fetch_data(page)
         {
-            var province_id = "<?php echo $province_id ?>";
+            var province_id = "<?php echo $province_id; ?>";
             var muncity_id = "<?php echo $muncity_id; ?>";
             var date_start = "<?php echo $date_start; ?>";
             var date_end = "<?php echo $date_end; ?>";
-            var url = "<?php echo asset('vaccine/vaccinated/municipality/content'); ?>";
-            url = url+"?page="+page;
+            var date_range = "<?php echo date('m/d/Y',strtotime($date_start)).' - '.date('m/d/Y',strtotime($date_end)); ?>";
+            var typeof_vaccine_filter = "<?php echo $typeof_vaccine_filter; ?>";
+            var priority_filter = "<?php echo $priority_filter; ?>";
+            console.log(date_range);
+
+            var url = "<?php echo asset('vaccine/vaccinated/municipality/content/'); ?>";
+            url = url+"?typeof_vaccine_filter="+typeof_vaccine_filter+"&muncity_filter="+muncity_id+"&priority_filter="+priority_filter+"&date_range="+date_range+"&page="+page;
             var json = {
                 "_token" : "<?php echo csrf_token(); ?>",
                 "province_id" : province_id,

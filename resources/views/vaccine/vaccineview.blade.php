@@ -1914,6 +1914,7 @@
                 "muncity_id" : muncity_id,
                 "date_start" : date_start,
                 "date_end" : date_end,
+                "typeof_vaccine_filter" : "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
                 "pagination_table": "false",
                 //sinovac

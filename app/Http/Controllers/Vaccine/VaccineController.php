@@ -620,12 +620,18 @@ class VaccineController extends Controller
         $vaccine_accomplishment = $vaccine_accomplishment->orderBy('id','asc')
             ->paginate(8);
 
+
+
         $data = [
             "province_id" => $request->province_id,
             "muncity_id" => $request->muncity_id,
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
+            "date_range" => $request->dater_range,
+            "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
+            "priority_filter" => $request->priority_filter,
             "vaccine_accomplishment" => $vaccine_accomplishment,
+
 
             //sinovac
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
