@@ -294,103 +294,6 @@
         </td>
     </tr>
     </tbody>
-    <!-- SPUTNIKV -->
-    <tbody id="collapse_sputnikv_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #b1ffdb">
-        <td rowspan="2">
-
-        </td> <!-- 1-3 -->
-        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a1_excel') }}</td><!-- A1 SPUTNIKV_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a2_excel') }}</td><!-- A2 SPUTNIKV_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a3_excel') }}</td><!-- A3 SPUTNIKV_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a4_excel') }}</td><!-- A4 SPUTNIKV_FIRST -->
-        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_excel') }} <!-- TOTAL ELI POP SPUTNIKV_FIRST -->
-        </td>
-        <td rowspan="2">{{ Session::get('total_vallocated_sputnikv_frst_excel') }} </td> <!-- VACCINE ALLOCATED (FD) SPUTNIKV_FIRST -->
-        <td rowspan="2">{{ Session::get('total_vallocated_sputnikv_scnd_excel') }} </td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
-        <td rowspan="2"> {{ Session::get('total_vallocated_frst_sputnikv_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
-        <td>
-            <span class="label label-success">{{ Session::get('total_sputnikv_a1_frst_excel') }}</span>   <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_sputnikv_a2_frst_excel') }}</span>  <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_sputnikv_a3_frst_excel') }}</span>  <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_sputnikv_a4_frst_excel') }}</span>  <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_vcted_sputnikv_frst_excel') }}</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_mild_sputnikv_frst_excel') }}</span> <!-- MILD SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_srs_sputnikv_frst_excel') }}</span> <!-- SERIOUS SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_dfrd_sputnikv_frst_excel') }}</span> <!-- DEFERRED SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_rfsd_sputnikv_frst_excel') }}</span> <!-- REFUSED SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_wstge_sputnikv_frst_excel') }}</span> <!-- WASTAGE SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_p_cvrge_sputnikv_frst_excel') }}%</span> <!-- PERCENT_COVERAGE SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_c_rate_sputnikv_frst_excel') }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ Session::get('total_r_unvcted_frst_sputnikv_excel') }}</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
-        </td>
-    </tr>
-    <tr style="background-color: #b1ffdb">
-        <td style="color: black;">
-            <span class="label label-warning">{{ Session::get('total_sputnikv_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
-        </td>
-        <td style="color:black;">
-            <span class="label label-warning">{{ Session::get('total_sputnikv_a2_scnd_excel') }}</span>  <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_sputnikv_a3_scnd_excel') }}</span>  <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_sputnikv_a4_scnd_excel') }}</span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_vcted_sputnikv_second_excel') }}</span>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
-        </td> <!-- 1-6 -->
-        <td>
-            <span class="label label-warning">{{ Session::get('total_mild_sputnikv_scnd_excel') }}</span>  <!-- MILD SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_srs_sputnikv_scnd_excel') }}</span> <!-- SERIOUS SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_dfrd_sputnikv_scnd_excel') }}</span> <!-- DEFERRED SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_rfsd_sputnikv_scnd_excel') }}</span> <!-- REFUSED SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_wstge_sputnikv_scnd_excel') }}</span> <!-- WASTAGE SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_p_cvrge_sputnikv_scnd_excel') }}%</span> <!-- PERCENT_COVERAGE_SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_c_rate_sputnikv_scnd_excel') }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ Session::get('total_r_unvcted_scnd_sputnikv_excel') }}</span> <!-- REMAINING UNVACCINATED SPUTNIKV_SECOND -->
-        </td>
-    </tr>
-    </tbody>
 
     <!-- PFIZER -->
     <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
@@ -490,6 +393,297 @@
     </tr>
     </tbody>
 
+    <!-- SPUTNIKV -->
+    <tbody id="collapse_sputnikv_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tr style="background-color: #b1ffdb">
+        <td rowspan="2">
+
+        </td> <!-- 1-3 -->
+        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a1_excel') }}</td><!-- A1 SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a2_excel') }}</td><!-- A2 SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a3_excel') }}</td><!-- A3 SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a4_excel') }}</td><!-- A4 SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_excel') }} <!-- TOTAL ELI POP SPUTNIKV_FIRST -->
+        </td>
+        <td rowspan="2">{{ Session::get('total_vallocated_sputnikv_frst_excel') }} </td> <!-- VACCINE ALLOCATED (FD) SPUTNIKV_FIRST -->
+        <td rowspan="2">{{ Session::get('total_vallocated_sputnikv_scnd_excel') }} </td>  <!-- VACCINE ALLOCATED (SD) SPUTNIKV_FIRST -->
+        <td rowspan="2"> {{ Session::get('total_vallocated_frst_sputnikv_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV_FIRST -->
+        <td>
+            <span class="label label-success">{{ Session::get('total_sputnikv_a1_frst_excel') }}</span>   <!-- VACCINATED (A1) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_sputnikv_a2_frst_excel') }}</span>  <!-- VACCINATED (A2) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_sputnikv_a3_frst_excel') }}</span>  <!-- VACCINATED (A3) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_sputnikv_a4_frst_excel') }}</span>  <!-- VACCINATED (A4) SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_vcted_sputnikv_frst_excel') }}</span> <!-- TOTAL VACCINATED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_mild_sputnikv_frst_excel') }}</span> <!-- MILD SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_srs_sputnikv_frst_excel') }}</span> <!-- SERIOUS SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_dfrd_sputnikv_frst_excel') }}</span> <!-- DEFERRED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_rfsd_sputnikv_frst_excel') }}</span> <!-- REFUSED SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_wstge_sputnikv_frst_excel') }}</span> <!-- WASTAGE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_p_cvrge_sputnikv_frst_excel') }}%</span> <!-- PERCENT_COVERAGE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_c_rate_sputnikv_frst_excel') }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_r_unvcted_frst_sputnikv_excel') }}</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
+        </td>
+    </tr>
+    <tr style="background-color: #b1ffdb">
+        <td style="color: black;">
+            <span class="label label-warning">{{ Session::get('total_sputnikv_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">{{ Session::get('total_sputnikv_a2_scnd_excel') }}</span>  <!-- VACCINATED (A2) SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_sputnikv_a3_scnd_excel') }}</span>  <!-- VACCINATED (A3) SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_sputnikv_a4_scnd_excel') }}</span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_vcted_sputnikv_second_excel') }}</span>  <!-- TOTAL VACCINATED SPUTNIKV_SECOND -->
+        </td> <!-- 1-6 -->
+        <td>
+            <span class="label label-warning">{{ Session::get('total_mild_sputnikv_scnd_excel') }}</span>  <!-- MILD SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_srs_sputnikv_scnd_excel') }}</span> <!-- SERIOUS SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_dfrd_sputnikv_scnd_excel') }}</span> <!-- DEFERRED SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_rfsd_sputnikv_scnd_excel') }}</span> <!-- REFUSED SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_wstge_sputnikv_scnd_excel') }}</span> <!-- WASTAGE SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_p_cvrge_sputnikv_scnd_excel') }}%</span> <!-- PERCENT_COVERAGE_SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_c_rate_sputnikv_scnd_excel') }}%</span> <!-- CONSUMPTION RATE SPUTNIKV_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_r_unvcted_scnd_sputnikv_excel') }}</span> <!-- REMAINING UNVACCINATED SPUTNIKV_SECOND -->
+        </td>
+    </tr>
+    </tbody>
+    <!-- MODERNA -->
+    <tbody id="collapse_moderna_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tr style="background-color: #605ca8">
+        <td rowspan="2">
+
+        </td> <!-- 1-3 -->
+        <td rowspan="2">{{ Session::get('total_e_pop_moderna_a1_excel') }}</td><!-- A1 MODERNA_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_moderna_a2_excel') }}</td><!-- A2 MODERNA_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_moderna_a3_excel') }}</td><!-- A3 MODERNA_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_moderna_a4_excel') }}</td><!-- A4 MODERNA_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_moderna_excel') }} <!-- TOTAL ELI POP MODERNA_FIRST -->
+        </td>
+        <td rowspan="2">{{ Session::get('total_vallocated_moderna_frst_excel') }} </td> <!-- VACCINE ALLOCATED (FD) MODERNA_FIRST -->
+        <td rowspan="2">{{ Session::get('total_vallocated_moderna_scnd_excel') }} </td>  <!-- VACCINE ALLOCATED (SD) MODERNA_FIRST -->
+        <td rowspan="2"> {{ Session::get('total_vallocated_frst_moderna_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED MODERNA_FIRST -->
+        <td>
+            <span class="label label-success">{{ Session::get('total_moderna_a1_frst_excel') }}</span>   <!-- VACCINATED (A1) MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_moderna_a2_frst_excel') }}</span>  <!-- VACCINATED (A2) MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_moderna_a3_frst_excel') }}</span>  <!-- VACCINATED (A3) MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_moderna_a4_frst_excel') }}</span>  <!-- VACCINATED (A4) MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_vcted_moderna_frst_excel') }}</span> <!-- TOTAL VACCINATED MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_mild_moderna_frst_excel') }}</span> <!-- MILD MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_srs_moderna_frst_excel') }}</span> <!-- SERIOUS MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_dfrd_moderna_frst_excel') }}</span> <!-- DEFERRED MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_rfsd_moderna_frst_excel') }}</span> <!-- REFUSED MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_wstge_moderna_frst_excel') }}</span> <!-- WASTAGE MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_p_cvrge_moderna_frst_excel') }}%</span> <!-- PERCENT_COVERAGE MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_c_rate_moderna_frst_excel') }}%</span> <!-- CONSUMPTION RATE MODERNA_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_r_unvcted_frst_moderna_excel') }}</span> <!-- REMAINUNG UNVACCINATED MODERNA_FIRST -->
+        </td>
+    </tr>
+    <tr style="background-color: #605ca8">
+        <td style="color: black;">
+            <span class="label label-warning">{{ Session::get('total_moderna_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) MODERNA_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">{{ Session::get('total_moderna_a2_scnd_excel') }}</span>  <!-- VACCINATED (A2) MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_moderna_a3_scnd_excel') }}</span>  <!-- VACCINATED (A3) MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_moderna_a4_scnd_excel') }}</span>  <!-- VACCINATED (A4) MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_vcted_moderna_second_excel') }}</span>  <!-- TOTAL VACCINATED MODERNA_SECOND -->
+        </td> <!-- 1-6 -->
+        <td>
+            <span class="label label-warning">{{ Session::get('total_mild_moderna_scnd_excel') }}</span>  <!-- MILD MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_srs_moderna_scnd_excel') }}</span> <!-- SERIOUS MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_dfrd_moderna_scnd_excel') }}</span> <!-- DEFERRED MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_rfsd_moderna_scnd_excel') }}</span> <!-- REFUSED MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_wstge_moderna_scnd_excel') }}</span> <!-- WASTAGE MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_p_cvrge_moderna_scnd_excel') }}%</span> <!-- PERCENT_COVERAGE_MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_c_rate_moderna_scnd_excel') }}%</span> <!-- CONSUMPTION RATE MODERNA_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_r_unvcted_scnd_moderna_excel') }}</span> <!-- REMAINING UNVACCINATED MODERNA_SECOND -->
+        </td>
+    </tr>
+    </tbody>
+    <!-- JOHNSON -->
+    <tbody id="collapse_johnson_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tr style="background-color: #1d94ff">
+        <td rowspan="2">
+
+        </td> <!-- 1-3 -->
+        <td rowspan="2">{{ Session::get('total_e_pop_johnson_a1_excel') }}</td><!-- A1 JOHNSON_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_johnson_a2_excel') }}</td><!-- A2 JOHNSON_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_johnson_a3_excel') }}</td><!-- A3 JOHNSON_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_johnson_a4_excel') }}</td><!-- A4 JOHNSON_FIRST -->
+        <td rowspan="2">{{ Session::get('total_e_pop_johnson_excel') }} <!-- TOTAL ELI POP JOHNSON_FIRST -->
+        </td>
+        <td rowspan="2">{{ Session::get('total_vallocated_johnson_frst_excel') }} </td> <!-- VACCINE ALLOCATED (FD) JOHNSON_FIRST -->
+        <td rowspan="2">{{ Session::get('total_vallocated_johnson_scnd_excel') }} </td>  <!-- VACCINE ALLOCATED (SD) JOHNSON_FIRST -->
+        <td rowspan="2"> {{ Session::get('total_vallocated_frst_johnson_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED JOHNSON_FIRST -->
+        <td>
+            <span class="label label-success">{{ Session::get('total_johnson_a1_frst_excel') }}</span>   <!-- VACCINATED (A1) JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_johnson_a2_frst_excel') }}</span>  <!-- VACCINATED (A2) JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_johnson_a3_frst_excel') }}</span>  <!-- VACCINATED (A3) JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_johnson_a4_frst_excel') }}</span>  <!-- VACCINATED (A4) JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_vcted_johnson_frst_excel') }}</span> <!-- TOTAL VACCINATED JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_mild_johnson_frst_excel') }}</span> <!-- MILD JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_srs_johnson_frst_excel') }}</span> <!-- SERIOUS JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_dfrd_johnson_frst_excel') }}</span> <!-- DEFERRED JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_rfsd_johnson_frst_excel') }}</span> <!-- REFUSED JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_wstge_johnson_frst_excel') }}</span> <!-- WASTAGE JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_p_cvrge_johnson_frst_excel') }}%</span> <!-- PERCENT_COVERAGE JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_c_rate_johnson_frst_excel') }}%</span> <!-- CONSUMPTION RATE JOHNSON_FIRST -->
+        </td>
+        <td>
+            <span class="label label-success">{{ Session::get('total_r_unvcted_frst_johnson_excel') }}</span> <!-- REMAINUNG UNVACCINATED JOHNSON_FIRST -->
+        </td>
+    </tr>
+    <tr style="background-color: #1d94ff">
+        <td style="color: black;">
+            <span class="label label-warning">{{ Session::get('total_johnson_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) JOHNSON_SECOND -->
+        </td>
+        <td style="color:black;">
+            <span class="label label-warning">{{ Session::get('total_johnson_a2_scnd_excel') }}</span>  <!-- VACCINATED (A2) JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_johnson_a3_scnd_excel') }}</span>  <!-- VACCINATED (A3) JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_johnson_a4_scnd_excel') }}</span>  <!-- VACCINATED (A4) JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_vcted_johnson_second_excel') }}</span>  <!-- TOTAL VACCINATED JOHNSON_SECOND -->
+        </td> <!-- 1-6 -->
+        <td>
+            <span class="label label-warning">{{ Session::get('total_mild_johnson_scnd_excel') }}</span>  <!-- MILD JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_srs_johnson_scnd_excel') }}</span> <!-- SERIOUS JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_dfrd_johnson_scnd_excel') }}</span> <!-- DEFERRED JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_rfsd_johnson_scnd_excel') }}</span> <!-- REFUSED JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_wstge_johnson_scnd_excel') }}</span> <!-- WASTAGE JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_p_cvrge_johnson_scnd_excel') }}%</span> <!-- PERCENT_COVERAGE_JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_c_rate_johnson_scnd_excel') }}%</span> <!-- CONSUMPTION RATE JOHNSON_SECOND -->
+        </td>
+        <td>
+            <span class="label label-warning">{{ Session::get('total_r_unvcted_scnd_johnson_excel') }}</span> <!-- REMAINING UNVACCINATED JOHNSON_SECOND -->
+        </td>
+    </tr>
+    </tbody>
 
     <tbody>
     <tr>
