@@ -229,7 +229,9 @@
                             <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
                             <li><a href="{{ url('admin/statistics/incoming') }}"><i class="fa fa-certificate"></i>Statistics Report Incoming</a></li>
                             <li><a href="{{ url('admin/statistics/outgoing') }}"><i class="fa fa-certificate"></i>Statistics Report Outgoing</a></li>
+                            <!--
                             <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
+                            -->
                             <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                         </ul>
                     </li>
@@ -285,7 +287,9 @@
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
                         <li><a href="{{ url('admin/statistics/incoming') }}"><i class="fa fa-certificate"></i>Statistics Report Incoming</a></li>
                         <li><a href="{{ url('admin/statistics/outgoing') }}"><i class="fa fa-certificate"></i>Statistics Report Outgoing</a></li>
+                        <!--
                         <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
+                        -->
                         <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                     </ul>
                 </li>
@@ -318,7 +322,9 @@
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
                         <li><a href="{{ url('admin/statistics/incoming') }}"><i class="fa fa-certificate"></i>Statistics Report Incoming</a></li>
                         <li><a href="{{ url('admin/statistics/outgoing') }}"><i class="fa fa-certificate"></i>Statistics Report Outgoing</a></li>
+                        <!--
                         <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
+                        -->
                         <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                     <!--
                 <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
@@ -373,7 +379,9 @@
                         <li><a href="{{ url('admin/report/consolidated/incomingv2') }}"><i class="fa fa-file-archive-o"></i>Consolidated</a></li>
                         <li><a href="{{ url('admin/statistics/incoming') }}"><i class="fa fa-certificate"></i>Statistics Report Incoming</a></li>
                         <li><a href="{{ url('admin/statistics/outgoing') }}"><i class="fa fa-certificate"></i>Statistics Report Outgoing</a></li>
+                        <!--
                         <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
+                        -->
                         <li><a href="{{ url('admin/average/user_online') }}"><i class="fa fa-certificate"></i>Average User's Online</a></li>
                     <!--
                 <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>

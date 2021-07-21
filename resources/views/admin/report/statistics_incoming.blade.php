@@ -24,7 +24,8 @@
             <div class="box-body">
                 @if(count($data) > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered table-fixed-header">
+                            <thead class='header'>
                             <tr class="bg-black">
                                 <th></th>
                                 <th>Facility Name</th>
@@ -36,6 +37,7 @@
                                 <th>Seen only</th>
                                 <th>Not Seen</th>
                             </tr>
+                            </thead>
                             <?php
                             $count = 0;
                             ?>
@@ -77,7 +79,11 @@
                                         <span class="text-blue" style="font-size: 15pt;">
                                             {{ $row->cancelled }}
                                         </span><br><br></td>
-                                    <td>pending</td>
+                                    <td>
+                                        <span class="text-blue" style="font-size: 15pt;">
+                                            pending
+                                        </span><br><br>
+                                    </td>
                                     <?php
                                         $seen_only = $row->seen_total - $row->accepted - $row->redirected;
                                         $seen_only = $seen_only <= 0 ? 0 : $seen_only;
@@ -89,7 +95,7 @@
                                         $not_seen = $row->incoming - $row->seen_total;
                                     ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen > 0 ? $not_seen : 0 }}</span><br><br>
                                     </td>
                                 </tr>
                             @endforeach
@@ -114,6 +120,9 @@
     <script>
         //Date range picker
         $('#consolidate_date_range').daterangepicker();
+        $(document).ready(function(){
+            $('.table-fixed-header').fixedHeader();
+        });
     </script>
 @endsection
 
