@@ -1,3 +1,4 @@
+
 <table class="table" style="font-size: 8pt">
     <thead class="bg-gray">
     <tr>
@@ -787,7 +788,7 @@
     <div class="col-md-6">
         <div class="pull-right">
             <button type="button" class="btn btn-default btn-md" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-success btn-md" onclick="javascript=this.disabled = true; form.submit();"><i class="fa fa-send"></i> Submit</button>
+            <button type="submit" class="btn btn-success btn-md" onclick="javascript=this.disabled = true; form.submit(); loadPage();"><i class="fa fa-send"></i> Submit</button>
         </div>
     </div>
 </div>

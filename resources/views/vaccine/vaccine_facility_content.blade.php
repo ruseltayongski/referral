@@ -905,8 +905,15 @@
             var facility_id = "<?php echo $facility_id; ?>";
             var date_start = "<?php echo $date_start; ?>";
             var date_end = "<?php echo $date_end; ?>";
+            var date_range = "<?php echo date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) ?>";
+            var typeof_vaccine_filter = "<?php echo $typeof_vaccine_filter; ?>";
+            var priority_filter = "<?php echo $priority_filter; ?>";
+
+            console.log(priority_filter);
             var url = "<?php echo asset('vaccine/facility_content'); ?>";
-            url = url+"?page="+page;
+            url = url+"?&typeof_vaccine_filter="+typeof_vaccine_filter+"&muncity_filter="+facility_id+"&priority_filter="+priority_filter+"&date_range="+date_range+"&page="+page;
+
+
             var json = {
                 "_token" : "<?php echo csrf_token(); ?>",
                 "facility_id" : facility_id,
