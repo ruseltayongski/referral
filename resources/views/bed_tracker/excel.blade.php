@@ -1,6 +1,3 @@
-<!-- Bootstrap core CSS -->
-<link href="{{ asset('resources/assets/css/bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('resources/assets/css/bootstrap-theme.min.css') }}" rel="stylesheet">
 <section class="content-area">
     <div style="font-size: 6pt;" class="table-responsive">
         <table class="table table-striped table-fixed-header" border="1">
