@@ -1,17 +1,4 @@
 
-{{--<div class="col-md-6">
-    <div class="col-md-4">
-        <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
-    </div>
-    <div class="col-md-8">
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
-            </span>
-    </div>
-</div>
-<br>
-<br>
-<br>--}}
 <table class="table" style="font-size: 8pt">
     <thead class="bg-gray">
     <tr>

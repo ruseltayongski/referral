@@ -908,7 +908,6 @@
             var date_range = "<?php echo date('m/d/Y',strtotime($date_start)).' - '.date('m/d/Y',strtotime($date_end)); ?>";
             var typeof_vaccine_filter = "<?php echo $typeof_vaccine_filter; ?>";
             var priority_filter = "<?php echo $priority_filter; ?>";
-            console.log(date_range);
 
             var url = "<?php echo asset('vaccine/vaccinated/municipality/content/'); ?>";
             url = url+"?typeof_vaccine_filter="+typeof_vaccine_filter+"&muncity_filter="+muncity_id+"&priority_filter="+priority_filter+"&date_range="+date_range+"&page="+page;

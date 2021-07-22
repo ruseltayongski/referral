@@ -552,6 +552,8 @@ class VaccineController extends Controller
             ->orderBy("name","asc")
             ->paginate(10);
 
+
+
         return view('vaccine.vaccine_facility',[
             'title' => 'List of Facility',
             'province_name' => "Cebu",
@@ -559,11 +561,11 @@ class VaccineController extends Controller
             'data' => $this->data_facility,
             'date_start' => $date_start,
             'date_end' => $date_end,
-            'tri_city' => $tri_city,
-            "facility" => $facility,
+            'typeof_vaccine_filter' => $request->typeof_vaccine_filter,
             'muncity_filter' => $request->muncity_filter,
             'priority_filter' => $request->priority_filter,
-            "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
+            'tri_city' => $tri_city,
+            "facility" => $facility,
             'a1_target_facility'  =>  $this->a1_target_facility,
             'a2_target_facility'  =>  $this->a2_target_facility,
             'a3_target_facility'  =>  $this->a3_target_facility,
@@ -627,12 +629,10 @@ class VaccineController extends Controller
             "muncity_id" => $request->muncity_id,
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
-            "date_range" => $request->dater_range,
+            "date_range" => $request->date_range,
             "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
             "priority_filter" => $request->priority_filter,
             "vaccine_accomplishment" => $vaccine_accomplishment,
-
-
             //sinovac
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
@@ -916,6 +916,9 @@ class VaccineController extends Controller
             "province_id" => Facility::find($request->facility_id)->province,
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
+            "date_range" => $request->date_range,
+            "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
+            "priority_filter" => $request->priority_filter,
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
             "total_epop_svac_a3" => $request->total_epop_svac_a3,
