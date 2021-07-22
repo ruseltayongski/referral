@@ -1,6 +1,3 @@
-<!-- Bootstrap core CSS -->
-<link href="{{ asset('resources/assets/css/bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('resources/assets/css/bootstrap-theme.min.css') }}" rel="stylesheet">
 <section class="content-area">
     <div style="font-size: 6pt;" class="table-responsive">
         <table class="table table-striped table-fixed-header" border="1">
@@ -89,15 +86,7 @@
                         <span style="color: black !important;font-size: 10pt;">{{ $row->icu_covid_occupied ? $row->icu_covid_occupied : 0 }}</span>
                     </td>
                     <td>
-                        <span class="htmlHigh">
-                            <span class="tooltip-ex">
-                                <span style="color: black !important;font-size: 10pt;">{{ $row->beds_covid_vacant ? $row->beds_covid_vacant : 0 }}</span>
-                                <span class="tooltip-ex-text">
-                                    COVID BEDS<br>
-                                    (COVID Beds) Vacant
-                                </span>
-                            </span>
-                        </span>
+                        <span style="color: black !important;font-size: 10pt;">{{ $row->beds_covid_vacant ? $row->beds_covid_vacant : 0 }}</span>
                     </td>
                     <td>
                         <span style="color: black !important;font-size: 10pt;">{{ $row->beds_covid_occupied ? $row->beds_covid_occupied : 0 }}</span>
