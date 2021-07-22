@@ -152,6 +152,7 @@ class BedTrackerCtrl extends Controller
             $facility = $facility->where("id",$facility_select);
 
         $facility = $facility->get();
+        Session::put('bed_facility',$facility);
 
         $province = Province::get();
 
@@ -171,6 +172,14 @@ class BedTrackerCtrl extends Controller
                 })
                 ->orderBy("name","asc")
                 ->get();
+    }
+
+    public function bedExport(){
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment;filename=bed_export.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        return view('bed_tracker.excel');
     }
 
 }

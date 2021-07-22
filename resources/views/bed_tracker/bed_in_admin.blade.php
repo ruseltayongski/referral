@@ -49,6 +49,7 @@
                     <div class="col-md-4">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-success"><i class="fa fa-filter" onclick="loadPage()"></i> Filter</button>
+                            <a href="{{ asset('bed_export') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                         </span>
                     </div>
@@ -444,9 +445,6 @@
     </script>
 
     <script>
-        $("#container").removeClass("container");
-        $("#container").addClass("container-fluid");
-
         var timeDisplay = document.getElementById("time");
         function refreshTime() {
             var dateString = new Date().toLocaleString("en-US");

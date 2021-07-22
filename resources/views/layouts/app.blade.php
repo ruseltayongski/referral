@@ -475,7 +475,7 @@
         <div class="clearfix"></div>
     </div> <!-- /container -->
 @else
-    <div class="{{ in_array(Request::segments()[0], array('vaccine'), true) ? 'container-fluid' : 'container' }}" id="container">
+    <div class="{{ in_array(Request::segments()[0], array('vaccine','bed_admin'), true) ? 'container-fluid' : 'container' }}" id="container">
         <div class="loading"></div>
         <div class="row">
             @yield('content')
