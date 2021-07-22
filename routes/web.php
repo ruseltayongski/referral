@@ -371,7 +371,7 @@ Route::match(['GET','POST'],"online/facility","admin\ReportCtrl@onlineFacility")
 
 //offline facility
 Route::match(['GET','POST'],"offline/facility","admin\ReportCtrl@offlineFacility");
-Route::match(['GET','POST'],"weekly/report","admin\ReportCtrl@weeklyReport");
+Route::match(['GET','POST'],"weekly/report/{province_id}","admin\ReportCtrl@weeklyReport");
 Route::post('offline/facility/remark','Monitoring\MonitoringCtrl@offlineRemarkBody');
 Route::post('offline/facility/remark/add','Monitoring\MonitoringCtrl@offlineRemarkAdd');
 

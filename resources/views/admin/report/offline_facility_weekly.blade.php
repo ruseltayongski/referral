@@ -91,7 +91,7 @@
                                 </tr>
                             </thead>
                             <?php
-                                $province = [];
+                                $province_flag = false;
                             ?>
                             @foreach($facility as $row)
                                 <?php
@@ -100,11 +100,11 @@
                                 $offline_count = 0;
                                 $went_minutes_30 = 0;
                                 ?>
-                                @if(!isset($province[$row->province]))
-                                    <?php $province[$row->province] = true; ?>
+                                @if(!$province_flag)
+                                    <?php $province_flag = true; ?>
                                     <tr>
                                         <td colspan="9">
-                                            <strong class="text-info" style="font-size: 20pt;">{{ $row->province }}</strong>
+                                            <strong class="text-info" style="font-size: 20pt;">{{ $province }} Province</strong>
                                         </td>
                                     </tr>
                                 @endif
@@ -179,8 +179,6 @@
 
 @section('js')
     <script>
-        $("#container").removeClass("container");
-        $("#container").addClass("container-fluid");
         $(document).ready(function(){
             $('.table-fixed-header').fixedHeader();
         });
