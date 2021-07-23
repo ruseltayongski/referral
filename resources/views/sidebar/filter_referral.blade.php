@@ -26,7 +26,7 @@
                 <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $keyword }}" id="keyword" name="search"/>
             </div>
             <div class="form-group">
-                <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date" class="form-control" />
+                <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date_range" class="form-control" />
             </div>
             <div class="form-group">
                 <select class="form-control select2" name="facility_filter" id="facility">

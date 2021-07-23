@@ -37,7 +37,7 @@ class ReferralCtrl extends Controller
         $fac = '';
         $option = '';
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfYear()->format('m/d/Y');
+        $end = Carbon::now()->endOfMonth()->format('m/d/Y');
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.*',
@@ -77,9 +77,9 @@ class ReferralCtrl extends Controller
             $data = $data->where('tracking.referred_from',$fac);
         }
 
-        if($request->date)
+        if($request->date_range)
         {
-            $date = $request->date;
+            $date = $request->date_range;
             $range = explode('-',str_replace(' ', '', $date));
             $start = $range[0];
             $end = $range[1];
@@ -368,12 +368,12 @@ class ReferralCtrl extends Controller
         ParamCtrl::lastLogin();
         $search = $request->search;
         $option_filter = $request->option_filter;
-        $date = $request->date;
+        $date = $request->date_range;
         $facility_filter = $request->facility_filter;
         $department_filter = $request->department_filter;
 
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfYear()->format('m/d/Y');
+        $end = Carbon::now()->endOfMonth()->format('m/d/Y');
 
         if($request->referredCode){
             ParamCtrl::lastLogin();
