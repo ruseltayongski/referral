@@ -81,12 +81,12 @@
                                         </span><br><br></td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;">
-                                            pending
+                                            {{ $row->transferred }}
                                         </span><br><br>
                                     </td>
                                     <?php
-                                        $seen_only = $row->seen_total - $row->accepted - $row->redirected;
-                                        $seen_only = $seen_only <= 0 ? 0 : $seen_only;
+                                        $seen_only = $row->seen_total - $row->accepted - $row->redirected - $row->cancelled - $row->transferred;
+                                        //$seen_only = $seen_only <= 0 ? 0 : $seen_only;
                                     ?>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $seen_only }}</span><br><br>
@@ -95,7 +95,7 @@
                                         $not_seen = $row->incoming - $row->seen_total;
                                     ?>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen > 0 ? $not_seen : 0 }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
                                     </td>
                                 </tr>
                             @endforeach
