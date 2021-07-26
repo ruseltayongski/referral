@@ -39,7 +39,8 @@ if(!$dateReportOnline)
             <div class="box-body">
                 @if(count($data) > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered">
+                        <table class="table table-striped table-hover table-bordered table-fixed-header">
+                            <thead class='header'>
                             <tr class="bg-black">
                                 <th>Facility</th>
                                 <th>Name of User</th>
@@ -48,6 +49,7 @@ if(!$dateReportOnline)
                                 <th>Status</th>
                                 <th>Login</th>
                             </tr>
+                            </thead>
                             <?php
                                 $h = 0;
                                 $count = 0;
@@ -108,8 +110,11 @@ if(!$dateReportOnline)
 
     <script>
         <?php
-        $date = date('m/d/Y',strtotime($dateReportOnline));
+            $date = date('m/d/Y',strtotime($dateReportOnline));
         ?>
+        $(document).ready(function(){
+            $('.table-fixed-header').fixedHeader();
+        });
         $('#daterange').daterangepicker({
             "singleDatePicker": true,
             "startDate": "{{ $date }}",
