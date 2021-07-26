@@ -43,7 +43,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h1>{{ $title }}</h1>
-                <form action="{{ asset('weekly/report') }}" method="POST" class="form-inline">
+                <form action="{{ asset('weekly/report').'/'.$province_id }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group-sm">
                         <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" placeholder="Filter your date here..." id="consolidate_date_range">

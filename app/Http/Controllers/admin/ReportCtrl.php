@@ -187,7 +187,8 @@ class ReportCtrl extends Controller
             'generate_weeks' => $generate_weeks,
             'date_start' => $date_start,
             'date_end' => $date_end,
-            "province" => Province::find($province_id)->description
+            "province" => Province::find($province_id)->description,
+            "province_id" => $province_id
         ]);
     }
 
