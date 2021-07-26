@@ -20,7 +20,7 @@
         <thead>
         <tr style="background-color: #fbe4d5">
             <th><b style="font-size: 10pt">Province</b></th>
-            <th colspan="10"><b style="font-size: 10pt">Vaccine Allocation</b></th>
+            <th colspan="14"><b style="font-size: 10pt">Vaccine Allocation</b></th>
             <th colspan="1"><b style="font-size: 10pt">Eligible Population {{ $priority_set }}</b></th>
             <th colspan="10"><b style="font-size: 10pt">Vaccinated</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
@@ -37,10 +37,14 @@
             <td>2nd Dose Sinovac</td>
             <td>1st Dose AZ</td>
             <td>2nd Dose AZ</td>
-            <td>1st Dose Sputnikv</td>
-            <td>2nd Dose Sputnikv</td>
             <td>1st Dose Pfizer</td>
             <td>2nd Dose Pfizer</td>
+            <td>1st Dose Sputnikv</td>
+            <td>2nd Dose Sputnikv</td>
+            <td>1st Dose Moderna</td>
+            <td>2nd Dose Moderna</td>
+            <td>1st Dose Jansen</td>
+            <td>2nd Dose Jansen</td>
             <td><b>(1st Dose Total)</b></td>
             <td><b>(2nd Dose Total)</b></td>
             <td></td>
@@ -48,10 +52,10 @@
             <td>2nd Dose Sinovac</td>
             <td>1st Dose AZ</td>
             <td>2nd Dose AZ</td>
-            <td>1st Dose Sputnikv</td>
-            <td>2nd Dose Sputnikv</td>
             <td>1st Dose Pfizer</td>
             <td>2nd Dose Pfizer</td>
+            <td>1st Dose Sputnikv</td>
+            <td>2nd Dose Sputnikv</td>
             <td><b>(1st Dose Total)</b></td>
             <td><b>(2nd Dose Total)</b></td>
             <td>1st Dose</td>
@@ -60,28 +64,28 @@
             <td>2nd Dose</td>
             <td>Sinovac</td>
             <td>Astra</td>
-            <td>Sputnikv</td>
             <td>Pfizer</td>
+            <td>Sputnikv</td>
             <td><b>(Total Wastage)</b></td>
             <td>Sinovac</td>
             <td>Astra</td>
-            <td>Sputnikv</td>
             <td>Pfizer</td>
+            <td>Sputnikv</td>
             <td><b>(Total Percent Coverage)</b></td>
             <td>Sinovac</td>
             <td>Astra</td>
-            <td>Sputnikv</td>
             <td>Pfizer</td>
+            <td>Sputnikv</td>
             <td><b>(Total Percent Coverage)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
-            <td>Sputnikv</td>
             <td>Pfizer</td>
+            <td>Sputnikv</td>
             <td><b>(Total Consumption Rate)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
-            <td>Sputnikv</td>
             <td>Pfizer</td>
+            <td>Sputnikv</td>
             <td><b>(Total Consumption Rate)</b></td>
         </tr>
         <tr style="background-color: #e2efd9">
@@ -90,10 +94,14 @@
             <td>{{ $sinovac_region_second }}</td> <!-- VACCINE ALLOCATED SINOVAC REGION SECOND -->
             <td>{{ $astra_region_first }}</td> <!-- VACCINE ALLOCATED ASTRA REGION FIRST -->
             <td>{{ $astra_region_second }}</td> <!-- VACCINE ALLOCATED ASTRA REGION SECOND -->
-            <td>{{ $sputnikv_region_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV REGION FIRST -->
-            <td>{{ $sputnikv_region_second }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV REGION SECOND -->
             <td>{{ $pfizer_region_first }}</td> <!-- VACCINE ALLOCATED PFIZER REGION FIRST -->
             <td>{{ $pfizer_region_second }}</td> <!-- VACCINE ALLOCATED PFIZER REGION SECOND -->
+            <td>{{ $sputnikv_region_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV REGION FIRST -->
+            <td>{{ $sputnikv_region_second }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV REGION SECOND -->
+            <td>{{ $moderna_region_first }}</td> <!-- VACCINE ALLOCATED MODERNA REGION FIRST -->
+            <td>{{ $moderna_region_second }}</td>  <!-- VACCINE ALLOCATED MODERNA REGION SECOND -->
+            <td>{{ $johnson_region_first }}</td> <!-- VACCINE ALLOCATED JOHNSON REGION FIRST -->
+            <td>{{ $johnson_region_second }}</td> <!-- VACCINE ALLOCATED JOHNSON REGION SECOND -->
             <td>{{ $total_region_first }}</td> <!-- VACCINE ALLOCATED TOTAL REGION FIRST -->
             <td>{{ $total_region_second }}</td> <!-- VACCINE ALLOCATED TOTAL REGION SECOND -->
             <td>{{ $total_elipop_region }}</td> <!-- TOTAL ELIGBLE_POP REGION -->
@@ -143,10 +151,14 @@
             <td>{{ $sinovac_bohol_second }}</td> <!-- VACCINE ALLOCATED SINOVAC BOHOL_SECOND -->
             <td>{{ $astra_bohol_first }}</td>  <!-- VACCINE ALLOCATED ASTRA BOHOL_FIRST -->
             <td>{{ $astra_bohol_second }}</td> <!-- VACCINE ALLOCATED ASTRA BOHOL_SECOND -->
-            <td>{{ $sputnikv_bohol_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV BOHOL FIRST -->
-            <td>{{ $sputnikv_bohol_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV BOHOL SECOND -->
             <td>{{ $pfizer_bohol_first }}</td>  <!-- VACCINE ALLOCATED PFIZER BOHOL FIRST -->
             <td>{{ $pfizer_bohol_second }}</td>  <!-- VACCINE ALLOCATED PFIZER BOHOL SECOND -->
+            <td>{{ $sputnikv_bohol_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV BOHOL FIRST -->
+            <td>{{ $sputnikv_bohol_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV BOHOL SECOND -->
+            <td>{{ $moderna_bohol_first }}</td>  <!-- VACCINE ALLOCATED MODERNA BOHOL FIRST -->
+            <td>{{ $moderna_bohol_second }}</td>  <!-- VACCINE ALLOCATED MODERNA BOHOL SECOND -->
+            <td>{{ $johnson_bohol_first }}</td> <!-- VACCINE ALLOCATED JOHNSON BOHOL FIRST -->
+            <td>{{ $johnson_bohol_second }}</td> <!-- VACCINE ALLOCATED JOHNSON BOHOL SECOND -->
             <td>{{ $total_bohol_first }}</td>  <!-- TOTAL VACCINE ALLOCATED BOHOL FIRST -->
             <td>{{ $total_bohol_second }}</td>  <!-- TOTAL VACCINE ALLOCATED BOHOL SECOND -->
             <td>{{ $eli_pop_bohol }}</td> <!-- TOTAL ELIGIBLE POP BOHOL -->
@@ -196,10 +208,14 @@
             <td>{{ $sinovac_cebu_second }}</td> <!-- VACCINE ALLOCATED SINOVAC CEBU SECOND -->
             <td>{{ $astra_cebu_first }}</td> <!-- VACCINE ALLOCATED ASTRA CEBU FIRST -->
             <td>{{ $astra_cebu_second }}</td> <!-- VACCINE ALLOCATED ASTRA CEBU SECOND -->
-            <td>{{ $sputnikv_cebu_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FIRST -->
-            <td>{{ $sputnikv_cebu_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU SECOND -->
             <td>{{ $pfizer_cebu_first }}</td> <!-- VACCINE ALLOCATED PFIZER CEBU FIRST -->
             <td>{{ $pfizer_cebu_second }}</td> <!-- VACCINE ALLOCATED PFIZER CEBU SECOND -->
+            <td>{{ $sputnikv_cebu_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FIRST -->
+            <td>{{ $sputnikv_cebu_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU SECOND -->
+            <td>{{ $moderna_cebu_first }}</td> <!-- VACCINE ALLOCATED MODERNA CEBU FIRST -->
+            <td>{{ $moderna_cebu_second }}</td> <!-- VACCINE ALLOCATED MODERNA CEBU SECOND -->
+            <td>{{ $johnson_cebu_first }}</td> <!-- VACCINE ALLOCATED JOHNSON CEBU FIRST -->
+            <td>{{ $johnson_cebu_second }}</td> <!-- VACCINE ALLOCATED JOHNSON CEBU SECOND -->
             <td>{{ $total_cebu_first }}</td> <!-- TOTAL VACCINE ALLOCATED CEBU FIRST -->
             <td>{{ $total_cebu_second }}</td> <!-- TOTAL VACCINE ALLOCATED CEBU SECOND -->
             <td>{{ $eli_pop_cebu }}</td> <!-- ELIGIBLE POP CEBU -->
@@ -249,10 +265,14 @@
             <td>{{ $sinovac_negros_second }}</td> <!-- VACCINE ALLOCATED SINOVAC NEGROS SECOND -->
             <td>{{ $astra_negros_first }}</td>  <!-- VACCINE ALLOCATED ASTRA NEGROS FIRST -->
             <td>{{ $astra_negros_second }}</td>  <!-- VACCINE ALLOCATED ASTRA NEGROS SECOND -->
-            <td>{{ $sputnikv_negros_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV NEGROS FIRST -->
-            <td>{{ $sputnikv_negros_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV NEGROS SECOND -->
             <td>{{ $pfizer_negros_first }}</td> <!-- VACCINE ALLOCATED PFIZER NEGROS FIRST -->
             <td>{{ $pfizer_negros_second }}</td> <!-- VACCINE ALLOCATED PFIZER NEGROS SECOND -->
+            <td>{{ $sputnikv_negros_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV NEGROS FIRST -->
+            <td>{{ $sputnikv_negros_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV NEGROS SECOND -->
+            <td>{{ $moderna_negros_first }}</td> <!-- VACCINE ALLOCATED MODERNA NEGROS FIRST -->
+            <td>{{ $moderna_negros_second }}</td> <!-- VACCINE ALLOCATED MODERNA NEGROS SECOND -->
+            <td>{{ $johnson_negros_first }}</td> <!-- VACCINE ALLOCATED JOHNSON NEGROS FIRST -->
+            <td>{{ $johnson_negros_second }}</td> <!-- VACCINE ALLOCATED JOHNSON NEGROS SECOND -->
             <td>{{ $total_negros_first }}</td> <!-- TOTAL VACCINE ALLOCATED NEGROS FIRST -->
             <td>{{ $total_negros_second }}</td> <!-- TOTAL VACCINE ALLOCATED NEGROS SECOND -->
             <td>{{ $eli_pop_negros }}</td> <!-- ELIGIBLE POP NEGROS -->
@@ -302,10 +322,14 @@
             <td>{{ $sinovac_siquijor_second }}</td> <!-- VACCINE ALLOCATED SINOVAC SIQUIJOR SECOND -->
             <td>{{ $astra_siquijor_first }}</td> <!-- VACCINE ALLOCATED ASTRA SIQUIJOR FIRST -->
             <td>{{ $astra_siquijor_second }}</td> <!-- VACCINE ALLOCATED ASTRA SIQUIJOR SECOND -->
-            <td>{{ $sputnikv_siquijor_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV SIQUIJOR FIRST -->
-            <td>{{ $sputnikv_siquijor_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV SIQUIJOR FIRST -->
             <td>{{ $pfizer_siquijor_first }}</td> <!-- VACCINE ALLOCATED PFIZER SIQUIJOR FIRST -->
             <td>{{ $pfizer_siquijor_second }}</td> <!-- VACCINE ALLOCATED PFIZER SIQUIJOR FIRST -->
+            <td>{{ $sputnikv_siquijor_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV SIQUIJOR FIRST -->
+            <td>{{ $sputnikv_siquijor_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV SIQUIJOR FIRST -->
+            <td>{{ $moderna_siquijor_first }}</td> <!-- VACCINE ALLOCATED MODERNA SIQUIJOR FIRST -->
+            <td>{{ $moderna_siquijor_second }}</td> <!-- VACCINE ALLOCATED MODERNA SIQUIJOR FIRST -->
+            <td>{{ $johnson_siquijor_first }}</td> <!-- VACCINE ALLOCATED JOHNSON SIQUIJOR FIRST -->
+            <td>{{ $johnson_siquijor_second }}</td> <!-- VACCINE ALLOCATED JOHNSON SIQUIJOR FIRST -->
             <td>{{ $total_siquijor_first }}</td> <!-- TOTAL VACCINE ALLOCATED SIQUIJOR FIRST -->
             <td>{{ $total_siquijor_second }}</td> <!-- TOTAL VACCINE ALLOCATED SIQUIJOR SECOND -->
             <td>{{ $eli_pop_siquijor }}</td> <!-- ELIGIBLE POP SIQUIJOR  -->
@@ -355,10 +379,14 @@
             <td>{{ $sinovac_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED SINOVAC CEBU FACILITY SECOND -->
             <td>{{ $astra_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED ASTRA CEBU FACILITY FIRST -->
             <td>{{ $astra_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED ASTRA CEBU FACILITY SECOND -->
-            <td>{{ $sputnikv_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FACILITY FIRST -->
-            <td>{{ $sputnikv_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FACILITY SECOND -->
             <td>{{ $pfizer_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED PFIZER CEBU FACILITY FIRST -->
             <td>{{ $pfizer_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED PFIZER CEBU FACILITY SECOND -->
+            <td>{{ $sputnikv_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FACILITY FIRST -->
+            <td>{{ $sputnikv_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV CEBU FACILITY SECOND -->
+            <td>{{ $moderna_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED MODERNA CEBU FACILITY FIRST -->
+            <td>{{ $moderna_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED MODERNA CEBU FACILITY SECOND -->
+            <td>{{ $johnson_cebu_facility_first }}</td> <!-- VACCINE ALLOCATED JOHNSON CEBU FACILITY FIRST -->
+            <td>{{ $johnson_cebu_facility_second }}</td> <!-- VACCINE ALLOCATED JOHNSON CEBU FACILITY SECOND -->
             <td>{{ $total_cebu_facility_first }}</td> <!-- TOTAL VACCINE ALLOCATED CEBU FACILITY FIRST -->
             <td>{{ $total_cebu_facility_second }}</td> <!-- TOTAL VACCINE ALLOCATED CEBU FACILITY SECOND -->
             <td>{{ $eli_pop_cebu_facility }}</td> <!-- ELIGIBLE POP CEBU FACILITY  -->
@@ -408,10 +436,14 @@
             <td>{{ $sinovac_mandaue_facility_second }}</td> <!-- VACCINE ALLOCATED SINOVAC MANDAUE FACILITY SECOND -->
             <td>{{ $astra_mandaue_facility_first }}</td>   <!-- VACCINE ALLOCATED ASTRA MANDAUE FACILITY FIRST -->
             <td>{{ $astra_mandaue_facility_second }}</td>   <!-- VACCINE ALLOCATED ASTRA MANDAUE FACILITY SECOND -->
-            <td>{{ $sputnikv_mandaue_facility_first }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV MANDAUE FACILITY FIRST -->
-            <td>{{ $sputnikv_mandaue_facility_second }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV MANDAUE FACILITY SECOND -->
             <td>{{ $pfizer_mandaue_facility_first }}</td>  <!-- VACCINE ALLOCATED PFIZER MANDAUE FACILITY FIRST -->
             <td>{{ $pfizer_mandaue_facility_second }}</td>  <!-- VACCINE ALLOCATED PFIZER MANDAUE FACILITY SECOND -->
+            <td>{{ $sputnikv_mandaue_facility_first }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV MANDAUE FACILITY FIRST -->
+            <td>{{ $sputnikv_mandaue_facility_second }}</td>  <!-- VACCINE ALLOCATED SPUTNIKV MANDAUE FACILITY SECOND -->
+            <td>{{ $moderna_mandaue_facility_first }}</td>  <!-- VACCINE ALLOCATED MODERNA MANDAUE FACILITY FIRST -->
+            <td>{{ $moderna_mandaue_facility_second }}</td>  <!-- VACCINE ALLOCATED MODERNA MANDAUE FACILITY SECOND -->
+            <td>{{ $johnson_mandaue_facility_first }}</td>  <!-- VACCINE ALLOCATED JOHNSON MANDAUE FACILITY FIRST -->
+            <td>{{ $johnson_mandaue_facility_second }}</td>  <!-- VACCINE ALLOCATED JOHNSON MANDAUE FACILITY SECOND -->
             <td>{{ $total_mandaue_facility_first }}</td>  <!-- TOTAL VACCINE ALLOCATED MANDAUE FACILITY FIRST -->
             <td>{{ $total_mandaue_facility_second }}</td>  <!-- TOTAL VACCINE ALLOCATED MANDAUE FACILITY SECOND -->
             <td>{{ $eli_pop_mandaue_facility }}</td>  <!-- ELIGIBLE POP MANDAUE FACILITY -->
@@ -461,10 +493,14 @@
             <td>{{ $sinovac_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED SINOVAC LAPU-LAPU FACILITY SECOND -->
             <td>{{ $astra_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED ASTRA LAPU-LAPU FACILITY FIRST -->
             <td>{{ $astra_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED ASTRA LAPU-LAPU FACILITY SECOND -->
-            <td>{{ $sputnikv_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY FIRST -->
-            <td>{{ $sputnikv_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY SECOND -->
             <td>{{ $pfizer_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED PFIZER LAPU-LAPU FACILITY FIRST -->
             <td>{{ $pfizer_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED PFIZER LAPU-LAPU FACILITY SECOND -->
+            <td>{{ $sputnikv_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY FIRST -->
+            <td>{{ $sputnikv_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED SPUTNIKV LAPU-LAPU FACILITY SECOND -->
+            <td>{{ $moderna_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED MODERNA LAPU-LAPU FACILITY FIRST -->
+            <td>{{ $moderna_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED MODERNA LAPU-LAPU FACILITY SECOND -->
+            <td>{{ $johnson_lapu_facility_first }}</td> <!-- VACCINE ALLOCATED JOHNSON LAPU-LAPU FACILITY FIRST -->
+            <td>{{ $johnson_lapu_facility_second }}</td> <!-- VACCINE ALLOCATED JOHNSON LAPU-LAPU FACILITY SECOND -->
             <td>{{ $total_lapu_facility_first }}</td> <!-- TOTAL VACCINE ALLOCATED LAPU-LAPU FACILITY FIRST -->
             <td>{{ $total_lapu_facility_second }}</td> <!-- TOTAL VACCINE ALLOCATED LAPU-LAPU FACILITY SECOND -->
             <td>{{ $eli_pop_lapu_facility }}</td> <!-- ELIGBILE POP LAPU-LAPU FACILITY -->

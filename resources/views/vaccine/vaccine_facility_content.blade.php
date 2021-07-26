@@ -18,11 +18,17 @@
     <button class="btn btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
         <b>Astrazeneca</b>
     </button>
+    <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+        <b>Pfizer</b>
+    </button>
     <button class="btn btn-link collapsed" style="color:#00a65a" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
         <b>SputnikV</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-        <b>Pfizer</b>
+    <button class="btn btn-link collapsed" style="color:#605ca8" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        <b>Moderna</b>
+    </button>
+    <button class="btn btn-link collapsed" style="color:#1d94ff" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        <b>Johnson</b>
     </button>
 <div class="table-responsive">
     <table style="font-size: 10pt;" class="table table-striped" border="2">
@@ -341,138 +347,6 @@
     </tr>
     </tbody>
 
-    <!-- SPUTNIKV -->
-    <tr>
-    </tr>
-    <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
-    <tr style="background-color: #b1ffdb">
-        <td rowspan="2"></td> <!-- 1-5 -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a1 }}</td>  <!-- A1 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a2 }}</td>  <!-- A2 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a3}}</td>  <!-- A3 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a4 }}</td>  <!-- A4 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a5 }}</td>  <!-- A5 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b1 }}</td>  <!-- B1 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b2 }}</td>  <!-- B2 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b3 }}</td>  <!-- B3 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b4 }}</td>  <!-- B4 SPUTNIKV -->
-        <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv }}</td>  <!-- ELIPOP TOTAL SPUTNIKV FIRST  -->
-        <td rowspan="2" style="color:black;">{{ $total_vallocated_sputnikv_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SPUTNIKVFIRST -->
-        <td rowspan="2" style="color: black;">{{ $total_vallocated_sputnikv_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) SPUTNIKV FIRST -->
-        <td rowspan="2" style="color:black;">{{ $total_vallocated_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV FIRST -->
-        <td style="color:black;">
-            <span class="label label-success">{{ $total_sputnikv_a1_frst }}</span>  <!-- VACCINATED (A1) SPUTNIKV FIRST -->
-        </td>
-        <td  style="color:black;">
-            <span class="label label-success">{{ $total_sputnikv_a2_frst }} </span> <!-- VACCINATED (A2) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_a3_frst }} </span> <!-- VACCINATED (A3) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_a4_frst }} </span> <!-- VACCINATED (A4) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_a5_frst }} </span> <!-- VACCINATED (A5) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_b1_frst }} </span> <!-- VACCINATED (B1) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_b2_frst }} </span> <!-- VACCINATED (B2) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_b3_frst }} </span> <!-- VACCINATED (B3) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_sputnikv_b4_frst }} </span> <!-- VACCINATED (B4) SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_vcted_sputnikv_frst }}</span> <!-- TOTAL VACCINATED  SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_mild_sputnikv_frst }}</span> <!-- MILD SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_srs_sputnikv_frst }}</span>  <!-- SERIOUS SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_dfrd_sputnikv_frst }}</span>  <!-- DEFERRED SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_rfsd_sputnikv_frst }}</span>  <!-- REFUSED SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_wstge_sputnikv_frst }}</span>  <!-- WASTAGE SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ number_format($p_cvrge_sputnikv_frst,2) }}%</span>  <!-- PERCENT COVERAGE SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ number_format($total_c_rate_sputnikv_frst,2) }}%</span>  <!-- CONSUMPTION RATE SPUTNIKV FIRST -->
-        </td>
-        <td>
-            <span class="label label-success">{{ $total_r_unvcted_frst_sputnikv}} </span>  <!-- REMAINING UNVACCINATED SPUTNIKV FIRST -->
-        </td>
-    </tr>
-    <tr style="background-color: #b1ffdb">
-        <td style="color:black;">
-            <span class="label label-warning">{{ $total_sputnikv_a1_scnd }}</span> <!-- VACCINATED (A1) SPUTNIKV SECOND -->
-        </td>
-        <td style="color:black;">
-            <span class="label label-warning">{{ $total_sputnikv_a2_scnd }} </span>  <!-- VACCINATED (A2) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_a3_scnd }} </span>  <!-- VACCINATED (A3) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_a4_scnd }} </span>  <!-- VACCINATED (A4) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_a5_scnd }} </span>  <!-- VACCINATED (A5) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_b1_scnd }} </span>  <!-- VACCINATED (B1) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_b2_scnd }} </span>  <!-- VACCINATED (B2) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_b3_scnd }} </span>  <!-- VACCINATED (B3) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_sputnikv_b4_scnd }} </span>  <!-- VACCINATED (B4) SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_vcted_sputnikv_scnd }}</span> <!-- TOTAL VACCINATED SPUTNIKV SECOND -->
-        </td> <!-- 1-6 -->
-        <td>
-            <span class="label label-warning">{{ $total_mild_sputnikv_scnd }}</span> <!-- MILD SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_srs_sputnikv_scnd }}</span> <!-- SERIOUS SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_dfrd_sputnikv_scnd }}</span> <!-- DEFERRED SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_rfsd_sputnikv_scnd }}</span> <!-- REFUSED SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_wstge_sputnikv_scnd }}</span> <!-- WASTAGE SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ number_format($p_cvrge_sputnikv_scnd,2) }}%</span> <!-- PERCENT COVERAGE SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ number_format($total_c_rate_sputnikv_scnd,2) }}%</span> <!-- CONSUMPTION RATE SPUTNIKV SECOND -->
-        </td>
-        <td>
-            <span class="label label-warning">{{ $total_r_unvcted_scnd_sputnikv }}</span> <!-- REMAINING UNVACCINATED SPUTNIKV SECOND -->
-        </td>
-    </tr>
-    </tbody>
-
     <!-- PFIZER -->
     <tr>
     </tr>
@@ -605,7 +479,403 @@
     </tr>
     </tbody>
 
-    <tr>
+        <!-- SPUTNIKV -->
+        <tr>
+        </tr>
+        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tr style="background-color: #b1ffdb">
+            <td rowspan="2"></td> <!-- 1-5 -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a1 }}</td>  <!-- A1 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a2 }}</td>  <!-- A2 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a3}}</td>  <!-- A3 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a4 }}</td>  <!-- A4 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a5 }}</td>  <!-- A5 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b1 }}</td>  <!-- B1 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b2 }}</td>  <!-- B2 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b3 }}</td>  <!-- B3 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_b4 }}</td>  <!-- B4 SPUTNIKV -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv }}</td>  <!-- ELIPOP TOTAL SPUTNIKV FIRST  -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_sputnikv_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SPUTNIKVFIRST -->
+            <td rowspan="2" style="color: black;">{{ $total_vallocated_sputnikv_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) SPUTNIKV FIRST -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED SPUTNIKV FIRST -->
+            <td style="color:black;">
+                <span class="label label-success">{{ $total_sputnikv_a1_frst }}</span>  <!-- VACCINATED (A1) SPUTNIKV FIRST -->
+            </td>
+            <td  style="color:black;">
+                <span class="label label-success">{{ $total_sputnikv_a2_frst }} </span> <!-- VACCINATED (A2) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_a3_frst }} </span> <!-- VACCINATED (A3) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_a4_frst }} </span> <!-- VACCINATED (A4) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_a5_frst }} </span> <!-- VACCINATED (A5) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_b1_frst }} </span> <!-- VACCINATED (B1) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_b2_frst }} </span> <!-- VACCINATED (B2) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_b3_frst }} </span> <!-- VACCINATED (B3) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_sputnikv_b4_frst }} </span> <!-- VACCINATED (B4) SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_vcted_sputnikv_frst }}</span> <!-- TOTAL VACCINATED  SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_mild_sputnikv_frst }}</span> <!-- MILD SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_srs_sputnikv_frst }}</span>  <!-- SERIOUS SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_dfrd_sputnikv_frst }}</span>  <!-- DEFERRED SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_rfsd_sputnikv_frst }}</span>  <!-- REFUSED SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_wstge_sputnikv_frst }}</span>  <!-- WASTAGE SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($p_cvrge_sputnikv_frst,2) }}%</span>  <!-- PERCENT COVERAGE SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($total_c_rate_sputnikv_frst,2) }}%</span>  <!-- CONSUMPTION RATE SPUTNIKV FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_r_unvcted_frst_sputnikv}} </span>  <!-- REMAINING UNVACCINATED SPUTNIKV FIRST -->
+            </td>
+        </tr>
+        <tr style="background-color: #b1ffdb">
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_sputnikv_a1_scnd }}</span> <!-- VACCINATED (A1) SPUTNIKV SECOND -->
+            </td>
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_sputnikv_a2_scnd }} </span>  <!-- VACCINATED (A2) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_a3_scnd }} </span>  <!-- VACCINATED (A3) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_a4_scnd }} </span>  <!-- VACCINATED (A4) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_a5_scnd }} </span>  <!-- VACCINATED (A5) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_b1_scnd }} </span>  <!-- VACCINATED (B1) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_b2_scnd }} </span>  <!-- VACCINATED (B2) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_b3_scnd }} </span>  <!-- VACCINATED (B3) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_sputnikv_b4_scnd }} </span>  <!-- VACCINATED (B4) SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_vcted_sputnikv_scnd }}</span> <!-- TOTAL VACCINATED SPUTNIKV SECOND -->
+            </td> <!-- 1-6 -->
+            <td>
+                <span class="label label-warning">{{ $total_mild_sputnikv_scnd }}</span> <!-- MILD SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_srs_sputnikv_scnd }}</span> <!-- SERIOUS SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_dfrd_sputnikv_scnd }}</span> <!-- DEFERRED SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_rfsd_sputnikv_scnd }}</span> <!-- REFUSED SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_wstge_sputnikv_scnd }}</span> <!-- WASTAGE SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($p_cvrge_sputnikv_scnd,2) }}%</span> <!-- PERCENT COVERAGE SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($total_c_rate_sputnikv_scnd,2) }}%</span> <!-- CONSUMPTION RATE SPUTNIKV SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_r_unvcted_scnd_sputnikv }}</span> <!-- REMAINING UNVACCINATED SPUTNIKV SECOND -->
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- MODERNA -->
+        <tr>
+        </tr>
+        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tr style="background-color: #605ca8">
+            <td rowspan="2"></td> <!-- 1-5 -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a1 }}</td>  <!-- A1 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a2 }}</td>  <!-- A2 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a3}}</td>  <!-- A3 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a4 }}</td>  <!-- A4 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a5 }}</td>  <!-- A5 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_b1 }}</td>  <!-- B1 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_b2 }}</td>  <!-- B2 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_b3 }}</td>  <!-- B3 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna_b4 }}</td>  <!-- B4 MODERNA -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_moderna }}</td>  <!-- ELIPOP TOTAL MODERNA FIRST  -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_moderna_frst }}</td>  <!-- VACCINE ALLOCATED(FD) MODERNAFIRST -->
+            <td rowspan="2" style="color: black;">{{ $total_vallocated_moderna_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) MODERNA FIRST -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_moderna }}</td>  <!-- TOTAL VACCINE ALLOCATED MODERNA FIRST -->
+            <td style="color:black;">
+                <span class="label label-success">{{ $total_moderna_a1_frst }}</span>  <!-- VACCINATED (A1) MODERNA FIRST -->
+            </td>
+            <td  style="color:black;">
+                <span class="label label-success">{{ $total_moderna_a2_frst }} </span> <!-- VACCINATED (A2) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_a3_frst }} </span> <!-- VACCINATED (A3) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_a4_frst }} </span> <!-- VACCINATED (A4) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_a5_frst }} </span> <!-- VACCINATED (A5) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_b1_frst }} </span> <!-- VACCINATED (B1) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_b2_frst }} </span> <!-- VACCINATED (B2) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_b3_frst }} </span> <!-- VACCINATED (B3) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_moderna_b4_frst }} </span> <!-- VACCINATED (B4) MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_vcted_moderna_frst }}</span> <!-- TOTAL VACCINATED  MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_mild_moderna_frst }}</span> <!-- MILD MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_srs_moderna_frst }}</span>  <!-- SERIOUS MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_dfrd_moderna_frst }}</span>  <!-- DEFERRED MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_rfsd_moderna_frst }}</span>  <!-- REFUSED MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_wstge_moderna_frst }}</span>  <!-- WASTAGE MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($p_cvrge_moderna_frst,2) }}%</span>  <!-- PERCENT COVERAGE MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($total_c_rate_moderna_frst,2) }}%</span>  <!-- CONSUMPTION RATE MODERNA FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_r_unvcted_frst_moderna}} </span>  <!-- REMAINING UNVACCINATED MODERNA FIRST -->
+            </td>
+        </tr>
+        <tr style="background-color: #605ca8">
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_moderna_a1_scnd }}</span> <!-- VACCINATED (A1) MODERNA SECOND -->
+            </td>
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_moderna_a2_scnd }} </span>  <!-- VACCINATED (A2) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_a3_scnd }} </span>  <!-- VACCINATED (A3) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_a4_scnd }} </span>  <!-- VACCINATED (A4) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_a5_scnd }} </span>  <!-- VACCINATED (A5) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_b1_scnd }} </span>  <!-- VACCINATED (B1) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_b2_scnd }} </span>  <!-- VACCINATED (B2) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_b3_scnd }} </span>  <!-- VACCINATED (B3) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_moderna_b4_scnd }} </span>  <!-- VACCINATED (B4) MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_vcted_moderna_scnd }}</span> <!-- TOTAL VACCINATED MODERNA SECOND -->
+            </td> <!-- 1-6 -->
+            <td>
+                <span class="label label-warning">{{ $total_mild_moderna_scnd }}</span> <!-- MILD MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_srs_moderna_scnd }}</span> <!-- SERIOUS MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_dfrd_moderna_scnd }}</span> <!-- DEFERRED MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_rfsd_moderna_scnd }}</span> <!-- REFUSED MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_wstge_moderna_scnd }}</span> <!-- WASTAGE MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($p_cvrge_moderna_scnd,2) }}%</span> <!-- PERCENT COVERAGE MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($total_c_rate_moderna_scnd,2) }}%</span> <!-- CONSUMPTION RATE MODERNA SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_r_unvcted_scnd_moderna }}</span> <!-- REMAINING UNVACCINATED MODERNA SECOND -->
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- JOHNSON -->
+        <tr>
+        </tr>
+        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tr style="background-color: #1d94ff">
+            <td rowspan="2"></td> <!-- 1-5 -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a1 }}</td>  <!-- A1 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a2 }}</td>  <!-- A2 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a3}}</td>  <!-- A3 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a4 }}</td>  <!-- A4 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a5 }}</td>  <!-- A5 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_b1 }}</td>  <!-- B1 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_b2 }}</td>  <!-- B2 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_b3 }}</td>  <!-- B3 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson_b4 }}</td>  <!-- B4 JOHNSON -->
+            <td rowspan="2" style="color:black;">{{ $total_epop_johnson }}</td>  <!-- ELIPOP TOTAL JOHNSON FIRST  -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_johnson_frst }}</td>  <!-- VACCINE ALLOCATED(FD) JOHNSONFIRST -->
+            <td rowspan="2" style="color: black;">{{ $total_vallocated_johnson_scnd }}</td>  <!-- VACCINE ALLOCATED(SD) JOHNSON FIRST -->
+            <td rowspan="2" style="color:black;">{{ $total_vallocated_johnson }}</td>  <!-- TOTAL VACCINE ALLOCATED JOHNSON FIRST -->
+            <td style="color:black;">
+                <span class="label label-success">{{ $total_johnson_a1_frst }}</span>  <!-- VACCINATED (A1) JOHNSON FIRST -->
+            </td>
+            <td  style="color:black;">
+                <span class="label label-success">{{ $total_johnson_a2_frst }} </span> <!-- VACCINATED (A2) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_a3_frst }} </span> <!-- VACCINATED (A3) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_a4_frst }} </span> <!-- VACCINATED (A4) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_a5_frst }} </span> <!-- VACCINATED (A5) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_b1_frst }} </span> <!-- VACCINATED (B1) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_b2_frst }} </span> <!-- VACCINATED (B2) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_b3_frst }} </span> <!-- VACCINATED (B3) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_johnson_b4_frst }} </span> <!-- VACCINATED (B4) JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_vcted_johnson_frst }}</span> <!-- TOTAL VACCINATED  JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_mild_johnson_frst }}</span> <!-- MILD JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_srs_johnson_frst }}</span>  <!-- SERIOUS JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_dfrd_johnson_frst }}</span>  <!-- DEFERRED JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_rfsd_johnson_frst }}</span>  <!-- REFUSED JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_wstge_johnson_frst }}</span>  <!-- WASTAGE JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($p_cvrge_johnson_frst,2) }}%</span>  <!-- PERCENT COVERAGE JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ number_format($total_c_rate_johnson_frst,2) }}%</span>  <!-- CONSUMPTION RATE JOHNSON FIRST -->
+            </td>
+            <td>
+                <span class="label label-success">{{ $total_r_unvcted_frst_johnson}} </span>  <!-- REMAINING UNVACCINATED JOHNSON FIRST -->
+            </td>
+        </tr>
+        <tr style="background-color: #1d94ff">
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_johnson_a1_scnd }}</span> <!-- VACCINATED (A1) JOHNSON SECOND -->
+            </td>
+            <td style="color:black;">
+                <span class="label label-warning">{{ $total_johnson_a2_scnd }} </span>  <!-- VACCINATED (A2) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_a3_scnd }} </span>  <!-- VACCINATED (A3) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_a4_scnd }} </span>  <!-- VACCINATED (A4) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_a5_scnd }} </span>  <!-- VACCINATED (A5) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_b1_scnd }} </span>  <!-- VACCINATED (B1) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_b2_scnd }} </span>  <!-- VACCINATED (B2) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_b3_scnd }} </span>  <!-- VACCINATED (B3) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_johnson_b4_scnd }} </span>  <!-- VACCINATED (B4) JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_vcted_johnson_scnd }}</span> <!-- TOTAL VACCINATED JOHNSON SECOND -->
+            </td> <!-- 1-6 -->
+            <td>
+                <span class="label label-warning">{{ $total_mild_johnson_scnd }}</span> <!-- MILD JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_srs_johnson_scnd }}</span> <!-- SERIOUS JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_dfrd_johnson_scnd }}</span> <!-- DEFERRED JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_rfsd_johnson_scnd }}</span> <!-- REFUSED JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_wstge_johnson_scnd }}</span> <!-- WASTAGE JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($p_cvrge_johnson_scnd,2) }}%</span> <!-- PERCENT COVERAGE JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ number_format($total_c_rate_johnson_scnd,2) }}%</span> <!-- CONSUMPTION RATE JOHNSON SECOND -->
+            </td>
+            <td>
+                <span class="label label-warning">{{ $total_r_unvcted_scnd_johnson }}</span> <!-- REMAINING UNVACCINATED JOHNSON SECOND -->
+            </td>
+        </tr>
+        </tbody>
+
+        <tr>
         <td>Total</td> <!-- 1-7 -->
         <td>
             <b>{{ $total_epop_pfizer_a1 }}</b>  <!-- TOTAL_A1_FIRST -->
@@ -794,8 +1064,10 @@
             '            <option value="">Select Option</option>\n' +
             '            <option value="Sinovac">Sinovac</option>\n' +
             '            <option value="Astrazeneca">Astrazeneca</option>\n' +
-            '            <option value="SputnikV">SputnikV</option>\n' +
             '            <option value="Pfizer">Pfizer</option>\n' +
+            '            <option value="SputnikV">SputnikV</option>\n' +
+            '            <option value="Moderna">Moderna</option>\n' +
+            '            <option value="Johnson">Johnson</option>\n' +
             '        </select>\n' +
             '       <br><br>' +
             '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +

@@ -12,6 +12,8 @@
                 <option value="Astrazeneca">Astrazeneca</option>
                 <option value="SputnikV">SputnikV</option>
                 <option value="Pfizer">Pfizer</option>
+                <option value="Moderna">Moderna</option>
+                <option value="Johnson">Johnson</option>
             </select>
         </div>
         <div class="col-md-4">

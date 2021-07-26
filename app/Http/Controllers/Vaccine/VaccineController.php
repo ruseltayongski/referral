@@ -229,6 +229,21 @@ class VaccineController extends Controller
                 ->first()
                 ->pfizer_count;
             $data['pfizer'][] = $pfizer;
+
+            $moderna = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as moderna_count"))
+                ->where("typeof_vaccine","Moderna")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->first()
+                ->moderna_count;
+            $data['moderna'][] = $moderna;
+
+            $johnson = VaccineAccomplished::select(DB::raw("COALESCE(sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)),0) as johnson_count"))
+                ->where("typeof_vaccine","Johnson")
+                ->whereBetween('created_at',[$startdate,$enddate])
+                ->first()
+                ->johnson_count;
+            $data['johnson'][] = $johnson;
+
         }
 
         $sinovac_count = VaccineAccomplished::select(DB::raw("sum(COALESCE(vaccinated_first,0)+COALESCE(vaccinated_second,0)) as sinovac_count"))->where("typeof_vaccine","Sinovac")->first()->sinovac_count;

@@ -23,8 +23,8 @@
                             <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
                             <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> >Pfizer</option>
                             <option value="SputnikV" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'SputnikV')echo 'selected';} ?>>SputnikV</option>
-                           <!-- <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> >Moderna</option>
-                            <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?> >Johnson</option> -->
+                           <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?> >Moderna</option>
+                            <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?> >Johnson</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -773,15 +773,15 @@
                 $total_r_unvcted_scnd_moderna = $total_epop_moderna - $total_vcted_moderna_scnd - $total_rfsd_moderna_scnd; //REMAINUNG_UNVACCIANTED_MODERNA 2
                 $total_r_unvcted_scnd_johnson = $total_epop_johnson - $total_vcted_johnson_scnd - $total_rfsd_johnson_scnd; //REMAINUNG_UNVACCIANTED_JOHNSON 2
 
-                $total_vcted_overall_a1_frst = $total_svac_a1_frst + $total_astra_a1_frst + $total_sputnikv_a1_frst + $total_pfizer_a1_frst + $total_moderna_a1_frst + $total_moderna_a1_frst; // TOTAL VACCINATED OVERALL A1
-                $total_vcted_overall_a2_frst = $total_svac_a2_frst + $total_astra_a2_frst + $total_sputnikv_a2_frst + $total_pfizer_a2_frst + $total_moderna_a2_frst + $total_moderna_a2_frst; // TOTAL VACCINATED OVERALL A2
-                $total_vcted_overall_a3_frst = $total_svac_a3_frst + $total_astra_a3_frst + $total_sputnikv_a3_frst + $total_pfizer_a3_frst + $total_moderna_a3_frst + $total_moderna_a3_frst; // TOTAL VACCINATED OVERALL A3
-                $total_vcted_overall_a4_frst = $total_svac_a4_frst + $total_astra_a4_frst + $total_sputnikv_a4_frst + $total_pfizer_a4_frst + $total_moderna_a4_frst + $total_moderna_a4_frst; // TOTAL VACCINATED OVERALL A4
-                $total_vcted_overall_a5_frst = $total_svac_a5_frst + $total_astra_a5_frst + $total_sputnikv_a5_frst + $total_pfizer_a5_frst + $total_moderna_a5_frst + $total_moderna_a5_frst; // TOTAL VACCINATED OVERALL A5
-                $total_vcted_overall_b1_frst = $total_svac_b1_frst + $total_astra_b1_frst + $total_sputnikv_b1_frst + $total_pfizer_b1_frst + $total_moderna_b1_frst + $total_moderna_b1_frst; // TOTAL VACCINATED OVERALL B1
-                $total_vcted_overall_b2_frst = $total_svac_b2_frst + $total_astra_b2_frst + $total_sputnikv_b2_frst + $total_pfizer_b2_frst + $total_moderna_b2_frst + $total_moderna_b2_frst; // TOTAL VACCINATED OVERALL B2
-                $total_vcted_overall_b3_frst = $total_svac_b3_frst + $total_astra_b3_frst + $total_sputnikv_b3_frst + $total_pfizer_b3_frst + $total_moderna_b3_frst + $total_moderna_b3_frst; // TOTAL VACCINATED OVERALL B3
-                $total_vcted_overall_b4_frst = $total_svac_b4_frst + $total_astra_b4_frst + $total_sputnikv_b4_frst + $total_pfizer_b4_frst + $total_moderna_b4_frst + $total_moderna_b4_frst; // TOTAL VACCINATED OVERALL B4
+                $total_vcted_overall_a1_frst = $total_svac_a1_frst + $total_astra_a1_frst + $total_sputnikv_a1_frst + $total_pfizer_a1_frst + $total_moderna_a1_frst + $total_johnson_a1_frst; // TOTAL VACCINATED OVERALL A1
+                $total_vcted_overall_a2_frst = $total_svac_a2_frst + $total_astra_a2_frst + $total_sputnikv_a2_frst + $total_pfizer_a2_frst + $total_moderna_a2_frst + $total_johnson_a2_frst; // TOTAL VACCINATED OVERALL A2
+                $total_vcted_overall_a3_frst = $total_svac_a3_frst + $total_astra_a3_frst + $total_sputnikv_a3_frst + $total_pfizer_a3_frst + $total_moderna_a3_frst + $total_johnson_a3_frst; // TOTAL VACCINATED OVERALL A3
+                $total_vcted_overall_a4_frst = $total_svac_a4_frst + $total_astra_a4_frst + $total_sputnikv_a4_frst + $total_pfizer_a4_frst + $total_moderna_a4_frst + $total_johnson_a4_frst; // TOTAL VACCINATED OVERALL A4
+                $total_vcted_overall_a5_frst = $total_svac_a5_frst + $total_astra_a5_frst + $total_sputnikv_a5_frst + $total_pfizer_a5_frst + $total_moderna_a5_frst + $total_johnson_a5_frst; // TOTAL VACCINATED OVERALL A5
+                $total_vcted_overall_b1_frst = $total_svac_b1_frst + $total_astra_b1_frst + $total_sputnikv_b1_frst + $total_pfizer_b1_frst + $total_moderna_b1_frst + $total_johnson_b1_frst; // TOTAL VACCINATED OVERALL B1
+                $total_vcted_overall_b2_frst = $total_svac_b2_frst + $total_astra_b2_frst + $total_sputnikv_b2_frst + $total_pfizer_b2_frst + $total_moderna_b2_frst + $total_johnson_b2_frst; // TOTAL VACCINATED OVERALL B2
+                $total_vcted_overall_b3_frst = $total_svac_b3_frst + $total_astra_b3_frst + $total_sputnikv_b3_frst + $total_pfizer_b3_frst + $total_moderna_b3_frst + $total_johnson_b3_frst; // TOTAL VACCINATED OVERALL B3
+                $total_vcted_overall_b4_frst = $total_svac_b4_frst + $total_astra_b4_frst + $total_sputnikv_b4_frst + $total_pfizer_b4_frst + $total_moderna_b4_frst + $total_johnson_b4_frst; // TOTAL VACCINATED OVERALL B4
 
                 $total_vcted_overall_a1_scnd = $total_svac_a1_scnd + $total_astra_a1_scnd + $total_sputnikv_a1_scnd + $total_pfizer_a1_scnd + $total_moderna_a1_scnd + $total_johnson_a1_scnd; // TOTAL VACCINATED OVERALL A1
                 $total_vcted_overall_a2_scnd = $total_svac_a2_scnd + $total_astra_a2_scnd + $total_sputnikv_a2_scnd + $total_pfizer_a2_scnd + $total_moderna_a2_scnd + $total_johnson_a2_scnd; // TOTAL VACCINATED OVERALL A2
@@ -836,12 +836,12 @@
                 <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
                     <b>Sputnikv</b>
                 </button>
-              {{--  <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
+                <button class="btn btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
                     <b>Moderna</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
+                <button class="btn btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
                     <b>Johnson</b>
-                </button>--}}
+                </button>
                 <button class="btn" style="color: black;" type="button">
                     <h5>Total Allocated: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}">{{ $total_vallocated }}</b></h5>
                 </button>
@@ -1438,7 +1438,7 @@
                             </td>
                         </tr>
                         </tbody>
-                       {{-- <!-- MODERNA-->
+                        <!-- MODERNA-->
                         <tbody id="collapse_moderna{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
                         <tr style="background-color: #dad8ff">
                             <td rowspan="2">
@@ -1511,7 +1511,7 @@
                                 <span class="label label-success total_r_unvcted_frst_moderna{{ $row->id }}">{{ $total_r_unvcted_frst_moderna }}</span> <!-- REMAINUNG_UNVACCIANTED_MODERNA -->
                             </td>
                         </tr>
-                        <tr style="background-color: #605ca8">
+                        <tr style="background-color: #dad8ff">
                             <td style="color: black;">
                                 <span class="label label-warning total_moderna_a1_scnd{{ $row->id }}">{{ $total_moderna_a1_scnd }}</span>  <!-- A1_SPUTNIK2  -->
                             </td>
@@ -1570,7 +1570,7 @@
                         </tbody>
                         <!-- JOHNSON-->
                         <tbody id="collapse_johnson{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                        <tr style="background-color: #1d94ff">
+                        <tr style="background-color: #9af5ee">
                             <td rowspan="2">
                             </td> <!-- 1-3 -->
                             <td rowspan="2" style="color:black;" class="total_epop_johnson_a1{{ $row->id }}">{{ $total_epop_johnson_a1 }}</td>  <!-- TOTAL_E_POP_A1_JOHNSON -->
@@ -1641,7 +1641,7 @@
                                 <span class="label label-success total_r_unvcted_frst_johnson{{ $row->id }}">{{ $total_r_unvcted_frst_johnson }}</span> <!-- REMAINUNG_UNVACCIANTED_JOHNSON -->
                             </td>
                         </tr>
-                        <tr style="background-color: #1d94ff">
+                        <tr style="background-color: #9af5ee">
                             <td style="color: black;">
                                 <span class="label label-warning total_johnson_a1_scnd{{ $row->id }}">{{ $total_johnson_a1_scnd }}</span>  <!-- A1_SPUTNIK2  -->
                             </td>
@@ -1697,7 +1697,7 @@
                                 <span class="label label-warning total_r_unvcted_scnd_johnson{{ $row->id }}">{{ $total_r_unvcted_scnd_johnson }}</span> <!-- REMAINUNG_UNVACCIANTED_S2  JOHNSON2-->
                             </td>
                         </tr>
-                        </tbody> --}}
+                        </tbody>
                         <tbody>
                         <tr>
                             <td>Total</td> <!-- 1-7 -->

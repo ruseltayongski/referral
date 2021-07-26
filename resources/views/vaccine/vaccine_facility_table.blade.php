@@ -99,42 +99,6 @@
         $total_wstge_astra_frst = 0;
         $total_wstge_astra_scnd = 0;
 
-        //TOTAL_VACCINATED_SPUTNIKV
-        $total_e_pop_sputnikv_a1 = 0;
-        $total_e_pop_sputnikv_a1_flag = true;
-        $total_e_pop_sputnikv_a2 = 0;
-        $total_e_pop_sputnikv_a2_flag = true;
-        $total_e_pop_sputnikv_a3 = 0;
-        $total_e_pop_sputnikv_a3_flag = true;
-        $total_e_pop_sputnikv_a4 = 0;
-        $total_e_pop_sputnikv_a4_flag = true;
-        $total_e_pop_sputnikv_a5 = 0;
-        $total_e_pop_sputnikv_a5_flag = true;
-        $total_e_pop_sputnikv_b1 = 0;
-        $total_e_pop_sputnikv_b1_flag = true;
-        $total_e_pop_sputnikv_b2 = 0;
-        $total_e_pop_sputnikv_b2_flag = true;
-        $total_e_pop_sputnikv_b3 = 0;
-        $total_e_pop_sputnikv_b3flag = true;
-        $total_e_pop_sputnikv_b4 = 0;
-        $total_e_pop_sputnikv_b4_flag = true;
-
-        $total_vallocated_sputnikv = 0;
-        $total_vallocated_sputnikv_flag = true;
-        $total_vallocated_sputnikv_frst = 0;
-        $total_vallocated_sputnikv_scnd = 0;
-        $total_vcted_sputnikv_frst = 0;
-        $total_vcted_sputnikv_scnd = 0;
-        $total_mild_sputnikv_frst = 0;
-        $total_mild_sputnikv_scnd = 0;
-        $total_srs_sputnikv_frst = 0;
-        $total_srs_sputnikv_scnd = 0;
-        $total_dfrd_sputnikv_frst = 0;
-        $total_dfrd_sputnikv_scnd = 0;
-        $total_rfsd_sputnikv_frst = 0;
-        $total_rfsd_sputnikv_scnd = 0;
-        $total_wstge_sputnikv_frst = 0;
-        $total_wstge_sputnikv_scnd = 0;
 
         //TOTAL_VACCINATED_PFIZER
         $total_e_pop_pfizer_a1 = 0;
@@ -173,6 +137,116 @@
         $total_wstge_pfizer_frst = 0;
         $total_wstge_pfizer_scnd = 0;
 
+        //TOTAL_VACCINATED_SPUTNIKV
+        $total_e_pop_sputnikv_a1 = 0;
+        $total_e_pop_sputnikv_a1_flag = true;
+        $total_e_pop_sputnikv_a2 = 0;
+        $total_e_pop_sputnikv_a2_flag = true;
+        $total_e_pop_sputnikv_a3 = 0;
+        $total_e_pop_sputnikv_a3_flag = true;
+        $total_e_pop_sputnikv_a4 = 0;
+        $total_e_pop_sputnikv_a4_flag = true;
+        $total_e_pop_sputnikv_a5 = 0;
+        $total_e_pop_sputnikv_a5_flag = true;
+        $total_e_pop_sputnikv_b1 = 0;
+        $total_e_pop_sputnikv_b1_flag = true;
+        $total_e_pop_sputnikv_b2 = 0;
+        $total_e_pop_sputnikv_b2_flag = true;
+        $total_e_pop_sputnikv_b3 = 0;
+        $total_e_pop_sputnikv_b3flag = true;
+        $total_e_pop_sputnikv_b4 = 0;
+        $total_e_pop_sputnikv_b4_flag = true;
+
+        $total_vallocated_sputnikv = 0;
+        $total_vallocated_sputnikv_flag = true;
+        $total_vallocated_sputnikv_frst = 0;
+        $total_vallocated_sputnikv_scnd = 0;
+        $total_vcted_sputnikv_frst = 0;
+        $total_vcted_sputnikv_scnd = 0;
+        $total_mild_sputnikv_frst = 0;
+        $total_mild_sputnikv_scnd = 0;
+        $total_srs_sputnikv_frst = 0;
+        $total_srs_sputnikv_scnd = 0;
+        $total_dfrd_sputnikv_frst = 0;
+        $total_dfrd_sputnikv_scnd = 0;
+        $total_rfsd_sputnikv_frst = 0;
+        $total_rfsd_sputnikv_scnd = 0;
+        $total_wstge_sputnikv_frst = 0;
+        $total_wstge_sputnikv_scnd = 0;
+
+        //TOTAL_VACCINATED_MODERNA
+        $total_e_pop_moderna_a1 = 0;
+        $total_e_pop_moderna_a1_flag = true;
+        $total_e_pop_moderna_a2 = 0;
+        $total_e_pop_moderna_a2_flag = true;
+        $total_e_pop_moderna_a3 = 0;
+        $total_e_pop_moderna_a3_flag = true;
+        $total_e_pop_moderna_a4 = 0;
+        $total_e_pop_moderna_a4_flag = true;
+        $total_e_pop_moderna_a5 = 0;
+        $total_e_pop_moderna_a5_flag = true;
+        $total_e_pop_moderna_b1 = 0;
+        $total_e_pop_moderna_b1_flag = true;
+        $total_e_pop_moderna_b2 = 0;
+        $total_e_pop_moderna_b2_flag = true;
+        $total_e_pop_moderna_b3 = 0;
+        $total_e_pop_moderna_b3flag = true;
+        $total_e_pop_moderna_b4 = 0;
+        $total_e_pop_moderna_b4_flag = true;
+
+        $total_vallocated_moderna = 0;
+        $total_vallocated_moderna_flag = true;
+        $total_vallocated_moderna_frst = 0;
+        $total_vallocated_moderna_scnd = 0;
+        $total_vcted_moderna_frst = 0;
+        $total_vcted_moderna_scnd = 0;
+        $total_mild_moderna_frst = 0;
+        $total_mild_moderna_scnd = 0;
+        $total_srs_moderna_frst = 0;
+        $total_srs_moderna_scnd = 0;
+        $total_dfrd_moderna_frst = 0;
+        $total_dfrd_moderna_scnd = 0;
+        $total_rfsd_moderna_frst = 0;
+        $total_rfsd_moderna_scnd = 0;
+        $total_wstge_moderna_frst = 0;
+        $total_wstge_moderna_scnd = 0;
+
+        //TOTAL_VACCINATED_JOHNSON
+        $total_e_pop_johnson_a1 = 0;
+        $total_e_pop_johnson_a1_flag = true;
+        $total_e_pop_johnson_a2 = 0;
+        $total_e_pop_johnson_a2_flag = true;
+        $total_e_pop_johnson_a3 = 0;
+        $total_e_pop_johnson_a3_flag = true;
+        $total_e_pop_johnson_a4 = 0;
+        $total_e_pop_johnson_a4_flag = true;
+        $total_e_pop_johnson_a5 = 0;
+        $total_e_pop_johnson_a5_flag = true;
+        $total_e_pop_johnson_b1 = 0;
+        $total_e_pop_johnson_b1_flag = true;
+        $total_e_pop_johnson_b2 = 0;
+        $total_e_pop_johnson_b2_flag = true;
+        $total_e_pop_johnson_b3 = 0;
+        $total_e_pop_johnson_b3flag = true;
+        $total_e_pop_johnson_b4 = 0;
+        $total_e_pop_johnson_b4_flag = true;
+
+        $total_vallocated_johnson = 0;
+        $total_vallocated_johnson_flag = true;
+        $total_vallocated_johnson_frst = 0;
+        $total_vallocated_johnson_scnd = 0;
+        $total_vcted_johnson_frst = 0;
+        $total_vcted_johnson_scnd = 0;
+        $total_mild_johnson_frst = 0;
+        $total_mild_johnson_scnd = 0;
+        $total_srs_johnson_frst = 0;
+        $total_srs_johnson_scnd = 0;
+        $total_dfrd_johnson_frst = 0;
+        $total_dfrd_johnson_scnd = 0;
+        $total_rfsd_johnson_frst = 0;
+        $total_rfsd_johnson_scnd = 0;
+        $total_wstge_johnson_frst = 0;
+        $total_wstge_johnson_scnd = 0;
         //SINOVAC
         $total_svac_a1_frst = 0;
         $total_svac_a2_frst = 0;
@@ -193,7 +267,6 @@
         $total_svac_b2_scnd = 0;
         $total_svac_b3_scnd = 0;
         $total_svac_b4_scnd = 0;
-
         //ASTRAZENECA
         $total_astra_a1_frst = 0;
         $total_astra_a2_frst = 0;
@@ -214,28 +287,6 @@
         $total_astra_b2_scnd = 0;
         $total_astra_b3_scnd = 0;
         $total_astra_b4_scnd = 0;
-
-        //SPUTNIKV
-        $total_sputnikv_a1_frst = 0;
-        $total_sputnikv_a2_frst = 0;
-        $total_sputnikv_a3_frst = 0;
-        $total_sputnikv_a4_frst = 0;
-        $total_sputnikv_a5_frst = 0;
-        $total_sputnikv_b1_frst = 0;
-        $total_sputnikv_b2_frst = 0;
-        $total_sputnikv_b3_frst = 0;
-        $total_sputnikv_b4_frst = 0;
-
-        $total_sputnikv_a1_scnd = 0;
-        $total_sputnikv_a2_scnd = 0;
-        $total_sputnikv_a3_scnd = 0;
-        $total_sputnikv_a4_scnd = 0;
-        $total_sputnikv_a5_scnd = 0;
-        $total_sputnikv_b1_scnd = 0;
-        $total_sputnikv_b2_scnd = 0;
-        $total_sputnikv_b3_scnd = 0;
-        $total_sputnikv_b4_scnd = 0;
-
         //PFIZER
         $total_pfizer_a1_frst = 0;
         $total_pfizer_a2_frst = 0;
@@ -256,6 +307,66 @@
         $total_pfizer_b2_scnd = 0;
         $total_pfizer_b3_scnd = 0;
         $total_pfizer_b4_scnd = 0;
+        //SPUTNIKV
+        $total_sputnikv_a1_frst = 0;
+        $total_sputnikv_a2_frst = 0;
+        $total_sputnikv_a3_frst = 0;
+        $total_sputnikv_a4_frst = 0;
+        $total_sputnikv_a5_frst = 0;
+        $total_sputnikv_b1_frst = 0;
+        $total_sputnikv_b2_frst = 0;
+        $total_sputnikv_b3_frst = 0;
+        $total_sputnikv_b4_frst = 0;
+
+        $total_sputnikv_a1_scnd = 0;
+        $total_sputnikv_a2_scnd = 0;
+        $total_sputnikv_a3_scnd = 0;
+        $total_sputnikv_a4_scnd = 0;
+        $total_sputnikv_a5_scnd = 0;
+        $total_sputnikv_b1_scnd = 0;
+        $total_sputnikv_b2_scnd = 0;
+        $total_sputnikv_b3_scnd = 0;
+        $total_sputnikv_b4_scnd = 0;
+        //MODERNA
+        $total_moderna_a1_frst = 0;
+        $total_moderna_a2_frst = 0;
+        $total_moderna_a3_frst = 0;
+        $total_moderna_a4_frst = 0;
+        $total_moderna_a5_frst = 0;
+        $total_moderna_b1_frst = 0;
+        $total_moderna_b2_frst = 0;
+        $total_moderna_b3_frst = 0;
+        $total_moderna_b4_frst = 0;
+
+        $total_moderna_a1_scnd = 0;
+        $total_moderna_a2_scnd = 0;
+        $total_moderna_a3_scnd = 0;
+        $total_moderna_a4_scnd = 0;
+        $total_moderna_a5_scnd = 0;
+        $total_moderna_b1_scnd = 0;
+        $total_moderna_b2_scnd = 0;
+        $total_moderna_b3_scnd = 0;
+        $total_moderna_b4_scnd = 0;
+        //JOHNSON
+        $total_johnson_a1_frst = 0;
+        $total_johnson_a2_frst = 0;
+        $total_johnson_a3_frst = 0;
+        $total_johnson_a4_frst = 0;
+        $total_johnson_a5_frst = 0;
+        $total_johnson_b1_frst = 0;
+        $total_johnson_b2_frst = 0;
+        $total_johnson_b3_frst = 0;
+        $total_johnson_b4_frst = 0;
+
+        $total_johnson_a1_scnd = 0;
+        $total_johnson_a2_scnd = 0;
+        $total_johnson_a3_scnd = 0;
+        $total_johnson_a4_scnd = 0;
+        $total_johnson_a5_scnd = 0;
+        $total_johnson_b1_scnd = 0;
+        $total_johnson_b2_scnd = 0;
+        $total_johnson_b3_scnd = 0;
+        $total_johnson_b4_scnd = 0;
 
         ?>
         @if(count($vaccine_accomplishment)>0)
@@ -313,7 +424,34 @@
                     $total_vallocated_astra_frst += $facility->astrazeneca_allocated_first; //VACCINE ALLOCATED(FD) ASTRA FIRST
                     $total_vallocated_astra_scnd += $facility->astrazeneca_allocated_second; //VACCINE ALLOCATED(SD) ASTRA FIRST
                 }
-
+                elseif($vaccine->typeof_vaccine == 'Pfizer'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->pfizer_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->pfizer_allocated_second;
+                    $total_vallocated_pfizer_frst += $facility->pfizer_allocated_first; //VACCINE ALLOCATED(FD) PFIZER FIRST
+                    $total_vallocated_pfizer_scnd += $facility->pfizer_allocated_second; //VACCINE ALLOCATED(SD) PFIZER FIRST
+                }
+                elseif($vaccine->typeof_vaccine == 'SputnikV'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->sputnikv_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->sputnikv_allocated_second;
+                    $total_vallocated_sputnikv_frst += $facility->sputnikv_allocated_first; //VACCINE ALLOCATED(FD) SPUTNIKV FIRST
+                    $total_vallocated_sputnikv_scnd += $facility->sputnikv_allocated_second; //VACCINE ALLOCATED(SD) SPUTNIKV FIRST
+                }
+                elseif($vaccine->typeof_vaccine == 'Moderna'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->moderna_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->moderna_allocated_second;
+                    $total_vallocated_moderna_frst += $facility->moderna_allocated_first; //VACCINE ALLOCATED(FD) MODERNA FIRST
+                    $total_vallocated_moderna_scnd += $facility->moderna_allocated_second; //VACCINE ALLOCATED(SD) MODERNA FIRST
+                }
+                elseif($vaccine->typeof_vaccine == 'Johnson'){
+                    $facility = \App\Facility::find($vaccine->facility_id);
+                    $vaccine->vaccine_allocated_first = $facility->johnson_allocated_first;
+                    $vaccine->vaccine_allocated_second = $facility->johnson_allocated_second;
+                    $total_vallocated_johnson_frst += $facility->johnson_allocated_first; //VACCINE ALLOCATED(FD) ASTRA FIRST
+                    $total_vallocated_johnson_scnd += $facility->johnson_allocated_second; //VACCINE ALLOCATED(SD) ASTRA FIRST
+                }
 
                 if($vaccine->typeof_vaccine == "Sinovac"){
                     $total_e_pop_svac_a1 = $facility->a1; //A1 SINOVAC
@@ -452,10 +590,14 @@
                                     $total_e_pop_svac_b1 + $total_e_pop_svac_b2 + $total_e_pop_svac_b3 + $total_e_pop_svac_b4 ;  //ELIPOP TOTAL SINOVAC FIRST
                 $total_e_pop_astra = $total_e_pop_astra_a1 + $total_e_pop_astra_a2 + $total_e_pop_astra_a3 + $total_e_pop_astra_a4 + $total_e_pop_astra_a5 +
                                      $total_e_pop_astra_b1 + $total_e_pop_astra_b2 + $total_e_pop_astra_b3 + $total_e_pop_astra_b4;  //ELIPOP TOTAL ASTRA FIRST
+                $total_e_pop_pfizer = $total_e_pop_pfizer_a1 + $total_e_pop_pfizer_a2 + $total_e_pop_pfizer_a3 + $total_e_pop_pfizer_a4 + $total_e_pop_pfizer_a5 +
+                                      $total_e_pop_pfizer_b1 + $total_e_pop_pfizer_b2 + $total_e_pop_pfizer_b3 + $total_e_pop_pfizer_b4;  //ELIPOP TOTAL SPUTNIKV FIRST
                 $total_e_pop_sputnikv = $total_e_pop_sputnikv_a1 + $total_e_pop_sputnikv_a2 + $total_e_pop_sputnikv_a3 + $total_e_pop_sputnikv_a4 + $total_e_pop_sputnikv_a5 +
                                         $total_e_pop_sputnikv_b1 + $total_e_pop_sputnikv_b2 + $total_e_pop_sputnikv_b3 + $total_e_pop_sputnikv_b4;  //ELIPOP TOTAL SPUTNIKV FIRST
-                $total_e_pop_pfizer = $total_e_pop_pfizer_a1 + $total_e_pop_pfizer_a2 + $total_e_pop_pfizer_a3 + $total_e_pop_pfizer_a4 + $total_e_pop_pfizer_a5 +
-                                        $total_e_pop_pfizer_b1 + $total_e_pop_pfizer_b2 + $total_e_pop_pfizer_b3 + $total_e_pop_pfizer_b4;  //ELIPOP TOTAL SPUTNIKV FIRST
+                $total_e_pop_moderna = $total_e_pop_moderna_a1 + $total_e_pop_moderna_a2 + $total_e_pop_moderna_a3 + $total_e_pop_moderna_a4 + $total_e_pop_moderna_a5 +
+                                       $total_e_pop_moderna_b1 + $total_e_pop_moderna_b2 + $total_e_pop_moderna_b3 + $total_e_pop_moderna_b4;  //ELIPOP TOTAL MODERNA FIRST
+                $total_e_pop_johnson = $total_e_pop_johnson_a1 + $total_e_pop_johnson_a2 + $total_e_pop_johnson_a3 + $total_e_pop_johnson_a4 + $total_e_pop_johnson_a5 +
+                                       $total_e_pop_johnson_b1 + $total_e_pop_johnson_b2 + $total_e_pop_johnson_b3 + $total_e_pop_johnson_b4;  //ELIPOP TOTAL JOHNSON FIRST
 
                 $total_e_pop = $facility->a1 + $facility->a2 + $facility->a3 + $facility->a4 + $facility->a5 + $facility->b1 + $facility->b2 + $facility->b3 + $facility->b4; //TOTAL_ELI_POP
 
@@ -520,8 +662,11 @@
                             <option value="">Select Option</option>
                             <option value="Sinovac" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                             <option value="Astrazeneca" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
-                            <option value="SputnikV" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'SputnikV')echo 'selected';} ?>>Sputnik V</option>
                             <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
+                            <option value="SputnikV" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'SputnikV')echo 'selected';} ?>>Sputnik V</option>
+                            <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?>>Moderna</option>
+                            <option value="Johnson" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Johnson')echo 'selected';} ?>>Johnson</option>
+
                         </select>
                         <br><br>
                         <div class="row">

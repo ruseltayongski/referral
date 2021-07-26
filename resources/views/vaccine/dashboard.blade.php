@@ -16,8 +16,11 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <option value="">Select Type of Vaccine</option>
                                 <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
                                 <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
+                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                                 <option value="SputnikV" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'SputnikV')echo 'selected';} ?>>SputnikV</option>
-                                <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?> disabled>Pfizer</option>
+                                <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?>>Moderna</option>
+                                <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?>>Johnson</option>
+
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -72,11 +75,11 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
                             <div class="row" style="padding-left: 1%;padding-right: 1%; ">
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="small-box bg-red">
                                         <div class="inner">
                                             <p style="font-size: 15pt;">Sinovac</p>
-                                            <h3 style="font-size:20pt"  class="sinovac_dashboard">+{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</h3>
+                                            <h3 style="font-size:10pt"  class="sinovac_dashboard">+{{ $sinovac_count >= 1 ? $sinovac_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -84,11 +87,11 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="small-box bg-yellow">
                                         <div class="inner">
                                             <p style="font-size: 15pt;">Astrazeneca</p>
-                                            <h3 style="font-size:20pt" class="astra_dashboard">+{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</h3>
+                                            <h3 style="font-size:10pt" class="astra_dashboard">+{{ $astrazeneca_count >= 1 ? $astrazeneca_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -96,23 +99,11 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                    <div class="small-box bg-green">
-                                        <div class="inner">
-                                            <p style="font-size: 15pt;">Sputnik V</p>
-                                            <h3 style="font-size:20pt" class="sputnikv_dashboard">+{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</h3>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
-                                        </div>
-                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="small-box bg-aqua">
                                         <div class="inner">
                                             <p style="font-size: 15pt;">Pfizer</p>
-                                            <h3 style="font-size:20pt" class="pfizer_dashboard">+{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</h3>
+                                            <h3 style="font-size:10pt" class="pfizer_dashboard">+{{ $pfizer_count >= 1 ? $pfizer_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
                                             <i class="ion ion-erlenmeyer-flask-bubbles"></i>
@@ -120,6 +111,43 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
+                                <div class="col-lg-2">
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <p style="font-size: 15pt;">Sputnik V</p>
+                                            <h3 style="font-size:10pt" class="sputnikv_dashboard">+{{ $sputnikv_count >= 1 ? $sputnikv_count : 0 }}</h3>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="small-box bg-purple">
+                                        <div class="inner">
+                                            <p style="font-size: 15pt;">Moderna</p>
+                                            <h3 style="font-size:10pt" class="moderna_dashboard">+{{ $moderna_count >= 1 ? $moderna_count : 0 }}</h3>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="small-box bg-blue ">
+                                        <div class="inner">
+                                            <p style="font-size: 15pt;">Jansen</p>
+                                            <h3 style="font-size:10pt" class="johnson_dashboard">+{{ $johnson_count >= 1 ? $johnson_count : 0 }}</h3>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-erlenmeyer-flask-bubbles"></i>
+                                        </div>
+                                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="row" style="padding-left: 1%;padding-right: 1%">
@@ -318,8 +346,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                     </div>
                                 </div>
                             </div>
-
-
                             <h3 class="page-header">Monthly Activity</h3>
                             <div class="row">
                                 <div class="col-md-12">
@@ -674,15 +700,26 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         data: <?php echo json_encode($data["astrazeneca"]); ?>
                     },
                     {
+                        label: 'Pfizer',
+                        backgroundColor: '#00c0ef',
+                        data: <?php echo json_encode($data["pfizer"]); ?>
+                    },
+                    {
                         label: 'SputnikV',
                         backgroundColor: '#00a65a',
                         data: <?php echo json_encode($data["sputnikv"]); ?>
                     },
                     {
-                        label: 'Pfizer',
-                        backgroundColor: '#00c0ef',
-                        data: <?php echo json_encode($data["pfizer"]); ?>
+                        label: 'Moderna',
+                        backgroundColor: '#605ca8',
+                        data: <?php echo json_encode($data["moderna"]); ?>
+                    },
+                    {
+                        label: 'Johnson',
+                        backgroundColor: '#1d94ff',
+                        data: <?php echo json_encode($data["johnson"]); ?>
                     }
+
                 ]
             }
         };

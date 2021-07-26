@@ -715,77 +715,82 @@
                                 $total_vallocated_johnson = $total_vallocated_johnson_frst + $total_vallocated_johnson_scnd; //TOTAL VACCINE ALLOCATED_JOHNSON
                                 $total_vallocated  = $total_vallocated_svac + $total_vallocated_astra + $total_vallocated_pfizer + $total_vallocated_sputnikv + $total_vallocated_moderna + $total_vallocated_johnson; //TOTAL_VACCINE_ALLOCATED
 
+                                $total_vallocated_frst =  $total_vallocated_svac_frst + $total_vallocated_astra_frst + $total_vallocated_pfizer_frst + $total_vallocated_sputnikv_frst + $total_vallocated_moderna_frst + $total_vallocated_johnson_frst; //TOTAL_VACCINE_ALLOCATED_FIRST
+                                $total_vallocated_scnd = $total_vallocated_svac_scnd + $total_vallocated_astra_scnd + $total_vallocated_pfizer_scnd +$total_vallocated_sputnikv_scnd + $total_vallocated_moderna_scnd + $total_vallocated_johnson_scnd ; //TOTAL_VACCINE_ALLOCATED_SECOND
 
-
-                                    //DIRI KUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOB!
-
-
-
-
-                                $total_vallocated_frst =  $total_vallocated_svac_frst + $total_vallocated_astra_frst + $total_vallocated_sputnikv_frst + $total_vallocated_pfizer_frst; //TOTAL_VACCINE_ALLOCATED_FIRST
-                                $total_vallocated_scnd = $total_vallocated_svac_scnd + $total_vallocated_astra_scnd + $total_vallocated_sputnikv_scnd + $total_vallocated_pfizer_scnd; //TOTAL_VACCINE_ALLOCATED_SECOND
-
-                                $total_rfsd_frst = $total_rfsd_svac_frst + $total_rfsd_astra_frst + $total_rfsd_sputnikv_frst + $total_rfsd_pfizer_frst; //TOTAL_REFUSED
-                                $total_rfsd_scnd = $total_rfsd_svac_scnd + $total_rfsd_astra_scnd + $total_rfsd_sputnikv_scnd + $total_rfsd_pfizer_scnd; //TOTAL_REFUSED - 2
+                                $total_rfsd_frst = $total_rfsd_svac_frst + $total_rfsd_astra_frst + $total_rfsd_pfizer_frst + $total_rfsd_sputnikv_frst + $total_rfsd_moderna_frst + $total_rfsd_johnson_frst; //TOTAL_REFUSED
+                                $total_rfsd_scnd = $total_rfsd_svac_scnd + $total_rfsd_astra_scnd + $total_rfsd_pfizer_scnd + $total_rfsd_sputnikv_scnd + $total_rfsd_moderna_scnd + $total_rfsd_johnson_scnd; //TOTAL_REFUSED - 2
 
                                 $p_cvrge_svac_frst = $total_vcted_svac_frst / $total_epop_svac * 100; //PERCENT_COVERAGE_SINOVAC
                                 $p_cvrge_astra_frst = $total_vcted_astra_frst / $total_epop_astra * 100; //PERCENT_COVERAGE_ASTRA
-                                $p_cvrge_sputnikv_frst = $total_vcted_sputnikv_frst / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV
                                 $p_cvrge_pfizer_frst = $total_vcted_pfizer_frst / $total_epop_pfizer * 100; //PERCENT_COVERAGE_PFIZER
+                                $p_cvrge_sputnikv_frst = $total_vcted_sputnikv_frst / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV
+                                $p_cvrge_moderna_frst = $total_vcted_moderna_frst / $total_epop_moderna * 100; //PERCENT_COVERAGE_SPUTNIKV
+                                $p_cvrge_johnson_frst = $total_vcted_johnson_frst / $total_epop_johnson * 100; //PERCENT_COVERAGE_SPUTNIKV
 
                                 $p_cvrge_svac_scnd = $total_vcted_svac_scnd / $total_epop_svac * 100; //PERCENT_COVERAGE_SINOVAC 2
                                 $p_cvrge_astra_scnd = $total_vcted_astra_scnd / $total_epop_astra * 100; //PERCENT_COVERAGE_ASTRA 2
-                                $p_cvrge_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV 2
                                 $p_cvrge_pfizer_scnd = $total_vcted_pfizer_scnd / $total_epop_pfizer * 100; //PERCENT_COVERAGE_PFIZER 2
+                                $p_cvrge_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_epop_sputnikv * 100; //PERCENT_COVERAGE_SPUTNIKV 2
+                                $p_cvrge_moderna_scnd = $total_vcted_moderna_scnd / $total_epop_moderna * 100; //PERCENT_COVERAGE_SPUTNIKV 2
+                                $p_cvrge_johnson_scnd = $total_vcted_johnson_scnd / $total_epop_johnson * 100; //PERCENT_COVERAGE_SPUTNIKV 2
 
                                 $total_c_rate_svac_frst = $total_vcted_svac_frst / $total_vallocated_svac_frst * 100; //CONSUMPTION RATE_SINOVAC
                                 $total_c_rate_astra_frst = $total_vcted_astra_frst / $total_vallocated_astra_frst * 100; //CONSUMPTION RATE ASTRA
-                                $total_c_rate_sputnikv_frst = $total_vcted_sputnikv_frst / $total_vallocated_sputnikv_frst * 100; //CONSUMPTION RATE SPUTNIKV
                                 $total_c_rate_pfizer_frst = $total_vcted_pfizer_frst / $total_vallocated_pfizer_frst * 100; //CONSUMPTION RATE PFIZER
+                                $total_c_rate_sputnikv_frst = $total_vcted_sputnikv_frst / $total_vallocated_sputnikv_frst * 100; //CONSUMPTION RATE SPUTNIKV
+                                $total_c_rate_moderna_frst = $total_vcted_moderna_frst / $total_vallocated_moderna_frst * 100; //CONSUMPTION RATE SPUTNIKV
+                                $total_c_rate_johnson_frst = $total_vcted_johnson_frst / $total_vallocated_johnson_frst * 100; //CONSUMPTION RATE SPUTNIKV
 
                                 $total_c_rate_svac_scnd = $total_vcted_svac_scnd / $total_vallocated_svac_scnd * 100; //CONSUMPTION RATE SINOVAC 2
                                 $total_c_rate_astra_scnd = $total_vcted_astra_scnd / $total_vallocated_astra_scnd * 100; //CONSUMPTION_RATE_ASTRA 2
-                                $total_c_rate_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_vallocated_sputnikv_scnd * 100; //CONSUMPTION_RATE_SPUTNIKV 2
                                 $total_c_rate_pfizer_scnd = $total_vcted_pfizer_scnd / $total_vallocated_pfizer_scnd * 100; //CONSUMPTION_RATE_PFIZER 2
+                                $total_c_rate_sputnikv_scnd = $total_vcted_sputnikv_scnd / $total_vallocated_sputnikv_scnd * 100; //CONSUMPTION_RATE_SPUTNIKV 2
+                                $total_c_rate_moderna_scnd = $total_vcted_moderna_scnd / $total_vallocated_moderna_scnd * 100; //CONSUMPTION_RATE_SPUTNIKV 2
+                                $total_c_rate_johnson_scnd = $total_vcted_johnson_scnd / $total_vallocated_johnson_scnd * 100; //CONSUMPTION_RATE_SPUTNIKV 2
 
                                 $total_r_unvcted_frst_svac = $total_epop_svac - $total_vcted_svac_frst - $total_rfsd_svac_frst; //REMAINING UNVACCINATED_SINOVAC
                                 $total_r_unvcted_frst_astra = $total_epop_astra - $total_vcted_astra_frst - $total_rfsd_astra_frst; //REMAINUNG UNVACCINATED_ASTRA
-                                $total_r_unvcted_frst_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_frst - $total_rfsd_sputnikv_frst; //REMAINUNG UNVACCINATED_SPUTNIKV
                                 $total_r_unvcted_frst_pfizer = $total_epop_pfizer - $total_vcted_pfizer_frst - $total_rfsd_pfizer_frst; //REMAINUNG UNVACCINATED_PFIZER
+                                $total_r_unvcted_frst_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_frst - $total_rfsd_sputnikv_frst; //REMAINUNG UNVACCINATED_SPUTNIKV
+                                $total_r_unvcted_frst_moderna = $total_epop_moderna - $total_vcted_moderna_frst - $total_rfsd_moderna_frst; //REMAINUNG UNVACCINATED_SPUTNIKV
+                                $total_r_unvcted_frst_johnson = $total_epop_johnson - $total_vcted_johnson_frst - $total_rfsd_johnson_frst; //REMAINUNG UNVACCINATED_SPUTNIKV
 
                                 $total_r_unvcted_scnd_svac = $total_epop_svac - $total_vcted_svac_scnd - $total_rfsd_svac_scnd; //REMAINING UNVACCINATED_SINOVAC 2
                                 $total_r_unvcted_scnd_astra = $total_epop_astra - $total_vcted_astra_scnd - $total_rfsd_astra_scnd; //REMAINUNG_UNVACCIANTED_ASTRA 2
-                                $total_r_unvcted_scnd_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_scnd - $total_rfsd_sputnikv_scnd; //REMAINUNG_UNVACCIANTED_SPUTNIKV 2
                                 $total_r_unvcted_scnd_pfizer = $total_epop_pfizer - $total_vcted_pfizer_scnd - $total_rfsd_pfizer_scnd; //REMAINUNG_UNVACCIANTED_PFIZER 2
+                                $total_r_unvcted_scnd_sputnikv = $total_epop_sputnikv - $total_vcted_sputnikv_scnd - $total_rfsd_sputnikv_scnd; //REMAINUNG_UNVACCIANTED_SPUTNIKV 2
+                                $total_r_unvcted_scnd_moderna = $total_epop_moderna - $total_vcted_moderna_scnd - $total_rfsd_moderna_scnd; //REMAINUNG_UNVACCIANTED_SPUTNIKV 2
+                                $total_r_unvcted_scnd_johnson = $total_epop_johnson - $total_vcted_johnson_scnd - $total_rfsd_johnson_scnd; //REMAINUNG_UNVACCIANTED_SPUTNIKV 2
 
-                                $total_vcted_a1_first = $total_svac_a1_frst + $total_astra_a1_frst + $total_sputnikv_a1_frst + $total_pfizer_a1_frst; //VACCINATED A1
-                                $total_vcted_a2_first = $total_svac_a2_frst + $total_astra_a2_frst + $total_sputnikv_a2_frst + $total_pfizer_a2_frst; //VACCINATED A2
-                                $total_vcted_a3_first = $total_svac_a3_frst + $total_astra_a3_frst + $total_sputnikv_a3_frst + $total_pfizer_a3_frst; //VACCINATED A3
-                                $total_vcted_a4_first = $total_svac_a4_frst + $total_astra_a4_frst + $total_sputnikv_a4_frst + $total_pfizer_a4_frst; //VACCINATED A4
-                                $total_vcted_a5_first = $total_svac_a5_frst + $total_astra_a5_frst + $total_sputnikv_a5_frst + $total_pfizer_a5_frst; //VACCINATED A5
-                                $total_vcted_b1_first = $total_svac_b1_frst + $total_astra_b1_frst + $total_sputnikv_b1_frst + $total_pfizer_b1_frst; //VACCINATED B1
-                                $total_vcted_b2_first = $total_svac_b2_frst + $total_astra_b2_frst + $total_sputnikv_b2_frst + $total_pfizer_b2_frst; //VACCINATED B2
-                                $total_vcted_b3_first = $total_svac_b3_frst + $total_astra_b3_frst + $total_sputnikv_b3_frst + $total_pfizer_b3_frst; //VACCINATED B3
-                                $total_vcted_b4_first = $total_svac_b4_frst + $total_astra_b4_frst + $total_sputnikv_b4_frst + $total_pfizer_b4_frst; //VACCINATED B4
+                                $total_vcted_a1_first = $total_svac_a1_frst + $total_astra_a1_frst + $total_pfizer_a1_frst + $total_sputnikv_a1_frst + $total_moderna_a1_frst + $total_johnson_a1_frst; //VACCINATED A1
+                                $total_vcted_a2_first = $total_svac_a2_frst + $total_astra_a2_frst + $total_pfizer_a2_frst + $total_sputnikv_a2_frst + $total_moderna_a2_frst + $total_johnson_a2_frst; //VACCINATED A2
+                                $total_vcted_a3_first = $total_svac_a3_frst + $total_astra_a3_frst + $total_pfizer_a3_frst + $total_sputnikv_a3_frst + $total_moderna_a3_frst + $total_johnson_a3_frst; //VACCINATED A3
+                                $total_vcted_a4_first = $total_svac_a4_frst + $total_astra_a4_frst + $total_pfizer_a4_frst + $total_sputnikv_a4_frst + $total_moderna_a4_frst + $total_johnson_a4_frst; //VACCINATED A4
+                                $total_vcted_a5_first = $total_svac_a5_frst + $total_astra_a5_frst + $total_pfizer_a5_frst + $total_sputnikv_a5_frst + $total_moderna_a5_frst + $total_johnson_a5_frst; //VACCINATED A5
+                                $total_vcted_b1_first = $total_svac_b1_frst + $total_astra_b1_frst + $total_pfizer_b1_frst + $total_sputnikv_b1_frst + $total_moderna_b1_frst + $total_johnson_b1_frst; //VACCINATED B1
+                                $total_vcted_b2_first = $total_svac_b2_frst + $total_astra_b2_frst + $total_pfizer_b2_frst + $total_sputnikv_b2_frst + $total_moderna_b2_frst + $total_johnson_b2_frst; //VACCINATED B2
+                                $total_vcted_b3_first = $total_svac_b3_frst + $total_astra_b3_frst + $total_pfizer_b3_frst + $total_sputnikv_b3_frst + $total_moderna_b3_frst + $total_johnson_b3_frst; //VACCINATED B3
+                                $total_vcted_b4_first = $total_svac_b4_frst + $total_astra_b4_frst + $total_pfizer_b4_frst + $total_sputnikv_b4_frst + $total_moderna_b4_frst + $total_johnson_b4_frst; //VACCINATED B4
                                 $total_vcted_overall_first = $total_vcted_a1_first + $total_vcted_a2_first + $total_vcted_a3_first + $total_vcted_a4_first + $total_vcted_a5_first +
                                     $total_vcted_b1_first + $total_vcted_b2_first + $total_vcted_b3_first + $total_vcted_b4_first; //VACCINATED OVERALL
 
-                                $total_vcted_a1_scnd = $total_svac_a1_scnd + $total_astra_a1_scnd + $total_sputnikv_a1_scnd + $total_pfizer_a1_scnd; //VACCINATED A1 2
-                                $total_vcted_a2_scnd = $total_svac_a2_scnd + $total_astra_a2_scnd + $total_sputnikv_a2_scnd + $total_pfizer_a2_scnd; //VACCINATED A2 2
-                                $total_vcted_a3_scnd = $total_svac_a3_scnd + $total_astra_a3_scnd + $total_sputnikv_a3_scnd + $total_pfizer_a3_scnd; //VACCINATED A3 2
-                                $total_vcted_a4_scnd = $total_svac_a4_scnd + $total_astra_a4_scnd + $total_sputnikv_a4_scnd + $total_pfizer_a4_scnd; //VACCINATED A4 2
-                                $total_vcted_a5_scnd = $total_svac_a5_scnd + $total_astra_a5_scnd + $total_sputnikv_a5_scnd + $total_pfizer_a5_scnd; //VACCINATED A5 2
-                                $total_vcted_b1_scnd = $total_svac_b1_scnd + $total_astra_b1_scnd + $total_sputnikv_b1_scnd + $total_pfizer_b1_scnd; //VACCINATED B1 2
-                                $total_vcted_b2_scnd = $total_svac_b2_scnd + $total_astra_b2_scnd + $total_sputnikv_b2_scnd + $total_pfizer_b2_scnd; //VACCINATED B2 2
-                                $total_vcted_b3_scnd = $total_svac_b3_scnd + $total_astra_b3_scnd + $total_sputnikv_b3_scnd + $total_pfizer_b3_scnd; //VACCINATED B3 2
-                                $total_vcted_b4_scnd = $total_svac_b4_scnd + $total_astra_b4_scnd + $total_sputnikv_b4_scnd + $total_pfizer_b4_scnd; //VACCINATED B4 2
+                                $total_vcted_a1_scnd = $total_svac_a1_scnd + $total_astra_a1_scnd + $total_pfizer_a1_scnd + $total_sputnikv_a1_scnd + $total_moderna_a1_scnd + $total_johnson_a1_scnd; //VACCINATED A1 2
+                                $total_vcted_a2_scnd = $total_svac_a2_scnd + $total_astra_a2_scnd + $total_pfizer_a2_scnd + $total_sputnikv_a2_scnd + $total_moderna_a2_scnd + $total_johnson_a2_scnd; //VACCINATED A2 2
+                                $total_vcted_a3_scnd = $total_svac_a3_scnd + $total_astra_a3_scnd + $total_pfizer_a3_scnd + $total_sputnikv_a3_scnd + $total_moderna_a3_scnd + $total_johnson_a3_scnd; //VACCINATED A3 2
+                                $total_vcted_a4_scnd = $total_svac_a4_scnd + $total_astra_a4_scnd + $total_pfizer_a4_scnd + $total_sputnikv_a4_scnd + $total_moderna_a4_scnd + $total_johnson_a4_scnd; //VACCINATED A4 2
+                                $total_vcted_a5_scnd = $total_svac_a5_scnd + $total_astra_a5_scnd + $total_pfizer_a5_scnd + $total_sputnikv_a5_scnd + $total_moderna_a5_scnd + $total_johnson_a5_scnd; //VACCINATED A5 2
+                                $total_vcted_b1_scnd = $total_svac_b1_scnd + $total_astra_b1_scnd + $total_pfizer_b1_scnd + $total_sputnikv_b1_scnd + $total_moderna_b1_scnd + $total_johnson_b1_scnd; //VACCINATED B1 2
+                                $total_vcted_b2_scnd = $total_svac_b2_scnd + $total_astra_b2_scnd + $total_pfizer_b2_scnd + $total_sputnikv_b2_scnd + $total_moderna_b2_scnd + $total_johnson_b2_scnd; //VACCINATED B2 2
+                                $total_vcted_b3_scnd = $total_svac_b3_scnd + $total_astra_b3_scnd + $total_pfizer_b3_scnd + $total_sputnikv_b3_scnd + $total_moderna_b3_scnd + $total_johnson_b3_scnd; //VACCINATED B3 2
+                                $total_vcted_b4_scnd = $total_svac_b4_scnd + $total_astra_b4_scnd + $total_pfizer_b4_scnd + $total_sputnikv_b4_scnd + $total_moderna_b4_scnd + $total_johnson_b4_scnd; //VACCINATED B4 2
                                 $total_vcted_overall_scnd = $total_vcted_a1_scnd + $total_vcted_a2_scnd + $total_vcted_a3_scnd + $total_vcted_a4_scnd + $total_vcted_a5_scnd +
                                     $total_vcted_b1_scnd + $total_vcted_b2_scnd + $total_vcted_b3_scnd + $total_vcted_b4_scnd;//VACCINATED OVERALL
 
-                                $total_overall_mild_frst = $total_mild_svac_frst + $total_mild_astra_frst + $total_mild_sputnikv_frst + $total_mild_pfizer_frst; //TOTAL_OVERALL_MILD_FIRST
-                                $total_overall_srs_frst = $total_srs_svac_frst + $total_srs_astra_frst + $total_srs_sputnikv_frst + $total_srs_pfizer_frst; //TOTAL_OVERALL_SERIOUS_FIRST
-                                $total_overall_dfrd_frst = $total_dfrd_svac_frst + $total_dfrd_astra_frst + $total_dfrd_sputnikv_frst + $total_dfrd_pfizer_frst; //TOTAL_OVERALL_DEFERRED_FIRST
-                                $total_overall_wstge_frst = $total_wstge_svac_frst + $total_wstge_astra_frst + $total_wstge_sputnikv_frst + $total_wstge_pfizer_frst; //TOTAL_OVERALL_WASTAGE_FIRST
+                                $total_overall_mild_frst = $total_mild_svac_frst + $total_mild_astra_frst + $total_mild_pfizer_frst + $total_mild_sputnikv_frst + $total_mild_moderna_frst + $total_mild_johnson_frst; //TOTAL_OVERALL_MILD_FIRST
+                                $total_overall_srs_frst = $total_srs_svac_frst + $total_srs_astra_frst + $total_srs_pfizer_frst + $total_srs_sputnikv_frst + $total_srs_moderna_frst + $total_srs_johnson_frst; //TOTAL_OVERALL_SERIOUS_FIRST
+                                $total_overall_dfrd_frst = $total_dfrd_svac_frst + $total_dfrd_astra_frst + $total_dfrd_pfizer_frst + $total_dfrd_sputnikv_frst + $total_dfrd_moderna_frst + $total_dfrd_johnson_frst ; //TOTAL_OVERALL_DEFERRED_FIRST
+                                $total_overall_wstge_frst = $total_wstge_svac_frst + $total_wstge_astra_frst + $total_wstge_pfizer_frst + $total_wstge_sputnikv_frst + $total_wstge_moderna_frst + $total_wstge_johnson_frst; //TOTAL_OVERALL_WASTAGE_FIRST
 
                                 $total_p_cvrge_overall_frst = $total_vcted_overall_first / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_FIRST
                                 $total_p_cvrge_overall_scnd = $total_vcted_overall_scnd / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_SCND
@@ -809,13 +814,20 @@
                                             <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
                                                 <b>Astrazeneca</b>
                                             </button>
+                                            <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
+                                                 <b>Pfizer</b>
+                                            </button>
                                             <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
                                                 <b>SputnikV</b>
                                             </button>
-                                            <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
-                                                <b>Pfizer</b>
+                                            <button class="btn btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
+                                                <b>Moderna</b>
                                             </button>
-                                            <button class="btn" style="color: black;" type="button">
+                                            <button class="btn btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
+                                                 <b>Johnson</b>
+                                            </button>
+
+                                        <button class="btn" style="color: black;" type="button">
                                                 <h5>Total Allocated: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h5>
                                             </button>
                                             <button class="btn" style="color: black;" type="button">
@@ -1170,6 +1182,136 @@
                                             </tr>
                                             </tbody>
 
+                                            <!-- PFIZER -->
+                                            <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                            <tr style="background-color: #8fe7fd">
+                                                <td rowspan="2">
+                                                </td>
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a1{{ $row->id }}">{{ $total_epop_pfizer_a1 }}</td>  <!-- A1 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a2{{ $row->id }}">{{ $total_epop_pfizer_a2 }}</td>  <!-- A2 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a3{{ $row->id }}">{{ $total_epop_pfizer_a3 }}</td>  <!-- A3 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a4{{ $row->id }}">{{ $total_epop_pfizer_a4 }}</td>  <!-- A4 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a5{{ $row->id }}">{{ $total_epop_pfizer_a5 }}</td>  <!-- A5 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b1{{ $row->id }}">{{ $total_epop_pfizer_b1 }}</td>  <!-- B1 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b2{{ $row->id }}">{{ $total_epop_pfizer_b2 }}</td>  <!-- B2 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b3{{ $row->id }}">{{ $total_epop_pfizer_b3 }}</td>  <!-- B3 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b4{{ $row->id }}">{{ $total_epop_pfizer_b4 }}</td>  <!-- B4 EPOP PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer{{ $row->id }}">{{ $total_epop_pfizer }} </td>  <!-- TOTAL_E_POP_PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_frst{{ $row->id }}">{{ $total_vallocated_pfizer_frst }}</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_scnd{{ $row->id }}">{{ $total_vallocated_pfizer_scnd }}</td>  <!-- VACCINE ALLOCATED_PFIZER(SD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">{{ $total_vallocated_pfizer }}</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER -->
+                                                <td style="color:black;">
+                                                    <span class="label label-success total_pfizer_a1_frst{{ $row->id }}">{{ $total_pfizer_a1_frst }}</span>  <!-- A1_PFIZER  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_pfizer_a2_frst{{ $row->id }}">{{ $total_pfizer_a2_frst }}</span>  <!-- A2_PFIZER  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_pfizer_a3_frst{{ $row->id }}">{{ $total_pfizer_a3_frst }}</span>  <!-- A3_PFIZER  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_pfizer_a4_frst{{ $row->id }}">{{ $total_pfizer_a4_frst }}</span>  <!-- A4_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_pfizer_a5_frst{{ $row->id }}">{{ $total_pfizer_a5_frst }}</span>  <!-- A5_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_pfizer_b1_frst{{ $row->id }}">{{ $total_pfizer_b1_frst }}</span>  <!-- B1_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_pfizer_b2_frst{{ $row->id }}">{{ $total_pfizer_b2_frst }}</span>  <!-- B2_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_pfizer_b3_frst{{ $row->id }}">{{ $total_pfizer_b3_frst }}</span>  <!-- B3_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_pfizer_b4_frst{{ $row->id }}">{{ $total_pfizer_b4_frst }}</span>  <!-- B4_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_vcted_pfizer_frst{{ $row->id }}">{{ $total_vcted_pfizer_frst }}</span>  <!-- TOTAL VACCINATED_PFIZER-->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_mild_pfizer_frst{{ $row->id }}">{{ $total_mild_pfizer_frst }}</span> <!-- MILD_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_srs_pfizer_frst{{ $row->id }}">{{ $total_srs_pfizer_frst }}</span>  <!-- SERIOUS_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_dfrd_pfizer_frst{{ $row->id }}">{{ $total_dfrd_pfizer_frst }}</span> <!-- DEFERRED_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_rfsd_pfizer_frst{{ $row->id }}">{{ $total_rfsd_pfizer_frst }}</span> <!-- REFUSED_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_wstge_pfizer_frst{{ $row->id }}">{{ $total_wstge_pfizer_frst }}</span> <!-- WASTAGE_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success p_cvrge_pfizer_frst{{ $row->id }}">{{ number_format($p_cvrge_pfizer_frst,2) }}%</span> <!-- PERCENT_COVERAGE_PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_c_rate_pfizer_frst{{ $row->id }}">{{ number_format($total_c_rate_pfizer_frst,2) }}%</span> <!-- CONSUMPTION RATE PFIZER  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_r_unvcted_frst_pfizer{{ $row->id }}">{{ $total_r_unvcted_frst_pfizer }}</span> <!-- REMAINUNG UNVACCINATED_PFIZER  -->
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color: #8fe7fd">
+                                                <td style="color: black;">
+                                                    <span class="label label-warning total_pfizer_a1_scnd{{ $row->id }}">{{ $total_pfizer_a1_scnd }}</span>  <!-- A1_PFIZER 2  -->
+                                                </td>
+                                                <td style="color:black;">
+                                                    <span class="label label-warning total_pfizer_a2_scnd{{ $row->id }}">{{ $total_pfizer_a2_scnd }}</span>  <!-- A2_PFIZER 2  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-warning total_pfizer_a3_scnd{{ $row->id }}">{{ $total_pfizer_a3_scnd }}</span>  <!-- A3_PFIZER 2  -->
+                                                </td>
+                                                <td style="color:black;">
+                                                    <span class="label label-warning total_pfizer_a4_scnd{{ $row->id }}">{{ $total_pfizer_a4_scnd }}</span>  <!-- A4_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_pfizer_a5_scnd{{ $row->id }}">{{ $total_pfizer_a5_scnd }}</span>  <!-- A5_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_pfizer_b1_scnd{{ $row->id }}">{{ $total_pfizer_b1_scnd }}</span>  <!-- B1_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_pfizer_b2_scnd{{ $row->id }}">{{ $total_pfizer_b2_scnd }}</span>  <!-- B2_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_pfizer_b3_scnd{{ $row->id }}">{{ $total_pfizer_b3_scnd }}</span>  <!-- B3_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_pfizer_b4_scnd{{ $row->id }}">{{ $total_pfizer_b4_scnd }}</span>  <!-- B4_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_vcted_pfizer_scnd{{ $row->id }}">{{ $total_vcted_pfizer_scnd }}</span> <!-- TOTAL VACCINATED_PFIZER 2-->
+                                                </td> <!-- 1-6 -->
+                                                <td>
+                                                    <span class="label label-warning total_mild_pfizer_scnd{{ $row->id }}">{{ $total_mild_pfizer_scnd }}</span> <!-- MILD_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_srs_pfizer_scnd{{ $row->id }}">{{ $total_srs_pfizer_scnd }}</span> <!-- SERIOUS_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_dfrd_pfizer_scnd{{ $row->id }}">{{ $total_dfrd_pfizer_scnd }}</span> <!-- DEFERRED_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_rfsd_pfizer_scnd{{ $row->id }}">{{ $total_rfsd_pfizer_scnd }}</span> <!-- REFUSED_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_wstge_pfizer_scnd{{ $row->id }}">{{ $total_wstge_pfizer_scnd }}</span> <!-- WASTAGE_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning p_cvrge_pfizer_scnd{{ $row->id }}">{{ number_format($p_cvrge_pfizer_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_c_rate_pfizer_scnd{{ $row->id }}">{{ number_format($total_c_rate_pfizer_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_PFIZER 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_r_unvcted_scnd_pfizer{{ $row->id }}">{{ $total_r_unvcted_scnd_pfizer }}</span> <!-- REMAINUNG_UNVACCIANTED_PFIZER 2  -->
+                                                </td>
+                                            </tr>
+                                            </tbody>
                                             <!-- SPUTNIKV -->
                                             <tbody id="collapse_sputnikv{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #b1ffdb">
@@ -1301,133 +1443,264 @@
                                             </tr>
                                             </tbody>
 
-                                            <!-- PFIZER -->
-                                            <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                            <tr style="background-color: #8fe7fd">
+                                            <!-- MODERNA -->
+                                            <tbody id="collapse_moderna{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                            <tr style="background-color: #dad8ff">
                                                 <td rowspan="2">
                                                 </td>
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a1{{ $row->id }}">{{ $total_epop_pfizer_a1 }}</td>  <!-- A1 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a2{{ $row->id }}">{{ $total_epop_pfizer_a2 }}</td>  <!-- A2 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a3{{ $row->id }}">{{ $total_epop_pfizer_a3 }}</td>  <!-- A3 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a4{{ $row->id }}">{{ $total_epop_pfizer_a4 }}</td>  <!-- A4 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_a5{{ $row->id }}">{{ $total_epop_pfizer_a5 }}</td>  <!-- A5 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b1{{ $row->id }}">{{ $total_epop_pfizer_b1 }}</td>  <!-- B1 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b2{{ $row->id }}">{{ $total_epop_pfizer_b2 }}</td>  <!-- B2 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b3{{ $row->id }}">{{ $total_epop_pfizer_b3 }}</td>  <!-- B3 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer_b4{{ $row->id }}">{{ $total_epop_pfizer_b4 }}</td>  <!-- B4 EPOP PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_epop_pfizer{{ $row->id }}">{{ $total_epop_pfizer }} </td>  <!-- TOTAL_E_POP_PFIZER -->
-                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_frst{{ $row->id }}">{{ $total_vallocated_pfizer_frst }}</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
-                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_scnd{{ $row->id }}">{{ $total_vallocated_pfizer_scnd }}</td>  <!-- VACCINE ALLOCATED_PFIZER(SD) -->
-                                                <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">{{ $total_vallocated_pfizer }}</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_a1{{ $row->id }}">{{ $total_epop_moderna_a1 }}</td>  <!-- A1 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_a2{{ $row->id }}">{{ $total_epop_moderna_a2 }}</td>  <!-- A2 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_a3{{ $row->id }}">{{ $total_epop_moderna_a3 }}</td>  <!-- A3 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_a4{{ $row->id }}">{{ $total_epop_moderna_a4 }}</td>  <!-- A4 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_a5{{ $row->id }}">{{ $total_epop_moderna_a5 }}</td>  <!-- A5 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_b1{{ $row->id }}">{{ $total_epop_moderna_b1 }}</td>  <!-- B1 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_b2{{ $row->id }}">{{ $total_epop_moderna_b2 }}</td>  <!-- B2 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_b3{{ $row->id }}">{{ $total_epop_moderna_b3 }}</td>  <!-- B3 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna_b4{{ $row->id }}">{{ $total_epop_moderna_b4 }}</td>  <!-- B4 EPOP MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_moderna{{ $row->id }}">{{ $total_epop_moderna }} </td>  <!-- TOTAL_E_POP_MODERNA -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_moderna_frst{{ $row->id }}">{{ $total_vallocated_moderna_frst }}</td>  <!-- VACCINE ALLOCATED_MODERNA (FD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_moderna_scnd{{ $row->id }}">{{ $total_vallocated_moderna_scnd }}</td>  <!-- VACCINE ALLOCATED_MODERNA (SD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_moderna{{ $row->id }}">{{ $total_vallocated_moderna }}</td>  <!-- TOTAL VACCINE ALLOCATED_MODERNA -->
                                                 <td style="color:black;">
-                                                    <span class="label label-success total_pfizer_a1_frst{{ $row->id }}">{{ $total_pfizer_a1_frst }}</span>  <!-- A1_PFIZER  -->
+                                                    <span class="label label-success total_moderna_a1_frst{{ $row->id }}">{{ $total_moderna_a1_frst }}</span>  <!-- A1_MODERNA  -->
                                                 </td>
                                                 <td style="color:black">
-                                                    <span class="label label-success total_pfizer_a2_frst{{ $row->id }}">{{ $total_pfizer_a2_frst }}</span>  <!-- A2_PFIZER  -->
+                                                    <span class="label label-success total_moderna_a2_frst{{ $row->id }}">{{ $total_moderna_a2_frst }}</span>  <!-- A2_MODERNA  -->
                                                 </td>
                                                 <td style="color:black">
-                                                    <span class="label label-success total_pfizer_a3_frst{{ $row->id }}">{{ $total_pfizer_a3_frst }}</span>  <!-- A3_PFIZER  -->
+                                                    <span class="label label-success total_moderna_a3_frst{{ $row->id }}">{{ $total_moderna_a3_frst }}</span>  <!-- A3_MODERNA  -->
                                                 </td>
                                                 <td style="color:black">
-                                                    <span class="label label-success total_pfizer_a4_frst{{ $row->id }}">{{ $total_pfizer_a4_frst }}</span>  <!-- A4_PFIZER  -->
+                                                    <span class="label label-success total_moderna_a4_frst{{ $row->id }}">{{ $total_moderna_a4_frst }}</span>  <!-- A4_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_pfizer_a5_frst{{ $row->id }}">{{ $total_pfizer_a5_frst }}</span>  <!-- A5_PFIZER  -->
+                                                    <span class="label label-success total_moderna_a5_frst{{ $row->id }}">{{ $total_moderna_a5_frst }}</span>  <!-- A5_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_pfizer_b1_frst{{ $row->id }}">{{ $total_pfizer_b1_frst }}</span>  <!-- B1_PFIZER  -->
+                                                    <span class="label label-success total_moderna_b1_frst{{ $row->id }}">{{ $total_moderna_b1_frst }}</span>  <!-- B1_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_pfizer_b2_frst{{ $row->id }}">{{ $total_pfizer_b2_frst }}</span>  <!-- B2_PFIZER  -->
+                                                    <span class="label label-success total_moderna_b2_frst{{ $row->id }}">{{ $total_moderna_b2_frst }}</span>  <!-- B2_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_pfizer_b3_frst{{ $row->id }}">{{ $total_pfizer_b3_frst }}</span>  <!-- B3_PFIZER  -->
+                                                    <span class="label label-success total_moderna_b3_frst{{ $row->id }}">{{ $total_moderna_b3_frst }}</span>  <!-- B3_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_pfizer_b4_frst{{ $row->id }}">{{ $total_pfizer_b4_frst }}</span>  <!-- B4_PFIZER  -->
+                                                    <span class="label label-success total_moderna_b4_frst{{ $row->id }}">{{ $total_moderna_b4_frst }}</span>  <!-- B4_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_vcted_pfizer_frst{{ $row->id }}">{{ $total_vcted_pfizer_frst }}</span>  <!-- TOTAL VACCINATED_PFIZER-->
+                                                    <span class="label label-success total_vcted_moderna_frst{{ $row->id }}">{{ $total_vcted_moderna_frst }}</span>  <!-- TOTAL VACCINATED_MODERNA-->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_mild_pfizer_frst{{ $row->id }}">{{ $total_mild_pfizer_frst }}</span> <!-- MILD_PFIZER  -->
+                                                    <span class="label label-success total_mild_moderna_frst{{ $row->id }}">{{ $total_mild_moderna_frst }}</span> <!-- MILD_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_srs_pfizer_frst{{ $row->id }}">{{ $total_srs_pfizer_frst }}</span>  <!-- SERIOUS_PFIZER  -->
+                                                    <span class="label label-success total_srs_moderna_frst{{ $row->id }}">{{ $total_srs_moderna_frst }}</span>  <!-- SERIOUS_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_dfrd_pfizer_frst{{ $row->id }}">{{ $total_dfrd_pfizer_frst }}</span> <!-- DEFERRED_PFIZER  -->
+                                                    <span class="label label-success total_dfrd_moderna_frst{{ $row->id }}">{{ $total_dfrd_moderna_frst }}</span> <!-- DEFERRED_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_rfsd_pfizer_frst{{ $row->id }}">{{ $total_rfsd_pfizer_frst }}</span> <!-- REFUSED_PFIZER  -->
+                                                    <span class="label label-success total_rfsd_moderna_frst{{ $row->id }}">{{ $total_rfsd_moderna_frst }}</span> <!-- REFUSED_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_wstge_pfizer_frst{{ $row->id }}">{{ $total_wstge_pfizer_frst }}</span> <!-- WASTAGE_PFIZER  -->
+                                                    <span class="label label-success total_wstge_moderna_frst{{ $row->id }}">{{ $total_wstge_moderna_frst }}</span> <!-- WASTAGE_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success p_cvrge_pfizer_frst{{ $row->id }}">{{ number_format($p_cvrge_pfizer_frst,2) }}%</span> <!-- PERCENT_COVERAGE_PFIZER  -->
+                                                    <span class="label label-success p_cvrge_moderna_frst{{ $row->id }}">{{ number_format($p_cvrge_moderna_frst,2) }}%</span> <!-- PERCENT_COVERAGE_MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_c_rate_pfizer_frst{{ $row->id }}">{{ number_format($total_c_rate_pfizer_frst,2) }}%</span> <!-- CONSUMPTION RATE PFIZER  -->
+                                                    <span class="label label-success total_c_rate_moderna_frst{{ $row->id }}">{{ number_format($total_c_rate_moderna_frst,2) }}%</span> <!-- CONSUMPTION RATE MODERNA  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success total_r_unvcted_frst_pfizer{{ $row->id }}">{{ $total_r_unvcted_frst_pfizer }}</span> <!-- REMAINUNG UNVACCINATED_PFIZER  -->
+                                                    <span class="label label-success total_r_unvcted_frst_moderna{{ $row->id }}">{{ $total_r_unvcted_frst_moderna }}</span> <!-- REMAINUNG UNVACCINATED_MODERNA  -->
                                                 </td>
                                             </tr>
-                                            <tr style="background-color: #8fe7fd">
+                                            <tr style="background-color: #dad8ff">
                                                 <td style="color: black;">
-                                                    <span class="label label-warning total_pfizer_a1_scnd{{ $row->id }}">{{ $total_pfizer_a1_scnd }}</span>  <!-- A1_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_a1_scnd{{ $row->id }}">{{ $total_moderna_a1_scnd }}</span>  <!-- A1_MODERNA 2  -->
                                                 </td>
                                                 <td style="color:black;">
-                                                    <span class="label label-warning total_pfizer_a2_scnd{{ $row->id }}">{{ $total_pfizer_a2_scnd }}</span>  <!-- A2_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_a2_scnd{{ $row->id }}">{{ $total_moderna_a2_scnd }}</span>  <!-- A2_MODERNA 2  -->
                                                 </td>
                                                 <td style="color:black">
-                                                    <span class="label label-warning total_pfizer_a3_scnd{{ $row->id }}">{{ $total_pfizer_a3_scnd }}</span>  <!-- A3_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_a3_scnd{{ $row->id }}">{{ $total_moderna_a3_scnd }}</span>  <!-- A3_MODERNA 2  -->
                                                 </td>
                                                 <td style="color:black;">
-                                                    <span class="label label-warning total_pfizer_a4_scnd{{ $row->id }}">{{ $total_pfizer_a4_scnd }}</span>  <!-- A4_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_a4_scnd{{ $row->id }}">{{ $total_moderna_a4_scnd }}</span>  <!-- A4_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_pfizer_a5_scnd{{ $row->id }}">{{ $total_pfizer_a5_scnd }}</span>  <!-- A5_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_a5_scnd{{ $row->id }}">{{ $total_moderna_a5_scnd }}</span>  <!-- A5_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_pfizer_b1_scnd{{ $row->id }}">{{ $total_pfizer_b1_scnd }}</span>  <!-- B1_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_b1_scnd{{ $row->id }}">{{ $total_moderna_b1_scnd }}</span>  <!-- B1_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_pfizer_b2_scnd{{ $row->id }}">{{ $total_pfizer_b2_scnd }}</span>  <!-- B2_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_b2_scnd{{ $row->id }}">{{ $total_moderna_b2_scnd }}</span>  <!-- B2_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_pfizer_b3_scnd{{ $row->id }}">{{ $total_pfizer_b3_scnd }}</span>  <!-- B3_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_b3_scnd{{ $row->id }}">{{ $total_moderna_b3_scnd }}</span>  <!-- B3_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_pfizer_b4_scnd{{ $row->id }}">{{ $total_pfizer_b4_scnd }}</span>  <!-- B4_PFIZER 2  -->
+                                                    <span class="label label-warning total_moderna_b4_scnd{{ $row->id }}">{{ $total_moderna_b4_scnd }}</span>  <!-- B4_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_vcted_pfizer_scnd{{ $row->id }}">{{ $total_vcted_pfizer_scnd }}</span> <!-- TOTAL VACCINATED_PFIZER 2-->
+                                                    <span class="label label-warning total_vcted_moderna_scnd{{ $row->id }}">{{ $total_vcted_moderna_scnd }}</span> <!-- TOTAL VACCINATED_MODERNA 2-->
                                                 </td> <!-- 1-6 -->
                                                 <td>
-                                                    <span class="label label-warning total_mild_pfizer_scnd{{ $row->id }}">{{ $total_mild_pfizer_scnd }}</span> <!-- MILD_PFIZER 2  -->
+                                                    <span class="label label-warning total_mild_moderna_scnd{{ $row->id }}">{{ $total_mild_moderna_scnd }}</span> <!-- MILD_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_srs_pfizer_scnd{{ $row->id }}">{{ $total_srs_pfizer_scnd }}</span> <!-- SERIOUS_PFIZER 2  -->
+                                                    <span class="label label-warning total_srs_moderna_scnd{{ $row->id }}">{{ $total_srs_moderna_scnd }}</span> <!-- SERIOUS_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_dfrd_pfizer_scnd{{ $row->id }}">{{ $total_dfrd_pfizer_scnd }}</span> <!-- DEFERRED_PFIZER 2  -->
+                                                    <span class="label label-warning total_dfrd_moderna_scnd{{ $row->id }}">{{ $total_dfrd_moderna_scnd }}</span> <!-- DEFERRED_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_rfsd_pfizer_scnd{{ $row->id }}">{{ $total_rfsd_pfizer_scnd }}</span> <!-- REFUSED_PFIZER 2  -->
+                                                    <span class="label label-warning total_rfsd_moderna_scnd{{ $row->id }}">{{ $total_rfsd_moderna_scnd }}</span> <!-- REFUSED_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_wstge_pfizer_scnd{{ $row->id }}">{{ $total_wstge_pfizer_scnd }}</span> <!-- WASTAGE_PFIZER 2  -->
+                                                    <span class="label label-warning total_wstge_moderna_scnd{{ $row->id }}">{{ $total_wstge_moderna_scnd }}</span> <!-- WASTAGE_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning p_cvrge_pfizer_scnd{{ $row->id }}">{{ number_format($p_cvrge_pfizer_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_PFIZER 2  -->
+                                                    <span class="label label-warning p_cvrge_moderna_scnd{{ $row->id }}">{{ number_format($p_cvrge_moderna_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_c_rate_pfizer_scnd{{ $row->id }}">{{ number_format($total_c_rate_pfizer_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_PFIZER 2  -->
+                                                    <span class="label label-warning total_c_rate_moderna_scnd{{ $row->id }}">{{ number_format($total_c_rate_moderna_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_MODERNA 2  -->
                                                 </td>
                                                 <td>
-                                                    <span class="label label-warning total_r_unvcted_scnd_pfizer{{ $row->id }}">{{ $total_r_unvcted_scnd_pfizer }}</span> <!-- REMAINUNG_UNVACCIANTED_PFIZER 2  -->
+                                                    <span class="label label-warning total_r_unvcted_scnd_moderna{{ $row->id }}">{{ $total_r_unvcted_scnd_moderna }}</span> <!-- REMAINUNG_UNVACCIANTED_MODERNA 2  -->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+
+                                            <!-- JOHNSON -->
+                                            <tbody id="collapse_johnson{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                            <tr style="background-color: #9af5ee">
+                                                <td rowspan="2">
+                                                </td>
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_a1{{ $row->id }}">{{ $total_epop_johnson_a1 }}</td>  <!-- A1 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_a2{{ $row->id }}">{{ $total_epop_johnson_a2 }}</td>  <!-- A2 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_a3{{ $row->id }}">{{ $total_epop_johnson_a3 }}</td>  <!-- A3 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_a4{{ $row->id }}">{{ $total_epop_johnson_a4 }}</td>  <!-- A4 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_a5{{ $row->id }}">{{ $total_epop_johnson_a5 }}</td>  <!-- A5 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_b1{{ $row->id }}">{{ $total_epop_johnson_b1 }}</td>  <!-- B1 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_b2{{ $row->id }}">{{ $total_epop_johnson_b2 }}</td>  <!-- B2 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_b3{{ $row->id }}">{{ $total_epop_johnson_b3 }}</td>  <!-- B3 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson_b4{{ $row->id }}">{{ $total_epop_johnson_b4 }}</td>  <!-- B4 EPOP JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_epop_johnson{{ $row->id }}">{{ $total_epop_johnson }} </td>  <!-- TOTAL_E_POP_JOHNSON -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_johnson_frst{{ $row->id }}">{{ $total_vallocated_johnson_frst }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (FD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_johnson_scnd{{ $row->id }}">{{ $total_vallocated_johnson_scnd }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (SD) -->
+                                                <td rowspan="2" style="color:black;" class="total_vallocated_johnson{{ $row->id }}">{{ $total_vallocated_johnson }}</td>  <!-- TOTAL VACCINE ALLOCATED_JOHNSON -->
+                                                <td style="color:black;">
+                                                    <span class="label label-success total_johnson_a1_frst{{ $row->id }}">{{ $total_johnson_a1_frst }}</span>  <!-- A1_JOHNSON  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_johnson_a2_frst{{ $row->id }}">{{ $total_johnson_a2_frst }}</span>  <!-- A2_JOHNSON  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_johnson_a3_frst{{ $row->id }}">{{ $total_johnson_a3_frst }}</span>  <!-- A3_JOHNSON  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-success total_johnson_a4_frst{{ $row->id }}">{{ $total_johnson_a4_frst }}</span>  <!-- A4_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_johnson_a5_frst{{ $row->id }}">{{ $total_johnson_a5_frst }}</span>  <!-- A5_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_johnson_b1_frst{{ $row->id }}">{{ $total_johnson_b1_frst }}</span>  <!-- B1_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_johnson_b2_frst{{ $row->id }}">{{ $total_johnson_b2_frst }}</span>  <!-- B2_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_johnson_b3_frst{{ $row->id }}">{{ $total_johnson_b3_frst }}</span>  <!-- B3_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_johnson_b4_frst{{ $row->id }}">{{ $total_johnson_b4_frst }}</span>  <!-- B4_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_vcted_johnson_frst{{ $row->id }}">{{ $total_vcted_johnson_frst }}</span>  <!-- TOTAL VACCINATED_JOHNSON-->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_mild_johnson_frst{{ $row->id }}">{{ $total_mild_johnson_frst }}</span> <!-- MILD_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_srs_johnson_frst{{ $row->id }}">{{ $total_srs_johnson_frst }}</span>  <!-- SERIOUS_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_dfrd_johnson_frst{{ $row->id }}">{{ $total_dfrd_johnson_frst }}</span> <!-- DEFERRED_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_rfsd_johnson_frst{{ $row->id }}">{{ $total_rfsd_johnson_frst }}</span> <!-- REFUSED_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_wstge_johnson_frst{{ $row->id }}">{{ $total_wstge_johnson_frst }}</span> <!-- WASTAGE_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success p_cvrge_johnson_frst{{ $row->id }}">{{ number_format($p_cvrge_johnson_frst,2) }}%</span> <!-- PERCENT_COVERAGE_JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_c_rate_johnson_frst{{ $row->id }}">{{ number_format($total_c_rate_johnson_frst,2) }}%</span> <!-- CONSUMPTION RATE JOHNSON  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-success total_r_unvcted_frst_johnson{{ $row->id }}">{{ $total_r_unvcted_frst_johnson }}</span> <!-- REMAINUNG UNVACCINATED_JOHNSON  -->
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color: #9af5ee">
+                                                <td style="color: black;">
+                                                    <span class="label label-warning total_johnson_a1_scnd{{ $row->id }}">{{ $total_johnson_a1_scnd }}</span>  <!-- A1_JOHNSON 2  -->
+                                                </td>
+                                                <td style="color:black;">
+                                                    <span class="label label-warning total_johnson_a2_scnd{{ $row->id }}">{{ $total_johnson_a2_scnd }}</span>  <!-- A2_JOHNSON 2  -->
+                                                </td>
+                                                <td style="color:black">
+                                                    <span class="label label-warning total_johnson_a3_scnd{{ $row->id }}">{{ $total_johnson_a3_scnd }}</span>  <!-- A3_JOHNSON 2  -->
+                                                </td>
+                                                <td style="color:black;">
+                                                    <span class="label label-warning total_johnson_a4_scnd{{ $row->id }}">{{ $total_johnson_a4_scnd }}</span>  <!-- A4_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_johnson_a5_scnd{{ $row->id }}">{{ $total_johnson_a5_scnd }}</span>  <!-- A5_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_johnson_b1_scnd{{ $row->id }}">{{ $total_johnson_b1_scnd }}</span>  <!-- B1_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_johnson_b2_scnd{{ $row->id }}">{{ $total_johnson_b2_scnd }}</span>  <!-- B2_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_johnson_b3_scnd{{ $row->id }}">{{ $total_johnson_b3_scnd }}</span>  <!-- B3_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_johnson_b4_scnd{{ $row->id }}">{{ $total_johnson_b4_scnd }}</span>  <!-- B4_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_vcted_johnson_scnd{{ $row->id }}">{{ $total_vcted_johnson_scnd }}</span> <!-- TOTAL VACCINATED_JOHNSON 2-->
+                                                </td> <!-- 1-6 -->
+                                                <td>
+                                                    <span class="label label-warning total_mild_johnson_scnd{{ $row->id }}">{{ $total_mild_johnson_scnd }}</span> <!-- MILD_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_srs_johnson_scnd{{ $row->id }}">{{ $total_srs_johnson_scnd }}</span> <!-- SERIOUS_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_dfrd_johnson_scnd{{ $row->id }}">{{ $total_dfrd_johnson_scnd }}</span> <!-- DEFERRED_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_rfsd_johnson_scnd{{ $row->id }}">{{ $total_rfsd_johnson_scnd }}</span> <!-- REFUSED_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_wstge_johnson_scnd{{ $row->id }}">{{ $total_wstge_johnson_scnd }}</span> <!-- WASTAGE_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning p_cvrge_johnson_scnd{{ $row->id }}">{{ number_format($p_cvrge_johnson_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_c_rate_johnson_scnd{{ $row->id }}">{{ number_format($total_c_rate_johnson_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_JOHNSON 2  -->
+                                                </td>
+                                                <td>
+                                                    <span class="label label-warning total_r_unvcted_scnd_johnson{{ $row->id }}">{{ $total_r_unvcted_scnd_johnson }}</span> <!-- REMAINUNG_UNVACCIANTED_JOHNSON 2  -->
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -1643,8 +1916,11 @@
         $('#date_range').daterangepicker();
         $(".sinovac_dashboard").text({{ Session::get("sinovac_dashboard") }});
         $(".astra_dashboard").text({{ Session::get("astra_dashboard") }});
-        $(".sputnikv_dashboard").text({{ Session::get("sputnikv_dashboard") }});
         $(".pfizer_dashboard").text({{ Session::get("pfizer_dashboard") }});
+        $(".sputnikv_dashboard").text({{ Session::get("sputnikv_dashboard") }});
+        $(".moderna_dashboard").text({{ Session::get("moderna_dashboard") }});
+        $(".johnson_dashboard").text({{ Session::get("johnson_dashboard") }});
+
 
         <?php $user = Session::get('auth'); ?>
 
@@ -1780,60 +2056,6 @@
                 "total_r_unvcted_scnd_astra" : $(".total_r_unvcted_scnd_astra"+facility_id).text(),
 
 
-                //SPUTNIKV
-                "total_epop_sputnikv_a1" : $(".total_epop_sputnikv_a1"+facility_id).text(),
-                "total_epop_sputnikv_a2" : $(".total_epop_sputnikv_a2"+facility_id).text(),
-                "total_epop_sputnikv_a3" : $(".total_epop_sputnikv_a3"+facility_id).text(),
-                "total_epop_sputnikv_a4" : $(".total_epop_sputnikv_a4"+facility_id).text(),
-                "total_epop_sputnikv_a5" : $(".total_epop_sputnikv_a5"+facility_id).text(),
-                "total_epop_sputnikv_b1" : $(".total_epop_sputnikv_b1"+facility_id).text(),
-                "total_epop_sputnikv_b2" : $(".total_epop_sputnikv_b2"+facility_id).text(),
-                "total_epop_sputnikv_b3" : $(".total_epop_sputnikv_b3"+facility_id).text(),
-                "total_epop_sputnikv_b4" : $(".total_epop_sputnikv_b4"+facility_id).text(),
-                "total_epop_sputnikv" : $(".total_epop_sputnikv"+facility_id).text(),
-
-                "total_vallocated_sputnikv_frst" : $(".total_vallocated_sputnikv_frst"+facility_id).text(),
-                "total_vallocated_sputnikv_scnd" : $(".total_vallocated_sputnikv_scnd"+facility_id).text(),
-                "total_vallocated_sputnikv" : $(".total_vallocated_sputnikv"+facility_id).text(),
-                "total_sputnikv_a1_frst" : $(".total_sputnikv_a1_frst"+facility_id).text(),
-                "total_sputnikv_a2_frst" : $(".total_sputnikv_a2_frst"+facility_id).text(),
-                "total_sputnikv_a3_frst" : $(".total_sputnikv_a3_frst"+facility_id).text(),
-                "total_sputnikv_a4_frst" : $(".total_sputnikv_a4_frst"+facility_id).text(),
-                "total_sputnikv_a5_frst" : $(".total_sputnikv_a5_frst"+facility_id).text(),
-                "total_sputnikv_b1_frst" : $(".total_sputnikv_b1_frst"+facility_id).text(),
-                "total_sputnikv_b2_frst" : $(".total_sputnikv_b2_frst"+facility_id).text(),
-                "total_sputnikv_b3_frst" : $(".total_sputnikv_b3_frst"+facility_id).text(),
-                "total_sputnikv_b4_frst" : $(".total_sputnikv_b4_frst"+facility_id).text(),
-                "total_vcted_sputnikv_frst" : $(".total_vcted_sputnikv_frst"+facility_id).text(),
-                "total_mild_sputnikv_frst" : $(".total_mild_sputnikv_frst"+facility_id).text(),
-                "total_srs_sputnikv_frst" : $(".total_srs_sputnikv_frst"+facility_id).text(),
-                "total_dfrd_sputnikv_frst" : $(".total_dfrd_sputnikv_frst"+facility_id).text(),
-                "total_rfsd_sputnikv_frst" : $(".total_rfsd_sputnikv_frst"+facility_id).text(),
-                "total_wstge_sputnikv_frst" : $(".total_wstge_sputnikv_frst"+facility_id).text(),
-                "p_cvrge_sputnikv_frst" : $(".p_cvrge_sputnikv_frst"+facility_id).text(),
-                "total_c_rate_sputnikv_frst" : $(".total_c_rate_sputnikv_frst"+facility_id).text(),
-                "total_r_unvcted_frst_sputnikv" : $(".total_r_unvcted_frst_sputnikv"+facility_id).text(),
-
-                "total_sputnikv_a1_scnd" : $(".total_sputnikv_a1_scnd"+facility_id).text(),
-                "total_sputnikv_a2_scnd" : $(".total_sputnikv_a2_scnd"+facility_id).text(),
-                "total_sputnikv_a3_scnd" : $(".total_sputnikv_a3_scnd"+facility_id).text(),
-                "total_sputnikv_a4_scnd" : $(".total_sputnikv_a4_scnd"+facility_id).text(),
-                "total_sputnikv_a5_scnd" : $(".total_sputnikv_a5_scnd"+facility_id).text(),
-                "total_sputnikv_b1_scnd" : $(".total_sputnikv_b1_scnd"+facility_id).text(),
-                "total_sputnikv_b2_scnd" : $(".total_sputnikv_b2_scnd"+facility_id).text(),
-                "total_sputnikv_b3_scnd" : $(".total_sputnikv_b3_scnd"+facility_id).text(),
-                "total_sputnikv_b4_scnd" : $(".total_sputnikv_b4_scnd"+facility_id).text(),
-                "total_vcted_sputnikv_scnd" : $(".total_vcted_sputnikv_scnd"+facility_id).text(),
-                "total_mild_sputnikv_scnd" : $(".total_mild_sputnikv_scnd"+facility_id).text(),
-                "total_srs_sputnikv_scnd" : $(".total_srs_sputnikv_scnd"+facility_id).text(),
-                "total_dfrd_sputnikv_scnd" : $(".total_dfrd_sputnikv_scnd"+facility_id).text(),
-                "total_rfsd_sputnikv_scnd" : $(".total_rfsd_sputnikv_scnd"+facility_id).text(),
-                "total_wstge_sputnikv_scnd" : $(".total_wstge_sputnikv_scnd"+facility_id).text(),
-                "p_cvrge_sputnikv_scnd" : $(".p_cvrge_sputnikv_scnd"+facility_id).text(),
-                "total_c_rate_sputnikv_scnd" : $(".total_c_rate_sputnikv_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_sputnikv" : $(".total_r_unvcted_scnd_sputnikv"+facility_id).text(),
-
-
                 //PFIZER
                 "total_epop_pfizer_a1" : $(".total_epop_pfizer_a1"+facility_id).text(),
                 "total_epop_pfizer_a2" : $(".total_epop_pfizer_a2"+facility_id).text(),
@@ -1887,6 +2109,165 @@
                 "total_c_rate_pfizer_scnd" : $(".total_c_rate_pfizer_scnd"+facility_id).text(),
                 "total_r_unvcted_scnd_pfizer" : $(".total_r_unvcted_scnd_pfizer"+facility_id).text(),
 
+
+                //SPUTNIKV
+                "total_epop_sputnikv_a1" : $(".total_epop_sputnikv_a1"+facility_id).text(),
+                "total_epop_sputnikv_a2" : $(".total_epop_sputnikv_a2"+facility_id).text(),
+                "total_epop_sputnikv_a3" : $(".total_epop_sputnikv_a3"+facility_id).text(),
+                "total_epop_sputnikv_a4" : $(".total_epop_sputnikv_a4"+facility_id).text(),
+                "total_epop_sputnikv_a5" : $(".total_epop_sputnikv_a5"+facility_id).text(),
+                "total_epop_sputnikv_b1" : $(".total_epop_sputnikv_b1"+facility_id).text(),
+                "total_epop_sputnikv_b2" : $(".total_epop_sputnikv_b2"+facility_id).text(),
+                "total_epop_sputnikv_b3" : $(".total_epop_sputnikv_b3"+facility_id).text(),
+                "total_epop_sputnikv_b4" : $(".total_epop_sputnikv_b4"+facility_id).text(),
+                "total_epop_sputnikv" : $(".total_epop_sputnikv"+facility_id).text(),
+
+                "total_vallocated_sputnikv_frst" : $(".total_vallocated_sputnikv_frst"+facility_id).text(),
+                "total_vallocated_sputnikv_scnd" : $(".total_vallocated_sputnikv_scnd"+facility_id).text(),
+                "total_vallocated_sputnikv" : $(".total_vallocated_sputnikv"+facility_id).text(),
+                "total_sputnikv_a1_frst" : $(".total_sputnikv_a1_frst"+facility_id).text(),
+                "total_sputnikv_a2_frst" : $(".total_sputnikv_a2_frst"+facility_id).text(),
+                "total_sputnikv_a3_frst" : $(".total_sputnikv_a3_frst"+facility_id).text(),
+                "total_sputnikv_a4_frst" : $(".total_sputnikv_a4_frst"+facility_id).text(),
+                "total_sputnikv_a5_frst" : $(".total_sputnikv_a5_frst"+facility_id).text(),
+                "total_sputnikv_b1_frst" : $(".total_sputnikv_b1_frst"+facility_id).text(),
+                "total_sputnikv_b2_frst" : $(".total_sputnikv_b2_frst"+facility_id).text(),
+                "total_sputnikv_b3_frst" : $(".total_sputnikv_b3_frst"+facility_id).text(),
+                "total_sputnikv_b4_frst" : $(".total_sputnikv_b4_frst"+facility_id).text(),
+                "total_vcted_sputnikv_frst" : $(".total_vcted_sputnikv_frst"+facility_id).text(),
+                "total_mild_sputnikv_frst" : $(".total_mild_sputnikv_frst"+facility_id).text(),
+                "total_srs_sputnikv_frst" : $(".total_srs_sputnikv_frst"+facility_id).text(),
+                "total_dfrd_sputnikv_frst" : $(".total_dfrd_sputnikv_frst"+facility_id).text(),
+                "total_rfsd_sputnikv_frst" : $(".total_rfsd_sputnikv_frst"+facility_id).text(),
+                "total_wstge_sputnikv_frst" : $(".total_wstge_sputnikv_frst"+facility_id).text(),
+                "p_cvrge_sputnikv_frst" : $(".p_cvrge_sputnikv_frst"+facility_id).text(),
+                "total_c_rate_sputnikv_frst" : $(".total_c_rate_sputnikv_frst"+facility_id).text(),
+                "total_r_unvcted_frst_sputnikv" : $(".total_r_unvcted_frst_sputnikv"+facility_id).text(),
+
+                "total_sputnikv_a1_scnd" : $(".total_sputnikv_a1_scnd"+facility_id).text(),
+                "total_sputnikv_a2_scnd" : $(".total_sputnikv_a2_scnd"+facility_id).text(),
+                "total_sputnikv_a3_scnd" : $(".total_sputnikv_a3_scnd"+facility_id).text(),
+                "total_sputnikv_a4_scnd" : $(".total_sputnikv_a4_scnd"+facility_id).text(),
+                "total_sputnikv_a5_scnd" : $(".total_sputnikv_a5_scnd"+facility_id).text(),
+                "total_sputnikv_b1_scnd" : $(".total_sputnikv_b1_scnd"+facility_id).text(),
+                "total_sputnikv_b2_scnd" : $(".total_sputnikv_b2_scnd"+facility_id).text(),
+                "total_sputnikv_b3_scnd" : $(".total_sputnikv_b3_scnd"+facility_id).text(),
+                "total_sputnikv_b4_scnd" : $(".total_sputnikv_b4_scnd"+facility_id).text(),
+                "total_vcted_sputnikv_scnd" : $(".total_vcted_sputnikv_scnd"+facility_id).text(),
+                "total_mild_sputnikv_scnd" : $(".total_mild_sputnikv_scnd"+facility_id).text(),
+                "total_srs_sputnikv_scnd" : $(".total_srs_sputnikv_scnd"+facility_id).text(),
+                "total_dfrd_sputnikv_scnd" : $(".total_dfrd_sputnikv_scnd"+facility_id).text(),
+                "total_rfsd_sputnikv_scnd" : $(".total_rfsd_sputnikv_scnd"+facility_id).text(),
+                "total_wstge_sputnikv_scnd" : $(".total_wstge_sputnikv_scnd"+facility_id).text(),
+                "p_cvrge_sputnikv_scnd" : $(".p_cvrge_sputnikv_scnd"+facility_id).text(),
+                "total_c_rate_sputnikv_scnd" : $(".total_c_rate_sputnikv_scnd"+facility_id).text(),
+                "total_r_unvcted_scnd_sputnikv" : $(".total_r_unvcted_scnd_sputnikv"+facility_id).text(),
+
+                //MODERNA
+                "total_epop_moderna_a1" : $(".total_epop_moderna_a1"+facility_id).text(),
+                "total_epop_moderna_a2" : $(".total_epop_moderna_a2"+facility_id).text(),
+                "total_epop_moderna_a3" : $(".total_epop_moderna_a3"+facility_id).text(),
+                "total_epop_moderna_a4" : $(".total_epop_moderna_a4"+facility_id).text(),
+                "total_epop_moderna_a5" : $(".total_epop_moderna_a5"+facility_id).text(),
+                "total_epop_moderna_b1" : $(".total_epop_moderna_b1"+facility_id).text(),
+                "total_epop_moderna_b2" : $(".total_epop_moderna_b2"+facility_id).text(),
+                "total_epop_moderna_b3" : $(".total_epop_moderna_b3"+facility_id).text(),
+                "total_epop_moderna_b4" : $(".total_epop_moderna_b4"+facility_id).text(),
+                "total_epop_moderna" : $(".total_epop_moderna"+facility_id).text(),
+
+                "total_vallocated_moderna_frst" : $(".total_vallocated_moderna_frst"+facility_id).text(),
+                "total_vallocated_moderna_scnd" : $(".total_vallocated_moderna_scnd"+facility_id).text(),
+                "total_vallocated_moderna" : $(".total_vallocated_moderna"+facility_id).text(),
+                "total_moderna_a1_frst" : $(".total_moderna_a1_frst"+facility_id).text(),
+                "total_moderna_a2_frst" : $(".total_moderna_a2_frst"+facility_id).text(),
+                "total_moderna_a3_frst" : $(".total_moderna_a3_frst"+facility_id).text(),
+                "total_moderna_a4_frst" : $(".total_moderna_a4_frst"+facility_id).text(),
+                "total_moderna_a5_frst" : $(".total_moderna_a5_frst"+facility_id).text(),
+                "total_moderna_b1_frst" : $(".total_moderna_b1_frst"+facility_id).text(),
+                "total_moderna_b2_frst" : $(".total_moderna_b2_frst"+facility_id).text(),
+                "total_moderna_b3_frst" : $(".total_moderna_b3_frst"+facility_id).text(),
+                "total_moderna_b4_frst" : $(".total_moderna_b4_frst"+facility_id).text(),
+                "total_vcted_moderna_frst" : $(".total_vcted_moderna_frst"+facility_id).text(),
+                "total_mild_moderna_frst" : $(".total_mild_moderna_frst"+facility_id).text(),
+                "total_srs_moderna_frst" : $(".total_srs_moderna_frst"+facility_id).text(),
+                "total_dfrd_moderna_frst" : $(".total_dfrd_moderna_frst"+facility_id).text(),
+                "total_rfsd_moderna_frst" : $(".total_rfsd_moderna_frst"+facility_id).text(),
+                "total_wstge_moderna_frst" : $(".total_wstge_moderna_frst"+facility_id).text(),
+                "p_cvrge_moderna_frst" : $(".p_cvrge_moderna_frst"+facility_id).text(),
+                "total_c_rate_moderna_frst" : $(".total_c_rate_moderna_frst"+facility_id).text(),
+                "total_r_unvcted_frst_moderna" : $(".total_r_unvcted_frst_moderna"+facility_id).text(),
+
+                "total_moderna_a1_scnd" : $(".total_moderna_a1_scnd"+facility_id).text(),
+                "total_moderna_a2_scnd" : $(".total_moderna_a2_scnd"+facility_id).text(),
+                "total_moderna_a3_scnd" : $(".total_moderna_a3_scnd"+facility_id).text(),
+                "total_moderna_a4_scnd" : $(".total_moderna_a4_scnd"+facility_id).text(),
+                "total_moderna_a5_scnd" : $(".total_moderna_a5_scnd"+facility_id).text(),
+                "total_moderna_b1_scnd" : $(".total_moderna_b1_scnd"+facility_id).text(),
+                "total_moderna_b2_scnd" : $(".total_moderna_b2_scnd"+facility_id).text(),
+                "total_moderna_b3_scnd" : $(".total_moderna_b3_scnd"+facility_id).text(),
+                "total_moderna_b4_scnd" : $(".total_moderna_b4_scnd"+facility_id).text(),
+                "total_vcted_moderna_scnd" : $(".total_vcted_moderna_scnd"+facility_id).text(),
+                "total_mild_moderna_scnd" : $(".total_mild_moderna_scnd"+facility_id).text(),
+                "total_srs_moderna_scnd" : $(".total_srs_moderna_scnd"+facility_id).text(),
+                "total_dfrd_moderna_scnd" : $(".total_dfrd_moderna_scnd"+facility_id).text(),
+                "total_rfsd_moderna_scnd" : $(".total_rfsd_moderna_scnd"+facility_id).text(),
+                "total_wstge_moderna_scnd" : $(".total_wstge_moderna_scnd"+facility_id).text(),
+                "p_cvrge_moderna_scnd" : $(".p_cvrge_moderna_scnd"+facility_id).text(),
+                "total_c_rate_moderna_scnd" : $(".total_c_rate_moderna_scnd"+facility_id).text(),
+                "total_r_unvcted_scnd_moderna" : $(".total_r_unvcted_scnd_moderna"+facility_id).text(),
+
+                //JOHNSON
+                "total_epop_johnson_a1" : $(".total_epop_johnson_a1"+facility_id).text(),
+                "total_epop_johnson_a2" : $(".total_epop_johnson_a2"+facility_id).text(),
+                "total_epop_johnson_a3" : $(".total_epop_johnson_a3"+facility_id).text(),
+                "total_epop_johnson_a4" : $(".total_epop_johnson_a4"+facility_id).text(),
+                "total_epop_johnson_a5" : $(".total_epop_johnson_a5"+facility_id).text(),
+                "total_epop_johnson_b1" : $(".total_epop_johnson_b1"+facility_id).text(),
+                "total_epop_johnson_b2" : $(".total_epop_johnson_b2"+facility_id).text(),
+                "total_epop_johnson_b3" : $(".total_epop_johnson_b3"+facility_id).text(),
+                "total_epop_johnson_b4" : $(".total_epop_johnson_b4"+facility_id).text(),
+                "total_epop_johnson" : $(".total_epop_johnson"+facility_id).text(),
+
+                "total_vallocated_johnson_frst" : $(".total_vallocated_johnson_frst"+facility_id).text(),
+                "total_vallocated_johnson_scnd" : $(".total_vallocated_johnson_scnd"+facility_id).text(),
+                "total_vallocated_johnson" : $(".total_vallocated_johnson"+facility_id).text(),
+                "total_johnson_a1_frst" : $(".total_johnson_a1_frst"+facility_id).text(),
+                "total_johnson_a2_frst" : $(".total_johnson_a2_frst"+facility_id).text(),
+                "total_johnson_a3_frst" : $(".total_johnson_a3_frst"+facility_id).text(),
+                "total_johnson_a4_frst" : $(".total_johnson_a4_frst"+facility_id).text(),
+                "total_johnson_a5_frst" : $(".total_johnson_a5_frst"+facility_id).text(),
+                "total_johnson_b1_frst" : $(".total_johnson_b1_frst"+facility_id).text(),
+                "total_johnson_b2_frst" : $(".total_johnson_b2_frst"+facility_id).text(),
+                "total_johnson_b3_frst" : $(".total_johnson_b3_frst"+facility_id).text(),
+                "total_johnson_b4_frst" : $(".total_johnson_b4_frst"+facility_id).text(),
+                "total_vcted_johnson_frst" : $(".total_vcted_johnson_frst"+facility_id).text(),
+                "total_mild_johnson_frst" : $(".total_mild_johnson_frst"+facility_id).text(),
+                "total_srs_johnson_frst" : $(".total_srs_johnson_frst"+facility_id).text(),
+                "total_dfrd_johnson_frst" : $(".total_dfrd_johnson_frst"+facility_id).text(),
+                "total_rfsd_johnson_frst" : $(".total_rfsd_johnson_frst"+facility_id).text(),
+                "total_wstge_johnson_frst" : $(".total_wstge_johnson_frst"+facility_id).text(),
+                "p_cvrge_johnson_frst" : $(".p_cvrge_johnson_frst"+facility_id).text(),
+                "total_c_rate_johnson_frst" : $(".total_c_rate_johnson_frst"+facility_id).text(),
+                "total_r_unvcted_frst_johnson" : $(".total_r_unvcted_frst_johnson"+facility_id).text(),
+
+                "total_johnson_a1_scnd" : $(".total_johnson_a1_scnd"+facility_id).text(),
+                "total_johnson_a2_scnd" : $(".total_johnson_a2_scnd"+facility_id).text(),
+                "total_johnson_a3_scnd" : $(".total_johnson_a3_scnd"+facility_id).text(),
+                "total_johnson_a4_scnd" : $(".total_johnson_a4_scnd"+facility_id).text(),
+                "total_johnson_a5_scnd" : $(".total_johnson_a5_scnd"+facility_id).text(),
+                "total_johnson_b1_scnd" : $(".total_johnson_b1_scnd"+facility_id).text(),
+                "total_johnson_b2_scnd" : $(".total_johnson_b2_scnd"+facility_id).text(),
+                "total_johnson_b3_scnd" : $(".total_johnson_b3_scnd"+facility_id).text(),
+                "total_johnson_b4_scnd" : $(".total_johnson_b4_scnd"+facility_id).text(),
+                "total_vcted_johnson_scnd" : $(".total_vcted_johnson_scnd"+facility_id).text(),
+                "total_mild_johnson_scnd" : $(".total_mild_johnson_scnd"+facility_id).text(),
+                "total_srs_johnson_scnd" : $(".total_srs_johnson_scnd"+facility_id).text(),
+                "total_dfrd_johnson_scnd" : $(".total_dfrd_johnson_scnd"+facility_id).text(),
+                "total_rfsd_johnson_scnd" : $(".total_rfsd_johnson_scnd"+facility_id).text(),
+                "total_wstge_johnson_scnd" : $(".total_wstge_johnson_scnd"+facility_id).text(),
+                "p_cvrge_johnson_scnd" : $(".p_cvrge_johnson_scnd"+facility_id).text(),
+                "total_c_rate_johnson_scnd" : $(".total_c_rate_johnson_scnd"+facility_id).text(),
+                "total_r_unvcted_scnd_johnson" : $(".total_r_unvcted_scnd_johnson"+facility_id).text(),
 
                 //TOTAL OVERALL
                 "total_vallocated_frst" : $(".total_vallocated_frst"+facility_id).text(),
@@ -2008,6 +2389,8 @@
             var astra_dashboard = <?php if(Session::get('astra_dashboard')) echo Session::get('astra_dashboard'); else echo 0; ?>;
             var pfizer_dashboard = <?php if(Session::get('pfizer_dashboard')) echo Session::get('pfizer_dashboard'); else echo 0; ?>;
             var sputnikv_dashboard = <?php if(Session::get('sputnikv_dashboard')) echo Session::get('sputnikv_dashboard'); else echo 0; ?>;
+            var moderna_dashboard = <?php if(Session::get('moderna_dashboard')) echo Session::get('moderna_dashboard'); else echo 0; ?>;
+            var johnson_dashboard = <?php if(Session::get('johnson_dashboard')) echo Session::get('johnson_dashboard'); else echo 0; ?>;
 
             var options1 = {
                 title: {
@@ -2022,7 +2405,9 @@
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12" },
                             { label: "Pfizer",  y: pfizer_dashboard, color:"#00c0ef"  },
-                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a"  }
+                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a"  },
+                            { label: "Moderna", y: moderna_dashboard, color:"#605ca8"  },
+                            { label: "Johnson", y: johnson_dashboard, color:"#1d94ff"  }
                         ]
 
                     }
@@ -2052,7 +2437,7 @@
                         // Change type to "doughnut", "line", "splineArea", etc.
                         type: "column",
                         dataPoints: [
-                            { label: "(A1)",  y: a1_dashboard},
+                            { label: "(A1)",  y: a1_dashboard },
                             { label: "(A2)",  y: a2_dashboard },
                             { label: "(A3)",  y: a3_dashboard },
                             { label: "(A4)",  y: a4_dashboard },

@@ -40,7 +40,18 @@
         </div>
     </div>
     <div class="form-group">
-       <label style="margin-left: -3%;">Sputnik V Allocated</label>
+       <label style="margin-left: -3%;">Pfizer Allocated</label>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-green" value="@if(isset($facility->pfizer_allocated_first)){{ $facility->pfizer_allocated_first}}@endif" name="pfizer_allocated_first">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-yellow" value="@if(isset($facility->pfizer_allocated_second)){{ $facility->pfizer_allocated_second}}@endif" name="pfizer_allocated_second">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label style="margin-left: -3%;">Sputnik V Allocated</label>
         <div class="row">
             <div class="col-md-6">
                 <input type="text" class="form-control text-green" value="@if(isset($facility->sputnikv_allocated_first)){{ $facility->sputnikv_allocated_first}}@endif" name="sputnikv_allocated_first">
@@ -51,13 +62,24 @@
         </div>
     </div>
     <div class="form-group">
-       <label style="margin-left: -3%;">Pfizer Allocated</label>
+        <label style="margin-left: -3%;">Moderna Allocated</label>
         <div class="row">
             <div class="col-md-6">
-                <input type="text" class="form-control text-green" value="@if(isset($facility->pfizer_allocated_first)){{ $facility->pfizer_allocated_first}}@endif" name="pfizer_allocated_first">
+                <input type="text" class="form-control text-green" value="@if(isset($facility->moderna_allocated_first)){{ $facility->moderna_allocated_first}}@endif" name="moderna_allocated_first">
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control text-yellow" value="@if(isset($facility->pfizer_allocated_second)){{ $facility->pfizer_allocated_second}}@endif" name="pfizer_allocated_second">
+                <input type="text" class="form-control text-yellow" value="@if(isset($facility->moderna_allocated_second)){{ $facility->moderna_allocated_second}}@endif" name="moderna_allocated_second">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label style="margin-left: -3%;">Johnson Allocated</label>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-green" value="@if(isset($facility->johnson_allocated_first)){{ $facility->johnson_allocated_first}}@endif" name="johnson_allocated_first">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-yellow" value="@if(isset($facility->johnson_allocated_second)){{ $facility->johnson_allocated_second}}@endif" name="johnson_allocated_second">
             </div>
         </div>
     </div>
