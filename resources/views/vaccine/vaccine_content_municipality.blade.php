@@ -1141,8 +1141,8 @@
     function getEliPop(muncity_id,count){
         var url = "<?php echo asset('vaccine/no_eli_pop').'/'; ?>"+muncity_id+"/"+$("#priority"+count).val();
         $.get(url,function(data){
-            console.log(data);
-            $("#no_eli_pop"+count).val(data);
+            console.log(data.innerText);
+            $("#no_eli_pop"+count).val(data.innerText);
         });
     }
 

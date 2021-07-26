@@ -1325,23 +1325,23 @@ class VaccineController extends Controller
     public function getEliPop($muncity_id,$priority){
         $no_eli_pop = Muncity::find($muncity_id);
         if($priority == 'a1')
-            return (int)$no_eli_pop->a1;
+            return $no_eli_pop->a1;
         elseif($priority == 'a2')
-            return (int)$no_eli_pop->a2;
+            return $no_eli_pop->a2;
         elseif($priority == 'a3')
-            return (int)$no_eli_pop->a3;
+            return $no_eli_pop->a3;
         elseif($priority == 'a4')
-            return (int)$no_eli_pop->a4;
+            return $no_eli_pop->a4;
         elseif($priority == 'a5')
-            return (int)$no_eli_pop->a5;
+            return $no_eli_pop->a5;
         elseif($priority == 'b1')
-            return (int)$no_eli_pop->b1;
+            return $no_eli_pop->b1;
         elseif($priority == 'b2')
-            return (int)$no_eli_pop->b2;
+            return $no_eli_pop->b2;
         elseif($priority == 'b3')
-            return (int)$no_eli_pop->b3;
+            return $no_eli_pop->b3;
         elseif($priority == 'b4')
-            return (int)$no_eli_pop->b4;
+            return $no_eli_pop->b4;
     }
 
     public function getEliPopFacility($facility_id,$priority){
