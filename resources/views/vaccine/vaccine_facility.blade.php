@@ -683,29 +683,29 @@
                                 $total_wstge_johnson_scnd =  $typeof_vaccine_filter == "Johnson" || empty($typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$province_id)->where("facility_id",$row->id)->where("typeof_vaccine","Johnson")->first()->wastage_second :0; //WASTAGE_JOHNSON2
 
                                 $total_vcted_svac_frst = $total_svac_a1_frst + $total_svac_a2_frst + $total_svac_a3_frst + $total_svac_a4_frst + $total_svac_a5_frst +
-                                    $total_svac_b1_frst + $total_svac_b2_frst + $total_svac_b3_frst + $total_svac_b4_frst; //TOTAL_VACCINATED_SINOVAC_FIRST
+                                                         $total_svac_b1_frst + $total_svac_b2_frst + $total_svac_b3_frst + $total_svac_b4_frst; //TOTAL_VACCINATED_SINOVAC_FIRST
                                 $total_vcted_svac_scnd = $total_svac_a1_scnd + $total_svac_a2_scnd + $total_svac_a3_scnd + $total_svac_a4_scnd + $total_svac_a5_scnd +
-                                    $total_svac_b1_scnd + $total_svac_b2_scnd + $total_svac_b3_scnd + $total_svac_b4_scnd; //TOTAL_VACCINATED_SINOVAC_SECOND
+                                                         $total_svac_b1_scnd + $total_svac_b2_scnd + $total_svac_b3_scnd + $total_svac_b4_scnd; //TOTAL_VACCINATED_SINOVAC_SECOND
                                 $total_vcted_astra_frst = $total_astra_a1_frst + $total_astra_a2_frst + $total_astra_a3_frst + $total_astra_a4_frst + $total_astra_a5_frst +
-                                    $total_astra_b1_frst + $total_astra_b2_frst + $total_astra_b3_frst + $total_astra_b4_frst; //TOTAL_VACCINATED_ASTRA_FIRST
+                                                          $total_astra_b1_frst + $total_astra_b2_frst + $total_astra_b3_frst + $total_astra_b4_frst; //TOTAL_VACCINATED_ASTRA_FIRST
                                 $total_vcted_astra_scnd = $total_astra_a1_scnd + $total_astra_a2_scnd + $total_astra_a3_scnd + $total_astra_a4_scnd + $total_astra_a5_scnd +
-                                    $total_astra_b1_scnd + $total_astra_b2_scnd + $total_astra_b3_scnd + $total_astra_b4_scnd ; //TOTAL_VACCINATED_ASTRA_SECOND
+                                                          $total_astra_b1_scnd + $total_astra_b2_scnd + $total_astra_b3_scnd + $total_astra_b4_scnd ; //TOTAL_VACCINATED_ASTRA_SECOND
                                 $total_vcted_pfizer_frst = $total_pfizer_a1_frst + $total_pfizer_a2_frst + $total_pfizer_a3_frst + $total_pfizer_a4_frst + $total_pfizer_a5_frst +
-                                    $total_pfizer_b1_frst + $total_pfizer_b2_frst + $total_pfizer_b3_frst + $total_pfizer_b4_frst; //TOTAL_VACCINATED_PFIZER_FIRST
-                                $total_vcted_pfizer_scnd = $total_pfizer_a1_scnd + $total_pfizer_a2_scnd + $total_pfizer_a3_scnd + $total_pfizer_a4_scnd + $total_pfizer_a4_scnd +
-                                    $total_pfizer_b1_scnd + $total_pfizer_b2_scnd + $total_pfizer_b3_scnd + $total_pfizer_b4_scnd; //TOTAL_VACCINATED_PFIZER_SECOND
+                                                           $total_pfizer_b1_frst + $total_pfizer_b2_frst + $total_pfizer_b3_frst + $total_pfizer_b4_frst; //TOTAL_VACCINATED_PFIZER_FIRST
+                                $total_vcted_pfizer_scnd = $total_pfizer_a1_scnd + $total_pfizer_a2_scnd + $total_pfizer_a3_scnd + $total_pfizer_a4_scnd + $total_pfizer_a5_scnd +
+                                                           $total_pfizer_b1_scnd + $total_pfizer_b2_scnd + $total_pfizer_b3_scnd + $total_pfizer_b4_scnd; //TOTAL_VACCINATED_PFIZER_SECOND
                                 $total_vcted_sputnikv_frst = $total_sputnikv_a1_frst + $total_sputnikv_a2_frst + $total_sputnikv_a3_frst + $total_sputnikv_a4_frst + $total_sputnikv_a5_frst +
-                                    $total_sputnikv_b1_frst + $total_sputnikv_b2_frst + $total_sputnikv_b3_frst + $total_sputnikv_b4_frst; //TOTAL_VACCINATED_SPUTNIKV_FIRST
+                                                             $total_sputnikv_b1_frst + $total_sputnikv_b2_frst + $total_sputnikv_b3_frst + $total_sputnikv_b4_frst; //TOTAL_VACCINATED_SPUTNIKV_FIRST
                                 $total_vcted_sputnikv_scnd = $total_sputnikv_a1_scnd + $total_sputnikv_a2_scnd + $total_sputnikv_a3_scnd + $total_sputnikv_a4_scnd + $total_sputnikv_a5_scnd +
-                                    $total_sputnikv_b1_scnd + $total_sputnikv_b2_scnd + $total_sputnikv_b3_scnd + $total_sputnikv_b4_scnd; //TOTAL_VACCINATED_SPUTNIKV_SECOND
+                                                             $total_sputnikv_b1_scnd + $total_sputnikv_b2_scnd + $total_sputnikv_b3_scnd + $total_sputnikv_b4_scnd; //TOTAL_VACCINATED_SPUTNIKV_SECOND
                                 $total_vcted_moderna_frst = $total_moderna_a1_frst + $total_moderna_a2_frst + $total_moderna_a3_frst + $total_moderna_a4_frst + $total_moderna_a5_frst +
-                                    $total_moderna_b1_frst + $total_moderna_b2_frst + $total_moderna_b3_frst + $total_moderna_b4_frst; //TOTAL_VACCINATED_MODERNA_FIRST
-                                $total_vcted_moderna_scnd = $total_moderna_a1_scnd + $total_moderna_a2_scnd + $total_moderna_a3_scnd + $total_moderna_a4_scnd + $total_moderna_a4_scnd +
-                                    $total_moderna_b1_scnd + $total_moderna_b2_scnd + $total_moderna_b3_scnd + $total_moderna_b4_scnd; //TOTAL_VACCINATED_MODERNA_SECOND
+                                                            $total_moderna_b1_frst + $total_moderna_b2_frst + $total_moderna_b3_frst + $total_moderna_b4_frst; //TOTAL_VACCINATED_MODERNA_FIRST
+                                $total_vcted_moderna_scnd = $total_moderna_a1_scnd + $total_moderna_a2_scnd + $total_moderna_a3_scnd + $total_moderna_a4_scnd + $total_moderna_a5_scnd +
+                                                            $total_moderna_b1_scnd + $total_moderna_b2_scnd + $total_moderna_b3_scnd + $total_moderna_b4_scnd; //TOTAL_VACCINATED_MODERNA_SECOND
                                 $total_vcted_johnson_frst = $total_johnson_a1_frst + $total_johnson_a2_frst + $total_johnson_a3_frst + $total_johnson_a4_frst + $total_johnson_a5_frst +
-                                    $total_johnson_b1_frst + $total_johnson_b2_frst + $total_johnson_b3_frst + $total_johnson_b4_frst; //TOTAL_VACCINATED_JOHNSON_FIRST
-                                $total_vcted_johnson_scnd = $total_johnson_a1_scnd + $total_johnson_a2_scnd + $total_johnson_a3_scnd + $total_johnson_a4_scnd + $total_johnson_a4_scnd +
-                                    $total_johnson_b1_scnd + $total_johnson_b2_scnd + $total_johnson_b3_scnd + $total_johnson_b4_scnd; //TOTAL_VACCINATED_JOHNSON_SECOND
+                                                            $total_johnson_b1_frst + $total_johnson_b2_frst + $total_johnson_b3_frst + $total_johnson_b4_frst; //TOTAL_VACCINATED_JOHNSON_FIRST
+                                $total_vcted_johnson_scnd = $total_johnson_a1_scnd + $total_johnson_a2_scnd + $total_johnson_a3_scnd + $total_johnson_a4_scnd + $total_johnson_a5_scnd +
+                                                            $total_johnson_b1_scnd + $total_johnson_b2_scnd + $total_johnson_b3_scnd + $total_johnson_b4_scnd; //TOTAL_VACCINATED_JOHNSON_SECOND
 
                                 $total_vallocated_svac = $total_vallocated_svac_frst + $total_vallocated_svac_scnd; //TOTAL VACCINE ALLOCATED_SINOVAC
                                 $total_vallocated_astra = $total_vallocated_astra_frst + $total_vallocated_astra_scnd; //TOTAL VACCINE ALLOCATED_ASTRA
