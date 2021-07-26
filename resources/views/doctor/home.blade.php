@@ -137,7 +137,7 @@
 
     var options_user_per_department = {
         title: {
-            text: "Number of users per department",
+            text: "Login users per department as of today",
             fontFamily: "Arial"
         },
         legend: {

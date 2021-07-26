@@ -44,6 +44,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                             <table class="table table-striped">
                                 <thead class="bg-gray">
                                 <tr>
+                                    <th></th>
                                     <th>Referring Facility</th>
                                     <th>Patient Name/Code</th>
                                     <th>Date Accepted</th>
@@ -74,14 +75,19 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                     $diff = $end->diffInHours($start);
                                     ?>
                                     <tr>
+                                        <td width="1%">
+                                            <a href="{{ asset('doctor/referred?referredCode=').$row->code }}" class="btn btn-xs btn-success" target="_blank">
+                                                <i class="fa fa-stethoscope"></i> Track
+                                            </a>
+                                        </td>
                                         <td style="white-space: nowrap;">
-                                    <span class="facility" title="{{ $row->name }}">
-                                    @if(strlen($row->name)>25)
-                                            {{ substr($row->name,0,25) }}...
-                                        @else
-                                            {{ $row->name }}
-                                        @endif
-                                    </span>
+                                            <span class="facility" title="{{ $row->name }}">
+                                            @if(strlen($row->name)>25)
+                                                    {{ substr($row->name,0,25) }}...
+                                                @else
+                                                    {{ $row->name }}
+                                                @endif
+                                            </span>
                                             <br />
                                             <span class="text-muted">{{ $type }}</span>
                                         </td>

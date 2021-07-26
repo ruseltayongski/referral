@@ -10,6 +10,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ReportCtrl extends Controller
@@ -158,7 +159,7 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function weeklyReport(Request $request){
+    public function weeklyReport($province_id,Request $request){
         if($request->isMethod('post') && isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
@@ -167,7 +168,17 @@ class ReportCtrl extends Controller
             $date_end = date('Y-m-d');
         }
 
-        $facility = \DB::connection('mysql')->select("call weekly_report()");
+        $facility = Facility::select("id as facility_id","hospital_type","name")->where("referral_used","yes")
+            ->where("province",$province_id)
+            ->orderBy(DB::raw("
+                CASE
+                    WHEN hospital_type = 'government' THEN 'a'
+                    WHEN hospital_type = 'private' THEN 'b'
+                    ELSE hospital_type
+                END 
+            "),"asc")
+            ->orderBy("name","desc")
+            ->get();
         $generate_weeks = \DB::connection('mysql')->select("call generate_weeks('$date_start','$date_end')");
 
         return view('admin.report.offline_facility_weekly',[
@@ -175,7 +186,9 @@ class ReportCtrl extends Controller
             'facility' => $facility,
             'generate_weeks' => $generate_weeks,
             'date_start' => $date_start,
-            'date_end' => $date_end
+            'date_end' => $date_end,
+            "province" => Province::find($province_id)->description,
+            "province_id" => $province_id
         ]);
     }
 
