@@ -41,6 +41,7 @@ $user = Session::get('auth');
                             <table class="table table-striped">
                                 <thead class="bg-gray">
                                 <tr>
+                                    <th></th>
                                     <th width="25%">Referring Facility</th>
                                     <th width="25%">Patient Name/Code</th>
                                     <th width="25%">Date Archived</th>
@@ -54,14 +55,19 @@ $user = Session::get('auth');
                                     $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
                                     ?>
                                     <tr>
+                                        <td width="1%">
+                                            <a href="{{ asset('doctor/referred?referredCode=').$row->code }}" class="btn btn-xs btn-success" target="_blank">
+                                                <i class="fa fa-stethoscope"></i> Track
+                                            </a>
+                                        </td>
                                         <td style="white-space: nowrap;">
-                                    <span class="facility" title="{{ $row->name }}">
-                                    @if(strlen($row->name)>25)
-                                            {{ substr($row->name,0,25) }}...
-                                        @else
-                                            {{ $row->name }}
-                                        @endif
-                                    </span>
+                                            <span class="facility" title="{{ $row->name }}">
+                                            @if(strlen($row->name)>25)
+                                                    {{ substr($row->name,0,25) }}...
+                                                @else
+                                                    {{ $row->name }}
+                                                @endif
+                                            </span>
                                             <br />
                                             <span class="text-muted">{{ $type }}</span>
                                         </td>
