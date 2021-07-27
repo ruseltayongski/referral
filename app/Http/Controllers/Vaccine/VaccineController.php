@@ -1384,6 +1384,14 @@ class VaccineController extends Controller
             $data[0] = $vaccine_allocated->pfizer_allocated_first;
             $data[1] = $vaccine_allocated->pfizer_allocated_second;
         }
+        elseif($typeof_vaccine == 'Moderna'){
+            $data[0] = $vaccine_allocated->moderna_allocated_first;
+            $data[1] = $vaccine_allocated->moderna_allocated_second;
+        }
+        elseif($typeof_vaccine == 'Johnson'){
+            $data[0] = $vaccine_allocated->johnson_allocated_first;
+            $data[1] = $vaccine_allocated->johnson_allocated_second;
+        }
         return $data;
     }
     public function getVaccineAllocatedFacility($facility_id,$typeof_vaccine){
@@ -1403,6 +1411,14 @@ class VaccineController extends Controller
         elseif($typeof_vaccine == 'Pfizer'){
             $data[0] = $vaccine_allocated->pfizer_allocated_first;
             $data[1] = $vaccine_allocated->pfizer_allocated_second;
+        }
+        elseif($typeof_vaccine == 'Moderna'){
+            $data[0] = $vaccine_allocated->moderna_allocated_first;
+            $data[1] = $vaccine_allocated->moderna_allocated_second;
+        }
+        elseif($typeof_vaccine == 'Johnson'){
+            $data[0] = $vaccine_allocated->johnson_allocated_first;
+            $data[1] = $vaccine_allocated->johnson_allocated_second;
         }
         return $data;
     }
