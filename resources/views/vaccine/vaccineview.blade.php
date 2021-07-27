@@ -2369,9 +2369,9 @@
                             { label: "Sinovac",  y: sinovac_dashboard, color: "#dd4b39" },
                             { label: "AstraZeneca", y: astra_dashboard, color: "#f39c12"},
                             { label: "Pfizer",  y: pfizer_dashboard, color:"#00c0ef" },
-                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a" }
-                           /* { label: "Moderna", y: moderna_dashboard, color:"#605ca8" },
-                            { label: "Johnson", y: johnson_dashboard, color:"#1d94ff" }*/
+                            { label: "Sputnik V", y: sputnikv_dashboard, color:"#00a65a" },
+                            { label: "Moderna", y: moderna_dashboard, color:"#605ca8" },
+                            { label: "Johnson", y: johnson_dashboard, color:"#1d94ff" }
                         ]
 
                     }
