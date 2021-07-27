@@ -153,7 +153,7 @@ Route::get('doctor','doctor\HomeCtrl@index');
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
 Route::get('doctor/referral/seen/{track_id}','doctor\ReferralCtrl@seen');//if the form is seen
-Route::get('doctor/referral/seenBy/{track_id}','doctor\ReferralCtrl@seenBy');//if the form is seen
+Route::get('doctor/referral/seenBy_save/{track_id}/{code}','doctor\ReferralCtrl@seenBy');//if the form is seen
 Route::get('doctor/referral/seenBy/list/{track_id}','doctor\ReferralCtrl@seenByList');//if the form is seen
 Route::get('doctor/referral/callerBy/list/{track_id}','doctor\ReferralCtrl@callerByList');//if the form is called
 Route::post('doctor/referral/reject/{track_id}','doctor\ReferralCtrl@reject');//if form is rejected

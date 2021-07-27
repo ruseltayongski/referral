@@ -968,24 +968,19 @@ class ReferralCtrl extends Controller
         );
     }
 
-    public function seenBy($track_id)
+    public function seenBy($track_id,$code)
     {
         $user = Session::get('auth');
         $data = array(
             'tracking_id' => $track_id,
+            'code' => $code,
             'facility_id' => $user->facility_id,
             'user_md' => $user->id
         );
         Tracking::find($track_id)->update([
            "date_seen" => date("Y-m-d H:i:s")
         ]);
-        /*$code = Tracking::find($track_id)->code;
-        $facility = Tracking::find($track_id)->referred_from;
-        $hospital = Facility::find($user->facility_id)->name;
-        $name = User::find($user->id);
-        $doctor = ucwords(mb_strtolower($name->fname))." ".ucwords(mb_strtolower($name->lname));
 
-        DeviceTokenCtrl::send('Referral Seen',"Referral code $code seen by Dr. $doctor of $hospital",$facility);*/
         Seen::create($data);
     }
 

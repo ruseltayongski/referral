@@ -363,7 +363,7 @@
         <div class="clearfix"></div>
     </div> <!-- /container -->
 @elseif(isset(Request::segments()[2]))
-    <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2], array('vaccine/vaccineview/1','vaccine/vaccineview/2','vaccine/vaccineview/3','vaccine/vaccineview/4','vaccine/facility/cebu','vaccine/facility/mandaue','vaccine/facility/lapu','weekly/report/1','weekly/report/2','weekly/report/3','weekly/report/4'), true) ? 'container-fluid' : 'container' }}" >
+    <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2], array('vaccine/vaccineview/1','vaccine/vaccineview/2','vaccine/vaccineview/3','vaccine/vaccineview/4','vaccine/facility/cebu','vaccine/facility/mandaue','vaccine/facility/lapu','weekly/report/1','weekly/report/2','weekly/report/3','weekly/report/4','admin/statistics/incoming1'), true) ? 'container-fluid' : 'container' }}" >
         <div class="loading"></div>
         @yield('content')
         <div class="clearfix"></div>
