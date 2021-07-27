@@ -32,8 +32,8 @@
                                 <th>Incoming</th>
                                 <th>Accepted</th>
                                 <th>Redirected</th>
-                                <th>Cancelled</th>
                                 <th>Transferred</th>
+                                <th>Cancelled</th>
                                 <th>Seen only</th>
                                 <th>Not Seen</th>
                             </tr>
@@ -71,29 +71,29 @@
                                         ?>
                                         <span class="text-blue">{{ $row->accepted }}</span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
+                                        <br>{{ $row->seen_accepted }}
+                                        <br>walk-in : {{ $row->incoming_walkin }}
                                     </td>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $row->redirected }}</span><br><br>
+                                        {{ $row->seen_redirected }}
                                     </td>
-                                    <td>
-                                        <span class="text-blue" style="font-size: 15pt;">
-                                            {{ $row->cancelled }}
-                                        </span><br><br></td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;">
                                             {{ $row->transferred }}
                                         </span><br><br>
+                                        {{ $row->seen_transferred }}
                                     </td>
-                                    <?php
-                                        $seen_only = $row->seen_total - $row->accepted - $row->redirected - $row->cancelled - $row->transferred;
-                                        //$seen_only = $seen_only <= 0 ? 0 : $seen_only;
-                                    ?>
+                                    <td>
+                                        <span class="text-blue" style="font-size: 15pt;">
+                                            {{ $row->cancelled }}
+                                        </span><br><br>
+                                        {{ $row->seen_cancelled }}
+                                    </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $seen_only }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->seen_total }}</span><br><br>
+                                        {{ $row->seen_accepted + $row->seen_redirected + $row->seen_transferred + $row->seen_cancelled }}
                                     </td>
-                                    <?php
-                                        $not_seen = $row->incoming - $row->seen_total;
-                                    ?>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
                                     </td>

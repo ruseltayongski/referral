@@ -77,8 +77,7 @@ $('body').on('click','.btn-refer',function () {
 
     patient_name = $(item).find('.patient_name').html();
     facility = $(item).find('.facility').html();
-    var count_referral = $('.count_referral').html();
-    var seenUrl = "{{ url('doctor/referral/seenBy/') }}/"+form_id;
+    var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
     $.ajax({
         url: seenUrl,
         type: "GET",
@@ -90,17 +89,9 @@ $('body').on('click','.btn-refer',function () {
         }
     });
 
-    /*if(status=='referred' || status=='redirected'){
-        seenMessage();
-    }else{
-        setTimeout(function () {
-            $('.loading').hide();
-        },500)
-    }*/ //murag wala nay gamit pero ako lang ge comment kay basen unya og gamit diay hehe
-
     setTimeout(function () {
         $('.loading').hide();
-    },500)
+    },500);
 
 
     if(type=='normal'){
