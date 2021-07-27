@@ -665,7 +665,7 @@
                             <option value="Pfizer" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                             <option value="SputnikV" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'SputnikV')echo 'selected';} ?>>Sputnik V</option>
                             <option value="Moderna" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Moderna')echo 'selected';} ?>>Moderna</option>
-                            <option value="Johnson" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Johnson')echo 'selected';} ?>>Johnson</option>
+                            <option value="Johnson" <?php if(isset($vaccine->typeof_vaccine)){if($vaccine->typeof_vaccine == 'Johnson')echo 'selected';} ?>>Janssen</option>
 
                         </select>
                         <br><br>

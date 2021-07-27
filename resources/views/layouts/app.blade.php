@@ -435,14 +435,11 @@
     var query_string_option = urlParams.get('option_filter') ? urlParams.get('option_filter') : '';
 
 
-    console.log(location.protocol);
-
     $(".pagination").children().each(function(index){
         var _href = $($(this).children().get(0)).attr('href');
 
         if(_href){
             _href = _href.replace("http:",location.protocol);
-            console.log(_href);
             $($(this).children().get(0)).attr('href',_href+'&search='+query_string_search+'&date_range='+query_string_date_range+'&typeof_vaccine_filter='+query_string_typeof_vaccine+'&muncity_filter='+query_string_muncity+'&facility_filter='+query_string_facility+'&department_filter='+query_string_department+'&option_filter='+query_string_option);
         }
 

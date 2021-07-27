@@ -19,7 +19,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                                 <option value="SputnikV" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'SputnikV')echo 'selected';} ?>>SputnikV</option>
                                 <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?>>Moderna</option>
-                                <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?>>Johnson</option>
+                                <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?>>Janssen</option>
 
                             </select>
                         </div>
@@ -138,7 +138,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                                 <div class="col-lg-2">
                                     <div class="small-box bg-blue ">
                                         <div class="inner">
-                                            <p style="font-size: 15pt;">Jansen</p>
+                                            <p style="font-size: 15pt;">Janssen</p>
                                             <h3 style="font-size:10pt" class="johnson_dashboard">+{{ $johnson_count >= 1 ? $johnson_count : 0 }}</h3>
                                         </div>
                                         <div class="icon">
@@ -715,7 +715,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         data: <?php echo json_encode($data["moderna"]); ?>
                     },
                     {
-                        label: 'Johnson',
+                        label: 'Janssen',
                         backgroundColor: '#1d94ff',
                         data: <?php echo json_encode($data["johnson"]); ?>
                     }

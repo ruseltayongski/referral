@@ -23,8 +23,8 @@
                                 <option value="Astrazeneca" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Astrazeneca')echo 'selected';} ?>>Astrazeneca</option>
                                 <option value="Pfizer" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Pfizer')echo 'selected';} ?>>Pfizer</option>
                                 <option value="Sputnikv" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sputnikv')echo 'selected';} ?>>Sputnikv</option>
-                                <!--<option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?>>Moderna</option>
-                                <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?>>Johnson</option>-->
+                                <option value="Moderna" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Moderna')echo 'selected';} ?>>Moderna</option>
+                                <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?>>Janssen</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -156,7 +156,7 @@
                 <div class="info-box"  style="background: #1d94ff;">
                     <span class="info-box-icon"><i class="ion ion-erlenmeyer-flask-bubbles" style="color:white;"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text" style="color:white;">JOHNSON</span>
+                        <span class="info-box-text" style="color:white;">JANSSEN</span>
                         <span class="info-box-number" style="color:white;">+{{ $johnson_allocated_facility }}</span>
                         <div class="progress">
                             <div class="progress-bar" style="width: 50%"></div>
@@ -824,7 +824,7 @@
                                                 <b>Moderna</b>
                                             </button>
                                             <button class="btn btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
-                                                 <b>Johnson</b>
+                                                 <b>Janssen</b>
                                             </button>
 
                                         <button class="btn" style="color: black;" type="button">

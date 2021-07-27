@@ -65,21 +65,21 @@
         <label style="margin-left: -3%;">Moderna Allocated</label>
         <div class="row">
             <div class="col-md-6">
-                <input type="text" class="form-control text-green" value="@if(isset($muncity->moderna_allocated_first)){{ $muncity->moderna_allocated_first}}@endif" name="pfizer_allocated_first">
+                <input type="text" class="form-control text-green" value="@if(isset($muncity->moderna_allocated_first)){{ $muncity->moderna_allocated_first}}@endif" name="moderna_allocated_first">
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control text-yellow" value="@if(isset($muncity->moderna_allocated_second)){{ $muncity->moderna_allocated_second}}@endif" name="pfizer_allocated_second">
+                <input type="text" class="form-control text-yellow" value="@if(isset($muncity->moderna_allocated_second)){{ $muncity->moderna_allocated_second}}@endif" name="moderna_allocated_second">
             </div>
         </div>
     </div>
     <div class="form-group">
-        <label style="margin-left: -3%;">Johnson Allocated</label>
+        <label style="margin-left: -3%;">Janssen Allocated</label>
         <div class="row">
             <div class="col-md-6">
-                <input type="text" class="form-control text-green" value="@if(isset($muncity->johnson_allocated_first)){{ $muncity->johnson_allocated_first}}@endif" name="pfizer_allocated_first">
+                <input type="text" class="form-control text-green" value="@if(isset($muncity->johnson_allocated_first)){{ $muncity->johnson_allocated_first}}@endif" name="johnson_allocated_first">
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control text-yellow" value="@if(isset($muncity->johnson_allocated_second)){{ $muncity->johnson_allocated_second}}@endif" name="pfizer_allocated_second">
+                <input type="text" class="form-control text-yellow" value="@if(isset($muncity->johnson_allocated_second)){{ $muncity->johnson_allocated_second}}@endif" name="johnson_allocated_second">
             </div>
         </div>
     </div>
