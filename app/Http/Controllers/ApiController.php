@@ -33,7 +33,7 @@ class ApiController extends Controller
     public function api(Request $request)
     {
         if($request->request_type=='facility'){
-            return $this->getFacilities($request->province);
+            return $this->getFacilities($request);
         }
         if($request->request_type=='incoming'){
             $incoming = $this->apiIncoming($request);
@@ -41,6 +41,7 @@ class ApiController extends Controller
             foreach($incoming as $inc){
                 $data[] = [
                     "province" => $inc->province,
+                    "facility_id" => $inc->facility_id,
                     "facility_name" => $inc->name,
                     "hospital_type" => $inc->hospital_type,
                     "data" => [
@@ -63,6 +64,7 @@ class ApiController extends Controller
             foreach($outgoing as $inc){
                 $data[] = [
                     "province" => $inc->province,
+                    "facility_id" => $inc->facility_id,
                     "facility_name" => $inc->name,
                     "hospital_type" => $inc->hospital_type,
                     "data" => [
@@ -213,8 +215,12 @@ class ApiController extends Controller
         return $facility;
     }
 
-    public function getFacilities($province){
-        $facility = Facility::select("facility.id","facility.name as facility_name")->where("referral_used","yes")->orderBy("facility.name","asc")->get();
+    public function getFacilities(Request $request){
+        $facility = Facility::select("facility.id","facility.name as facility_name")->where("referral_used","yes")->orderBy("facility.name","asc");
+        if($request->province)
+            $facility = $facility->where("province",$request->province);
+
+        $facility = $facility->get();
         return $facility;
     }
 
