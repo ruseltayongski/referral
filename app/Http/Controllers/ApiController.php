@@ -182,7 +182,7 @@ class ApiController extends Controller
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
-        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end')");
+        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province')");
 
         return $data;
     }
@@ -196,7 +196,7 @@ class ApiController extends Controller
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
-        $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end')");
+        $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province')");
 
         return $data;
     }

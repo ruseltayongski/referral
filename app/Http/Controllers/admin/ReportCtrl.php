@@ -66,8 +66,8 @@ class ReportCtrl extends Controller
             $date = date('Y-m-d');
         }
 
-        $start = Carbon::parse($date)->startOfDay();
-        $end = Carbon::parse($date)->endOfDay();
+        $start = $date.' 00:00:00';
+        $end = $date.' 23:59:59';
 
         $data = \DB::connection('mysql')->select("call AttendanceFunc('$start','$end')");
 
