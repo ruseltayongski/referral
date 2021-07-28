@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\Baby;
 use App\Barangay;
+use App\BedTracker;
 use App\Department;
 use App\Facility;
 use App\Feedback;
@@ -78,6 +79,91 @@ class ApiController extends Controller
             }
             return $data;
         }
+        elseif($request->request_type=="bed"){
+            $beds = $this->apiBedAvailability($request);
+            $data = [];
+            foreach($beds as $bed){
+                $encoded_by = BedTracker::
+                    select("bed_tracker.id","users.fname","users.mname","users.lname","bed_tracker.created_at")
+                        ->leftJoin("users","users.id","=","bed_tracker.encoded_by")
+                        ->where("bed_tracker.facility_id","=",$bed->id)
+                        ->where("users.level","!=","opcen")
+                        ->orderBy("bed_tracker.id","desc")
+                        ->first();
+                    $created_at = $encoded_by->created_at;
+                    $encoded_by = ucfirst($encoded_by->fname).' '.strtoupper($encoded_by->mname[0]).'. '.ucfirst($encoded_by->lname);
+                $data[] = [
+                    "province" => Province::find($bed->province)->description,
+                    "facility_name" => $bed->name,
+                    "hospital_type" => $bed->hospital_type,
+                    "data" => [
+                        [
+                            "Number of Available Beds" => [
+                                "COVID BEDS" => [
+                                    "Emergency Room (ER)" => [
+                                        "Vacant" => $bed->emergency_room_covid_vacant ? $bed->emergency_room_covid_vacant : 0,
+                                        "Occupied" => $bed->emergency_room_covid_occupied ? $bed->emergency_room_covid_occupied : 0
+                                    ],
+                                    "ICU - Intensive Care Units" => [
+                                        "Vacant" => $bed->icu_covid_vacant ? $bed->icu_covid_vacant : 0,
+                                        "Occupied" => $bed->icu_covid_occupied ? $bed->icu_covid_occupied : 0
+                                    ],
+                                    "COVID Beds" => [
+                                        "Vacant" => $bed->beds_covid_vacant ? $bed->beds_covid_vacant : 0,
+                                        "Occupied" => $bed->beds_covid_occupied ? $bed->beds_covid_occupied : 0
+                                    ],
+                                    "Isolation Beds" => [
+                                        "Vacant" => $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0,
+                                        "Occupied" => $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0
+                                    ],
+                                    "Mechanical Ventilators" => [
+                                        "Vacant" => $bed->mechanical_used_covid ? $bed->mechanical_used_covid : 0,
+                                        "Occupied" => $bed->mechanical_vacant_covid ? $bed->mechanical_vacant_covid : 0
+                                    ]
+                                ],
+                                "Non-COVID BEDS" => [
+                                    "Emergency Room (ER)" => [
+                                        "Vacant" => $bed->emergency_room_non_vacant ? $bed->emergency_room_non_vacant : 0,
+                                        "Occupied" => $bed->emergency_room_non_occupied ? $bed->emergency_room_non_occupied : 0
+                                    ],
+                                    "ICU - Intensive Care Units" => [
+                                        "Vacant" => $bed->icu_non_vacant ? $bed->icu_non_vacant : 0,
+                                        "Occupied" => $bed->icu_non_occupied ? $bed->icu_non_occupied : 0
+                                    ],
+                                    "Regular Beds" => [
+                                        "Vacant" => $bed->beds_non_vacant ? $bed->beds_non_vacant : 0,
+                                        "Occupied" => $bed->beds_non_occupied ? $bed->beds_non_occupied : 0
+                                    ],
+                                    "Isolation Beds" => [
+                                        "Vacant" => $bed->isolation_non_vacant ? $bed->isolation_non_vacant : 0,
+                                        "Occupied" => $bed->isolation_non_occupied ? $bed->isolation_non_occupied : 0
+                                    ],
+                                    "Mechanical Ventilators" => [
+                                        "Vacant" => $bed->mechanical_used_non ? $bed->mechanical_used_non : 0,
+                                        "Occupied" => $bed->mechanical_vacant_non ? $bed->mechanical_vacant_non : 0
+                                    ]
+                                ]
+                            ],
+                            "Number of Waitlist" => [
+                                "COVID BEDS" => [
+                                    "Emergency Room (ER)" => $bed->emergency_room_covid_wait ? $bed->emergency_room_covid_wait : 0,
+                                    "ICU - Intensive Care Units" => $bed->icu_covid_wait ? $bed->icu_covid_wait : 0,
+                                ],
+                                "Non-COVID BEDS" => [
+                                    "Emergency Room (ER)" => $bed->emergency_room_non_wait ? $bed->emergency_room_non_wait : 0,
+                                    "ICU - Intensive Care Units" => $bed->icu_non_wait ? $bed->icu_non_wait : 0,
+                                ],
+
+                            ],
+                            "Remarks" => $bed->remarks,
+                            "Encoded By" => $encoded_by,
+                            "Created At" => $created_at
+                        ]
+                    ]
+                ];
+            }
+            return $data;
+        }
         else{
             return 'Error API';
         }
@@ -109,6 +195,22 @@ class ApiController extends Controller
         $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end')");
 
         return $data;
+    }
+
+    public function apiBedAvailability(Request $request){
+        $facility = Facility::where(function($q){
+            $q->where("hospital_type","government")->orWhere("hospital_type","private");
+        })
+            ->where("referral_used","yes")
+            ->orderBy("province","asc")
+            ->orderBy("name","asc");
+
+        if($request->province)
+            $facility = $facility->where("province",$request->province);
+
+        $facility = $facility->get();
+
+        return $facility;
     }
 
     public function getFacilities($province){
