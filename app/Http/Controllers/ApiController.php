@@ -29,17 +29,55 @@ use Illuminate\Support\Facades\Session;
 
 class ApiController extends Controller
 {
-    public function api(Request $req)
+    public function api(Request $request)
     {
-        if($req->r==='login')
-            return self::login($req);
-        elseif($req->r=='getContactList')
-            return User::select(\DB::raw("concat(users.fname,' ',users.lname) as name"),'department.description as department','facility.name as hospital')
-                ->leftJoin('facility','facility.id','=','users.facility_id')
-                ->leftJoin('department','department.id','=','users.department_id')
-                ->get();
-        else
+        if($request->request_type=='facility'){
+            return $this->getFacilities($request->province);
+        }
+        if($request->request_type=='incoming'){
+            $incoming = $this->apiIncoming($request);
+            $data = [];
+            foreach($incoming as $inc){
+                $data[] = [
+                    "province" => $inc->province,
+                    "facility_name" => $inc->name,
+                    "hospital_type" => $inc->hospital_type,
+                    "data" => [
+                        "referred" => $inc->referred,
+                        "redirected" => $inc->redirected,
+                        "transferred" => $inc->transferred,
+                        "accepted" => $inc->accepted,
+                        "denied" => $inc->denied,
+                        "cancelled" => $inc->cancelled,
+                        "seen_only" => $inc->seen_only,
+                        "not_seen" => $inc->not_seen
+                    ]
+                ];
+            }
+            return $data;
+        }
+        else{
             return 'Error API';
+        }
+    }
+
+    public function apiIncoming(Request $request){
+        if($request->isMethod('post') && isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end')");
+
+        return $data;
+    }
+
+    public function getFacilities($province){
+        $facility = Facility::select("facility.id","facility.name as facility_name")->where("referral_used","yes")->orderBy("facility.name","asc")->get();
+        return $facility;
     }
 
     public function login(Request $req)
