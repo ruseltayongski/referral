@@ -56,6 +56,28 @@ class ApiController extends Controller
             }
             return $data;
         }
+        elseif($request->request_type=='outgoing'){
+            $outgoing = $this->apiOutgoing($request);
+            $data = [];
+            foreach($outgoing as $inc){
+                $data[] = [
+                    "province" => $inc->province,
+                    "facility_name" => $inc->name,
+                    "hospital_type" => $inc->hospital_type,
+                    "data" => [
+                        "referred" => $inc->referred,
+                        "redirected" => $inc->redirected,
+                        "transferred" => $inc->transferred,
+                        "accepted" => $inc->accepted,
+                        "denied" => $inc->denied,
+                        "cancelled" => $inc->cancelled,
+                        "seen_only" => $inc->seen_only,
+                        "not_seen" => $inc->not_seen
+                    ]
+                ];
+            }
+            return $data;
+        }
         else{
             return 'Error API';
         }
@@ -71,6 +93,20 @@ class ApiController extends Controller
         }
 
         $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end')");
+
+        return $data;
+    }
+
+    public function apiOutgoing(Request $request){
+        if($request->isMethod('post') && isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end')");
 
         return $data;
     }
