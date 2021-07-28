@@ -32,6 +32,8 @@ class ApiController extends Controller
 {
     public function api(Request $request)
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
         if($request->request_type=='facility'){
             return $this->getFacilities($request);
         }
