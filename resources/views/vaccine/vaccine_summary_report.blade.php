@@ -26,10 +26,10 @@
             <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Deferral</b></th>
             <th colspan="7"><b style="font-size: 10pt">Wastage</b></th>
-            <th colspan="5"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
-            <th colspan="5"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
-            <th colspan="5"><b style="font-size: 10pt">1st dose Consumption Rate</b></th>
-            <th colspan="5"><b style="font-size: 10pt">2nd dose Consumption Rate</b></th>
+            <th colspan="7"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="7"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="7"><b style="font-size: 10pt">1st dose Consumption Rate</b></th>
+            <th colspan="7"><b style="font-size: 10pt">2nd dose Consumption Rate</b></th>
         </tr>
         <tr style="background-color: #fbe4d5;">
             <td></td>
@@ -73,26 +73,33 @@
             <td>Moderna</td>
             <td>Janssen</td>
             <td><b>(Total Wastage)</b></td>
-
             <td>Sinovac</td>
             <td>Astra</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
+            <td>Moderna</td>
+            <td>Janssen</td>
             <td><b>(Total Percent Coverage)</b></td>
             <td>Sinovac</td>
             <td>Astra</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
+            <td>Moderna</td>
+            <td>Janssen</td>
             <td><b>(Total Percent Coverage)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
+            <td>Moderna</td>
+            <td>Johnson</td>
             <td><b>(Total Consumption Rate)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
+            <td>Moderna</td>
+            <td>Janssen</td>
             <td><b>(Total Consumption Rate)</b></td>
         </tr>
         <tr style="background-color: #e2efd9">
@@ -136,28 +143,34 @@
             <td>{{ $wastage_sputnikv_first}}</td> <!--  WASTAGE SPUTNIKV  REGION -->
             <td>{{ $wastage_moderna_first}}</td> <!--  WASTAGE MODERNA  REGION -->
             <td>{{ $wastage_johnson_first}}</td> <!--  WASTAGE JOHNSON  REGION -->
-
-
             <td>{{ $wastage_region}}</td>   <!-- TOTAL WASTAGE REGION -->
             <td>{{ $total_p_cvrge_sinovac_region_first }}%</td> <!-- TOTAL PERCENT COVERAGE SINOVAC FIRST REGION -->
             <td>{{ $total_p_cvrge_astra_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA FIRST REGION -->
-            <td>{{ $total_p_cvrge_sputnikv_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION -->
             <td>{{ $total_p_cvrge_pfizer_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER FIRST REGION -->
+            <td>{{ $total_p_cvrge_sputnikv_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION -->
+            <td>{{ $total_p_cvrge_moderna_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE MODERNA FIRST REGION -->
+            <td>{{ $total_p_cvrge_johnson_region_first}}%</td> <!-- TOTAL PERCENT COVERAGE JOHNSON FIRST REGION -->
             <td>{{ $total_p_cvrge_region_first }}%</td> <!-- TOTAL PERCENT COVERAGE FIRST REGION -->
             <td>{{ $total_p_cvrge_sinovac_region_second }}%</td> <!-- TOTAL PERCENT COVERAGE SINOVAC SECOND REGION -->
             <td>{{ $total_p_cvrge_astra_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE ASTRA SECOND REGION -->
-            <td>{{ $total_p_cvrge_sputnikv_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION -->
             <td>{{ $total_p_cvrge_pfizer_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE PFIZER SECOND REGION -->
+            <td>{{ $total_p_cvrge_sputnikv_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE SPUTNIKV SECOND REGION -->
+            <td>{{ $total_p_cvrge_moderna_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE MODERNA SECOND REGION -->
+            <td>{{ $total_p_cvrge_johnson_region_second}}%</td> <!-- TOTAL PERCENT COVERAGE JOHNSON SECOND REGION -->
             <td>{{ $total_p_cvrge_region_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND REGION -->
             <td>{{ $c_rate_region_sinovac_first }}%</td>  <!-- CONSUMPTION RATE SINOVAC FIRST REGION -->
             <td>{{ $c_rate_region_astra_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST REGION -->
-            <td>{{ $c_rate_region_sputnikv_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST REGION -->
             <td>{{ $c_rate_region_pfizer_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST REGION -->
+            <td>{{ $c_rate_region_sputnikv_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST REGION -->
+            <td>{{ $c_rate_region_moderna_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST REGION -->
+            <td>{{ $c_rate_region_johnson_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST REGION -->
             <td>{{ $total_c_rate_region_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST REGION -->
             <td>{{ $c_rate_region_sinovac_second }}%</td>  <!-- CONSUMPTION RATE SINOVAC SECOND REGION -->
             <td>{{ $c_rate_region_astra_second }}%</td>  <!-- CONSUMPTION RATE ASTRA SECOND REGION -->
-            <td>{{ $c_rate_region_sputnikv_second }}%</td>  <!-- CONSUMPTION RATE SPUTNIKV SECOND REGION -->
             <td>{{ $c_rate_region_pfizer_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND REGION -->
+            <td>{{ $c_rate_region_sputnikv_second }}%</td>  <!-- CONSUMPTION RATE SPUTNIKV SECOND REGION -->
+            <td>{{ $c_rate_region_moderna_second }}%</td>  <!-- CONSUMPTION RATE MODERNA SECOND REGION -->
+            <td>{{ $c_rate_region_johnson_second }}%</td>  <!-- CONSUMPTION RATE JOHNSON SECOND REGION -->
             <td>{{ $total_c_rate_region_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND REGION -->
         </tr>
         <tr>
@@ -197,28 +210,38 @@
             <td>{{ $deferred_second_bohol }}</td> <!--  DEFERRED SECOND BOHOL -->
             <td>{{ $wastage_sinovac_bohol_first }}</td> <!-- WASTAGE SINOVAC FIRST BOHOL -->
             <td>{{ $wastage_astra_bohol_first }}</td> <!--  WASTAGE ASTRA FIRST BOHOL -->
-            <td>{{ $wastage_sputnikv_bohol_first }}</td> <!--  WASTAGE SPUTNIKV FIRST BOHOL -->
             <td>{{ $wastage_pfizer_bohol_first }}</td> <!--  WASTAGE PFIZER FIRST BOHOL -->
+            <td>{{ $wastage_sputnikv_bohol_first }}</td> <!--  WASTAGE SPUTNIKV FIRST BOHOL -->
+            <td>{{ $wastage_moderna_bohol_first }}</td> <!--  WASTAGE MODERNA FIRST BOHOL -->
+            <td>{{ $wastage_johnson_bohol_first }}</td> <!--  WASTAGE JOHNSON FIRST BOHOL -->
             <td>{{ $total_wastage_bohol}}</td> <!--  TOTAL WASTAGE FIRST BOHOL -->
             <td>{{ $p_cvrge_sinovac_bohol_first }}%</td> <!--  PERCENT COVERAGE SINOVAC FIRST BOHOL -->
             <td>{{ $p_cvrge_astra_bohol_first }}%</td> <!--  PERCENT COVERAGE ASTRA FIRST BOHOL -->
-            <td>{{ $p_cvrge_sputnikv_bohol_first }}%</td> <!--  PERCENT COVERAGE SPUTNIKV FIRST BOHOL -->
             <td>{{ $p_cvrge_pfizer_bohol_first }}%</td> <!--  PERCENT COVERAGE PFIZER FIRST BOHOL -->
+            <td>{{ $p_cvrge_sputnikv_bohol_first }}%</td> <!--  PERCENT COVERAGE SPUTNIKV FIRST BOHOL -->
+            <td>{{ $p_cvrge_moderna_bohol_first }}%</td> <!--  PERCENT COVERAGE MODERNA FIRST BOHOL -->
+            <td>{{ $p_cvrge_johnson_bohol_first }}%</td> <!--  PERCENT COVERAGE JOHNSON FIRST BOHOL -->
             <td>{{ $total_p_cvrge_bohol_first }}%</td> <!--  TOTAL PERCENT COVERAGE FIRST BOHOL -->
             <td>{{ $p_cvrge_sinovac_bohol_second }}%</td> <!--  PERCENT COVERAGE SINOVAC SECOND BOHOL -->
             <td>{{ $p_cvrge_astra_bohol_second }}%</td> <!--  PERCENT COVERAGE ASTRA SECOND BOHOL -->
-            <td>{{ $p_cvrge_sputnikv_bohol_second }}%</td> <!--  PERCENT COVERAGE SPUTNIKV SECOND BOHOL -->
             <td>{{ $p_cvrge_pfizer_bohol_second }}%</td> <!--  PERCENT COVERAGE PFIZER SECOND BOHOL -->
+            <td>{{ $p_cvrge_sputnikv_bohol_second }}%</td> <!--  PERCENT COVERAGE SPUTNIKV SECOND BOHOL -->
+            <td>{{ $p_cvrge_moderna_bohol_second }}%</td> <!--  PERCENT COVERAGE MODERNA SECOND BOHOL -->
+            <td>{{ $p_cvrge_johnson_bohol_second }}%</td> <!--  PERCENT COVERAGE JOHNSON SECOND BOHOL -->
             <td>{{ $total_p_cvrge_bohol_second }}%</td> <!--  TOTAL PERCENT COVERAGE SECOND BOHOL -->
             <td>{{ $c_rate_sinovac_bohol_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST BOHOL -->
             <td>{{ $c_rate_astra_bohol_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST BOHOL -->
-            <td>{{ $c_rate_sputnikv_bohol_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST BOHOL -->
             <td>{{ $c_rate_pfizer_bohol_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST BOHOL -->
+            <td>{{ $c_rate_sputnikv_bohol_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST BOHOL -->
+            <td>{{ $c_rate_moderna_bohol_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST BOHOL -->
+            <td>{{ $c_rate_johnson_bohol_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST BOHOL -->
             <td>{{ $total_c_rate_bohol_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST BOHOL -->
             <td>{{ $c_rate_sinovac_bohol_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND BOHOL -->
             <td>{{ $c_rate_astra_bohol_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND BOHOL -->
-            <td>{{ $c_rate_sputnikv_bohol_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND BOHOL -->
             <td>{{ $c_rate_pfizer_bohol_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND BOHOL -->
+            <td>{{ $c_rate_sputnikv_bohol_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND BOHOL -->
+            <td>{{ $c_rate_moderna_bohol_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND BOHOL -->
+            <td>{{ $c_rate_johnson_bohol_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND BOHOL -->
             <td>{{ $total_c_rate_bohol_second }}%</td>  <!-- TOTAL CONSUMPTION RATE SECOND BOHOL -->
         </tr>
         <tr>
@@ -258,28 +281,38 @@
             <td>{{ $deferred_second_cebu }}</td> <!-- DEFERRED SECOND CEBU -->
             <td>{{ $wastage_sinovac_cebu_first }}</td> <!-- WASTAGE SINOVAC CEBU -->
             <td>{{ $wastage_astra_cebu_first }}</td> <!-- WASTAGE ASTRA CEBU -->
-            <td>{{ $wastage_sputnikv_cebu_first }}</td> <!-- WASTAGE SPUTNIKV CEBU -->
             <td>{{ $wastage_pfizer_cebu_first }}</td> <!-- WASTAGE PFIZER CEBU -->
+            <td>{{ $wastage_sputnikv_cebu_first }}</td> <!-- WASTAGE SPUTNIKV CEBU -->
+            <td>{{ $wastage_moderna_cebu_first }}</td> <!-- WASTAGE MODERNA CEBU -->
+            <td>{{ $wastage_johnson_cebu_first }}</td> <!-- WASTAGE JOHNSON CEBU -->
             <td>{{ $total_wastage_cebu}}</td> <!-- TOTAL WASTAGE CEBU -->
             <td>{{ $p_cvrge_sinovac_cebu_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST CEBU -->
             <td>{{ $p_cvrge_astra_cebu_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST CEBU -->
-            <td>{{ $p_cvrge_sputnikv_cebu_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU -->
             <td>{{ $p_cvrge_pfizer_cebu_first }}%</td> <!-- PERCENT COVERAGE PFIZER FIRST CEBU -->
+            <td>{{ $p_cvrge_sputnikv_cebu_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU -->
+            <td>{{ $p_cvrge_moderna_cebu_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST CEBU -->
+            <td>{{ $p_cvrge_johnson_cebu_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST CEBU -->
             <td>{{ $total_p_cvrge_cebu_first }}%</td> <!-- TOTAL PERCENT COVERAGE FIRST CEBU -->
             <td>{{ $p_cvrge_sinovac_cebu_second }}%</td> <!-- PERCENT COVERAGE SINOVAC SECOND CEBU -->
             <td>{{ $p_cvrge_astra_cebu_second }}%</td>  <!-- PERCENT COVERAGE ASTRA SECOND CEBU -->
-            <td>{{ $p_cvrge_sputnikv_cebu_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU -->
             <td>{{ $p_cvrge_pfizer_cebu_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND CEBU -->
+            <td>{{ $p_cvrge_sputnikv_cebu_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU -->
+            <td>{{ $p_cvrge_moderna_cebu_second }}%</td> <!-- PERCENT COVERAGE MODERNA SECOND CEBU -->
+            <td>{{ $p_cvrge_johnson_cebu_second }}%</td> <!-- PERCENT COVERAGE JOHNSON SECOND CEBU -->
             <td>{{ $total_p_cvrge_cebu_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND CEBU -->
             <td>{{ $c_rate_sinovac_cebu_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST CEBU -->
             <td>{{ $c_rate_astra_cebu_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST CEBU -->
-            <td>{{ $c_rate_sputnikv_cebu_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU -->
             <td>{{ $c_rate_pfizer_cebu_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST CEBU -->
+            <td>{{ $c_rate_sputnikv_cebu_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU -->
+            <td>{{ $c_rate_moderna_cebu_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST CEBU -->
+            <td>{{ $c_rate_johnson_cebu_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST CEBU -->
             <td>{{ $total_c_rate_cebu_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST CEBU -->
             <td>{{ $c_rate_sinovac_cebu_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND CEBU -->
             <td>{{ $c_rate_astra_cebu_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND CEBU -->
-            <td>{{ $c_rate_sputnikv_cebu_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND CEBU -->
             <td>{{ $c_rate_pfizer_cebu_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND CEBU -->
+            <td>{{ $c_rate_sputnikv_cebu_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND CEBU -->
+            <td>{{ $c_rate_moderna_cebu_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND CEBU -->
+            <td>{{ $c_rate_johnson_cebu_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND CEBU -->
             <td>{{ $total_c_rate_cebu_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND CEBU -->
         </tr>
         <tr>
@@ -319,28 +352,38 @@
             <td>{{ $deferred_second_negros }}</td> <!-- DEFERRED SECOND NEGROS -->
             <td>{{ $wastage_sinovac_negros_first }}</td> <!-- WASTAGE SINOVAC NEGROS -->
             <td>{{ $wastage_astra_negros_first }}</td>  <!-- WASTAGE ASTRA NEGROS -->
-            <td>{{ $wastage_sputnikv_negros_first }}</td> <!-- WASTAGE SPUTNIKV NEGROS -->
             <td>{{ $wastage_pfizer_negros_first }}</td> <!-- WASTAGE PFIZER NEGROS -->
+            <td>{{ $wastage_sputnikv_negros_first }}</td> <!-- WASTAGE SPUTNIKV NEGROS -->
+            <td>{{ $wastage_moderna_negros_first }}</td> <!-- WASTAGE MODERNA NEGROS -->
+            <td>{{ $wastage_johnson_negros_first }}</td> <!-- WASTAGE MODERNA NEGROS -->
             <td>{{ $total_wastage_negros}}</td> <!-- TOTAL WASTAGE NEGROS -->
             <td>{{ $p_cvrge_sinovac_negros_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST NEGROS -->
             <td>{{ $p_cvrge_astra_negros_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST NEGROS -->
-            <td>{{ $p_cvrge_sputnikv_negros_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST NEGROS -->
             <td>{{ $p_cvrge_pfizer_negros_first }}%</td> <!-- PERCENT COVERAGE PFIZER FIRST NEGROS -->
+            <td>{{ $p_cvrge_sputnikv_negros_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST NEGROS -->
+            <td>{{ $p_cvrge_moderna_negros_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST NEGROS -->
+            <td>{{ $p_cvrge_johnson_negros_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST NEGROS -->
             <td>{{ $total_p_cvrge_negros_first }}%</td>  <!-- TOTAL PERCENT COVERAGE FIRST NEGROS -->
             <td>{{ $p_cvrge_sinovac_negros_second }}%</td> <!-- PERCENT COVERAGE SINOVAC SECOND NEGROS -->
             <td>{{ $p_cvrge_astra_negros_second }}%</td>  <!-- PERCENT COVERAGE ASTRA SECOND NEGROS -->
-            <td>{{ $p_cvrge_sputnikv_negros_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND NEGROS -->
             <td>{{ $p_cvrge_pfizer_negros_second }}%</td>  <!-- PERCENT COVERAGE PFIZER SECOND NEGROS -->
+            <td>{{ $p_cvrge_sputnikv_negros_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND NEGROS -->
+            <td>{{ $p_cvrge_moderna_negros_second }}%</td> <!-- PERCENT COVERAGE MODERNA SECOND NEGROS -->
+            <td>{{ $p_cvrge_johnson_negros_second }}%</td> <!-- PERCENT COVERAGE JOHNSON SECOND NEGROS -->
             <td>{{ $total_p_cvrge_negros_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND NEGROS -->
             <td>{{ $c_rate_sinovac_negros_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST NEGROS -->
             <td>{{ $c_rate_astra_negros_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST NEGROS -->
-            <td>{{ $c_rate_sputnikv_negros_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST NEGROS -->
             <td>{{ $c_rate_pfizer_negros_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST NEGROS -->
+            <td>{{ $c_rate_sputnikv_negros_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST NEGROS -->
+            <td>{{ $c_rate_moderna_negros_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST NEGROS -->
+            <td>{{ $c_rate_johnson_negros_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST NEGROS -->
             <td>{{ $total_c_rate_negros_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST NEGROS -->
             <td>{{ $c_rate_sinovac_negros_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND NEGROS -->
             <td>{{ $c_rate_astra_negros_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND NEGROS -->
-            <td>{{ $c_rate_sputnikv_negros_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND NEGROS -->
             <td>{{ $c_rate_pfizer_negros_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND NEGROS -->
+            <td>{{ $c_rate_sputnikv_negros_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND NEGROS -->
+            <td>{{ $c_rate_moderna_negros_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND NEGROS -->
+            <td>{{ $c_rate_johnson_negros_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND NEGROS -->
             <td>{{ $total_c_rate_negros_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND NEGROS -->
         </tr>
         <tr>
@@ -380,28 +423,38 @@
             <td>{{ $deferred_second_siquijor }}</td> <!-- DEFERRED SECOND SIQUIJOR -->
             <td>{{ $wastage_sinovac_siquijor_first }}</td> <!-- WASTAGE SINOVAC SIQUIJOR -->
             <td>{{ $wastage_astra_siquijor_first }}</td> <!-- WASTAGE ASTRA SIQUIJOR -->
-            <td>{{ $wastage_sputnikv_siquijor_first }}</td> <!-- WASTAGE SPUTNIKV SIQUIJOR -->
             <td>{{ $wastage_pfizer_siquijor_first }}</td> <!-- WASTAGE PFIZER SIQUIJOR -->
+            <td>{{ $wastage_sputnikv_siquijor_first }}</td> <!-- WASTAGE SPUTNIKV SIQUIJOR -->
+            <td>{{ $wastage_moderna_siquijor_first }}</td> <!-- WASTAGE MODERNA SIQUIJOR -->
+            <td>{{ $wastage_johnson_siquijor_first }}</td> <!-- WASTAGE JOHNSON SIQUIJOR -->
             <td>{{ $total_wastage_siquijor}}</td> <!-- TOTAL WASTAGE SIQUIJOR -->
             <td>{{ $p_cvrge_sinovac_siquijor_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_astra_siquijor_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST SIQUIJOR -->
-            <td>{{ $p_cvrge_sputnikv_siquijor_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_pfizer_siquijor_first }}%</td> <!-- PERCENT COVERAGE PFIZER FIRST SIQUIJOR -->
+            <td>{{ $p_cvrge_sputnikv_siquijor_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST SIQUIJOR -->
+            <td>{{ $p_cvrge_moderna_siquijor_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST SIQUIJOR -->
+            <td>{{ $p_cvrge_johnson_siquijor_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST SIQUIJOR -->
             <td>{{ $total_p_cvrge_siquijor_first }}%</td> <!-- TOTAL PERCENT COVERAGE FIRST SIQUIJOR -->
             <td>{{ $p_cvrge_sinovac_siquijor_second }}%</td> <!-- PERCENT COVERAGE SINOVAC SECOND SIQUIJOR -->
             <td>{{ $p_cvrge_astra_siquijor_second }}%</td>  <!-- PERCENT COVERAGE ASTRA SECOND SIQUIJOR -->
-            <td>{{ $p_cvrge_sputnikv_siquijor_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND SIQUIJOR -->
             <td>{{ $p_cvrge_pfizer_siquijor_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND SIQUIJOR -->
+            <td>{{ $p_cvrge_sputnikv_siquijor_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND SIQUIJOR -->
+            <td>{{ $p_cvrge_moderna_siquijor_second }}%</td>  <!-- PERCENT COVERAGE MODERNA SECOND SIQUIJOR -->
+            <td>{{ $p_cvrge_johnson_siquijor_second }}%</td>  <!-- PERCENT COVERAGE JOHNSON SECOND SIQUIJOR -->
             <td>{{ $total_p_cvrge_siquijor_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND SIQUIJOR -->
             <td>{{ $c_rate_sinovac_siquijor_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST SIQUIJOR -->
             <td>{{ $c_rate_astra_siquijor_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST SIQUIJOR -->
-            <td>{{ $c_rate_sputnikv_siquijor_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST SIQUIJOR -->
             <td>{{ $c_rate_pfizer_siquijor_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST SIQUIJOR -->
+            <td>{{ $c_rate_sputnikv_siquijor_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST SIQUIJOR -->
+            <td>{{ $c_rate_moderna_siquijor_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST SIQUIJOR -->
+            <td>{{ $c_rate_johnson_siquijor_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST SIQUIJOR -->
             <td>{{ $total_c_rate_siquijor_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST SIQUIJOR -->
             <td>{{ $c_rate_sinovac_siquijor_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND SIQUIJOR -->
             <td>{{ $c_rate_astra_siquijor_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND SIQUIJOR -->
-            <td>{{ $c_rate_sputnikv_siquijor_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND SIQUIJOR -->
             <td>{{ $c_rate_pfizer_siquijor_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND SIQUIJOR -->
+            <td>{{ $c_rate_sputnikv_siquijor_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND SIQUIJOR -->
+            <td>{{ $c_rate_moderna_siquijor_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND SIQUIJOR -->
+            <td>{{ $c_rate_johnson_siquijor_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND SIQUIJOR -->
             <td>{{ $total_c_rate_siquijor_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND SIQUIJOR -->
         </tr>
         <tr>
@@ -441,28 +494,38 @@
             <td>{{ $deferred_cebu_facility_second }}</td> <!-- DEFERRED SECOND CEBU FACILITY -->
             <td>{{ $wastage_sinovac_cebu_facility_first }}</td> <!-- WASTAGE SINOVAC CEBU FACILITY -->
             <td>{{ $wastage_astra_cebu_facility_first }}</td> <!-- WASTAGE ASTRA CEBU FACILITY -->
-            <td>{{ $wastage_sputnikv_cebu_facility_first }}</td>  <!-- WASTAGE SPUTNIKV CEBU FACILITY -->
             <td>{{ $wastage_pfizer_cebu_facility_first }}</td> <!-- WASTAGE PFIZER CEBU FACILITY -->
+            <td>{{ $wastage_sputnikv_cebu_facility_first }}</td>  <!-- WASTAGE SPUTNIKV CEBU FACILITY -->
+            <td>{{ $wastage_moderna_cebu_facility_first }}</td>  <!-- WASTAGE MODERNA CEBU FACILITY -->
+            <td>{{ $wastage_johnson_cebu_facility_first }}</td>  <!-- WASTAGE JOHNSON CEBU FACILITY -->
             <td>{{ $total_wastage_cebu_facility }}</td> <!-- TOTAL WASTAGE CEBU FACILITY -->
             <td>{{ $p_cvrge_sinovac_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST CEBU FACILITY -->
             <td>{{ $p_cvrge_astra_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST CEBU FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU FACILITY -->
             <td>{{ $p_cvrge_pfizer_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE PFIZER FIRST CEBU FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST CEBU FACILITY -->
+            <td>{{ $p_cvrge_moderna_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST CEBU FACILITY -->
+            <td>{{ $p_cvrge_johnson_cebu_facility_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST CEBU FACILITY -->
             <td>{{ $total_p_cvrge_cebu_facility_first }}%</td> <!-- TOTAL PERCENT COVERAGE FIRST CEBU FACILITY -->
             <td>{{ $p_cvrge_sinovac_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE SINOVAC SECOND CEBU FACILITY -->
             <td>{{ $p_cvrge_astra_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE ASTRA SECOND CEBU FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU FACILITY -->
             <td>{{ $p_cvrge_pfizer_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND CEBU FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND CEBU FACILITY -->
+            <td>{{ $p_cvrge_moderna_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE MODERNA SECOND CEBU FACILITY -->
+            <td>{{ $p_cvrge_johnson_cebu_facility_second }}%</td> <!-- PERCENT COVERAGE JOHNSON SECOND CEBU FACILITY -->
             <td>{{ $total_p_cvrge_cebu_facility_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND CEBU FACILITY -->
             <td>{{ $c_rate_sinovac_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST CEBU FACILITY -->
             <td>{{ $c_rate_astra_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST CEBU FACILITY -->
-            <td>{{ $c_rate_sputnikv_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU FACILITY -->
             <td>{{ $c_rate_pfizer_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST CEBU FACILITY -->
+            <td>{{ $c_rate_sputnikv_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST CEBU FACILITY -->
+            <td>{{ $c_rate_moderna_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST CEBU FACILITY -->
+            <td>{{ $c_rate_johnson_cebu_facility_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST CEBU FACILITY -->
             <td>{{ $total_c_rate_cebu_facility_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST CEBU FACILITY -->
             <td>{{ $c_rate_sinovac_cebu_facility_second }}%</td>  <!-- CONSUMPTION RATE SINOVAC SECOND CEBU FACILITY -->
             <td>{{ $c_rate_astra_cebu_facility_second }}%</td>  <!-- CONSUMPTION RATE ASTRA SECOND CEBU FACILITY -->
-            <td>{{ $c_rate_sputnikv_cebu_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND CEBU FACILITY -->
             <td>{{ $c_rate_pfizer_cebu_facility_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND CEBU FACILITY -->
+            <td>{{ $c_rate_sputnikv_cebu_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND CEBU FACILITY -->
+            <td>{{ $c_rate_moderna_cebu_facility_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND CEBU FACILITY -->
+            <td>{{ $c_rate_johnson_cebu_facility_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND CEBU FACILITY -->
             <td>{{ $total_c_rate_cebu_facility_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND CEBU FACILITY -->
         </tr>
         <tr>
@@ -502,28 +565,38 @@
             <td>{{ $deferred_mandaue_facility_second }}</td> <!-- DEFERRED SECOND MANDAUE FACILITY -->
             <td>{{ $wastage_sinovac_mandaue_facility_first }}</td> <!-- WASTAGE SINOVAC MANDAUE FACILITY -->
             <td>{{ $wastage_astra_mandaue_facility_first }}</td> <!-- WASTAGE ASTRA MANDAUE FACILITY -->
-            <td>{{ $wastage_sputnikv_mandaue_facility_first }}</td> <!-- WASTAGE SPUTNIKV MANDAUE FACILITY -->
             <td>{{ $wastage_pfizer_mandaue_facility_first }}</td> <!-- WASTAGE PFIZER MANDAUE FACILITY -->
+            <td>{{ $wastage_sputnikv_mandaue_facility_first }}</td> <!-- WASTAGE SPUTNIKV MANDAUE FACILITY -->
+            <td>{{ $wastage_moderna_mandaue_facility_first }}</td> <!-- WASTAGE MODERNA MANDAUE FACILITY -->
+            <td>{{ $wastage_johnson_mandaue_facility_first }}</td> <!-- WASTAGE JOHNSON MANDAUE FACILITY -->
             <td>{{ $total_wastage_mandaue_facility }}</td> <!-- TOTAL WASTAGE MANDAUE FACILITY -->
             <td>{{ $p_cvrge_sinovac_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST MANDAUE FACILITY -->
             <td>{{ $p_cvrge_astra_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA FIRST MANDAUE FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST MANDAUE FACILITY -->
             <td>{{ $p_cvrge_pfizer_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_moderna_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_johnson_mandaue_facility_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST MANDAUE FACILITY -->
             <td>{{ $total_p_cvrge_mandaue_facility_first }}%</td>  <!-- TOTAL PERCENT COVERAGE FIRST MANDAUE FACILITY -->
             <td>{{ $p_cvrge_sinovac_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE SINOVAC SECOND MANDAUE FACILITY -->
             <td>{{ $p_cvrge_astra_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE ASTRA SECOND MANDAUE FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND MANDAUE FACILITY -->
             <td>{{ $p_cvrge_pfizer_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE PFIZER SECOND MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE SPUTNIKV SECOND MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_moderna_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE MODERNA SECOND MANDAUE FACILITY -->
+            <td>{{ $p_cvrge_johnson_mandaue_facility_second }}%</td> <!-- PERCENT COVERAGE JOHNSON SECOND MANDAUE FACILITY -->
             <td>{{ $total_p_cvrge_mandaue_facility_second }}%</td> <!-- TOTAL PERCENT COVERAGE SECOND MANDAUE FACILITY -->
             <td>{{ $c_rate_sinovac_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE SINOVAC FIRST MANDAUE FACILITY -->
             <td>{{ $c_rate_astra_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE ASTRA FIRST MANDAUE FACILITY -->
-            <td>{{ $c_rate_sputnikv_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST MANDAUE FACILITY -->
             <td>{{ $c_rate_pfizer_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE PFIZER FIRST MANDAUE FACILITY -->
+            <td>{{ $c_rate_sputnikv_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST MANDAUE FACILITY -->
+            <td>{{ $c_rate_moderna_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST MANDAUE FACILITY -->
+            <td>{{ $c_rate_johnson_mandaue_facility_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST MANDAUE FACILITY -->
             <td>{{ $total_c_rate_mandaue_facility_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST MANDAUE FACILITY -->
             <td>{{ $c_rate_sinovac_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND MANDAUE FACILITY -->
             <td>{{ $c_rate_astra_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND MANDAUE FACILITY -->
-            <td>{{ $c_rate_sputnikv_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND MANDAUE FACILITY -->
             <td>{{ $c_rate_pfizer_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND MANDAUE FACILITY -->
+            <td>{{ $c_rate_sputnikv_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND MANDAUE FACILITY -->
+            <td>{{ $c_rate_moderna_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND MANDAUE FACILITY -->
+            <td>{{ $c_rate_johnson_mandaue_facility_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND MANDAUE FACILITY -->
             <td>{{ $total_c_rate_mandaue_facility_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND MANDAUE FACILITY -->
         </tr>
         <tr>
@@ -563,28 +636,38 @@
             <td>{{ $deferred_lapu_facility_second }}</td>  <!-- DEFERRED SECOND LAPU-LAPU FACILITY -->
             <td>{{ $wastage_sinovac_lapu_facility_first }}</td>  <!-- WASTAGE SINOVAC LAPU-LAPU FACILITY -->
             <td>{{ $wastage_astra_lapu_facility_first }}</td> <!-- WASTAGE ASTRA LAPU-LAPU FACILITY -->
-            <td>{{ $wastage_sputnikv_lapu_facility_first }}</td> <!-- WASTAGE SPUTNIKV LAPU-LAPU FACILITY -->
             <td>{{ $wastage_pfizer_lapu_facility_first }}</td> <!-- WASTAGE PFIZER LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_sputnikv_lapu_facility_first }}</td> <!-- WASTAGE SPUTNIKV LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_moderna_lapu_facility_first }}</td> <!-- WASTAGE MODERNA LAPU-LAPU FACILITY -->
+            <td>{{ $wastage_johnson_lapu_facility_first }}</td> <!-- WASTAGE JOHNSON LAPU-LAPU FACILITY -->
             <td>{{ $total_wastage_lapu_facility }}</td> <!-- TOTAL WASTAGE LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_sinovac_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE SINOVAC FIRST LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_astra_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE ASTRA  FIRST LAPU-LAPU FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_pfizer_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE PFIZER FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE SPUTNIKV FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_moderna_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE MODERNA FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_johnson_lapu_facility_first }}%</td> <!-- PERCENT COVERAGE JOHNSON FIRST LAPU-LAPU FACILITY -->
             <td>{{ $total_p_cvrge_lapu_facility_first }}%</td> <!-- TOTAL PERCENT COVERAGE  FIRST LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_sinovac_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE SINOVAC SECOND LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_astra_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE ASTRA SECOND LAPU-LAPU FACILITY -->
-            <td>{{ $p_cvrge_sputnikv_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND LAPU-LAPU FACILITY -->
             <td>{{ $p_cvrge_pfizer_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE PFIZER SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_sputnikv_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE SPUTNIKV SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_moderna_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE MODERNA SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $p_cvrge_johnson_lapu_facility_second }}%</td>  <!-- PERCENT COVERAGE JOHNSON SECOND LAPU-LAPU FACILITY -->
             <td>{{ $total_p_cvrge_lapu_facility_second }}%</td>   <!-- TOTAL PERCENT COVERAGE SECOND LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_sinovac_lapu_facility_first }}%</td>  <!-- CONSUMPTION RATE SINOVAC FIRST LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_astra_lapu_facility_first }}%</td>   <!-- CONSUMPTION RATE ASTRA FIRST LAPU-LAPU FACILITY -->
-            <td>{{ $c_rate_sputnikv_lapu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_pfizer_lapu_facility_first }}%</td>   <!-- CONSUMPTION RATE PFIZER FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_sputnikv_lapu_facility_first }}%</td> <!-- CONSUMPTION RATE SPUTNIKV FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_moderna_lapu_facility_first }}%</td> <!-- CONSUMPTION RATE MODERNA FIRST LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_johnson_lapu_facility_first }}%</td> <!-- CONSUMPTION RATE JOHNSON FIRST LAPU-LAPU FACILITY -->
             <td>{{ $total_c_rate_lapu_facility_first }}%</td> <!-- TOTAL CONSUMPTION RATE FIRST LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_sinovac_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE SINOVAC SECOND LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_astra_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE ASTRA SECOND LAPU-LAPU FACILITY -->
-            <td>{{ $c_rate_sputnikv_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND LAPU-LAPU FACILITY -->
             <td>{{ $c_rate_pfizer_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE PFIZER SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_sputnikv_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE SPUTNIKV SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_moderna_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE MODERNA SECOND LAPU-LAPU FACILITY -->
+            <td>{{ $c_rate_johnson_lapu_facility_second }}%</td> <!-- CONSUMPTION RATE JOHNSON SECOND LAPU-LAPU FACILITY -->
             <td>{{ $total_c_rate_lapu_facility_second }}%</td> <!-- TOTAL CONSUMPTION RATE SECOND LAPU-LAPU FACILITY -->
         </tr>
         </thead>

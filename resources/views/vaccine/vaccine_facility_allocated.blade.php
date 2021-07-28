@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label style="margin-left: -3%;">Johnson Allocated</label>
+        <label style="margin-left: -3%;">Janssen Allocated</label>
         <div class="row">
             <div class="col-md-6">
                 <input type="text" class="form-control text-green" value="@if(isset($facility->johnson_allocated_first)){{ $facility->johnson_allocated_first}}@endif" name="johnson_allocated_first">

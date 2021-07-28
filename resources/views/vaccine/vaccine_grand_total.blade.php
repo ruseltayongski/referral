@@ -507,7 +507,7 @@
          <b>Moderna</b>
     </button>
     <button class="btn btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson_grand" aria-expanded="false" aria-controls="collapse_johnson_grandtotal">
-          <b>Johnson</b>
+          <b>Janssen</b>
     </button>
     <table style="font-size: 8pt;" class="table" border="2">
      <tbody>

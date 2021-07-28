@@ -28,7 +28,7 @@
         <b>Moderna</b>
     </button>
     <button class="btn btn-link collapsed" style="color:#1d94ff" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        <b>Johnson</b>
+        <b>Janssen</b>
     </button>
 <div class="table-responsive">
     <table style="font-size: 10pt;" class="table table-striped" border="2">
