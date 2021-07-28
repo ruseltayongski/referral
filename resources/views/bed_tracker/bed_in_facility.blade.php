@@ -145,7 +145,7 @@
         //editables
         $(".text_editable").each(function(){
             $('#'+this.id).editable({
-                type : this.id == 'remarks' ? 'textarea' : 'text',
+                type : this.id == 'remarks' ? 'textarea' : 'number',
                 name: 'username',
                 title: $(this).data("title"),
                 emptytext: 'empty',
