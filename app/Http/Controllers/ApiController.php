@@ -114,7 +114,7 @@ class ApiController extends Controller
                                     ],
                                     "Isolation Beds" => [
                                         "Vacant" => $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0,
-                                        "Occupied" => $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0
+                                        "Occupied" => $bed->isolation_covid_occupied ? $bed->isolation_covid_occupied : 0
                                     ],
                                     "Mechanical Ventilators" => [
                                         "Vacant" => $bed->mechanical_used_covid ? $bed->mechanical_used_covid : 0,
