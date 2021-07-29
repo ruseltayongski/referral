@@ -143,7 +143,7 @@ class ApiController extends Controller
             return $data;
         }
         elseif($request->request_type=="bed"){
-            return $beds = $this->apiBedAvailability($request);
+            $beds = $this->apiBedAvailability($request);
             $data = [];
             foreach($beds as $bed){
 
@@ -157,52 +157,18 @@ class ApiController extends Controller
                 $created_at = $encoded_by->created_at;
                 $encoded_by = ucfirst($encoded_by->fname).' '.strtoupper($encoded_by->mname[0]).'. '.ucfirst($encoded_by->lname);
 
-                $UnusedCovid = 0;
-                $UsedCovid = 0;
-                $UnusedNoncovid = 0;
-                $UsedNoncovid = 0;
-
-                $emergency_room_covid_vacant = $bed->emergency_room_covid_vacant ? $bed->emergency_room_covid_vacant : 0;
-                $icu_covid_vacant= $bed->icu_covid_vacant ? $bed->icu_covid_vacant : 0;
-                $beds_covid_vacant = $bed->beds_covid_vacant ? $bed->beds_covid_vacant : 0;
-                $isolation_covid_vacant = $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0;
-
-                $UnusedCovid = $emergency_room_covid_vacant + $icu_covid_vacant + $beds_covid_vacant + $isolation_covid_vacant;
-
-                $emergency_room_covid_occupied = $bed->emergency_room_covid_occupied ? $bed->emergency_room_covid_occupied : 0;
-                $icu_covid_occupied = $bed->icu_covid_occupied ? $bed->icu_covid_occupied : 0;
-                $beds_covid_occupied = $bed->beds_covid_occupied ? $bed->beds_covid_occupied : 0;
-                $isolation_covid_occupied = $bed->isolation_covid_occupied ? $bed->isolation_covid_occupied : 0;
-
-                $UsedCovid = $emergency_room_covid_occupied + $icu_covid_occupied + $beds_covid_occupied + $isolation_covid_occupied;
-
-
-                $emergency_room_non_vacant = $bed->emergency_room_non_vacant ? $bed->emergency_room_non_vacant : 0;
-                $icu_non_vacant = $bed->icu_non_vacant ? $bed->icu_non_vacant : 0;
-                $beds_non_vacant = $bed->beds_non_vacant ? $bed->beds_non_vacant : 0;
-                $isolation_non_vacant = $bed->isolation_non_vacant ? $bed->isolation_non_vacant : 0;
-
-                $UnusedNoncovid = $emergency_room_non_vacant + $icu_non_vacant + $beds_non_vacant + $isolation_non_vacant;
-
-                $emergency_room_non_occupied = $bed->emergency_room_non_occupied ? $bed->emergency_room_non_occupied : 0;
-                $icu_non_occupied = $bed->icu_non_occupied ? $bed->icu_non_occupied : 0;
-                $beds_non_occupied = $bed->beds_non_occupied ? $bed->beds_non_occupied : 0;
-                $isolation_non_occupied = $bed->isolation_non_occupied ? $bed->isolation_non_occupied : 0;
-
-                $UsedNoncovid = $emergency_room_non_occupied + $icu_non_occupied + $beds_non_occupied + $isolation_non_occupied;
-
                 $data[] = [
                     "province" => Province::find($bed->province)->description,
-                    "facility_name" => $bed->name,
+                    "facility_name" => $bed->facility_name,
                     "hospital_type" => $bed->hospital_type,
                     "encoded_by" => $encoded_by,
                     "created_at" => $created_at,
                     "data" => [
                         [
-                            "UnusedCovid" => $UnusedCovid,
-                            "UsedCovid" => $UsedCovid,
-                            "UnusedNoncovid" => $UnusedNoncovid,
-                            "UsedNoncovid" => $UsedNoncovid
+                            "UnusedCovid" => $bed->UnusedCovid,
+                            "UsedCovid" => $bed->UsedCovid,
+                            "UnusedNoncovid" => $bed->UnusedNoncovid,
+                            "UsedNoncovid" => $bed->UsedNoncovid
                         ]
                     ]
                 ];
@@ -257,15 +223,24 @@ class ApiController extends Controller
         $facility = Facility::
         select(
             "id",
+            "province",
             "name as facility_name",
+            "hospital_type",
             DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) AS UnusedCovid"),
-            DB::raw("COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0) AS UsedCovid")
+            DB::raw("COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0) AS UsedCovid"),
+            DB::raw("COALESCE(emergency_room_non_vacant,0) + COALESCE(icu_non_vacant,0) + COALESCE(beds_non_vacant,0) + COALESCE(isolation_non_vacant,0) AS UnusedNoncovid"),
+            DB::raw("COALESCE(emergency_room_non_occupied,0) + COALESCE(icu_non_occupied,0) + COALESCE(beds_non_occupied,0) + COALESCE(isolation_non_occupied,0) AS UsedNoncovid")
         )
         ->where(function($q){
             $q->where("hospital_type","government")->orWhere("hospital_type","private");
         })
-            ->where("referral_used","yes")
-            ->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"desc");
+            ->where("referral_used","yes");
+
+        if($request->top == "most_bed")
+            $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"desc");
+        elseif($request->top == "least_bed"){
+            $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"asc");
+        }
 
         if($request->province)
             $facility = $facility->where("province",$request->province);
