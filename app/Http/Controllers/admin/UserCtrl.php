@@ -40,8 +40,7 @@ class UserCtrl extends Controller
                 ->where(function($q){
                     $q->where("level",'support')
                         ->orWhere("level","opcen")
-                        ->orWhere("level","bed_tracker")
-                        ->orWhere("level","medical_dispatcher");
+                        ->orWhere("level","bed_tracker");
                     })
                 ->orderBy('lname','asc')
                 ->paginate(20);
