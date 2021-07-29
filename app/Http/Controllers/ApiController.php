@@ -152,9 +152,9 @@ class ApiController extends Controller
                     "data" => [
                         [
                             "UnusedCovid" => $UnusedCovid,
-                            "UsedCovid" => $UsedCovid,
+                            "UsedCovid" => $UsedCovid/*,
                             "UnusedNoncovid" => $UnusedNoncovid,
-                            "UsedNoncovid" => $UsedNoncovid
+                            "UsedNoncovid" => $UsedNoncovid*/
                         ]
                     ]
                 ];
