@@ -39,7 +39,7 @@ class ApiController extends Controller
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
 
@@ -59,6 +59,7 @@ class ApiController extends Controller
                 $data = [];
                 foreach($top_referred as $referred){
                     $data[] = [
+                        "province" => Province::find($request->province)->description ? Province::find($request->province)->description  : "ALL",
                         "facility_name" => $referred->facility_name,
                         "request_type" => $request->request_type,
                         "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
@@ -106,6 +107,7 @@ class ApiController extends Controller
                 $data = [];
                 foreach($top_referred as $referred){
                     $data[] = [
+                        "province" => Province::find($request->province)->description ? Province::find($request->province)->description  : "ALL",
                         "facility_name" => $referred->facility_name,
                         "request_type" => $request->request_type,
                         "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
@@ -141,7 +143,7 @@ class ApiController extends Controller
             return $data;
         }
         elseif($request->request_type=="bed"){
-            $beds = $this->apiBedAvailability($request);
+            return $beds = $this->apiBedAvailability($request);
             $data = [];
             foreach($beds as $bed){
 
@@ -223,12 +225,47 @@ class ApiController extends Controller
     }
 
     public function apiBedAvailability(Request $request){
-        $facility = Facility::where(function($q){
+        /*$emergency_room_covid_vacant = $bed->emergency_room_covid_vacant ? $bed->emergency_room_covid_vacant : 0;
+        $icu_covid_vacant= $bed->icu_covid_vacant ? $bed->icu_covid_vacant : 0;
+        $beds_covid_vacant = $bed->beds_covid_vacant ? $bed->beds_covid_vacant : 0;
+        $isolation_covid_vacant = $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0;
+
+        $UnusedCovid = $emergency_room_covid_vacant + $icu_covid_vacant + $beds_covid_vacant + $isolation_covid_vacant;
+
+        $emergency_room_covid_occupied = $bed->emergency_room_covid_occupied ? $bed->emergency_room_covid_occupied : 0;
+        $icu_covid_occupied = $bed->icu_covid_occupied ? $bed->icu_covid_occupied : 0;
+        $beds_covid_occupied = $bed->beds_covid_occupied ? $bed->beds_covid_occupied : 0;
+        $isolation_covid_occupied = $bed->isolation_covid_occupied ? $bed->isolation_covid_occupied : 0;
+
+        $UsedCovid = $emergency_room_covid_occupied + $icu_covid_occupied + $beds_covid_occupied + $isolation_covid_occupied;
+
+
+        $emergency_room_non_vacant = $bed->emergency_room_non_vacant ? $bed->emergency_room_non_vacant : 0;
+        $icu_non_vacant = $bed->icu_non_vacant ? $bed->icu_non_vacant : 0;
+        $beds_non_vacant = $bed->beds_non_vacant ? $bed->beds_non_vacant : 0;
+        $isolation_non_vacant = $bed->isolation_non_vacant ? $bed->isolation_non_vacant : 0;
+
+        $UnusedNoncovid = $emergency_room_non_vacant + $icu_non_vacant + $beds_non_vacant + $isolation_non_vacant;
+
+        $emergency_room_non_occupied = $bed->emergency_room_non_occupied ? $bed->emergency_room_non_occupied : 0;
+        $icu_non_occupied = $bed->icu_non_occupied ? $bed->icu_non_occupied : 0;
+        $beds_non_occupied = $bed->beds_non_occupied ? $bed->beds_non_occupied : 0;
+        $isolation_non_occupied = $bed->isolation_non_occupied ? $bed->isolation_non_occupied : 0;
+
+        $UsedNoncovid = $emergency_room_non_occupied + $icu_non_occupied + $beds_non_occupied + $isolation_non_occupied;*/
+
+        $facility = Facility::
+        select(
+            "id",
+            "name as facility_name",
+            DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) AS UnusedCovid"),
+            DB::raw("COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0) AS UsedCovid")
+        )
+        ->where(function($q){
             $q->where("hospital_type","government")->orWhere("hospital_type","private");
         })
             ->where("referral_used","yes")
-            ->orderBy("province","asc")
-            ->orderBy("name","asc");
+            ->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"desc");
 
         if($request->province)
             $facility = $facility->where("province",$request->province);
