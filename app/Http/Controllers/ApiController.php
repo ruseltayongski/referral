@@ -34,11 +34,20 @@ class ApiController extends Controller
     {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
         if($request->request_type=='facility'){
             return $this->getFacilities($request);
         }
         if($request->request_type=='incoming'){
-            $incoming = $this->apiIncoming($request);
+            $incoming = $this->apiIncoming($request,$date_start,$date_end);
             $data = [];
             foreach($incoming as $inc){
                 $data[] = [
@@ -46,6 +55,7 @@ class ApiController extends Controller
                     "facility_id" => $inc->facility_id,
                     "facility_name" => $inc->name,
                     "hospital_type" => $inc->hospital_type,
+                    "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
                     "data" => [
                         "referred" => $inc->referred,
                         "redirected" => $inc->redirected,
@@ -61,7 +71,7 @@ class ApiController extends Controller
             return $data;
         }
         elseif($request->request_type=='outgoing'){
-            $outgoing = $this->apiOutgoing($request);
+            $outgoing = $this->apiOutgoing($request,$date_start,$date_end);
             $data = [];
             foreach($outgoing as $inc){
                 $data[] = [
@@ -69,6 +79,7 @@ class ApiController extends Controller
                     "facility_id" => $inc->facility_id,
                     "facility_name" => $inc->name,
                     "hospital_type" => $inc->hospital_type,
+                    "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
                     "data" => [
                         "referred" => $inc->referred,
                         "redirected" => $inc->redirected,
@@ -155,31 +166,13 @@ class ApiController extends Controller
         }
     }
 
-    public function apiIncoming(Request $request){
-        if($request->isMethod('post') && isset($request->date_range)){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
-        } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
-        }
-
+    public function apiIncoming(Request $request,$date_start,$date_end){
         $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province')");
-
         return $data;
     }
 
-    public function apiOutgoing(Request $request){
-        if($request->isMethod('post') && isset($request->date_range)){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
-        } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
-        }
-
+    public function apiOutgoing(Request $request,$date_start,$date_end){
         $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province')");
-
         return $data;
     }
 
