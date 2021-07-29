@@ -47,6 +47,29 @@ class ApiController extends Controller
             return $this->getFacilities($request);
         }
         if($request->request_type=='incoming'){
+            if($request->top){
+                if($request->top == "denied"){
+                    $top = "denied";
+                    $request->top = "rejected";
+                }
+                else
+                    $top = $request->top;
+
+                $top_referred = $this->topReferral($request,$date_start,$date_end);
+                $data = [];
+                foreach($top_referred as $referred){
+                    $data[] = [
+                        "facility_name" => $referred->facility_name,
+                        "request_type" => $request->request_type,
+                        "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
+                        "data" => [
+                            $top => $referred->count
+                        ]
+                    ];
+                }
+                return $data;
+            }
+
             $incoming = $this->apiIncoming($request,$date_start,$date_end);
             $data = [];
             foreach($incoming as $inc){
@@ -71,6 +94,29 @@ class ApiController extends Controller
             return $data;
         }
         elseif($request->request_type=='outgoing'){
+            if($request->top){
+                if($request->top == "denied"){
+                    $top = "denied";
+                    $request->top = "rejected";
+                }
+                else
+                    $top = $request->top;
+
+                $top_referred = $this->topReferral($request,$date_start,$date_end);
+                $data = [];
+                foreach($top_referred as $referred){
+                    $data[] = [
+                        "facility_name" => $referred->facility_name,
+                        "request_type" => $request->request_type,
+                        "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
+                        "data" => [
+                            $top => $referred->count
+                        ]
+                    ];
+                }
+                return $data;
+            }
+
             $outgoing = $this->apiOutgoing($request,$date_start,$date_end);
             $data = [];
             foreach($outgoing as $inc){
@@ -152,9 +198,9 @@ class ApiController extends Controller
                     "data" => [
                         [
                             "UnusedCovid" => $UnusedCovid,
-                            "UsedCovid" => $UsedCovid/*,
+                            "UsedCovid" => $UsedCovid,
                             "UnusedNoncovid" => $UnusedNoncovid,
-                            "UsedNoncovid" => $UsedNoncovid*/
+                            "UsedNoncovid" => $UsedNoncovid
                         ]
                     ]
                 ];
@@ -199,6 +245,11 @@ class ApiController extends Controller
 
         $facility = $facility->get();
         return $facility;
+    }
+
+    public function topReferral($request,$date_start,$date_end){
+        $data = \DB::connection('mysql')->select("call top_referral('$date_start','$date_end','$request->province','$request->top','$request->request_type')");
+        return $data;
     }
 
     public function login(Request $req)
