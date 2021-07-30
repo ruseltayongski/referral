@@ -23,7 +23,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
 
                             </select>
                         </div>
-                        <div class="col-md-3">
+                       <div class="col-md-3">
                             <select name="muncity_filter" id="muncity_filter" class="select2">
                                 <option value="">Select Municipality</option>
                                 @foreach($muncity as $row)

@@ -1058,7 +1058,7 @@
             '            <option value="Pfizer">Pfizer</option>\n' +
             '            <option value="SputnikV">SputnikV</option>\n' +
             '            <option value="Moderna">Moderna</option>\n' +
-            '            <option value="Johnson">Johnson</option>\n' +
+            '            <option value="Johnson">Janssen</option>\n' +
             '        </select>\n' +
             '       <br><br>' +
             '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +
