@@ -33,6 +33,7 @@
                                 <th>Accepted</th>
                                 <th>Redirected</th>
                                 <th>Transferred</th>
+                                <th>Denied</th>
                                 <th>Cancelled</th>
                                 <th>Seen only</th>
                                 <th>Not Seen</th>
@@ -63,39 +64,41 @@
                                         <small class="@if($row->hospital_type == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row->hospital_type) }}</small>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt">{{ $row->incoming }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt">{{ $row->incoming_normal }}</span><br><br>
                                     </td>
                                     <td width="10%">
                                         <?php
-                                            $accept_percent = ($row->accepted / $row->incoming) * 100;
+                                            $accept_percent = ($row->accepted / $row->incoming_normal) * 100;
                                         ?>
                                         <span class="text-blue">{{ $row->accepted }}</span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
-                                        <br>{{ $row->seen_accepted }}
+                                        <br>Accepted and seen : {{ $row->accepted_and_seen }}
                                         <br>walk-in : {{ $row->incoming_walkin }}
+                                        <br>Accepted but not seened(glitch) : {{ $row->accepted_but_not_seen }}
                                     </td>
-                                    <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->redirected }}</span><br><br>
-                                        {{ $row->seen_redirected }}
+                                    <td>
+                                        <span class="text-blue" style="font-size: 15pt;">
+                                            {{ $row->redirected }}
+                                        </span><br><br>
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;">
                                             {{ $row->transferred }}
                                         </span><br><br>
-                                        {{ $row->seen_transferred }}
+                                    </td>
+                                    <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->denied }}</span><br><br>
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;">
                                             {{ $row->cancelled }}
                                         </span><br><br>
-                                        {{ $row->seen_cancelled }}
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->seen_total }}</span><br><br>
-                                        {{ $row->seen_accepted + $row->seen_redirected + $row->seen_transferred + $row->seen_cancelled }}
+                                        <span class="text-blue" style="font-size: 15pt;">{{ $row->seen_only }}</span><br><br>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $not_seen }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt;"></span><br><br>
                                     </td>
                                 </tr>
                             @endforeach

@@ -284,6 +284,7 @@ Route::get('resetPassword/{username}',function($username){
 
 //API
 Route::get('api','ApiController@api');
+Route::get('api/get_report','ApiController@apiGetReport');
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
@@ -501,7 +502,6 @@ Route::get('vaccine/facility_allocated/{facility_id}/{typeof_vaccine}','Vaccine\
 Route::get('vaccine/facility_no_eli_pop/{facility_id}/{priority}','Vaccine\VaccineController@getEliPopFacility');
 Route::post('vaccine/eligible_pop','Vaccine\VaccineController@vaccineEligiblePop');
 
-
 Route::get('vaccine/map','Vaccine\VaccineController@vaccineMap');
 Route::get('vaccine/line_chart','Vaccine\VaccineController@vaccineLineChart');
 Route::get('vaccine/summary/report','Vaccine\VaccineController@vaccineSummaryReport');//tab4
@@ -514,10 +514,6 @@ Route::get('vaccine/tab10/report','Vaccine\VaccineController@vaccineTab10Report'
 Route::get('vaccine/tab11/report','Vaccine\VaccineController@vaccineTab11Report');//tab11
 Route::get('vaccine/tab12/report','Vaccine\VaccineController@vaccineTab12Report');//tab12
 Route::get('vaccine/tab13/report','Vaccine\VaccineController@vaccineTab13Report');//tab13
-
-
-
-
 
 
 
