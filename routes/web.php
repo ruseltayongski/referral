@@ -284,9 +284,7 @@ Route::get('resetPassword/{username}',function($username){
 
 //API
 Route::get('api','ApiController@api');
-
-//API for OPO
-//Route::get('api','admin\ReportCtrl@apiIncoming');
+Route::get('api/get_report','ApiController@apiGetReport');
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');

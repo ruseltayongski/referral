@@ -71,7 +71,7 @@ class ApiController extends Controller
                 return $data;
             }
 
-            $incoming = $this->apiIncoming($request,$date_start,$date_end);
+            /*$incoming = $this->apiIncoming($request,$date_start,$date_end);
             $data = [];
             foreach($incoming as $inc){
                 $data[] = [
@@ -92,7 +92,7 @@ class ApiController extends Controller
                     ]
                 ];
             }
-            return $data;
+            return $data;*/
         }
         elseif($request->request_type=='outgoing'){
             if($request->top){
@@ -119,7 +119,7 @@ class ApiController extends Controller
                 return $data;
             }
 
-            $outgoing = $this->apiOutgoing($request,$date_start,$date_end);
+            /*$outgoing = $this->apiOutgoing($request,$date_start,$date_end);
             $data = [];
             foreach($outgoing as $inc){
                 $data[] = [
@@ -140,7 +140,7 @@ class ApiController extends Controller
                     ]
                 ];
             }
-            return $data;
+            return $data;*/
         }
         elseif($request->request_type=="bed"){
             $beds = $this->apiBedAvailability($request);
@@ -178,6 +178,85 @@ class ApiController extends Controller
         else{
             return 'Error API';
         }
+    }
+
+    public function apiGetReport(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        if($request->request_type=='incoming' || $request->request_type=='outgoing'){
+            if($request->top){
+                if($request->top == "denied"){
+                    $top = "denied";
+                    $request->top = "rejected";
+                }
+                else
+                    $top = $request->top;
+
+                return $this->dataResponse($request,$date_start,$date_end,$top);
+            }
+        }
+        elseif($request->request_type=="bed"){
+            $beds = $this->apiReportBedAvailability($request);
+            $data = [];
+            foreach($beds as $bed){
+
+                $encoded_by = BedTracker::
+                select("bed_tracker.id","users.fname","users.mname","users.lname","bed_tracker.created_at")
+                    ->leftJoin("users","users.id","=","bed_tracker.encoded_by")
+                    ->where("bed_tracker.facility_id","=",$bed->id)
+                    ->where("users.level","!=","opcen")
+                    ->orderBy("bed_tracker.id","desc")
+                    ->first();
+                $created_at = $encoded_by->created_at;
+                $encoded_by = ucfirst($encoded_by->fname).' '.strtoupper($encoded_by->mname[0]).'. '.ucfirst($encoded_by->lname);
+
+                $data[] = [
+                    "province" => Province::find($bed->province)->description,
+                    "facility_name" => $bed->facility_name,
+                    "hospital_type" => $bed->hospital_type,
+                    "encoded_by" => $encoded_by,
+                    "created_at" => $created_at,
+                    "data" => [
+                        [
+                            "UnusedCovid" => $bed->UnusedCovid,
+                            "UsedCovid" => $bed->UsedCovid,
+                            "UnusedNoncovid" => $bed->UnusedNoncovid,
+                            "UsedNoncovid" => $bed->UsedNoncovid
+                        ]
+                    ]
+                ];
+            }
+            return $data;
+        }
+        else{
+            return 'Error API';
+        }
+    }
+
+    public function dataResponse($request,$date_start,$date_end,$top){
+        $response = $this->reportReferral($request,$date_start,$date_end);
+        $data = [];
+        foreach($response as $row){
+            $data[] = [
+                "province" => Province::find($request->province)->description ? Province::find($request->province)->description  : "ALL",
+                "facility_name" => $row->facility_name,
+                "request_type" => $request->request_type,
+                "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
+                "data" => [
+                    $top => $row->count
+                ]
+            ];
+        }
+        return $data;
     }
 
     public function apiIncoming(Request $request,$date_start,$date_end){
@@ -237,6 +316,37 @@ class ApiController extends Controller
             ->where("referral_used","yes");
 
         if($request->top == "most_bed")
+            $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"desc")->limit(10);
+        elseif($request->top == "least_bed"){
+            $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"asc")->limit(10);
+        }
+
+        if($request->province)
+            $facility = $facility->where("province",$request->province);
+
+        $facility = $facility->get();
+
+        return $facility;
+    }
+
+    public function apiReportBedAvailability(Request $request){
+        $facility = Facility::
+        select(
+            "id",
+            "province",
+            "name as facility_name",
+            "hospital_type",
+            DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) AS UnusedCovid"),
+            DB::raw("COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0) AS UsedCovid"),
+            DB::raw("COALESCE(emergency_room_non_vacant,0) + COALESCE(icu_non_vacant,0) + COALESCE(beds_non_vacant,0) + COALESCE(isolation_non_vacant,0) AS UnusedNoncovid"),
+            DB::raw("COALESCE(emergency_room_non_occupied,0) + COALESCE(icu_non_occupied,0) + COALESCE(beds_non_occupied,0) + COALESCE(isolation_non_occupied,0) AS UsedNoncovid")
+        )
+            ->where(function($q){
+                $q->where("hospital_type","government")->orWhere("hospital_type","private");
+            })
+            ->where("referral_used","yes");
+
+        if($request->top == "most_bed")
             $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"desc");
         elseif($request->top == "least_bed"){
             $facility->orderBy(DB::raw("COALESCE(emergency_room_covid_vacant,0) + COALESCE(icu_covid_vacant,0) + COALESCE(beds_covid_vacant,0) + COALESCE(isolation_covid_vacant,0) + COALESCE(emergency_room_covid_occupied,0) + COALESCE(icu_covid_occupied,0) + COALESCE(beds_covid_occupied,0) + COALESCE(isolation_covid_occupied,0)"),"asc");
@@ -261,6 +371,11 @@ class ApiController extends Controller
 
     public function topReferral($request,$date_start,$date_end){
         $data = \DB::connection('mysql')->select("call top_referral('$date_start','$date_end','$request->province','$request->top','$request->request_type')");
+        return $data;
+    }
+
+    public function reportReferral($request,$date_start,$date_end){
+        $data = \DB::connection('mysql')->select("call report_referral('$date_start','$date_end','$request->province','$request->top','$request->request_type')");
         return $data;
     }
 
