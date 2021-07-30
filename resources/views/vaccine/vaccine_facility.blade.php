@@ -792,6 +792,11 @@
                                 $total_overall_dfrd_frst = $total_dfrd_svac_frst + $total_dfrd_astra_frst + $total_dfrd_pfizer_frst + $total_dfrd_sputnikv_frst + $total_dfrd_moderna_frst + $total_dfrd_johnson_frst ; //TOTAL_OVERALL_DEFERRED_FIRST
                                 $total_overall_wstge_frst = $total_wstge_svac_frst + $total_wstge_astra_frst + $total_wstge_pfizer_frst + $total_wstge_sputnikv_frst + $total_wstge_moderna_frst + $total_wstge_johnson_frst; //TOTAL_OVERALL_WASTAGE_FIRST
 
+                                $total_overall_mild_scnd = $total_mild_svac_scnd + $total_mild_astra_scnd + $total_mild_pfizer_scnd + $total_mild_sputnikv_scnd + $total_mild_moderna_scnd + $total_mild_johnson_scnd; //TOTAL_OVERALL_MILD_SECOND
+                                $total_overall_srs_scnd = $total_srs_svac_scnd + $total_srs_astra_scnd + $total_srs_pfizer_scnd + $total_srs_sputnikv_scnd + $total_srs_moderna_scnd + $total_srs_johnson_scnd; //TOTAL_OVERALL_SERIOUS_SECOND
+                                $total_overall_dfrd_scnd = $total_dfrd_svac_scnd + $total_dfrd_astra_scnd + $total_dfrd_pfizer_scnd + $total_dfrd_sputnikv_scnd + $total_dfrd_moderna_scnd + $total_dfrd_johnson_scnd ; //TOTAL_OVERALL_DEFERRED_SECOND
+                                $total_overall_wstge_scnd = $total_wstge_svac_scnd + $total_wstge_astra_scnd + $total_wstge_pfizer_scnd + $total_wstge_sputnikv_scnd + $total_wstge_moderna_scnd + $total_wstge_johnson_scnd; //TOTAL_OVERALL_WASTAGE_SECOND
+
                                 $total_p_cvrge_overall_frst = $total_vcted_overall_first / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_FIRST
                                 $total_p_cvrge_overall_scnd = $total_vcted_overall_scnd / $total_epop_pfizer * 100; //TOTAL_PERCENT_COVERAGE_OVERALL_SCND
 
@@ -1827,19 +1832,19 @@
                                                     <b class="label label-warning total_vcted_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_vcted_overall_scnd }}</b>  <!-- TOTAL_VACCINATED_SECOND -->
                                                 </td>
                                                 <td>
-                                                    <b class="label label-warning total_overall_mild_second{{ $row->id }}" style="margin-right: 5%">{{ $total_mild_svac_scnd + $total_mild_astra_scnd + $total_mild_sputnikv_scnd + $total_mild_pfizer_scnd }}</b>  <!-- TOTAL_MILD - 2 -->
+                                                    <b class="label label-warning total_overall_mild_second{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_mild_scnd }}</b>  <!-- TOTAL_MILD - 2 -->
                                                 </td>
                                                 <td>
-                                                    <b class="label label-warning total_overall_serious_second{{ $row->id }}" style="margin-right: 5%">{{ $total_srs_svac_scnd + $total_srs_astra_scnd + $total_srs_sputnikv_scnd + $total_srs_pfizer_scnd }}</b> <!-- TOTAL_SERIOUS - 2 -->
+                                                    <b class="label label-warning total_overall_serious_second{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_srs_scnd }}</b> <!-- TOTAL_SERIOUS - 2 -->
                                                 </td>
                                                 <td>
-                                                    <b class="label label-warning total_overall_deferred_second{{ $row->id }}" style="margin-right: 5%">{{ $total_dfrd_svac_scnd + $total_dfrd_astra_scnd + $total_dfrd_sputnikv_scnd + $total_dfrd_pfizer_scnd }}</b> <!-- TOTAL_DEFERRED - 2 -->
+                                                    <b class="label label-warning total_overall_deferred_second{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_dfrd_scnd }}</b> <!-- TOTAL_DEFERRED - 2 -->
                                                 </td>
                                                 <td>
                                                     <b class="label label-warning total_rfsd_scnd{{ $row->id }}" style="margin-right: 5%">{{ $total_rfsd_scnd }}</b> <!-- TOTAL_REFUSED - 2 -->
                                                 </td>
                                                 <td>
-                                                    <b class="label label-warning total_overall_wastage_second{{ $row->id }}" style="margin-right: 5%">{{ $total_wstge_svac_scnd + $total_wstge_astra_scnd + $total_wstge_sputnikv_scnd + $total_wstge_pfizer_scnd }}</b> <!-- TOTAL_WASTAGE - 2 -->
+                                                    <b class="label label-warning total_overall_wastage_second{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_wstge_scnd }}</b> <!-- TOTAL_WASTAGE - 2 -->
                                                 </td>
                                                 <td>
                                                     <b class="label label-warning total_p_cvrge_scnd{{ $row->id }}" style="margin-right: 5%">{{number_format($total_p_cvrge_overall_scnd ,2)}}%</b> <!-- TOTAL_PERCENT_COVERAGE_OVERALL_SCND -->

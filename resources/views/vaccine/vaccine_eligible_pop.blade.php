@@ -20,55 +20,55 @@
     <div class="form-group">
             <div class="col-md-6">
                 <label>A1</label>
-                <input type="text" class="form-control" value="@if(isset($muncity->a1)){{ $muncity->a1 }}@endif" name="a1" required>
+                <input type="text" class="form-control" value="@if(isset($muncity->a1)){{ $muncity->a1 }}@endif" name="a1" >
             </div>
     </div>
     <div class="form-group">
             <div class="col-md-6">
                 <label>A2</label>
-                <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a2 }}@endif" name="a2" required>
+                <input type="text" class="form-control" value="@if(isset($muncity->a2)){{ $muncity->a2 }}@endif" name="a2" >
             </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>A3</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->a3)){{ $muncity->a3 }}@endif" name="a3" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->a3)){{ $muncity->a3 }}@endif" name="a3" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>A4</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->a4)){{ $muncity->a4 }}@endif" name="a4" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->a4)){{ $muncity->a4 }}@endif" name="a4" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>A5</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->a5)){{ $muncity->a5 }}@endif" name="a5" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->a5)){{ $muncity->a5 }}@endif" name="a5" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>B1</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->b1)){{ $muncity->b1 }}@endif" name="b1" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->b1)){{ $muncity->b1 }}@endif" name="b1" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>B2</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->b2)){{ $muncity->b2 }}@endif" name="b2" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->b2)){{ $muncity->b2 }}@endif" name="b2" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>B3</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->b3)){{ $muncity->b3 }}@endif" name="b3" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->b3)){{ $muncity->b3 }}@endif" name="b3" >
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-6">
             <label>B4</label>
-            <input type="text" class="form-control" value="@if(isset($muncity->b4)){{ $muncity->b4 }}@endif" name="b4" required>
+            <input type="text" class="form-control" value="@if(isset($muncity->b4)){{ $muncity->b4 }}@endif" name="b4" >
         </div>
     </div>
     <div class="modal-footer">
