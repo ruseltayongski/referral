@@ -71,7 +71,7 @@ class ApiController extends Controller
                 return $data;
             }
 
-            /*$incoming = $this->apiIncoming($request,$date_start,$date_end);
+            $incoming = $this->apiIncoming($request,$date_start,$date_end);
             $data = [];
             foreach($incoming as $inc){
                 $data[] = [
@@ -92,7 +92,7 @@ class ApiController extends Controller
                     ]
                 ];
             }
-            return $data;*/
+            return $data;
         }
         elseif($request->request_type=='outgoing'){
             if($request->top){
@@ -119,7 +119,7 @@ class ApiController extends Controller
                 return $data;
             }
 
-            /*$outgoing = $this->apiOutgoing($request,$date_start,$date_end);
+            $outgoing = $this->apiOutgoing($request,$date_start,$date_end);
             $data = [];
             foreach($outgoing as $inc){
                 $data[] = [
@@ -140,7 +140,7 @@ class ApiController extends Controller
                     ]
                 ];
             }
-            return $data;*/
+            return $data;
         }
         elseif($request->request_type=="bed"){
             $beds = $this->apiBedAvailability($request);
