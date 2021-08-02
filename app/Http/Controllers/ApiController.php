@@ -396,7 +396,7 @@ class ApiController extends Controller
 
         if(!$request->referring_facility)
             $request->referring_facility = 24;
-        if(!$request->referred_facility)
+        elseif(!$request->referred_facility)
             $request->referred_facility = 24;
 
         $data = $data = \DB::connection('mysql')->select("call referral_list('$request->referring_facility','$request->referred_facility','$date_start','$date_end')");
