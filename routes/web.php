@@ -285,6 +285,7 @@ Route::get('resetPassword/{username}',function($username){
 //API
 Route::get('api','ApiController@api');
 Route::get('api/get_report','ApiController@apiGetReport');
+Route::get('api/referral_list','ApiController@apiGetReferralList');
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');

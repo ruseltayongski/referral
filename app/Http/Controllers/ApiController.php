@@ -379,6 +379,22 @@ class ApiController extends Controller
         return $data;
     }
 
+    public function apiGetReferralList (Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $data = $data = \DB::connection('mysql')->select("call referral_list('$request->referring_facility','$request->referred_facility','$date_start','$date_end')");
+        return $data;
+    }
+
     public function login(Request $req)
     {
         $user = $req->user;
