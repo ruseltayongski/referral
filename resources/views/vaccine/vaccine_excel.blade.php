@@ -62,9 +62,9 @@
     </tr>
     </tbody>
     <tbody id="collapse_sinovac_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #ffd8d6">
+    <tr>
         <td rowspan="2">
-
+        <p>Sinovac</p>
         </td> <!--SINOVAC -->
         <td rowspan="2">{{ Session::get('total_e_pop_svac_a1_excel') }}</td><!-- A1 SINOVAC_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_svac_a2_excel') }}</td><!-- A2 SINOVAC_FIRST -->
@@ -134,7 +134,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_svac_excel') }}</span> <!-- REMAINING UNVACCINATED SINOVAC_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #ffd8d6">
+    <tr>
         <td>
             <span class="label label-warning">{{ Session::get('total_svac_a1_scnd_excel') }}</span>   <!-- VACCINATED (A1) SINOVAC_SECOND -->
         </td>
@@ -192,9 +192,9 @@
     </tr>
     </tbody>
     <tbody id="collapse_astra_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #f2fcac">
+    <tr >
         <td rowspan="2">
-
+        <p>Astrazeneca</p>
         </td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a1_excel') }}</td>  <!-- A1 ASTRA_FIRST -->
         <td rowspan="2" style="color:black;">{{ Session::get('total_e_pop_astra_a2_excel') }}</td>  <!-- A2 ASTRA_FIRST-->
@@ -264,7 +264,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_astra_excel') }}</span> <!-- REMAINUNG UNVACCINATED ASTRA_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #f2fcac">
+    <tr>
         <td style="color: black;">
             <span class="label label-warning">{{ Session::get('total_astra_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) ASTRA_SECOND -->
         </td>
@@ -324,9 +324,9 @@
 
     <!-- PFIZER -->
     <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #8fe7fd">
+    <tr >
         <td rowspan="2">
-
+        <p>Pfizer</p>
         </td> <!-- 1-5 -->
         <td rowspan="2">{{ Session::get('total_e_pop_pfizer_a1_excel') }}</td><!-- A1 PFIZER_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_pfizer_a2_excel') }}</td><!-- A2 PFIZER_FIRST -->
@@ -397,7 +397,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_pfizer_excel') }}</span> <!-- REMAINUNG UNVACCINATED PFIZER_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #8fe7fd">
+    <tr>
         <td>
             <span class="label label-warning">{{ Session::get('total_pfizer_a1_scnd_excel') }}</span>   <!-- VACCINATED (A1) PFIZER_SECOND -->
         </td>
@@ -457,9 +457,9 @@
 
     <!-- SPUTNIKV -->
     <tbody id="collapse_sputnikv_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #b1ffdb">
+    <tr>
         <td rowspan="2">
-
+        <p>SputnikV</p>
         </td> <!-- 1-3 -->
         <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a1_excel') }}</td><!-- A1 SPUTNIKV_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_sputnikv_a2_excel') }}</td><!-- A2 SPUTNIKV_FIRST -->
@@ -530,7 +530,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_sputnikv_excel') }}</span> <!-- REMAINUNG UNVACCINATED SPUTNIKV_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #b1ffdb">
+    <tr>
         <td style="color: black;">
             <span class="label label-warning">{{ Session::get('total_sputnikv_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) SPUTNIKV_SECOND -->
         </td>
@@ -589,9 +589,9 @@
     </tbody>
     <!-- MODERNA -->
     <tbody id="collapse_moderna_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #605ca8">
+    <tr>
         <td rowspan="2">
-
+        <p>Moderna</p>
         </td> <!-- 1-3 -->
         <td rowspan="2">{{ Session::get('total_e_pop_moderna_a1_excel') }}</td><!-- A1 MODERNA_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_moderna_a2_excel') }}</td><!-- A2 MODERNA_FIRST -->
@@ -662,7 +662,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_moderna_excel') }}</span> <!-- REMAINUNG UNVACCINATED MODERNA_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #605ca8">
+    <tr>
         <td style="color: black;">
             <span class="label label-warning">{{ Session::get('total_moderna_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) MODERNA_SECOND -->
         </td>
@@ -721,9 +721,9 @@
     </tbody>
     <!-- JOHNSON -->
     <tbody id="collapse_johnson_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    <tr style="background-color: #1d94ff">
+    <tr >
         <td rowspan="2">
-
+        <p>Jannsen</p>
         </td> <!-- 1-3 -->
         <td rowspan="2">{{ Session::get('total_e_pop_johnson_a1_excel') }}</td><!-- A1 JOHNSON_FIRST -->
         <td rowspan="2">{{ Session::get('total_e_pop_johnson_a2_excel') }}</td><!-- A2 JOHNSON_FIRST -->
@@ -794,7 +794,7 @@
             <span class="label label-success">{{ Session::get('total_r_unvcted_frst_johnson_excel') }}</span> <!-- REMAINUNG UNVACCINATED JOHNSON_FIRST -->
         </td>
     </tr>
-    <tr style="background-color: #1d94ff">
+    <tr>
         <td style="color: black;">
             <span class="label label-warning">{{ Session::get('total_johnson_a1_scnd_excel') }}</span>  <!-- VACCINATED (A1) JOHNSON_SECOND -->
         </td>
@@ -865,8 +865,8 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>{{ Session::get('total_vallocated_frst_excel') }}</td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
-        <td>{{ Session::get('total_vallocated_scnd_excel') }} </td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
+        <td><b>{{ Session::get('total_vallocated_frst_excel') }}</b></td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
+        <td><b>{{ Session::get('total_vallocated_scnd_excel') }}</b></td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
         <td>
             <b>{{ Session::get('total_vallocated_excel') }} </b>  <!-- TOTAL VACCINE ALLOCATED  -->
         <td>

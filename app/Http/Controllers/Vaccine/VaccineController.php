@@ -3257,13 +3257,20 @@ class VaccineController extends Controller
                                                  $this->vcted_sputnikv_lapu_facility_first + $this->vcted_moderna_lapu_facility_first + $this->vcted_johnson_lapu_facility_first; //TOTAL VACCINATED FIRST LAPU-LAPU FACILITY
 
         //TOTAL VACCINATED SECOND
-        $this->total_vcted_second_bohol = $this->vcted_sinovac_bohol_second + $this->vcted_astra_bohol_second + $this->vcted_sputnikv_bohol_second + $this->vcted_pfizer_bohol_second; //TOTAL VACCINATED SECOND BOHOL
-        $this->total_vcted_second_cebu = $this->vcted_sinovac_cebu_second + $this->vcted_astra_cebu_second + $this->vcted_sputnikv_cebu_second + $this->vcted_pfizer_cebu_second; //TOTAL VACCINATED SECOND CEBU
-        $this->total_vcted_second_negros = $this->vcted_sinovac_negros_second + $this->vcted_astra_negros_second + $this->vcted_sputnikv_negros_second + $this->vcted_pfizer_negros_second; //TOTAL VACCINATED SECOND NEGROS
-        $this->total_vcted_second_siquijor = $this->vcted_sinovac_siquijor_second + $this->vcted_astra_siquijor_second + $this->vcted_sputnikv_siquijor_second + $this->vcted_pfizer_siquijor_second; //TOTAL VACCINATED SECOND SIQUIJOR
-        $this->total_vcted_cebu_facility_second = $this->vcted_sinovac_cebu_facility_second + $this->vcted_astra_cebu_facility_second + $this->vcted_sputnikv_cebu_facility_second + $this->vcted_pfizer_cebu_facility_second; //TOTAL VACCINATED SECOND CEBU FACILITY
-        $this->total_vcted_mandaue_facility_second = $this->vcted_sinovac_mandaue_facility_second + $this->vcted_astra_mandaue_facility_second + $this->vcted_sputnikv_mandaue_facility_second + $this->vcted_pfizer_mandaue_facility_second; //TOTAL VACCINATED SECOND MANDAUE FACILITY
-        $this->total_vcted_lapu_facility_second = $this->vcted_sinovac_lapu_facility_second + $this->vcted_astra_lapu_facility_second + $this->vcted_sputnikv_lapu_facility_second + $this->vcted_pfizer_lapu_facility_second; //TOTAL VACCINATED SECOND LAPU-LAPU FACILITY
+        $this->total_vcted_second_bohol = $this->vcted_sinovac_bohol_second + $this->vcted_astra_bohol_second + $this->vcted_pfizer_bohol_second +
+                                          $this->vcted_sputnikv_bohol_second + $this->vcted_moderna_bohol_second +  $this->vcted_johnson_bohol_second; //TOTAL VACCINATED SECOND BOHOL
+        $this->total_vcted_second_cebu = $this->vcted_sinovac_cebu_second + $this->vcted_astra_cebu_second + $this->vcted_pfizer_cebu_second +
+                                         $this->vcted_sputnikv_cebu_second + $this->vcted_moderna_cebu_second + $this->vcted_johnson_cebu_second ; //TOTAL VACCINATED SECOND CEBU
+        $this->total_vcted_second_negros = $this->vcted_sinovac_negros_second + $this->vcted_astra_negros_second + $this->vcted_pfizer_negros_second +
+                                           $this->vcted_sputnikv_negros_second + $this->vcted_moderna_negros_second + $this->vcted_johnson_negros_second; //TOTAL VACCINATED SECOND NEGROS
+        $this->total_vcted_second_siquijor = $this->vcted_sinovac_siquijor_second + $this->vcted_astra_siquijor_second + $this->vcted_pfizer_siquijor_second +
+                                             $this->vcted_sputnikv_siquijor_second + $this->vcted_moderna_siquijor_second + $this->vcted_johnson_siquijor_second ; //TOTAL VACCINATED SECOND SIQUIJOR
+        $this->total_vcted_cebu_facility_second = $this->vcted_sinovac_cebu_facility_second + $this->vcted_astra_cebu_facility_second + $this->vcted_pfizer_cebu_facility_second +
+                                                  $this->vcted_sputnikv_cebu_facility_second + $this->vcted_moderna_cebu_facility_second + $this->vcted_johnson_cebu_facility_second; //TOTAL VACCINATED SECOND CEBU FACILITY
+        $this->total_vcted_mandaue_facility_second = $this->vcted_sinovac_mandaue_facility_second + $this->vcted_astra_mandaue_facility_second + $this->vcted_pfizer_mandaue_facility_second +
+                                                     $this->vcted_sputnikv_mandaue_facility_second + $this->vcted_moderna_mandaue_facility_second + $this->vcted_johnson_mandaue_facility_second; //TOTAL VACCINATED SECOND MANDAUE FACILITY
+        $this->total_vcted_lapu_facility_second = $this->vcted_sinovac_lapu_facility_second + $this->vcted_astra_lapu_facility_second + $this->vcted_pfizer_lapu_facility_second +
+                                                  $this->vcted_sputnikv_lapu_facility_second  + $this->vcted_moderna_lapu_facility_second + $this->vcted_johnson_lapu_facility_second; //TOTAL VACCINATED SECOND LAPU-LAPU FACILITY
 
 
         //PERCENT_COVERAGE_SINOVAC_FIRST
@@ -3792,6 +3799,8 @@ class VaccineController extends Controller
         $vcted_johnson_mandaue_facility_second = $this->vcted_johnson_mandaue_facility_second;
         $vcted_johnson_lapu_facility_first = $this->vcted_johnson_lapu_facility_first;
         $vcted_johnson_lapu_facility_second = $this->vcted_johnson_lapu_facility_second;
+
+
 
         //TOTAL REFUSED FIRST A1
         $total_refusal_first = $this->total_refusal_first;
