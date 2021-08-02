@@ -1511,7 +1511,7 @@
             <td>
                   <span class="label label-success">
                     {{ $total_sputnikv_b4_frst_prov }}
-                      <?php session::put('total_sputnikv_a4_frst_excel',$total_sputnikv_b4_frst_prov);?>
+                      <?php session::put('total_sputnikv_b4_frst_excel',$total_sputnikv_b4_frst_prov);?>
                 </span>  <!-- VACCINATED (B4) SPUTNIKV_FIRST -->
             </td>
             <td>
@@ -1621,7 +1621,7 @@
             <td>
                  <span class="label label-warning">
                     {{ $total_sputnikv_a4_scnd_prov }}
-                     <?php session::put('total_sputnikv_a4_scnd_excel',$total_sputnikv_a4_scnd_prov);?>
+                     <?php session::put('total_sputnikv_b4_scnd_excel',$total_sputnikv_b4_scnd_prov);?>
                 </span>  <!-- VACCINATED (A4) SPUTNIKV_SECOND -->
             </td>
             <td>
@@ -1790,7 +1790,7 @@
             <td>
                   <span class="label label-success">
                     {{ $total_moderna_b4_frst_prov }}
-                      <?php session::put('total_moderna_a4_frst_excel',$total_moderna_b4_frst_prov);?>
+                      <?php session::put('total_moderna_b4_frst_excel',$total_moderna_b4_frst_prov);?>
                 </span>  <!-- VACCINATED (B4) MODERNA_FIRST -->
             </td>
             <td>
@@ -1900,7 +1900,7 @@
             <td>
                  <span class="label label-warning">
                     {{ $total_moderna_a4_scnd_prov }}
-                     <?php session::put('total_moderna_a4_scnd_excel',$total_moderna_a4_scnd_prov);?>
+                     <?php session::put('total_moderna_b4_scnd_excel',$total_moderna_a4_scnd_prov);?>
                 </span>  <!-- VACCINATED (A4) MODERNA_SECOND -->
             </td>
             <td>
@@ -2069,7 +2069,7 @@
             <td>
                   <span class="label label-success">
                     {{ $total_johnson_b4_frst_prov }}
-                      <?php session::put('total_johnson_a4_frst_excel',$total_johnson_b4_frst_prov);?>
+                      <?php session::put('total_johnson_b4_frst_excel',$total_johnson_b4_frst_prov);?>
                 </span>  <!-- VACCINATED (B4) JOHNSON_FIRST -->
             </td>
             <td>
@@ -2179,7 +2179,7 @@
             <td>
                  <span class="label label-warning">
                     {{ $total_johnson_a4_scnd_prov }}
-                     <?php session::put('total_johnson_a4_scnd_excel',$total_johnson_a4_scnd_prov);?>
+                     <?php session::put('total_johnson_b4_scnd_excel',$total_johnson_b4_scnd_prov);?>
                 </span>  <!-- VACCINATED (A4) JOHNSON_SECOND -->
             </td>
             <td>
@@ -2253,12 +2253,15 @@
         <td>{{ $total_e_pop_pfizer_b4_prov }}</td>
         <td>{{ $total_e_pop_pfizer_prov }}</td>
         <td>
-            {{ $total_vallocated_frst_prov }}
+           <b> {{ $total_vallocated_frst_prov }}
             <?php session::put('total_vallocated_frst_excel',$total_vallocated_frst_prov);?>
+           </b>
         </td>  <!-- TOTAL VACCINE ALLOCATED FIRST -->
         <td>
+            <b>
             {{ $total_vallocated_scnd_prov }}
             <?php session::put('total_vallocated_scnd_excel',$total_vallocated_scnd_prov);?>
+            </b>
         </td> <!-- TOTAL VACCINE ALLOCATED SECOND -->
         <td>
             <b>

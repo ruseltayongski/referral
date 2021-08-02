@@ -26,8 +26,8 @@
             <th colspan="2"><b style="font-size: 10pt">Total Refusal</b></th>
             <th colspan="2"><b style="font-size: 10pt">Total Deferral</b></th>
             <th colspan="7"><b style="font-size: 10pt">Wastage</b></th>
-            <th colspan="7"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
-            <th colspan="7"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }})</b></th>
+            <th colspan="7"><b style="font-size: 10pt">1st dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }}</b></th>
+            <th colspan="7"><b style="font-size: 10pt">2nd dose % Coverage(Total 1st dose Vaccinated / Total Eligible {{ $priority_set }}</b></th>
             <th colspan="7"><b style="font-size: 10pt">1st dose Consumption Rate</b></th>
             <th colspan="7"><b style="font-size: 10pt">2nd dose Consumption Rate</b></th>
         </tr>
@@ -45,8 +45,8 @@
             <td>2nd Dose Moderna</td>
             <td>1st Dose Janssen</td>
             <td>2nd Dose Janssen</td>
-            <td><b>(1st Dose Total)</b></td>
-            <td><b>(2nd Dose Total)</b></td>
+            <td><b>Vaccine Allocation (1st Dose Total)</b></td>
+            <td><b>Vaccine Allocation (2nd Dose Total)</b></td>
             <td></td>
             <td>1st Dose Sinovac</td>
             <td>2nd Dose Sinovac</td>
@@ -60,8 +60,8 @@
             <td>2nd Dose Moderna</td>
             <td>1st Dose Janssen</td>
             <td>2nd Dose Janssen</td>
-            <td><b>(1st Dose Total)</b></td>
-            <td><b>(2nd Dose Total)</b></td>
+            <td><b>Vaccinated (1st Dose Total)</b></td>
+            <td><b>Vaccinated (2nd Dose Total)</b></td>
             <td>1st Dose</td>
             <td>2nd Dose</td>
             <td>1st Dose</td>
@@ -79,28 +79,28 @@
             <td>Sputnikv</td>
             <td>Moderna</td>
             <td>Janssen</td>
-            <td><b>(Total Percent Coverage)</b></td>
+            <td><b>Percent Coverage (1st Dose Total)</b></td>
             <td>Sinovac</td>
             <td>Astra</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
             <td>Moderna</td>
             <td>Janssen</td>
-            <td><b>(Total Percent Coverage)</b></td>
+            <td><b>Percent Coverage (2nd Dose Total)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
             <td>Moderna</td>
             <td>Johnson</td>
-            <td><b>(Total Consumption Rate)</b></td>
+            <td><b>Consumption Rate (1st Dose Total)</b></td>
             <td>Sinovac</td>
             <td>AZ</td>
             <td>Pfizer</td>
             <td>Sputnikv</td>
             <td>Moderna</td>
             <td>Janssen</td>
-            <td><b>(Total Consumption Rate)</b></td>
+            <td><b>Consumption Rate (2nd Dose Total)</b></td>
         </tr>
         <tr style="background-color: #e2efd9">
             <td>Region 7</td>
