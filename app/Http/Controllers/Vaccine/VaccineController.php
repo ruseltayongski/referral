@@ -3243,7 +3243,7 @@ class VaccineController extends Controller
         //TOTAL VACCINATED_FIRST
         $this->total_vcted_first_bohol = $this->vcted_sinovac_bohol_first + $this->vcted_astra_bohol_first + $this->vcted_pfizer_bohol_first +
                                          $this->vcted_sputnikv_bohol_first + $this->vcted_moderna_bohol_first + $this->vcted_johnson_bohol_first; //TOTAL VACCINATED FIRST BOHOL
-        $this->total_vcted_first_cebu = $this->vcted_sinovac_cebu_first + $this->vcted_astra_cebu_first + $this->vcted_pfizer_cebu_first +
+       $this->total_vcted_first_cebu = $this->vcted_sinovac_cebu_first + $this->vcted_astra_cebu_first + $this->vcted_pfizer_cebu_first +
                                         $this->vcted_sputnikv_cebu_first + $this->vcted_moderna_cebu_first + $this->vcted_johnson_cebu_first; //TOTAL VACCINATED FIRST CEBU
         $this->total_vcted_first_negros = $this->vcted_sinovac_negros_first + $this->vcted_astra_negros_first + $this->vcted_pfizer_negros_first +
                                           $this->vcted_sputnikv_negros_first + $this->vcted_moderna_negros_first + $this->vcted_johnson_negros_first; //TOTAL VACCINATED FIRST NEGROS
@@ -3254,7 +3254,7 @@ class VaccineController extends Controller
         $this->total_vcted_mandaue_facility_first = $this->vcted_sinovac_mandaue_facility_first + $this->vcted_astra_mandaue_facility_first + $this->vcted_pfizer_mandaue_facility_first +
                                                     $this->vcted_sputnikv_mandaue_facility_first + $this->vcted_moderna_mandaue_facility_first + $this->vcted_johnson_mandaue_facility_first; //TOTAL VACCINATED MANDAUE FACILITY
         $this->total_vcted_lapu_facility_first = $this->vcted_sinovac_lapu_facility_first + $this->vcted_astra_lapu_facility_first + $this->vcted_pfizer_lapu_facility_first +
-                                                 $this->vcted_sputnikv_lapu_facility_first + $this->vcted_moderna_lapu_facility_first + $this->vcted_johnson_lapu_facility_first; //TOTAL VACCINATED FIRST LAPU-LAPU FACILITY
+                                                 $this->vcted_sputnikv_lapu_facility_first + $this->vcted_moderna_lapu_facility_first + $this->vcted_johnson_lapu_facility_first; //TOTAL VACCINATED FIRST LAPU-LAPU FACILITY*/
 
         //TOTAL VACCINATED SECOND
         $this->total_vcted_second_bohol = $this->vcted_sinovac_bohol_second + $this->vcted_astra_bohol_second + $this->vcted_pfizer_bohol_second +
@@ -3270,7 +3270,7 @@ class VaccineController extends Controller
         $this->total_vcted_mandaue_facility_second = $this->vcted_sinovac_mandaue_facility_second + $this->vcted_astra_mandaue_facility_second + $this->vcted_pfizer_mandaue_facility_second +
                                                      $this->vcted_sputnikv_mandaue_facility_second + $this->vcted_moderna_mandaue_facility_second + $this->vcted_johnson_mandaue_facility_second; //TOTAL VACCINATED SECOND MANDAUE FACILITY
         $this->total_vcted_lapu_facility_second = $this->vcted_sinovac_lapu_facility_second + $this->vcted_astra_lapu_facility_second + $this->vcted_pfizer_lapu_facility_second +
-                                                  $this->vcted_sputnikv_lapu_facility_second  + $this->vcted_moderna_lapu_facility_second + $this->vcted_johnson_lapu_facility_second; //TOTAL VACCINATED SECOND LAPU-LAPU FACILITY
+                                                  $this->vcted_sputnikv_lapu_facility_second  + $this->vcted_moderna_lapu_facility_second + $this->vcted_johnson_lapu_facility_second; //TOTAL VACCINATED SECOND LAPU-LAPU FACILITY*/
 
 
         //PERCENT_COVERAGE_SINOVAC_FIRST
@@ -4022,6 +4022,8 @@ class VaccineController extends Controller
         $vcted_johnson_lapu_facility_first += $this->vcted_johnson_lapu_facility_first;
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
 
+
+
         //TOTAL REFUSED FIRST A2
         $total_refusal_first += $this->total_refusal_first;
         $refused_first_bohol += $this->refused_first_bohol;
@@ -4240,6 +4242,7 @@ class VaccineController extends Controller
         $vcted_johnson_lapu_facility_first += $this->vcted_johnson_lapu_facility_first;
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
 
+
         //TOTAL REFUSED SECOND A3
         $total_refusal_second += $this->total_refusal_second;
         $refused_second_bohol += $this->refused_second_bohol;
@@ -4448,6 +4451,7 @@ class VaccineController extends Controller
         $vcted_johnson_mandaue_facility_second += $this->vcted_johnson_mandaue_facility_second;
         $vcted_johnson_lapu_facility_first += $this->vcted_johnson_lapu_facility_first;
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
+
 
 
         //TOTAL REFUSED FIRST A4
@@ -4668,6 +4672,7 @@ class VaccineController extends Controller
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
 
 
+
         //TOTAL REFUSED FIRST A5
         $total_refusal_first += $this->total_refusal_first;
         $refused_first_bohol += $this->refused_first_bohol;
@@ -4884,6 +4889,7 @@ class VaccineController extends Controller
         $vcted_johnson_mandaue_facility_second += $this->vcted_johnson_mandaue_facility_second;
         $vcted_johnson_lapu_facility_first += $this->vcted_johnson_lapu_facility_first;
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
+
 
 
         //TOTAL REFUSED FIRST B1
@@ -5325,6 +5331,7 @@ class VaccineController extends Controller
         $vcted_johnson_lapu_facility_second += $this->vcted_johnson_lapu_facility_second;
 
 
+
         //TOTAL REFUSED FIRST B3
         $total_refusal_first += $this->total_refusal_first;
         $refused_first_bohol += $this->refused_first_bohol;
@@ -5687,6 +5694,7 @@ class VaccineController extends Controller
         $this->vcted_sinovac_mandaue_facility_second = $vcted_sinovac_mandaue_facility_second;
         $this->vcted_sinovac_lapu_facility_first = $vcted_sinovac_lapu_facility_first;
         $this->vcted_sinovac_lapu_facility_second = $vcted_sinovac_lapu_facility_second;
+
 
         //GRAND OVERALL VACCINATED ASTRA
         $this->vcted_astra_bohol_first = $vcted_astra_bohol_first;
