@@ -379,7 +379,7 @@ class ApiController extends Controller
         return $data;
     }
 
-    public function apiGetReferralList (Request $request){
+    public function apiGetReferralList(Request $request){
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 
@@ -395,6 +395,11 @@ class ApiController extends Controller
             return "error API";
 
         $data = $data = \DB::connection('mysql')->select("call referral_list('$request->referring_facility','$request->referred_facility','$date_start','$date_end')");
+        return $data;
+    }
+
+    public function apiGetReferralTrack(Request $request){
+        $data = $data = \DB::connection('mysql')->select("call referral_track('$request->code')");
         return $data;
     }
 
