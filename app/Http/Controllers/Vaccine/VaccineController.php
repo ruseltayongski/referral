@@ -3407,9 +3407,6 @@ class VaccineController extends Controller
         $this->total_p_cvrge_sputnikv_region_first = number_format($this->region_sputnikv_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE SPUTNIKV FIRST REGION
         $this->total_p_cvrge_moderna_region_first = number_format($this->region_moderna_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE MODERNA FIRST REGION
         $this->total_p_cvrge_johnson_region_first = number_format($this->region_johnson_first_dose / $this->total_elipop_region * 100,2); //TOTAL PERCENT COVERAGE JOHNSON FIRST REGION
-
-
-
         $this->total_p_cvrge_region_first = number_format($this->first_dose_total / $this->total_elipop_region * 100,2) ; //TOTAL PERCENT COVERAGE FIRST REGION
 
         //TOTAL_P_COVERAGE_REGION_SECOND
@@ -3697,7 +3694,6 @@ class VaccineController extends Controller
         $region_pfizer_second_dose = $this->region_pfizer_second_dose;
         $region_sputnikv_first_dose = $this->region_sputnikv_first_dose;
         $region_sputnikv_second_dose = $this->region_sputnikv_second_dose;
-
         $region_moderna_first_dose = $this->region_moderna_first_dose;
         $region_moderna_second_dose = $this->region_moderna_second_dose;
         $region_johnson_first_dose = $this->region_johnson_first_dose;
@@ -5775,6 +5771,46 @@ class VaccineController extends Controller
         $this->vcted_johnson_mandaue_facility_second = $vcted_johnson_mandaue_facility_second;
         $this->vcted_johnson_lapu_facility_first = $vcted_johnson_lapu_facility_first;
         $this->vcted_johnson_lapu_facility_second = $vcted_johnson_lapu_facility_second;
+
+
+        //GRAND VACCINATED FIRST
+        $this->total_vcted_first_bohol = $this->vcted_sinovac_bohol_first + $this->vcted_astra_bohol_first + $this->vcted_pfizer_bohol_first +
+                                         $this->vcted_sputnikv_bohol_first + $this->vcted_moderna_bohol_first + $this->vcted_johnson_bohol_first;
+        $this->total_vcted_first_cebu = $this->vcted_sinovac_cebu_first + $this->vcted_astra_cebu_first + $this->vcted_pfizer_cebu_first +
+                                         $this->vcted_sputnikv_cebu_first + $this->vcted_moderna_cebu_first + $this->vcted_johnson_cebu_first;
+        $this->total_vcted_first_negros = $this->vcted_sinovac_negros_first + $this->vcted_astra_negros_first + $this->vcted_pfizer_negros_first +
+                                          $this->vcted_sputnikv_negros_first + $this->vcted_moderna_negros_first + $this->vcted_johnson_negros_first;
+        $this->total_vcted_first_siquijor = $this->vcted_sinovac_siquijor_first + $this->vcted_astra_siquijor_first + $this->vcted_pfizer_siquijor_first +
+                                            $this->vcted_sputnikv_siquijor_first + $this->vcted_moderna_siquijor_first + $this->vcted_johnson_siquijor_first;
+        $this->total_vcted_cebu_facility_first = $this->vcted_sinovac_cebu_facility_first + $this->vcted_astra_cebu_facility_first + $this->vcted_pfizer_cebu_facility_first +
+                                                 $this->vcted_sputnikv_cebu_facility_first + $this->vcted_moderna_cebu_facility_first + $this->vcted_johnson_cebu_facility_first;
+        $this->total_vcted_mandaue_facility_first = $this->vcted_sinovac_mandaue_facility_first + $this->vcted_astra_mandaue_facility_first + $this->vcted_pfizer_mandaue_facility_first +
+                                                    $this->vcted_sputnikv_mandaue_facility_first + $this->vcted_moderna_mandaue_facility_first + $this->vcted_johnson_mandaue_facility_first;
+        $this->total_vcted_lapu_facility_first = $this->vcted_sinovac_lapu_facility_first + $this->vcted_astra_lapu_facility_first + $this->vcted_pfizer_lapu_facility_first +
+                                                 $this->vcted_sputnikv_lapu_facility_first + $this->vcted_moderna_lapu_facility_first + $this->vcted_johnson_lapu_facility_first;
+
+
+        //GRAND VACCINATED SECOND
+        $this->total_vcted_second_bohol = $this->vcted_sinovac_bohol_second + $this->vcted_astra_bohol_second + $this->vcted_pfizer_bohol_second +
+                                          $this->vcted_sputnikv_bohol_second + $this->vcted_moderna_bohol_second + $this->vcted_johnson_bohol_second;
+        $this->total_vcted_second_cebu = $this->vcted_sinovac_cebu_second + $this->vcted_astra_cebu_second + $this->vcted_pfizer_cebu_second +
+                                         $this->vcted_sputnikv_cebu_second + $this->vcted_moderna_cebu_second + $this->vcted_johnson_cebu_second;
+        $this->total_vcted_second_negros = $this->vcted_sinovac_negros_second + $this->vcted_astra_negros_second + $this->vcted_pfizer_negros_second +
+                                           $this->vcted_sputnikv_negros_second + $this->vcted_moderna_negros_second + $this->vcted_johnson_negros_second;
+        $this->total_vcted_second_siquijor = $this->vcted_sinovac_siquijor_second + $this->vcted_astra_siquijor_second + $this->vcted_pfizer_siquijor_second +
+                                             $this->vcted_sputnikv_siquijor_second + $this->vcted_moderna_siquijor_second + $this->vcted_johnson_siquijor_second;
+        $this->total_vcted_cebu_facility_second = $this->vcted_sinovac_cebu_facility_second + $this->vcted_astra_cebu_facility_second + $this->vcted_pfizer_cebu_facility_second +
+                                                  $this->vcted_sputnikv_cebu_facility_second + $this->vcted_moderna_cebu_facility_second + $this->vcted_johnson_cebu_facility_second;
+        $this->total_vcted_mandaue_facility_second = $this->vcted_sinovac_mandaue_facility_second + $this->vcted_astra_mandaue_facility_second + $this->vcted_pfizer_mandaue_facility_second +
+                                                     $this->vcted_sputnikv_mandaue_facility_second + $this->vcted_moderna_mandaue_facility_second + $this->vcted_johnson_mandaue_facility_second;
+        $this->total_vcted_lapu_facility_second = $this->vcted_sinovac_lapu_facility_second + $this->vcted_astra_lapu_facility_second + $this->vcted_pfizer_lapu_facility_second +
+                                                  $this->vcted_sputnikv_lapu_facility_second + $this->vcted_moderna_lapu_facility_second + $this->vcted_johnson_lapu_facility_second;
+
+        //GRAND VACCINATED REGION
+        $this->first_dose_total = $this->region_sinovac_first_dose  +  $this->region_astra_first_dose + $this->region_pfizer_first_dose +
+                                  $this->region_sputnikv_first_dose + $this->region_moderna_first_dose + $this->region_johnson_first_dose;
+        $this->second_dose_total = $this->region_sinovac_second_dose  +  $this->region_astra_second_dose + $this->region_pfizer_second_dose +
+                                   $this->region_sputnikv_second_dose + $this->region_moderna_second_dose + $this->region_johnson_second_dose;
 
 
         //PERCENT COVERAGE SINOVAC FIRST
