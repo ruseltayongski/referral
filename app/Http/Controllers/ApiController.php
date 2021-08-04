@@ -399,6 +399,8 @@ class ApiController extends Controller
     }
 
     public function apiGetReferralTrack(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
         $data = $data = \DB::connection('mysql')->select("call referral_track('$request->code')");
         return $data;
     }
