@@ -1151,7 +1151,8 @@
     function getEliPop(facility_id,count){
         var url = "<?php echo asset('vaccine/facility_no_eli_pop').'/'; ?>"+facility_id+"/"+$("#priority"+count).val();
         $.get(url,function(data){
-            $("#no_eli_pop"+count).val(data);
+            console.log(data.replace(/<\/?[^>]+(>|$)/g, ""));
+            $("#no_eli_pop"+count).val(data.replace(/<\/?[^>]+(>|$)/g, ""));
         });
     }
 
