@@ -12,22 +12,22 @@
     @include("vaccine.vaccine_facility_table")
 </div>
 @if(count($vaccine_accomplishment) > 0)
-    <button class="btn btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+    <button class="btn btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapse_sinovac" aria-expanded="false" aria-controls="collapse_sinovac">
         <b>Sinovac</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+    <button class="btn btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra" aria-expanded="false" aria-controls="collapse_astra">
         <b>Astrazeneca</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+    <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer" aria-expanded="false" aria-controls="collapse_pfizer">
         <b>Pfizer</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:#00a65a" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+    <button class="btn btn-link collapsed" style="color:#00a65a" type="button" data-toggle="collapse" data-target="#collapse_sputnikv" aria-expanded="false" aria-controls="collapse_sputnikv">
         <b>SputnikV</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:#605ca8" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+    <button class="btn btn-link collapsed" style="color:#605ca8" type="button" data-toggle="collapse" data-target="#collapse_moderna" aria-expanded="false" aria-controls="collapse_moderna">
         <b>Moderna</b>
     </button>
-    <button class="btn btn-link collapsed" style="color:#1d94ff" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+    <button class="btn btn-link collapsed" style="color:#1d94ff" type="button" data-toggle="collapse" data-target="#collapse_johnson" aria-expanded="false" aria-controls="collapse_johnson">
         <b>Janssen</b>
     </button>
 <div class="table-responsive">
@@ -83,7 +83,7 @@
     <tr>
     </tr>
     <!-- SINOVAC -->
-    <tbody id="collapseTwo" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tbody id="collapse_sinovac" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #ffd8d6">
         <td rowspan="2">
 
@@ -218,7 +218,7 @@
     <!-- ASTRAZENECA -->
     <tr>
     </tr>
-    <tbody id="collapse2" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <tbody id="collapse_astra" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #f2fcac">
         <td rowspan="2"></td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- A1 ASTRA -->
@@ -350,7 +350,7 @@
     <!-- PFIZER -->
     <tr>
     </tr>
-    <tbody id="collapse3" class="collapse bg-primary" aria-labelledby="heading3" data-parent="#accordionExample">
+    <tbody id="collapse_pfizer" class="collapse bg-primary" aria-labelledby="heading3" data-parent="#accordionExample">
     <tr style="background-color: #8fe7fd">
         <td rowspan="2"></td> <!-- 1-5 -->
         <td rowspan="2" style="color:black;">{{ $total_epop_pfizer_a1 }}</td>  <!-- A1 PFIZER -->
@@ -482,7 +482,7 @@
         <!-- SPUTNIKV -->
         <tr>
         </tr>
-        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tbody id="collapse_sputnikv" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
         <tr style="background-color: #b1ffdb">
             <td rowspan="2"></td> <!-- 1-5 -->
             <td rowspan="2" style="color:black;">{{ $total_epop_sputnikv_a1 }}</td>  <!-- A1 SPUTNIKV -->
@@ -614,8 +614,8 @@
         <!-- MODERNA -->
         <tr>
         </tr>
-        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
-        <tr style="background-color: #605ca8">
+        <tbody id="collapse_moderna" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tr style="background-color: #dad8ff">
             <td rowspan="2"></td> <!-- 1-5 -->
             <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a1 }}</td>  <!-- A1 MODERNA -->
             <td rowspan="2" style="color:black;">{{ $total_epop_moderna_a2 }}</td>  <!-- A2 MODERNA -->
@@ -685,7 +685,7 @@
                 <span class="label label-success">{{ $total_r_unvcted_frst_moderna}} </span>  <!-- REMAINING UNVACCINATED MODERNA FIRST -->
             </td>
         </tr>
-        <tr style="background-color: #605ca8">
+        <tr style="background-color: #dad8ff">
             <td style="color:black;">
                 <span class="label label-warning">{{ $total_moderna_a1_scnd }}</span> <!-- VACCINATED (A1) MODERNA SECOND -->
             </td>
@@ -746,8 +746,8 @@
         <!-- JOHNSON -->
         <tr>
         </tr>
-        <tbody id="collapseThree" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
-        <tr style="background-color: #1d94ff">
+        <tbody id="collapse_johnson" class="collapse bg-primary" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <tr style="background-color: #9af5ee">
             <td rowspan="2"></td> <!-- 1-5 -->
             <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a1 }}</td>  <!-- A1 JOHNSON -->
             <td rowspan="2" style="color:black;">{{ $total_epop_johnson_a2 }}</td>  <!-- A2 JOHNSON -->
@@ -817,7 +817,7 @@
                 <span class="label label-success">{{ $total_r_unvcted_frst_johnson}} </span>  <!-- REMAINING UNVACCINATED JOHNSON FIRST -->
             </td>
         </tr>
-        <tr style="background-color: #1d94ff">
+        <tr style="background-color: #9af5ee">
             <td style="color:black;">
                 <span class="label label-warning">{{ $total_johnson_a1_scnd }}</span> <!-- VACCINATED (A1) JOHNSON SECOND -->
             </td>
