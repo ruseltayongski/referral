@@ -1536,8 +1536,6 @@ class VaccineController extends Controller
 
     public function vaccineFacilitySaved(Request $request)
     {
-
-
         $user_id = Session::get('auth')->id;
         $count = 0;
         foreach ($request->typeof_vaccine as $row){
@@ -1574,6 +1572,8 @@ class VaccineController extends Controller
         Session::put('vaccine_saved', true);
 
         return redirect('vaccine/facility'.'/'.$request->tri_city);
+
+
     }
 
     public function vaccineUpdateView($id)
