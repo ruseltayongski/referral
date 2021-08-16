@@ -709,13 +709,13 @@ class VaccineController extends Controller
             ->paginate(8);
 
 
-
         $data = [
             "province_id" => $request->province_id,
             "muncity_id" => $request->muncity_id,
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
             "date_range" => $request->date_range,
+            "muncity_filter" =>$request->muncity_filter,
             "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
             "priority_filter" => $request->priority_filter,
             "vaccine_accomplishment" => $vaccine_accomplishment,
@@ -1118,11 +1118,11 @@ class VaccineController extends Controller
             "province_id" => Facility::find($request->facility_id)->province,
             "date_start" => $request->date_start,
             "date_end" => $request->date_end,
+            "tri_city" => $request->tri_city,
             "date_range" => $request->date_range,
+            "muncity_filter" =>$request->muncity_filter,
             "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
             "priority_filter" => $request->priority_filter,
-            "tri_city" => $request->tri_city,
-
             //SINOVAC
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
             "total_epop_svac_a2" => $request->total_epop_svac_a2,
@@ -1531,7 +1531,9 @@ class VaccineController extends Controller
 
         Session::put('vaccine_saved', true);
 
-        return redirect('vaccine/vaccineview'.'/'.$request->province_id);
+
+
+        return redirect('vaccine/vaccineview'.'/'.$request->province_id."?muncity_filter=".$request->muncity_filter);
     }
 
     public function vaccineFacilitySaved(Request $request)
@@ -1571,7 +1573,8 @@ class VaccineController extends Controller
 
         Session::put('vaccine_saved', true);
 
-        return redirect('vaccine/facility'.'/'.$request->tri_city);
+        return redirect('vaccine/facility'.'/'.$request->tri_city."?muncity_filter=".$request->muncity_filter);
+
 
 
     }

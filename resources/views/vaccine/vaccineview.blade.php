@@ -1907,6 +1907,8 @@
 
         <?php $user = Session::get('auth'); ?>
 
+        console.log("<?php echo $typeof_vaccine_filter; ?>");
+
         function muncityVaccinated(province_id,muncity_id,date_start,date_end,data){
             var json = {
                 "_token" : "<?php echo csrf_token()?>",
@@ -1914,6 +1916,8 @@
                 "muncity_id" : muncity_id,
                 "date_start" : date_start,
                 "date_end" : date_end,
+                "muncity_filter": "<?php echo $muncity_filter; ?>",
+                "date_range" : "<?php echo $date_range; ?>",
                 "typeof_vaccine_filter" : "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
                 "pagination_table": "false",

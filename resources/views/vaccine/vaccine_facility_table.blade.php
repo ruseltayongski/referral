@@ -2,6 +2,7 @@
     {{ csrf_field() }}
     <br>
     <input type="hidden" name="tri_city" value="{{ $tri_city }}">
+    <input type="hidden" name="muncity_filter" value = "{{ $muncity_filter }}">
     <table class="table" style="font-size: 8pt">
         <thead class="bg-gray">
         <tr>

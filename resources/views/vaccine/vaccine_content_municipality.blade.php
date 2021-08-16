@@ -10,6 +10,7 @@
  <form action="{{ asset('vaccine/saved') }}" method="POST" id="form_submit" autocomplete="off">
      {{ csrf_field() }}
      <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
+     <input type="hidden" name="muncity_filter" value = "{{ $muncity_filter }}">
      <br>
      <div id="table_data">
      @include('vaccine.vaccine_table')
