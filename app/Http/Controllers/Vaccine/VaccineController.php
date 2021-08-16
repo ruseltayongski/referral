@@ -697,8 +697,13 @@ class VaccineController extends Controller
                             ->orWhereBetween("date_second",[$date_start,$date_end]);
                     });
 
-        if($request->priority_filter)
+        if($request->typeof_vaccine_filter)
+            $vaccine_accomplishment = $vaccine_accomplishment->where("typeof_vaccine",$request->typeof_vaccine_filter);
+
+
+         if($request->priority_filter)
             $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
+
 
         $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','desc')
             ->paginate(8);
@@ -1094,7 +1099,11 @@ class VaccineController extends Controller
                                 ->orWhereBetween("date_second",[$date_start,$date_end]);
                             });
 
-         if($request->priority_filter)
+        if($request->typeof_vaccine_filter)
+            $vaccine_accomplishment = $vaccine_accomplishment->where("typeof_vaccine",$request->typeof_vaccine_filter);
+
+
+        if($request->priority_filter)
              $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
              $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','desc')->paginate(8);
