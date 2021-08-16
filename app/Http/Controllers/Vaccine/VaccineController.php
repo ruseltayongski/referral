@@ -700,7 +700,7 @@ class VaccineController extends Controller
         if($request->priority_filter)
             $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
-        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('id','asc')
+        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','desc')
             ->paginate(8);
 
 
@@ -1097,7 +1097,7 @@ class VaccineController extends Controller
          if($request->priority_filter)
              $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
-             $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('id','asc')->paginate(8);
+             $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','desc')->paginate(8);
 
 
 
