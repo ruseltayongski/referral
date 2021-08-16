@@ -35,5 +35,8 @@
         <!--
             <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
         -->
+        @if($user->level=='admin')
+        <li><a href="{{ url('reports') }}"><i class="fa fa-certificate"></i>Reports</a></li>
+        @endif
     </ul>
 </li>

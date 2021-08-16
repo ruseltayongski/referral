@@ -278,4 +278,8 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function sottoReports(){
+        return view("admin.report.sotto_reports");
+    }
+
 }
