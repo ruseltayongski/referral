@@ -1941,6 +1941,7 @@
                 "facility_id" : facility_id,
                 "date_start": date_start,
                 "date_end" : date_end,
+                "tri_city": "<?php echo $tri_city; ?>",
                 "typeof_vaccine_filter": "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
                 "pagination_table" : "false",

@@ -30,6 +30,7 @@
     <button class="btn btn-link collapsed" style="color:#1d94ff" type="button" data-toggle="collapse" data-target="#collapse_johnson" aria-expanded="false" aria-controls="collapse_johnson">
         <b>Janssen</b>
     </button>
+
 <div class="table-responsive">
     <table style="font-size: 10pt;" class="table table-striped" border="2">
         <tr>

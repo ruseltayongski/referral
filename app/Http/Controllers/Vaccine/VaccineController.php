@@ -1091,6 +1091,8 @@ class VaccineController extends Controller
     }
 
     public function vaccinatedFacilityContent(Request $request){
+
+
         $date_start = $request->date_start;
         $date_end = $request->date_end;
         $vaccine_accomplishment = VaccineAccomplished::where('facility_id',$request->facility_id)
@@ -1119,6 +1121,7 @@ class VaccineController extends Controller
             "date_range" => $request->date_range,
             "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
             "priority_filter" => $request->priority_filter,
+            "tri_city" => $request->tri_city,
 
             //SINOVAC
             "total_epop_svac_a1" => $request->total_epop_svac_a1,
@@ -1528,11 +1531,13 @@ class VaccineController extends Controller
 
         Session::put('vaccine_saved', true);
 
-        return Redirect::back();
+        return redirect('vaccine/vaccineview'.'/'.$request->province_id);
     }
 
     public function vaccineFacilitySaved(Request $request)
     {
+
+
         $user_id = Session::get('auth')->id;
         $count = 0;
         foreach ($request->typeof_vaccine as $row){
@@ -1568,7 +1573,7 @@ class VaccineController extends Controller
 
         Session::put('vaccine_saved', true);
 
-        return Redirect::back();
+        return redirect('vaccine/facility'.'/'.$request->tri_city);
     }
 
     public function vaccineUpdateView($id)
