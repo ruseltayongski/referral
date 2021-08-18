@@ -56,10 +56,10 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <input type="text" class="form-control" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                      <span class="input-group-btn">
                         <button type="submit" class="btn btn-success" onclick="loadPage()"><i class="fa fa-filter"></i> Filter</button>
                         <a href="{{ asset('vaccine/export/excel') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
@@ -73,7 +73,7 @@
             </div>
         </form>
     </div>
-    <div class="row">
+    <div class="row"  style="padding-left: 1%;padding-right: 1%">
         <div class="col-lg-2 col-xs-6">
             <!-- small box -->
             <div class="info-box bg-red">
@@ -172,7 +172,7 @@
                 <!-- /.info-box-content -->
             </div>
         </div>
-        <div class="row" style="padding-left: 1%;padding-right: 1%">
+       {{-- <div class="row" style="padding-left: 1%;padding-right: 1%">
             <div class="col-md-2">
                 <div class="info-box" style="background-color: #d0fffe">
                     <span class="info-box-icon" style="background-color: #d0fffe" ><i class="ion ion-ios-medkit-outline"></i></span>
@@ -366,7 +366,7 @@
                     <!-- /.info-box-content -->
                 </div>
             </div>
-        </div>
+        </div>--}}
     </div>
     <div class="row">
         <div class="col-md-9">
@@ -824,32 +824,33 @@
                         {{ $row->description }}
                     </a>
                 </b>
-                <button class="btn btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}">
                     <b>Sinovac</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}">
                     <b>Astrazeneca</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
                     <b>Pfizer</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
                     <b>Sputnikv</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
                     <b>Moderna</b>
                 </button>
-                <button class="btn btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
+                <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
                     <b>Janssen</b>
                 </button>
-                <button class="btn" style="color: black;" type="button">
-                    <h5>Total Allocated: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}">{{ $total_vallocated }}</b></h5>
+                <button class="btn btn-sm" style="color: black;" type="button">
+                    <h6>TOTAL ALLOCATED: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}">{{ $total_vallocated }}</b></h6>
                 </button>
-                <button class="btn" style="color: black;" type="button">
-                    <h5>Goal Completion: <b style="font-size: 18px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up" style="color:#00a65a;"> </i>
+                <button class="btn btn-sm" style="color: black;" type="button">
+                    <h6>GOAL COMPLETION: <b style="font-size: 18px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up" style="color:#00a65a;"> </i>
                             {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100,2) }}%   </b>
-                    </h5>
+                    </h6>
                 </button>
+                <br>
                 <br>
                 <div class="table-responsive">
                     <table style="font-size: 8pt;" class="table" border="2">

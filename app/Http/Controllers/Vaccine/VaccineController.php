@@ -705,8 +705,8 @@ class VaccineController extends Controller
             $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
 
-        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','desc')
-            ->paginate(8);
+        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','asc')
+            ->paginate(20);
 
 
         $data = [
@@ -1108,7 +1108,7 @@ class VaccineController extends Controller
         if($request->priority_filter)
              $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
-             $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','desc')->paginate(8);
+             $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','asc')->paginate(20);
 
 
 
@@ -6204,6 +6204,8 @@ class VaccineController extends Controller
         return view( 'vaccine.vaccine_summary_report',$this->tabValueDeclaration());
     }
 }
+
+
 
 
 
