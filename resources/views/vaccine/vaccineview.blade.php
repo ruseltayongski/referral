@@ -1921,6 +1921,7 @@
                 "date_range" : "<?php echo $date_range; ?>",
                 "typeof_vaccine_filter" : "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
+                "last_page": "<?php echo $last_page;?>",
                 "pagination_table": "false",
                 //sinovac
                 "total_epop_svac_a1" : $(".total_epop_svac_a1"+muncity_id).text(),

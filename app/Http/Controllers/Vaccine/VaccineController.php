@@ -441,6 +441,11 @@ class VaccineController extends Controller
 
         $data = $data->paginate(10);
 
+        $last_page = $data->lastPage();
+
+
+
+
         return view('vaccine.vaccineview',[
             'title' => 'List of Municipality',
             'province_name' => Province::find($province_id)->description,
@@ -482,6 +487,7 @@ class VaccineController extends Controller
             'sputnikv_completion' => $sputnikv_completion,
             'moderna_completion' => $moderna_completion,
             'johnson_completion' => $johnson_completion,
+            'last_page' => $last_page,
         ]);
     }
 
@@ -706,7 +712,9 @@ class VaccineController extends Controller
             $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
 
-        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','asc')->paginate(10);
+        $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','asc')->paginate(8);
+
+
 
 
 
@@ -1110,7 +1118,7 @@ class VaccineController extends Controller
         if($request->priority_filter)
              $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
-        $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','asc')->paginate(10);
+        $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','asc')->paginate(8);
 
 
         $data = [
@@ -1531,6 +1539,11 @@ class VaccineController extends Controller
 
 
         Session::put('vaccine_saved', true);
+
+        //ibutang nimo sa
+        //sayup mana loy $vaccine->lastPage()
+        //$vaccine->lastPage() turn to $request->lastPage;
+        //kay nag pasa'2 naman, pero dapat imo na siya butangan og value
 
 
 

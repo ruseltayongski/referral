@@ -1044,107 +1044,108 @@
 <script>
     var count = 0;
     function addTbodyContent(province_id,muncity_id) {
-
         if (count<=13){
+            $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
+                '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
+                '    <input type="hidden" name="muncity_id" value="'+muncity_id+'" >\n' +
+                '    <td style="width: 15%">\n' +
+                '        <input type="text" id="date_picker'+count+'" name="date_first[]" class="form-control" >\n' +
+                '    </td>\n' +
+                '    <td style="width: 15%" rowspan="2">\n' +
+                '        <select name="typeof_vaccine[]" id="typeof_vaccine'+count+'" onchange="getVaccineAllocated('+muncity_id+','+count+')" class="select2" required>\n' +
+                '            <option value="">Select Option</option>\n' +
+                '            <option value="Sinovac">Sinovac</option>\n' +
+                '            <option value="Astrazeneca">Astrazeneca</option>\n' +
+                '            <option value="Pfizer">Pfizer</option>\n' +
+                '            <option value="SputnikV">SputnikV</option>\n' +
+                '            <option value="Moderna">Moderna</option>\n' +
+                '            <option value="Johnson">Janssen</option>\n' +
+                '        </select>\n' +
+                '       <br><br>' +
+                '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +
+                '    </td>\n' +
+                '    <td style="width: 15%" rowspan="2">\n' +
+                '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+muncity_id+','+count+')" class="select2" >\n' +
+                '            <option value="">Select Priority</option>\n' +
+                '            <option value="a1" >A1</option>\n' +
+                '            <option value="a2" >A2</option>\n' +
+                '            <option value="a3" >A3</option>\n' +
+                '            <option value="a4" >A4</option>\n' +
+                '            <option value="a5" >A5</option>\n' +
+                '            <option value="b1" >B1</option>\n' +
+                '            <option value="b2" >B2</option>\n' +
+                '            <option value="b3" >B3</option>\n' +
+                '            <option value="b4" >B4</option>\n' +
+                '            <option value="b5" disabled>B5</option>\n' +
+                '            <option value="b6" disabled>B6</option>\n' +
+                '            <option value="c"  disabled>C</option>\n' +
+                '        </select>\n' +
+                '       <br><br><input type="text" name="no_eli_pop[]" id="no_eli_pop'+count+'" class="form-control" readonly>\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="vaccinated_first[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="mild_first[]" value="" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="serious_first[]" value="" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="refused_first[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="deferred_first[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="wastage_first[]" class="form-control">\n' +
+                '    </td>\n' +
+                '</tr>\n' +
+                '<tr style="background-color: #f39c12">\n' +
+                '    <td>\n' +
+                '        <input type="text" id="date_picker2'+count+'" name="date_second[]"  class="form-control">\n' +
+                '    </td>\n' +
+                '    <td>\n' +
+                '        <input type="text" name="vaccinated_second[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="mild_second[]" value="" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="serious_second[]" value="" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="refused_second[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td style="width: 5%">\n' +
+                '        <input type="text" name="deferred_second[]" class="form-control">\n' +
+                '    </td>\n' +
+                '    <td>\n' +
+                '        <input type="text" name="wastage_second[]"  class="form-control">\n' +
+                '    </td>\n' +
+                '\n' +
+                '</tr>\n' +
+                '<tr>\n' +
+                '    <td colspan="9"><hr></td>\n' +
+                '</tr>');
+
+            $("#date_picker"+count).daterangepicker({
+                "singleDatePicker":true
+            });
+            $("#date_picker2"+count).daterangepicker({
+                "singleDatePicker":true
+            });
+
+            $(".select2").select2({ width: '100%' });
             count++;
         }
         else {
-           alert("You reached the limit of entry!!");
+            Lobibox.alert("warning",
+                {
+                    msg: "You reached the limit of entry!!"
+                });
 
         }
-        $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
-            '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
-            '    <input type="hidden" name="muncity_id" value="'+muncity_id+'" >\n' +
-            '    <td style="width: 15%">\n' +
-            '        <input type="text" id="date_picker'+count+'" name="date_first[]" class="form-control" >\n' +
-            '    </td>\n' +
-            '    <td style="width: 15%" rowspan="2">\n' +
-            '        <select name="typeof_vaccine[]" id="typeof_vaccine'+count+'" onchange="getVaccineAllocated('+muncity_id+','+count+')" class="select2" required>\n' +
-            '            <option value="">Select Option</option>\n' +
-            '            <option value="Sinovac">Sinovac</option>\n' +
-            '            <option value="Astrazeneca">Astrazeneca</option>\n' +
-            '            <option value="Pfizer">Pfizer</option>\n' +
-            '            <option value="SputnikV">SputnikV</option>\n' +
-            '            <option value="Moderna">Moderna</option>\n' +
-            '            <option value="Johnson">Janssen</option>\n' +
-            '        </select>\n' +
-            '       <br><br>' +
-            '<div class="row"><div class="col-md-6" style="padding:2%"><input type="text" id="vaccine_allocated_first'+count+'" name="vaccine_allocated_first[]" class="form-control" readonly></div><div class="col-md-6" style="background-color: #f39c12;padding: 2%"><input type="text" id="vaccine_allocated_second'+count+'" name="vaccine_allocated_second[]" class="form-control" readonly></div></div> \n' +
-            '    </td>\n' +
-            '    <td style="width: 15%" rowspan="2">\n' +
-            '        <select name="priority[]" id="priority'+count+'" onchange="getEliPop('+muncity_id+','+count+')" class="select2" >\n' +
-            '            <option value="">Select Priority</option>\n' +
-            '            <option value="a1" >A1</option>\n' +
-            '            <option value="a2" >A2</option>\n' +
-            '            <option value="a3" >A3</option>\n' +
-            '            <option value="a4" >A4</option>\n' +
-            '            <option value="a5" >A5</option>\n' +
-            '            <option value="b1" >B1</option>\n' +
-            '            <option value="b2" >B2</option>\n' +
-            '            <option value="b3" >B3</option>\n' +
-            '            <option value="b4" >B4</option>\n' +
-            '            <option value="b5" disabled>B5</option>\n' +
-            '            <option value="b6" disabled>B6</option>\n' +
-            '            <option value="c"  disabled>C</option>\n' +
-            '        </select>\n' +
-            '       <br><br><input type="text" name="no_eli_pop[]" id="no_eli_pop'+count+'" class="form-control" readonly>\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="vaccinated_first[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="mild_first[]" value="" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="serious_first[]" value="" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="refused_first[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="deferred_first[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="wastage_first[]" class="form-control">\n' +
-            '    </td>\n' +
-            '</tr>\n' +
-            '<tr style="background-color: #f39c12">\n' +
-            '    <td>\n' +
-            '        <input type="text" id="date_picker2'+count+'" name="date_second[]"  class="form-control">\n' +
-            '    </td>\n' +
-            '    <td>\n' +
-            '        <input type="text" name="vaccinated_second[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="mild_second[]" value="" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="serious_second[]" value="" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="refused_second[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td style="width: 5%">\n' +
-            '        <input type="text" name="deferred_second[]" class="form-control">\n' +
-            '    </td>\n' +
-            '    <td>\n' +
-            '        <input type="text" name="wastage_second[]"  class="form-control">\n' +
-            '    </td>\n' +
-            '\n' +
-            '</tr>\n' +
-            '<tr>\n' +
-            '    <td colspan="9"><hr></td>\n' +
-            '</tr>');
-
-        $("#date_picker"+count).daterangepicker({
-            "singleDatePicker":true
-        });
-        $("#date_picker2"+count).daterangepicker({
-            "singleDatePicker":true
-        });
-
-        $(".select2").select2({ width: '100%' });
-
 
     }
 
