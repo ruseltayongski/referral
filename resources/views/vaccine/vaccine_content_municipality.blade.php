@@ -1044,7 +1044,14 @@
 <script>
     var count = 0;
     function addTbodyContent(province_id,muncity_id) {
-        count++;
+
+        if (count<=13){
+            count++;
+        }
+        else {
+           alert("You reached the limit of entry!!");
+
+        }
         $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
             '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
             '    <input type="hidden" name="muncity_id" value="'+muncity_id+'" >\n' +
@@ -1137,6 +1144,8 @@
         });
 
         $(".select2").select2({ width: '100%' });
+
+
     }
 
     function getEliPop(muncity_id,count){

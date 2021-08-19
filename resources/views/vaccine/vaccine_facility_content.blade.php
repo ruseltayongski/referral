@@ -1053,7 +1053,14 @@
 <script>
     var count = 0;
     function addTbodyContent(province_id,facility_id) {
-        count++;
+
+        if (count<=13){
+            count++;
+        }
+        else {
+            alert("You reached the limit of entry!!");
+
+        }
         $('#tbody_content_vaccine').append('<tr style="background-color: #59ab91">\n' +
             '    <input type="hidden" name="province_id" value="'+province_id+'" >\n' +
             '    <input type="hidden" name="facility_id" value="'+facility_id+'" >\n' +
