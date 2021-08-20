@@ -11,6 +11,8 @@
      {{ csrf_field() }}
      <input type="hidden" name="vaccine_id" value="{{ $vaccine->id }}">
      <input type="hidden" name="muncity_filter" value = "{{ $muncity_filter }}">
+     <input type="hidden" name="last_page" value = "{{ $last_page }}">
+
      <br>
      <div id="table_data">
      @include('vaccine.vaccine_table')
@@ -1166,6 +1168,7 @@
             $("#vaccine_allocated_second"+count).val(data[1]);
         });
     }
+
 
     $(document).ready(function(){
 

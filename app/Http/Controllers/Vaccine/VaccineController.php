@@ -439,11 +439,12 @@ class VaccineController extends Controller
         $data = $data->orderBy("description","asc");
         $muncity = $data->get();
 
-        $data = $data->paginate(10);
+        $data = $data->paginate(10); //kay kani nagsugod
+        //dire dapita nimo i declare
+        //ari ka sugod declare last page
 
-        $last_page = $data->lastPage();
 
-
+        //imo buhatun like akong filter pagination katong latest nga ako ge tudlo nimo katong pasa'2 sa filter
 
 
         return view('vaccine.vaccineview',[
@@ -487,7 +488,6 @@ class VaccineController extends Controller
             'sputnikv_completion' => $sputnikv_completion,
             'moderna_completion' => $moderna_completion,
             'johnson_completion' => $johnson_completion,
-            'last_page' => $last_page,
         ]);
     }
 
@@ -714,9 +714,8 @@ class VaccineController extends Controller
 
         $vaccine_accomplishment = $vaccine_accomplishment->orderBy('date_first','asc')->paginate(8);
 
-
-
-
+        //dara diay loy
+        $last_page = $vaccine_accomplishment->lastPage();
 
         $data = [
             "province_id" => $request->province_id,
@@ -1547,7 +1546,7 @@ class VaccineController extends Controller
 
 
 
-        return redirect('vaccine/vaccineview'.'/'.$request->province_id."?muncity_filter=".$request->muncity_filter);
+        return redirect('vaccine/vaccineview'.'/'.$request->province_id."?muncity_filter=".$request->muncity_filter."&last_page=".$request->last_Page);
     }
 
     public function vaccineFacilitySaved(Request $request)

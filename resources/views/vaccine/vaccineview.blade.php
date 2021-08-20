@@ -102,9 +102,11 @@
                     <div class="progress">
                         <div class="progress-bar" style="width: 50%"></div>
                     </div>
-                        <span class="progress-description">
-                            {{ $astra_completion }}% Goal Completion
+                        <span class="progress-description" >
+                            {{ $astra_completion }}% Goal Completion<
+
                         </span>
+
                 </div>
             </div>
         </div>
@@ -819,6 +821,7 @@
                 $total_r_unvcted_frst = $total_epop_overall - $total_vcted_overall_frst - $total_rfsd_frst;
                 $total_r_unvcted_scnd = $total_epop_overall - $total_vcted_overall_scnd - $total_rfsd_scnd;
             ?>
+                <br>
                 <b>
                     <a  class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="muncityVaccinated('<?php echo $row->province_id; ?>','<?php echo $row->id; ?>','<?php echo $date_start; ?>','<?php echo $date_end; ?>',$(this))">
                         {{ $row->description }}
@@ -842,16 +845,16 @@
                 <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
                     <b>Janssen</b>
                 </button>
-                <button class="btn btn-sm" style="color: black;" type="button">
-                    <h6>TOTAL ALLOCATED: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}">{{ $total_vallocated }}</b></h6>
+                <button class="btn btn-xs " style="color: black;" type="button">
+                    <h8>TOTAL ALLOCATED: <b style="font-size: 15px; color: #137fb1" class="individual_allocated{{ $row->id }}">{{ $total_vallocated }}</b></h8>
                 </button>
-                <button class="btn btn-sm" style="color: black;" type="button">
-                    <h6>GOAL COMPLETION: <b style="font-size: 18px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up" style="color:#00a65a;"> </i>
+                <button class="btn btn-xs" style="color: black;" type="button">
+                    <h8>GOAL COMPLETION: <b style="font-size: 15px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up" style="color:#00a65a;"> </i>
                             {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100,2) }}%   </b>
-                    </h6>
+                    </h8>
                 </button>
-                <br>
-                <br>
+                <br> <br>
+
                 <div class="table-responsive">
                     <table style="font-size: 8pt;" class="table" border="2">
                         <tbody>
@@ -1908,7 +1911,6 @@
 
         <?php $user = Session::get('auth'); ?>
 
-        console.log("<?php echo $typeof_vaccine_filter; ?>");
 
         function muncityVaccinated(province_id,muncity_id,date_start,date_end,data){
             var json = {
@@ -1921,7 +1923,6 @@
                 "date_range" : "<?php echo $date_range; ?>",
                 "typeof_vaccine_filter" : "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
-                "last_page": "<?php echo $last_page;?>",
                 "pagination_table": "false",
                 //sinovac
                 "total_epop_svac_a1" : $(".total_epop_svac_a1"+muncity_id).text(),

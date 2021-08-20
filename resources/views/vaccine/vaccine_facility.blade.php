@@ -805,6 +805,7 @@
                                 $total_r_unvcted_overall_frst = $total_epop_pfizer - $total_vcted_overall_first - $total_rfsd_frst; //TOTAL_REMAINING_UNVACCINATED_OVERALL_FIRST
                                 $total_r_unvcted_overall_scnd = $total_epop_pfizer - $total_vcted_overall_scnd - $total_rfsd_scnd; //TOTAL_REMAINING_UNVACCINATED_OVERALL_SECOND
                                 ?>
+                                <br>
                                 <tr>
                                     <td style="white-space: nowrap;" colspan="12">
                                         <b>
@@ -831,11 +832,11 @@
                                                  <b>Janssen</b>
                                             </button>
 
-                                        <button class="btn btn-sm" style="color: black;" >
-                                                <h6>TOTAL ALLOCATED: <b style="font-size: 18px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h6>
+                                        <button class="btn btn-xs" style="color: black;" >
+                                                <h8>TOTAL ALLOCATED: <b style="font-size: 15px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h8>
                                             </button>
-                                            <button class="btn" style="color: black;" type="button">
-                                                <h6>GOAL COMPLETION: <b style="font-size: 18px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up " style="color:#00a65a;"> </i>  {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100 ),2 }}%   </b></h6>
+                                            <button class="btn btn-xs" style="color: black;" type="button">
+                                                <h8>GOAL COMPLETION: <b style="font-size: 15px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up " style="color:#00a65a;"> </i>  {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100 ),2 }}%   </b></h8>
                                             </button>
                                         <br>
                                         <!--
