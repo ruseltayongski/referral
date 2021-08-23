@@ -379,7 +379,7 @@
                         <table>
                             @foreach($data as $row)
                                 <?php
-                                $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
+                               /* $vaccine = \App\VaccineAccomplished::where("muncity_id",$row->id)->orderBy("date_first","asc")->first();
 
                                 $global_elipop_a1 =  \App\Facility::select(DB::raw("sum(COALESCE(a1,0)) as a1"))->where("tricity_id",$tricity_id)->where("id",$row->id)->first()->a1;
                                 $global_elipop_a2 =  \App\Facility::select(DB::raw("sum(COALESCE(a2,0)) as a2"))->where("tricity_id",$tricity_id)->where("id",$row->id)->first()->a2;
@@ -803,7 +803,7 @@
                                 $total_c_rate_overall_scnd = $total_vcted_overall_scnd / $total_vallocated_scnd * 100; //OTAL_CONSUMPTION_RATE_OVERALL_SECOND
 
                                 $total_r_unvcted_overall_frst = $total_epop_pfizer - $total_vcted_overall_first - $total_rfsd_frst; //TOTAL_REMAINING_UNVACCINATED_OVERALL_FIRST
-                                $total_r_unvcted_overall_scnd = $total_epop_pfizer - $total_vcted_overall_scnd - $total_rfsd_scnd; //TOTAL_REMAINING_UNVACCINATED_OVERALL_SECOND
+                                $total_r_unvcted_overall_scnd = $total_epop_pfizer - $total_vcted_overall_scnd - $total_rfsd_scnd; //TOTAL_REMAINING_UNVACCINATED_OVERALL_SECOND*/
                                 ?>
                                 <br>
                                 <tr>
@@ -831,13 +831,15 @@
                                             <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
                                                  <b>Janssen</b>
                                             </button>
-
-                                        <button class="btn btn-xs" style="color: black;" >
+                                            <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $row->id }}">
+                                                <b>OVERALL TOTAL</b>
+                                            </button>
+                                          {{-- <button class="btn btn-xs" style="color: black;" >
                                                 <h8>TOTAL ALLOCATED: <b style="font-size: 15px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h8>
                                             </button>
                                             <button class="btn btn-xs" style="color: black;" type="button">
                                                 <h8>GOAL COMPLETION: <b style="font-size: 15px; color:#00a65a;" class="goal_completion {{ $row->id }}"><i class="fa fa-thumbs-up " style="color:#00a65a;"> </i>  {{ number_format($total_vcted_overall_scnd / $total_vallocated * 100 ),2 }}%   </b></h8>
-                                            </button>
+                                            </button>--}}
                                         <br>
                                         <!--
                                         @foreach(\App\VaccineAccomplished::where("facility_id",$row->id)->whereBetween("date_first",[$date_start,$date_end])->orderBy("date_first","asc")->get() as $x)
@@ -930,6 +932,7 @@
                                             </tbody><tbody id="collapse_sinovac{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #ffd8d6">
                                                 <td rowspan="2">
+                                                    Sinovac
                                                 </td> <!-- 1-3 -->
                                                 <td rowspan ="2" class="total_epop_svac_a1{{ $row->id }}">{{ $total_epop_svac_a1 }}</td> <!-- A1 EPOP SINOVAC  -->
                                                 <td rowspan ="2" class="total_epop_svac_a2{{ $row->id }}">{{ $total_epop_svac_a2 }}</td> <!-- A2 EPOP SINOVAC -->
@@ -1059,7 +1062,8 @@
                                             <!-- ASTRACENECA -->
                                              <tbody id="collapse_astra{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #f2fcac">
-                                                <td rowspan="2">
+                                                <td rowspan="2" style="color:black;">
+                                                    Astrazeneca
                                                 </td> <!-- 1-5 -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_astra_a1{{ $row->id }}">{{ $total_epop_astra_a1 }}</td>  <!-- A1 EPOP ASTRA -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_astra_a2{{ $row->id }}">{{ $total_epop_astra_a2 }}</td>  <!-- A2 EPOP ASTRA -->
@@ -1190,7 +1194,8 @@
                                             <!-- PFIZER -->
                                             <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #8fe7fd">
-                                                <td rowspan="2">
+                                                <td rowspan="2"  style="color:black;">
+                                                    Pfizer
                                                 </td>
                                                 <td rowspan="2" style="color:black;" class="total_epop_pfizer_a1{{ $row->id }}">{{ $total_epop_pfizer_a1 }}</td>  <!-- A1 EPOP PFIZER -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_pfizer_a2{{ $row->id }}">{{ $total_epop_pfizer_a2 }}</td>  <!-- A2 EPOP PFIZER -->
@@ -1320,7 +1325,8 @@
                                             <!-- SPUTNIKV -->
                                             <tbody id="collapse_sputnikv{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #b1ffdb">
-                                                <td rowspan="2">
+                                                <td rowspan="2"  style="color:black;">
+                                                    SputnikV
                                                 </td>
                                                 <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a1{{ $row->id }}">{{ $total_epop_sputnikv_a1 }}</td>  <!-- A1 EPOP SPUTNIKV -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_sputnikv_a2{{ $row->id }}">{{ $total_epop_sputnikv_a2 }}</td>  <!-- A2 EPOP SPUTNIKV -->
@@ -1451,7 +1457,8 @@
                                             <!-- MODERNA -->
                                             <tbody id="collapse_moderna{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #dad8ff">
-                                                <td rowspan="2">
+                                                <td rowspan="2"  style="color:black;">
+                                                    Moderna
                                                 </td>
                                                 <td rowspan="2" style="color:black;" class="total_epop_moderna_a1{{ $row->id }}">{{ $total_epop_moderna_a1 }}</td>  <!-- A1 EPOP MODERNA -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_moderna_a2{{ $row->id }}">{{ $total_epop_moderna_a2 }}</td>  <!-- A2 EPOP MODERNA -->
@@ -1582,7 +1589,8 @@
                                             <!-- JOHNSON -->
                                             <tbody id="collapse_johnson{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                             <tr style="background-color: #9af5ee">
-                                                <td rowspan="2">
+                                                <td rowspan="2"  style="color:black;">
+                                                    Janssen
                                                 </td>
                                                 <td rowspan="2" style="color:black;" class="total_epop_johnson_a1{{ $row->id }}">{{ $total_epop_johnson_a1 }}</td>  <!-- A1 EPOP JOHNSON -->
                                                 <td rowspan="2" style="color:black;" class="total_epop_johnson_a2{{ $row->id }}">{{ $total_epop_johnson_a2 }}</td>  <!-- A2 EPOP JOHNSON -->
@@ -1708,11 +1716,12 @@
                                                     <span class="label label-warning total_r_unvcted_scnd_johnson{{ $row->id }}">{{ $total_r_unvcted_scnd_johnson }}</span> <!-- REMAINUNG_UNVACCIANTED_JOHNSON 2  -->
                                                 </td>
                                             </tr>
-                                            </tbody>
+                                            </tbody >
 
-                                            <tbody><tr>
+                                            <tbody id="collapse_total{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample" style="color:black;">
+                                            <tr style="background-color:white;" >
                                                 <td>Total</td> <!-- 1-7 -->
-                                                <td class="">{{ $total_epop_pfizer_a1 }}</td> <!-- TOTAL_A1 -->
+                                                <td class="" >{{ $total_epop_pfizer_a1 }}</td> <!-- TOTAL_A1 -->
                                                 <td class="">{{ $total_epop_pfizer_a2 }}</td> <!-- TOTAL_A2 -->
                                                 <td class="">{{ $total_epop_pfizer_a3 }}</td> <!-- TOTAL_A3 -->
                                                 <td class="">{{ $total_epop_pfizer_a4 }}</td> <!-- TOTAL_A4 -->
@@ -1786,7 +1795,7 @@
                                                     <b class="label label-success total_r_unvcted_frst{{ $row->id }}" style="margin-right: 5%">{{ $total_r_unvcted_overall_frst }}</b>  <!-- REMAINUNG_UNVACCINATED -->
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr style="background-color:white;" >
                                                 <td></td> <!-- 1-7 -->
                                                 <td></td>
                                                 <td></td>
