@@ -192,8 +192,8 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onboardFacility(){
-        $data = \DB::connection('mysql')->select("call onboard_facility()");
+    public function onboardFacility($province_id){
+        $data = \DB::connection('mysql')->select("call onboard_facility('$province_id')");
 
         return view('admin.report.onboard_facility',[
             'title' => 'ONBOARD FACILITY',

@@ -18,7 +18,14 @@
                 @endforeach
             </ul>
         </li>
-        <li><a href="{{ url('onboard/facility') }}"><i class="fa fa-ambulance"></i>Onboard Facility</a></li>
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-calendar-check-o"></i>Onboard Facility</a>
+            <ul class="dropdown-menu">
+                @foreach(\App\Province::get() as $prov)
+                    <li><a href="{{ asset('onboard/facility').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
+                @endforeach
+            </ul>
+        </li>
     <!--
         <li><a href="{{ url('onboard/users') }}"><i class="fa fa-ambulance"></i>Onboard Users</a></li>
             <li><a href="{{ url('admin/report/referral') }}"><i class="fa fa-line-chart"></i>Referral Status</a></li>
