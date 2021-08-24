@@ -88,10 +88,12 @@
                                 <?php
                                     $count++;
 
+                                    $transaction = \App\Activity::where("referred_from",$row->facility_id)->orWhere("referred_to",$row->facility_id)->orderBy("id","desc")->first();
+
                                     if($row->status == 'onboard'){
                                         $facility_onboard[$row->province_id]++;
                                         $hospital_type[$row->province_id][$row->hospital_type]++;
-                                        if($row->transaction == 'transaction'){
+                                        if($transaction){
                                             $facility_transaction[$row->province_id]['with_transaction']++;
                                             if($row->hospital_type == 'government'){
                                                 $government_transaction[$row->province_id]['with_transaction']++;
@@ -190,7 +192,7 @@
                                 @endif
                                 <tr class="@if($row->status == 'onboard'){{ 'bg-yellow' }}@endif">
                                     <td>{{ $count }}</td>
-                                    <td class="@if($row->transaction == 'no_transaction' && $row->status == 'onboard'){{ 'bg-red' }}@endif">
+                                    <td class="@if(!$transaction && $row->status == 'onboard'){{ 'bg-red' }}@endif">
                                         {{ $row->name }}<br>
                                         <span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span>
                                     </td>
@@ -228,12 +230,12 @@
                                         @endif
                                     </td>
                                     <td >
-                                        @if($row->last_transaction_date == 'no_transaction')
-                                            <small>NO TRANSACTION</small>
+                                        @if($transaction)
+                                            <small>{{ date("F d,Y",strtotime($transaction->created_at)) }}</small><br>
+                                            <i>(<small>{{ date("g:i a",strtotime($transaction->created_a)) }}</small>)</i>
+                                            <span class="badge bg-green">{{ ucfirst($transaction->status) }}</span>
                                         @else
-                                            <small>{{ date("F d,Y",strtotime($row->last_transaction_date)) }}</small><br>
-                                            <i>(<small>{{ date("g:i a",strtotime($row->last_transaction_date)) }}</small>)</i>
-                                            <span class="badge bg-green">{{ ucfirst($row->last_transaction_status) }}</span>
+                                            <small class="badge bg-red">NO TRANSACTION</small>
                                         @endif
                                     </td>
                                 </tr>
@@ -427,7 +429,7 @@
         var facility_progress4 = Math.round("<?php echo $facility_onboard[4] ?>" / "<?php echo $facility_total[4] ?>" * 100);
         $('.facility_progress4').css('width',facility_progress4+"%");
         $('.facility_percent4').html(facility_progress4+"%");
-*/
+        */
 
         $(".government_hospital1").html("<?php echo $hospital_type[1]['government']; ?>");
         $(".government_hospital_total1").html("<?php echo $hospital_type_total[1]['government']; ?>");
