@@ -1,6 +1,8 @@
 <form action="{{ asset('vaccine_facility/saved') }}" method="POST" id="form_submit" autocomplete="off">
     {{ csrf_field() }}
     <br>
+    <input type="hidden" name="tri_city" value="{{ $tri_city }}">
+    <input type="hidden" name="muncity_filter" value = "{{ $muncity_filter }}">
     <table class="table" style="font-size: 8pt">
         <thead class="bg-gray">
         <tr>
@@ -654,6 +656,7 @@
                     <input type="hidden" name="province_id" value="{{ $province_id }}">
                     <input type="hidden" name="facility_id" value="{{ $facility_id }}">
                     <input type="hidden" name="vaccine_id[]" value="{{ $vaccine->id }}">
+
                     <td style="width: 15%">
                         <input type="text" id="date_picker{{ $vaccine->id.$vaccine->encoded_by }}" name="date_first[]" value="<?php if(isset($vaccine->date_first)) echo date('m/d/Y',strtotime($vaccine->date_first)) ?>" class="form-control" required>
                     </td>

@@ -1,0 +1,128 @@
+<tr style="background-color: #f2fcac">
+    <td rowspan="2" style="color:black;">
+        Astrazeneca
+    </td> <!-- 1-5 -->
+    <td rowspan="2" style="color:black;" class="total_epop_astra_a1{{ $row->id }}">{{ $total_epop_astra_a1 }}</td> <!-- TOTAL_E_POP_A1_ASTRA -->
+    <td rowspan="2" style="color:black;" class="total_epop_astra_a2{{ $row->id }}">{{ $total_epop_astra_a2 }}</td>  <!-- TOTAL_E_POP_A2_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_a3{{ $row->id }}">{{ $total_epop_astra_a3 }}</td>  <!-- TOTAL_E_POP_A3_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_a4{{ $row->id }}">{{ $total_epop_astra_a4 }}</td>  <!-- TOTAL_E_POP_A4_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_a5{{ $row->id }}">{{ $total_epop_astra_a5 }}</td>  <!-- TOTAL_E_POP_A5_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_b1{{ $row->id }}">{{ $total_epop_astra_b1 }}</td>  <!-- TOTAL_E_POP_B1_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_b2{{ $row->id }}">{{ $total_epop_astra_b2 }}</td>  <!-- TOTAL_E_POP_B2_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_b3{{ $row->id }}">{{ $total_epop_astra_b3 }}</td>  <!-- TOTAL_E_POP_B3_ASTRA -->
+    <td rowspan="2" style="color:black" class="total_epop_astra_b4{{ $row->id }}">{{ $total_epop_astra_b4 }}</td>  <!-- TOTAL_E_POP_B4_ASTRA -->
+    <td rowspan="2" style="color:black;" class="total_epop_astra{{ $row->id }}">{{ $total_epop_astra }} </td>  <!-- TOTAL_E_POP_ASTRA -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra_frst{{ $row->id }}">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED_ASTRA (FD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated_astra }}</td>  <!-- TOTAL VACCINE ALLOCATED_ASTRA -->
+    <td style="color:black;">
+        <span class="label label-success total_astra_a1_frst{{ $row->id }}">{{ $total_astra_a1_frst }}</span>  <!-- A1_ASTRA  -->
+    </td>
+    <td style="color:black">
+        <span class="label label-success total_astra_a2_frst{{ $row->id }}">{{ $total_astra_a2_frst }}</span>  <!-- A2_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_a3_frst{{ $row->id }}">{{ $total_astra_a3_frst }}</span>  <!-- A3_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_a4_frst{{ $row->id }}">{{ $total_astra_a4_frst }}</span>  <!-- A4_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_a5_frst{{ $row->id }}">{{ $total_astra_a5_frst }}</span>  <!-- A5_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_b1_frst{{ $row->id }}">{{ $total_astra_b1_frst }}</span>  <!-- B1_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_b2_frst{{ $row->id }}">{{ $total_astra_b2_frst }}</span>  <!-- B2_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_b3_frst{{ $row->id }}">{{ $total_astra_b3_frst }}</span>  <!-- B3_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_astra_b4_frst{{ $row->id }}">{{ $total_astra_b4_frst }}</span>  <!-- B4_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_vcted_astra_frst{{ $row->id }}">{{ $total_vcted_astra_frst }}</span>  <!-- TOTAL VACCINATED_ASTRA-->
+    </td>
+    <td>
+        <span class="label label-success total_mild_astra_frst{{ $row->id }}">{{ $total_mild_astra_frst }}</span> <!-- MILD_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_srs_astra_frst{{ $row->id }}">{{ $total_srs_astra_frst }}</span>  <!-- SERIOUS_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_dfrd_astra_frst{{ $row->id }}">{{ $total_dfrd_astra_frst }}</span> <!-- DEFERRED_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_rfsd_astra_frst{{ $row->id }}">{{ $total_rfsd_astra_frst }}</span> <!-- REFUSED_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_wstge_astra_frst{{ $row->id }}">{{ $total_wstge_astra_frst }}</span> <!-- WASTAGE_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success p_cvrge_astra_frst{{ $row->id }}">{{ number_format($p_cvrge_astra_frst,2) }}%</span> <!-- PERCENT_COVERAGE_ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_c_rate_astra_frst{{ $row->id }}">{{ number_format($total_c_rate_astra_frst,2) }}%</span> <!-- CONSUMPTION RATE ASTRA  -->
+    </td>
+    <td>
+        <span class="label label-success total_r_unvcted_frst_astra{{ $row->id }}">{{ $total_r_unvcted_frst_astra }}</span> <!-- REMAINUNG UNVACCINATED_ASTRA  -->
+    </td>
+</tr>
+<tr style="background-color: #f2fcac">
+    <td style="color: black;">
+        <span class="label label-warning total_astra_a1_scnd{{ $row->id }}">{{ $total_astra_a1_scnd }}</span>  <!-- A1_ASTRA2  -->
+    </td>
+    <td style="color:black;">
+        <span class="label label-warning total_astra_a2_scnd{{ $row->id }}">{{ $total_astra_a2_scnd }}</span>  <!-- A2_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_a3_scnd{{ $row->id }}">{{ $total_astra_a3_scnd }}</span>  <!-- A3_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_a4_scnd{{ $row->id }}">{{ $total_astra_a4_scnd }}</span>  <!-- A4_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_a5_scnd{{ $row->id }}">{{ $total_astra_a5_scnd }}</span>  <!-- A5_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_b1_scnd{{ $row->id }}">{{ $total_astra_b1_scnd }}</span>  <!-- B1_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_b2_scnd{{ $row->id }}">{{ $total_astra_b2_scnd }}</span>  <!-- B2_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_b3_scnd{{ $row->id }}">{{ $total_astra_b3_scnd }}</span>  <!-- B3_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_astra_b4_scnd{{ $row->id }}">{{ $total_astra_b4_scnd }}</span>  <!-- B4_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_vcted_astra_scnd{{ $row->id }}">{{ $total_vcted_astra_scnd }}</span> <!-- TOTAL VACCINATED_ASTRA 2-->
+    </td> <!-- 1-6 -->
+    <td>
+        <span class="label label-warning total_mild_astra_scnd{{ $row->id }}">{{ $total_mild_astra_scnd }}</span> <!-- MILD_ASTRA 2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_srs_astra_scnd{{ $row->id }}">{{ $total_srs_astra_scnd }}</span> <!-- SERIOUS_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_dfrd_astra_scnd{{ $row->id }}">{{ $total_dfrd_astra_scnd }}</span> <!-- DEFERRED_ASTRA 2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_rfsd_astra_scnd{{ $row->id }}">{{ $total_rfsd_astra_scnd }}</span> <!-- REFUSED_ASTRA 2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_wstge_astra_scnd{{ $row->id }}">{{ $total_wstge_astra_scnd }}</span> <!-- WASTAGE_ASTRA2  -->
+    </td>
+    <td>
+        <span class="label label-warning p_cvrge_astra_scnd{{ $row->id }}">{{ number_format($p_cvrge_astra_scnd,2)}}%</span> <!-- PERCENT_COVERAGE_ASTRA 2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_c_rate_astra_scnd{{ $row->id }}">{{ number_format($total_c_rate_astra_scnd,2) }}%</span> <!-- CONSUMPTION_RATE_ASTRA 2  -->
+    </td>
+    <td>
+        <span class="label label-warning total_r_unvcted_scnd_astra{{ $row->id }}">{{ $total_r_unvcted_scnd_astra }}</span> <!-- REMAINUNG_UNVACCIANTED_ASTRA 2  -->
+    </td>
+</tr>
