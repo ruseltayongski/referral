@@ -1,20 +1,20 @@
 <tr style="background-color: white;">
     <td>Total</td> <!-- 1-7 -->
-    <td>{{ $total_epop_pfizer_a1 }}</td> <!-- TOTAL_ELIGIBLE_POP_A1 -->
-    <td>{{ $total_epop_pfizer_a2 }}</td> <!-- TOTAL_ELIGIBLE_POP_A2  -->
-    <td>{{ $total_epop_pfizer_a3 }}</td> <!-- TOTAL_ELIGIBLE_POP_A3  -->
-    <td>{{ $total_epop_pfizer_a4 }}</td> <!-- TOTAL_ELIGIBLE_POP_A4  -->
-    <td>{{ $total_epop_pfizer_a5 }}</td> <!-- TOTAL_ELIGIBLE_POP_A5  -->
-    <td>{{ $total_epop_pfizer_b1 }}</td> <!-- TOTAL_ELIGIBLE_POP_B1  -->
-    <td>{{ $total_epop_pfizer_b2 }}</td> <!-- TOTAL_ELIGIBLE_POP_B2  -->
-    <td>{{ $total_epop_pfizer_b3 }}</td> <!-- TOTAL_ELIGIBLE_POP_B3  -->
-    <td>{{ $total_epop_pfizer_b4 }}</td> <!-- TOTAL_ELIGIBLE_POP_B4  -->
-    <td>{{ $total_epop_pfizer }}</td> <!-- TOTAL_ELIGBLE_POP_OVERALL -->
+    <td>{{ $total_epop_a1 }}</td> <!-- TOTAL_ELIGIBLE_POP_A1 -->
+    <td>{{ $total_epop_a2 }}</td> <!-- TOTAL_ELIGIBLE_POP_A2  -->
+    <td>{{ $total_epop_a3 }}</td> <!-- TOTAL_ELIGIBLE_POP_A3  -->
+    <td>{{ $total_epop_a4 }}</td> <!-- TOTAL_ELIGIBLE_POP_A4  -->
+    <td>{{ $total_epop_a5 }}</td> <!-- TOTAL_ELIGIBLE_POP_A5  -->
+    <td>{{ $total_epop_b1 }}</td> <!-- TOTAL_ELIGIBLE_POP_B1  -->
+    <td>{{ $total_epop_b2 }}</td> <!-- TOTAL_ELIGIBLE_POP_B2  -->
+    <td>{{ $total_epop_b3 }}</td> <!-- TOTAL_ELIGIBLE_POP_B3  -->
+    <td>{{ $total_epop_b4 }}</td> <!-- TOTAL_ELIGIBLE_POP_B4  -->
+    <td>{{ $total_epop }}</td> <!-- TOTAL_ELIGBLE_POP_OVERALL -->
     <td>
         <b class="total_vallocated_frst{{ $row->id }}">{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
     </td>
     <td>
-        <b class="total_vallocated_scnd{{ $row->id }}">{{ $total_vallocated_scnd }} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
+        <b class="total_vallocated_scnd{{ $row->id }}">{{ $total_vallocated_scnd}} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
     </td>
     <td>
         <b class="total_vallocated{{ $row->id }}">{{$total_vallocated }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->

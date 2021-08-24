@@ -837,7 +837,7 @@
                 <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}" onclick="dataCollapseJav('sinovac','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sinovac_allocated_first?>','<?php echo $row->sinovac_allocated_second?>')">
                     <b>Sinovac</b>
                 </button>
-                <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astra{{ $row->id }}" onclick="dataCollapseJav('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
+                <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astrazeneca{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astrazeneca{{ $row->id }}" onclick="dataCollapseJav('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
                     <b>Astrazeneca</b>
                 </button>
                 <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}" onclick="dataCollapseJav('pfizer','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->pfizer_allocated_first?>','<?php echo $row->pfizer_allocated_second?>')">
@@ -852,7 +852,7 @@
                 <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}" onclick="dataCollapseJav('johnson','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->johnson_allocated_first?>','<?php echo $row->johnson_allocated_second?>')">
                     <b>Janssen</b>
                 </button>
-                <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $row->id }}">
+                <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $row->id }}" onclick="dataCollapseJav('total','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','')">
                     <b>OVERALL TOTAL</b>
                 </button>
                {{-- <button class="btn btn-xs " style="color: black;" type="button">
@@ -934,7 +934,7 @@
                         </tr>
                         </tbody>
                         <tbody id="collapse_sinovac{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
-                        <tbody id="collapse_astra{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
+                        <tbody id="collapse_astrazeneca{{ $row->id }}" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
                         <tbody id="collapse_pfizer{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
                         <tbody id="collapse_sputnikv{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
                         <tbody id="collapse_moderna{{ $row->id }}" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample"></tbody>
@@ -1004,7 +1004,7 @@
         function dataCollapseJav(typeof_vaccine,province_id,muncity_id,typeof_vaccine_filter,allocated_first,allocated_second){
             var path_gif = "<?php echo asset('resources/img/spin.gif'); ?>";
             var loading = '<center><img src="'+path_gif+'" alt="" style="height: 60px;"></center>';
-            $("#collapse_"+typeof_vaccine+muncity_id).html("<tr><td colspan='40'>"+loading+"</td></tr>");
+            $("#collapse_"+typeof_vaccine+muncity_id).html("<tr><td colspan='40' style='background: #f4f4f4;' >"+loading+"</td></tr>");
             var url = "<?php echo asset('vaccine/collapse'); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token()?>",
@@ -1018,7 +1018,8 @@
             console.log(json);
             $.post(url,json,function(data){
                 setTimeout(function(){
-                    $("#collapse_sinovac"+muncity_id).html(data);
+                    $("#collapse_"+typeof_vaccine+muncity_id).html(data);
+
                 },500);
             });
         }
