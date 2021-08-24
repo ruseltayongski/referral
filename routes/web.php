@@ -379,7 +379,7 @@ Route::post('offline/facility/remark','Monitoring\MonitoringCtrl@offlineRemarkBo
 Route::post('offline/facility/remark/add','Monitoring\MonitoringCtrl@offlineRemarkAdd');
 
 //onboard facility
-Route::get("onboard/facility","admin\ReportCtrl@onboardFacility");
+Route::get("onboard/facility/{province_id}","admin\ReportCtrl@onboardFacility");
 Route::get("onboard/users","admin\ReportCtrl@onboardUsers");
 
 //EocRegion dashboard
