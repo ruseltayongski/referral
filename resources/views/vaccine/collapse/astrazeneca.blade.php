@@ -16,7 +16,7 @@
     <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $allocated_second }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
     <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_ASTRA -->
     <td style="color:black;">
-        <span class="label label-success total_astra_a1_frst{{ $row->id }}">{{ $total_frst }}</span>  <!-- A1_ASTRA  -->
+        <span class="label label-success total_astra_a1_frst{{ $row->id }}">{{ $total_a1_frst }}</span>  <!-- A1_ASTRA  -->
     </td>
     <td style="color:black">
         <span class="label label-success total_astra_a2_frst{{ $row->id }}">{{ $total_a2_frst }}</span>  <!-- A2_ASTRA  -->
