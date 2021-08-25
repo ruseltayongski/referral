@@ -517,6 +517,7 @@ Route::get('vaccine/tab11/report','Vaccine\VaccineController@vaccineTab11Report'
 Route::get('vaccine/tab12/report','Vaccine\VaccineController@vaccineTab12Report');//tab12
 Route::get('vaccine/tab13/report','Vaccine\VaccineController@vaccineTab13Report');//tab13
 Route::post('vaccine/collapse','Vaccine\VaccineController@dataCollapse');
+Route::post('vaccine/collapse_facility','Vaccine\VaccineController@dataCollapseFacility');
 
 //sotto reports
 Route::get("reports","admin\ReportCtrl@sottoReports");
