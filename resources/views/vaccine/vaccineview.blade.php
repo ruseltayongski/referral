@@ -16,7 +16,7 @@
             {{ csrf_field() }}
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <select name="typeof_vaccine_filter" id="typeof_vaccine_filter" class="select2">
                             <option value="">Select Type of Vaccine</option>
                             <option value="Sinovac" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Sinovac')echo 'selected';} ?>>Sinovac</option>
@@ -27,7 +27,7 @@
                             <option value="Johnson" <?php if(isset($typeof_vaccine_filter)){if($typeof_vaccine_filter == 'Johnson')echo 'selected';} ?> >Janssen</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <select name="muncity_filter" id="muncity_filter" class="select2">
                             <option value="">Select Municipality</option>
                             @foreach($muncity as $row)
@@ -35,7 +35,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <select name="priority_filter" id="priority_filter" class="select2">
                             <option value="">Select Priority</option>
                             <option value="a1" <?php if(isset($priority_filter)){if($priority_filter == 'a1')echo 'selected';} ?> >A1</option>
@@ -52,13 +52,7 @@
                             <option value="c" <?php if(isset($priority_filter)){if($priority_filter == 'c')echo 'selected';} ?> disabled >C</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <select name="date_filter" id="date_filter" class="select2">
-                            <option value="">Select Date</option>
-                            <option value="date_first" <?php if(isset($priority_filter)){if($priority_filter == 'a1')echo 'selected';} ?> >First Dose</option>
-                            <option value="date_second" <?php if(isset($priority_filter)){if($priority_filter == 'a2')echo 'selected';} ?> >Second Dose</option>
-                        </select>
-                    </div>
+
                 </div>
             </div>
             <div class="row">

@@ -389,25 +389,25 @@
                                                 {{ $row->name }}
                                             </a>
                                         </b>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}"  onclick="dataCollapseJavFacility('sinovac','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sinovac_allocated_first?>','<?php echo $row->sinovac_allocated_second?>')">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $tricity_id }}"   onclick="dataCollapseFac('sinovac','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
                                                 <b>Sinovac</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astrazeneca{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astrazeneca{{ $row->id }}" onclick="dataCollapseJavFacility('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astrazeneca{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astrazeneca{{ $tricity_id }}" onclick="dataCollapseFac('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
                                                 <b>Astrazeneca</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $tricity_id }}" onclick="dataCollapseFac('pfizer','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->pfizer_allocated_first?>','<?php echo $row->pfizer_allocated_second?>')">
                                                  <b>Pfizer</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $tricity_id }}" onclick="dataCollapseFac('sputnikv','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id;?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sputnikv_allocated_first?>','<?php echo $row->sputnikv_allocated_second?>')">
                                                 <b>SputnikV</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $tricity_id }}" onclick="dataCollapseFac('moderna','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->moderna_allocated_first?>','<?php echo $row->moderna_allocated_second?>')">
                                                 <b>Moderna</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $tricity_id }}" onclick="dataCollapseFac('johnson','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->johnson_allocated_first?>','<?php echo $row->johnson_allocated_second?>')" >
                                                  <b>Janssen</b>
                                             </button>
-                                            <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $row->id }}">
+                                            <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $tricity_id }}" onclick="dataCollapseFac('total','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>')">
                                                 <b>OVERALL TOTAL</b>
                                             </button>
                                           {{-- <button class="btn btn-xs" style="color: black;" >
@@ -586,16 +586,17 @@
         <?php $user = Session::get('auth'); ?>
 
 
-        function dataCollapseJavFacility(typeof_vaccine,province_id,muncity_id,typeof_vaccine_filter,allocated_first,allocated_second){
+        function dataCollapseFac(typeof_vaccine,province_id,facility_id,tricity_id,typeof_vaccine_filter,allocated_first,allocated_second){
             var path_gif = "<?php echo asset('resources/img/spin.gif'); ?>";
             var loading = '<center><img src="'+path_gif+'" alt="" style="height: 60px;"></center>';
-            $("#collapse_"+typeof_vaccine+muncity_id).html("<tr><td colspan='40' style='background: #f4f4f4;' >"+loading+"</td></tr>");
+            $("#collapse_"+typeof_vaccine+facility_id).html("<tr><td colspan='40' style='background: #f4f4f4;' >"+loading+"</td></tr>");
             var url = "<?php echo asset('vaccine/collapse_facility'); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token()?>",
+                "typeof_vaccine": typeof_vaccine,
                 "province_id" : province_id,
                 "facility_id" : facility_id,
-                "typeof_vaccine": typeof_vaccine,
+                "tricity_id" : tricity_id,
                 "typeof_vaccine_filter" : typeof_vaccine_filter,
                 "allocated_first": allocated_first,
                 "allocated_second": allocated_second,
@@ -603,7 +604,7 @@
             console.log(json);
             $.post(url,json,function(data){
                 setTimeout(function(){
-                    $("#collapse_"+typeof_vaccine+muncity_id).html(data);
+                    $("#collapse_"+typeof_vaccine+facility_id).html(data);
 
                 },500);
             });
