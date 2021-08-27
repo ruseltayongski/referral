@@ -716,7 +716,6 @@ class VaccineController extends Controller
 
         $vaccine_accomplishment = $vaccine_accomplishment->orderBy('id','desc')->paginate(8);
 
-
         $data = [
             "province_id" => $request->province_id,
             "muncity_id" => $request->muncity_id,
@@ -1117,8 +1116,23 @@ class VaccineController extends Controller
         if($request->priority_filter)
              $vaccine_accomplishment = $vaccine_accomplishment->where("priority",$request->priority_filter);
 
-        $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('date_first','asc')->paginate(8);
+        $vaccine_accomplishment = $vaccine_accomplishment ->orderBy('id','desc')->paginate(8);
 
+        $request->facility_content = "true";
+        $request->typeof_vaccine = "sinovac";
+        $sinovac_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "astrazeneca";
+        $astrazeneca_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "pfizer";
+        $pfizer_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "sputnikv";
+        $sputnikv_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "moderna";
+        $moderna_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "johnson";
+        $johnson_data = $this->dataCollapseFacility($request);
+        $request->typeof_vaccine = "total";
+        $total_data = $this->dataCollapseFacility($request);
 
         $data = [
             "vaccine_accomplishment" => $vaccine_accomplishment,
@@ -1132,364 +1146,365 @@ class VaccineController extends Controller
             "typeof_vaccine_filter" => $request->typeof_vaccine_filter,
             "priority_filter" => $request->priority_filter,
             //SINOVAC
-            "total_epop_svac_a1" => $request->total_epop_svac_a1,
-            "total_epop_svac_a2" => $request->total_epop_svac_a2,
-            "total_epop_svac_a3" => $request->total_epop_svac_a3,
-            "total_epop_svac_a4" => $request->total_epop_svac_a4,
-            "total_epop_svac_a5" => $request->total_epop_svac_a5,
-            "total_epop_svac_b1" => $request->total_epop_svac_b1,
-            "total_epop_svac_b2" => $request->total_epop_svac_b2,
-            "total_epop_svac_b3" => $request->total_epop_svac_b3,
-            "total_epop_svac_b4" => $request->total_epop_svac_b4,
-            "total_epop_svac" => $request->total_epop_svac,
-            "total_vallocated_svac_frst" => $request->total_vallocated_svac_frst,
-            "total_vallocated_svac_scnd" => $request->total_vallocated_svac_scnd,
-            "total_vallocated_svac" => $request->total_vallocated_svac,
-            "total_svac_a1_frst" => $request->total_svac_a1_frst,
-            "total_svac_a2_frst" => $request->total_svac_a2_frst,
-            "total_svac_a3_frst" => $request->total_svac_a3_frst,
-            "total_svac_a4_frst" => $request->total_svac_a4_frst,
-            "total_svac_a5_frst" => $request->total_svac_a5_frst,
-            "total_svac_b1_frst" => $request->total_svac_b1_frst,
-            "total_svac_b2_frst" => $request->total_svac_b2_frst,
-            "total_svac_b3_frst" => $request->total_svac_b3_frst,
-            "total_svac_b4_frst" => $request->total_svac_b4_frst,
-            "total_vcted_svac_frst" => $request->total_vcted_svac_frst,
-            "total_mild_svac_frst" => $request->total_mild_svac_frst,
-            "total_srs_svac_frst" => $request->total_srs_svac_frst,
-            "total_dfrd_svac_frst" => $request->total_dfrd_svac_frst,
-            "total_rfsd_svac_frst" => $request->total_rfsd_svac_frst,
-            "total_wstge_svac_frst" => $request->total_wstge_svac_frst,
-            "p_cvrge_svac_frst" => $request->p_cvrge_svac_frst,
-            "total_c_rate_svac_frst" => $request->total_c_rate_svac_frst,
-            "total_r_unvcted_frst_svac" => $request->total_r_unvcted_frst_svac,
+            "total_epop_svac_a1" => $sinovac_data["total_epop_a1"],
+            "total_epop_svac_a2" => $sinovac_data["total_epop_a2"],
+            "total_epop_svac_a3" => $sinovac_data["total_epop_a3"],
+            "total_epop_svac_a4" => $sinovac_data["total_epop_a4"],
+            "total_epop_svac_a5" => $sinovac_data["total_epop_a5"],
+            "total_epop_svac_b1" => $sinovac_data["total_epop_b1"],
+            "total_epop_svac_b2" => $sinovac_data["total_epop_b2"],
+            "total_epop_svac_b3" => $sinovac_data["total_epop_b3"],
+            "total_epop_svac_b4" => $sinovac_data["total_epop_b4"],
+            "total_epop_svac" => $sinovac_data["total_epop"],
+            "total_vallocated_svac_frst" => $request->sinovac_allocated_first,
+            "total_vallocated_svac_scnd" =>  $request->sinovac_allocated_second,
+            "total_vallocated_svac" => $request->sinovac_allocated_first + $request->sinovac_allocated_second,
+            "total_svac_a1_frst" => $sinovac_data["total_a1_frst"],
+            "total_svac_a2_frst" => $sinovac_data["total_a2_frst"],
+            "total_svac_a3_frst" => $sinovac_data["total_a3_frst"],
+            "total_svac_a4_frst" => $sinovac_data["total_a4_frst"],
+            "total_svac_a5_frst" => $sinovac_data["total_a5_frst"],
+            "total_svac_b1_frst" => $sinovac_data["total_b1_frst"],
+            "total_svac_b2_frst" => $sinovac_data["total_b2_frst"],
+            "total_svac_b3_frst" => $sinovac_data["total_b3_frst"],
+            "total_svac_b4_frst" => $sinovac_data["total_b4_frst"],
+            "total_vcted_svac_frst" => $sinovac_data["total_vcted_frst"],
+            "total_mild_svac_frst" => $sinovac_data["total_mild_frst"],
+            "total_srs_svac_frst" => $sinovac_data["total_srs_frst"],
+            "total_dfrd_svac_frst" => $sinovac_data["total_dfrd_frst"],
+            "total_rfsd_svac_frst" => $sinovac_data["total_rfsd_frst"],
+            "total_wstge_svac_frst" => $sinovac_data["total_wstge_frst"],
+            "p_cvrge_svac_frst" => $sinovac_data["p_cvrge_frst"],
+            "total_c_rate_svac_frst" => $sinovac_data["total_vcted_frst"] /  $request->sinovac_allocated_first * 100,
+            "total_r_unvcted_frst_svac" => $sinovac_data["total_r_unvcted_frst"],
 
-            "total_svac_a1_scnd" => $request->total_svac_a1_scnd,
-            "total_svac_a2_scnd" => $request->total_svac_a2_scnd,
-            "total_svac_a3_scnd" => $request->total_svac_a3_scnd,
-            "total_svac_a4_scnd" => $request->total_svac_a4_scnd,
-            "total_svac_a5_scnd" => $request->total_svac_a5_scnd,
-            "total_svac_b1_scnd" => $request->total_svac_b1_scnd,
-            "total_svac_b2_scnd" => $request->total_svac_b2_scnd,
-            "total_svac_b3_scnd" => $request->total_svac_b3_scnd,
-            "total_svac_b4_scnd" => $request->total_svac_b4_scnd,
-            "total_vcted_svac_scnd" => $request->total_vcted_svac_scnd,
-            "total_mild_svac_scnd" => $request->total_mild_svac_scnd,
-            "total_srs_svac_scnd" => $request->total_srs_svac_scnd,
-            "total_dfrd_svac_scnd" => $request->total_dfrd_svac_scnd,
-            "total_rfsd_svac_scnd" => $request->total_rfsd_svac_scnd,
-            "total_wstge_svac_scnd" => $request->total_wstge_svac_scnd,
-            "p_cvrge_svac_scnd" => $request->p_cvrge_svac_scnd,
-            "total_c_rate_svac_scnd" => $request->total_c_rate_svac_scnd,
-            "total_r_unvcted_scnd_svac" => $request->total_r_unvcted_scnd_svac,
+            "total_svac_a1_scnd" => $sinovac_data["total_a1_scnd"],
+            "total_svac_a2_scnd" => $sinovac_data["total_a2_scnd"],
+            "total_svac_a3_scnd" => $sinovac_data["total_a3_scnd"],
+            "total_svac_a4_scnd" => $sinovac_data["total_a4_scnd"],
+            "total_svac_a5_scnd" => $sinovac_data["total_a5_scnd"],
+            "total_svac_b1_scnd" => $sinovac_data["total_b1_scnd"],
+            "total_svac_b2_scnd" => $sinovac_data["total_b2_scnd"],
+            "total_svac_b3_scnd" => $sinovac_data["total_b3_scnd"],
+            "total_svac_b4_scnd" => $sinovac_data["total_b4_scnd"],
+            "total_vcted_svac_scnd" => $sinovac_data["total_vcted_scnd"],
+            "total_mild_svac_scnd" => $sinovac_data["total_mild_scnd"],
+            "total_srs_svac_scnd" => $sinovac_data["total_srs_scnd"],
+            "total_dfrd_svac_scnd" => $sinovac_data["total_dfrd_scnd"],
+            "total_rfsd_svac_scnd" => $sinovac_data["total_rfsd_scnd"],
+            "total_wstge_svac_scnd" => $sinovac_data["total_wstge_scnd"],
+            "p_cvrge_svac_scnd" => $sinovac_data["p_cvrge_scnd"],
+            "total_c_rate_svac_scnd" =>  $sinovac_data["total_vcted_scnd"] /  $request->sinovac_allocated_second * 100,
+            "total_r_unvcted_scnd_svac" => $sinovac_data["total_r_unvcted_scnd"],
             //END SINOVAC
 
             //ASTRA
-            "total_epop_astra_a1" => $request->total_epop_astra_a1,
-            "total_epop_astra_a2" => $request->total_epop_astra_a2,
-            "total_epop_astra_a3" => $request->total_epop_astra_a3,
-            "total_epop_astra_a4" => $request->total_epop_astra_a4,
-            "total_epop_astra_a5" => $request->total_epop_astra_a5,
-            "total_epop_astra_b1" => $request->total_epop_astra_b1,
-            "total_epop_astra_b2" => $request->total_epop_astra_b2,
-            "total_epop_astra_b3" => $request->total_epop_astra_b3,
-            "total_epop_astra_b4" => $request->total_epop_astra_b4,
-            "total_epop_astra" => $request->total_epop_astra,
-            "total_vallocated_astra_frst" => $request->total_vallocated_astra_frst,
-            "total_vallocated_astra_scnd" => $request->total_vallocated_astra_scnd,
-            "total_vallocated_astra" => $request->total_vallocated_astra,
-            "total_astra_a1_frst" => $request->total_astra_a1_frst,
-            "total_astra_a2_frst" => $request->total_astra_a2_frst,
-            "total_astra_a3_frst" => $request->total_astra_a3_frst,
-            "total_astra_a4_frst" => $request->total_astra_a4_frst,
-            "total_astra_a5_frst" => $request->total_astra_a5_frst,
-            "total_astra_b1_frst" => $request->total_astra_b1_frst,
-            "total_astra_b2_frst" => $request->total_astra_b2_frst,
-            "total_astra_b3_frst" => $request->total_astra_b3_frst,
-            "total_astra_b4_frst" => $request->total_astra_b4_frst,
-            "total_vcted_astra_frst" => $request->total_vcted_astra_frst,
-            "total_mild_astra_frst" => $request->total_mild_astra_frst,
-            "total_srs_astra_frst" => $request->total_srs_astra_frst,
-            "total_dfrd_astra_frst" => $request->total_dfrd_astra_frst,
-            "total_rfsd_astra_frst" => $request->total_rfsd_astra_frst,
-            "total_wstge_astra_frst" => $request->total_wstge_astra_frst,
-            "p_cvrge_astra_frst" => $request->p_cvrge_astra_frst,
-            "total_c_rate_astra_frst" => $request->total_c_rate_astra_frst,
-            "total_r_unvcted_frst_astra" => $request->total_r_unvcted_frst_astra,
-            "total_astra_a1_scnd" => $request->total_astra_a1_scnd,
-            "total_astra_a2_scnd" => $request->total_astra_a2_scnd,
-            "total_astra_a3_scnd" => $request->total_astra_a3_scnd,
-            "total_astra_a4_scnd" => $request->total_astra_a4_scnd,
-            "total_astra_a5_scnd" => $request->total_astra_a5_scnd,
-            "total_astra_b1_scnd" => $request->total_astra_b1_scnd,
-            "total_astra_b2_scnd" => $request->total_astra_b2_scnd,
-            "total_astra_b3_scnd" => $request->total_astra_b3_scnd,
-            "total_astra_b4_scnd" => $request->total_astra_b4_scnd,
-            "total_vcted_astra_scnd" => $request->total_vcted_astra_scnd,
-            "total_mild_astra_scnd" => $request->total_mild_astra_scnd,
-            "total_srs_astra_scnd" => $request->total_srs_astra_scnd,
-            "total_dfrd_astra_scnd" => $request->total_dfrd_astra_scnd,
-            "total_rfsd_astra_scnd" => $request->total_rfsd_astra_scnd,
-            "total_wstge_astra_scnd" => $request->total_wstge_astra_scnd,
-            "p_cvrge_astra_scnd" => $request->p_cvrge_astra_scnd,
-            "total_c_rate_astra_scnd" => $request->total_c_rate_astra_scnd,
-            "total_r_unvcted_scnd_astra" => $request->total_r_unvcted_scnd_astra,
+            "total_epop_astra_a1" => $astrazeneca_data["total_epop_a1"],
+            "total_epop_astra_a2" => $astrazeneca_data["total_epop_a2"],
+            "total_epop_astra_a3" => $astrazeneca_data["total_epop_a3"],
+            "total_epop_astra_a4" => $astrazeneca_data["total_epop_a4"],
+            "total_epop_astra_a5" => $astrazeneca_data["total_epop_a5"],
+            "total_epop_astra_b1" => $astrazeneca_data["total_epop_b1"],
+            "total_epop_astra_b2" => $astrazeneca_data["total_epop_b2"],
+            "total_epop_astra_b3" => $astrazeneca_data["total_epop_b3"],
+            "total_epop_astra_b4" => $astrazeneca_data["total_epop_b4"],
+            "total_epop_astra" => $astrazeneca_data["total_epop"],
+            "total_vallocated_astra_frst" => $request->astrazeneca_allocated_first,
+            "total_vallocated_astra_scnd" =>  $request->astrazeneca_allocated_second,
+            "total_vallocated_astra" => $request->astrazeneca_allocated_first + $request->astrazeneca_allocated_second,
+            "total_astra_a1_frst" => $astrazeneca_data["total_a1_frst"],
+            "total_astra_a2_frst" => $astrazeneca_data["total_a2_frst"],
+            "total_astra_a3_frst" => $astrazeneca_data["total_a3_frst"],
+            "total_astra_a4_frst" => $astrazeneca_data["total_a4_frst"],
+            "total_astra_a5_frst" => $astrazeneca_data["total_a5_frst"],
+            "total_astra_b1_frst" => $astrazeneca_data["total_b1_frst"],
+            "total_astra_b2_frst" => $astrazeneca_data["total_b2_frst"],
+            "total_astra_b3_frst" => $astrazeneca_data["total_b3_frst"],
+            "total_astra_b4_frst" => $astrazeneca_data["total_b4_frst"],
+            "total_vcted_astra_frst" => $astrazeneca_data["total_vcted_frst"],
+            "total_mild_astra_frst" => $astrazeneca_data["total_mild_frst"],
+            "total_srs_astra_frst" => $astrazeneca_data["total_srs_frst"],
+            "total_dfrd_astra_frst" => $astrazeneca_data["total_dfrd_frst"],
+            "total_rfsd_astra_frst" => $astrazeneca_data["total_rfsd_frst"],
+            "total_wstge_astra_frst" => $astrazeneca_data["total_wstge_frst"],
+            "p_cvrge_astra_frst" => $astrazeneca_data["p_cvrge_frst"],
+            "total_c_rate_astra_frst" =>  $astrazeneca_data["total_vcted_frst"] /  $request->astrazeneca_allocated_first * 100,
+            "total_r_unvcted_frst_astra" => $astrazeneca_data["total_r_unvcted_frst"],
+
+            "total_astra_a1_scnd" => $astrazeneca_data["total_a1_scnd"],
+            "total_astra_a2_scnd" => $astrazeneca_data["total_a2_scnd"],
+            "total_astra_a3_scnd" => $astrazeneca_data["total_a3_scnd"],
+            "total_astra_a4_scnd" => $astrazeneca_data["total_a4_scnd"],
+            "total_astra_a5_scnd" => $astrazeneca_data["total_a5_scnd"],
+            "total_astra_b1_scnd" => $astrazeneca_data["total_b1_scnd"],
+            "total_astra_b2_scnd" => $astrazeneca_data["total_b2_scnd"],
+            "total_astra_b3_scnd" => $astrazeneca_data["total_b3_scnd"],
+            "total_astra_b4_scnd" => $astrazeneca_data["total_b4_scnd"],
+            "total_vcted_astra_scnd" => $astrazeneca_data["total_vcted_scnd"],
+            "total_mild_astra_scnd" => $astrazeneca_data["total_mild_scnd"],
+            "total_srs_astra_scnd" => $astrazeneca_data["total_srs_scnd"],
+            "total_dfrd_astra_scnd" => $astrazeneca_data["total_dfrd_scnd"],
+            "total_rfsd_astra_scnd" => $astrazeneca_data["total_rfsd_scnd"],
+            "total_wstge_astra_scnd" => $astrazeneca_data["total_wstge_scnd"],
+            "p_cvrge_astra_scnd" => $astrazeneca_data["p_cvrge_scnd"],
+            "total_c_rate_astra_scnd" => $astrazeneca_data["total_vcted_scnd"] /  $request->astrazeneca_allocated_second * 100,
+            "total_r_unvcted_scnd_astra" => $astrazeneca_data["total_r_unvcted_scnd"],
             //END ASTRA
 
             //PFIZER
-            "total_epop_pfizer_a1" => $request->total_epop_pfizer_a1,
-            "total_epop_pfizer_a2" => $request->total_epop_pfizer_a2,
-            "total_epop_pfizer_a3" => $request->total_epop_pfizer_a3,
-            "total_epop_pfizer_a4" => $request->total_epop_pfizer_a4,
-            "total_epop_pfizer_a5" => $request->total_epop_pfizer_a5,
-            "total_epop_pfizer_b1" => $request->total_epop_pfizer_b1,
-            "total_epop_pfizer_b2" => $request->total_epop_pfizer_b2,
-            "total_epop_pfizer_b3" => $request->total_epop_pfizer_b3,
-            "total_epop_pfizer_b4" => $request->total_epop_pfizer_b4,
-            "total_epop_pfizer" => $request->total_epop_pfizer,
-            "total_vallocated_pfizer_frst" => $request->total_vallocated_pfizer_frst,
-            "total_vallocated_pfizer_scnd" => $request->total_vallocated_pfizer_scnd,
-            "total_vallocated_pfizer" => $request->total_vallocated_pfizer,
-            "total_pfizer_a1_frst" => $request->total_pfizer_a1_frst,
-            "total_pfizer_a2_frst" => $request->total_pfizer_a2_frst,
-            "total_pfizer_a3_frst" => $request->total_pfizer_a3_frst,
-            "total_pfizer_a4_frst" => $request->total_pfizer_a4_frst,
-            "total_pfizer_a5_frst" => $request->total_pfizer_a5_frst,
-            "total_pfizer_b1_frst" => $request->total_pfizer_b1_frst,
-            "total_pfizer_b2_frst" => $request->total_pfizer_b2_frst,
-            "total_pfizer_b3_frst" => $request->total_pfizer_b3_frst,
-            "total_pfizer_b4_frst" => $request->total_pfizer_b4_frst,
-            "total_vcted_pfizer_frst" => $request->total_vcted_pfizer_frst,
-            "total_mild_pfizer_frst" => $request->total_mild_pfizer_frst,
-            "total_srs_pfizer_frst" => $request->total_srs_pfizer_frst,
-            "total_dfrd_pfizer_frst" => $request->total_dfrd_pfizer_frst,
-            "total_rfsd_pfizer_frst" => $request->total_rfsd_pfizer_frst,
-            "total_wstge_pfizer_frst" => $request->total_wstge_pfizer_frst,
-            "p_cvrge_pfizer_frst" => $request->p_cvrge_pfizer_frst,
-            "total_c_rate_pfizer_frst" => $request->total_c_rate_pfizer_frst,
-            "total_r_unvcted_frst_pfizer" => $request->total_r_unvcted_frst_pfizer,
+            "total_epop_pfizer_a1" => $pfizer_data["total_epop_a1"],
+            "total_epop_pfizer_a2" => $pfizer_data["total_epop_a2"],
+            "total_epop_pfizer_a3" => $pfizer_data["total_epop_a3"],
+            "total_epop_pfizer_a4" => $pfizer_data["total_epop_a4"],
+            "total_epop_pfizer_a5" => $pfizer_data["total_epop_a5"],
+            "total_epop_pfizer_b1" => $pfizer_data["total_epop_b1"],
+            "total_epop_pfizer_b2" => $pfizer_data["total_epop_b2"],
+            "total_epop_pfizer_b3" => $pfizer_data["total_epop_b3"],
+            "total_epop_pfizer_b4" => $pfizer_data["total_epop_b4"],
+            "total_epop_pfizer" => $pfizer_data["total_epop"],
+            "total_vallocated_pfizer_frst" => $request->pfizer_allocated_first,
+            "total_vallocated_pfizer_scnd" => $request->pfizer_allocated_second,
+            "total_vallocated_pfizer" => $request->pfizer_allocated_first +  $request->pfizer_allocated_second,
+            "total_pfizer_a1_frst" => $pfizer_data["total_a1_frst"],
+            "total_pfizer_a2_frst" => $pfizer_data["total_a2_frst"],
+            "total_pfizer_a3_frst" => $pfizer_data["total_a3_frst"],
+            "total_pfizer_a4_frst" => $pfizer_data["total_a4_frst"],
+            "total_pfizer_a5_frst" => $pfizer_data["total_a5_frst"],
+            "total_pfizer_b1_frst" => $pfizer_data["total_b1_frst"],
+            "total_pfizer_b2_frst" => $pfizer_data["total_b2_frst"],
+            "total_pfizer_b3_frst" => $pfizer_data["total_b3_frst"],
+            "total_pfizer_b4_frst" => $pfizer_data["total_b4_frst"],
+            "total_vcted_pfizer_frst" => $pfizer_data["total_vcted_frst"],
+            "total_mild_pfizer_frst" => $pfizer_data["total_mild_frst"],
+            "total_srs_pfizer_frst" => $pfizer_data["total_srs_frst"],
+            "total_dfrd_pfizer_frst" => $pfizer_data["total_dfrd_frst"],
+            "total_rfsd_pfizer_frst" => $pfizer_data["total_rfsd_frst"],
+            "total_wstge_pfizer_frst" => $pfizer_data["total_wstge_frst"],
+            "p_cvrge_pfizer_frst" => $pfizer_data["p_cvrge_frst"],
+            "total_c_rate_pfizer_frst" =>  $pfizer_data["total_vcted_frst"] /  $request->pfizer_allocated_first * 100,
+            "total_r_unvcted_frst_pfizer" => $pfizer_data["total_r_unvcted_frst"],
 
-            "total_pfizer_a1_scnd" => $request->total_pfizer_a1_scnd,
-            "total_pfizer_a2_scnd" => $request->total_pfizer_a2_scnd,
-            "total_pfizer_a3_scnd" => $request->total_pfizer_a3_scnd,
-            "total_pfizer_a4_scnd" => $request->total_pfizer_a4_scnd,
-            "total_pfizer_a5_scnd" => $request->total_pfizer_a5_scnd,
-            "total_pfizer_b1_scnd" => $request->total_pfizer_b1_scnd,
-            "total_pfizer_b2_scnd" => $request->total_pfizer_b2_scnd,
-            "total_pfizer_b3_scnd" => $request->total_pfizer_b3_scnd,
-            "total_pfizer_b4_scnd" => $request->total_pfizer_b4_scnd,
-            "total_vcted_pfizer_scnd" => $request->total_vcted_pfizer_scnd,
-            "total_mild_pfizer_scnd" => $request->total_mild_pfizer_scnd,
-            "total_srs_pfizer_scnd" => $request->total_srs_pfizer_scnd,
-            "total_dfrd_pfizer_scnd" => $request->total_dfrd_pfizer_scnd,
-            "total_rfsd_pfizer_scnd" => $request->total_rfsd_pfizer_scnd,
-            "total_wstge_pfizer_scnd" => $request->total_wstge_pfizer_scnd,
-            "p_cvrge_pfizer_scnd" => $request->p_cvrge_pfizer_scnd,
-            "total_c_rate_pfizer_scnd" => $request->total_c_rate_pfizer_scnd,
-            "total_r_unvcted_scnd_pfizer" => $request->total_r_unvcted_scnd_pfizer,
+            "total_pfizer_a1_scnd" => $pfizer_data["total_a1_scnd"],
+            "total_pfizer_a2_scnd" => $pfizer_data["total_a2_scnd"],
+            "total_pfizer_a3_scnd" => $pfizer_data["total_a3_scnd"],
+            "total_pfizer_a4_scnd" => $pfizer_data["total_a4_scnd"],
+            "total_pfizer_a5_scnd" => $pfizer_data["total_a5_scnd"],
+            "total_pfizer_b1_scnd" => $pfizer_data["total_b1_scnd"],
+            "total_pfizer_b2_scnd" => $pfizer_data["total_b2_scnd"],
+            "total_pfizer_b3_scnd" => $pfizer_data["total_b3_scnd"],
+            "total_pfizer_b4_scnd" => $pfizer_data["total_b4_scnd"],
+            "total_vcted_pfizer_scnd" => $pfizer_data["total_vcted_scnd"],
+            "total_mild_pfizer_scnd" => $pfizer_data["total_mild_scnd"],
+            "total_srs_pfizer_scnd" => $pfizer_data["total_srs_scnd"],
+            "total_dfrd_pfizer_scnd" => $pfizer_data["total_dfrd_scnd"],
+            "total_rfsd_pfizer_scnd" => $pfizer_data["total_rfsd_scnd"],
+            "total_wstge_pfizer_scnd" => $pfizer_data["total_wstge_scnd"],
+            "p_cvrge_pfizer_scnd" => $pfizer_data["p_cvrge_scnd"],
+            "total_c_rate_pfizer_scnd" => $pfizer_data["total_vcted_scnd"] /  $request->pfizer_allocated_second * 100,
+            "total_r_unvcted_scnd_pfizer" => $pfizer_data["total_r_unvcted_scnd"],
             //END PFIZER
 
 
             //SPUTNIKV
-            "total_epop_sputnikv_a1" => $request->total_epop_sputnikv_a1,
-            "total_epop_sputnikv_a2" => $request->total_epop_sputnikv_a2,
-            "total_epop_sputnikv_a3" => $request->total_epop_sputnikv_a3,
-            "total_epop_sputnikv_a4" => $request->total_epop_sputnikv_a4,
-            "total_epop_sputnikv_a5" => $request->total_epop_sputnikv_a5,
-            "total_epop_sputnikv_b1" => $request->total_epop_sputnikv_b1,
-            "total_epop_sputnikv_b2" => $request->total_epop_sputnikv_b2,
-            "total_epop_sputnikv_b3" => $request->total_epop_sputnikv_b3,
-            "total_epop_sputnikv_b4" => $request->total_epop_sputnikv_b4,
-            "total_epop_sputnikv" => $request->total_epop_sputnikv,
-            "total_vallocated_sputnikv_frst" => $request->total_vallocated_sputnikv_frst,
-            "total_vallocated_sputnikv_scnd" => $request->total_vallocated_sputnikv_scnd,
-            "total_vallocated_sputnikv" => $request->total_vallocated_sputnikv,
-            "total_sputnikv_a1_frst" => $request->total_sputnikv_a1_frst,
-            "total_sputnikv_a2_frst" => $request->total_sputnikv_a2_frst,
-            "total_sputnikv_a3_frst" => $request->total_sputnikv_a3_frst,
-            "total_sputnikv_a4_frst" => $request->total_sputnikv_a4_frst,
-            "total_sputnikv_a5_frst" => $request->total_sputnikv_a5_frst,
-            "total_sputnikv_b1_frst" => $request->total_sputnikv_b1_frst,
-            "total_sputnikv_b2_frst" => $request->total_sputnikv_b2_frst,
-            "total_sputnikv_b3_frst" => $request->total_sputnikv_b3_frst,
-            "total_sputnikv_b4_frst" => $request->total_sputnikv_b4_frst,
-            "total_vcted_sputnikv_frst" => $request->total_vcted_sputnikv_frst,
-            "total_mild_sputnikv_frst" => $request->total_mild_sputnikv_frst,
-            "total_srs_sputnikv_frst" => $request->total_srs_sputnikv_frst,
-            "total_dfrd_sputnikv_frst" => $request->total_dfrd_sputnikv_frst,
-            "total_rfsd_sputnikv_frst" => $request->total_rfsd_sputnikv_frst,
-            "total_wstge_sputnikv_frst" => $request->total_wstge_sputnikv_frst,
-            "p_cvrge_sputnikv_frst" => $request->p_cvrge_sputnikv_frst,
-            "total_c_rate_sputnikv_frst" => $request->total_c_rate_sputnikv_frst,
-            "total_r_unvcted_frst_sputnikv" => $request->total_r_unvcted_frst_sputnikv,
+            "total_epop_sputnikv_a1" => $sputnikv_data["total_epop_a1"],
+            "total_epop_sputnikv_a2" => $sputnikv_data["total_epop_a2"],
+            "total_epop_sputnikv_a3" => $sputnikv_data["total_epop_a3"],
+            "total_epop_sputnikv_a4" => $sputnikv_data["total_epop_a4"],
+            "total_epop_sputnikv_a5" => $sputnikv_data["total_epop_a5"],
+            "total_epop_sputnikv_b1" => $sputnikv_data["total_epop_b1"],
+            "total_epop_sputnikv_b2" => $sputnikv_data["total_epop_b2"],
+            "total_epop_sputnikv_b3" => $sputnikv_data["total_epop_b3"],
+            "total_epop_sputnikv_b4" => $sputnikv_data["total_epop_b4"],
+            "total_epop_sputnikv" => $sputnikv_data["total_epop"],
+            "total_vallocated_sputnikv_frst" =>  $request->sputnikv_allocated_first,
+            "total_vallocated_sputnikv_scnd" =>  $request->sputnikv_allocated_second,
+            "total_vallocated_sputnikv" => $request->sputnikv_allocated_first + $request->sputnikv_allocated_second,
+            "total_sputnikv_a1_frst" => $sputnikv_data["total_a1_frst"],
+            "total_sputnikv_a2_frst" => $sputnikv_data["total_a2_frst"],
+            "total_sputnikv_a3_frst" => $sputnikv_data["total_a3_frst"],
+            "total_sputnikv_a4_frst" => $sputnikv_data["total_a4_frst"],
+            "total_sputnikv_a5_frst" => $sputnikv_data["total_a5_frst"],
+            "total_sputnikv_b1_frst" => $sputnikv_data["total_b1_frst"],
+            "total_sputnikv_b2_frst" => $sputnikv_data["total_b2_frst"],
+            "total_sputnikv_b3_frst" => $sputnikv_data["total_b3_frst"],
+            "total_sputnikv_b4_frst" => $sputnikv_data["total_b4_frst"],
+            "total_vcted_sputnikv_frst" => $sputnikv_data["total_vcted_frst"],
+            "total_mild_sputnikv_frst" => $sputnikv_data["total_mild_frst"],
+            "total_srs_sputnikv_frst" => $sputnikv_data["total_srs_frst"],
+            "total_dfrd_sputnikv_frst" => $sputnikv_data["total_dfrd_frst"],
+            "total_rfsd_sputnikv_frst" => $sputnikv_data["total_rfsd_frst"],
+            "total_wstge_sputnikv_frst" => $sputnikv_data["total_wstge_frst"],
+            "p_cvrge_sputnikv_frst" => $sputnikv_data["p_cvrge_frst"],
+            "total_c_rate_sputnikv_frst" =>  $sputnikv_data["total_vcted_frst"] /  $request->sputnikv_allocated_first * 100,
+            "total_r_unvcted_frst_sputnikv" => $sputnikv_data["total_r_unvcted_frst"],
 
-            "total_sputnikv_a1_scnd" => $request->total_sputnikv_a1_scnd,
-            "total_sputnikv_a2_scnd" => $request->total_sputnikv_a2_scnd,
-            "total_sputnikv_a3_scnd" => $request->total_sputnikv_a3_scnd,
-            "total_sputnikv_a4_scnd" => $request->total_sputnikv_a4_scnd,
-            "total_sputnikv_a5_scnd" => $request->total_sputnikv_a5_scnd,
-            "total_sputnikv_b1_scnd" => $request->total_sputnikv_b1_scnd,
-            "total_sputnikv_b2_scnd" => $request->total_sputnikv_b2_scnd,
-            "total_sputnikv_b3_scnd" => $request->total_sputnikv_b3_scnd,
-            "total_sputnikv_b4_scnd" => $request->total_sputnikv_b4_scnd,
-            "total_vcted_sputnikv_scnd" => $request->total_vcted_sputnikv_scnd,
-            "total_mild_sputnikv_scnd" => $request->total_mild_sputnikv_scnd,
-            "total_srs_sputnikv_scnd" => $request->total_srs_sputnikv_scnd,
-            "total_dfrd_sputnikv_scnd" => $request->total_dfrd_sputnikv_scnd,
-            "total_rfsd_sputnikv_scnd" => $request->total_rfsd_sputnikv_scnd,
-            "total_wstge_sputnikv_scnd" => $request->total_wstge_sputnikv_scnd,
-            "p_cvrge_sputnikv_scnd" => $request->p_cvrge_sputnikv_scnd,
-            "total_c_rate_sputnikv_scnd" => $request->total_c_rate_sputnikv_scnd,
-            "total_r_unvcted_scnd_sputnikv" => $request->total_r_unvcted_scnd_sputnikv,
+            "total_sputnikv_a1_scnd" => $sputnikv_data["total_a1_scnd"],
+            "total_sputnikv_a2_scnd" => $sputnikv_data["total_a2_scnd"],
+            "total_sputnikv_a3_scnd" => $sputnikv_data["total_a3_scnd"],
+            "total_sputnikv_a4_scnd" => $sputnikv_data["total_a4_scnd"],
+            "total_sputnikv_a5_scnd" => $sputnikv_data["total_a5_scnd"],
+            "total_sputnikv_b1_scnd" => $sputnikv_data["total_b1_scnd"],
+            "total_sputnikv_b2_scnd" => $sputnikv_data["total_b2_scnd"],
+            "total_sputnikv_b3_scnd" => $sputnikv_data["total_b3_scnd"],
+            "total_sputnikv_b4_scnd" => $sputnikv_data["total_b4_scnd"],
+            "total_vcted_sputnikv_scnd" => $sputnikv_data["total_vcted_scnd"],
+            "total_mild_sputnikv_scnd" => $sputnikv_data["total_mild_scnd"],
+            "total_srs_sputnikv_scnd" => $sputnikv_data["total_srs_scnd"],
+            "total_dfrd_sputnikv_scnd" => $sputnikv_data["total_dfrd_scnd"],
+            "total_rfsd_sputnikv_scnd" => $sputnikv_data["total_rfsd_scnd"],
+            "total_wstge_sputnikv_scnd" => $sputnikv_data["total_wstge_scnd"],
+            "p_cvrge_sputnikv_scnd" => $sputnikv_data["p_cvrge_scnd"],
+            "total_c_rate_sputnikv_scnd" =>   $sputnikv_data["total_vcted_scnd"] /  $request->sputnikv_allocated_second * 100,
+            "total_r_unvcted_scnd_sputnikv" => $sputnikv_data["total_r_unvcted_scnd"],
             //END SPUTNIKV
 
             //MODERNA
-            "total_epop_moderna_a1" => $request->total_epop_moderna_a1,
-            "total_epop_moderna_a2" => $request->total_epop_moderna_a2,
-            "total_epop_moderna_a3" => $request->total_epop_moderna_a3,
-            "total_epop_moderna_a4" => $request->total_epop_moderna_a4,
-            "total_epop_moderna_a5" => $request->total_epop_moderna_a5,
-            "total_epop_moderna_b1" => $request->total_epop_moderna_b1,
-            "total_epop_moderna_b2" => $request->total_epop_moderna_b2,
-            "total_epop_moderna_b3" => $request->total_epop_moderna_b3,
-            "total_epop_moderna_b4" => $request->total_epop_moderna_b4,
-            "total_epop_moderna" => $request->total_epop_moderna,
-            "total_vallocated_moderna_frst" => $request->total_vallocated_moderna_frst,
-            "total_vallocated_moderna_scnd" => $request->total_vallocated_moderna_scnd,
-            "total_vallocated_moderna" => $request->total_vallocated_moderna,
-            "total_moderna_a1_frst" => $request->total_moderna_a1_frst,
-            "total_moderna_a2_frst" => $request->total_moderna_a2_frst,
-            "total_moderna_a3_frst" => $request->total_moderna_a3_frst,
-            "total_moderna_a4_frst" => $request->total_moderna_a4_frst,
-            "total_moderna_a5_frst" => $request->total_moderna_a5_frst,
-            "total_moderna_b1_frst" => $request->total_moderna_b1_frst,
-            "total_moderna_b2_frst" => $request->total_moderna_b2_frst,
-            "total_moderna_b3_frst" => $request->total_moderna_b3_frst,
-            "total_moderna_b4_frst" => $request->total_moderna_b4_frst,
-            "total_vcted_moderna_frst" => $request->total_vcted_moderna_frst,
-            "total_mild_moderna_frst" => $request->total_mild_moderna_frst,
-            "total_srs_moderna_frst" => $request->total_srs_moderna_frst,
-            "total_dfrd_moderna_frst" => $request->total_dfrd_moderna_frst,
-            "total_rfsd_moderna_frst" => $request->total_rfsd_moderna_frst,
-            "total_wstge_moderna_frst" => $request->total_wstge_moderna_frst,
-            "p_cvrge_moderna_frst" => $request->p_cvrge_moderna_frst,
-            "total_c_rate_moderna_frst" => $request->total_c_rate_moderna_frst,
-            "total_r_unvcted_frst_moderna" => $request->total_r_unvcted_frst_moderna,
+            "total_epop_moderna_a1" => $moderna_data["total_epop_a1"],
+            "total_epop_moderna_a2" => $moderna_data["total_epop_a2"],
+            "total_epop_moderna_a3" => $moderna_data["total_epop_a3"],
+            "total_epop_moderna_a4" => $moderna_data["total_epop_a4"],
+            "total_epop_moderna_a5" => $moderna_data["total_epop_a5"],
+            "total_epop_moderna_b1" => $moderna_data["total_epop_b1"],
+            "total_epop_moderna_b2" => $moderna_data["total_epop_b2"],
+            "total_epop_moderna_b3" => $moderna_data["total_epop_b3"],
+            "total_epop_moderna_b4" => $moderna_data["total_epop_b4"],
+            "total_epop_moderna" => $moderna_data["total_epop"],
+            "total_vallocated_moderna_frst" => $request->moderna_allocated_first,
+            "total_vallocated_moderna_scnd" => $request->moderna_allocated_second,
+            "total_vallocated_moderna" => $request->moderna_allocated_first + $request->moderna_allocated_second,
+            "total_moderna_a1_frst" => $moderna_data["total_a1_frst"],
+            "total_moderna_a2_frst" => $moderna_data["total_a2_frst"],
+            "total_moderna_a3_frst" => $moderna_data["total_a3_frst"],
+            "total_moderna_a4_frst" => $moderna_data["total_a4_frst"],
+            "total_moderna_a5_frst" => $moderna_data["total_a5_frst"],
+            "total_moderna_b1_frst" => $moderna_data["total_b1_frst"],
+            "total_moderna_b2_frst" => $moderna_data["total_b2_frst"],
+            "total_moderna_b3_frst" => $moderna_data["total_b3_frst"],
+            "total_moderna_b4_frst" => $moderna_data["total_b4_frst"],
+            "total_vcted_moderna_frst" => $moderna_data["total_vcted_frst"],
+            "total_mild_moderna_frst" => $moderna_data["total_mild_frst"],
+            "total_srs_moderna_frst" => $moderna_data["total_srs_frst"],
+            "total_dfrd_moderna_frst" => $moderna_data["total_dfrd_frst"],
+            "total_rfsd_moderna_frst" => $moderna_data["total_rfsd_frst"],
+            "total_wstge_moderna_frst" => $moderna_data["total_wstge_frst"],
+            "p_cvrge_moderna_frst" => $moderna_data["p_cvrge_frst"],
+            "total_c_rate_moderna_frst" =>  $moderna_data["total_vcted_frst"] /  $request->moderna_allocated_first * 100,
+            "total_r_unvcted_frst_moderna" => $moderna_data["total_r_unvcted_frst"],
 
-            "total_moderna_a1_scnd" => $request->total_moderna_a1_scnd,
-            "total_moderna_a2_scnd" => $request->total_moderna_a2_scnd,
-            "total_moderna_a3_scnd" => $request->total_moderna_a3_scnd,
-            "total_moderna_a4_scnd" => $request->total_moderna_a4_scnd,
-            "total_moderna_a5_scnd" => $request->total_moderna_a5_scnd,
-            "total_moderna_b1_scnd" => $request->total_moderna_b1_scnd,
-            "total_moderna_b2_scnd" => $request->total_moderna_b2_scnd,
-            "total_moderna_b3_scnd" => $request->total_moderna_b3_scnd,
-            "total_moderna_b4_scnd" => $request->total_moderna_b4_scnd,
-            "total_vcted_moderna_scnd" => $request->total_vcted_moderna_scnd,
-            "total_mild_moderna_scnd" => $request->total_mild_moderna_scnd,
-            "total_srs_moderna_scnd" => $request->total_srs_moderna_scnd,
-            "total_dfrd_moderna_scnd" => $request->total_dfrd_moderna_scnd,
-            "total_rfsd_moderna_scnd" => $request->total_rfsd_moderna_scnd,
-            "total_wstge_moderna_scnd" => $request->total_wstge_moderna_scnd,
-            "p_cvrge_moderna_scnd" => $request->p_cvrge_moderna_scnd,
-            "total_c_rate_moderna_scnd" => $request->total_c_rate_moderna_scnd,
-            "total_r_unvcted_scnd_moderna" => $request->total_r_unvcted_scnd_moderna,
+            "total_moderna_a1_scnd" => $moderna_data["total_a1_scnd"],
+            "total_moderna_a2_scnd" => $moderna_data["total_a2_scnd"],
+            "total_moderna_a3_scnd" => $moderna_data["total_a3_scnd"],
+            "total_moderna_a4_scnd" => $moderna_data["total_a4_scnd"],
+            "total_moderna_a5_scnd" => $moderna_data["total_a5_scnd"],
+            "total_moderna_b1_scnd" => $moderna_data["total_b1_scnd"],
+            "total_moderna_b2_scnd" => $moderna_data["total_b2_scnd"],
+            "total_moderna_b3_scnd" => $moderna_data["total_b3_scnd"],
+            "total_moderna_b4_scnd" => $moderna_data["total_b4_scnd"],
+            "total_vcted_moderna_scnd" => $moderna_data["total_vcted_scnd"],
+            "total_mild_moderna_scnd" => $moderna_data["total_mild_scnd"],
+            "total_srs_moderna_scnd" => $moderna_data["total_srs_scnd"],
+            "total_dfrd_moderna_scnd" => $moderna_data["total_dfrd_scnd"],
+            "total_rfsd_moderna_scnd" => $moderna_data["total_rfsd_scnd"],
+            "total_wstge_moderna_scnd" => $moderna_data["total_wstge_scnd"],
+            "p_cvrge_moderna_scnd" => $moderna_data["p_cvrge_scnd"],
+            "total_c_rate_moderna_scnd" => $moderna_data["total_vcted_scnd"] /  $request->moderna_allocated_second * 100,
+            "total_r_unvcted_scnd_moderna" => $moderna_data["total_r_unvcted_scnd"],
             //END MODERNA
 
 
             //JOHNSON
-            "total_epop_johnson_a1" => $request->total_epop_johnson_a1,
-            "total_epop_johnson_a2" => $request->total_epop_johnson_a2,
-            "total_epop_johnson_a3" => $request->total_epop_johnson_a3,
-            "total_epop_johnson_a4" => $request->total_epop_johnson_a4,
-            "total_epop_johnson_a5" => $request->total_epop_johnson_a5,
-            "total_epop_johnson_b1" => $request->total_epop_johnson_b1,
-            "total_epop_johnson_b2" => $request->total_epop_johnson_b2,
-            "total_epop_johnson_b3" => $request->total_epop_johnson_b3,
-            "total_epop_johnson_b4" => $request->total_epop_johnson_b4,
-            "total_epop_johnson" => $request->total_epop_johnson,
-            "total_vallocated_johnson_frst" => $request->total_vallocated_johnson_frst,
-            "total_vallocated_johnson_scnd" => $request->total_vallocated_johnson_scnd,
-            "total_vallocated_johnson" => $request->total_vallocated_johnson,
-            "total_johnson_a1_frst" => $request->total_johnson_a1_frst,
-            "total_johnson_a2_frst" => $request->total_johnson_a2_frst,
-            "total_johnson_a3_frst" => $request->total_johnson_a3_frst,
-            "total_johnson_a4_frst" => $request->total_johnson_a4_frst,
-            "total_johnson_a5_frst" => $request->total_johnson_a5_frst,
-            "total_johnson_b1_frst" => $request->total_johnson_b1_frst,
-            "total_johnson_b2_frst" => $request->total_johnson_b2_frst,
-            "total_johnson_b3_frst" => $request->total_johnson_b3_frst,
-            "total_johnson_b4_frst" => $request->total_johnson_b4_frst,
-            "total_vcted_johnson_frst" => $request->total_vcted_johnson_frst,
-            "total_mild_johnson_frst" => $request->total_mild_johnson_frst,
-            "total_srs_johnson_frst" => $request->total_srs_johnson_frst,
-            "total_dfrd_johnson_frst" => $request->total_dfrd_johnson_frst,
-            "total_rfsd_johnson_frst" => $request->total_rfsd_johnson_frst,
-            "total_wstge_johnson_frst" => $request->total_wstge_johnson_frst,
-            "p_cvrge_johnson_frst" => $request->p_cvrge_johnson_frst,
-            "total_c_rate_johnson_frst" => $request->total_c_rate_johnson_frst,
-            "total_r_unvcted_frst_johnson" => $request->total_r_unvcted_frst_johnson,
+            "total_epop_johnson_a1" => $johnson_data["total_epop_a1"],
+            "total_epop_johnson_a2" => $johnson_data["total_epop_a2"],
+            "total_epop_johnson_a3" => $johnson_data["total_epop_a3"],
+            "total_epop_johnson_a4" => $johnson_data["total_epop_a4"],
+            "total_epop_johnson_a5" => $johnson_data["total_epop_a5"],
+            "total_epop_johnson_b1" => $johnson_data["total_epop_b1"],
+            "total_epop_johnson_b2" => $johnson_data["total_epop_b2"],
+            "total_epop_johnson_b3" => $johnson_data["total_epop_b3"],
+            "total_epop_johnson_b4" => $johnson_data["total_epop_b4"],
+            "total_epop_johnson" => $johnson_data["total_epop"],
+            "total_vallocated_johnson_frst" => $request->johnson_allocated_first,
+            "total_vallocated_johnson_scnd" => $request->johnson_allocated_first,
+            "total_vallocated_johnson" => $request->johnson_allocated_first + $request->johnson_allocated_first,
+            "total_johnson_a1_frst" => $johnson_data["total_a1_frst"],
+            "total_johnson_a2_frst" => $johnson_data["total_a2_frst"],
+            "total_johnson_a3_frst" => $johnson_data["total_a3_frst"],
+            "total_johnson_a4_frst" => $johnson_data["total_a4_frst"],
+            "total_johnson_a5_frst" => $johnson_data["total_a5_frst"],
+            "total_johnson_b1_frst" => $johnson_data["total_b1_frst"],
+            "total_johnson_b2_frst" => $johnson_data["total_b2_frst"],
+            "total_johnson_b3_frst" => $johnson_data["total_b3_frst"],
+            "total_johnson_b4_frst" => $johnson_data["total_b4_frst"],
+            "total_vcted_johnson_frst" => $johnson_data["total_vcted_frst"],
+            "total_mild_johnson_frst" => $johnson_data["total_mild_frst"],
+            "total_srs_johnson_frst" => $johnson_data["total_srs_frst"],
+            "total_dfrd_johnson_frst" => $johnson_data["total_dfrd_frst"],
+            "total_rfsd_johnson_frst" => $johnson_data["total_rfsd_frst"],
+            "total_wstge_johnson_frst" => $johnson_data["total_wstge_frst"],
+            "p_cvrge_johnson_frst" => $johnson_data["p_cvrge_frst"],
+            "total_c_rate_johnson_frst" => $johnson_data["total_vcted_frst"] /  $request->johnson_allocated_first * 100,
+            "total_r_unvcted_frst_johnson" => $johnson_data["total_r_unvcted_frst"],
 
-            "total_johnson_a1_scnd" => $request->total_johnson_a1_scnd,
-            "total_johnson_a2_scnd" => $request->total_johnson_a2_scnd,
-            "total_johnson_a3_scnd" => $request->total_johnson_a3_scnd,
-            "total_johnson_a4_scnd" => $request->total_johnson_a4_scnd,
-            "total_johnson_a5_scnd" => $request->total_johnson_a5_scnd,
-            "total_johnson_b1_scnd" => $request->total_johnson_b1_scnd,
-            "total_johnson_b2_scnd" => $request->total_johnson_b2_scnd,
-            "total_johnson_b3_scnd" => $request->total_johnson_b3_scnd,
-            "total_johnson_b4_scnd" => $request->total_johnson_b4_scnd,
-            "total_vcted_johnson_scnd" => $request->total_vcted_johnson_scnd,
-            "total_mild_johnson_scnd" => $request->total_mild_johnson_scnd,
-            "total_srs_johnson_scnd" => $request->total_srs_johnson_scnd,
-            "total_dfrd_johnson_scnd" => $request->total_dfrd_johnson_scnd,
-            "total_rfsd_johnson_scnd" => $request->total_rfsd_johnson_scnd,
-            "total_wstge_johnson_scnd" => $request->total_wstge_johnson_scnd,
-            "p_cvrge_johnson_scnd" => $request->p_cvrge_johnson_scnd,
-            "total_c_rate_johnson_scnd" => $request->total_c_rate_johnson_scnd,
-            "total_r_unvcted_scnd_johnson" => $request->total_r_unvcted_scnd_johnson,
+            "total_johnson_a1_scnd" => $johnson_data["total_a1_scnd"],
+            "total_johnson_a2_scnd" => $johnson_data["total_a2_scnd"],
+            "total_johnson_a3_scnd" => $johnson_data["total_a3_scnd"],
+            "total_johnson_a4_scnd" => $johnson_data["total_a4_scnd"],
+            "total_johnson_a5_scnd" => $johnson_data["total_a5_scnd"],
+            "total_johnson_b1_scnd" => $johnson_data["total_b1_scnd"],
+            "total_johnson_b2_scnd" => $johnson_data["total_b2_scnd"],
+            "total_johnson_b3_scnd" => $johnson_data["total_b3_scnd"],
+            "total_johnson_b4_scnd" => $johnson_data["total_b4_scnd"],
+            "total_vcted_johnson_scnd" => $johnson_data["total_vcted_scnd"],
+            "total_mild_johnson_scnd" => $johnson_data["total_mild_scnd"],
+            "total_srs_johnson_scnd" => $johnson_data["total_srs_scnd"],
+            "total_dfrd_johnson_scnd" => $johnson_data["total_dfrd_scnd"],
+            "total_rfsd_johnson_scnd" => $johnson_data["total_rfsd_scnd"],
+            "total_wstge_johnson_scnd" => $johnson_data["total_wstge_scnd"],
+            "p_cvrge_johnson_scnd" => $johnson_data["p_cvrge_scnd"],
+            "total_c_rate_johnson_scnd" => $johnson_data["total_vcted_frst"] /  $request->johnson_allocated_second * 100,
+            "total_r_unvcted_scnd_johnson" => $johnson_data["total_r_unvcted_scnd"],
             //END JOHNSON
 
-            "total_vallocated_frst" => $request->total_vallocated_frst,
-            "total_vallocated_scnd" => $request->total_vallocated_scnd,
-            "total_vallocated" => $request->total_vallocated,
-            "total_overall_a1_first" => $request->total_overall_a1_first,
-            "total_overall_a2_first" => $request->total_overall_a2_first,
-            "total_overall_a3_first" => $request->total_overall_a3_first,
-            "total_overall_a4_first" => $request->total_overall_a4_first,
-            "total_overall_a5_first" => $request->total_overall_a5_first,
-            "total_overall_b1_first" => $request->total_overall_b1_first,
-            "total_overall_b2_first" => $request->total_overall_b2_first,
-            "total_overall_b3_first" => $request->total_overall_b3_first,
-            "total_overall_b4_first" => $request->total_overall_b4_first,
-            "total_vcted_frst" => $request->total_vcted_frst,
-            "total_overall_mild_first" => $request->total_overall_mild_first,
-            "total_overall_serious_first" => $request->total_overall_serious_first,
-            "total_overall_deferred_first" => $request->total_overall_deferred_first,
-            "total_rfsd_frst" => $request->total_rfsd_frst,
-            "total_overall_wastage_first" => $request->total_overall_wastage_first,
-            "total_p_cvrge_frst" => $request->total_p_cvrge_frst,
-            "total_c_rate_frst" => $request->total_c_rate_frst,
-            "total_r_unvcted_frst" => $request->total_r_unvcted_frst,
+            "total_vallocated_frst" => $total_data["total_vallocated_overall_frst"],
+            "total_vallocated_scnd" => $total_data["total_vallocated_overall_scnd"],
+            "total_vallocated" => $total_data["total_vallocated_overall"],
+            "total_overall_a1_first" => $total_data["total_overall_a1_frst"],
+            "total_overall_a2_first" => $total_data["total_overall_a2_frst"],
+            "total_overall_a3_first" => $total_data["total_overall_a3_frst"],
+            "total_overall_a4_first" => $total_data["total_overall_a4_frst"],
+            "total_overall_a5_first" => $total_data["total_overall_a5_frst"],
+            "total_overall_b1_first" => $total_data["total_overall_b1_frst"],
+            "total_overall_b2_first" => $total_data["total_overall_b2_frst"],
+            "total_overall_b3_first" => $total_data["total_overall_b3_frst"],
+            "total_overall_b4_first" => $total_data["total_overall_b4_frst"],
+            "total_vcted_frst" => $total_data["total_vcted_overall_frst"],
+            "total_overall_mild_first" => $total_data["total_overall_mild_frst"],
+            "total_overall_serious_first" => $total_data["total_overall_srs_frst"],
+            "total_overall_deferred_first" => $total_data["total_overall_dfrd_frst"],
+            "total_rfsd_frst" => $total_data["total_overall_rfsd_frst"],
+            "total_overall_wastage_first" => $total_data["total_overall_wstge_frst"],
+            "total_p_cvrge_frst" => $total_data["p_cvrge_overall_frst"],
+            "total_c_rate_frst" => $total_data["total_c_rate_overall_frst"],
+            "total_r_unvcted_frst" => $total_data["total_r_unvcted_overall_frst"],
 
-            "total_overall_a1_second" => $request->total_overall_a1_second,
-            "total_overall_a2_second" => $request->total_overall_a2_second,
-            "total_overall_a3_second" => $request->total_overall_a3_second,
-            "total_overall_a4_second" => $request->total_overall_a4_second,
-            "total_overall_a5_second" => $request->total_overall_a5_second,
-            "total_overall_b1_second" => $request->total_overall_b1_second,
-            "total_overall_b2_second" => $request->total_overall_b2_second,
-            "total_overall_b3_second" => $request->total_overall_b3_second,
-            "total_overall_b4_second" => $request->total_overall_b4_second,
-            "total_vcted_scnd" => $request->total_vcted_scnd,
-            "total_overall_mild_second" => $request->total_overall_mild_second,
-            "total_overall_serious_second" => $request->total_overall_serious_second,
-            "total_overall_deferred_second" => $request->total_overall_deferred_second,
-            "total_rfsd_scnd" => $request->total_rfsd_scnd,
-            "total_overall_wastage_second" => $request->total_overall_wastage_second,
-            "total_p_cvrge_scnd" => $request->total_p_cvrge_scnd,
-            "total_c_rate_scnd" => $request->total_c_rate_scnd,
-            "total_r_unvcted_scnd" => $request->total_r_unvcted_scnd,
+            "total_overall_a1_second" => $total_data["total_overall_a1_scnd"],
+            "total_overall_a2_second" => $total_data["total_overall_a2_scnd"],
+            "total_overall_a3_second" => $total_data["total_overall_a3_scnd"],
+            "total_overall_a4_second" => $total_data["total_overall_a4_scnd"],
+            "total_overall_a5_second" => $total_data["total_overall_a5_scnd"],
+            "total_overall_b1_second" => $total_data["total_overall_b1_scnd"],
+            "total_overall_b2_second" => $total_data["total_overall_b2_scnd"],
+            "total_overall_b3_second" => $total_data["total_overall_b3_scnd"],
+            "total_overall_b4_second" => $total_data["total_overall_b4_scnd"],
+            "total_vcted_scnd" => $total_data["total_vcted_overall_scnd"],
+            "total_overall_mild_second" => $total_data["total_overall_mild_scnd"],
+            "total_overall_serious_second" => $total_data["total_overall_srs_scnd"],
+            "total_overall_deferred_second" => $total_data["total_overall_dfrd_scnd"],
+            "total_rfsd_scnd" => $total_data["total_overall_rfsd_scnd"],
+            "total_overall_wastage_second" => $total_data["total_overall_wstge_scnd"],
+            "total_p_cvrge_scnd" => $total_data["p_cvrge_overall_scnd"],
+            "total_c_rate_scnd" => $total_data["total_c_rate_overall_scnd"],
+            "total_r_unvcted_scnd" => $total_data["total_r_unvcted_overall_scnd"],
 
 
 
@@ -1538,12 +1553,6 @@ class VaccineController extends Controller
 
 
         Session::put('vaccine_saved', true);
-
-        //ibutang nimo sa
-        //sayup mana loy $vaccine->lastPage()
-        //$vaccine->lastPage() turn to $request->lastPage;
-        //kay nag pasa'2 naman, pero dapat imo na siya butangan og value
-
 
 
         return redirect('vaccine/vaccineview'.'/'.$request->province_id."?muncity_filter=".$request->muncity_filter."&last_page=".$request->last_Page);
@@ -4261,6 +4270,15 @@ class VaccineController extends Controller
 
     public function dataCollapseFacility(Request $request)
     {
+        if($request->tricity_id == 'cebu'){
+            $request->tricity_id = 63;
+        }
+        elseif($request->tricity_id == 'mandaue'){
+            $request->tricity_id = 80;
+        }
+        elseif($request->tricity_id == 'lapu'){
+            $request->tricity_id = 76;
+        }
 
         $global_elipop_a1 =  \App\Facility::select(DB::raw("sum(COALESCE(a1,0)) as a1"))->where("tricity_id",$request->tricity_id)->where("id",$request->facility_id)->first()->a1;
         $global_elipop_a2 =  \App\Facility::select(DB::raw("sum(COALESCE(a2,0)) as a2"))->where("tricity_id",$request->tricity_id)->where("id",$request->facility_id)->first()->a2;
@@ -4275,7 +4293,6 @@ class VaccineController extends Controller
 
         if($request->typeof_vaccine == "sinovac")
         {
-
             $total_epop_a1 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_a1 :0; //E_POP_A1_SINOVAC
             $total_epop_a2 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_a2 :0; //E_POP_A2_SINOVAC
             $total_epop_a3 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_a3 :0; //E_POP_A3_SINOVAC
@@ -4292,44 +4309,44 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SINOVAC (SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SINOVAC
 
-            $total_a1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->first()->vaccinated_first :0; //A1_SINOVAC
-            $total_a2_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->first()->vaccinated_first :0; //A2_SINOVAC
-            $total_a3_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->first()->vaccinated_first :0; //A3_SINOVAC
-            $total_a4_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->first()->vaccinated_first :0; //A4_SINOVAC
-            $total_a5_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->first()->vaccinated_first :0; //A5_SINOVAC
-            $total_b1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->first()->vaccinated_first :0; //B1_SINOVAC
-            $total_b2_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->first()->vaccinated_first :0; //B2_SINOVAC
-            $total_b3_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->first()->vaccinated_first :0; //B3_SINOVAC
-            $total_b4_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->first()->vaccinated_first :0; //B4_SINOVAC
+            $total_a1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->first()->vaccinated_first :0; //A1_SINOVAC
+            $total_a2_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->first()->vaccinated_first :0; //A2_SINOVAC
+            $total_a3_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->first()->vaccinated_first :0; //A3_SINOVAC
+            $total_a4_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->first()->vaccinated_first :0; //A4_SINOVAC
+            $total_a5_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->first()->vaccinated_first :0; //A5_SINOVAC
+            $total_b1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->first()->vaccinated_first :0; //B1_SINOVAC
+            $total_b2_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->first()->vaccinated_first :0; //B2_SINOVAC
+            $total_b3_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->first()->vaccinated_first :0; //B3_SINOVAC
+            $total_b4_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->first()->vaccinated_first :0; //B4_SINOVAC
 
 
-            $total_a1_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->first()->vaccinated_second :0; //A1_SINOVAC 2
-            $total_a2_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->first()->vaccinated_second :0; //A2_SINOVAC 2
-            $total_a3_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->first()->vaccinated_second :0; //A3_SINOVAC 2
-            $total_a4_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->first()->vaccinated_second :0; //A4_SINOVAC 2
-            $total_a5_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->first()->vaccinated_second :0; //A5_SINOVAC 2
-            $total_b1_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->first()->vaccinated_second :0; //B1_SINOVAC 2
-            $total_b2_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->first()->vaccinated_second :0; //B2_SINOVAC 2
-            $total_b3_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->first()->vaccinated_second :0; //B3_SINOVAC 2
-            $total_b4_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->first()->vaccinated_second :0; //B4_SINOVAC 2
+            $total_a1_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->first()->vaccinated_second :0; //A1_SINOVAC 2
+            $total_a2_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->first()->vaccinated_second :0; //A2_SINOVAC 2
+            $total_a3_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a3")->first()->vaccinated_second :0; //A3_SINOVAC 2
+            $total_a4_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a4")->first()->vaccinated_second :0; //A4_SINOVAC 2
+            $total_a5_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a5")->first()->vaccinated_second :0; //A5_SINOVAC 2
+            $total_b1_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b1")->first()->vaccinated_second :0; //B1_SINOVAC 2
+            $total_b2_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b2")->first()->vaccinated_second :0; //B2_SINOVAC 2
+            $total_b3_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b3")->first()->vaccinated_second :0; //B3_SINOVAC 2
+            $total_b4_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","b4")->first()->vaccinated_second :0; //B4_SINOVAC 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
-            $total_mild_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->mild_first :0; //MILD_SINOVAC
-            $total_mild_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->mild_second :0; //MILD_SINOVAC 2
+            $total_mild_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->mild_first :0; //MILD_SINOVAC
+            $total_mild_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->mild_second :0; //MILD_SINOVAC 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->serious_first :0; //SERIOUS_SINOVAC
-            $total_srs_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->serious_second :0; //SERIOUS_SINOVAC 2
+            $total_srs_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->serious_first :0; //SERIOUS_SINOVAC
+            $total_srs_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->serious_second :0; //SERIOUS_SINOVAC 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->deferred_first :0; //DEFERRED_SINOVAC
-            $total_dfrd_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->deferred_second :0; //DEFERRED_SINOVAC 2
+            $total_dfrd_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->deferred_first :0; //DEFERRED_SINOVAC
+            $total_dfrd_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->deferred_second :0; //DEFERRED_SINOVAC 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->refused_first :0; //REFUSED_SINOVAC
-            $total_rfsd_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->refused_second :0; //REFUSED_SINOVAC 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->refused_first :0; //REFUSED_SINOVAC
+            $total_rfsd_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->refused_second :0; //REFUSED_SINOVAC 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->wastage_first :0; //WASTAGF_SINOVAC
-            $total_wstge_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->wastage_second :0; //WASTAGE_SINOVAC 2
+            $total_wstge_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->wastage_first :0; //WASTAGF_SINOVAC
+            $total_wstge_scnd =  $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->first()->wastage_second :0; //WASTAGE_SINOVAC 2
 
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_SINOVAC
@@ -4363,43 +4380,43 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_ASTRAZENECA (SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_ASTRAZENECA
 
-            $total_a1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->first()->vaccinated_first :0; //A1_ASTRAZENECA
-            $total_a2_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->first()->vaccinated_first :0; //A2_ASTRAZENECA
-            $total_a3_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->first()->vaccinated_first :0; //A3_ASTRAZENECA
-            $total_a4_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->first()->vaccinated_first :0; //A4_ASTRAZENECA
-            $total_a5_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->first()->vaccinated_first :0; //A5_ASTRAZENECA
-            $total_b1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->first()->vaccinated_first :0; //B1_ASTRAZENECA
-            $total_b2_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->first()->vaccinated_first :0; //B2_ASTRAZENECA
-            $total_b3_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->first()->vaccinated_first :0; //B3_ASTRAZENECA
-            $total_b4_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->first()->vaccinated_first :0; //B4_ASTRAZENECA
+            $total_a1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->first()->vaccinated_first :0; //A1_ASTRAZENECA
+            $total_a2_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->first()->vaccinated_first :0; //A2_ASTRAZENECA
+            $total_a3_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->first()->vaccinated_first :0; //A3_ASTRAZENECA
+            $total_a4_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->first()->vaccinated_first :0; //A4_ASTRAZENECA
+            $total_a5_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->first()->vaccinated_first :0; //A5_ASTRAZENECA
+            $total_b1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->first()->vaccinated_first :0; //B1_ASTRAZENECA
+            $total_b2_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->first()->vaccinated_first :0; //B2_ASTRAZENECA
+            $total_b3_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->first()->vaccinated_first :0; //B3_ASTRAZENECA
+            $total_b4_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->first()->vaccinated_first :0; //B4_ASTRAZENECA
 
-            $total_a1_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->first()->vaccinated_second :0; //A1_ASTRAZENECA 2
-            $total_a2_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->first()->vaccinated_second :0; //A2_ASTRAZENECA 2
-            $total_a3_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->first()->vaccinated_second :0; //A3_ASTRAZENECA 2
-            $total_a4_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->first()->vaccinated_second :0; //A4_ASTRAZENECA 2
-            $total_a5_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->first()->vaccinated_second :0; //A5_ASTRAZENECA 2
-            $total_b1_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->first()->vaccinated_second :0; //B1_ASTRAZENECA 2
-            $total_b2_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->first()->vaccinated_second :0; //B2_ASTRAZENECA 2
-            $total_b3_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->first()->vaccinated_second :0; //B3_ASTRAZENECA 2
-            $total_b4_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->first()->vaccinated_second :0; //B4_ASTRAZENECA 2
+            $total_a1_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->first()->vaccinated_second :0; //A1_ASTRAZENECA 2
+            $total_a2_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->first()->vaccinated_second :0; //A2_ASTRAZENECA 2
+            $total_a3_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->first()->vaccinated_second :0; //A3_ASTRAZENECA 2
+            $total_a4_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a4")->first()->vaccinated_second :0; //A4_ASTRAZENECA 2
+            $total_a5_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a5")->first()->vaccinated_second :0; //A5_ASTRAZENECA 2
+            $total_b1_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b1")->first()->vaccinated_second :0; //B1_ASTRAZENECA 2
+            $total_b2_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b2")->first()->vaccinated_second :0; //B2_ASTRAZENECA 2
+            $total_b3_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b3")->first()->vaccinated_second :0; //B3_ASTRAZENECA 2
+            $total_b4_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","b4")->first()->vaccinated_second :0; //B4_ASTRAZENECA 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
-            $total_mild_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->mild_first :0; //MILD_ASTRAZENECA
-            $total_mild_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->mild_second :0; //MILD_ASTRAZENECA 2
+            $total_mild_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->mild_first :0; //MILD_ASTRAZENECA
+            $total_mild_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->mild_second :0; //MILD_ASTRAZENECA 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->serious_first :0; //SERIOUS_ASTRAZENECA
-            $total_srs_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->serious_second :0; //SERIOUS_ASTRAZENECA 2
+            $total_srs_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->serious_first :0; //SERIOUS_ASTRAZENECA
+            $total_srs_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->serious_second :0; //SERIOUS_ASTRAZENECA 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->deferred_first :0; //DEFERRED_ASTRAZENECA
-            $total_dfrd_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->deferred_second :0; //DEFERRED_ASTRAZENECA 2
+            $total_dfrd_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->deferred_first :0; //DEFERRED_ASTRAZENECA
+            $total_dfrd_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->deferred_second :0; //DEFERRED_ASTRAZENECA 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->refused_first :0; //REFUSED_ASTRAZENECA
-            $total_rfsd_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->refused_second :0; //REFUSED_ASTRAZENECA 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->refused_first :0; //REFUSED_ASTRAZENECA
+            $total_rfsd_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->refused_second :0; //REFUSED_ASTRAZENECA 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->wastage_first :0; //WASTAGF_ASTRAZENECA
-            $total_wstge_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->wastage_second :0; //WASTAGE_ASTRAZENECA 2
+            $total_wstge_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->wastage_first :0; //WASTAGF_ASTRAZENECA
+            $total_wstge_scnd =  $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->first()->wastage_second :0; //WASTAGE_ASTRAZENECA 2
 
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_ASTRAZENECA
@@ -4433,43 +4450,43 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_PFIZER(SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_PFIZER
 
-            $total_a1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->first()->vaccinated_first :0; //A1_PFIZER
-            $total_a2_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->first()->vaccinated_first :0; //A2_PFIZER
-            $total_a3_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->first()->vaccinated_first :0; //A3_PFIZER
-            $total_a4_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->first()->vaccinated_first :0; //A4_PFIZER
-            $total_a5_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->first()->vaccinated_first :0; //A5_PFIZER
-            $total_b1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->first()->vaccinated_first :0; //B1_PFIZER
-            $total_b2_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->first()->vaccinated_first :0; //B2_PFIZER
-            $total_b3_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->first()->vaccinated_first :0; //B3_PFIZER
-            $total_b4_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->first()->vaccinated_first :0; //B4_PFIZER
+            $total_a1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->first()->vaccinated_first :0; //A1_PFIZER
+            $total_a2_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->first()->vaccinated_first :0; //A2_PFIZER
+            $total_a3_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->first()->vaccinated_first :0; //A3_PFIZER
+            $total_a4_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->first()->vaccinated_first :0; //A4_PFIZER
+            $total_a5_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->first()->vaccinated_first :0; //A5_PFIZER
+            $total_b1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->first()->vaccinated_first :0; //B1_PFIZER
+            $total_b2_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->first()->vaccinated_first :0; //B2_PFIZER
+            $total_b3_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->first()->vaccinated_first :0; //B3_PFIZER
+            $total_b4_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->first()->vaccinated_first :0; //B4_PFIZER
 
-            $total_a1_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->first()->vaccinated_second :0; //A1_PFIZER 2
-            $total_a2_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->first()->vaccinated_second :0; //A2_PFIZER 2
-            $total_a3_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->first()->vaccinated_second :0; //A3_PFIZER 2
-            $total_a4_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->first()->vaccinated_second :0; //A4_PFIZER 2
-            $total_a5_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->first()->vaccinated_second :0; //A5_PFIZER 2
-            $total_b1_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->first()->vaccinated_second :0; //B1_PFIZER 2
-            $total_b2_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->first()->vaccinated_second :0; //B2_PFIZER 2
-            $total_b3_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->first()->vaccinated_second :0; //B3_PFIZER 2
-            $total_b4_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->first()->vaccinated_second :0; //B4_PFIZER 2
+            $total_a1_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->first()->vaccinated_second :0; //A1_PFIZER 2
+            $total_a2_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->first()->vaccinated_second :0; //A2_PFIZER 2
+            $total_a3_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->first()->vaccinated_second :0; //A3_PFIZER 2
+            $total_a4_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a4")->first()->vaccinated_second :0; //A4_PFIZER 2
+            $total_a5_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a5")->first()->vaccinated_second :0; //A5_PFIZER 2
+            $total_b1_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b1")->first()->vaccinated_second :0; //B1_PFIZER 2
+            $total_b2_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b2")->first()->vaccinated_second :0; //B2_PFIZER 2
+            $total_b3_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b3")->first()->vaccinated_second :0; //B3_PFIZER 2
+            $total_b4_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","b4")->first()->vaccinated_second :0; //B4_PFIZER 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
-            $total_mild_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->mild_first :0; //MILD_PFIZER
-            $total_mild_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->mild_second :0; //MILD_PFIZER 2
+            $total_mild_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->mild_first :0; //MILD_PFIZER
+            $total_mild_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->mild_second :0; //MILD_PFIZER 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->serious_first :0; //SERIOUS_PFIZER
-            $total_srs_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->serious_second :0; //SERIOUS_PFIZER 2
+            $total_srs_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->serious_first :0; //SERIOUS_PFIZER
+            $total_srs_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->serious_second :0; //SERIOUS_PFIZER 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->deferred_first :0; //DEFERRED_PFIZER
-            $total_dfrd_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->deferred_second :0; //DEFERRED_PFIZER 2
+            $total_dfrd_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->deferred_first :0; //DEFERRED_PFIZER
+            $total_dfrd_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->deferred_second :0; //DEFERRED_PFIZER 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->refused_first :0; //REFUSED_PFIZER
-            $total_rfsd_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->refused_second :0; //REFUSED_PFIZER 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->refused_first :0; //REFUSED_PFIZER
+            $total_rfsd_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->refused_second :0; //REFUSED_PFIZER 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->wastage_first :0; //WASTAGF_PFIZER
-            $total_wstge_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->wastage_second :0; //WASTAGE_PFIZER 2
+            $total_wstge_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->wastage_first :0; //WASTAGF_PFIZER
+            $total_wstge_scnd =  $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->first()->wastage_second :0; //WASTAGE_PFIZER 2
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_PFIZER
             $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_PFIZER 2
@@ -4502,43 +4519,43 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SPUTNIKV((SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SPUTNIKV
 
-            $total_a1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->first()->vaccinated_first :0; //A1_SPUTNIKV
-            $total_a2_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->first()->vaccinated_first :0; //A2_SPUTNIKV
-            $total_a3_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->first()->vaccinated_first :0; //A3_SPUTNIKV
-            $total_a4_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->first()->vaccinated_first :0; //A4_SPUTNIKV
-            $total_a5_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->first()->vaccinated_first :0; //A5_SPUTNIKV
-            $total_b1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->first()->vaccinated_first :0; //B1_SPUTNIKV
-            $total_b2_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->first()->vaccinated_first :0; //B2_SPUTNIKV
-            $total_b3_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->first()->vaccinated_first :0; //B3_SPUTNIKV
-            $total_b4_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->first()->vaccinated_first :0; //B4_SPUTNIKV
+            $total_a1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->first()->vaccinated_first :0; //A1_SPUTNIKV
+            $total_a2_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->first()->vaccinated_first :0; //A2_SPUTNIKV
+            $total_a3_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->first()->vaccinated_first :0; //A3_SPUTNIKV
+            $total_a4_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->first()->vaccinated_first :0; //A4_SPUTNIKV
+            $total_a5_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->first()->vaccinated_first :0; //A5_SPUTNIKV
+            $total_b1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->first()->vaccinated_first :0; //B1_SPUTNIKV
+            $total_b2_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->first()->vaccinated_first :0; //B2_SPUTNIKV
+            $total_b3_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->first()->vaccinated_first :0; //B3_SPUTNIKV
+            $total_b4_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->first()->vaccinated_first :0; //B4_SPUTNIKV
 
-            $total_a1_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->first()->vaccinated_second :0; //A1_SPUTNIKV 2
-            $total_a2_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->first()->vaccinated_second :0; //A2_SPUTNIKV 2
-            $total_a3_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->first()->vaccinated_second :0; //A3_SPUTNIKV 2
-            $total_a4_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->first()->vaccinated_second :0; //A4_SPUTNIKV 2
-            $total_a5_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->first()->vaccinated_second :0; //A5_SPUTNIKV 2
-            $total_b1_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->first()->vaccinated_second :0; //B1_SPUTNIKV 2
-            $total_b2_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->first()->vaccinated_second :0; //B2_SPUTNIKV 2
-            $total_b3_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->first()->vaccinated_second :0; //B3_SPUTNIKV 2
-            $total_b4_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->first()->vaccinated_second :0; //B4_SPUTNIKV 2
+            $total_a1_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->first()->vaccinated_second :0; //A1_SPUTNIKV 2
+            $total_a2_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->first()->vaccinated_second :0; //A2_SPUTNIKV 2
+            $total_a3_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->first()->vaccinated_second :0; //A3_SPUTNIKV 2
+            $total_a4_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a4")->first()->vaccinated_second :0; //A4_SPUTNIKV 2
+            $total_a5_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a5")->first()->vaccinated_second :0; //A5_SPUTNIKV 2
+            $total_b1_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b1")->first()->vaccinated_second :0; //B1_SPUTNIKV 2
+            $total_b2_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b2")->first()->vaccinated_second :0; //B2_SPUTNIKV 2
+            $total_b3_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b3")->first()->vaccinated_second :0; //B3_SPUTNIKV 2
+            $total_b4_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","b4")->first()->vaccinated_second :0; //B4_SPUTNIKV 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
-            $total_mild_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->mild_first :0; //MILD_SPUTNIKV
-            $total_mild_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->mild_second :0; //MILD_SPUTNIKV 2
+            $total_mild_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->mild_first :0; //MILD_SPUTNIKV
+            $total_mild_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->mild_second :0; //MILD_SPUTNIKV 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->serious_first :0; //SERIOUS_SPUTNIKV
-            $total_srs_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->serious_second :0; //SERIOUS_SPUTNIKV 2
+            $total_srs_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->serious_first :0; //SERIOUS_SPUTNIKV
+            $total_srs_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->serious_second :0; //SERIOUS_SPUTNIKV 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->deferred_first :0; //DEFERRED_SPUTNIKV
-            $total_dfrd_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->deferred_second :0; //DEFERRED_SPUTNIKV 2
+            $total_dfrd_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->deferred_first :0; //DEFERRED_SPUTNIKV
+            $total_dfrd_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->deferred_second :0; //DEFERRED_SPUTNIKV 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->refused_first :0; //REFUSED_SPUTNIKV
-            $total_rfsd_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->refused_second :0; //REFUSED_SPUTNIKV 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->refused_first :0; //REFUSED_SPUTNIKV
+            $total_rfsd_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->refused_second :0; //REFUSED_SPUTNIKV 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->wastage_first :0; //WASTAGF_SPUTNIKV
-            $total_wstge_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->wastage_second :0; //WASTAGE_SPUTNIKV 2
+            $total_wstge_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->wastage_first :0; //WASTAGF_SPUTNIKV
+            $total_wstge_scnd =  $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->first()->wastage_second :0; //WASTAGE_SPUTNIKV 2
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_SPUTNIKV
             $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_SPUTNIKV 2
@@ -4571,44 +4588,44 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_MODERNA((SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_MODERNA
 
-            $total_a1_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->first()->vaccinated_first :0; //A1_MODERNA
-            $total_a2_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a2")->first()->vaccinated_first :0; //A2_MODERNA
-            $total_a3_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a3")->first()->vaccinated_first :0; //A3_MODERNA
-            $total_a4_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a4")->first()->vaccinated_first :0; //A4_MODERNA
-            $total_a5_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a5")->first()->vaccinated_first :0; //A5_MODERNA
-            $total_b1_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b1")->first()->vaccinated_first :0; //B1_MODERNA
-            $total_b2_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b2")->first()->vaccinated_first :0; //B2_MODERNA
-            $total_b3_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b3")->first()->vaccinated_first :0; //B3_MODERNA
-            $total_b4_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b4")->first()->vaccinated_first :0; //B4_MODERNA
+            $total_a1_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->first()->vaccinated_first :0; //A1_MODERNA
+            $total_a2_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a2")->first()->vaccinated_first :0; //A2_MODERNA
+            $total_a3_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a3")->first()->vaccinated_first :0; //A3_MODERNA
+            $total_a4_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a4")->first()->vaccinated_first :0; //A4_MODERNA
+            $total_a5_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a5")->first()->vaccinated_first :0; //A5_MODERNA
+            $total_b1_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b1")->first()->vaccinated_first :0; //B1_MODERNA
+            $total_b2_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b2")->first()->vaccinated_first :0; //B2_MODERNA
+            $total_b3_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b3")->first()->vaccinated_first :0; //B3_MODERNA
+            $total_b4_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b4")->first()->vaccinated_first :0; //B4_MODERNA
 
-            $total_a1_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->first()->vaccinated_second :0; //A1_MODERNA 2
-            $total_a2_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a2")->first()->vaccinated_second :0; //A2_MODERNA 2
-            $total_a3_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a3")->first()->vaccinated_second :0; //A3_MODERNA 2
-            $total_a4_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a4")->first()->vaccinated_second :0; //A4_MODERNA 2
-            $total_a5_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a5")->first()->vaccinated_second :0; //A5_MODERNA 2
-            $total_b1_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b1")->first()->vaccinated_second :0; //B1_MODERNA 2
-            $total_b2_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b2")->first()->vaccinated_second :0; //B2_MODERNA 2
-            $total_b3_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b3")->first()->vaccinated_second :0; //B3_MODERNA 2
-            $total_b4_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b4")->first()->vaccinated_second :0; //B4_MODERNA 2
+            $total_a1_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->first()->vaccinated_second :0; //A1_MODERNA 2
+            $total_a2_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a2")->first()->vaccinated_second :0; //A2_MODERNA 2
+            $total_a3_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a3")->first()->vaccinated_second :0; //A3_MODERNA 2
+            $total_a4_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a4")->first()->vaccinated_second :0; //A4_MODERNA 2
+            $total_a5_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a5")->first()->vaccinated_second :0; //A5_MODERNA 2
+            $total_b1_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b1")->first()->vaccinated_second :0; //B1_MODERNA 2
+            $total_b2_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b2")->first()->vaccinated_second :0; //B2_MODERNA 2
+            $total_b3_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b3")->first()->vaccinated_second :0; //B3_MODERNA 2
+            $total_b4_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","b4")->first()->vaccinated_second :0; //B4_MODERNA 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
 
-            $total_mild_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->mild_first :0; //MILD_MODERNA
-            $total_mild_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->mild_second :0; //MILD_MODERNA 2
+            $total_mild_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->mild_first :0; //MILD_MODERNA
+            $total_mild_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->mild_second :0; //MILD_MODERNA 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->serious_first :0; //SERIOUS_MODERNA
-            $total_srs_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->serious_second :0; //SERIOUS_MODERNA 2
+            $total_srs_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->serious_first :0; //SERIOUS_MODERNA
+            $total_srs_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->serious_second :0; //SERIOUS_MODERNA 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->deferred_first :0; //DEFERRED_MODERNA
-            $total_dfrd_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->deferred_second :0; //DEFERRED_MODERNA 2
+            $total_dfrd_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->deferred_first :0; //DEFERRED_MODERNA
+            $total_dfrd_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->deferred_second :0; //DEFERRED_MODERNA 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->refused_first :0; //REFUSED_MODERNA
-            $total_rfsd_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->refused_second :0; //REFUSED_MODERNA 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->refused_first :0; //REFUSED_MODERNA
+            $total_rfsd_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->refused_second :0; //REFUSED_MODERNA 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->wastage_first :0; //WASTAGF_MODERNA
-            $total_wstge_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->wastage_second :0; //WASTAGE_MODERNA 2
+            $total_wstge_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->wastage_first :0; //WASTAGF_MODERNA
+            $total_wstge_scnd =  $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->first()->wastage_second :0; //WASTAGE_MODERNA 2
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_MODERNA
             $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_MODERNA 2
@@ -4640,43 +4657,43 @@ class VaccineController extends Controller
             $total_vallocated_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_JOHNSON((SD)
             $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_JOHNSON
 
-            $total_a1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->first()->vaccinated_first :0; //A1_JOHNSON
-            $total_a2_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a2")->first()->vaccinated_first :0; //A2_JOHNSON
-            $total_a3_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a3")->first()->vaccinated_first :0; //A3_JOHNSON
-            $total_a4_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a4")->first()->vaccinated_first :0; //A4_JOHNSON
-            $total_a5_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a5")->first()->vaccinated_first :0; //A5_JOHNSON
-            $total_b1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b1")->first()->vaccinated_first :0; //B1_JOHNSON
-            $total_b2_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b2")->first()->vaccinated_first :0; //B2_JOHNSON
-            $total_b3_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b3")->first()->vaccinated_first :0; //B3_JOHNSON
-            $total_b4_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b4")->first()->vaccinated_first :0; //B4_JOHNSON
+            $total_a1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->first()->vaccinated_first :0; //A1_JOHNSON
+            $total_a2_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a2")->first()->vaccinated_first :0; //A2_JOHNSON
+            $total_a3_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a3")->first()->vaccinated_first :0; //A3_JOHNSON
+            $total_a4_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a4")->first()->vaccinated_first :0; //A4_JOHNSON
+            $total_a5_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a5")->first()->vaccinated_first :0; //A5_JOHNSON
+            $total_b1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b1")->first()->vaccinated_first :0; //B1_JOHNSON
+            $total_b2_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b2")->first()->vaccinated_first :0; //B2_JOHNSON
+            $total_b3_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b3")->first()->vaccinated_first :0; //B3_JOHNSON
+            $total_b4_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b4")->first()->vaccinated_first :0; //B4_JOHNSON
 
-            $total_a1_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->first()->vaccinated_second :0; //A1_JOHNSON 2
-            $total_a2_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a2")->first()->vaccinated_second :0; //A2_JOHNSON 2
-            $total_a3_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a3")->first()->vaccinated_second :0; //A3_JOHNSON 2
-            $total_a4_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a4")->first()->vaccinated_second :0; //A4_JOHNSON 2
-            $total_a5_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a5")->first()->vaccinated_second :0; //A5_JOHNSON 2
-            $total_b1_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b1")->first()->vaccinated_second :0; //B1_JOHNSON 2
-            $total_b2_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b2")->first()->vaccinated_second :0; //B2_JOHNSON 2
-            $total_b3_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b3")->first()->vaccinated_second :0; //B3_JOHNSON 2
-            $total_b4_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b4")->first()->vaccinated_second :0; //B4_JOHNSON 2
+            $total_a1_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->first()->vaccinated_second :0; //A1_JOHNSON 2
+            $total_a2_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a2")->first()->vaccinated_second :0; //A2_JOHNSON 2
+            $total_a3_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a3")->first()->vaccinated_second :0; //A3_JOHNSON 2
+            $total_a4_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a4")->first()->vaccinated_second :0; //A4_JOHNSON 2
+            $total_a5_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a5")->first()->vaccinated_second :0; //A5_JOHNSON 2
+            $total_b1_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b1")->first()->vaccinated_second :0; //B1_JOHNSON 2
+            $total_b2_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b2")->first()->vaccinated_second :0; //B2_JOHNSON 2
+            $total_b3_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b3")->first()->vaccinated_second :0; //B3_JOHNSON 2
+            $total_b4_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as vaccinated_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","b4")->first()->vaccinated_second :0; //B4_JOHNSON 2
 
             $total_vcted_frst = $total_a1_frst + $total_a2_frst + $total_a3_frst + $total_a4_frst + $total_a5_frst + $total_b1_frst + $total_b1_frst + $total_b3_frst + $total_b4_frst;
             $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd + $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd;
 
-            $total_mild_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->mild_first :0; //MILD_JOHNSON
-            $total_mild_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->mild_second :0; //MILD_JOHNSON 2
+            $total_mild_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as mild_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->mild_first :0; //MILD_JOHNSON
+            $total_mild_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as mild_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->mild_second :0; //MILD_JOHNSON 2
 
-            $total_srs_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->serious_first :0; //SERIOUS_JOHNSON
-            $total_srs_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->serious_second :0; //SERIOUS_JOHNSON 2
+            $total_srs_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as serious_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->serious_first :0; //SERIOUS_JOHNSON
+            $total_srs_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as serious_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->serious_second :0; //SERIOUS_JOHNSON 2
 
-            $total_dfrd_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->deferred_first :0; //DEFERRED_JOHNSON
-            $total_dfrd_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->deferred_second :0; //DEFERRED_JOHNSON 2
+            $total_dfrd_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as deferred_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->deferred_first :0; //DEFERRED_JOHNSON
+            $total_dfrd_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as deferred_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->deferred_second :0; //DEFERRED_JOHNSON 2
 
-            $total_rfsd_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->refused_first :0; //REFUSED_JOHNSON
-            $total_rfsd_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->refused_second :0; //REFUSED_JOHNSON 2
+            $total_rfsd_frst =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as refused_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->refused_first :0; //REFUSED_JOHNSON
+            $total_rfsd_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as refused_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->refused_second :0; //REFUSED_JOHNSON 2
 
-            $total_wstge_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->wastage_first :0; //WASTAGF_JOHNSON
-            $total_wstge_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->wastage_second :0; //WASTAGE_JOHNSON 2
+            $total_wstge_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as wastage_first"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->wastage_first :0; //WASTAGF_JOHNSON
+            $total_wstge_scnd =  $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as wastage_second"))->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->first()->wastage_second :0; //WASTAGE_JOHNSON 2
 
 
             $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_JOHNSON
@@ -4710,46 +4727,45 @@ class VaccineController extends Controller
 
             $total_vallocated_overall =  $total_vallocated_overall_frst + $total_vallocated_overall_scnd ;
 
-            $total_overall_a1_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a1_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a1")->first()->total_overall_a1_frst; //A1_OVERALL
-            $total_overall_a2_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a2_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a2")->first()->total_overall_a2_frst; //A2_OVERALL
-            $total_overall_a3_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a3_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a3")->first()->total_overall_a3_frst; //A3_OVERALL
-            $total_overall_a4_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a4_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a4")->first()->total_overall_a4_frst; //A4_OVERALL
-            $total_overall_a5_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a5_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a5")->first()->total_overall_a5_frst; //A5_OVERALL
-            $total_overall_b1_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b1_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b1")->first()->total_overall_b1_frst; //B1_OVERALL
-            $total_overall_b2_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b2_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b2")->first()->total_overall_b2_frst; //B2_OVERALL
-            $total_overall_b3_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b3_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b3")->first()->total_overall_b3_frst; //B3_OVERALL
-            $total_overall_b4_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b4_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b4")->first()->total_overall_b4_frst; //B4_OVERALL
+            $total_overall_a1_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a1_frst"))->where("facility_id",$request->facility_id)->where("priority","a1")->first()->total_overall_a1_frst; //A1_OVERALL
+            $total_overall_a2_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a2_frst"))->where("facility_id",$request->facility_id)->where("priority","a2")->first()->total_overall_a2_frst; //A2_OVERALL
+            $total_overall_a3_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a3_frst"))->where("facility_id",$request->facility_id)->where("priority","a3")->first()->total_overall_a3_frst; //A3_OVERALL
+            $total_overall_a4_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a4_frst"))->where("facility_id",$request->facility_id)->where("priority","a4")->first()->total_overall_a4_frst; //A4_OVERALL
+            $total_overall_a5_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a5_frst"))->where("facility_id",$request->facility_id)->where("priority","a5")->first()->total_overall_a5_frst; //A5_OVERALL
+            $total_overall_b1_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b1_frst"))->where("facility_id",$request->facility_id)->where("priority","b1")->first()->total_overall_b1_frst; //B1_OVERALL
+            $total_overall_b2_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b2_frst"))->where("facility_id",$request->facility_id)->where("priority","b2")->first()->total_overall_b2_frst; //B2_OVERALL
+            $total_overall_b3_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b3_frst"))->where("facility_id",$request->facility_id)->where("priority","b3")->first()->total_overall_b3_frst; //B3_OVERALL
+            $total_overall_b4_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_b4_frst"))->where("facility_id",$request->facility_id)->where("priority","b4")->first()->total_overall_b4_frst; //B4_OVERALL
 
-            $total_overall_a1_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a1_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a1")->first()->total_overall_a1_scnd; //A1_OVERALL
-            $total_overall_a2_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a2_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a2")->first()->total_overall_a2_scnd; //A2_OVERALL
-            $total_overall_a3_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a3_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a3")->first()->total_overall_a3_scnd; //A3_OVERALL
-            $total_overall_a4_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a4_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a4")->first()->total_overall_a4_scnd; //A4_OVERALL
-            $total_overall_a5_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a5_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","a5")->first()->total_overall_a5_scnd; //A5_OVERALL
-            $total_overall_b1_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b1_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b1")->first()->total_overall_b1_scnd; //B1_OVERALL
-            $total_overall_b2_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b2_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b2")->first()->total_overall_b2_scnd; //B2_OVERALL
-            $total_overall_b3_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b3_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b3")->first()->total_overall_b3_scnd; //B3_OVERALL
-            $total_overall_b4_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b4_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("priority","b4")->first()->total_overall_b4_scnd; //B4_OVERALL
+            $total_overall_a1_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a1_scnd"))->where("facility_id",$request->facility_id)->where("priority","a1")->first()->total_overall_a1_scnd; //A1_OVERALL
+            $total_overall_a2_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a2_scnd"))->where("facility_id",$request->facility_id)->where("priority","a2")->first()->total_overall_a2_scnd; //A2_OVERALL
+            $total_overall_a3_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a3_scnd"))->where("facility_id",$request->facility_id)->where("priority","a3")->first()->total_overall_a3_scnd; //A3_OVERALL
+            $total_overall_a4_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a4_scnd"))->where("facility_id",$request->facility_id)->where("priority","a4")->first()->total_overall_a4_scnd; //A4_OVERALL
+            $total_overall_a5_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_a5_scnd"))->where("facility_id",$request->facility_id)->where("priority","a5")->first()->total_overall_a5_scnd; //A5_OVERALL
+            $total_overall_b1_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b1_scnd"))->where("facility_id",$request->facility_id)->where("priority","b1")->first()->total_overall_b1_scnd; //B1_OVERALL
+            $total_overall_b2_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b2_scnd"))->where("facility_id",$request->facility_id)->where("priority","b2")->first()->total_overall_b2_scnd; //B2_OVERALL
+            $total_overall_b3_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b3_scnd"))->where("facility_id",$request->facility_id)->where("priority","b3")->first()->total_overall_b3_scnd; //B3_OVERALL
+            $total_overall_b4_scnd = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_second,0)) as total_overall_b4_scnd"))->where("facility_id",$request->facility_id)->where("priority","b4")->first()->total_overall_b4_scnd; //B4_OVERALL
 
             $total_vcted_overall_frst = $total_overall_a1_frst + $total_overall_a2_frst + $total_overall_a3_frst + $total_overall_a4_frst + $total_overall_a5_frst +
                 $total_overall_b1_frst + $total_overall_b2_frst + $total_overall_b3_frst + $total_overall_b4_frst ;
             $total_vcted_overall_scnd = $total_overall_a1_scnd + $total_overall_a2_scnd + $total_overall_a3_scnd + $total_overall_a4_scnd + $total_overall_a5_scnd +
                 $total_overall_b1_scnd + $total_overall_b2_scnd + $total_overall_b3_scnd + $total_overall_b4_scnd ;
 
-            $total_overall_mild_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as total_overall_mild_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_mild_frst; //MILD_FIRST
-            $total_overall_mild_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as total_overall_mild_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_mild_scnd; //MILD_SECOND
+            $total_overall_mild_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_first,0)) as total_overall_mild_frst"))->where("facility_id",$request->facility_id)->first()->total_overall_mild_frst; //MILD_FIRST
+            $total_overall_mild_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(mild_second,0)) as total_overall_mild_scnd"))->where("facility_id",$request->facility_id)->first()->total_overall_mild_scnd; //MILD_SECOND
 
-            $total_overall_srs_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as total_overall_srs_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_srs_frst; //SERIOUS FIRST
-            $total_overall_srs_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as total_overall_srs_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_srs_scnd; //SERIOUS SECOND
+            $total_overall_srs_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_first,0)) as total_overall_srs_frst"))->where("facility_id",$request->facility_id)->first()->total_overall_srs_frst; //SERIOUS FIRST
+            $total_overall_srs_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(serious_second,0)) as total_overall_srs_scnd"))->where("facility_id",$request->facility_id)->first()->total_overall_srs_scnd; //SERIOUS SECOND
 
-            $total_overall_dfrd_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as total_overall_dfrd_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_dfrd_frst; //DEFERRED FIRST
-            $total_overall_dfrd_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as total_overall_dfrd_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_dfrd_scnd; //DEFERRED SECOND
+            $total_overall_dfrd_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_first,0)) as total_overall_dfrd_frst"))->where("facility_id",$request->facility_id)->first()->total_overall_dfrd_frst; //DEFERRED FIRST
+            $total_overall_dfrd_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(deferred_second,0)) as total_overall_dfrd_scnd"))->where("facility_id",$request->facility_id)->first()->total_overall_dfrd_scnd; //DEFERRED SECOND
 
-            $total_overall_rfsd_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as total_overall_rfsd_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_rfsd_frst; //REFUSED FIRST
-            $total_overall_rfsd_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as total_overall_rfsd_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_rfsd_scnd; //REFUSED SECOND
+            $total_overall_rfsd_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_first,0)) as total_overall_rfsd_frst"))->where("facility_id",$request->facility_id)->first()->total_overall_rfsd_frst; //REFUSED FIRST
+            $total_overall_rfsd_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(refused_second,0)) as total_overall_rfsd_scnd"))->where("facility_id",$request->facility_id)->first()->total_overall_rfsd_scnd; //REFUSED SECOND
 
-            $total_overall_wstge_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as total_overall_wstge_frst"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_wstge_frst; //WASTAGE FIRST
-            $total_overall_wstge_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as total_overall_wstge_scnd"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->first()->total_overall_wstge_scnd; //WASTAGE SECOND
-
+            $total_overall_wstge_frst =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_first,0)) as total_overall_wstge_frst"))->where("facility_id",$request->facility_id)->first()->total_overall_wstge_frst; //WASTAGE FIRST
+            $total_overall_wstge_scnd =  VaccineAccomplished::select(\DB::raw("SUM(COALESCE(wastage_second,0)) as total_overall_wstge_scnd"))->where("facility_id",$request->facility_id)->first()->total_overall_wstge_scnd; //WASTAGE SECOND
 
             $p_cvrge_overall_frst = $total_vcted_overall_frst / $total_epop * 100; //PERCENT_COVERAGE_JOHNSON
             $p_cvrge_overall_scnd = $total_vcted_overall_scnd / $total_epop * 100; //PERCENT_COVERAGE_JOHNSON 2
@@ -4764,8 +4780,7 @@ class VaccineController extends Controller
             $view = 'vaccine.collapse_facility.total';
         }
 
-        return view($view,[
-
+        $data = [
             "facility_id" => $request->facility_id,
             "tricity_id" => $request->tricity_id,
             "total_epop_a1" => $total_epop_a1,
@@ -4860,12 +4875,15 @@ class VaccineController extends Controller
             "total_c_rate_overall_scnd" => $total_c_rate_overall_scnd,
             "total_r_unvcted_overall_frst" => $total_r_unvcted_overall_frst,
             "total_r_unvcted_overall_scnd" => $total_r_unvcted_overall_scnd,
+        ];
 
 
 
+        if($request->facility_content == "true")
+            return $data;
 
 
-        ]);
+        return view($view,$data);
     }
 
 

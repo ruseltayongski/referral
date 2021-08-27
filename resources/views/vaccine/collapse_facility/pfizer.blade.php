@@ -14,7 +14,7 @@
     <td rowspan="2" style="color:black;" class="total_epop_pfizer{{ $row->id }}">{{ $total_epop }} </td>  <!-- TOTAL_E_POP_PFIZER -->
     <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_frst{{ $row->id }}">{{ $allocated_first }}</td>  <!-- VACCINE ALLOCATED_PFIZER (FD) -->
     <td rowspan="2" style="color:black;" class="total_vallocated_pfizer_scnd{{ $row->id }}">{{ $allocated_first }}</td>  <!-- VACCINE ALLOCATED_PFIZER(SD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER --> H
+    <td rowspan="2" style="color:black;" class="total_vallocated_pfizer{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_PFIZER -->
     <td style="color:black;">
         <span class="label label-success total_pfizer_a1_frst{{ $row->id }}">{{ $total_a1_frst }}</span>  <!-- A1_PFIZER  -->
     </td>

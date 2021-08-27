@@ -97,7 +97,7 @@
         <td rowspan="2">
 
         </td> <!-- 1-3 -->
-        <td rowspan="2">{{ $total_epop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
+        <td rowspan="2" >{{ $total_epop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a3 }}</td> <!-- A3 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a4 }}</td> <!-- A4 SINOVAC FIRST -->
@@ -107,7 +107,7 @@
         <td rowspan="2">{{ $total_epop_svac_b3 }}</td> <!-- B3 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_b4 }}</td> <!-- B4 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
-        <td rowspan="2">{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
+        <td rowspan="2" >{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac }}</td><!-- VACCINE ALLOCATED TOTAL SINOVAC -->
         <td>
