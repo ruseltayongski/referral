@@ -12,9 +12,9 @@
     <td rowspan="2" style="color:black;" class="total_epop_johnson_b3{{ $row->id }}">{{ $total_epop_b3 }}</td>  <!-- B3 EPOP JOHNSON -->
     <td rowspan="2" style="color:black;" class="total_epop_johnson_b4{{ $row->id }}">{{ $total_epop_b4 }}</td>  <!-- B4 EPOP JOHNSON -->
     <td rowspan="2" style="color:black;" class="total_epop_johnson{{ $row->id }}">{{ $total_epop }} </td>  <!-- TOTAL_E_POP_JOHNSON -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_johnson_frst{{ $row->id }}">{{ $total_vallocated_johnson_frst }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (FD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_johnson_scnd{{ $row->id }}">{{ $total_vallocated_johnson_scnd }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (SD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_johnson{{ $row->id }}">{{ $total_vallocated_johnson }}</td>  <!-- TOTAL VACCINE ALLOCATED_JOHNSON -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_johnson_frst{{ $row->id }}">{{ $allocated_first }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (FD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_johnson_scnd{{ $row->id }}">{{ $allocated_second }}</td>  <!-- VACCINE ALLOCATED_JOHNSON (SD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_johnson{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_JOHNSON -->
     <td style="color:black;">
         <span class="label label-success total_johnson_a1_frst{{ $row->id }}">{{ $total_a1_frst }}</span>  <!-- A1_JOHNSON  -->
     </td>

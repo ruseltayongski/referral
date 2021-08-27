@@ -3678,9 +3678,10 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 :0; //E_POP_B3_SINOVAC
            $total_epop_b4 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 :0; //E_POP_B4_SINOVAC
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            $total_vallocated_frst  = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_SINOVAC (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SINOVAC (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SINOVAC
 
            $total_a1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_SINOVAC
@@ -3723,9 +3724,6 @@ class VaccineController extends Controller
            $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd +
                                $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd; //TOTAL VACCINATED_SINOVAC SECOND
 
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
-
            $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_SINOVAC
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_SINOVAC 2
 
@@ -3749,9 +3747,10 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 :0; //E_POP_B3_ASTRA
            $total_epop_b4 =$request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 :0; //E_POP_B4_ASTRA
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            $total_vallocated_frst  = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_ASTRA (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_ASTRA (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;
 
            $total_a1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_ASTRA
@@ -3794,10 +3793,6 @@ class VaccineController extends Controller
            $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd +
                                      $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd ; //TOTAL VACCINATED_ASTRA SECOND
 
-           $total_vallocated = $total_vallocated_frst + $total_vallocated_scnd; //TOTAL VACCINE ALLOCATED_ASTRA
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
-
            $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_ASTRA
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_ASTRA 2
 
@@ -3822,10 +3817,11 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 : 0; //E_POP_B3_PFIZER
            $total_epop_b4 = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 : 0; //E_POP_B4_PFIZER
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            //VACCINE ALLOCATED
            $total_vallocated_frst  = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0;  //VACCINE ALLOCATED_PFIZER (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_PFIZER (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;
 
            $total_a1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_PFIZER
@@ -3868,10 +3864,6 @@ class VaccineController extends Controller
            $total_vcted_scnd =  $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a4_scnd +
                                 $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd  ; // TOTAL VACCINATED_PFIZER SECOND
 
-           $total_vallocated = $total_vallocated_frst + $total_vallocated_scnd; //TOTAL VACCINE ALLOCATED_PFIZER
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
-
            $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_PFIZER
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_PFIZER 2
 
@@ -3896,9 +3888,10 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 : 0; //E_POP_B3_SPUTNIKV
            $total_epop_b4 =$request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 : 0; //E_POP_B4_SPUTNIKV
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            $total_vallocated_frst  = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_SPUTNIKV (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SPUTNIKV (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;
 
            $total_a1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_SPUTNIKV
@@ -3941,9 +3934,6 @@ class VaccineController extends Controller
            $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd +
                                $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd; //TOTAL VACCINATED_SPUTNIKV SECOND
 
-           $total_vallocated = $total_vallocated_frst + $total_vallocated_scnd; //TOTAL VACCINE ALLOCATED_SPUTNIKV
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
 
            $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_SPUTNIKV
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_SPUTNIKV 2
@@ -3968,9 +3958,10 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "moderna"  || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 : 0; //E_POP_B3_MODERNA
            $total_epop_b4 = $request->typeof_vaccine == "moderna"  || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 : 0; //E_POP_B4_MODERNA
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            $total_vallocated_frst  = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_MODERNA (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_MODERNA (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;
 
            $total_a1_frst = $request->typeof_vaccine == "moderna"  || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_MODERNA
@@ -4013,10 +4004,6 @@ class VaccineController extends Controller
            $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd +
                                $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd; //TOTAL VACCINATED_MODERNA SECOND
 
-           $total_vallocated = $total_vallocated_frst + $total_vallocated_scnd; //TOTAL VACCINE ALLOCATED_MODERNA
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
-
            $p_cvrge_frst = $total_vcted_frst / $total_epop* 100; //PERCENT_COVERAGE_MODERNA
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_MODERNA 2
 
@@ -4040,9 +4027,10 @@ class VaccineController extends Controller
            $total_epop_b3 = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 : 0; //E_POP_B3_JOHNSON
            $total_epop_b4 = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 : 0; //E_POP_B4_JOHNSON
 
+           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
+
            $total_vallocated_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  $request->allocated_first :0; //VACCINE ALLOCATED_MODERNA (FD)
            $total_vallocated_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_MODERNA (SD)
-
            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;
 
            $total_a1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->whereNull("facility_id")->first()->vaccinated_first :0; //A1_JOHNSON
@@ -4085,9 +4073,6 @@ class VaccineController extends Controller
            $total_vcted_scnd = $total_a1_scnd + $total_a2_scnd + $total_a3_scnd + $total_a4_scnd + $total_a5_scnd +
                                $total_b1_scnd + $total_b2_scnd + $total_b3_scnd + $total_b4_scnd; //TOTAL VACCINATED_JOHNSON SECOND
 
-           $total_vallocated = $total_vallocated_frst + $total_vallocated_scnd; //TOTAL VACCINE ALLOCATED_JOHNSON
-
-           $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
 
            $p_cvrge_frst = $total_vcted_frst / $total_epop * 100; //PERCENT_COVERAGE_JOHNSON
            $p_cvrge_scnd = $total_vcted_scnd / $total_epop * 100; //PERCENT_COVERAGE_JOHNSON 2
@@ -4118,7 +4103,7 @@ class VaccineController extends Controller
            $total_vallocated_overall_frst = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)+COALESCE(pfizer_allocated_first,0)+COALESCE(sputnikv_allocated_first,0)+COALESCE(moderna_allocated_first,0)+COALESCE(johnson_allocated_first,0)) as total_vallocated_overall_frst"))->where("province_id",$request->province_id)->where("id",$request->muncity_id)->first()->total_vallocated_overall_frst;  //VACCINE ALLOCATED_MODERNA (FD)
            $total_vallocated_overall_scnd = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)+COALESCE(pfizer_allocated_second,0)+COALESCE(sputnikv_allocated_second,0)+COALESCE(moderna_allocated_second,0)+COALESCE(johnson_allocated_second,0)) as total_vallocated_overall_scnd"))->where("province_id",$request->province_id)->where("id",$request->muncity_id)->first()->total_vallocated_overall_scnd;  //VACCINE ALLOCATED_MODERNA (SD)
 
-            $total_vallocated_overall =  $total_vallocated_overall_frst + $total_vallocated_overall_scnd ;
+           $total_vallocated_overall =  $total_vallocated_overall_frst + $total_vallocated_overall_scnd ;
 
            $total_overall_a1_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a1_frst"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("priority","a1")->whereNull("facility_id")->first()->total_overall_a1_frst; //A1_OVERALL
            $total_overall_a2_frst = VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as total_overall_a2_frst"))->where("province_id",$request->province_id)->where("muncity_id",$request->muncity_id)->where("priority","a2")->whereNull("facility_id")->first()->total_overall_a2_frst; //A2_OVERALL
@@ -4301,13 +4286,11 @@ class VaccineController extends Controller
             $total_epop_b3 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_b3 :0; //E_POP_B3_SINOVAC
             $total_epop_b4 = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 :0; //E_POP_B4_SINOVAC
 
-            $total_vallocated_frst  = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_SINOVAC (FD)
-            $total_vallocated_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SINOVAC (SD)
-
-            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SINOVAC
-
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
 
+            $total_vallocated_frst  = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_SINOVAC (FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SINOVAC (SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SINOVAC
 
             $total_a1_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a1")->first()->vaccinated_first :0; //A1_SINOVAC
             $total_a2_frst = $request->typeof_vaccine == "sinovac" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Sinovac")->where("priority","a2")->first()->vaccinated_first :0; //A2_SINOVAC
@@ -4376,6 +4359,10 @@ class VaccineController extends Controller
 
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
 
+            $total_vallocated_frst  = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_ASTRAZENECA (FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_ASTRAZENECA (SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_ASTRAZENECA
+
             $total_a1_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a1")->first()->vaccinated_first :0; //A1_ASTRAZENECA
             $total_a2_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a2")->first()->vaccinated_first :0; //A2_ASTRAZENECA
             $total_a3_frst = $request->typeof_vaccine == "astrazeneca" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Astrazeneca")->where("priority","a3")->first()->vaccinated_first :0; //A3_ASTRAZENECA
@@ -4442,6 +4429,10 @@ class VaccineController extends Controller
 
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
 
+            $total_vallocated_frst  = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_PFIZER (FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_PFIZER(SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_PFIZER
+
             $total_a1_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a1")->first()->vaccinated_first :0; //A1_PFIZER
             $total_a2_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a2")->first()->vaccinated_first :0; //A2_PFIZER
             $total_a3_frst = $request->typeof_vaccine == "pfizer" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Pfizer")->where("priority","a3")->first()->vaccinated_first :0; //A3_PFIZER
@@ -4507,6 +4498,10 @@ class VaccineController extends Controller
 
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
 
+            $total_vallocated_frst  = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_SPUTNIKV(FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_SPUTNIKV((SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_SPUTNIKV
+
             $total_a1_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a1")->first()->vaccinated_first :0; //A1_SPUTNIKV
             $total_a2_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a2")->first()->vaccinated_first :0; //A2_SPUTNIKV
             $total_a3_frst = $request->typeof_vaccine == "sputnikv" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","SputnikV")->where("priority","a3")->first()->vaccinated_first :0; //A3_SPUTNIKV
@@ -4555,7 +4550,6 @@ class VaccineController extends Controller
             $total_r_unvcted_scnd = $total_epop - $total_vcted_scnd - $total_rfsd_scnd; //REMAINING UNVACCINATED_SPUTNIKV 2
 
 
-
             $view = 'vaccine.collapse_facility.sputnikv';
         }
         elseif ($request->typeof_vaccine == "moderna")
@@ -4572,6 +4566,10 @@ class VaccineController extends Controller
             $total_epop_b4 = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? $global_elipop_b4 :0; //E_POP_B4_MODERNA
 
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
+
+            $total_vallocated_frst  = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_MODERNA (FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_MODERNA((SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_MODERNA
 
             $total_a1_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a1")->first()->vaccinated_first :0; //A1_MODERNA
             $total_a2_frst = $request->typeof_vaccine == "moderna" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Moderna")->where("priority","a2")->first()->vaccinated_first :0; //A2_MODERNA
@@ -4638,6 +4636,10 @@ class VaccineController extends Controller
 
             $total_epop = $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 +$total_epop_b3 + $total_epop_b4;
 
+            $total_vallocated_frst  = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? $request->allocated_first : 0; //VACCINE ALLOCATED_JOHNSON (FD)
+            $total_vallocated_scnd = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ?  $request->allocated_second :0; //VACCINE ALLOCATED_JOHNSON((SD)
+            $total_vallocated =  $total_vallocated_frst  + $total_vallocated_scnd;  //TOTAL VACCINE ALLOCATED_JOHNSON
+
             $total_a1_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a1")->first()->vaccinated_first :0; //A1_JOHNSON
             $total_a2_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a2")->first()->vaccinated_first :0; //A2_JOHNSON
             $total_a3_frst = $request->typeof_vaccine == "johnson" || empty($request->typeof_vaccine_filter) ? \App\VaccineAccomplished::select(\DB::raw("SUM(COALESCE(vaccinated_first,0)) as vaccinated_first"))->where("province_id",$request->province_id)->where("facility_id",$request->facility_id)->where("typeof_vaccine","Johnson")->where("priority","a3")->first()->vaccinated_first :0; //A3_JOHNSON
@@ -4703,8 +4705,8 @@ class VaccineController extends Controller
 
             $total_epop =  $total_epop_a1 + $total_epop_a2 + $total_epop_a3 + $total_epop_a4 + $total_epop_a5 + $total_epop_b1 + $total_epop_b2 + $total_epop_b3 + $total_epop_b4;
 
-            $total_vallocated_overall_frst = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)+COALESCE(pfizer_allocated_first,0)+COALESCE(sputnikv_allocated_first,0)+COALESCE(moderna_allocated_first,0)+COALESCE(johnson_allocated_first,0)) as total_vallocated_overall_frst"))->where("province_id",$request->province_id)->where("id",$request->facility_id)->first()->total_vallocated_overall_frst;  //VACCINE ALLOCATED_MODERNA (FD)
-            $total_vallocated_overall_scnd = Muncity::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)+COALESCE(pfizer_allocated_second,0)+COALESCE(sputnikv_allocated_second,0)+COALESCE(moderna_allocated_second,0)+COALESCE(johnson_allocated_second,0)) as total_vallocated_overall_scnd"))->where("province_id",$request->province_id)->where("id",$request->facility_id)->first()->total_vallocated_overall_scnd;  //VACCINE ALLOCATED_MODERNA (SD)
+            $total_vallocated_overall_frst = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_first,0)+COALESCE(astrazeneca_allocated_first,0)+COALESCE(pfizer_allocated_first,0)+COALESCE(sputnikv_allocated_first,0)+COALESCE(moderna_allocated_first,0)+COALESCE(johnson_allocated_first,0)) as total_vallocated_overall_frst"))->where("tricity_id",$request->tricity_id)->where("id",$request->facility_id)->first()->total_vallocated_overall_frst;  //VACCINE ALLOCATED_MODERNA (FD)
+            $total_vallocated_overall_scnd = Facility::select(DB::raw("sum(COALESCE(sinovac_allocated_second,0)+COALESCE(astrazeneca_allocated_second,0)+COALESCE(pfizer_allocated_second,0)+COALESCE(sputnikv_allocated_second,0)+COALESCE(moderna_allocated_second,0)+COALESCE(johnson_allocated_second,0)) as total_vallocated_overall_scnd"))->where("tricity_id",$request->tricity_id)->where("id",$request->facility_id)->first()->total_vallocated_overall_scnd;  //VACCINE ALLOCATED_MODERNA (SD)
 
             $total_vallocated_overall =  $total_vallocated_overall_frst + $total_vallocated_overall_scnd ;
 

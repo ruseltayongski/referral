@@ -12,9 +12,9 @@
     <td rowspan="2" style="color:black;" class="total_epop_sputnikv_b3{{ $row->id }}">{{ $total_epop_b3 }}</td>  <!-- B3 EPOP SPUTNIKV -->
     <td rowspan="2" style="color:black;" class="total_epop_sputnikv_b4{{ $row->id }}">{{ $total_epop_b4 }}</td>  <!-- B4 EPOP SPUTNIKV -->
     <td rowspan="2" style="color:black;" class="total_epop_sputnikv{{ $row->id }}">{{ $total_epop }} </td>  <!-- TOTAL_E_POP_SPUTNIKV -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_frst{{ $row->id }}">{{ $total_vallocated_sputnikv_frst }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (FD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_scnd{{ $row->id }}">{{ $total_vallocated_sputnikv_scnd }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (SD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv{{ $row->id }}">{{ $total_vallocated_sputnikv }}</td>  <!-- TOTAL VACCINE ALLOCATED_SPUTNIKV -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_frst{{ $row->id }}">{{ $allocated_first }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (FD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv_scnd{{ $row->id }}">{{ $allocated_second }}</td>  <!-- VACCINE ALLOCATED_SPUTNIKV (SD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_sputnikv{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_SPUTNIKV -->
     <td style="color:black;">
         <span class="label label-success total_sputnikv_a1_frst{{ $row->id }}">{{ $total_a1_frst }}</span>  <!-- A1_SPUTNIKV  -->
     </td>

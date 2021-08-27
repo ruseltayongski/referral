@@ -12,9 +12,9 @@
     <td rowspan="2" style="color:black;" class="total_epop_astra_b3{{ $row->id }}">{{ $total_epop_b3 }}</td>  <!-- B3 EPOP ASTRA -->
     <td rowspan="2" style="color:black;" class="total_epop_astra_b4{{ $row->id }}">{{ $total_epop_b4 }}</td>  <!-- B4 EPOP ASTRA -->
     <td rowspan="2" style="color:black;" class="total_epop_astra{{ $row->id }}">{{ $total_epop }} </td>  <!-- TOTAL_E_POP_ASTRA -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_astra_frst{{ $row->id }}">{{ $total_vallocated_astra_frst }}</td>  <!-- VACCINE ALLOCATED_ASTRA (FD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $total_vallocated_astra_scnd }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
-    <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated_astra }}</td>  <!-- TOTAL VACCINE ALLOCATED_ASTRA -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra_frst{{ $row->id }}">{{ $allocated_first }}</td>  <!-- VACCINE ALLOCATED_ASTRA (FD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra_scnd{{ $row->id }}">{{ $allocated_second }}</td>  <!-- VACCINE ALLOCATED_ASTRA (SD) -->
+    <td rowspan="2" style="color:black;" class="total_vallocated_astra{{ $row->id }}">{{ $total_vallocated }}</td>  <!-- TOTAL VACCINE ALLOCATED_ASTRA -->
     <td style="color:black;">
         <span class="label label-success total_astra_a1_frst{{ $row->id }}">{{ $total_a1_frst }}</span>  <!-- A1_ASTRA  -->
     </td>

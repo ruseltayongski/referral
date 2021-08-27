@@ -11,13 +11,13 @@
     <td class="">{{ $total_epop_b4 }}</td> <!-- TOTAL_B4 -->
     <td class="">{{ $total_epop }}</td> <!-- TOTAL_E_POP -->
     <td>
-        <b class="total_vallocated_frst{{ $row->id }}">{{ $total_vallocated_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
+        <b class="total_vallocated_frst{{ $row->id }}">{{ $total_vallocated_overall_frst }}</b> <!-- TOTAL_VACCINE_ALLOCATED_FIRST  -->
     </td>
     <td>
-        <b class="total_vallocated_scnd{{ $row->id }}">{{ $total_vallocated_scnd }} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
+        <b class="total_vallocated_scnd{{ $row->id }}">{{ $total_vallocated_overall_scnd }} </b> <!-- TOTAL_VACCINE_ALLOCATED_SECOND  -->
     </td>
     <td>
-        <b class="total_vallocated{{ $row->id }}">{{$total_vallocated }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->
+        <b class="total_vallocated{{ $row->id }}">{{$total_vallocated_overall }}</b> <!-- TOTAL_VACCINE_ALLOCATED  -->
     </td>
     <td>
         <b class="label label-success total_overall_a1_first{{ $row->id }}" style="margin-right: 5%">{{ $total_overall_a1_frst}}</b> <!-- TOTAL_A1  -->
