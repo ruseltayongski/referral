@@ -411,7 +411,7 @@
                                                  <b>Janssen</b>
                                             </button>
                                             <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $tricity_id }}" onclick="dataCollapseFac('total','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>')">
-                                                <b>OVERALL TOTAL</b>
+                                                <b>Overall Total</b>
                                             </button>
                                           {{-- <button class="btn btn-xs" style="color: black;" >
                                                 <h8>TOTAL ALLOCATED: <b style="font-size: 15px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h8>
