@@ -32,7 +32,7 @@
     </button>
 
 <div class="table-responsive">
-    <table style="font-size: 10pt;" class="table table-striped" border="2">
+    <table style="font-size: 8pt;" class="table table-striped" border="2">
         <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
         <th colspan="10"><center>Eligible Population</center></th>
