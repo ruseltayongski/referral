@@ -385,7 +385,7 @@
                                 <tr>
                                     <td style="white-space: nowrap;" colspan="12">
                                         <b>
-                                            <a class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>','<?php echo $date_start; ?>','<?php echo $date_end; ?>',$(this),
+                                            <a class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>','<?php echo $tri_city?>','<?php echo $date_start; ?>','<?php echo $date_end; ?>',$(this),
                                                     '<?php echo $row->sinovac_allocated_first ?>','<?php echo $row->sinovac_allocated_second?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>',
                                                     '<?php echo $row->pfizer_allocated_first ?>','<?php echo $row->pfizer_allocated_second?>','<?php echo $row->sputnikv_allocated_first?>','<?php echo $row->sputnikv_allocated_second?>',
                                                     '<?php echo $row->moderna_allocated_first ?>','<?php echo $row->moderna_allocated_second?>','<?php echo $row->johnson_allocated_first?>','<?php echo $row->johnson_allocated_second?>')">
@@ -615,7 +615,7 @@
 
 
 
-        function facilityVaccinated(facility_id,date_start,date_end,data,sinovac_allocated_first,sinovac_allocated_second,astrazeneca_allocated_first,astrazeneca_allocated_second,
+        function facilityVaccinated(facility_id,tri_city,date_start,date_end,data,sinovac_allocated_first,sinovac_allocated_second,astrazeneca_allocated_first,astrazeneca_allocated_second,
                                     pfizer_allocated_first,pfizer_allocated_second,sputnikv_allocated_first,sputnikv_allocated_second,moderna_allocated_first,moderna_allocated_second,
                                     johnson_allocated_first,johnson_allocated_second){
             event.preventDefault();
@@ -627,6 +627,7 @@
             json = {
                 "_token" : "<?php echo csrf_token()?>",
                 "facility_id" : facility_id,
+                "tri_city" : tri_city,
                 "date_start": date_start,
                 "date_end" : date_end,
                 "sinovac_allocated_first": sinovac_allocated_first,
