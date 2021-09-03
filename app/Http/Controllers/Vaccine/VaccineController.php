@@ -4356,7 +4356,7 @@ class VaccineController extends Controller
             $total_r_unvcted_frst = $total_epop - $total_vcted_frst - $total_rfsd_frst; //REMAINING UNVACCINATED_SINOVAC
             $total_r_unvcted_scnd = $total_epop - $total_vcted_scnd - $total_rfsd_scnd; //REMAINING UNVACCINATED_SINOVAC 2
 
-            $view = 'vaccine.collapse.sinovac';
+            $view = 'vaccine.collapse_facility.sinovac';
         }
         elseif ($request->typeof_vaccine == "astrazeneca")
         {
@@ -4796,7 +4796,7 @@ class VaccineController extends Controller
 
         return view($view,[
 
-            "muncity_id" => $request->muncity_id,
+            "tricity_id" => $request->tricity_id,
             "total_epop_a1" => $total_epop_a1,
             "total_epop_a2" => $total_epop_a2,
             "total_epop_a3" => $total_epop_a3,

@@ -239,7 +239,7 @@
                 <div class="input-group input-group-lg">
                     <input type="text" id="icd10_keyword" class="form-control">
                     <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Go!</button>
+                      <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Find</button>
                     </span>
                 </div><br>
                 <div class="icd_body"></div>
