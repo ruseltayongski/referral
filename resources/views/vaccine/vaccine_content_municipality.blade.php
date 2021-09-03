@@ -3,6 +3,7 @@
         width: 20%;
         height: 2em;
     }
+
 </style>
 <div class="modal-header">
     <h3 id="myModalLabel"><i class="fa fa-location-arrow" style="color:green"></i> {{ \App\Muncity::find($muncity_id)->description }}</h3>
@@ -17,29 +18,29 @@
      <div id="table_data">
      @include('vaccine.vaccine_table')
      </div>
-     <button class="btn btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapse_sinovac" aria-expanded="false" aria-controls="collapse_sinovac">
+     <button class="btn btn-sm btn-link collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapse_sinovac" aria-expanded="false" aria-controls="collapse_sinovac">
         <b>Sinovac</b>
      </button>
-     <button class="btn btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra" aria-expanded="false" aria-controls="collapse_astra">
+     <button class="btn btn-sm btn-link collapsed" style="color:darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astra" aria-expanded="false" aria-controls="collapse_astra">
         <b>Astrazeneca</b>
      </button>
-     <button class="btn btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer" aria-expanded="false" aria-controls="collapse_pfizer">
+     <button class="btn btn-sm btn-link collapsed" style="color:#00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer" aria-expanded="false" aria-controls="collapse_pfizer">
          <b>Pfizer</b>
      </button>
-     <button class="btn btn-link collapsed" style="color:#00a65a" type="button" data-toggle="collapse" data-target="#collapse_sputnikv" aria-expanded="false" aria-controls="collapse_sputnikv">
+     <button class="btn btn-sm btn-link collapsed" style="color:#00a65a" type="button" data-toggle="collapse" data-target="#collapse_sputnikv" aria-expanded="false" aria-controls="collapse_sputnikv">
          <b>SputnikV</b>
      </button>
-     <button class="btn btn-link collapsed" style="color:#605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna" aria-expanded="false" aria-controls="collapse_moderna">
+     <button class="btn btn-sm btn-link collapsed" style="color:#605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna" aria-expanded="false" aria-controls="collapse_moderna">
          <b>Moderna</b>
      </button>
-     <button class="btn btn-link collapsed" style="color:#1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson" aria-expanded="false" aria-controls="collapse_johnson">
+     <button class="btn btn-sm btn-link collapsed" style="color:#1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson" aria-expanded="false" aria-controls="collapse_johnson">
          <b>Johnson</b>
      </button>
 
 </form>
 @if(count($vaccine_accomplishment) > 0)
 <div class="table-responsive">
-<table style="font-size: 10pt;" class="table table-striped" border="2">
+<table style="font-size: 8pt;" class="table table-striped" border="2">
     <tr>
         <th>Type of Vaccine</th> <!-- Type of Vaccine 1-1 -->
         <th colspan="10"><center>Eligible Population</center></th>
@@ -94,9 +95,7 @@
     <!-- SINOVAC -->
     <tbody id="collapse_sinovac" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
     <tr style="background-color: #ffd8d6">
-        <td rowspan="2">
-
-        </td> <!-- 1-3 -->
+        <td rowspan="2">Sinovac</td> <!-- 1-3 -->
         <td rowspan="2">{{ $total_epop_svac_a1 }}</td> <!-- A1 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a2 }}</td> <!-- A2 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_a3 }}</td> <!-- A3 SINOVAC FIRST -->
@@ -107,7 +106,7 @@
         <td rowspan="2">{{ $total_epop_svac_b3 }}</td> <!-- B3 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac_b4 }}</td> <!-- B4 SINOVAC FIRST -->
         <td rowspan="2">{{ $total_epop_svac }}</td> <!-- ELIPOP TOTAL SINOVAC FIRST  -->
-        <td rowspan="2">{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
+        <td rowspan="2" >{{ $total_vallocated_svac_frst }}</td>  <!-- VACCINE ALLOCATED(FD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac_scnd }}</td> <!-- VACCINE ALLOCATED(SD) SINOVAC FIRST -->
         <td rowspan="2">{{ $total_vallocated_svac }}</td><!-- VACCINE ALLOCATED TOTAL SINOVAC -->
         <td>
@@ -228,7 +227,7 @@
     <!-- ASTRAZENECA -->
     <tbody id="collapse_astra" class="collapse bg-primary" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #f2fcac">
-            <td rowspan="2"></td> <!-- 1-5 -->
+            <td rowspan="2" style="color:black;">Astrazeneca</td> <!-- 1-5 -->
             <td rowspan="2" style="color:black;">{{ $total_epop_astra_a1 }}</td>  <!-- (A1) ASTRA -->
             <td rowspan="2" style="color:black;">{{ $total_epop_astra_a2 }}</td>  <!-- (A2) ASTRA -->
             <td rowspan="2" style="color:black;">{{ $total_epop_astra_a3 }}</td>  <!-- (A3) ASTRA -->
@@ -357,7 +356,7 @@
     <!-- PFIZER -->
     <tbody id="collapse_pfizer" class="collapse bg-danger" aria-labelledby="heading3" data-parent="#accordionExample">
     <tr style="background-color: #8fe7fd">
-        <td rowspan="2">
+        <td rowspan="2">Pfizer</td>
         <td rowspan="2">{{ $total_epop_pfizer_a1 }}</td> <!-- A1 PFIZER FIRST -->
         <td rowspan="2">{{ $total_epop_pfizer_a2 }}</td> <!-- A2 PFIZER  FIRST -->
         <td rowspan="2">{{ $total_epop_pfizer_a3 }}</td> <!-- A3 PFIZER FIRST -->
@@ -486,8 +485,7 @@
     <!-- SPUTNIK V-->
     <tbody id="collapse_sputnikv" class="collapse bg-danger" aria-labelledby="headingThree" data-parent="#accordionExample">
     <tr style="background-color: #b1ffdb">
-        <td rowspan="2">
-        </td>
+        <td rowspan="2">SputnikV</td>
         <td rowspan="2">{{ $total_epop_sputnikv_a1 }}</td> <!-- A1 SPUTNIKV FIRST -->
         <td rowspan="2">{{ $total_epop_sputnikv_a2 }}</td> <!-- A2 SPUTNIKV  FIRST -->
         <td rowspan="2">{{ $total_epop_sputnikv_a3 }}</td> <!-- A3 SPUTNIKV  FIRST -->
@@ -616,7 +614,7 @@
     <!-- MODERNA -->
     <tbody id="collapse_moderna" class="collapse bg-danger" aria-labelledby="heading3" data-parent="#accordionExample">
     <tr style="background-color: #dad8ff">
-        <td rowspan="2">
+        <td rowspan="2">Moderna</td>
         <td rowspan="2">{{ $total_epop_moderna_a1 }}</td> <!-- A1 MODERNA FIRST -->
         <td rowspan="2">{{ $total_epop_moderna_a2 }}</td> <!-- A2 MODERNA  FIRST -->
         <td rowspan="2">{{ $total_epop_moderna_a3 }}</td> <!-- A3 MODERNA FIRST -->
@@ -745,7 +743,7 @@
     <!-- JOHNSON -->
     <tbody id="collapse_johnson" class="collapse bg-danger" aria-labelledby="heading3" data-parent="#accordionExample">
     <tr style="background-color: #9af5ee">
-        <td rowspan="2">
+        <td rowspan="2">Janssen</td>
         <td rowspan="2">{{ $total_epop_johnson_a1 }}</td> <!-- A1 JOHNSON FIRST -->
         <td rowspan="2">{{ $total_epop_johnson_a2 }}</td> <!-- A2 JOHNSON  FIRST -->
         <td rowspan="2">{{ $total_epop_johnson_a3 }}</td> <!-- A3 JOHNSON FIRST -->
@@ -959,7 +957,7 @@
             <b class="label label-success" style="margin-right: 5%">{{ number_format($total_p_cvrge_frst,2) }}%</b>  <!-- TOTAL_PERCENT_COVERAGE -->
         </td>
         <td>
-            <b class="label label-success" style="margin-right: 5%">{{ $total_c_rate_frst }}</b>  <!-- TOTAL_CONSUMPTION_RATE-->
+            <b class="label label-success" style="margin-right: 5%">{{ number_format($total_c_rate_frst,2) }}%</b>  <!-- TOTAL_CONSUMPTION_RATE-->
         </td>
         <td>
             <b class="label label-success" style="margin-right: 5%">{{ $total_r_unvcted_frst }}</b>  <!-- TOTAL_REMAINING_UNVACCINATED -->
@@ -1029,7 +1027,7 @@
             <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_overall_p_coverage,2) }}%</b> <!-- TOTAL_PERCENT_COVERAGE_2   -->
         </td>
         <td>
-            <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_c_rate }}</b> <!-- TOTAL_CONSUMPTION_RATE 2   -->
+            <b class="label label-warning" style="margin-right: 5%">{{ number_format($total_overall_c_rate,2)  }}%</b> <!-- TOTAL_CONSUMPTION_RATE 2   -->
         </td>
         <td>
             <b class="label label-warning" style="margin-right: 5%">{{ $total_overall_r_unvcted }}</b> <!-- TOTAL_REMAINING_UNVACCINATED 2   -->

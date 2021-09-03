@@ -385,30 +385,33 @@
                                 <tr>
                                     <td style="white-space: nowrap;" colspan="12">
                                         <b>
-                                            <a class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>','<?php echo $date_start; ?>','<?php echo $date_end; ?>',$(this))">
+                                            <a class="text-green" style= "font-size:14pt;cursor: pointer; " onclick="facilityVaccinated('<?php echo $row->id; ?>','<?php echo $tri_city?>','<?php echo $date_start; ?>','<?php echo $date_end; ?>',$(this),
+                                                    '<?php echo $row->sinovac_allocated_first ?>','<?php echo $row->sinovac_allocated_second?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>',
+                                                    '<?php echo $row->pfizer_allocated_first ?>','<?php echo $row->pfizer_allocated_second?>','<?php echo $row->sputnikv_allocated_first?>','<?php echo $row->sputnikv_allocated_second?>',
+                                                    '<?php echo $row->moderna_allocated_first ?>','<?php echo $row->moderna_allocated_second?>','<?php echo $row->johnson_allocated_first?>','<?php echo $row->johnson_allocated_second?>')">
                                                 {{ $row->name }}
                                             </a>
                                         </b>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $row->id }}"  onclick="dataCollapseJavFacility('sinovac','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sinovac_allocated_first?>','<?php echo $row->sinovac_allocated_second?>')">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: red;" type="button" data-toggle="collapse" data-target="#collapse_sinovac{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sinovac{{ $tricity_id }}"   onclick="dataCollapseFac('sinovac','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sinovac_allocated_first?>','<?php echo $row->sinovac_allocated_second?>')">
                                                 <b>Sinovac</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astrazeneca{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astrazeneca{{ $row->id }}" onclick="dataCollapseJavFacility('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: darkgoldenrod;" type="button" data-toggle="collapse" data-target="#collapse_astrazeneca{{ $row->id }}" aria-expanded="false" aria-controls="collapse_astrazeneca{{ $tricity_id }}" onclick="dataCollapseFac('astrazeneca','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->astrazeneca_allocated_first?>','<?php echo $row->astrazeneca_allocated_second?>')">
                                                 <b>Astrazeneca</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #00c0ef;" type="button" data-toggle="collapse" data-target="#collapse_pfizer{{ $row->id }}" aria-expanded="false" aria-controls="collapse_pfizer{{ $tricity_id }}" onclick="dataCollapseFac('pfizer','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->pfizer_allocated_first?>','<?php echo $row->pfizer_allocated_second?>')">
                                                  <b>Pfizer</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #00a65a;" type="button" data-toggle="collapse" data-target="#collapse_sputnikv{{ $row->id }}" aria-expanded="false" aria-controls="collapse_sputnikv{{ $tricity_id }}" onclick="dataCollapseFac('sputnikv','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id;?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->sputnikv_allocated_first?>','<?php echo $row->sputnikv_allocated_second?>')">
                                                 <b>SputnikV</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #605ca8;" type="button" data-toggle="collapse" data-target="#collapse_moderna{{ $row->id }}" aria-expanded="false" aria-controls="collapse_moderna{{ $tricity_id }}" onclick="dataCollapseFac('moderna','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->moderna_allocated_first?>','<?php echo $row->moderna_allocated_second?>')">
                                                 <b>Moderna</b>
                                             </button>
-                                            <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $row->id }}">
+                                            <button class="btn btn-sm btn-link collapsed" style="color: #1d94ff;" type="button" data-toggle="collapse" data-target="#collapse_johnson{{ $row->id }}" aria-expanded="false" aria-controls="collapse_johnson{{ $tricity_id }}" onclick="dataCollapseFac('johnson','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>','<?php echo $row->johnson_allocated_first?>','<?php echo $row->johnson_allocated_second?>')" >
                                                  <b>Janssen</b>
                                             </button>
-                                            <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $row->id }}">
-                                                <b>OVERALL TOTAL</b>
+                                            <button class="btn btn-xs btn-link collapsed" style="color: black;" type="button" data-toggle="collapse" data-target="#collapse_total{{ $row->id }}" aria-expanded="false" aria-controls="collapse_total{{ $tricity_id }}" onclick="dataCollapseFac('total','<?php echo $province_id?>','<?php echo $row->id ?>','<?php echo $tricity_id; ?>','<?php echo $typeof_vaccine_filter?>')">
+                                                <b>Overall Total</b>
                                             </button>
                                           {{-- <button class="btn btn-xs" style="color: black;" >
                                                 <h8>TOTAL ALLOCATED: <b style="font-size: 15px; color: #137fb1" class="individual_allocated{{ $row->id }}"> {{ $total_vallocated }}</b></h8>
@@ -586,16 +589,17 @@
         <?php $user = Session::get('auth'); ?>
 
 
-        function dataCollapseJavFacility(typeof_vaccine,province_id,muncity_id,typeof_vaccine_filter,allocated_first,allocated_second){
+        function dataCollapseFac(typeof_vaccine,province_id,facility_id,tricity_id,typeof_vaccine_filter,allocated_first,allocated_second){
             var path_gif = "<?php echo asset('resources/img/spin.gif'); ?>";
             var loading = '<center><img src="'+path_gif+'" alt="" style="height: 60px;"></center>';
-            $("#collapse_"+typeof_vaccine+muncity_id).html("<tr><td colspan='40' style='background: #f4f4f4;' >"+loading+"</td></tr>");
+            $("#collapse_"+typeof_vaccine+facility_id).html("<tr><td colspan='40' style='background: #f4f4f4;' >"+loading+"</td></tr>");
             var url = "<?php echo asset('vaccine/collapse_facility'); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token()?>",
+                "typeof_vaccine": typeof_vaccine,
                 "province_id" : province_id,
                 "facility_id" : facility_id,
-                "typeof_vaccine": typeof_vaccine,
+                "tricity_id" : tricity_id,
                 "typeof_vaccine_filter" : typeof_vaccine_filter,
                 "allocated_first": allocated_first,
                 "allocated_second": allocated_second,
@@ -603,7 +607,7 @@
             console.log(json);
             $.post(url,json,function(data){
                 setTimeout(function(){
-                    $("#collapse_"+typeof_vaccine+muncity_id).html(data);
+                    $("#collapse_"+typeof_vaccine+facility_id).html(data);
 
                 },500);
             });
@@ -611,395 +615,38 @@
 
 
 
-        function facilityVaccinated(facility_id,date_start,date_end,data){
+        function facilityVaccinated(facility_id,tri_city,date_start,date_end,data,sinovac_allocated_first,sinovac_allocated_second,astrazeneca_allocated_first,astrazeneca_allocated_second,
+                                    pfizer_allocated_first,pfizer_allocated_second,sputnikv_allocated_first,sputnikv_allocated_second,moderna_allocated_first,moderna_allocated_second,
+                                    johnson_allocated_first,johnson_allocated_second){
             event.preventDefault();
             $("#vaccine_modal_facility").modal('show');
             $(".vaccinated_content_facility").html(loading);
             $("a").css("background-color","");
             data.css("background-color","yellow");
+
             json = {
                 "_token" : "<?php echo csrf_token()?>",
                 "facility_id" : facility_id,
+                "tri_city" : tri_city,
                 "date_start": date_start,
                 "date_end" : date_end,
-                "tri_city": "<?php echo $tri_city; ?>",
+                "sinovac_allocated_first": sinovac_allocated_first,
+                "sinovac_allocated_second": sinovac_allocated_second,
+                "astrazeneca_allocated_first": astrazeneca_allocated_first,
+                "astrazeneca_allocated_second": astrazeneca_allocated_second,
+                "pfizer_allocated_first": pfizer_allocated_first,
+                "pfizer_allocated_second": pfizer_allocated_second,
+                "sputnikv_allocated_first": sputnikv_allocated_first,
+                "sputnikv_allocated_second": sputnikv_allocated_second,
+                "moderna_allocated_first": moderna_allocated_first,
+                "moderna_allocated_second": moderna_allocated_second,
+                "johnson_allocated_first": johnson_allocated_first,
+                "johnson_allocated_second": johnson_allocated_second,
+                "tricity_id": "<?php echo $tri_city; ?>",
                 "typeof_vaccine_filter": "<?php echo $typeof_vaccine_filter; ?>",
                 "priority_filter" : "<?php echo $priority_filter; ?>",
                 "muncity_filter" : "<?php echo $muncity_filter; ?>",
                 "pagination_table" : "false",
-                //SINOVAC
-                "total_epop_svac_a1" : $(".total_epop_svac_a1"+facility_id).text(),
-                "total_epop_svac_a2" : $(".total_epop_svac_a2"+facility_id).text(),
-                "total_epop_svac_a3" : $(".total_epop_svac_a3"+facility_id).text(),
-                "total_epop_svac_a4" : $(".total_epop_svac_a4"+facility_id).text(),
-                "total_epop_svac_a5" : $(".total_epop_svac_a5"+facility_id).text(),
-                "total_epop_svac_b1" : $(".total_epop_svac_b1"+facility_id).text(),
-                "total_epop_svac_b2" : $(".total_epop_svac_b2"+facility_id).text(),
-                "total_epop_svac_b3" : $(".total_epop_svac_b3"+facility_id).text(),
-                "total_epop_svac_b4" : $(".total_epop_svac_b4"+facility_id).text(),
-                "total_epop_svac" : $(".total_epop_svac"+facility_id).text(),
-                "total_vallocated_svac_frst" : $(".total_vallocated_svac_frst"+facility_id).text(),
-                "total_vallocated_svac_scnd" : $(".total_vallocated_svac_scnd"+facility_id).text(),
-                "total_vallocated_svac" : $(".total_vallocated_svac"+facility_id).text(),
-                "total_svac_a1_frst" : $(".total_svac_a1_frst"+facility_id).text(),
-                "total_svac_a2_frst" : $(".total_svac_a2_frst"+facility_id).text(),
-                "total_svac_a3_frst" : $(".total_svac_a3_frst"+facility_id).text(),
-                "total_svac_a4_frst" : $(".total_svac_a4_frst"+facility_id).text(),
-                "total_svac_a5_frst" : $(".total_svac_a5_frst"+facility_id).text(),
-                "total_svac_b1_frst" : $(".total_svac_b1_frst"+facility_id).text(),
-                "total_svac_b2_frst" : $(".total_svac_b2_frst"+facility_id).text(),
-                "total_svac_b3_frst" : $(".total_svac_b3_frst"+facility_id).text(),
-                "total_svac_b4_frst" : $(".total_svac_b4_frst"+facility_id).text(),
-                "total_vcted_svac_frst" : $(".total_vcted_svac_frst"+facility_id).text(),
-                "total_mild_svac_frst" : $(".total_mild_svac_frst"+facility_id).text(),
-                "total_srs_svac_frst" : $(".total_srs_svac_frst"+facility_id).text(),
-                "total_dfrd_svac_frst" : $(".total_dfrd_svac_frst"+facility_id).text(),
-                "total_rfsd_svac_frst" : $(".total_rfsd_svac_frst"+facility_id).text(),
-                "total_wstge_svac_frst" : $(".total_wstge_svac_frst"+facility_id).text(),
-                "p_cvrge_svac_frst" : $(".p_cvrge_svac_frst"+facility_id).text(),
-                "total_c_rate_svac_frst" : $(".total_c_rate_svac_frst"+facility_id).text(),
-                "total_r_unvcted_frst_svac" : $(".total_r_unvcted_frst_svac"+facility_id).text(),
-
-                "total_svac_a1_scnd" : $(".total_svac_a1_scnd"+facility_id).text(),
-                "total_svac_a2_scnd" : $(".total_svac_a2_scnd"+facility_id).text(),
-                "total_svac_a3_scnd" : $(".total_svac_a3_scnd"+facility_id).text(),
-                "total_svac_a4_scnd" : $(".total_svac_a4_scnd"+facility_id).text(),
-                "total_svac_a5_scnd" : $(".total_svac_a5_scnd"+facility_id).text(),
-                "total_svac_b1_scnd" : $(".total_svac_b1_scnd"+facility_id).text(),
-                "total_svac_b2_scnd" : $(".total_svac_b2_scnd"+facility_id).text(),
-                "total_svac_b3_scnd" : $(".total_svac_b3_scnd"+facility_id).text(),
-                "total_svac_b4_scnd" : $(".total_svac_b4_scnd"+facility_id).text(),
-                "total_vcted_svac_scnd" : $(".total_vcted_svac_scnd"+facility_id).text(),
-                "total_mild_svac_scnd" : $(".total_mild_svac_scnd"+facility_id).text(),
-                "total_srs_svac_scnd" : $(".total_srs_svac_scnd"+facility_id).text(),
-                "total_dfrd_svac_scnd" : $(".total_dfrd_svac_scnd"+facility_id).text(),
-                "total_rfsd_svac_scnd" : $(".total_rfsd_svac_scnd"+facility_id).text(),
-                "total_wstge_svac_scnd" : $(".total_wstge_svac_scnd"+facility_id).text(),
-                "p_cvrge_svac_scnd" : $(".p_cvrge_svac_scnd"+facility_id).text(),
-                "total_c_rate_svac_scnd" : $(".total_c_rate_svac_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_svac" : $(".total_r_unvcted_scnd_svac"+facility_id).text(),
-
-
-                //ASTRAZENECA
-                "total_epop_astra_a1" : $(".total_epop_astra_a1"+facility_id).text(),
-                "total_epop_astra_a2" : $(".total_epop_astra_a2"+facility_id).text(),
-                "total_epop_astra_a3" : $(".total_epop_astra_a3"+facility_id).text(),
-                "total_epop_astra_a4" : $(".total_epop_astra_a4"+facility_id).text(),
-                "total_epop_astra_a5" : $(".total_epop_astra_a5"+facility_id).text(),
-                "total_epop_astra_b1" : $(".total_epop_astra_b1"+facility_id).text(),
-                "total_epop_astra_b2" : $(".total_epop_astra_b2"+facility_id).text(),
-                "total_epop_astra_b3" : $(".total_epop_astra_b3"+facility_id).text(),
-                "total_epop_astra_b4" : $(".total_epop_astra_b4"+facility_id).text(),
-                "total_epop_astra" : $(".total_epop_astra"+facility_id).text(),
-                "total_epop_overall_a1" : $(".total_epop_overall_a1"+facility_id).text(),
-                "total_epop_overall_a2" : $(".total_epop_overall_a2"+facility_id).text(),
-                "total_epop_overall_a3" : $(".total_epop_overall_a3"+facility_id).text(),
-                "total_epop_overall_a4" : $(".total_epop_overall_a4"+facility_id).text(),
-                "total_epop_overall_a5" : $(".total_epop_overall_a5"+facility_id).text(),
-                "total_epop_overall_b1" : $(".total_epop_overall_b1"+facility_id).text(),
-                "total_epop_overall_b2" : $(".total_epop_overall_b2"+facility_id).text(),
-                "total_epop_overall_b3" : $(".total_epop_overall_b3"+facility_id).text(),
-                "total_epop_overall_b4" : $(".total_epop_overall_b4"+facility_id).text(),
-                "total_epop_overall" : $(".total_epop_overall"+facility_id).text(),
-
-                "total_vallocated_astra_frst" : $(".total_vallocated_astra_frst"+facility_id).text(),
-                "total_vallocated_astra_scnd" : $(".total_vallocated_astra_scnd"+facility_id).text(),
-                "total_vallocated_astra" : $(".total_vallocated_astra"+facility_id).text(),
-                "total_astra_a1_frst" : $(".total_astra_a1_frst"+facility_id).text(),
-                "total_astra_a2_frst" : $(".total_astra_a2_frst"+facility_id).text(),
-                "total_astra_a3_frst" : $(".total_astra_a3_frst"+facility_id).text(),
-                "total_astra_a4_frst" : $(".total_astra_a4_frst"+facility_id).text(),
-                "total_astra_a5_frst" : $(".total_astra_a5_frst"+facility_id).text(),
-                "total_astra_b1_frst" : $(".total_astra_b1_frst"+facility_id).text(),
-                "total_astra_b2_frst" : $(".total_astra_b2_frst"+facility_id).text(),
-                "total_astra_b3_frst" : $(".total_astra_b3_frst"+facility_id).text(),
-                "total_astra_b4_frst" : $(".total_astra_b4_frst"+facility_id).text(),
-                "total_vcted_astra_frst" : $(".total_vcted_astra_frst"+facility_id).text(),
-                "total_mild_astra_frst" : $(".total_mild_astra_frst"+facility_id).text(),
-                "total_srs_astra_frst" : $(".total_srs_astra_frst"+facility_id).text(),
-                "total_dfrd_astra_frst" : $(".total_dfrd_astra_frst"+facility_id).text(),
-                "total_rfsd_astra_frst" : $(".total_rfsd_astra_frst"+facility_id).text(),
-                "total_wstge_astra_frst" : $(".total_wstge_astra_frst"+facility_id).text(),
-                "p_cvrge_astra_frst" : $(".p_cvrge_astra_frst"+facility_id).text(),
-                "total_c_rate_astra_frst" : $(".total_c_rate_astra_frst"+facility_id).text(),
-                "total_r_unvcted_frst_astra" : $(".total_r_unvcted_frst_astra"+facility_id).text(),
-
-                "total_astra_a1_scnd" : $(".total_astra_a1_scnd"+facility_id).text(),
-                "total_astra_a2_scnd" : $(".total_astra_a2_scnd"+facility_id).text(),
-                "total_astra_a3_scnd" : $(".total_astra_a3_scnd"+facility_id).text(),
-                "total_astra_a4_scnd" : $(".total_astra_a4_scnd"+facility_id).text(),
-                "total_astra_a5_scnd" : $(".total_astra_a5_scnd"+facility_id).text(),
-                "total_astra_b1_scnd" : $(".total_astra_b1_scnd"+facility_id).text(),
-                "total_astra_b2_scnd" : $(".total_astra_b2_scnd"+facility_id).text(),
-                "total_astra_b3_scnd" : $(".total_astra_b3_scnd"+facility_id).text(),
-                "total_astra_b4_scnd" : $(".total_astra_b4_scnd"+facility_id).text(),
-                "total_vcted_astra_scnd" : $(".total_vcted_astra_scnd"+facility_id).text(),
-                "total_mild_astra_scnd" : $(".total_mild_astra_scnd"+facility_id).text(),
-                "total_srs_astra_scnd" : $(".total_srs_astra_scnd"+facility_id).text(),
-                "total_dfrd_astra_scnd" : $(".total_dfrd_astra_scnd"+facility_id).text(),
-                "total_rfsd_astra_scnd" : $(".total_rfsd_astra_scnd"+facility_id).text(),
-                "total_wstge_astra_scnd" : $(".total_wstge_astra_scnd"+facility_id).text(),
-                "p_cvrge_astra_scnd" : $(".p_cvrge_astra_scnd"+facility_id).text(),
-                "total_c_rate_astra_scnd" : $(".total_c_rate_astra_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_astra" : $(".total_r_unvcted_scnd_astra"+facility_id).text(),
-
-
-                //PFIZER
-                "total_epop_pfizer_a1" : $(".total_epop_pfizer_a1"+facility_id).text(),
-                "total_epop_pfizer_a2" : $(".total_epop_pfizer_a2"+facility_id).text(),
-                "total_epop_pfizer_a3" : $(".total_epop_pfizer_a3"+facility_id).text(),
-                "total_epop_pfizer_a4" : $(".total_epop_pfizer_a4"+facility_id).text(),
-                "total_epop_pfizer_a5" : $(".total_epop_pfizer_a5"+facility_id).text(),
-                "total_epop_pfizer_b1" : $(".total_epop_pfizer_b1"+facility_id).text(),
-                "total_epop_pfizer_b2" : $(".total_epop_pfizer_b2"+facility_id).text(),
-                "total_epop_pfizer_b3" : $(".total_epop_pfizer_b3"+facility_id).text(),
-                "total_epop_pfizer_b4" : $(".total_epop_pfizer_b4"+facility_id).text(),
-                "total_epop_pfizer" : $(".total_epop_pfizer"+facility_id).text(),
-
-                "total_vallocated_pfizer_frst" : $(".total_vallocated_pfizer_frst"+facility_id).text(),
-                "total_vallocated_pfizer_scnd" : $(".total_vallocated_pfizer_scnd"+facility_id).text(),
-                "total_vallocated_pfizer" : $(".total_vallocated_pfizer"+facility_id).text(),
-                "total_pfizer_a1_frst" : $(".total_pfizer_a1_frst"+facility_id).text(),
-                "total_pfizer_a2_frst" : $(".total_pfizer_a2_frst"+facility_id).text(),
-                "total_pfizer_a3_frst" : $(".total_pfizer_a3_frst"+facility_id).text(),
-                "total_pfizer_a4_frst" : $(".total_pfizer_a4_frst"+facility_id).text(),
-                "total_pfizer_a5_frst" : $(".total_pfizer_a5_frst"+facility_id).text(),
-                "total_pfizer_b1_frst" : $(".total_pfizer_b1_frst"+facility_id).text(),
-                "total_pfizer_b2_frst" : $(".total_pfizer_b2_frst"+facility_id).text(),
-                "total_pfizer_b3_frst" : $(".total_pfizer_b3_frst"+facility_id).text(),
-                "total_pfizer_b4_frst" : $(".total_pfizer_b4_frst"+facility_id).text(),
-                "total_vcted_pfizer_frst" : $(".total_vcted_pfizer_frst"+facility_id).text(),
-                "total_mild_pfizer_frst" : $(".total_mild_pfizer_frst"+facility_id).text(),
-                "total_srs_pfizer_frst" : $(".total_srs_pfizer_frst"+facility_id).text(),
-                "total_dfrd_pfizer_frst" : $(".total_dfrd_pfizer_frst"+facility_id).text(),
-                "total_rfsd_pfizer_frst" : $(".total_rfsd_pfizer_frst"+facility_id).text(),
-                "total_wstge_pfizer_frst" : $(".total_wstge_pfizer_frst"+facility_id).text(),
-                "p_cvrge_pfizer_frst" : $(".p_cvrge_pfizer_frst"+facility_id).text(),
-                "total_c_rate_pfizer_frst" : $(".total_c_rate_pfizer_frst"+facility_id).text(),
-                "total_r_unvcted_frst_pfizer" : $(".total_r_unvcted_frst_pfizer"+facility_id).text(),
-
-                "total_pfizer_a1_scnd" : $(".total_pfizer_a1_scnd"+facility_id).text(),
-                "total_pfizer_a2_scnd" : $(".total_pfizer_a2_scnd"+facility_id).text(),
-                "total_pfizer_a3_scnd" : $(".total_pfizer_a3_scnd"+facility_id).text(),
-                "total_pfizer_a4_scnd" : $(".total_pfizer_a4_scnd"+facility_id).text(),
-                "total_pfizer_a5_scnd" : $(".total_pfizer_a5_scnd"+facility_id).text(),
-                "total_pfizer_b1_scnd" : $(".total_pfizer_b1_scnd"+facility_id).text(),
-                "total_pfizer_b2_scnd" : $(".total_pfizer_b2_scnd"+facility_id).text(),
-                "total_pfizer_b3_scnd" : $(".total_pfizer_b3_scnd"+facility_id).text(),
-                "total_pfizer_b4_scnd" : $(".total_pfizer_b4_scnd"+facility_id).text(),
-                "total_vcted_pfizer_scnd" : $(".total_vcted_pfizer_scnd"+facility_id).text(),
-                "total_mild_pfizer_scnd" : $(".total_mild_pfizer_scnd"+facility_id).text(),
-                "total_srs_pfizer_scnd" : $(".total_srs_pfizer_scnd"+facility_id).text(),
-                "total_dfrd_pfizer_scnd" : $(".total_dfrd_pfizer_scnd"+facility_id).text(),
-                "total_rfsd_pfizer_scnd" : $(".total_rfsd_pfizer_scnd"+facility_id).text(),
-                "total_wstge_pfizer_scnd" : $(".total_wstge_pfizer_scnd"+facility_id).text(),
-                "p_cvrge_pfizer_scnd" : $(".p_cvrge_pfizer_scnd"+facility_id).text(),
-                "total_c_rate_pfizer_scnd" : $(".total_c_rate_pfizer_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_pfizer" : $(".total_r_unvcted_scnd_pfizer"+facility_id).text(),
-
-
-                //SPUTNIKV
-                "total_epop_sputnikv_a1" : $(".total_epop_sputnikv_a1"+facility_id).text(),
-                "total_epop_sputnikv_a2" : $(".total_epop_sputnikv_a2"+facility_id).text(),
-                "total_epop_sputnikv_a3" : $(".total_epop_sputnikv_a3"+facility_id).text(),
-                "total_epop_sputnikv_a4" : $(".total_epop_sputnikv_a4"+facility_id).text(),
-                "total_epop_sputnikv_a5" : $(".total_epop_sputnikv_a5"+facility_id).text(),
-                "total_epop_sputnikv_b1" : $(".total_epop_sputnikv_b1"+facility_id).text(),
-                "total_epop_sputnikv_b2" : $(".total_epop_sputnikv_b2"+facility_id).text(),
-                "total_epop_sputnikv_b3" : $(".total_epop_sputnikv_b3"+facility_id).text(),
-                "total_epop_sputnikv_b4" : $(".total_epop_sputnikv_b4"+facility_id).text(),
-                "total_epop_sputnikv" : $(".total_epop_sputnikv"+facility_id).text(),
-
-                "total_vallocated_sputnikv_frst" : $(".total_vallocated_sputnikv_frst"+facility_id).text(),
-                "total_vallocated_sputnikv_scnd" : $(".total_vallocated_sputnikv_scnd"+facility_id).text(),
-                "total_vallocated_sputnikv" : $(".total_vallocated_sputnikv"+facility_id).text(),
-                "total_sputnikv_a1_frst" : $(".total_sputnikv_a1_frst"+facility_id).text(),
-                "total_sputnikv_a2_frst" : $(".total_sputnikv_a2_frst"+facility_id).text(),
-                "total_sputnikv_a3_frst" : $(".total_sputnikv_a3_frst"+facility_id).text(),
-                "total_sputnikv_a4_frst" : $(".total_sputnikv_a4_frst"+facility_id).text(),
-                "total_sputnikv_a5_frst" : $(".total_sputnikv_a5_frst"+facility_id).text(),
-                "total_sputnikv_b1_frst" : $(".total_sputnikv_b1_frst"+facility_id).text(),
-                "total_sputnikv_b2_frst" : $(".total_sputnikv_b2_frst"+facility_id).text(),
-                "total_sputnikv_b3_frst" : $(".total_sputnikv_b3_frst"+facility_id).text(),
-                "total_sputnikv_b4_frst" : $(".total_sputnikv_b4_frst"+facility_id).text(),
-                "total_vcted_sputnikv_frst" : $(".total_vcted_sputnikv_frst"+facility_id).text(),
-                "total_mild_sputnikv_frst" : $(".total_mild_sputnikv_frst"+facility_id).text(),
-                "total_srs_sputnikv_frst" : $(".total_srs_sputnikv_frst"+facility_id).text(),
-                "total_dfrd_sputnikv_frst" : $(".total_dfrd_sputnikv_frst"+facility_id).text(),
-                "total_rfsd_sputnikv_frst" : $(".total_rfsd_sputnikv_frst"+facility_id).text(),
-                "total_wstge_sputnikv_frst" : $(".total_wstge_sputnikv_frst"+facility_id).text(),
-                "p_cvrge_sputnikv_frst" : $(".p_cvrge_sputnikv_frst"+facility_id).text(),
-                "total_c_rate_sputnikv_frst" : $(".total_c_rate_sputnikv_frst"+facility_id).text(),
-                "total_r_unvcted_frst_sputnikv" : $(".total_r_unvcted_frst_sputnikv"+facility_id).text(),
-
-                "total_sputnikv_a1_scnd" : $(".total_sputnikv_a1_scnd"+facility_id).text(),
-                "total_sputnikv_a2_scnd" : $(".total_sputnikv_a2_scnd"+facility_id).text(),
-                "total_sputnikv_a3_scnd" : $(".total_sputnikv_a3_scnd"+facility_id).text(),
-                "total_sputnikv_a4_scnd" : $(".total_sputnikv_a4_scnd"+facility_id).text(),
-                "total_sputnikv_a5_scnd" : $(".total_sputnikv_a5_scnd"+facility_id).text(),
-                "total_sputnikv_b1_scnd" : $(".total_sputnikv_b1_scnd"+facility_id).text(),
-                "total_sputnikv_b2_scnd" : $(".total_sputnikv_b2_scnd"+facility_id).text(),
-                "total_sputnikv_b3_scnd" : $(".total_sputnikv_b3_scnd"+facility_id).text(),
-                "total_sputnikv_b4_scnd" : $(".total_sputnikv_b4_scnd"+facility_id).text(),
-                "total_vcted_sputnikv_scnd" : $(".total_vcted_sputnikv_scnd"+facility_id).text(),
-                "total_mild_sputnikv_scnd" : $(".total_mild_sputnikv_scnd"+facility_id).text(),
-                "total_srs_sputnikv_scnd" : $(".total_srs_sputnikv_scnd"+facility_id).text(),
-                "total_dfrd_sputnikv_scnd" : $(".total_dfrd_sputnikv_scnd"+facility_id).text(),
-                "total_rfsd_sputnikv_scnd" : $(".total_rfsd_sputnikv_scnd"+facility_id).text(),
-                "total_wstge_sputnikv_scnd" : $(".total_wstge_sputnikv_scnd"+facility_id).text(),
-                "p_cvrge_sputnikv_scnd" : $(".p_cvrge_sputnikv_scnd"+facility_id).text(),
-                "total_c_rate_sputnikv_scnd" : $(".total_c_rate_sputnikv_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_sputnikv" : $(".total_r_unvcted_scnd_sputnikv"+facility_id).text(),
-
-                //MODERNA
-                "total_epop_moderna_a1" : $(".total_epop_moderna_a1"+facility_id).text(),
-                "total_epop_moderna_a2" : $(".total_epop_moderna_a2"+facility_id).text(),
-                "total_epop_moderna_a3" : $(".total_epop_moderna_a3"+facility_id).text(),
-                "total_epop_moderna_a4" : $(".total_epop_moderna_a4"+facility_id).text(),
-                "total_epop_moderna_a5" : $(".total_epop_moderna_a5"+facility_id).text(),
-                "total_epop_moderna_b1" : $(".total_epop_moderna_b1"+facility_id).text(),
-                "total_epop_moderna_b2" : $(".total_epop_moderna_b2"+facility_id).text(),
-                "total_epop_moderna_b3" : $(".total_epop_moderna_b3"+facility_id).text(),
-                "total_epop_moderna_b4" : $(".total_epop_moderna_b4"+facility_id).text(),
-                "total_epop_moderna" : $(".total_epop_moderna"+facility_id).text(),
-
-                "total_vallocated_moderna_frst" : $(".total_vallocated_moderna_frst"+facility_id).text(),
-                "total_vallocated_moderna_scnd" : $(".total_vallocated_moderna_scnd"+facility_id).text(),
-                "total_vallocated_moderna" : $(".total_vallocated_moderna"+facility_id).text(),
-                "total_moderna_a1_frst" : $(".total_moderna_a1_frst"+facility_id).text(),
-                "total_moderna_a2_frst" : $(".total_moderna_a2_frst"+facility_id).text(),
-                "total_moderna_a3_frst" : $(".total_moderna_a3_frst"+facility_id).text(),
-                "total_moderna_a4_frst" : $(".total_moderna_a4_frst"+facility_id).text(),
-                "total_moderna_a5_frst" : $(".total_moderna_a5_frst"+facility_id).text(),
-                "total_moderna_b1_frst" : $(".total_moderna_b1_frst"+facility_id).text(),
-                "total_moderna_b2_frst" : $(".total_moderna_b2_frst"+facility_id).text(),
-                "total_moderna_b3_frst" : $(".total_moderna_b3_frst"+facility_id).text(),
-                "total_moderna_b4_frst" : $(".total_moderna_b4_frst"+facility_id).text(),
-                "total_vcted_moderna_frst" : $(".total_vcted_moderna_frst"+facility_id).text(),
-                "total_mild_moderna_frst" : $(".total_mild_moderna_frst"+facility_id).text(),
-                "total_srs_moderna_frst" : $(".total_srs_moderna_frst"+facility_id).text(),
-                "total_dfrd_moderna_frst" : $(".total_dfrd_moderna_frst"+facility_id).text(),
-                "total_rfsd_moderna_frst" : $(".total_rfsd_moderna_frst"+facility_id).text(),
-                "total_wstge_moderna_frst" : $(".total_wstge_moderna_frst"+facility_id).text(),
-                "p_cvrge_moderna_frst" : $(".p_cvrge_moderna_frst"+facility_id).text(),
-                "total_c_rate_moderna_frst" : $(".total_c_rate_moderna_frst"+facility_id).text(),
-                "total_r_unvcted_frst_moderna" : $(".total_r_unvcted_frst_moderna"+facility_id).text(),
-
-                "total_moderna_a1_scnd" : $(".total_moderna_a1_scnd"+facility_id).text(),
-                "total_moderna_a2_scnd" : $(".total_moderna_a2_scnd"+facility_id).text(),
-                "total_moderna_a3_scnd" : $(".total_moderna_a3_scnd"+facility_id).text(),
-                "total_moderna_a4_scnd" : $(".total_moderna_a4_scnd"+facility_id).text(),
-                "total_moderna_a5_scnd" : $(".total_moderna_a5_scnd"+facility_id).text(),
-                "total_moderna_b1_scnd" : $(".total_moderna_b1_scnd"+facility_id).text(),
-                "total_moderna_b2_scnd" : $(".total_moderna_b2_scnd"+facility_id).text(),
-                "total_moderna_b3_scnd" : $(".total_moderna_b3_scnd"+facility_id).text(),
-                "total_moderna_b4_scnd" : $(".total_moderna_b4_scnd"+facility_id).text(),
-                "total_vcted_moderna_scnd" : $(".total_vcted_moderna_scnd"+facility_id).text(),
-                "total_mild_moderna_scnd" : $(".total_mild_moderna_scnd"+facility_id).text(),
-                "total_srs_moderna_scnd" : $(".total_srs_moderna_scnd"+facility_id).text(),
-                "total_dfrd_moderna_scnd" : $(".total_dfrd_moderna_scnd"+facility_id).text(),
-                "total_rfsd_moderna_scnd" : $(".total_rfsd_moderna_scnd"+facility_id).text(),
-                "total_wstge_moderna_scnd" : $(".total_wstge_moderna_scnd"+facility_id).text(),
-                "p_cvrge_moderna_scnd" : $(".p_cvrge_moderna_scnd"+facility_id).text(),
-                "total_c_rate_moderna_scnd" : $(".total_c_rate_moderna_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_moderna" : $(".total_r_unvcted_scnd_moderna"+facility_id).text(),
-
-                //JOHNSON
-                "total_epop_johnson_a1" : $(".total_epop_johnson_a1"+facility_id).text(),
-                "total_epop_johnson_a2" : $(".total_epop_johnson_a2"+facility_id).text(),
-                "total_epop_johnson_a3" : $(".total_epop_johnson_a3"+facility_id).text(),
-                "total_epop_johnson_a4" : $(".total_epop_johnson_a4"+facility_id).text(),
-                "total_epop_johnson_a5" : $(".total_epop_johnson_a5"+facility_id).text(),
-                "total_epop_johnson_b1" : $(".total_epop_johnson_b1"+facility_id).text(),
-                "total_epop_johnson_b2" : $(".total_epop_johnson_b2"+facility_id).text(),
-                "total_epop_johnson_b3" : $(".total_epop_johnson_b3"+facility_id).text(),
-                "total_epop_johnson_b4" : $(".total_epop_johnson_b4"+facility_id).text(),
-                "total_epop_johnson" : $(".total_epop_johnson"+facility_id).text(),
-
-                "total_vallocated_johnson_frst" : $(".total_vallocated_johnson_frst"+facility_id).text(),
-                "total_vallocated_johnson_scnd" : $(".total_vallocated_johnson_scnd"+facility_id).text(),
-                "total_vallocated_johnson" : $(".total_vallocated_johnson"+facility_id).text(),
-                "total_johnson_a1_frst" : $(".total_johnson_a1_frst"+facility_id).text(),
-                "total_johnson_a2_frst" : $(".total_johnson_a2_frst"+facility_id).text(),
-                "total_johnson_a3_frst" : $(".total_johnson_a3_frst"+facility_id).text(),
-                "total_johnson_a4_frst" : $(".total_johnson_a4_frst"+facility_id).text(),
-                "total_johnson_a5_frst" : $(".total_johnson_a5_frst"+facility_id).text(),
-                "total_johnson_b1_frst" : $(".total_johnson_b1_frst"+facility_id).text(),
-                "total_johnson_b2_frst" : $(".total_johnson_b2_frst"+facility_id).text(),
-                "total_johnson_b3_frst" : $(".total_johnson_b3_frst"+facility_id).text(),
-                "total_johnson_b4_frst" : $(".total_johnson_b4_frst"+facility_id).text(),
-                "total_vcted_johnson_frst" : $(".total_vcted_johnson_frst"+facility_id).text(),
-                "total_mild_johnson_frst" : $(".total_mild_johnson_frst"+facility_id).text(),
-                "total_srs_johnson_frst" : $(".total_srs_johnson_frst"+facility_id).text(),
-                "total_dfrd_johnson_frst" : $(".total_dfrd_johnson_frst"+facility_id).text(),
-                "total_rfsd_johnson_frst" : $(".total_rfsd_johnson_frst"+facility_id).text(),
-                "total_wstge_johnson_frst" : $(".total_wstge_johnson_frst"+facility_id).text(),
-                "p_cvrge_johnson_frst" : $(".p_cvrge_johnson_frst"+facility_id).text(),
-                "total_c_rate_johnson_frst" : $(".total_c_rate_johnson_frst"+facility_id).text(),
-                "total_r_unvcted_frst_johnson" : $(".total_r_unvcted_frst_johnson"+facility_id).text(),
-
-                "total_johnson_a1_scnd" : $(".total_johnson_a1_scnd"+facility_id).text(),
-                "total_johnson_a2_scnd" : $(".total_johnson_a2_scnd"+facility_id).text(),
-                "total_johnson_a3_scnd" : $(".total_johnson_a3_scnd"+facility_id).text(),
-                "total_johnson_a4_scnd" : $(".total_johnson_a4_scnd"+facility_id).text(),
-                "total_johnson_a5_scnd" : $(".total_johnson_a5_scnd"+facility_id).text(),
-                "total_johnson_b1_scnd" : $(".total_johnson_b1_scnd"+facility_id).text(),
-                "total_johnson_b2_scnd" : $(".total_johnson_b2_scnd"+facility_id).text(),
-                "total_johnson_b3_scnd" : $(".total_johnson_b3_scnd"+facility_id).text(),
-                "total_johnson_b4_scnd" : $(".total_johnson_b4_scnd"+facility_id).text(),
-                "total_vcted_johnson_scnd" : $(".total_vcted_johnson_scnd"+facility_id).text(),
-                "total_mild_johnson_scnd" : $(".total_mild_johnson_scnd"+facility_id).text(),
-                "total_srs_johnson_scnd" : $(".total_srs_johnson_scnd"+facility_id).text(),
-                "total_dfrd_johnson_scnd" : $(".total_dfrd_johnson_scnd"+facility_id).text(),
-                "total_rfsd_johnson_scnd" : $(".total_rfsd_johnson_scnd"+facility_id).text(),
-                "total_wstge_johnson_scnd" : $(".total_wstge_johnson_scnd"+facility_id).text(),
-                "p_cvrge_johnson_scnd" : $(".p_cvrge_johnson_scnd"+facility_id).text(),
-                "total_c_rate_johnson_scnd" : $(".total_c_rate_johnson_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd_johnson" : $(".total_r_unvcted_scnd_johnson"+facility_id).text(),
-
-                //TOTAL OVERALL
-                "total_vallocated_frst" : $(".total_vallocated_frst"+facility_id).text(),
-                "total_vallocated_scnd" : $(".total_vallocated_scnd"+facility_id).text(),
-                "total_vallocated" : $(".total_vallocated"+facility_id).text(),
-                "total_overall_a1_first" : $(".total_overall_a1_first"+facility_id).text(),
-                "total_overall_a2_first" : $(".total_overall_a2_first"+facility_id).text(),
-                "total_overall_a3_first" : $(".total_overall_a3_first"+facility_id).text(),
-                "total_overall_a4_first" : $(".total_overall_a4_first"+facility_id).text(),
-                "total_overall_a5_first" : $(".total_overall_a5_first"+facility_id).text(),
-                "total_overall_b1_first" : $(".total_overall_b1_first"+facility_id).text(),
-                "total_overall_b2_first" : $(".total_overall_b2_first"+facility_id).text(),
-                "total_overall_b3_first" : $(".total_overall_b3_first"+facility_id).text(),
-                "total_overall_b4_first" : $(".total_overall_b4_first"+facility_id).text(),
-                "total_vcted_frst" : $(".total_vcted_frst"+facility_id).text(),
-                "total_overall_mild_first" : $(".total_overall_mild_first"+facility_id).text(),
-                "total_overall_serious_first" : $(".total_overall_serious_first"+facility_id).text(),
-                "total_overall_deferred_first" : $(".total_overall_deferred_first"+facility_id).text(),
-                "total_rfsd_frst" : $(".total_rfsd_frst"+facility_id).text(),
-                "total_overall_wastage_first" : $(".total_overall_wastage_first"+facility_id).text(),
-                "total_p_cvrge_frst" : $(".total_p_cvrge_frst"+facility_id).text(),
-                "total_c_rate_frst" : $(".total_c_rate_frst"+facility_id).text(),
-                "total_r_unvcted_frst" : $(".total_r_unvcted_frst"+facility_id).text(),
-
-                "total_overall_a1_second" : $(".total_overall_a1_second"+facility_id).text(),
-                "total_overall_a2_second" : $(".total_overall_a2_second"+facility_id).text(),
-                "total_overall_a3_second" : $(".total_overall_a3_second"+facility_id).text(),
-                "total_overall_a4_second" : $(".total_overall_a4_second"+facility_id).text(),
-                "total_overall_a5_second" : $(".total_overall_a5_second"+facility_id).text(),
-                "total_overall_b1_second" : $(".total_overall_b1_second"+facility_id).text(),
-                "total_overall_b2_second" : $(".total_overall_b2_second"+facility_id).text(),
-                "total_overall_b3_second" : $(".total_overall_b3_second"+facility_id).text(),
-                "total_overall_b4_second" : $(".total_overall_b4_second"+facility_id).text(),
-                "total_vcted_scnd" : $(".total_vcted_scnd"+facility_id).text(),
-                "total_overall_mild_second" : $(".total_overall_mild_second"+facility_id).text(),
-                "total_overall_serious_second" : $(".total_overall_serious_second"+facility_id).text(),
-                "total_overall_deferred_second" : $(".total_overall_deferred_second"+facility_id).text(),
-                "total_rfsd_scnd" : $(".total_rfsd_scnd"+facility_id).text(),
-                "total_overall_wastage_second" : $(".total_overall_wastage_second"+facility_id).text(),
-                "total_p_cvrge_scnd" : $(".total_p_cvrge_scnd"+facility_id).text(),
-                "total_c_rate_scnd" : $(".total_c_rate_scnd"+facility_id).text(),
-                "total_r_unvcted_scnd" : $(".total_r_unvcted_scnd"+facility_id).text(),
-
-
             };
             var url = "<?php echo asset('vaccine/facility_content'); ?>";
             $.post(url,json,function(data){

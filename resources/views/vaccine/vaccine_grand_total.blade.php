@@ -572,8 +572,7 @@
     </tbody>
     <tbody id="collapse_sinovac_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #ffd8d6">
-            <td rowspan="2">
-            </td> <!--SINOVAC -->
+            <td rowspan="2">Sinovac</td> <!--SINOVAC -->
             <td rowspan="2">
                 {{ $total_e_pop_svac_a1_prov }}
                  <?php Session::put('total_e_pop_svac_a1_excel',$total_e_pop_svac_a1_prov); ?>
@@ -848,9 +847,7 @@
     </tbody>
     <tbody id="collapse_astra_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #f2fcac">
-            <td rowspan="2">
-
-            </td> <!-- 1-5 -->
+            <td rowspan="2">Astrazeneca</td> <!-- 1-5 -->
             <td rowspan="2" style="color:black;">
                 {{ $total_e_pop_astra_a1_prov }}
                 <?php session::put('total_e_pop_astra_a1_excel',$total_e_pop_astra_a1_prov);?>
@@ -1127,9 +1124,7 @@
         <!-- PFIZER -->
         <tbody id="collapse_pfizer_grand" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #8fe7fd">
-            <td rowspan="2">
-
-            </td> <!-- 1-5 -->
+            <td rowspan="2">Pfizer</td> <!-- 1-5 -->
             <td rowspan="2">
                 {{ $total_e_pop_pfizer_a1_prov }}
                 <?php session::put('total_e_pop_pfizer_a1_excel',$total_e_pop_pfizer_a1_prov );?>
@@ -1405,9 +1400,7 @@
         <!-- SPUTNIKV -->
         <tbody id="collapse_sputnikv_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #b1ffdb">
-            <td rowspan="2">
-
-            </td> <!-- 1-3 -->
+            <td rowspan="2">SputnikV</td> <!-- 1-3 -->
             <td rowspan="2">
                 {{ $total_e_pop_sputnikv_a1_prov }}
                 <?php session::put('total_e_pop_sputnikv_a1_excel',$total_e_pop_sputnikv_a1_prov);?>
@@ -1684,9 +1677,7 @@
         <!-- MODERNA -->
         <tbody id="collapse_moderna_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #dad8ff">
-            <td rowspan="2">
-
-            </td> <!-- 1-3 -->
+            <td rowspan="2">Moderna</td> <!-- 1-3 -->
             <td rowspan="2">
                 {{ $total_e_pop_moderna_a1_prov }}
                 <?php session::put('total_e_pop_moderna_a1_excel',$total_e_pop_moderna_a1_prov);?>
@@ -1963,9 +1954,7 @@
         <!-- JOHNSON -->
         <tbody id="collapse_johnson_grand" class="collapse bg-danger" aria-labelledby="headingTwo" data-parent="#accordionExample">
         <tr style="background-color: #9af5ee">
-            <td rowspan="2">
-
-            </td> <!-- 1-3 -->
+            <td rowspan="2">Janssen</td> <!-- 1-3 -->
             <td rowspan="2">
                 {{ $total_e_pop_johnson_a1_prov }}
                 <?php session::put('total_e_pop_johnson_a1_excel',$total_e_pop_johnson_a1_prov);?>
