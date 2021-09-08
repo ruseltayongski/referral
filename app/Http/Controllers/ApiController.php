@@ -259,6 +259,71 @@ class ApiController extends Controller
         return $data;
     }
 
+    public function individualList(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
+        if($request->status == 'denied')
+            $request->status = 'rejected';
+
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $data = Activity::select(
+                "activity.code",
+                DB::raw("concat(capitalize_name(pat.fname),' ',capitalize_name(pat.mname),'. ',capitalize_name(pat.lname)) as patient_name"),
+                DB::raw("YEAR(CURRENT_TIMESTAMP) - YEAR(pat.dob) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(pat.dob, 5)) as age"),
+                "fac_from.name as referring_facility",
+                "fac_to.name as referred_facility",
+                DB::raw("if(tra.type = 'normal',patient_f.diagnosis,pregnant_f.woman_major_findings) as diagnosis"),
+                DB::raw("if(tra.type = 'normal',patient_f.reason,pregnant_f.woman_reason) as reason")
+            )
+            ->whereBetween("activity.date_referred",[$date_start,$date_end]);
+
+        if($request->request_type == 'incoming')
+            $data = $data->where("activity.referred_to",$request->referring_facility);
+        else
+            $data = $data->where("activity.referred_to",$request->referred_to);
+
+        $data = $data->leftJoin('tracking as tra','tra.code','=','activity.code')
+                    ->leftJoin('patients as pat','pat.id','=','activity.patient_id')
+                    ->leftJoin('patient_form as patient_f','patient_f.code','=','activity.code')
+                    ->leftJoin('pregnant_form as pregnant_f','pregnant_f.code','=','activity.code')
+                    ->leftJoin('facility as fac_from','fac_from.id','=','activity.referred_from')
+                    ->leftJoin('facility as fac_to','fac_to.id','=','activity.referred_to')
+        ;
+
+        if($request->status == 'cancelled')
+            $data = $data->groupBy("activity.code");
+
+        if($request->status == 'seen_only'){
+            $data = $data->join("seen as see","see.code","=","activity.code")
+                        ->leftJoin("activity as act1",function($join){
+                            $join->on("activity.code","=",'act1.code');
+                            $join->on("activity.id",'<','act1.id');
+                            $join->on('act1.referred_to','=','activity.referred_to');
+                        })
+                    ->where(function($query){
+                        $query->where('activity.status','=','referred');
+                        $query->orWhere('activity.status','=','redirected');
+                        $query->orWhere('activity.status','=','transferred');
+                    })
+                    ->whereNull("act1.id")
+                    ->groupBy('activity.code');
+        }
+        else
+            $data = $data->where("activity.status",$request->status);
+
+        $data = $data->get();
+
+        return $data;
+    }
+
     public function apiIncoming(Request $request,$date_start,$date_end){
         $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province')");
         return $data;

@@ -287,6 +287,8 @@ Route::get('api','ApiController@api');
 Route::get('api/get_report','ApiController@apiGetReport');
 Route::get('api/referral_list','ApiController@apiGetReferralList');
 Route::get('api/referral_track','ApiController@apiGetReferralTrack');
+Route::get("reports","admin\ReportCtrl@sottoReports");
+Route::get("api/individual","ApiController@individualList");
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
@@ -519,8 +521,7 @@ Route::get('vaccine/tab13/report','Vaccine\VaccineController@vaccineTab13Report'
 Route::post('vaccine/collapse','Vaccine\VaccineController@dataCollapse');
 Route::post('vaccine/collapse_facility','Vaccine\VaccineController@dataCollapseFacility');
 
-//sotto reports
-Route::get("reports","admin\ReportCtrl@sottoReports");
+
 
 
 
