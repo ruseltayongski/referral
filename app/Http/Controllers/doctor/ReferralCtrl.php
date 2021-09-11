@@ -368,7 +368,7 @@ class ReferralCtrl extends Controller
         ParamCtrl::lastLogin();
         $search = $request->search;
         $option_filter = $request->option_filter;
-        $date = $request->date_range;
+        $date = $request->date;
         $facility_filter = $request->facility_filter;
         $department_filter = $request->department_filter;
 
@@ -427,6 +427,7 @@ class ReferralCtrl extends Controller
                         ->orwhere('tracking.status','rejected')
                         ->orWhere('tracking.status','redirected');
                 });
+
             if($search){
                 $data = $data->where(function($q) use ($search){
                     $q->where('patients.fname','like',"%$search%")
@@ -436,7 +437,8 @@ class ReferralCtrl extends Controller
                 });
             }
 
-            if($option_filter){
+            if($option_filter)
+            {
                 $data = $data->where('tracking.status',$option_filter);
             }
             if($facility_filter)
@@ -471,7 +473,7 @@ class ReferralCtrl extends Controller
             'end' => $end,
             'referredCode' => $request->referredCode,
             'search' => $search,
-            'option_fitler' => $option_filter,
+            'option_filter' => $option_filter,
             'facility_filter' => $facility_filter,
             'department_filter' => $department_filter
         ]);
