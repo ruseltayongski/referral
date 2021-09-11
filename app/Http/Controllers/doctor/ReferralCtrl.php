@@ -368,12 +368,12 @@ class ReferralCtrl extends Controller
         ParamCtrl::lastLogin();
         $search = $request->search;
         $option_filter = $request->option_filter;
-        $date = $request->date;
+        $date = $request->date_range;
         $facility_filter = $request->facility_filter;
         $department_filter = $request->department_filter;
 
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfMonth()->format('m/d/Y');
+        $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         if($request->referredCode){
             ParamCtrl::lastLogin();
