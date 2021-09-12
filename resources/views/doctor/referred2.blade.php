@@ -215,7 +215,7 @@ $user = Session::get('auth');
                                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                         <br />
-                                                        @if($act->department_id==0 && $user->facility_id==$act->referred_from)
+                                                        @if($user->facility_id==$act->referred_from)
                                                             <button class="btn btn-success btn-xs btn-referred" data-toggle="modal" data-target="#referredFormModal" data-activity_id="{{ $act->id }}">
                                                                 <i class="fa fa-ambulance"></i> Refer to other facility
                                                             </button>
@@ -233,18 +233,17 @@ $user = Session::get('auth');
                                                             else
                                                                 $referred_md = 'Dr. '.$act->referring_md;
                                                             ?>
-                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                         @else
                                                             <strong>Walk-In Patient:</strong> <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
                                                         @endif
                                                     </td>
                                                 </tr>
-
                                             @elseif($act->status=='transferred')
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                     <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $row->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                     </td>
                                                 </tr>
