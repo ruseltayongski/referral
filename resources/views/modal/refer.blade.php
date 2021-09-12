@@ -36,7 +36,7 @@ $facilities = \App\Facility::select('id','name')
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4>REFER TO OTHER FACILITY</h4>
+                <h4 class="text-green" style="font-size: 15pt;">Redirect to other facility</h4>
                 <hr />
                 <form method="post" id="referredForm">
                     {{ csrf_field() }}
@@ -72,7 +72,7 @@ $facilities = \App\Facility::select('id','name')
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4>REFER TO OTHER FACILITY</h4>
+                <h4 class="text-green" style="font-size: 15pt;">Transfer to other facility</h4>
                 <hr />
                 <form method="post" id="referAcceptForm">
                     {{ csrf_field() }}

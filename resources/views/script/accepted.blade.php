@@ -262,6 +262,10 @@
                     dataType: 'json',
                     success: function (data) {
                         console.info(data);
+                        setTimeout(function () {
+                            console.log("Force refresh!");
+                            window.location.reload(false);
+                        },15000);
                     }
                 });
             },

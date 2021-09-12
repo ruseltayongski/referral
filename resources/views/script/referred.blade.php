@@ -295,8 +295,8 @@
     });
 
     $('body').on('submit','#referredForm',function(e){
-         e.preventDefault();
-         $('.loading').show();
+        e.preventDefault();
+        $('.loading').show();
         var referred_to = $('#referredForm').find('.new_facility').val();
         var department_name = $('.select_department_referred :selected').text();
         var department_id = $('.select_department_referred').val();
@@ -367,6 +367,10 @@
                     dataType: 'json',
                     success: function (data) {
                         console.info(data);
+                        setTimeout(function () {
+                            console.log("Force refresh!");
+                            window.location.reload(false);
+                        },15000);
                     }
                 });
             },
