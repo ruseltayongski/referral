@@ -37,7 +37,7 @@ class ReferralCtrl extends Controller
         $fac = '';
         $option = '';
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        $end = Carbon::now()->endOfMonth()->format('m/d/Y');
+        $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
         $data = Tracking::select(
                     'tracking.*',
