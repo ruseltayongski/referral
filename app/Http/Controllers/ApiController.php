@@ -73,6 +73,8 @@ class ApiController extends Controller
 
             $incoming = $this->apiIncoming($request,$date_start,$date_end);
             $data = [];
+            /*$redirected_count = 0;
+            $new_array = [];*/ //for testing purpose
             foreach($incoming as $inc){
                 $data[] = [
                     "province" => $inc->province,
@@ -91,7 +93,24 @@ class ApiController extends Controller
                         "not_seen" => $inc->not_seen
                     ]
                 ];
+                /*$redirected_count += $inc->redirected;
+                if($inc->redirected != 0){
+                    $new_array[] = [
+                        "facility_name" => $inc->name,
+                        "redirected" => $inc->redirected
+                    ];
+                }*/ //for testing purposes
+
             }
+
+            /*$price = array_column($new_array, 'redirected');
+            array_multisort($price, SORT_DESC, $new_array);
+            return $new_array;
+            $sum = 0;
+            foreach($new_array as $row){
+                $sum += $row["redirected"];
+            }
+            return $sum;*/ //for testing purposes
             return $data;
         }
         elseif($request->request_type=='outgoing'){
