@@ -51,7 +51,11 @@ class LoginCtrl extends Controller
                         ]);
                 }
 
-                if($login->level=='doctor')
+                if($login->status=='inactive'){
+                    Session::forget('auth');
+                    return Redirect::back()->with('error','Your account was deactivated by the administrator, please call 711 DOH health line.');
+                }
+                elseif($login->level=='doctor')
                     return redirect('doctor');
                 else if($login->level=='chief')
                     return redirect('chief');

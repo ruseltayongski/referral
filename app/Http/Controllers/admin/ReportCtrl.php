@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Facility;
+use App\Http\Controllers\ApiController;
 use App\Login;
 use App\Province;
 use App\Tracking;
@@ -208,43 +209,24 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function statisticsReportIncoming(Request $request){
+    public function statisticsReport(Request $request,$province){
         if($request->isMethod('post') && isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d').' 23:59:59';
+            $request->date_range = $date_start." - ".$date_end;
         }
-
-        $stored_name = "statistics_report_incoming('$date_start','$date_end')";
-        $data = \DB::connection('mysql')->select("call $stored_name");
-
-        return view('admin.report.statistics_incoming',[
+        $apiCtrl = new ApiController();
+        $request->province = $province;
+        $data = $apiCtrl->api($request);
+        return view('admin.report.statistics',[
             'title' => 'STATISTICS REPORT INCOMING',
             "data" => $data,
             'date_range_start' => $date_start,
-            'date_range_end' => $date_end
-        ]);
-    }
-
-    public function statisticsReportOutgoing(Request $request){
-        if($request->isMethod('post') && isset($request->date_range)){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
-        } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
-        }
-
-        $stored_name = "statistics_report_outgoing('$date_start','$date_end')";
-        $data = \DB::connection('mysql')->select("call $stored_name");
-
-        return view('admin.report.statistics_outgoing',[
-            'title' => 'STATISTICS REPORT OUTGOING',
-            "data" => $data,
-            'date_range_start' => $date_start,
-            'date_range_end' => $date_end
+            'date_range_end' => $date_end,
+            'request_type' => $request->request_type
         ]);
     }
 
