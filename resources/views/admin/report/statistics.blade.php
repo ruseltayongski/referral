@@ -5,13 +5,13 @@
         <div class="box box-success">
             <div class="box-header with-border">
                 <h1>Statistic Reports</h1><br>
-                <form action="{{ asset('admin/statistics/incoming') }}" method="POST" class="form-inline">
+                <form action="{{ asset('admin/statistics').'/'.$province }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group-lg">
                         <select name="request_type" class="form-control" id="" required>
                             <option value="">Select request type</option>
-                            <option value="outgoing" <?php if($request_type == "outgoing") ?>>Outgoing</option>
-                            <option value="incoming" <?php if($request_type == "incoming") ?>>Incoming</option>
+                            <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
+                            <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
                         <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
                         <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
@@ -66,7 +66,7 @@
                                     </td>
                                     <td width="10%">
                                         <?php
-                                        $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected']['transferred'] ) * 100;
+                                        $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
                                         ?>
                                         <span class="text-blue">{{ $row['data']['accepted'] }}</span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>

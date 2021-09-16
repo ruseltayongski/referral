@@ -210,7 +210,7 @@ class ReportCtrl extends Controller
     }
 
     public function statisticsReport(Request $request,$province){
-        if($request->isMethod('post') && isset($request->date_range)){
+        if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
         } else {
@@ -226,7 +226,8 @@ class ReportCtrl extends Controller
             "data" => $data,
             'date_range_start' => $date_start,
             'date_range_end' => $date_end,
-            'request_type' => $request->request_type
+            'request_type' => $request->request_type,
+            'province' => $province
         ]);
     }
 
