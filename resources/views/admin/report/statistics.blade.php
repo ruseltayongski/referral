@@ -1,5 +1,9 @@
 @extends('layouts.app')
-
+<style>
+    span{
+        cursor: pointer;
+    }
+</style>
 @section('content')
     <div class="row col-md-12">
         <div class="box box-success">
@@ -52,7 +56,7 @@
                                         <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row['hospital_type']) }}</small>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt">{{ $row['data']['referred'] }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this))">{{ $row['data']['referred'] }}</span><br><br>
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;">
@@ -103,6 +107,23 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="statistics-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Outgoing Statistics</h3>
+                </div>
+                <div class="modal-body statistics-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('css')
 @endsection
@@ -114,6 +135,37 @@
         $(document).ready(function(){
             $('.table-fixed-header').fixedHeader();
         });
+
+        function statisticsData(data){
+            $("#statistics-modal").modal('show');
+            $(".statistics-body").html(loading);
+            $("span").css("background-color","");
+            data.css("background-color","yellow");
+            var url = "<?php echo asset('api/individual?request_type=incoming&facility_id=24&status=referred&date_range=09/12/2021%20-%2009/17/2021'); ?>";
+            $.get(url,function(result){
+                setTimeout(function(){
+                    $(".statistics-body").html(
+                        "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th></tr>\n" +
+                        "</table>"
+                    );
+                    jQuery.each(result, function(index, value) {
+                        var track_url = "<?php echo asset('doctor/referred?referredCode='); ?>"+value["code"];
+                        var tr = $('<tr />');
+                        tr.append("<a href='"+track_url+"' class=\"btn btn-xs btn-success\" target=\"_blank\">\n" +
+                            "<i class=\"fa fa-stethoscope\"></i> Track\n" +
+                            "</a>");
+                        tr.append( $('<td />', { text : value["code"] } ));
+                        tr.append( $('<td />', { text : value["patient_name"] } ));
+                        tr.append( $('<td />', { text : value["age"] } ));
+                        tr.append( $('<td />', { text : value["referring_facility"] } ));
+                        tr.append( $('<td />', { text : value["referred_facility"] } ));
+                        $("#table").append(tr);
+                    });
+
+                },500);
+            });
+        }
     </script>
 @endsection
 

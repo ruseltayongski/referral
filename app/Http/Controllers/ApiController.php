@@ -307,7 +307,7 @@ class ApiController extends Controller
         if($request->request_type == 'incoming')
             $data = $data->where("activity.referred_to",$request->facility_id);
         else
-            $data = $data->where("activity.referred_to",$request->facility_id);
+            $data = $data->where("activity.referred_from",$request->facility_id);
 
         $data = $data->leftJoin('tracking as tra','tra.code','=','activity.code')
                     ->leftJoin('patients as pat','pat.id','=','activity.patient_id')
