@@ -171,7 +171,7 @@
                 "facility_id" : facility_id
             };
             console.log(json);
-            var url = "<?php echo asset('offline/facility/remark') ?>";
+            var url = "<?php echo asset('offline/facilities/remark') ?>";
             $.post(url,json,function(result){
                 setTimeout(function(){
                     $(".offline_remark").html(result);
