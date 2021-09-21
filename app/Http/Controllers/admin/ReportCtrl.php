@@ -150,7 +150,7 @@ class ReportCtrl extends Controller
             $day_date = date('Y-m-d');
         }
 
-        $data = \DB::connection('mysql')->select("call offline_facility('$day_date','$province_id')");
+        return $data = \DB::connection('mysql')->select("call offline_facility('$day_date','$province_id')");
 
         return view('admin.report.offline_facility',[
             'title' => 'Offline Facility',
