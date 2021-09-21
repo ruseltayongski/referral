@@ -18,24 +18,6 @@
                         </div>
                     </form>
                 </div>
-                @if(Session::get('auth')->level == 'admin')
-                    <h3>
-                        Call Center IT support<br>
-                        <?php
-                        $call_center = \App\User::where('level','admin')->get();
-                        ?>
-                        @foreach($call_center as $row)
-                            <?php
-                            $it_name = $row->fname.' '.$row->mname.' '.$row->lname;
-                            $date_now = date('Y-m-d');
-                            $call_count = \App\OfflineFacilityRemark::where("remark_by",$row->id)->count();
-                            ?>
-                            <span class="badge bg-blue"> {{ $call_count }}</span> <span style="font-size: 8pt;">{{ $it_name }}</span>
-                        @endforeach
-                    </h3>
-                @else
-                    <h3>Offline Facility</h3>
-                @endif
             </div>
             <div class="box-body">
                 @if(count($data) > 0)

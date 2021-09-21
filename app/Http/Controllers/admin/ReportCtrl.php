@@ -18,7 +18,7 @@ class ReportCtrl extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
         //$this->middleware('admin');
         //$this->middleware('doctor');
     }
@@ -150,7 +150,7 @@ class ReportCtrl extends Controller
             $day_date = date('Y-m-d');
         }
 
-        return $data = \DB::connection('mysql')->select("call offline_facility('$day_date','$province_id')");
+        $data = \DB::connection('mysql')->select("call offline_facility('$day_date','$province_id')");
 
         return view('admin.report.offline_facility',[
             'title' => 'Offline Facility',
