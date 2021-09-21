@@ -17,7 +17,8 @@
                             <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
                             <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
-                        <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                        <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
+                        <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
                         <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
                     </div>
                 </form>
@@ -56,15 +57,15 @@
                                         <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row['hospital_type']) }}</small>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this))">{{ $row['data']['referred'] }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','referred','{{ $date_range }}')">{{ $row['data']['referred'] }}</span><br><br>
                                     </td>
                                     <td>
-                                        <span class="text-blue" style="font-size: 15pt;">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected','{{ $date_range }}')">
                                             {{ $row['data']['redirected'] }}
                                         </span><br><br>
                                     </td>
                                     <td>
-                                        <span class="text-blue" style="font-size: 15pt;">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','transferred','{{ $date_range }}')">
                                             {{ $row['data']['transferred'] }}
                                         </span><br><br>
                                     </td>
@@ -72,24 +73,24 @@
                                         <?php
                                         $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
                                         ?>
-                                        <span class="text-blue">{{ $row['data']['accepted'] }}</span><br>
+                                        <span class="text-blue" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','accepted','{{ $date_range }}')">{{ $row['data']['accepted'] }}</span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $row['data']['denied'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','denied','{{ $date_range }}')">{{ $row['data']['denied'] }}</span>
                                         <br><br>
                                     </td>
                                     <td>
-                                        <span class="text-blue" style="font-size: 15pt;">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">
                                             {{ $row['data']['cancelled'] }}
                                         </span><br><br>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $row['data']['seen_only'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['seen_only'] }}</span>
                                         <br><br>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;">{{ $row['data']['not_seen'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','note_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
                                         <br><br>
                                     </td>
                                 </tr>
@@ -112,7 +113,16 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Outgoing Statistics</h3>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h3 class="modal-title statistics-title"></h3>
+                        </div>
+                        <div class="col-xs-6">
+                            <button type="button" class="close" style="float: right" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-body statistics-body">
                     ...
@@ -136,17 +146,23 @@
             $('.table-fixed-header').fixedHeader();
         });
 
-        function statisticsData(data){
+        function statisticsData(data,request_type,facility_id,status,date_range){
+            date_range = date_range.replace(/\//ig, "%2F");
+            date_range = date_range.replace(/ /g, "+");
+            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics ");
             $("#statistics-modal").modal('show');
             $(".statistics-body").html(loading);
             $("span").css("background-color","");
             data.css("background-color","yellow");
-            var url = "<?php echo asset('api/individual?request_type=incoming&facility_id=24&status=referred&date_range=09/12/2021%20-%2009/17/2021'); ?>";
+            var url = "<?php echo asset('api/individual'); ?>"+"?request_type="+request_type+"&facility_id="+facility_id+"&status="+status+"&date_range="+date_range;
+            console.log(url);
+            console.log("http://localhost/referral/admin/statistics/2?_token=weVF7VYnePu6ZTnEqElkNP5Wzj6vXwdL7gCtwqRV&request_type=outgoing&date_range=09%2F01%2F2021+-+09%2F21%2F2021");
             $.get(url,function(result){
                 setTimeout(function(){
+                    $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');
                     $(".statistics-body").html(
                         "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
-                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th></tr>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th><th class='text-green'>Status</th></tr>\n" +
                         "</table>"
                     );
                     jQuery.each(result, function(index, value) {
@@ -160,6 +176,7 @@
                         tr.append( $('<td />', { text : value["age"] } ));
                         tr.append( $('<td />', { text : value["referring_facility"] } ));
                         tr.append( $('<td />', { text : value["referred_facility"] } ));
+                        tr.append( $('<td />', { text : status } ));
                         $("#table").append(tr);
                     });
 
