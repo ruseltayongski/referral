@@ -7,8 +7,13 @@
         <li>
             <a href="{{ url('online/facility') }}"><i class="fa fa-hospital-o"></i>Online Facility</a>
         </li>
-        <li>
-            <a href="{{ url('offline/facility') }}"><i class="fa fa-times-circle-o"></i>Offline Facility</a>
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-times-circle-o"></i>Offline Facility</a>
+            <ul class="dropdown-menu">
+                @foreach(\App\Province::get() as $prov)
+                    <li><a href="{{ asset('offline/facility').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
+                @endforeach
+            </ul>
         </li>
         <li class="dropdown-submenu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-calendar-check-o"></i>Login Status</a>

@@ -366,6 +366,7 @@
     <div class="{{ in_array(Request::segments()[0].'/'.Request::segments()[1].'/'.Request::segments()[2],
                     array('vaccine/vaccineview/1','vaccine/vaccineview/2','vaccine/vaccineview/3','vaccine/vaccineview/4',
                     'onboard/facility/1','onboard/facility/2','onboard/facility/3','onboard/facility/4',
+                    'offline/facility/1','offline/facility/2','offline/facility/3','offline/facility/4',
                     'vaccine/facility/cebu','vaccine/facility/mandaue','vaccine/facility/lapu','weekly/report/1','weekly/report/2','weekly/report/3','weekly/report/4',
                     'admin/statistics/incoming1','admin/statistics/incoming','admin/statistics/1','admin/statistics/2','admin/statistics/3','admin/statistics/4')
                    , true) ? 'container-fluid' : 'container' }}" >
