@@ -156,7 +156,6 @@
             data.css("background-color","yellow");
             var url = "<?php echo asset('api/individual'); ?>"+"?request_type="+request_type+"&facility_id="+facility_id+"&status="+status+"&date_range="+date_range;
             console.log(url);
-            console.log("http://localhost/referral/admin/statistics/2?_token=weVF7VYnePu6ZTnEqElkNP5Wzj6vXwdL7gCtwqRV&request_type=outgoing&date_range=09%2F01%2F2021+-+09%2F21%2F2021");
             $.get(url,function(result){
                 setTimeout(function(){
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');

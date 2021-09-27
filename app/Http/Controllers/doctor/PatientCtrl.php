@@ -51,13 +51,7 @@ class PatientCtrl extends Controller
         ParamCtrl::lastLogin();
 
         $user = Session::get('auth');
-        $muncity = Muncity::where('province_id',$user->province)
-            ->where(function($q){
-                $q->WhereNull("vaccine_used")
-                    ->orWhere("vaccine_used","No");
-            })
-            ->orderby('description','asc')
-            ->get();
+        $province = Province::get();
 
         $keyword = '';
         $brgy = '';
@@ -138,10 +132,9 @@ class PatientCtrl extends Controller
         return view('doctor.patient',[
             'title' => 'Patient List',
             'data' => $data,
-            'muncity' => $muncity,
+            'province' => $province,
             'source' => $source,
-            //'icd10' => $icd10,
-            'sidebar' => 'filter_profile'
+            //'icd10' => $icd10
         ]);
     }
 

@@ -19,7 +19,10 @@ function getMinutes($time){
             <th>Time Ended</th>
             <th>Time Duration</th>
             <th>Reason for Calling</th>
-            <th>Walk-In</th>
+            <th>Reason Others</th>
+            <th>Notes</th>
+            <th>Action Taken</th>
+            <th>Walk-In Notes</th>
         </tr>
         </thead>
         <tbody>
@@ -65,6 +68,15 @@ function getMinutes($time){
                     <small class="text-yellow">
                         ({{ ucfirst($row->reason_calling) }})
                     </small>
+                </td>
+                <td>
+                    {{ $row->reason_others }}
+                </td>
+                <td>
+                    {{ $row->notes }}
+                </td>
+                <td>
+                    {{ $row->action }}
                 </td>
                 <td>
                     <?php

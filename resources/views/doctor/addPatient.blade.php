@@ -96,7 +96,7 @@ $status = session::get('status');
                             <tr class="has-group">
                                 <td>Municipality/City :</td>
                                 <td>
-                                    <select class="form-control muncity filter_muncity select2" name="muncity" required>
+                                    <select class="form-control muncity filter_muncity select2" onchange="filterSidebar($(this),'barangay')" name="muncity" required>
                                         <option value="">Select Municipal/City...</option>
                                         @foreach($muncity as $m)
                                             <option value="{{ $m->id }}">{{ $m->description }}</option>

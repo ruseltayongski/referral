@@ -22,7 +22,7 @@
 
     </style>
     <div class="col-md-3">
-        @include('sidebar.'.$sidebar)
+        @include('sidebar.filter_profile')
     </div>
     <div class="col-md-9">
         <div class="jim-content">

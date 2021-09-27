@@ -279,6 +279,11 @@ class ApiController extends Controller
     }
 
     public function individualList(Request $request){
+        if(!$request->facility_id)
+            return "NO FACILITY FILTERED";
+        elseif(!$request->request_type)
+            return "NO REQUEST TYPE FILTERED";
+
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 
@@ -292,6 +297,9 @@ class ApiController extends Controller
             $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
+
+        /*$data = \DB::connection('mysql')->select("call statistics_report_individual('$request->request_type','$request->facility_id','$date_start','$date_end','$request->status')");
+        return $data;*/
 
         $data = Activity::select(
                 "activity.code",
