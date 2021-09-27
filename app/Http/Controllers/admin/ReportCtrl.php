@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Activity;
 use App\Facility;
 use App\Http\Controllers\ApiController;
 use App\Login;
@@ -192,12 +193,23 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onboardFacility($province_id){
-        $data = \DB::connection('mysql')->select("call onboard_facility('$province_id')");
+    public function onboardFacility(Request $request,$province_id){
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $data = \DB::connection('mysql')->select("call onboard_facility('$province_id','$date_start','$date_end')");
 
         return view('admin.report.onboard_facility',[
             'title' => 'ONBOARD FACILITY',
-            "data" => $data
+            'data' => $data,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'province_id' => $province_id
         ]);
     }
 

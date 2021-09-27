@@ -10,8 +10,19 @@
         <div class="box box-success">
             <div class="box-body">
                 @if(count($data) > 0)
+                    <h1 style="color: #676767">{{ $data[0]->province }}</h1>
+                    <div class="box-header with-border">
+                        <form action="{{ asset('onboard/facility').'/'.$province_id }}" method="GET" class="form-inline">
+                            {{ csrf_field() }}
+                            <div class="form-group-lg">
+                                <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
+                                <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
+                                <button type="submit" class="btn-lg btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered table-fixed-header">
                             <?php
                                 $count = 0;
 
@@ -129,11 +140,6 @@
                                     <?php $province[$row->province] = true; ?>
                                     <tr>
                                         <td colspan="9">
-                                            <b style="color: #ff298e;font-size: 17pt;">{{ $row->province }} - as of {{ date('F d, Y') }}</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="9">
                                             <div class="row">
                                                 <div class="col-lg-3">
                                                     <div id="chartOverall{{ $row->province_id }}" style="height: 200px; width: 100%;"></div>
@@ -178,17 +184,19 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="bg-black">
-                                        <th></th>
-                                        <th>Facility Name</th>
-                                        <th>Chief Hospital</th>
-                                        <th>Contact No</th>
-                                        <th>Registered On</th>
-                                        <th>First Login</th>
-                                        <th>Last Login From</th>
-                                        <th>Last Logout To</th>
-                                        <th>Last Transaction</th>
-                                    </tr>
+                                    <thead class='header'>
+                                        <tr class="bg-black">
+                                            <th></th>
+                                            <th>Facility Name</th>
+                                            <th>Chief Hospital</th>
+                                            <th>Contact No</th>
+                                            <th>Registered On</th>
+                                            <th>First Login</th>
+                                            <th>Last Login From</th>
+                                            <th>Last Logout To</th>
+                                            <th>Last Transaction</th>
+                                        </tr>
+                                    </thead>
                                 @endif
                                 <tr class="@if($row->status == 'onboard'){{ 'bg-yellow' }}@endif">
                                     <td>{{ $count }}</td>
@@ -261,6 +269,12 @@
 
 @section('js')
     <script type="text/javascript">
+        //Date range picker
+        $('#consolidate_date_range').daterangepicker();
+        $(document).ready(function(){
+            $('.table-fixed-header').fixedHeader();
+        });
+
         window.onload = function() {
             CanvasJS.addColorSet("greenShades",
                 [//colorSet Array
