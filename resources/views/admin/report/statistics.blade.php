@@ -86,11 +86,11 @@
                                         </span><br><br>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['seen_only'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','seen_only','{{ $date_range }}')">{{ $row['data']['seen_only'] }}</span>
                                         <br><br>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','note_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','not_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
                                         <br><br>
                                     </td>
                                 </tr>
@@ -155,7 +155,7 @@
             $("span").css("background-color","");
             data.css("background-color","yellow");
             var url = "<?php echo asset('api/individual'); ?>"+"?request_type="+request_type+"&facility_id="+facility_id+"&status="+status+"&date_range="+date_range;
-            console.log(url);
+            //console.log(url);
             $.get(url,function(result){
                 setTimeout(function(){
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');
