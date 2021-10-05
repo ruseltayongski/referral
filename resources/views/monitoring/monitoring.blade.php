@@ -4,15 +4,14 @@
     <div class="box box-success">
         <div class="box-body">
             <div class="box-header with-border">
-                <h3>
+                <h1>
                     Referral not accepted within 30 minutes as
-                </h3>
-                <span class="text-blue">({{ date("F d,Y H:i:s",strtotime($date_start)) }} to {{ date("F d,Y H:i:s",strtotime($date_end)) }})</span><br><br>
+                </h1>
                 <form action="{{ asset('monitoring') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group-sm">
+                    <div class="form-group-lg">
                         <input type="text" class="form-control active" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range" autocomplete="off">
-                        <button type="submit" class="btn-sm btn-info btn-flat" onclick="loadPage();"><i class="fa fa-search"></i> Filter</button>
+                        <button type="submit" class="btn-lg btn-info btn-flat" onclick="loadPage();"><i class="fa fa-search"></i> Filter</button>
                     </div>
                 </form>
             </div>

@@ -24,6 +24,7 @@ class MonitoringCtrl extends Controller
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");
+
         return view('monitoring.monitoring',[
             "pending_activity" => $pending_activity,
             "date_start" => $date_start,
