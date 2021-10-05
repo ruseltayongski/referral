@@ -8,13 +8,13 @@
                     {{ csrf_field() }}
                     <div class="form-group-lg" style="margin-bottom: 10px;">
                         <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ Session::get("keyword") }}">
-                        <button type="submit" class="btn btn-success btn-sm btn-flat">
+                        <button type="submit" class="btn btn-success btn-lg btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
-                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-lg btn-flat">
                             <i class="fa fa-eye"></i> View All
                         </button>
-                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat" onclick="FacilityBody('empty')">
+                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-lg btn-flat" onclick="FacilityBody('empty')">
                             <i class="fa fa-hospital-o"></i> Add Facility
                         </a>
                     </div>
@@ -92,6 +92,9 @@
                                     }
                                     elseif($row->hospital_type == 'birthing_home'){
                                         echo 'badge bg-orange';
+                                    }
+                                    elseif($row->hospital_type == 'EOC'){
+                                        echo 'badge bg-black';
                                     }
                                     ?>">{{ $row->hospital_type == 'birthing_home' ? 'Birthing Home' : ucfirst($row->hospital_type) }}</span>
                                 </td>

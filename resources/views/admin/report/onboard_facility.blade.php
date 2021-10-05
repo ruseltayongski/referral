@@ -202,7 +202,27 @@
                                     <td>{{ $count }}</td>
                                     <td class="@if(!$transaction && $row->status == 'onboard'){{ 'bg-red' }}@endif">
                                         {{ $row->name }}<br>
-                                        <span class="{{ $row->hospital_type == 'government' ? 'badge bg-green' : 'badge bg-blue' }}">{{ ucfirst($row->hospital_type) }}</span>
+                                        <span class="
+                                        <?php
+                                        if($row->hospital_type == 'government'){
+                                            echo 'badge bg-green';
+                                        }
+                                        elseif($row->hospital_type == 'private'){
+                                            echo 'badge bg-blue';
+                                        }
+                                        elseif($row->hospital_type == 'RHU'){
+                                            echo 'badge bg-yellow';
+                                        }
+                                        elseif($row->hospital_type == 'CIU/TTMF'){
+                                            echo 'badge bg-purple';
+                                        }
+                                        elseif($row->hospital_type == 'birthing_home'){
+                                            echo 'badge bg-orange';
+                                        }
+                                        elseif($row->hospital_type == 'EOC'){
+                                            echo 'badge bg-black';
+                                        }
+                                        ?>">{{ $row->hospital_type == 'birthing_home' ? 'Birthing Home' : ucfirst($row->hospital_type) }}</span>
                                     </td>
                                     <td>{{ $row->chief_hospital }}</td>
                                     <td width="10%"><small>{{ $row->contact }}</small></td>

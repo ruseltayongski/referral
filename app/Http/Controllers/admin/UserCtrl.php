@@ -104,6 +104,7 @@ class UserCtrl extends Controller
 
     public function store(Request $req)
     {
+        $user = Session::get('auth');
         $facility = Facility::find($req->facility_id);
         $data = array(
             'fname' => $req->fname,
@@ -118,7 +119,8 @@ class UserCtrl extends Controller
             'username' => $req->username,
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
-            'province' => $facility->province
+            'province' => $facility->province,
+            'created_by' => $user->id
         );
         if($req->user_id == "no_id"){
             Session::put("manage_user","Successfully added new account");

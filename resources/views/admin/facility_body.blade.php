@@ -197,6 +197,16 @@
                 ?>
             >Birthing Home
             </option>
+            <option value="EOC"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'EOC'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >EOC
+            </option>
         </select>
     </div>
     <div class="form-group">

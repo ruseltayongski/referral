@@ -104,7 +104,8 @@ class UserCtrl extends Controller
             'username' => $req->username,
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
-            'province' => $facility->province
+            'province' => $facility->province,
+            'created_by' => $user->id
         );
         User::updateOrCreate($match,$data);
         return 'added';
