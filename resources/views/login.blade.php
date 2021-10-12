@@ -21,7 +21,7 @@ $dateNow = date('Y-m-d');
         <center>
             <img src="{{ asset('resources/img/doh.png') }}" style="width: 25%"/><br>
             <label>711 DOH CVCHD HealthLine</label><br>
-            <label>Bed Occupancy Status hehehehe</label><br>
+            <label>Bed Occupancy Status</label><br>
             <label style="font-size: 9pt;">Central Visayas Electronic Health Referral System(CVe-HRS)</label>
         </center>
           <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
