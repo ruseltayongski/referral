@@ -13,7 +13,6 @@
             <form method="POST" class="form-submit pregnant_form">
             <div class="jim-content">
                 @include('include.header_form')
-                <div class="title-form">BEmONC/ CEmONC REFERRAL FORM</div>
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}
                     <input type="hidden" name="patient_id" class="patient_id" value="" />

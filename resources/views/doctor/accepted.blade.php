@@ -83,16 +83,16 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td style="white-space: nowrap;">
                                             <span class="facility" title="{{ $row->name }}">
                                             @if(strlen($row->name)>25)
-                                                    {{ substr($row->name,0,25) }}...
-                                                @else
-                                                    {{ $row->name }}
-                                                @endif
+                                                {{ substr($row->name,0,25) }}...
+                                            @else
+                                                {{ $row->name }}
+                                            @endif
                                             </span>
                                             <br />
                                             <span class="text-muted">{{ $type }}</span>
                                         </td>
                                         <td>
-                                            <a href="{{ $modal }}" class="view_form"
+                                            <a href="#referralForm" class="view_form"
                                                data-toggle="modal"
                                                data-type="{{ $row->type }}"
                                                data-id="{{ $row->id }}"

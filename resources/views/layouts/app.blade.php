@@ -77,13 +77,19 @@
         #myBtn:hover {
             background-color: #555;
         }
+        .form-label {
+            font-size: 10pt;
+        }
+
+        .form-details {
+            font-size: 12pt;
+            color: #e08e0b;;
+        }
     </style>
 </head>
 
 <body>
-
 <!-- Fixed navbar -->
-
 <nav class="navbar navbar-default fixed-top">
     <div class="header" style="background-color:#2F4054;padding:10px;">
         <div>
@@ -375,7 +381,7 @@
         <div class="clearfix"></div>
     </div> <!-- /container -->
 @else
-    <div class="{{ in_array(Request::segments()[0], array('vaccine','bed_admin','reports'), true) ? 'container-fluid' : 'container' }}" id="container">
+    <div class="{{ in_array(Request::segments()[0], array('vaccine','bed_admin','reports','monitoring'), true) ? 'container-fluid' : 'container' }}" id="container">
         <div class="loading"></div>
         <div class="row">
             @yield('content')
@@ -426,7 +432,19 @@
 <!-- TABLE-HEADER-FIXED -->
 <script src="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.js') }}"></script>
 
+<audio id="carteSoudCtrl">
+    <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
+</audio>
+
 <script>
+
+    var audioElement = document.createElement('audio');
+    audioElement.setAttribute('src', "{{ url('public/notify.mp3') }}");
+
+    audioElement.addEventListener('ended', function() {
+        this.play();
+    }, false);
+
     $(".select2").select2({ width: '100%' });
 
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
@@ -534,6 +552,37 @@
             scrollTop : 0 // Scroll to top of body
         }, 500);
     }
+
+    $('.select_facility').on('change',function(){
+        var id = $(this).val();
+        referred_facility = id;
+        if(referred_facility){
+            var url = "{{ url('location/facility/') }}";
+            $.ajax({
+                url: url+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    $('.facility_address').html(data.address);
+
+                    $('.select_department').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Select Department...'
+                        }));
+                    jQuery.each(data.departments, function(i,val){
+                        $('.select_department').append($('<option>', {
+                            value: val.id,
+                            text : val.description
+                        }));
+
+                    });
+                },
+                error: function(error){
+                    $('#serverModal').modal();
+                }
+            });
+        }
+    });
 
 </script>
 

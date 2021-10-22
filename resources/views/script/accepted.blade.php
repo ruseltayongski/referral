@@ -275,8 +275,8 @@
         });
     });
 
-    $('.view_form').on('click',function(){
-        $('.loading').show();
+    $('.view_form').on('click',function() {
+        $(".referral_body").html(loading);
         code = $(this).data('code');
         form_type = $(this).data('type');
         id = $(this).data('id');
@@ -285,107 +285,36 @@
         $('#pregnantFormModal').find('span').html('');
 
         if(form_type=='normal'){
-            getNormalForm();
+            $(".referral_body").html(loading);
+            $.ajax({
+                url: "{{ url('doctor/referral/data/normal') }}/"+id+"/referring/normal",
+                type: "GET",
+                success: function(data) {
+                    setTimeout(function() {
+                        $(".referral_body").html(data);
+                    },300);
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
         }else{
-            getPregnantForm();
+            $(".referral_body").html(loading);
+            $.ajax({
+                url: "{{ url('doctor/referral/data/pregnant') }}/"+id+"/referring/pregnant",
+                type: "GET",
+                success: function(data) {
+                    setTimeout(function() {
+                        $(".referral_body").html(data);
+                    },300);
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
         }
     });
 
-    function getNormalForm()
-    {
-        console.log("{{ url('doctor/referral/data/normal') }}/"+id);
-        $.ajax({
-            url: "{{ url('doctor/referral/data/normal') }}/"+id,
-            type: "GET",
-            success: function(data){
-                var print_url = "{{ url('doctor/print/form/') }}/"+id;
-                $('.btn-refer-normal').attr('href',print_url);
-
-                patient_name = data.patient_name;
-                referring_name = data.referring_name;
-
-                var address='';
-                var patient_address='';
-                var referred_address = '';
-
-                address += (data.facility_brgy) ? data.facility_brgy+', ': '';
-                address += (data.facility_muncity) ? data.facility_muncity+', ': '';
-                address += (data.facility_province) ? data.facility_province: '';
-
-                referred_address += (data.ff_brgy) ? data.ff_brgy+', ': '';
-                referred_address += (data.ff_muncity) ? data.ff_muncity+', ': '';
-                referred_address += (data.ff_province) ? data.ff_province: '';
-
-                patient_address += (data.patient_brgy) ? data.patient_brgy+', ': '';
-                patient_address += (data.patient_muncity) ? data.patient_muncity+', ': '';
-                patient_address += (data.patient_province) ? data.patient_province: '';
-
-                var case_summary = data.case_summary;
-                if (/\n/g.test(case_summary))
-                {
-                    case_summary = case_summary.replace(/\n/g, '<br>');
-                }
-
-                var reco_summary = data.reco_summary;
-                if (/\n/g.test(reco_summary))
-                {
-                    reco_summary = reco_summary.replace(/\n/g, '<br>');
-                }
-
-                var diagnosis = data.diagnosis;
-                if (/\n/g.test(diagnosis))
-                {
-                    diagnosis = diagnosis.replace(/\n/g, '<br>');
-                }
-
-                var reason = data.reason;
-                if (/\n/g.test(reason))
-                {
-                    reason = reason.replace(/\n/g, '<br>');
-                }
-
-
-                age = data.age;
-                sex = data.sex;
-                referring_contact = data.referring_contact;
-                referring_md_contact = data.referring_md_contact;
-                referred_name = data.referring_name;
-
-                $('span.referring_name').html(data.referring_name);
-                $('span.department_name').html(data.department);
-                $('span.referring_contact').html(data.referring_contact);
-                $('span.referring_address').html(address);
-                $('span.referred_name').html(data.referred_name);
-                $('span.referred_address').html(referred_address);
-                $('span.time_referred').html(data.time_referred);
-                $('span.patient_name').html(data.patient_name);
-                $('span.patient_age').html(data.age);
-                $('span.patient_sex').html(data.sex);
-                $('span.patient_status').html(data.civil_status);
-                $('span.patient_address').html(patient_address);
-                $('span.phic_status').html(data.phic_status);
-                $('span.phic_id').html(data.phic_id);
-                $('span.case_summary').append(case_summary);
-                $('span.reco_summary').html(reco_summary);
-                $('span.diagnosis').html(diagnosis);
-                $('span.reason').html(reason);
-                $('span.referring_md').html(data.md_referring);
-                $('span.referring_md_contact').html(data.referring_md_contact);
-                $('span.referred_md').html(data.md_referred);
-
-                $('span.covid_number').html(data.covid_number);
-                $('span.clinical_status').html(data.refer_clinical_status);
-                $('span.surveillance_category').html(data.refer_sur_category);
-
-                $('.loading').hide();
-            },
-            error: function(){
-                $('#serverModal').modal();
-                $('.loading').hide();
-            }
-        });
-
-    }
 
     function getPregnantForm()
     {

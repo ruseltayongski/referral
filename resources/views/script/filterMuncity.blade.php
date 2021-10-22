@@ -21,13 +21,44 @@
 
             $('.'+filter_type+'_holder').show();
             $('.'+filter_type).attr('required',true);
-            $('.others_holder_'+filter_type).addClass('hide');
-            $('.others'+filter_type).attr('required',false);
         } else {
             $('.'+filter_type+'_holder').hide();
             $('.'+filter_type).attr('required',true);
-            $('.others_holder_'+filter_type).removeClass('hide');
-            $('.others'+filter_type).attr('required',false);
+        }
+    }
+
+    function othersRegion(data,data_province) {
+        if(data.val() != "Region VII"){
+            $(".province_holder").html("<input type='text' class='form-control' name='province_others' required>");
+            $(".muncity_holder").html("<input type='text' class='form-control' name='muncity_others' required>");
+            $(".barangay_holder").html("<input type='text' class='form-control' name='brgy_others' required>");
+        }
+        else {
+
+            $(".province_holder").html("<select class=\"form-control province select2\" name=\"province\" onchange=\"filterSidebar($(this),'muncity')\" required>\n" +
+                "\n" +
+                "                                    </select>");
+
+            $('.province').empty();
+            var $newOption = $("<option selected='selected'></option>").val("").text('Select Province');
+            $('.province').append($newOption).trigger('change');
+
+            jQuery.each(JSON.parse(data_province), function(i,val){
+                $('.province').append($('<option>', {
+                    value: val.id,
+                    text : val.description
+                }));
+            });
+
+            $(".muncity_holder").html("<select class=\"form-control muncity select2\" name=\"muncity\" onchange=\"filterSidebar($(this),'barangay')\" required>\n" +
+                "\n" +
+                "                                    </select>");
+
+            $(".barangay_holder").html("<select class=\"form-control barangay select2\" name=\"brgy\" required>\n" +
+                "                                        <option value=\"\">Select Barangay</option>\n" +
+                "                                    </select>");
+
+            $(".select2").select2({ width: '100%' });
         }
     }
 

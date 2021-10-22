@@ -95,12 +95,11 @@ $user = Session::get('auth');
                     $department_name = $dept->description;
                 }
                 $patient = \App\Patients::find($row->patient_id);
-                $patient_address = '';
-                $patient_address .= ($patient->brgy) ? \App\Barangay::find($patient->brgy)->description.', ': '';
-                $patient_address .= ($patient->muncity) ? \App\Muncity::find($patient->muncity)->description: '';
-                if($patient->muncity=='others')
-                {
-                    $patient_address = $patient->address;
+                if(isset($patient->brgy)) {
+                    $patient_address = $patient->region.', '.\App\Province::find($patient->province)->description.', '.\App\Muncity::find($patient->muncity)->description.', '.\App\Barangay::find($patient->brgy)->description;
+                }
+                else {
+                    $patient_address = $patient->region.', '.$patient->province_others.', '.$patient->muncity_others.', '.$patient->brgy_others;
                 }
 
                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
@@ -114,22 +113,22 @@ $user = Session::get('auth');
                 <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
                     <div class="panel-heading">
                         <span class="txtTitle"><i class="fa fa-wheelchair"></i> {{ ucwords(strtolower($row->patient_name)) }} <small class="txtSub">[ {{ $row->sex }}, {{ $row->age }} ] from {{ $patient_address }}. </small></span>
-                        <br />
-                        @if($row->contact)
-                            Patient Contact Number: <strong class="text-primary">{{ $row->contact }}</strong>
                             <br />
-                        @endif
-                        Referred by:
-                        <span class="txtDoctor" href="#">
-                        <?php
-                            if($row->user_level == 'doctor'){
-                                $referring_md = "Dr. ".$row->referring_md;
-                            } else{
-                                $referring_md = $row->referring_md;
-                            }
-                            ?>
-                            {{ $referring_md }}
-                    </span>
+                            @if($row->contact)
+                                Patient Contact Number: <strong class="text-primary">{{ $row->contact }}</strong>
+                                <br />
+                            @endif
+                            Referred by:
+                            <span class="txtDoctor" href="#">
+                            <?php
+                                if($row->user_level == 'doctor'){
+                                    $referring_md = "Dr. ".$row->referring_md;
+                                } else{
+                                    $referring_md = $row->referring_md;
+                                }
+                                ?>
+                                {{ $referring_md }}
+                        </span>
                         <br />
                         Patient Code: <span class="txtCode">{{ $row->code }}</span>
                     </div>
@@ -187,6 +186,7 @@ $user = Session::get('auth');
                             <div class="tracking col-md-12">
                                 <div class="table-responsive">
                                     <table width="100%">
+                                        <thead class="prepend_from_firebase{{ $row->code }}"></thead>
                                         @foreach($activities as $act)
                                             <?php
                                             $act_name = \App\Patients::find($act->patient_id);
@@ -196,6 +196,7 @@ $user = Session::get('auth');
                                             if($act->status=='transferred' || $act->status=='redirected'|| $act->status=='referred' || $act->status=='calling'){
                                                 $act_icon = 'fa-ambulance';
                                             }
+
                                             $new_facility = 'N/A';
                                             $tmp_new = \App\Facility::find($act->referred_to);
 
@@ -207,6 +208,7 @@ $user = Session::get('auth');
                                             if($tmp_new){
                                                 $new_facility = $tmp_new->name;
                                             }
+
                                             ?>
                                             @if($act->status=='rejected')
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
@@ -216,8 +218,8 @@ $user = Session::get('auth');
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                         <br />
                                                         @if($user->facility_id==$act->referred_from)
-                                                            <button class="btn btn-success btn-xs btn-referred" data-toggle="modal" data-target="#referredFormModal" data-activity_id="{{ $act->id }}">
-                                                                <i class="fa fa-ambulance"></i> Refer to other facility
+                                                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
+                                                                <i class="fa fa-ambulance"></i> Redirect to other facility
                                                             </button>
                                                         @endif
                                                     </td>
@@ -354,11 +356,14 @@ $user = Session::get('auth');
                         @endif
                     </div>
                     <div class="panel-footer">
-                        <button data-target="{{ $modal }}" data-toggle="modal"
+                        <a data-toggle="modal" href="#referralForm"
                                 data-type="{{ $row->type }}"
                                 data-id="{{ $row->id }}"
                                 data-code="{{ $row->code }}"
-                                class="view_form btn btn-warning btn-xs"><i class="fa fa-folder"></i> View Form</button>
+                                data-referral_status="referring"
+                                class="view_form btn btn-warning btn-xs">
+                                <i class="fa fa-folder"></i> View Form
+                        </a>
                         @if($seen>0)
                             <a href="#seenModal" data-toggle="modal"
                                data-id="{{ $row->id }}"

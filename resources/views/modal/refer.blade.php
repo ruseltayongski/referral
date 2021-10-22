@@ -14,7 +14,7 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4>REFER TO OTHER FACILITY</h4>
                 <hr />
-                <form method="post" id="referForm">
+                <form method="post" id="rejectForm">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label style="padding:0px;">REASON FOR REDIRECTION:</label>
@@ -32,13 +32,13 @@ $facilities = \App\Facility::select('id','name')
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" role="dialog" id="referredFormModal">
+<div class="modal fade" role="dialog" id="redirectedFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;">Redirect to other facility</h4>
                 <hr />
-                <form method="post" id="referredForm">
+                <form method="post" id="redirectedForm">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label style="padding:0px;">SELECT FACILITY:</label>
@@ -58,7 +58,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Refer</button>
+                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Redirected</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

@@ -1,5 +1,6 @@
 <script>
     function desktopNotification(title,body){
+        console.log("desktopNotification");
         if (Notification.permission !== "granted"){
             console.log('Get Permission');
             Notification.requestPermission();
@@ -16,5 +17,4 @@
             };
         }
     }
-
 </script>

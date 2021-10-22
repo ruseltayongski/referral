@@ -133,8 +133,6 @@
     <script>
         //Date range picker
         $('#consolidate_date_range').daterangepicker();
-        $("#container").removeClass("container");
-        $("#container").addClass("container-fluid");
 
         @if(Session::get('add_remark'))
         Lobibox.notify('success', {

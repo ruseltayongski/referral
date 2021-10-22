@@ -164,11 +164,11 @@ Route::post('doctor/referral/archive/{track_id}','doctor\ReferralCtrl@archive');
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
-Route::post('doctor/referral/redirect/{activity_id}','doctor\ReferralCtrl@redirect');//if patient is discharge
+Route::post('doctor/referral/redirect/{code}','doctor\ReferralCtrl@redirect');//if patient is discharge
 
 
-Route::get('doctor/referral/data/normal/{id}','doctor\ReferralCtrl@normalForm');
-Route::get('doctor/referral/data/pregnant/{id}','doctor\ReferralCtrl@pregnantForm');
+Route::get('doctor/referral/data/normal/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@normalForm');
+Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
@@ -222,6 +222,7 @@ Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
 Route::post('doctor/change/login','doctor\UserCtrl@changeLogin');
 
 Route::get('doctor/verify/{code}','ParamCtrl@verifyCode');
+Route::get('doctor/verify_redirected/{code}','ParamCtrl@verifyRedirected');
 
 Route::get('/doctor/report/incoming','doctor\ReportCtrl@incoming');
 Route::post('/doctor/report/incoming','doctor\ReportCtrl@filterIncoming');

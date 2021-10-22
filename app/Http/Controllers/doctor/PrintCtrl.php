@@ -19,7 +19,6 @@ class PrintCtrl extends Controller
 
     public function printReferral($track_id)
     {
-        $data = array();
         $user = Session::get('auth');
         $form_type = Tracking::where('id',$track_id)
             ->where(function($q) use($user) {
@@ -35,10 +34,10 @@ class PrintCtrl extends Controller
 
         if($form_type=='normal')
         {
-            $data = ReferralCtrl::normalForm($track_id);
+            $data = ReferralCtrl::normalFormData($track_id);
             return self::printNormal($data);
         }else if($form_type=='pregnant'){
-            $data = ReferralCtrl::pregnantForm($track_id);
+            $data = ReferralCtrl::pregnantFormData($track_id);
             return self::printPregnant($data);
         }
     }
@@ -46,7 +45,7 @@ class PrintCtrl extends Controller
     public function printPregnant($record)
     {
 
-        $data = $record['form'];
+        $data = $record['pregnant'];
         $baby = $record['baby'];
         //print_r($baby);
         $pdf = new Fpdf();
@@ -240,13 +239,13 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name of Patient: ").self::orange($pdf,$data->patient_name,"Name of Patient:"), 0, 'L');
         $y = $pdf->getY();
         $pdf->SetXY($x/2+10, $y-7);
-        $pdf->MultiCell($x/4, 7, self::black($pdf,"Age: ").self::orange($pdf,$data->age,"age:"), 0);
+        $pdf->MultiCell($x/4, 7, self::black($pdf,"Age: ").self::orange($pdf,$data->patient_age,"age:"), 0);
         $y = $pdf->getY();
         $pdf->SetXY(($x/2)+($x/4) - 15, $y-7);
-        $pdf->MultiCell($x/4, 7, self::black($pdf,"Sex: ").self::orange($pdf,$data->sex,"sex:"), 0);
+        $pdf->MultiCell($x/4, 7, self::black($pdf,"Sex: ").self::orange($pdf,$data->patient_sex,"sex:"), 0);
         $y = $pdf->getY();
         $pdf->SetXY(($x/2)+($x/2) - 30, $y-7);
-        $pdf->MultiCell($x/4, 7, self::black($pdf,"Status: ").self::orange($pdf,$data->civil_status,"Status:"), 0);
+        $pdf->MultiCell($x/4, 7, self::black($pdf,"Status: ").self::orange($pdf,$data->patient_status,"Status:"), 0);
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$patient_address,"address:"), 0, 'L');
 

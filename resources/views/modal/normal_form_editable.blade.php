@@ -14,13 +14,7 @@
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
             <div class="jim-content">
-                <div style="margin-left: 58%;margin-top:10%;position: absolute;font-size: 8pt;background-color: white;" class="inventory_body">
-
-                </div>
                 @include('include.header_form')
-                <center>
-                    <h2>Clinical Referral Form</h2>
-                </center>
                 <div class="form-group-sm form-inline">
                     {{ csrf_field() }}
                     <input type="hidden" name="patient_id" class="patient_id" value="" />

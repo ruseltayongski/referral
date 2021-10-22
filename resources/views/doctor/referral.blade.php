@@ -9,6 +9,20 @@ $user = Session::get('auth');
         .timeline .facility {
             color: #ff8456;
         }
+        .blink_new_referral {
+            animation: blinkMe 2s linear infinite;
+        }
+        @keyframes blinkMe {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     </style>
     <div class="col-md-3">
         @include('sidebar.filter_referral')

@@ -2,14 +2,16 @@
     <div class="form-inline">
         @if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )
             <div class="form-group">
-                <a class="btn btn-warning btn-xs btn-refer" href="{{ $modal }}"
+                <a class="btn btn-warning btn-xs view_form" href="#referralForm"
                    data-toggle="modal"
                    data-code="{{ $row->code }}"
                    data-item="#item-{{ $row->id }}"
                    data-status="{{ $row->status }}"
+                   data-referral_status="referred"
                    data-type="{{ $row->type }}"
                    data-id="{{ $row->id }}"
                    data-referred_from="{{ $row->referred_from }}"
+                   data-patient_name="{{ $row->patient_name }}"
                    data-backdrop="static">
                     <i class="fa fa-folder"></i> View Form
                 </a>
@@ -77,6 +79,5 @@
                 <span class="badge bg-red">{{ $issue_and_concern }}</span>
             </button>
         @endif
-
     </div>
 </div>

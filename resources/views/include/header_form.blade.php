@@ -4,7 +4,7 @@
             <img src="{{ asset('resources/img/doh.png') }}" width="100">
         </div>
         <div class="col-md-8">
-            <div class="align small-text">
+            <div class="align small-text" style="font-size: 12pt;">
                 Republic of the Philippines<br>
                 DEPARTMENT OF HEALTH<br>
                 <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
@@ -17,4 +17,9 @@
             <img src="{{ asset('resources/img/f1.jpg') }}" width="100">
         </div>
     </div>
+    @if($form_type == 'normal')
+        <h3 class="text-green clinical-form-title">Clinical Referral Form</h3>
+    @else
+        <h3 class="text-green clinical-form-title">BEmONC/ CEmONC REFERRAL FORM</h3>
+    @endif
 </center>

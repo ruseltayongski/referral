@@ -21,119 +21,137 @@
         }
 
     </style>
-    <div class="col-md-3">
-        @include('sidebar.filter_profile')
-    </div>
-    <div class="col-md-9">
-        <div class="jim-content">
-            <h3 class="page-header">{{ $title }}</h3>
-            @if(count($data))
-                <div class="table-responsive">
-                    <table class="table table-striped"  style="white-space:nowrap;">
-                        <tbody>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Age / DOB</th>
-                            <th>Barangay</th>
-                            <th style="width:18%;">Action</th>
-                        </tr>
-                        @foreach($data as $row)
-                        <?php
-                            $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                        ?>
-                        <tr>
-                            <td>
-                                <b>
-                                    <a href="#patient_modal"
-                                       data-toggle="modal"
-                                       data-id = "{{ $row->id }}"
-                                       onclick="PatientBody('<?php echo $row->id ?>')"
-                                       class="update_info">
-                                        {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
-                                    </a>
-                                </b><br>
-                                <small class="text-success">{{ $row->contact }}</small>
-                            </td>
-                            <td>
-                                {{ $row->sex }}<br>
-                                <small class="text-success">{{ $row->civil_status }}</small>
-                            </td>
-                            <td>
-                                <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
-                                {{ $age }} years old
-                                <br />
-                                <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
-                            </td>
-                            <td>
+    <div class="row">
+        <div class="col-md-3">
+            @include('sidebar.filter_profile')
+        </div>
+        <div class="col-md-9">
+            <div class="jim-content">
+                <h3 class="page-header">{{ $title }}</h3>
+                @if(count($data))
+                    <div class="table-responsive">
+                        <table class="table table-striped"  style="white-space:nowrap;">
+                            <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Age/DOB</th>
+                                <th>Region/Province</th>
+                                <th>Municipality/Barangay</th>
+                                <th style="width:18%;">Action</th>
+                            </tr>
+                            @foreach($data as $row)
                                 <?php
-                                    $brgy_id = ($source=='tsekap') ? $row->barangay_id: $row->brgy;
-                                    $city_id = ($source=='tsekap') ? $row->muncity_id: $row->muncity;
-                                    $phic_id = ($source=='tsekap') ? $row->phicID: $row->phic_id;
-                                    $phic_id_stat = 0;
-                                    if($phic_id){
-                                        $phic_id_stat = 1;
-                                    }
+                                $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 ?>
-                                @if($brgy_id!=0)
-                                {{ $brgy = \App\Barangay::find($brgy_id)->description }}<br />
-                                <small class="text-success">{{ $city = \App\Muncity::find($city_id)->description }}</small>
-                                @else
-                                    {{ $row->address }}
-                                @endif
-                            </td>
-                            <td>
-                                @if($row->sex=='Female' && ($age >= 10 && $age <= 49))
-                                    <a href="#pregnantModal"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info hide">
-                                        <i class="fa fa-stethoscope"></i>
-                                        Refer
-                                    </a>
-                                    <a href="#pregnantModalWalkIn"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-toggle="modal"
-                                       class="btn btn-warning btn-xs profile_info hide">
-                                        <i class="fa fa-ambulance"></i>
-                                        Walk-In
-                                    </a>
-                                @else
-                                    <a href="#normalFormModal"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-backdrop="static"
-                                       data-toggle="modal"
-                                       class="btn btn-primary btn-xs profile_info hide">
-                                        <i class="fa fa-stethoscope"></i>
-                                        Refer
-                                    </a>
-                                    <a href="#normalFormModalWalkIn"
-                                       data-patient_id = "{{ $row->id }}"
-                                       data-backdrop="static"
-                                       data-toggle="modal"
-                                       class="btn btn-warning btn-xs profile_info hide">
-                                        <i class="fa fa-ambulance"></i>
-                                        Walk-In
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <ul class="pagination pagination-sm no-margin pull-right">
-                        {{ $data->links() }}
-                </ul>
+                                <tr>
+                                    <td>
+                                        <b>
+                                            <a href="#patient_modal"
+                                               data-toggle="modal"
+                                               data-id = "{{ $row->id }}"
+                                               onclick="PatientBody('<?php echo $row->id ?>')"
+                                               class="update_info">
+                                                {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
+                                            </a>
+                                        </b><br>
+                                        <small class="text-success">{{ $row->contact }}</small>
+                                    </td>
+                                    <td>
+                                        {{ $row->sex }}<br>
+                                        <small class="text-success">{{ $row->civil_status }}</small>
+                                    </td>
+                                    <td>
+                                        <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
+                                        {{ $age }} years old
+                                        <br />
+                                        <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
+                                    </td>
+                                    <td>
+                                        {{ $row->region }}<br />
+                                        <?php
+                                            if(!$province_display = \App\Province::find($row->province)->description)
+                                                $province_display = $row->province_others;
+                                        ?>
+                                        <small class="text-success">{{ $province_display }}</small>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $brgy_id = ($source=='tsekap') ? $row->barangay_id: $row->brgy;
+                                        $city_id = ($source=='tsekap') ? $row->muncity_id: $row->muncity;
+                                        $phic_id = ($source=='tsekap') ? $row->phicID: $row->phic_id;
+                                        $phic_id_stat = 0;
+                                        if($phic_id){
+                                            $phic_id_stat = 1;
+                                        }
+                                        ?>
 
-            @else
-                <div class="alert alert-warning">
+                                        <?php
+                                            if(!$brgy = \App\Barangay::find($brgy_id)->description)
+                                                $brgy = $row->brgy_others;
+                                            if(!$city = \App\Muncity::find($city_id)->description)
+                                                $city = $row->muncity_others;
+                                        ?>
+                                        {{ $city }}<br />
+                                        <small class="text-success">{{ $brgy }}</small>
+                                    </td>
+                                    <td>
+                                        @if($row->sex=='Female' && ($age >= 10 && $age <= 49))
+                                            <a href="#pregnantModal"
+                                               data-patient_id = "{{ $row->id }}"
+                                               data-toggle="modal"
+                                               data-type="pregnant"
+                                               class="btn btn-primary btn-xs profile_info hide">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Refer
+                                            </a>
+                                            <a href="#pregnantModalWalkIn"
+                                               data-patient_id = "{{ $row->id }}"
+                                               data-toggle="modal"
+                                               data-type="pregnant"
+                                               class="btn btn-warning btn-xs profile_info hide">
+                                                <i class="fa fa-ambulance"></i>
+                                                Walk-In
+                                            </a>
+                                        @else
+                                            <a href="#normalFormModal"
+                                               data-patient_id = "{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               class="btn btn-primary btn-xs profile_info hide">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Refer
+                                            </a>
+                                            <a href="#normalFormModalWalkIn"
+                                               data-patient_id = "{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               class="btn btn-warning btn-xs profile_info hide">
+                                                <i class="fa fa-ambulance"></i>
+                                                Walk-In
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <ul class="pagination pagination-sm no-margin pull-right">
+                        {{ $data->links() }}
+                    </ul>
+
+                @else
+                    <div class="alert alert-warning">
                 <span class="text-warning">
                     <i class="fa fa-warning"></i> Patient not found!
                 </span>
-                </div>
-            @endif
-            <div class="clearfix"></div>
+                    </div>
+                @endif
+                <div class="clearfix"></div>
+            </div>
         </div>
     </div>
     @include('modal.pregnantModal')
@@ -205,7 +223,14 @@
         }
     }*/
 
-    function PatientBody(patient_id){
+    function setClinicalFormTile(type) {
+        if(type == "pregnant")
+            $(".clinical-form-title").html("BEmONC/ CEmONC REFERRAL FORM");
+        else
+            $(".clinical-form-title").html("Clinical Referral Form");
+    }
+
+    function PatientBody(patient_id) {
         console.log(patient_id);
         var url = "<?php echo asset('doctor/patient/update'); ?>";
         var json = {
@@ -218,11 +243,9 @@
     }
 
     $(".select2").select2({ width: '100%' });
-    var referred_facility = 0;
     var referring_facility = "{{ $user->facility_id }}";
     var referred_facility = '';
     var referring_facility_name = $(".referring_name").val();
-    var patient_form_id = 0;
     var referring_md = "{{ $user->fname }} {{ $user->mname }} {{ $user->lname }}";
     var name,
         age,
@@ -236,43 +259,6 @@
         phic_id,
         department_id,
         department_name;
-
-    $('.form-submit').on('submit',function(){
-        $('.loading').show();
-        $('.btn-submit').attr('disabled',true);
-    });
-
-    $('.select_facility').on('change',function(){
-        var id = $(this).val();
-        referred_facility = id;
-        var url = "{{ url('location/facility/') }}";
-        $.ajax({
-            url: url+'/'+id,
-            type: 'GET',
-            success: function(data){
-                /*$.get("<?php echo asset('inventory/append').'/'; ?>"+data.facility_id,function(inventory_body){
-                    $(".inventory_body").html(inventory_body);
-                });*/
-                $('.facility_address').html(data.address);
-
-                $('.select_department').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Select Department...'
-                    }));
-                jQuery.each(data.departments, function(i,val){
-                    $('.select_department').append($('<option>', {
-                        value: val.id,
-                        text : val.description
-                    }));
-
-                });
-            },
-            error: function(error){
-                //$('#serverModal').modal();
-            }
-        });
-    });
 
     $('.select_facility_walkin').on('change',function(){
         var id = $(this).val();
@@ -293,33 +279,35 @@
         });
     });
 
-    $('.select_department').on('change',function(){
+    $('.select_department').on('change',function() {
         var id = $(this).val();
         var list = "{{ url('list/doctor') }}";
-        if(referred_facility==0){
-            referred_facility = "{{ $user->facility_id }}";
-        }
-        $.ajax({
-            url: list+'/'+referred_facility+'/'+id,
-            type: 'GET',
-            success: function(data){
-                $('.referred_md').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Any...'
-                    }));
-                jQuery.each(data, function(i,val){
-                    $('.referred_md').append($('<option>', {
-                        value: val.id,
-                        text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
-                    }));
-
-                });
-            },
-            error:function(){
-                $('#serverModal').modal();
+        if(id){
+            if(referred_facility==0){
+                referred_facility = "{{ $user->facility_id }}";
             }
-        });
+            $.ajax({
+                url: list+'/'+referred_facility+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    $('.referred_md').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Any...'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('.referred_md').append($('<option>', {
+                            value: val.id,
+                            text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
+                        }));
+
+                    });
+                },
+                error:function(){
+                    $('#serverModal').modal();
+                }
+            });
+        }
     });
 
     $('.profile_info').removeClass('hide');
@@ -355,16 +343,18 @@
 
     $('.normal_form').on('submit',function(e){
         e.preventDefault();
+        $('.loading').show();
+        $('.btn-submit').attr('disabled',true);
+
         reason = $('.reason_referral').val();
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
-        department_name = $('.select_department_normal :selected').text();
+        department_name = $('.select_department_normal option:selected').html();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data){
                 console.log(data);
-                //location.reload();
                 sendNormalData(data);
             },
             error: function(){
@@ -379,7 +369,7 @@
         reason = $('.reason_referral').val();
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
-        department_name = $('.select_department_normal :selected').text();
+        department_name = $('.select_department_normal option:selected').html();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/walkin/normal') }}",
             type: 'POST',
@@ -398,6 +388,7 @@
 
     $('.pregnant_form').on('submit',function(e){
         e.preventDefault();
+        $('.loading').show();
         form_type = '#pregnantFormModal';
         sex = 'Female';
         reason = $('.woman_information_given').val();
@@ -447,7 +438,7 @@
             var form_data = {
                 referring_name: referring_facility_name,
                 patient_code: data.patient_code,
-                name: name,
+                patient_name: name,
                 age: age,
                 sex: sex,
                 date: data.referred_date,
@@ -458,6 +449,7 @@
                 department_id: department_id,
                 department_name: department_name
             };
+
             var dbRef = firebase.database();
             var connRef = dbRef.ref('Referral');
             connRef.child(referred_facility).push(form_data);
@@ -470,6 +462,14 @@
                     "body": name+" was referred to your facility from "+referring_facility_name+"!"
                 }
             };
+
+            connRef.on('child_added',function(data){
+                setTimeout(function(){
+                    connRef.child(data.key).remove();
+                    window.location.reload(false);
+                },500);
+            });
+
             $.ajax({
                 url: 'https://fcm.googleapis.com/fcm/send',
                 type: 'post',
@@ -481,8 +481,6 @@
                 dataType: 'json',
                 success: function (data) {
                     console.log(data);
-                    console.info(data);
-                    //window.location.reload(false);
                     setTimeout(function () {
                         console.log("Force refresh!");
                         window.location.reload(false);
@@ -492,13 +490,8 @@
                     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 }
             });
-            connRef.on('child_added',function(data){
-                setTimeout(function(){
-                    connRef.child(data.key).remove();
-                    window.location.reload(false);
-                },500);
-            });
-        }else{
+
+        } else {
             console.log("error else");
             setTimeout(function(){
                 window.location.reload(false);

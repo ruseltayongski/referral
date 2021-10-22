@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Activity;
+use App\Department;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\DeviceTokenCtrl;
@@ -149,8 +150,7 @@ class ReferralCtrl extends Controller
         return $count;
     }
 
-    function seen($track_id)
-    {
+    function seen($track_id) {
 
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
@@ -175,115 +175,62 @@ class ReferralCtrl extends Controller
         return $activity->id;
     }
 
-    static function normalForm($id)
-    {
-        $form = PatientForm::select(
-                    DB::raw("'$id' as tracking_id"),
-                    'patient_form.code as code',
-                    DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-                    DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-                    'patients.sex',
-                    'patients.civil_status',
-                    'patients.phic_status',
-                    'patients.phic_id',
-                    'patient_form.covid_number',
-                    'patient_form.refer_clinical_status',
-                    'patient_form.refer_sur_category',
-                    'patient_form.case_summary',
-                    'patient_form.reco_summary',
-                    'patient_form.diagnosis',
-                    'patient_form.reason',
-                    'barangay.description as patient_brgy',
-                    'muncity.description as patient_muncity',
-                    'province.description as patient_province',
-                    'b.description as facility_brgy',
-                    'm.description as facility_muncity',
-                    'p.description as facility_province',
-                    'bb.description as ff_brgy',
-                    'mm.description as ff_muncity',
-                    'pp.description as ff_province',
-                    'facility.name as referring_name',
-                    'ff.name as referred_name',
-                    DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
-                    DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
-                    DB::raw('CONCAT(
-                            if(users.level="doctor","Dr. ","")
-                    ,users.fname," ",users.mname," ",users.lname) as md_referring'),
-                    DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname) as md_referred'),
-                    'facility.contact as referring_contact',
-                    'ff.contact as referred_contact',
-                    'users.contact as referring_md_contact',
-                    'department.description as department'
-                )
-                ->join('patients','patients.id','=','patient_form.patient_id')
-                ->join('tracking','tracking.form_id','=','patient_form.id')
-                ->join('facility','facility.id','=','tracking.referred_from')
-                ->join('facility as ff','ff.id','=','tracking.referred_to')
-                ->leftJoin('users','users.id','=','patient_form.referring_md')
-                ->leftJoin('users as u','u.id','=','patient_form.referred_md')
-                ->leftJoin('barangay','barangay.id','=','patients.brgy')
-                ->leftJoin('muncity','muncity.id','=','patients.muncity')
-                ->join('province','province.id','=','patients.province')
-                ->leftJoin('barangay as b','b.id','=','facility.brgy')
-                ->leftJoin('muncity as m','m.id','=','facility.muncity')
-                ->leftJoin('province as p','p.id','=','facility.province')
-                ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
-                ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
-                ->leftJoin('province as pp','pp.id','=','ff.province')
-                ->leftJoin('department','department.id','=','patient_form.department_id')
-                ->where('tracking.id',$id)
-                ->first();
-
-        return $form;
+    public function normalForm($id,$referral_status,$form_type) {
+        return view("doctor.referral_body_normal",[
+            "form" => self::normalFormData($id),
+            "referral_status" => $referral_status,
+            "form_type" => $form_type
+        ]);
     }
 
-    static function pregnantForm($id)
-    {
-        $form = PregnantForm::select(
-                DB::raw("'$id' as tracking_id"),
-                'pregnant_form.patient_baby_id',
-                'pregnant_form.code',
-                'pregnant_form.record_no',
-                DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
-                DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
-                DB::raw('CONCAT(
-                    if(users.level="doctor","Dr. ","")
+    public static function normalFormData($id) {
+        $form = PatientForm::select(
+            DB::raw("'$id' as tracking_id"),
+            'patient_form.code as code',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS patient_age"),
+            'patients.sex as patient_sex',
+            'patients.civil_status as patient_status',
+            'patients.phic_status',
+            'patients.phic_id',
+            'patient_form.covid_number',
+            'patient_form.refer_clinical_status',
+            'patient_form.refer_sur_category',
+            'patient_form.case_summary',
+            'patient_form.reco_summary',
+            'patient_form.diagnosis',
+            'patient_form.reason',
+            DB::raw("if(
+                                    patients.brgy,
+                                    concat(patients.region,', ',patients.province,', ',muncity.description,', ',barangay.description),
+                                    concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
+                                ) as patient_address"),
+            DB::raw("concat(p.description,', ',m.description,', ',b.description) as referring_address"),
+            DB::raw("concat(pp.description,', ',mm.description,', ',pp.description) as referred_address"),
+            'facility.name as referring_name',
+            'ff.name as referred_name',
+            DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
+            DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
+            DB::raw('CONCAT(
+                        if(
+                            users.level="doctor",
+                            "Dr. ",
+                            ""
+                        )
                 ,users.fname," ",users.mname," ",users.lname) as md_referring'),
-                'facility.name as referring_facility',
-                'b.description as facility_brgy',
-                'm.description as facility_muncity',
-                'p.description as facility_province',
-                'ff.name as referred_facility',
-                'bb.description as ff_brgy',
-                'mm.description as ff_muncity',
-                'pp.description as ff_province',
-                'pregnant_form.health_worker',
-                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
-                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
-                'patients.sex',
-                'barangay.description as patient_brgy',
-                'muncity.description as patient_muncity',
-                'province.description as patient_province',
-                'pregnant_form.woman_reason',
-                'pregnant_form.woman_major_findings',
-                'pregnant_form.woman_before_treatment',
-                DB::raw("DATE_FORMAT(pregnant_form.woman_before_given_time,'%M %d, %Y %h:%i %p') as woman_before_given_time"),
-                'pregnant_form.woman_during_transport',
-                DB::raw("DATE_FORMAT(pregnant_form.woman_transport_given_time,'%M %d, %Y %h:%i %p') as woman_transport_given_time"),
-                'pregnant_form.woman_information_given',
-                'facility.contact as referring_contact',
-                'ff.contact as referred_contact',
-                'users.contact as referring_md_contact',
-                'department.description as department',
-                'pregnant_form.covid_number',
-                'pregnant_form.refer_clinical_status',
-                'pregnant_form.refer_sur_category'
-            )
-            ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
-            ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
-            ->leftJoin('facility','facility.id','=','tracking.referred_from')
-            ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
-            ->leftJoin('users','users.id','=','pregnant_form.referred_by')
+            DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname) as md_referred'),
+            'facility.contact as referring_contact',
+            'ff.contact as referred_contact',
+            'users.contact as referring_md_contact',
+            'department.description as department',
+            DB::raw("DATE_FORMAT(act.date_referred,'%M %e, %Y %r') as date_referred")
+        )
+            ->join('patients','patients.id','=','patient_form.patient_id')
+            ->join('tracking','tracking.form_id','=','patient_form.id')
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','patient_form.referring_md')
+            ->leftJoin('users as u','u.id','=','patient_form.referred_md')
             ->leftJoin('barangay','barangay.id','=','patients.brgy')
             ->leftJoin('muncity','muncity.id','=','patients.muncity')
             ->leftJoin('province','province.id','=','patients.province')
@@ -293,9 +240,90 @@ class ReferralCtrl extends Controller
             ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
             ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
             ->leftJoin('province as pp','pp.id','=','ff.province')
-            ->leftJoin('department','department.id','=','pregnant_form.department_id')
+            ->leftJoin('department','department.id','=','patient_form.department_id')
+            ->leftJoin('activity as act','act.code','=','tracking.code')
             ->where('tracking.id',$id)
+            ->where(function($query) {
+                $query->where('act.status', 'referred')
+                    ->orWhere('act.status', 'redirected')
+                    ->orWhere('act.status', 'transferred');
+            })
+            ->orderBy('act.date_referred','desc')
             ->first();
+
+        return $form;
+    }
+
+    public function pregnantForm($id,$referral_status) {
+        return view('doctor.referral_body_pregnant',[
+            "form" => self::pregnantFormData($id),
+            "referral_status" => $referral_status,
+            "form_type" => "pregnant"
+        ]);
+    }
+
+    public static function pregnantFormData($id) {
+        $form = PregnantForm::select(
+            DB::raw("'$id' as tracking_id"),
+            'pregnant_form.patient_baby_id',
+            'pregnant_form.code',
+            'pregnant_form.record_no',
+            DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
+            DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
+            DB::raw('CONCAT(
+                if(users.level="doctor","Dr. ","")
+            ,users.fname," ",users.mname," ",users.lname) as md_referring'),
+            'facility.name as referring_facility',
+            'b.description as facility_brgy',
+            'm.description as facility_muncity',
+            'p.description as facility_province',
+            'ff.name as referred_facility',
+            'bb.description as ff_brgy',
+            'mm.description as ff_muncity',
+            'pp.description as ff_province',
+            'pregnant_form.health_worker',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
+            'patients.sex',
+            DB::raw("if(
+                patients.brgy,
+                concat(patients.region,', ',patients.province,', ',muncity.description,', ',barangay.description),
+                concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
+            ) as patient_address"),
+            'pregnant_form.woman_reason',
+            'pregnant_form.woman_major_findings',
+            'pregnant_form.woman_before_treatment',
+            DB::raw("DATE_FORMAT(pregnant_form.woman_before_given_time,'%M %d, %Y %h:%i %p') as woman_before_given_time"),
+            'pregnant_form.woman_during_transport',
+            DB::raw("DATE_FORMAT(pregnant_form.woman_transport_given_time,'%M %d, %Y %h:%i %p') as woman_transport_given_time"),
+            'pregnant_form.woman_information_given',
+            'facility.contact as referring_contact',
+            'ff.contact as referred_contact',
+            'users.contact as referring_md_contact',
+            'department.description as department',
+            'pregnant_form.covid_number',
+            'pregnant_form.refer_clinical_status',
+            'pregnant_form.refer_sur_category',
+            'pregnant_form.dis_clinical_status',
+            'pregnant_form.dis_sur_category'
+        )
+        ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
+        ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
+        ->leftJoin('facility','facility.id','=','tracking.referred_from')
+        ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
+        ->leftJoin('users','users.id','=','pregnant_form.referred_by')
+        ->leftJoin('barangay','barangay.id','=','patients.brgy')
+        ->leftJoin('muncity','muncity.id','=','patients.muncity')
+        ->leftJoin('province','province.id','=','patients.province')
+        ->leftJoin('barangay as b','b.id','=','facility.brgy')
+        ->leftJoin('muncity as m','m.id','=','facility.muncity')
+        ->leftJoin('province as p','p.id','=','facility.province')
+        ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
+        ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
+        ->leftJoin('province as pp','pp.id','=','ff.province')
+        ->leftJoin('department','department.id','=','pregnant_form.department_id')
+        ->where('tracking.id',$id)
+        ->first();
 
         $baby = array();
         if(isset($form->patient_baby_id) && $form->patient_baby_id > 0)
@@ -321,7 +349,7 @@ class ReferralCtrl extends Controller
                     ->first();
         }
         return array(
-            'form' => $form,
+            'pregnant' => $form,
             'baby' => $baby
         );
     }
@@ -581,9 +609,7 @@ class ReferralCtrl extends Controller
         $track = Tracking::find($track_id);
 
         if($track->status=='accepted' || $track->status=='rejected')
-        {
             return 'denied';
-        }
 
         Tracking::where('id',$track_id)
             ->update([
@@ -614,8 +640,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
 
         $track = Tracking::find($track_id);
-        if($track->status=='accepted' || $track->status=='rejected')
-        {
+        if($track->status=='accepted' || $track->status=='rejected') {
             Session::put('incoming_denied',true);
             return 'denied';
         }
@@ -627,6 +652,7 @@ class ReferralCtrl extends Controller
                 'date_accepted' => date('Y-m-d H:i:s')
             ]);
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -639,6 +665,7 @@ class ReferralCtrl extends Controller
             'remarks' => isset($req->remarks) ? $req->remarks : "",
             'status' => $track->status
         );
+
         Activity::create($data);
 
         /*$doc = User::find($user->id);
@@ -901,15 +928,16 @@ class ReferralCtrl extends Controller
         );
     }
 
-    public function redirect(Request $req, $activity_id)
+    public function redirect(Request $req, $code)
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
         $track = Activity::select('activity.*','tracking.type','tracking.form_id')
                 ->join('tracking','tracking.code','=','activity.code')
-                ->where('activity.id',$activity_id)
+                ->where('activity.code',$code)
                 ->first();
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -940,7 +968,6 @@ class ReferralCtrl extends Controller
             ]);
         }
 
-
         $patient = Patients::select(
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex',
@@ -948,13 +975,15 @@ class ReferralCtrl extends Controller
         )
             ->where('id',$track->patient_id)
             ->first();
-        $user_md = User::find($user->id);
-
 
         $form_type = '#normalFormModal';
         if($track->type=='pregnant'){
             $form_type = '#pregnantFormModal';
         }
+        if($user->level == 'doctor')
+            $referring_md = "Dr. ".$user->fname.' '.$user->lname;
+        else
+            $referring_md = $user->fname.' '.$user->lname;
 
         return array(
             'code' => $track->code,
@@ -962,11 +991,14 @@ class ReferralCtrl extends Controller
             'patient_name' => $patient->patient_name,
             'age' => $patient->age,
             'sex' => $patient->sex,
-            'action_md' => "$user_md->fname $user_md->mname $user_md->lname",
             'form_type' => $form_type,
             'track_id' => $tracking->id,
             'activity_id' => $activity->id,
-            'referred_facility' => Facility::find($req->facility)->name
+            'referred_from' => $user->facility_id,
+            'referring_md' => $referring_md,
+            'referring_facility' => Facility::find($user->facility_id)->name,
+            'department_id' => $req->department,
+            'department_name' => Department::find($req->department)->description
         );
     }
 

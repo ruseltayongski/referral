@@ -201,17 +201,33 @@ class ParamCtrl extends Controller
             ]);
     }
 
-    public function verifyCode($code)
-    {
+    public function verifyCode($code) {
         $user = Session::get('auth');
-        if($user->level=='admin')
-        {
+
+        if($user->level == 'admin')
             return 1;
-        }
+
         $tracking = Tracking::where('code',$code)->first();
 
-        if($tracking){
-            if($tracking->referred_from == $user->facility_id){
+        if($tracking) {
+            if($tracking->referred_from == $user->facility_id) {
+                return 1;
+            }
+            return 0;
+        }
+        return 0;
+    }
+
+    public function verifyRedirected($code) {
+        $user = Session::get('auth');
+
+        if($user->level == 'admin')
+            return 1;
+
+        $activity = Activity::where('code',$code)->where("status","redirected")->orderBy("date_referred","desc")->first();
+
+        if($activity){
+            if($activity->referred_to == $user->facility_id){
                 return 1;
             }
             return 0;

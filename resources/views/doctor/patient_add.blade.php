@@ -94,34 +94,56 @@ $status = session::get('status');
                                 </td>
                             </tr>
                             <tr class="has-group">
-                                <td>Municipality/City :</td>
+                                <td>Region: </td>
                                 <td>
-                                    <select class="form-control muncity filter_muncity select2" onchange="filterSidebar($(this),'barangay')" name="muncity" required>
-                                        <option value="">Select Municipal/City...</option>
-                                        @foreach($muncity as $m)
-                                            <option value="{{ $m->id }}">{{ $m->description }}</option>
+                                    <select class="form-control region" name="region" onchange="othersRegion($(this),'{{ $province }}');" required>
+                                        <option value="Region VII">Region VII</option>
+                                        <option value="NCR">NCR</option>
+                                        <option value="CAR">CAR</option>
+                                        <option value="Region I">Region I</option>
+                                        <option value="Region II">Region II</option>
+                                        <option value="Region III">Region III</option>
+                                        <option value="Region IV-A">Region IV-A</option>
+                                        <option value="Mimaropa">Mimaropa</option>
+                                        <option value="Region V">Region V</option>
+                                        <option value="Region VI">Region VI</option>
+                                        <option value="Region VIII">Region VIII</option>
+                                        <option value="Region IX">Region IX</option>
+                                        <option value="Region X">Region X</option>
+                                        <option value="Region XI">Region XI</option>
+                                        <option value="Region XII">Region XII</option>
+                                        <option value="Region XIII">Region XIII</option>
+                                        <option value="RBARMM">RBARMM</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="has-group ">
+                                <td>Province :</td>
+                                <td class="province_holder">
+                                    <select class="form-control province" name="province" onchange="filterSidebar($(this),'muncity')" required>
+                                        <option value="">Select Province</option>
+                                        @foreach($province as $prov)
+                                            <option value="{{ $prov->id }}">{{ $prov->description }}</option>
                                         @endforeach
-                                        <option value="others">Others</option>
                                     </select>
                                 </td>
                             </tr>
+                            <tr class="has-group ">
+                                <td>Municipality/City :</td>
+                                <td class="muncity_holder">
+                                    <select class="form-control muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
 
-                            <tr class="has-group barangay_holder">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="has-group">
                                 <td>Barangay :</td>
-                                <td>
+                                <td class="barangay_holder">
                                     <select class="form-control barangay select2" name="brgy" required>
-                                        <option value="">Select Barangay...</option>
+                                        <option value="">Select Barangay</option>
                                     </select>
                                 </td>
                             </tr>
-
-                            <tr class="has-group others_holder hide">
-                                <td>Complete Address :</td>
-                                <td>
-                                    <input type="text" name="others" class="form-control others" placeholder="Enter complete address..." />
-                                </td>
-                            </tr>
-
                             <tr>
                                 <td></td>
                                 <td>

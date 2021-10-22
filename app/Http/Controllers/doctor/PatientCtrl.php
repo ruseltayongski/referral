@@ -37,10 +37,13 @@ class PatientCtrl extends Controller
     {
         $data = array(
             'keyword' => $req->keyword,
-            'brgy' => $req->brgy,
+            'region' => $req->region,
+            'province' => $req->province,
             'muncity' => $req->muncity,
-            'others' => $req->others,
-            'source' => $req->source
+            'brgy' => $req->brgy,
+            'province_others' => $req->province_others,
+            'muncity_others' => $req->muncity_others,
+            'brgy_others' => $req->brgy_others
         );
         Session::put('profileSearch',$data);
         return self::index();
@@ -49,29 +52,17 @@ class PatientCtrl extends Controller
     public function index()
     {
         ParamCtrl::lastLogin();
-
-        $user = Session::get('auth');
-        $province = Province::get();
-
-        $keyword = '';
-        $brgy = '';
-        $mun = '';
-        $others = '';
         $session = Session::get('profileSearch');
-        if(isset($session))
-        {
+        if(isset($session)) {
             $keyword = $session['keyword'];
-            $brgy = $session['brgy'];
+            $reg = $session['region'];
+            $prov = $session['province'];
             $mun = $session['muncity'];
-            $others = $session['others'];
-        }
+            $brgy = $session['brgy'];
+            $prov_others = $session['province_others'];
+            $mun_others = $session['muncity_others'];
+            $brgy_others = $session['brgy_others'];
 
-        $source='referral';
-
-        $data = array();
-
-        if(!empty($keyword) || !empty($mun) || !empty($brgy))
-        {
             $tsekap = Profile::orderBy('lname','asc')
                 ->where('barangay_id',$brgy)
                 ->where('muncity_id',$mun)
@@ -82,7 +73,7 @@ class PatientCtrl extends Controller
                 })
                 ->get();
 
-            foreach($tsekap as $req){
+            foreach($tsekap as $req) {
                 $unique = array(
                     $req->fname,
                     $req->mname,
@@ -105,34 +96,54 @@ class PatientCtrl extends Controller
                     'province' => ($req->province_id) ? $req->province_id : '',
                     'brgy' => ($req->barangay_id) ? $req->barangay_id: ''
                 );
+
                 Patients::updateOrCreate($match,$data);
             }
+        }
+        else {
+            $keyword = 'empty_data';
+            $reg = 'empty_data';
+            $prov = 'empty_data';
+            $mun = 'empty_data';
+            $brgy = 'empty_data';
+            $prov_others = 'empty_data';
+            $mun_others = 'empty_data';
+            $brgy_others = 'empty_data';
+        }
 
-            $data = Patients::orderBy('lname','asc');
-            if(!empty($brgy)){
-                $data = $data->where('brgy',$brgy);
-            }
-            if(!empty($mun) && $mun!='others'){
-                $data = $data->where('muncity',$mun);
-            }
-            if(!empty($others)){
-                $data = $data->where('address','like',"%$others%");
-            }
+        $source='referral';
 
-            $data = $data->where(function($q) use($keyword){
+        $data = Patients::
+            where(function($query) use ($keyword, $reg, $prov, $mun, $brgy) {
+            $query->where(function($q) use($keyword, $reg, $prov, $mun, $brgy) {
                 $q->where('lname',"like","%$keyword%")
                     ->orWhere('fname','like',"%$keyword%")
                     ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
-            });
-
-            $data = $data->paginate(20);
-        }
+            })
+                ->where('region',$reg)
+                ->where('province',$prov)
+                ->where('muncity',$mun)
+                ->where('brgy',$brgy);
+            })
+            ->orWhere(function($query) use ($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
+                $query->where(function($q) use($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
+                    $q->where('lname',"like","%$keyword%")
+                        ->orWhere('fname','like',"%$keyword%")
+                        ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
+                })
+                    ->where('region',$reg)
+                    ->where('province_others',$prov_others)
+                    ->where('muncity_others',$mun_others)
+                    ->where('brgy_others',$brgy_others);
+            })
+            ->orderBy('lname','asc')
+            ->paginate(15);
 
         //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
             'title' => 'Patient List',
             'data' => $data,
-            'province' => $province,
+            'province' => Province::get(),
             'source' => $source,
             //'icd10' => $icd10
         ]);
@@ -140,7 +151,6 @@ class PatientCtrl extends Controller
 
     public function storePatient(Request $req)
     {
-        $user = Session::get('auth');
         $unique = array(
             $req->fname,
             $req->mname,
@@ -161,20 +171,26 @@ class PatientCtrl extends Controller
             'dob' => $req->dob,
             'sex' => $req->sex,
             'civil_status' => $req->civil_status,
+            'region' => $req->region,
+            'province' => $req->province,
             'muncity' => $req->muncity,
-            'province' => $user->province,
-            'brgy' => ($req->brgy) ? $req->brgy:'' ,
-            'address' => ($req->others) ? $req->others: ''
+            'brgy' => $req->brgy,
+            'province_others' => $req->province_others,
+            'muncity_others' => $req->muncity_others,
+            'brgy_others' => $req->brgy_others
         );
 
         Patients::updateOrCreate($match,$data);
 
         $data = array(
             'keyword' => $req->fname.' '.$req->lname,
-            'brgy' => $req->brgy,
+            'region' => $req->region,
+            'province' => $req->province,
             'muncity' => $req->muncity,
-            'others' => '',
-            'source' => 'referral'
+            'brgy' => $req->brgy,
+            'province_others' => $req->province_others,
+            'muncity_others' => $req->muncity_others,
+            'brgy_others' => $req->brgy_others
         );
         Session::put('profileSearch',$data);
         return redirect('doctor/patient');
@@ -182,16 +198,10 @@ class PatientCtrl extends Controller
 
     public function addPatient()
     {
-        $user = Session::get('auth');
-        $muncity = Muncity::where('province_id',$user->province)->where(function($q){
-            $q->WhereNull("vaccine_used")
-            ->orWhere("vaccine_used","No");
-        })
-        ->orderby('description','asc')
-        ->get();
-        return view('doctor.addPatient',[
+        $province = Province::get();
+        return view('doctor.patient_add',[
             'title' => 'Add New Patient',
-            'muncity' => $muncity,
+            'province' => $province,
             'method' => 'store'
         ]);
     }
@@ -216,15 +226,16 @@ class PatientCtrl extends Controller
     public function showPatientProfile($id)
     {
         $data = Patients::find($id);
-        if($data->brgy)
-        {
-            $brgy = Barangay::find($data->brgy)->description;
-            $muncity = Muncity::find($data->muncity)->description;
-            $province = Province::find($data->province)->description;
-            $data->address = "$brgy, $muncity, $province";
-        }else{
-            $data->address = $data->address;
-        }
+
+        $brgy = Barangay::find($data->brgy)->description;
+        $muncity = Muncity::find($data->muncity)->description;
+        $province = Province::find($data->province)->description;
+
+        if($data->region == "Region VII")
+            $data->address = "$data->region, $province, $muncity, $brgy";
+        else
+            $data->address = "$data->region, $data->province_others, $data->muncity_others, $data->brgy_others";
+
         $data->patient_name = "$data->fname $data->mname $data->lname";
         $data->age = ParamCtrl::getAge($data->dob);
         return $data;
@@ -370,9 +381,6 @@ class PatientCtrl extends Controller
         $code = date('ymd').'-'.$user_code.'-'.date('His');
         $unique_id = "$patient_id-$user->facility_id-".date('ymdHis');
         $tracking_id = 0; //default declaration
-        $match = array(
-            'unique_id' => $unique_id
-        );
         if($type==='normal')
         {
             Patients::where('id',$patient_id)
