@@ -12,26 +12,29 @@
         facility = $(item).find('.facility').html();
         referral_status = $(this).data('referral_status');
 
-        var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
-        $.ajax({
-            url: seenUrl,
-            type: "GET",
-            success: function(result){
+        if(referral_status == 'referred') {
+            var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
+            $.ajax({
+                url: seenUrl,
+                type: "GET",
+                success: function(result){
 
-            },
-            error: function(){
-                console.log('error');
-            }
-        });
+                },
+                error: function(){
+                    console.log('error');
+                }
+            });
+        }
 
         if(type == 'normal') {
             form_type = '#referralForm';
+            var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
             $(".referral_body").html(loading);
             $.ajax({
-                url: "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type,
+                url: form_url,
                 type: "GET",
                 success: function(data) {
-                    console.log("{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type);
+                    console.log(form_url);
                     setTimeout(function(){
                         $(".referral_body").html(data);
                     },300);
