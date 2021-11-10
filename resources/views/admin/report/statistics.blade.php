@@ -36,7 +36,6 @@
                                 <th>Transferred</th>
                                 <th>Accepted</th>
                                 <th>Recommend to Redirect</th>
-                                <th>Cancelled</th>
                                 <th>Seen Only</th>
                                 <th>Not Seen</th>
                             </tr>
@@ -79,11 +78,6 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','denied','{{ $date_range }}')">{{ $row['data']['denied'] }}</span>
                                         <br><br>
-                                    </td>
-                                    <td>
-                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">
-                                            {{ $row['data']['cancelled'] }}
-                                        </span><br><br>
                                     </td>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','seen_only','{{ $date_range }}')">{{ $row['data']['seen_only'] }}</span>
