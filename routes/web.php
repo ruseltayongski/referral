@@ -521,8 +521,13 @@ Route::get('vaccine/tab13/report','Vaccine\VaccineController@vaccineTab13Report'
 Route::post('vaccine/collapse','Vaccine\VaccineController@dataCollapse');
 Route::post('vaccine/collapse_facility','Vaccine\VaccineController@dataCollapseFacility');
 
-
-
+// ADMIN REASON FOR REFERRAL
+Route::get('admin/reason-referral','admin\ReasonForReferralCtrl@view');
+Route::post('admin/reason-referral/add','admin\ReasonForReferralCtrl@addNew');
+Route::post('admin/reason-referral/edit','admin\ReasonForReferralCtrl@showUpdateModal');
+Route::post('admin/reason-referral/update','admin\ReasonForReferralCtrl@update');
+Route::post('admin/reason-referral/delete','admin\ReasonForReferralCtrl@delete');
+Route::any('admin/reason-referral/search','admin\ReasonForReferralCtrl@search');
 
 
 
