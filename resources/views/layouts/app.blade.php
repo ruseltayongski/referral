@@ -285,6 +285,7 @@
                                     @endforeach
                                 </ul>
                             </li>
+                            <li><a href="{{ url('admin/reason-referral') }}" ><i class="fa fa-wrench"></i>&nbsp; Reason for Referral</a></li>
                         </ul>
                     </li>
                     @include('layouts.report_menu')
