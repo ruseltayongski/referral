@@ -7,21 +7,91 @@
 @section('content')
     <div class="row col-md-12">
         <div class="box box-success">
-            <div class="box-header with-border">
-                <h1>Statistic Reports</h1><br>
-                <form action="{{ asset('admin/statistics').'/'.$province }}" method="GET" class="form-inline">
-                    {{ csrf_field() }}
-                    <div class="form-group-lg">
-                        <select name="request_type" class="form-control" id="" required>
-                            <option value="">Select request type</option>
-                            <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
-                            <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
-                        </select>
-                        <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
-                        <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
-                        <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="box-header with-border">
+                        <h1>Statistic Reports</h1><br>
+                        <form action="{{ asset('admin/statistics').'/'.$province }}" method="GET" class="form-inline">
+                            {{ csrf_field() }}
+                            <div class="form-group-lg">
+                                <select name="request_type" class="form-control" id="" required>
+                                    <option value="">Select request type</option>
+                                    <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
+                                    <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
+                                </select>
+                                <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
+                                <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                                <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+                <div class="col-md-8">
+                    <section class="content" style="height: auto !important; min-height: 0px !important;margin-top: 10px;">
+                        <div class="row">
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>0</h3>
+
+                                        <p>Referred</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-bag"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>0<sup style="font-size: 20px">%</sup></h3>
+
+                                        <p>Redirected</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-stats-bars"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3>0</h3>
+
+                                        <p>Transferred</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-person-add"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-red">
+                                    <div class="inner">
+                                        <h3>0</h3>
+
+                                        <p>Accepted</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-pie-graph"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                        </div>
+                    </section>
+                </div>
             </div>
             <div class="box-body">
                 @if($request_type)
