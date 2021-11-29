@@ -17,7 +17,7 @@
             <img src="{{ asset('resources/img/f1.jpg') }}" width="100">
         </div>
     </div>
-    @if($form_type == 'normal')
+    @if($form_type == 'normal' || !isset($form_type))
         <h3 class="text-green clinical-form-title">Clinical Referral Form</h3>
     @else
         <h3 class="text-green clinical-form-title">BEmONC/ CEmONC REFERRAL FORM</h3>

@@ -46,7 +46,7 @@ class ApiController extends Controller
         if($request->request_type=='facility'){
             return $this->getFacilities($request);
         }
-        if($request->request_type=='incoming'){
+        if($request->request_type == 'incoming' || $request->request_type == 'outgoing') {
             if($request->top){
                 if($request->top == "denied"){
                     $top = "denied";
@@ -71,10 +71,9 @@ class ApiController extends Controller
                 return $data;
             }
 
-            $incoming = $this->apiIncoming($request,$date_start,$date_end);
+            $incoming = $this->apiReport($request,$date_start,$date_end);
             $data = [];
-            /*$redirected_count = 0;
-            $new_array = [];*/ //for testing purpose
+
             foreach($incoming as $inc){
                 $data[] = [
                     "province" => $inc->province,
@@ -95,74 +94,12 @@ class ApiController extends Controller
                         "redirected_spam" => $inc->redirected_spam
                     ]
                 ];
-                /*$redirected_count += $inc->redirected;
-                if($inc->redirected != 0){
-                    $new_array[] = [
-                        "facility_name" => $inc->name,
-                        "redirected" => $inc->redirected
-                    ];
-                }*/ //for testing purposes
 
             }
 
-            /*$price = array_column($new_array, 'redirected');
-            array_multisort($price, SORT_DESC, $new_array);
-            return $new_array;
-            $sum = 0;
-            foreach($new_array as $row){
-                $sum += $row["redirected"];
-            }
-            return $sum;*/ //for testing purposes
             return $data;
         }
-        elseif($request->request_type=='outgoing'){
-            if($request->top){
-                if($request->top == "denied"){
-                    $top = "denied";
-                    $request->top = "rejected";
-                }
-                else
-                    $top = $request->top;
 
-                $top_referred = $this->topReferral($request,$date_start,$date_end);
-                $data = [];
-                foreach($top_referred as $referred){
-                    $data[] = [
-                        "province" => Province::find($request->province)->description ? Province::find($request->province)->description  : "ALL",
-                        "facility_name" => $referred->facility_name,
-                        "request_type" => $request->request_type,
-                        "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
-                        "data" => [
-                            $top => $referred->count
-                        ]
-                    ];
-                }
-                return $data;
-            }
-
-            $outgoing = $this->apiOutgoing($request,$date_start,$date_end);
-            $data = [];
-            foreach($outgoing as $inc){
-                $data[] = [
-                    "province" => $inc->province,
-                    "facility_id" => $inc->facility_id,
-                    "facility_name" => $inc->name,
-                    "hospital_type" => $inc->hospital_type,
-                    "date_range" => date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)),
-                    "data" => [
-                        "referred" => $inc->referred,
-                        "redirected" => $inc->redirected,
-                        "transferred" => $inc->transferred,
-                        "accepted" => $inc->accepted,
-                        "denied" => $inc->denied,
-                        "cancelled" => $inc->cancelled,
-                        "seen_only" => $inc->seen_only,
-                        "not_seen" => $inc->not_seen
-                    ]
-                ];
-            }
-            return $data;
-        }
         elseif($request->request_type=="bed"){
             $beds = $this->apiBedAvailability($request);
             $data = [];
@@ -355,13 +292,8 @@ class ApiController extends Controller
         return $data;
     }
 
-    public function apiIncoming(Request $request,$date_start,$date_end){
-        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province')");
-        return $data;
-    }
-
-    public function apiOutgoing(Request $request,$date_start,$date_end){
-        $data = \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province')");
+    public function apiReport(Request $request,$date_start,$date_end){
+        $data = \DB::connection('mysql')->select("call statistics_report_incoming($request->request_type','$date_start','$date_end','$request->province')");
         return $data;
     }
 

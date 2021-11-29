@@ -15,7 +15,11 @@ class IcdController extends Controller
 
     public function icdSearch(Request $request){
         $keyword = $request->icd_keyword;
-        $icd = Icd10::where("description","like","%$keyword%")->get();
+
+        if(!$keyword)
+            return "";
+
+        $icd = Icd10::where("description","like","%$keyword%")->orWhere("code","like","%$keyword%")->get();
         return view("icd.icd_search",[
             "icd" => $icd
         ]);
