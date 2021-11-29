@@ -41,7 +41,7 @@ class LoginCtrl extends Controller
                 $l = new Login();
                 $l->userId = $login->id;
                 $l->login = $last_login;
-                $l->logout = "0000-00-00 00:00:00";
+                $l->logout = date("Y-m-d H:i:s",strtotime("0000-00-00 00:00:00"));
                 $l->status = 'login';
                 $l->save();
 
