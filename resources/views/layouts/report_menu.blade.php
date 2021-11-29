@@ -44,6 +44,7 @@
                 @foreach(\App\Province::get() as $prov)
                     <li><a href="{{ asset('admin/statistics').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
                 @endforeach
+                <li><a href="{{ asset('admin/statistics').'/0' }}">All Province</a></li>
             </ul>
         </li>
         <!--

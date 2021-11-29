@@ -103,7 +103,16 @@
 
 @section('js')
 @include('script.chart')
+{{--@include('modal.announcement')--}}
 <script>
+    Lobibox.confirm({
+        msg: "Do you want to proceed in referral form?",
+        callback: function ($this, type, ev) {
+            if(type == 'yes')
+                window.location.replace("{{ asset('doctor/patient') }}");
+        }
+    });
+
     var doctor_monthly_report = <?php echo json_encode($doctor_monthly_report); ?>;
     console.log(doctor_monthly_report);
 

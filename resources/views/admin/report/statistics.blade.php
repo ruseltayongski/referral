@@ -29,12 +29,11 @@
                 <div class="col-md-8">
                     <section class="content" style="height: auto !important; min-height: 0px !important;margin-top: 10px;">
                         <div class="row">
-                            <div class="col-lg-3 col-xs-6">
+                            <div class="col-lg-4">
                                 <!-- small box -->
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3>0</h3>
-
+                                        <h3 id="statistics_referred">0</h3>
                                         <p>Referred</p>
                                     </div>
                                     <div class="icon">
@@ -44,12 +43,11 @@
                                 </div>
                             </div>
                             <!-- ./col -->
-                            <div class="col-lg-3 col-xs-6">
+                            <div class="col-lg-4">
                                 <!-- small box -->
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3>0<sup style="font-size: 20px">%</sup></h3>
-
+                                        <h3 id="statistics_redirected">0</h3>
                                         <p>Redirected</p>
                                     </div>
                                     <div class="icon">
@@ -59,31 +57,15 @@
                                 </div>
                             </div>
                             <!-- ./col -->
-                            <div class="col-lg-3 col-xs-6">
+                            <div class="col-lg-4">
                                 <!-- small box -->
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3>0</h3>
-
+                                        <h3 id="statistics_transferred">0</h3>
                                         <p>Transferred</p>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-person-add"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-xs-6">
-                                <!-- small box -->
-                                <div class="small-box bg-red">
-                                    <div class="inner">
-                                        <h3>0</h3>
-
-                                        <p>Accepted</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ion ion-pie-graph"></i>
                                     </div>
                                     <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
@@ -108,6 +90,9 @@
                                 <th>Recommend to Redirect</th>
                                 <th>Seen Only</th>
                                 <th>Not Seen</th>
+                                <th>Requesting a Call</th>
+                                <th>Redirected Spam</th>
+                                <th class="bg-red">Cancelled</th>
                             </tr>
                             </thead>
                             <tr>
@@ -116,25 +101,39 @@
                                     <strong class="text-green">{{ $data[0]['province'] }} Province</strong>
                                 </td>
                             </tr>
+                            <?php
+                                $statistics_referred = 0;
+                                $statistics_redirected = 0;
+                                $statistics_transferred = 0;
+                            ?>
                             @foreach($data as $row)
+                                <?php
+                                    $left_sum = 0;
+                                    $right_sum = 0;
+                                ?>
                                 <tr class="">
                                     <td>{{ $count }}</td>
-                                    <td >
+                                    <td width="30%;">
                                         <span style="font-size: 12pt;">
                                             {{ $row['facility_name'] }}
                                         </span><br>
                                         <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row['hospital_type']) }}</small>
                                     </td>
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','referred','{{ $date_range }}')">{{ $row['data']['referred'] }}</span><br><br>
+                                        <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','referred','{{ $date_range }}')">
+                                            <?php $statistics_referred += $row['data']['referred']; ?>
+                                            {{ $row['data']['referred'] }}
+                                        </span><br><br>
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected','{{ $date_range }}')">
+                                            <?php $statistics_redirected += $row['data']['redirected']; ?>
                                             {{ $row['data']['redirected'] }}
                                         </span><br><br>
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','transferred','{{ $date_range }}')">
+                                            <?php $statistics_transferred += $row['data']['transferred']; ?>
                                             {{ $row['data']['transferred'] }}
                                         </span><br><br>
                                     </td>
@@ -142,7 +141,9 @@
                                         <?php
                                         $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
                                         ?>
-                                        <span class="text-blue" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','accepted','{{ $date_range }}')">{{ $row['data']['accepted'] }}</span><br>
+                                        <span class="text-blue" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','accepted','{{ $date_range }}')">
+                                            {{ $row['data']['accepted'] }}
+                                        </span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
                                     </td>
                                     <td width="10%">
@@ -156,6 +157,33 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','not_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
                                         <br><br>
+                                    </td>
+                                    <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','request_call','{{ $date_range }}')">{{ $row['data']['request_call'] }}</span>
+                                        <br><br>
+                                    </td>
+                                    <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected_spam','{{ $date_range }}')">{{ $row['data']['redirected_spam'] }}</span>
+                                        <br><br>
+                                    </td>
+                                    <td width="10%">
+                                        <span class="text-red" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['cancelled'] }}</span>
+                                        <br><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                        $left_sum += $row['data']['referred'] + $row['data']['redirected'] + $row['data']['transferred'];
+                                        $right_sum += $row['data']['accepted'] + $row['data']['denied'] + $row['data']['seen_only'] + $row['data']['not_seen'] + $row['data']['request_call'] + $row['data']['redirected_spam'];
+                                    ?>
+                                    <td colspan="2">
+
+                                    </td>
+                                    <td colspan="3" class="{{ $left_sum == $right_sum ? '' : 'bg-yellow' }}">
+                                        <center style="font-size: 20pt;">{{ $left_sum }}</center>
+                                    </td>
+                                    <td colspan="5" class="{{ $left_sum == $right_sum ? '' : 'bg-yellow' }}">
+                                        <center style="font-size: 20pt;">{{ $right_sum }}</center>
                                     </td>
                                 </tr>
                             @endforeach
@@ -204,6 +232,10 @@
 
 @section('js')
     <script>
+        $("#statistics_referred").html("{{ $statistics_referred }}");
+        $("#statistics_redirected").html("{{ $statistics_redirected }}");
+        $("#statistics_transferred").html("{{ $statistics_transferred }}");
+
         //Date range picker
         $('#consolidate_date_range').daterangepicker();
         $(document).ready(function(){

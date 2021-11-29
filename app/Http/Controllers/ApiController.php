@@ -90,7 +90,9 @@ class ApiController extends Controller
                         "denied" => $inc->denied,
                         "cancelled" => $inc->cancelled,
                         "seen_only" => $inc->seen_only,
-                        "not_seen" => $inc->not_seen
+                        "request_call" => $inc->request_call,
+                        "not_seen" => $inc->not_seen,
+                        "redirected_spam" => $inc->redirected_spam
                     ]
                 ];
                 /*$redirected_count += $inc->redirected;
