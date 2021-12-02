@@ -529,7 +529,10 @@ Route::post('admin/reason-referral/update','admin\ReasonForReferralCtrl@update')
 Route::post('admin/reason-referral/delete','admin\ReasonForReferralCtrl@delete');
 Route::any('admin/reason-referral/search','admin\ReasonForReferralCtrl@search');
 
-
-
-
+// API for Mobile
+Route::post('mobile/v2/login', 'MobileCtrl@loginAPI');
+Route::get('mobile/get/v2/facility/{last_downloaded}', 'MobileCtrl@latestFacilityAPI');
+Route::get('mobile/get/v2/province/{last_downloaded}', 'MobileCtrl@latestProvinceAPI');
+Route::get('mobile/get/v2/municipality/{last_downloaded}', 'MobileCtrl@latestMuncityAPI');
+Route::get('mobile/get/v2/barangay/{last_downloaded}', 'MobileCtrl@latestBarangayAPI');
 
