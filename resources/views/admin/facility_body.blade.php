@@ -176,7 +176,7 @@
                     }
                 }
                 ?>
-            >RHU</option>
+            >Rural Health Unit Government</option>
             <option value="CIU/TTMF"
             <?php
                 if(isset($data->level)){
@@ -187,15 +187,25 @@
                 ?>
             >CIU/TTMF
             </option>
-            <option value="birthing_home"
+            <option value="priv_birthing_home"
             <?php
                 if(isset($data->level)){
-                    if($data->hospital_type == 'birthing_home'){
+                    if($data->hospital_type == 'priv_birthing_home'){
                         echo 'selected';
                     }
                 }
                 ?>
-            >Birthing Home
+            >Private Birthing Home
+            </option>
+            <option value="gov_birthing_home"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'gov_birthing_home'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Government Birthing Home
             </option>
             <option value="EOC"
             <?php
@@ -206,6 +216,26 @@
                 }
                 ?>
             >EOC
+            </option>
+            <option value="lgu_owned"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'lgu_owned'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >LGU-Owned Hospital
+            </option>
+            <option value="doh_hospital"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'doh_hospital'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >DOH Hospital
             </option>
         </select>
     </div>
