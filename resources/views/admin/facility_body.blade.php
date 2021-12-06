@@ -225,7 +225,7 @@
                     }
                 }
                 ?>
-            >LGU-Owned Hospital
+            >LGU-Owned
             </option>
             <option value="doh_hospital"
             <?php
