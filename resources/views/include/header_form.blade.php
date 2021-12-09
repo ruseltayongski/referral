@@ -18,8 +18,8 @@
         </div>
     </div>
     @if($form_type == 'normal' || !isset($form_type))
-        <h3 class="text-green clinical-form-title">Clinical Referral Form</h3>
+        <h3 class="text-green clinical-form-title" style="font-size: 23pt;">Clinical Referral Form</h3>
     @else
-        <h3 class="text-green clinical-form-title">BEmONC/ CEmONC REFERRAL FORM</h3>
+        <h3 class="text-green clinical-form-title" style="font-size: 23pt;">BEmONC/ CEmONC REFERRAL FORM</h3>
     @endif
 </center>

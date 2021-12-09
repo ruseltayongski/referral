@@ -14,6 +14,7 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         'login',
         'telemedicine/sync/tsekap',
-        'api/refer/patient'
+        'api/refer/patient',
+        'mobile/v2/login'
     ];
 }

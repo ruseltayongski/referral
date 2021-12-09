@@ -113,7 +113,7 @@ $status = session::get('status');
                                         <option value="Region XI">Region XI</option>
                                         <option value="Region XII">Region XII</option>
                                         <option value="Region XIII">Region XIII</option>
-                                        <option value="RBARMM">RBARMM</option>
+                                        <option value="BARMM">BARMM</option>
                                     </select>
                                 </td>
                             </tr>

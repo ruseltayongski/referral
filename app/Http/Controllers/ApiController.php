@@ -293,7 +293,7 @@ class ApiController extends Controller
     }
 
     public function apiReport(Request $request,$date_start,$date_end){
-        $data = \DB::connection('mysql')->select("call statistics_report_incoming($request->request_type','$date_start','$date_end','$request->province')");
+        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$request->request_type','$date_start','$date_end','$request->province')");
         return $data;
     }
 

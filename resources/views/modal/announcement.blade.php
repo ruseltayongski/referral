@@ -1,12 +1,10 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <?php
-                    $dateNow = date('Y-m-d');
-                ?>
-                @if(!isset(Session::get("auth")->id))
+@if(!isset(Session::get("auth")->id))
+    <div class="modal fade" tabindex="-1" role="dialog" id="notificationModal" style="margin-top: 30px;z-index: 99999 ">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <?php $dateNow = date('Y-m-d'); ?>
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
@@ -92,14 +90,11 @@
                             <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine <strong>(032)411-6900</strong>
                         </div>
                     </div>
-                @else
-                    <a href="#" type="button" class="btn btn-success btn-lg btn-block">Redirect to refer process</a>
-                @endif
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<script>
-    $('#notificationModal').modal('show');
-</script>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <script>
+        $('#notificationModal').modal('show');
+    </script>
+@endif
