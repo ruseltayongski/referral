@@ -15,6 +15,9 @@ class VerifyCsrfToken extends BaseVerifier
         'login',
         'telemedicine/sync/tsekap',
         'api/refer/patient',
-        'mobile/v2/login'
+        'mobile/get/v2/facility',
+        'mobile/get/v2/province',
+        'mobile/get/v2/municipality',
+        'mobile/get/v2/barangay'
     ];
 }

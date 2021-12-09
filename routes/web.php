@@ -530,9 +530,9 @@ Route::post('admin/reason-referral/delete','admin\ReasonForReferralCtrl@delete')
 Route::any('admin/reason-referral/search','admin\ReasonForReferralCtrl@search');
 
 // API for Mobile
-Route::post('mobile/v2/login', 'MobileCtrl@loginAPI');
-Route::get('mobile/get/v2/facility/{last_downloaded}', 'MobileCtrl@latestFacilityAPI');
-Route::get('mobile/get/v2/province/{last_downloaded}', 'MobileCtrl@latestProvinceAPI');
-Route::get('mobile/get/v2/municipality/{last_downloaded}', 'MobileCtrl@latestMuncityAPI');
-Route::get('mobile/get/v2/barangay/{last_downloaded}', 'MobileCtrl@latestBarangayAPI');
+Route::post('mobile/v2/login', 'Mobile\MobileCtrlV2@loginAPI');
+Route::post('mobile/get/v2/facility', 'Mobile\MobileCtrlV2@latestFacilityAPI');
+Route::post('mobile/get/v2/province', 'Mobile\MobileCtrlV2@latestProvinceAPI');
+Route::post('mobile/get/v2/municipality', 'Mobile\MobileCtrlV2@latestMuncityAPI');
+Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
 
