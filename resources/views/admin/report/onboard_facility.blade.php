@@ -444,7 +444,7 @@
                                             echo 'badge bg-cornflowerblue';
                                         }
                                         elseif($row->hospital_type == 'doh_hospital'){
-                                            echo 'badge bg-darkcyan';
+                                            echo 'badge bg-blue';
                                         }
                                         elseif($row->hospital_type == 'EOC'){
                                             echo 'badge bg-black';
