@@ -141,7 +141,7 @@ class BedTrackerCtrl extends Controller
         $facility_select = $request->facility;
 
         $facility = Facility::where(function($q){
-                $q->where("hospital_type","government")->orWhere("hospital_type","private");
+                $q->where("hospital_type","government")->orWhere("hospital_type","private")->orWhere("hospital_type","doh_hospital");
             })
             ->where("referral_used","yes")
             ->orderBy("province","asc")
