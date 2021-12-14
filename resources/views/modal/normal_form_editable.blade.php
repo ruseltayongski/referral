@@ -287,15 +287,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <button type="button" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
                                     <button type="button" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
                                     <button type="button" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                     <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
                                         <i class="fa fa-medkit"></i> Add ICD-10
                                     </a>
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    <div id="icd-selected">
+                                    <div id="icd_selected">
 
                                     </div>
                                 </td>
@@ -309,7 +309,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    <div id="others-diagnosis">
+                                    <div id="others_diagnosis">
 
                                     </div>
                                 </td>
@@ -321,7 +321,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <select name="" class="form-control-select select2" style="width: 100%" required>
                                         <option value="">Select reason for referral</option>
                                         @foreach($reason_for_referral as $reason_referral)
-                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            <option name="reason_referral1" value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                         @endforeach
                                     </select><br><br>
                                     <button type="button" class="btn btn-sm btn-info" onclick="clearOtherReasonReferral()"> Clear other reason for referral</button>
@@ -423,11 +423,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
 <script>
     function clearICD() {
-        $("#icd-selected").html("");
+        $("#icd_selected").html("");
     }
 
     function clearOtherDiagnosis() {
-        $("#others-diagnosis").html("");
+        $("#others_diagnosis").html("");
     }
 
     function clearNotesDiagnosis() {
@@ -443,7 +443,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         setTimeout(function(){
             $("#add_notes_diagnosis").html('<span class="text-success">Notes diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control add_notes_diagnosis" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 
@@ -457,7 +457,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     function searchICD10() {
-        $("#others-diagnosis").html("");
+        $("#others_diagnosis").html("");
         $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
@@ -473,13 +473,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
-        $("#icd-selected").html("");
+        $("#icd_selected").html("");
         var values = [];
-        $('input[name="icd-checkbox[]"]:checked').each(function () {
+        $('input[name="icd_checkbox[]"]:checked').each(function () {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
+            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             if(this.checked){
-                $("#icd-selected").append('<span class="text-green">'+'=> '+icd_description+'</span><br>');
+                $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br>');
             }
         });
         console.log(values);
@@ -491,7 +492,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             setTimeout(function(){
                 $("#reason_referral_others_body").html('<span class="text-success">Reason for referral others:</span> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
-                    '                                <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                    '                                <textarea class="form-control reason_referral" name="reason_referral2" style="resize: none;width: 100%;" rows="7" required></textarea>')
             },500);
         } else {
             $("#reason_referral_others_body").html("");
@@ -500,11 +501,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     function othersDiagnosis(){
         $('#icd-modal').modal('hide');
-        $("#others-diagnosis").html(loading);
+        $("#others_diagnosis").html(loading);
         setTimeout(function(){
-            $("#others-diagnosis").html('<span class="text-success">Others diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#others_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 

@@ -23,7 +23,7 @@
                 <td>{{ strtoupper($row->source) }}</td>
                 <td>
                     <div class="custom-control custom-checkbox checkbox-xl">
-                        <input type="checkbox" class="custom-control-input" name="icd-checkbox[]" style="height: 30px;width: 30px;cursor: pointer;">
+                        <input type="checkbox" class="custom-control-input" value="{{ $row->id }}" name="icd_checkbox[]" style="height: 30px;width: 30px;cursor: pointer;">
                     </div>
                 </td>
             </tr>

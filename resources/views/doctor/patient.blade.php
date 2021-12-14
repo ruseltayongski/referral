@@ -346,7 +346,6 @@
         $('.loading').show();
         $('.btn-submit').attr('disabled',true);
 
-        reason = $('.reason_referral').val();
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();

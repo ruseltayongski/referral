@@ -8,6 +8,7 @@ use App\Barangay;
 use App\Facility;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
+use App\Icd;
 use App\Icd10;
 use App\Muncity;
 use App\PatientForm;
@@ -406,13 +407,25 @@ class PatientCtrl extends Controller
                 'case_summary' => $req->case_summary,
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
-                //'icd_code' => $req->icd_code,
-                'reason' => $req->reason,
                 'referring_md' => $user->id,
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
+                'reason_referral' => $req->reason_referral1,
+                'other_reason_referral' => $req->other_reason_referral,
+                // 'file_path' => ,
+                'other_diagnoses' => $req->other_diagnosis,
+                'notes_diagnoses' => $req->notes_diagnosis
             );
             $form = PatientForm::create($data);
             $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
+
+            // if(count($req->icd_checkbox)) {
+            //     foreach($req->icd_checkbox as $icd) {
+            //         $icd = new ICD;
+            //         $icd->patient_id = $form->id;
+            //         $icd->icd_id = $icd->id;
+            //         $icd->save();
+            //     }
+            // }
         }
         else if($type==='pregnant')
         {
