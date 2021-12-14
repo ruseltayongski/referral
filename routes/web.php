@@ -536,3 +536,5 @@ Route::post('mobile/get/v2/province', 'Mobile\MobileCtrlV2@latestProvinceAPI');
 Route::post('mobile/get/v2/municipality', 'Mobile\MobileCtrlV2@latestMuncityAPI');
 Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
 
+// upload file
+// Route::post('public/{facility_id}/{username}', '');
