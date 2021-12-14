@@ -443,7 +443,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         setTimeout(function(){
             $("#add_notes_diagnosis").html('<span class="text-success">Notes diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 
@@ -478,7 +478,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('input[name="icd_checkbox[]"]:checked').each(function () {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
-            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             if(this.checked){
                 $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br>');
             }
@@ -492,7 +491,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             setTimeout(function(){
                 $("#reason_referral_others_body").html('<span class="text-success">Reason for referral others:</span> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
-                    '                                <textarea class="form-control reason_referral" name="reason_referral2" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                    '                                <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>')
             },500);
         } else {
             $("#reason_referral_others_body").html("");

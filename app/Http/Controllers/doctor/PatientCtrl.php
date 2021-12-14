@@ -413,18 +413,14 @@ class PatientCtrl extends Controller
                 'other_reason_referral' => $req->other_reason_referral,
                 // 'file_path' => ,
                 'other_diagnoses' => $req->other_diagnosis,
-                'notes_diagnoses' => $req->notes_diagnosis
             );
             $form = PatientForm::create($data);
             $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
 
             // if(count($req->icd_checkbox)) {
-            //     foreach($req->icd_checkbox as $icd) {
-            //         $icd = new ICD;
-            //         $icd->patient_id = $form->id;
-            //         $icd->icd_id = $icd->id;
-            //         $icd->save();
-            //     }
+                
+            // }else{
+            //     echo "tabang hahahha";
             // }
         }
         else if($type==='pregnant')
