@@ -7,7 +7,7 @@
             <th>Group</th>
             <th>CR</th> <!--Case Rate -->
             <th>PF</th> <!-- Professional Fee -->
-            <th>HCF</th> <!-- Heath Care Fee -->
+            <th>HCF</th> <!-- Health Care Fee -->
             <th>Source</th>
             <th>Option</th>
         </tr>

@@ -318,10 +318,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <td colspan="6">
                                     <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
                                     <br>
-                                    <select name="" class="form-control-select select2" style="width: 100%" required>
+                                    <select name="reason_referral1" class="form-control-select select2" style="width: 100%" required="">
                                         <option value="">Select reason for referral</option>
                                         @foreach($reason_for_referral as $reason_referral)
-                                            <option name="reason_referral1" value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                         @endforeach
                                     </select><br><br>
                                     <button type="button" class="btn btn-sm btn-info" onclick="clearOtherReasonReferral()"> Clear other reason for referral</button>
@@ -353,7 +353,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
                                         -->
                                         <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/*" />
                                             <div class="drag-text">
                                                 <h3>Drag and drop a file or select add Image</h3>
                                             </div>
@@ -441,7 +441,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     function addNotesDiagnosis() {
         $("#add_notes_diagnosis").html(loading);
         setTimeout(function(){
-            $("#add_notes_diagnosis").html('<span class="text-success">Notes diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#add_notes_diagnosis").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
@@ -475,11 +475,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('#icd-modal').modal('toggle');
         $("#icd_selected").html("");
         var values = [];
+
         $('input[name="icd_checkbox[]"]:checked').each(function () {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
+            var id = $(this).val();
             if(this.checked){
-                $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br>');
+                $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);
@@ -523,7 +525,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             };
 
             reader.readAsDataURL(input.files[0]);
-
+                      
         } else {
             removeUpload();
         }
