@@ -14,7 +14,6 @@ class ChangePatientFormTable extends Migration
     public function up()
     {
         Schema::table('patient_form', function (Blueprint $table) {
-            $table->dropColumn('notes_diagnoses');
             $table->string('diagnosis')->nullable()->change();
         });
     }

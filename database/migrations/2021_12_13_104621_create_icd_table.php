@@ -15,7 +15,7 @@ class CreateIcdTable extends Migration
     {
         Schema::create('icd', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
+            $table->string('code', 255);
             $table->integer('icd_id');
             $table->timestamps();
         });
