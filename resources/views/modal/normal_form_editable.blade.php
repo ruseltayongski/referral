@@ -318,23 +318,18 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <td colspan="6">
                                     <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
                                     <br>
-                                    <select name="reason_referral1" class="form-control-select select2" style="width: 100%" required="">
+                                    <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                         <option value="">Select reason for referral</option>
+                                        <option value="-1">Other reason for referral</option>
                                         @foreach($reason_for_referral as $reason_referral)
                                             <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                         @endforeach
                                     </select><br><br>
-                                    <button type="button" class="btn btn-sm btn-info" onclick="clearOtherReasonReferral()"> Clear other reason for referral</button>
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addOtherReasonReferral()"><i class="fa fa-plus"></i> Other reason for referral</button>
-                                    <!--
-                                    <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>
-                                    -->
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
                                     <div id="other_reason_referral">
-
                                     </div>
                                 </td>
                             </tr>
@@ -353,7 +348,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
                                         -->
                                         <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/*" />
+                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                                             <div class="drag-text">
                                                 <h3>Drag and drop a file or select add Image</h3>
                                             </div>
@@ -447,14 +442,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
         },500);
     }
 
-    function addOtherReasonReferral() {
-        $("#other_reason_referral").html(loading);
-        setTimeout(function(){
-            $("#other_reason_referral").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
-                '                                <br />\n' +
-                '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-        },500);
-    }
+    $('.reason_referral').on('change', function() {
+        var value = $(this).val();
+        if(value == '-1') {
+            $("#other_reason_referral").html(loading);
+            setTimeout(function(){
+                $("#other_reason_referral").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
+                    '                                <br />\n' +
+                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
+            },500);
+            $("#other_reason_referral").show();
+        }else{
+            clearOtherReasonReferral();
+        }
+    });
 
     function searchICD10() {
         $("#others_diagnosis").html("");

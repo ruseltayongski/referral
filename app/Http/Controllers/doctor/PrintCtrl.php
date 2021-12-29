@@ -26,6 +26,7 @@ class PrintCtrl extends Controller
                     ->orwhere('referred_to',$user->facility_id);
             })
             ->first();
+        $form_status = $form_type->status;
         if($form_type){
             $form_type = $form_type->type;
         }else{
@@ -34,8 +35,8 @@ class PrintCtrl extends Controller
 
         if($form_type=='normal')
         {
-            $data = ReferralCtrl::normalFormData($track_id);
-            return self::printNormal($data);
+            $data = ReferralCtrl::normalForm($track_id, $form_status, $form_type);
+            return self::printNormal($data->form, $data);
         }else if($form_type=='pregnant'){
             $data = ReferralCtrl::pregnantFormData($track_id);
             return self::printPregnant($data);
@@ -184,7 +185,7 @@ class PrintCtrl extends Controller
         exit();
     }
 
-    public function printNormal($data)
+    public function printNormal($data, $data2)
     {
        //print_r($data);
         $address='';
@@ -273,17 +274,59 @@ class PrintCtrl extends Controller
         $pdf->MultiCell(0, 5, $data->reco_summary, 0, 'L');
         $pdf->Ln();
 
-        $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
-        $pdf->SetTextColor(102,56,0);
-        $pdf->SetFont('Arial','I',10);
-        $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
-        $pdf->Ln();
+        // $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
+        // $pdf->SetTextColor(102,56,0);
+        // $pdf->SetFont('Arial','I',10);
+        // $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
+        // $pdf->Ln();
 
-        $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
-        $pdf->SetTextColor(102,56,0);
-        $pdf->SetFont('Arial','I',10);
-        $pdf->MultiCell(0, 5, $data->reason, 0, 'L');
-        $pdf->Ln();
+        // $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
+        // $pdf->SetTextColor(102,56,0);
+        // $pdf->SetFont('Arial','I',10);
+        // $pdf->MultiCell(0, 5, $data->reason, 0, 'L');
+        // $pdf->Ln();
+
+        if(isset($data2->icd)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
+            $pdf->SetTextColor(102,56,0);
+            $pdf->SetFont('Arial','I',10);
+            foreach($data2->icd as $icd) {
+                $pdf->MultiCell(0, 5, $icd->code." - ".$icd->description, 0, 'L');
+            }
+            $pdf->Ln();
+        }
+
+        if(isset($data->diagnosis)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Additional notes in diagnosis: "), 0, 'L');
+            $pdf->SetTextColor(102,56,0);
+            $pdf->SetFont('Arial','I',10);
+            $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
+            $pdf->Ln();
+        }
+
+        if(isset($data->other_diagnoses)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Other diagnosis: "), 0, 'L');
+            $pdf->SetTextColor(102,56,0);
+            $pdf->SetFont('Arial','I',10);
+            $pdf->MultiCell(0, 5, $data->other_diagnoses, 0, 'L');
+            $pdf->Ln();   
+        }
+
+        if(isset($data2->reason)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
+            $pdf->SetTextColor(102,56,0);
+            $pdf->SetFont('Arial','I',10);
+            $pdf->MultiCell(0, 5, $data2->reason, 0, 'L');
+            $pdf->Ln();
+        }
+
+        if(isset($data->other_reason_referral)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
+            $pdf->SetTextColor(102,56,0);
+            $pdf->SetFont('Arial','I',10);
+            $pdf->MultiCell(0, 5, $data->other_reason_referral, 0, 'L');
+            $pdf->Ln();   
+        }
 
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name of referring MD/HCW: ").self::orange($pdf,$data->md_referring,"Name of referring MD/HCW:"), 0, 'L');
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Contact # of referring MD/HCW: ").self::orange($pdf,$data->referring_md_contact,"Contact # of referring MD/HCW:"), 0, 'L');

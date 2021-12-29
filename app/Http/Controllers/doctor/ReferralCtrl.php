@@ -8,11 +8,13 @@ use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
+use App\Icd;
 use App\Issue;
 use App\Monitoring;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
+use App\ReasonForReferral;
 use App\Seen;
 use App\Tracking;
 use App\User;
@@ -20,6 +22,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 
 class ReferralCtrl extends Controller
@@ -175,9 +179,24 @@ class ReferralCtrl extends Controller
         return $activity->id;
     }
 
-    public function normalForm($id,$referral_status,$form_type) {
+    public static function normalForm($id,$referral_status,$form_type) {
+        $track = Tracking::select('code')->where('id', $id)->first();
+        $icd = Icd::select('icd10.code', 'icd10.description')
+                    ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+                    ->where('icd.code',$track->code)->get();
+        $path = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        $file_name = basename($path);
+
+        $reason = ReasonForReferral::select("reason_referral.reason")
+                ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
+                ->where('patient_form.code', $track->code)->first();
+
         return view("doctor.referral_body_normal",[
             "form" => self::normalFormData($id),
+            "reason" => $reason->reason,
+            "icd" => $icd,
+            "file_path" => $path,
+            "file_name" => $file_name,
             "referral_status" => $referral_status,
             "form_type" => $form_type
         ]);
@@ -198,8 +217,9 @@ class ReferralCtrl extends Controller
             'patient_form.refer_sur_category',
             'patient_form.case_summary',
             'patient_form.reco_summary',
+            'patient_form.other_reason_referral',
             'patient_form.diagnosis',
-            'patient_form.reason',
+            'patient_form.other_diagnoses',
             DB::raw("if(
                                     patients.brgy,
                                     concat(patients.region,', ',patients.province,', ',muncity.description,', ',barangay.description),

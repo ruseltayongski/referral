@@ -56,20 +56,61 @@
             <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
         </td>
     </tr>
-    <tr>
-        <td colspan="6">
-            Diagnosis/Impression:
-            <br />
-            <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="6">
-            Reason for referral:
-            <br />
-            <span class="reason form-details">{{ $form->reason }}</span>
-        </td>
-    </tr>
+    @if(isset($icd))
+        <tr>
+            <td colspan="6">
+                ICD-10 Code and Description:
+                <br />
+                @foreach($icd as $i)
+                    <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
+                @endforeach
+            </td>
+        </tr>
+    @endif
+    @if(isset($form->diagnosis))
+        <tr>
+            <td colspan="6">
+                Notes in diagnosis:
+                <br />
+                <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($form->other_diagnoses)) 
+        <tr>
+            <td colspan="6">
+                Other Diagnoses:
+                <br />
+                <span class="reason form-details">{{ $form->other_diagnoses }}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($reason))
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $reason }}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($form->other_reason_referral))
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $form->other_reason_referral }}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($file_path))
+        <tr>
+            <td colspan="6">
+                File Attachment:
+                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+            </td>
+        </tr>
+    @endif
     <tr>
         <td colspan="6">
             Name of referring MD/HCW: <span class="referring_md form-details">{{ $form->md_referring }}</span>
@@ -81,7 +122,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{ $form->referred_md }}</span></td>
+        <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{ $form->md_referred }}</span></td>
     </tr>
 </table>
 <hr />

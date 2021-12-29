@@ -419,14 +419,13 @@ class PatientCtrl extends Controller
                 $username = $user->username;
                 $file = $_FILES['file_upload']['name'];
                 $dir = public_path()."\\fileupload\\".$username."\\";
-                $new_dir = public_path()."\\fileupload\\".$username."\\".$file;
 
                 if(!file_exists($dir) && !is_dir($dir)) { // if directory does not exist, create it
                     mkdir($dir);
                 }
 
-                if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $new_dir)) { // upload file to directory
-                    $form->file_path = $new_dir;
+                if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { // upload file to directory
+                    $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
                 }
             }
             $form->save();
@@ -489,19 +488,35 @@ class PatientCtrl extends Controller
                 'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
-                // 'reason_referral' => $req->reason_referral1,
-                // 'other_reason_referral' => $req->other_reason_referral,
-                // 'file_path' => $req->file_upload,
-                // 'other_diagnoses' => $req->other_diagnosis,
+                
+
+                'reason_referral' => $req->reason_referral1,
+                'other_reason_referral' => $req->other_reason_referral,
+                'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PregnantForm::create($data);
 
-            // foreach($req->icd_ids as $i){
-            //     $icd = new Icd();
-            //     $icd->code = $form->code;
-            //     $icd->icd_id = $i;
-            //     $icd->save();
-            // }
+            if($_FILES["file_upload"]["name"]) {
+                $username = $user->username;
+                $file = $_FILES['file_upload']['name'];
+                $dir = public_path()."\\fileupload\\".$username."\\";
+
+                if(!file_exists($dir) && !is_dir($dir)) { 
+                    mkdir($dir);
+                }
+
+                if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { 
+                    $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
+                }
+            }
+            $form->save();
+
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
@@ -552,23 +567,20 @@ class PatientCtrl extends Controller
                 'case_summary' => $req->case_summary,
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
-                //'icd_code' => $req->icd_code_walkin,
-                'reason' => $req->reason,
                 'referring_md' => 0,
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
-                // 'reason_referral' => $req->reason_referral1,
-                // 'other_reason_referral' => $req->other_reason_referral,
-                // 'file_path' => $req->file_upload,
-                // 'other_diagnoses' => $req->other_diagnosis,
+                'reason_referral' => $req->reason_referral1,
+                'other_reason_referral' => $req->other_reason_referral,
+                'other_diagnoses' => $req->other_diagnoses,
             );
             $form = PatientForm::updateOrCreate($match,$data);
 
-            // foreach($req->icd_ids as $i){
-            //     $icd = new Icd();
-            //     $icd->code = $form->code;
-            //     $icd->icd_id = $i;
-            //     $icd->save();
-            // }
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             if($form->wasRecentlyCreated){
                 PatientForm::where('unique_id',$unique_id)
@@ -679,8 +691,6 @@ class PatientCtrl extends Controller
         }else{
             return '0';
         }
-
-
     }
 
     function importTsekap($patient_id,$civil_status='',$phic_id='',$phic_status='')
