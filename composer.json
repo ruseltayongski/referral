@@ -13,7 +13,8 @@
         "pusher/pusher-php-server": "^4.1",
         "twilio/sdk": "^6.9",
         "kylekatarnls/laravel-carbon-2": "^1.0.0",
-        "nesbot/carbon": "2.27.0 as 1.39.0"
+        "nesbot/carbon": "2.27.0 as 1.39.0",
+        "doctrine/dbal" : "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

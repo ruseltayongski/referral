@@ -535,3 +535,5 @@ Route::post('mobile/get/v2/facility', 'Mobile\MobileCtrlV2@latestFacilityAPI');
 Route::post('mobile/get/v2/province', 'Mobile\MobileCtrlV2@latestProvinceAPI');
 Route::post('mobile/get/v2/municipality', 'Mobile\MobileCtrlV2@latestMuncityAPI');
 Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
+Route::post('mobile/get/v2/reason_for_referral', 'Mobile\MobileCtrlV2@latestReasonForReferralAPI');
+Route::post('mobile/get/v2/icd10', 'Mobile\MobileCtrlV2@latestIcd10API');
