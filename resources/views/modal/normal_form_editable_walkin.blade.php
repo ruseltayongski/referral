@@ -146,9 +146,6 @@ $referral_reasons = \App\ReasonForReferral::get();
                                 <td colspan="6">
                                     <span class="text-success">Diagnosis</span>
                                     <span class="text-red">*</span><br><br>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
-                                    <button type="button" class="btn btn-sm btn-warning" onclick="clearOtherDiagnoses()">Clear other Diagnosis</button>
-                                    <button type="button" class="btn btn-sm btn-info" onclick="clearNotesDiagnoses()">Clear notes diagnosis</button>
                                     <a data-toggle="modal" data-target="#modal-icd" type="button" class="btn btn-sm btn-success" onclick="searchICD()">
                                         <i class="fa fa-medkit"></i> Add ICD-10
                                     </a>
@@ -158,16 +155,19 @@ $referral_reasons = \App\ReasonForReferral::get();
                             </tr>
                             <tr>
                                 <td colspan="6">
+                                    <button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
                                     <div id="selected_icd"></div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
+                                    <button type="button" id="clear_notes_walkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnoses()">Clear notes diagnosis</button>
                                     <div id="add_diagnosis_notes"></div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
+                                    <button type="button" id="clear_other_diag_walkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnoses()">Clear other Diagnosis</button>
                                     <div id="other_diagnosis"></div>
                                 </td>
                             </tr>
@@ -218,6 +218,18 @@ $referral_reasons = \App\ReasonForReferral::get();
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" role="dialog" id="patient_modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body patient_body">
+                <center>
+                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                </center>
+            </div><!-- /.modal-content -->
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="modal fade" id="modal-icd">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -246,16 +258,23 @@ $referral_reasons = \App\ReasonForReferral::get();
 </div>
 
 <script>
+    $("#clear_icd_walkin").hide();
+    $("#clear_notes_walkin").hide();
+    $("#clear_other_diag_walkin").hide();
+
     function clearIcd(){
         $('#selected_icd').html("");
+        $("#clear_icd_walkin").hide();
     }
 
     function clearOtherDiagnoses(){
         $("#other_diagnosis").html("");
+        $("#clear_other_diag_walkin").hide();
     }
 
     function clearNotesDiagnoses(){
         $("#add_diagnosis_notes").html("");
+        $("#clear_notes_walkin").hide();
     }
 
     function clearOtherReferralReason(){
@@ -264,6 +283,7 @@ $referral_reasons = \App\ReasonForReferral::get();
 
     function addNotesDiagnoses(){
         $("#add_diagnosis_notes").html(loading);
+        $("#clear_notes_walkin").show();
         setTimeout(function(){
             $("#add_diagnosis_notes").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
@@ -304,8 +324,8 @@ $referral_reasons = \App\ReasonForReferral::get();
     function getAllCheckbox() {
         $('#modal-icd').modal('toggle');
         $("#selected_icd").html("");
+        $("#clear_icd_walkin").show();
         var values = [];
-
         $('input[name="icd_checkbox[]"]:checked').each(function () {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
@@ -320,6 +340,7 @@ $referral_reasons = \App\ReasonForReferral::get();
     function otherDiagnoses(){
         $('#modal-icd').modal('hide');
         $("#other_diagnosis").html(loading);
+        $("#clear_other_diag_walkin").show();
         setTimeout(function(){
             $("#other_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +

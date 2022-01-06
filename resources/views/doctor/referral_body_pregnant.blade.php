@@ -78,6 +78,61 @@
                     <span class="woman_information_given form-details">{!! nl2br($form['pregnant']->woman_information_given) !!}</span>
                 </td>
             </tr>
+            @if(isset($icd[0]))
+                <tr>
+                    <td colspan="4">
+                        ICD-10 Code and Description:
+                        <br />
+                        @foreach($icd as $i)
+                            <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
+                        @endforeach
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->notes_diagnoses))
+                <tr>
+                    <td colspan="4">
+                        Notes in diagnosis:
+                        <br />
+                        <span class="diagnosis form-details">{!! nl2br($form['pregnant']->notes_diagnoses) !!}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->other_diagnoses)) 
+                <tr>
+                    <td colspan="4">
+                        Other Diagnoses:
+                        <br />
+                        <span class="reason form-details">{{ $form['pregnant']->other_diagnoses }}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($reason))
+                <tr>
+                    <td colspan="4">
+                        Reason for referral:
+                        <br />
+                        <span class="reason form-details">{{ $reason }}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->other_reason_referral))
+                <tr>
+                    <td colspan="4">
+                        Reason for referral:
+                        <br />
+                        <span class="reason form-details">{{ $form['pregnant']->other_reason_referral }}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($file_path))
+                <tr>
+                    <td colspan="4">
+                        File Attachment:
+                        <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+                    </td>
+                </tr>
+            @endif
         </table>
     </div>
 

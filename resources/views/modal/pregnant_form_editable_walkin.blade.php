@@ -7,6 +7,7 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfacility->id);
+$reason_for_referral = \App\ReasonForReferral::get();
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModalWalkIn">
     <div class="modal-dialog modal-lg" role="document">
@@ -127,7 +128,51 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                                         <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </td>
                                 </tr>
+                                <tr>
+                                     <td colspan="4">
+                                        <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
+                                        <br><br>
+                                        <a data-toggle="modal" data-target="#icd-modal-preg-walkin" type="button" class="btn btn-sm btn-success" onclick="searchICD10PregWalkin()">
+                                            <i class="fa fa-medkit"></i>  Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregWalkin()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button" id="clear_icd_pwalkin" class="btn btn-sm btn-danger" onclick="clearICDPregWalkin()"> Clear ICD-10</button>
+                                        <div id="icd_selected_preg_walkin">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button" id="clear_notes_pwalkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregWalkin()"> Clear notes diagnosis</button>
+                                        <div id="add_notes_diagnosis_preg_walkin">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button" id="clear_other_diag_pwalkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregWalkin()"> Clear other diagnosis</button>
+                                        <div id="others_diagnosis_preg_walkin">
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
+                                    <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%;" required>
+                                        <option value="">Select reason for referral</option>
+                                        <option value="-1">Other reason for referral</option>
+                                        @foreach($reason_for_referral as $reason_referral)
+                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="other_reason_referral_preg_walkin"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-sm-6">
@@ -198,7 +243,7 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i> Send</button>
+                        <button type="submit" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -206,3 +251,136 @@ $departments = \App\Http\Controllers\LocationCtrl::getDepartmentByFacility($myfa
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" role="dialog" id="patient_modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body patient_body">
+                <center>
+                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                </center>
+            </div><!-- /.modal-content -->
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="icd-modal-preg-walkin">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" style="font-size: 17pt;">Search ICD-10 by keyword</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-lg">
+                    <input type="text" id="icd10_keyword_preg_walkin" class="form-control">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10PregWalkin()">Find</button>
+                    </span>
+                </div><br>
+                <div class="icd_body_preg_walkin"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" onclick="othersDiagnosisPregWalkin()"> Other Diagnosis</button>
+                <button type="button" class="btn btn-success" onclick="getAllCheckBoxPregWalkin()"><i class="fa fa-save"></i> Save selected check</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    $("#clear_other_diag_pwalkin").hide();
+    $("#clear_notes_pwalkin").hide();
+    $("#clear_icd_pwalkin").hide();
+
+    function clearICDPregWalkin() {
+        $("#icd_selected_preg_walkin").html("");
+        $("#clear_icd_pwalkin").hide();
+    }
+
+    function clearOtherDiagnosisPregWalkin() {
+        $("#others_diagnosis_preg_walkin").html("");
+        $("#clear_other_diag_pwalkin").hide();
+    }
+
+    function clearNotesDiagnosisPregWalkin() {
+        $("#add_notes_diagnosis_preg_walkin").html("");
+        $("#clear_notes_pwalkin").hide();
+    }
+
+    function clearOtherReasonReferralPregWalkin() {
+        $("#other_reason_referral_preg_walkin").html("");
+    }
+
+    function addNotesDiagnosisPregWalkin() {
+        $("#add_notes_diagnosis_preg_walkin").html(loading);
+        $("#clear_notes_pwalkin").show();
+        setTimeout(function(){
+            $("#add_notes_diagnosis_preg_walkin").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>');
+        },500);
+    }
+
+    $('.reason_referral').on('change', function() {
+        var value = $(this).val();
+        if(value == '-1') {
+            $("#other_reason_referral_preg_walkin").html(loading);
+            setTimeout(function(){
+                $("#other_reason_referral_preg_walkin").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
+                    '                                <br />\n' +
+                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>');
+            },500);
+            $("#other_reason_referral_preg_walkin").show();
+        }else{
+            clearOtherReasonReferralPregWalkin();
+        }
+    });
+
+    function searchICD10PregWalkin() {
+        $("#others_diagnosis_preg_walkin").html("");
+        $(".icd_body_preg_walkin").html(loading);
+        var url = "<?php echo asset('icd/search'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "icd_keyword" : $("#icd10_keyword_preg_walkin").val()
+        };
+        $.post(url,json,function(result){
+            setTimeout(function(){
+                $(".icd_body_preg_walkin").html(result);
+            },500);
+        });
+    }
+
+    function getAllCheckBoxPregWalkin() {
+        $('#icd-modal-preg-walkin').modal('toggle');
+        $("#icd_selected_preg_walkin").html("");
+        $("#clear_icd_pwalkin").show();
+        var values = [];
+
+        $('input[name="icd_checkbox[]"]:checked').each(function () {
+            values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
+            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
+            var id = $(this).val();
+            if(this.checked){
+                $("#icd_selected_preg_walkin").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input type="hidden" name="icd_ids[]" value="'+id+'">');
+            }
+        });
+        console.log(values);
+    }
+
+    function othersDiagnosisPregWalkin(){
+        $('#icd-modal-preg-walkin').modal('hide');
+        $("#others_diagnosis_preg_walkin").html(loading);
+        $("#clear_other_diag_pwalkin").show();
+        setTimeout(function(){
+            $("#others_diagnosis_preg_walkin").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>');
+        },500);
+    }
+</script>

@@ -189,7 +189,6 @@ Route::post('doctor/patient/update','doctor\PatientCtrl@updatePatient');
 Route::post('doctor/patient/refer/walkin/{type}','doctor\PatientCtrl@referPatientWalkin');
 Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
 
-
 Route::get('doctor/accepted','doctor\PatientCtrl@accepted');
 Route::post('doctor/accepted','doctor\PatientCtrl@searchAccepted');
 

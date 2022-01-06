@@ -56,7 +56,7 @@
             <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
         </td>
     </tr>
-    @if(isset($icd))
+    @if(isset($icd[0]))
         <tr>
             <td colspan="6">
                 ICD-10 Code and Description:

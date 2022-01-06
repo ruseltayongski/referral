@@ -38,7 +38,7 @@
             '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
             '    <div class="timeline-item '+type+'" id="item-'+data.tracking_id+'">\n' +
             '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+data.date+'</span></span>\n' +
-            '        <h3 class="timeline-header no-border"><a href="#" class="patient_name">'+data.name+'</a> <small class="status">[ '+data.sex+', '+data.age+' ]</small> was <span class="badge bg-blue">referred</span> to <span class="text-danger">'+data.department_name+'</span> by <span class="text-warning">Dr. '+data.referring_md+'</span> of <span class="facility">'+data.referring_name+'</span></h3>\n' +
+            '        <h3 class="timeline-header no-border"><a href="#" class="patient_name">'+data.patient_name+'</a> <small class="status">[ '+data.sex+', '+data.age+' ]</small> was <span class="badge bg-blue">referred</span> to <span class="text-danger">'+data.department_name+'</span> by <span class="text-warning">Dr. '+data.referring_md+'</span> of <span class="facility">'+data.referring_name+'</span></h3>\n' +
             '        <div class="timeline-footer">\n';
 
         if(my_department_id==data.department_id){

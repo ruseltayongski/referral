@@ -38,7 +38,7 @@ class PrintCtrl extends Controller
             $data = ReferralCtrl::normalForm($track_id, $form_status, $form_type);
             return self::printNormal($data->form, $data);
         }else if($form_type=='pregnant'){
-            $data = ReferralCtrl::pregnantFormData($track_id);
+            $data = ReferralCtrl::pregnantForm($track_id, $form_status);
             return self::printPregnant($data);
         }
     }
@@ -46,8 +46,8 @@ class PrintCtrl extends Controller
     public function printPregnant($record)
     {
 
-        $data = $record['pregnant'];
-        $baby = $record['baby'];
+        $data = $record->form["pregnant"];
+        $baby = $record->form["baby"];
         //print_r($baby);
         $pdf = new Fpdf();
         $x = ($pdf->w)-20;
@@ -121,7 +121,7 @@ class PrintCtrl extends Controller
 
         $pdf->MultiCell(0, 7, "Name: " .self::green($pdf,$data->woman_name,'name'), 1, 'L');
         $pdf->MultiCell(0, 7, "Age: " .self::green($pdf,$data->woman_age,'Age'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Address: " .self::green($pdf,$patient_address,'Address'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Address: " .self::green($pdf,$data->patient_address,'Address'), 1, 'L');
         $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Main Reason for Referral: ")."\n".self::staticGreen($pdf,$data->woman_reason), 1, 'L');
         $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Major Findings (Clinica and BP,Temp,Lab) : ")."\n".self::staticGreen($pdf,$data->woman_major_findings), 1, 'L');
 
@@ -140,6 +140,30 @@ class PrintCtrl extends Controller
         $pdf->MultiCell(0, 7, "Before Referral: " .self::green($pdf,$data->woman_before_treatment.'-'.$data->woman_before_given_time,'Before Referral'), 1, 'L');
         $pdf->MultiCell(0, 7, "During Transport: " .self::green($pdf,$data->woman_before_given_time.'-'.$data->woman_before_given_time,'During Transport'), 1, 'L');
         $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Information Given to the Woman and Companion About the Reason for Referral : ")."\n".self::staticGreen($pdf,$data->woman_information_given), 1, 'L');
+
+        if(isset($record->icd)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 1, 'L');
+            foreach($record->icd as $icd) {
+                $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code." - ".$icd->description), 0, 'L');
+            }
+        }
+
+        if(isset($data->notes_diagnoses)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Additional notes in diagnosis: "), 1, 'L');
+            $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
+        }
+
+        if(isset($data->other_diagnoses)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Other diagnosis: ")."\n".self::staticGreen($pdf, $data->other_diagnoses), 1, 'L');
+        }
+
+        if(isset($record->reason)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: ")."\n".self::staticGreen($pdf, $record->reason), 1, 'L');
+        }
+
+        if(isset($data->other_reason_referral)) {
+            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: ")."\n".self::staticGreen($pdf, $data->other_reason_referral), 1, 'L');
+        }
 
         if(count($baby)>0)
         {
@@ -160,7 +184,7 @@ class PrintCtrl extends Controller
             $pdf->MultiCell(0, 7, "Name: " .self::green($pdf,$baby->baby_name,'name'), 1, 'L');
             $pdf->MultiCell(0, 7, "Date of Birth: " .self::green($pdf,$baby->baby_dob,"Date of Birth"), 1, 'L');
             $pdf->MultiCell(0, 7, "Body Weight: " .self::green($pdf,$baby->weight,'body weight'), 1, 'L');
-            $pdf->MultiCell(0, 7, "Gestational Age: " .self::green($pdf,$baby->weight,'Gestational Age'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Gestational Age: " .self::green($pdf,$baby->gestational_age,'Gestational Age'), 1, 'L');
             $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Main Reason for Referral: ")."\n".self::staticGreen($pdf,$baby->baby_reason), 1, 'L');
             $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Major Findings (Clinica and BP,Temp,Lab) : ")."\n".self::staticGreen($pdf,$baby->baby_major_findings), 1, 'L');
             $pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " .self::green($pdf,$baby->baby_last_feed,"Last (Breast) Feed (Time)"), 1, 'L');
@@ -286,7 +310,7 @@ class PrintCtrl extends Controller
         // $pdf->MultiCell(0, 5, $data->reason, 0, 'L');
         // $pdf->Ln();
 
-        if(isset($data2->icd)) {
+        if(isset($data2->icd[0])) {
             $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
             $pdf->SetTextColor(102,56,0);
             $pdf->SetFont('Arial','I',10);

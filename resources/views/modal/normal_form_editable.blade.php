@@ -11,120 +11,6 @@ $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
 $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
-<style>
-    .file-upload {
-        background-color: #ffffff;
-        width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .file-upload-btn {
-        width: 100%;
-        margin: 0;
-        color: #fff;
-        background: #1FB264;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        border-bottom: 4px solid #15824B;
-        transition: all .2s ease;
-        outline: none;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .file-upload-btn:hover {
-        background: #1AA059;
-        color: #ffffff;
-        transition: all .2s ease;
-        cursor: pointer;
-    }
-
-    .file-upload-btn:active {
-        border: 0;
-        transition: all .2s ease;
-    }
-
-    .file-upload-content {
-        display: none;
-        text-align: center;
-    }
-
-    .file-upload-input {
-        position: absolute;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        outline: none;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .image-upload-wrap {
-        margin-top: 20px;
-        border: 4px dashed #1FB264;
-        position: relative;
-    }
-
-    .image-dropping,
-    .image-upload-wrap:hover {
-        background-color: #1FB264;
-        border: 4px dashed #ffffff;
-    }
-
-    .image-title-wrap {
-        padding: 0 15px 15px 15px;
-        color: #222;
-    }
-
-    .drag-text {
-        text-align: center;
-    }
-
-    .drag-text h3 {
-        font-weight: 100;
-        text-transform: uppercase;
-        color: #15824B;
-        padding: 60px 0;
-    }
-
-    .file-upload-image {
-        max-height: 200px;
-        max-width: 200px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    .remove-image {
-        width: 200px;
-        margin: 0;
-        color: #fff;
-        background: #cd4535;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        border-bottom: 4px solid #b02818;
-        transition: all .2s ease;
-        outline: none;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .remove-image:hover {
-        background: #c13b2a;
-        color: #ffffff;
-        transition: all .2s ease;
-        cursor: pointer;
-    }
-
-    .remove-image:active {
-        border: 0;
-        transition: all .2s ease;
-    }
-</style>
-
 <div class="modal fade" role="dialog" id="normalFormModal" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -284,9 +170,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <td colspan="6">
                                     <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
                                     <br><br>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
-                                    <button type="button" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
-                                    <button type="button" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
                                     <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
                                         <i class="fa fa-medkit"></i> Add ICD-10
                                     </a>
@@ -295,23 +178,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    <div id="icd_selected">
-
-                                    </div>
+                                    <button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
+                                    <div id="icd_selected"></div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    <div id="add_notes_diagnosis">
-
-                                    </div>
+                                    <button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                    <div id="add_notes_diagnosis"></div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="6">
-                                    <div id="others_diagnosis">
-
-                                    </div>
+                                    <button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
+                                    <div id="others_diagnosis"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -417,16 +297,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
 </div>
 
 <script>
+    $("#clear_icd").hide();
+    $("#clear_notes").hide();
+    $("#clear_other_diag").hide();
+
     function clearICD() {
         $("#icd_selected").html("");
+        $("#clear_icd").hide();
     }
 
     function clearOtherDiagnosis() {
         $("#others_diagnosis").html("");
+        $("#clear_other_diag").hide();
     }
 
     function clearNotesDiagnosis() {
         $("#add_notes_diagnosis").html("");
+        $("#clear_notes").hide();
     }
 
     function clearOtherReasonReferral() {
@@ -435,6 +322,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     function addNotesDiagnosis() {
         $("#add_notes_diagnosis").html(loading);
+        $("#clear_notes").show();
         setTimeout(function(){
             $("#add_notes_diagnosis").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
@@ -475,6 +363,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $("#icd_selected").html("");
+        $("#clear_icd").show();
         var values = [];
 
         $('input[name="icd_checkbox[]"]:checked').each(function () {
@@ -504,6 +393,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     function othersDiagnosis(){
         $('#icd-modal').modal('hide');
         $("#others_diagnosis").html(loading);
+        $("#clear_other_diag").show();
         setTimeout(function(){
             $("#others_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
