@@ -221,10 +221,10 @@ class ReferralCtrl extends Controller
             'patient_form.diagnosis',
             'patient_form.other_diagnoses',
             DB::raw("if(
-                                    patients.brgy,
-                                    concat(patients.region,', ',patients.province,', ',muncity.description,', ',barangay.description),
-                                    concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
-                                ) as patient_address"),
+                patients.brgy,
+                concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
+                concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
+            ) as patient_address"),
             DB::raw("concat(p.description,', ',m.description,', ',b.description) as referring_address"),
             DB::raw("concat(pp.description,', ',mm.description,', ',pp.description) as referred_address"),
             'facility.name as referring_name',
@@ -238,7 +238,7 @@ class ReferralCtrl extends Controller
                             ""
                         )
                 ,users.fname," ",users.mname," ",users.lname) as md_referring'),
-            DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname) as md_referred'),
+            DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname," / ",u.contact) as md_referred'),
             'facility.contact as referring_contact',
             'ff.contact as referred_contact',
             'users.contact as referring_md_contact',
@@ -274,9 +274,24 @@ class ReferralCtrl extends Controller
         return $form;
     }
 
-    public function pregnantForm($id,$referral_status) {
+    public static function pregnantForm($id,$referral_status) {
+        $track = Tracking::select('code')->where('id', $id)->first();
+        $icd = Icd::select('icd10.code', 'icd10.description')
+                    ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+                    ->where('icd.code',$track->code)->get();
+        $path = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        $file_name = basename($path);
+
+        $reason = ReasonForReferral::select("reason_referral.reason")
+                ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+                ->where('pregnant_form.code', $track->code)->first();
+
         return view('doctor.referral_body_pregnant',[
             "form" => self::pregnantFormData($id),
+            "reason" => $reason->reason,
+            "icd" => $icd,
+            "file_path" => $path,
+            "file_name" => $file_name,
             "referral_status" => $referral_status,
             "form_type" => "pregnant"
         ]);
@@ -288,6 +303,9 @@ class ReferralCtrl extends Controller
             'pregnant_form.patient_baby_id',
             'pregnant_form.code',
             'pregnant_form.record_no',
+            'pregnant_form.other_reason_referral',
+            'pregnant_form.notes_diagnoses',
+            'pregnant_form.other_diagnoses',
             DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
             DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
             DB::raw('CONCAT(
@@ -307,7 +325,7 @@ class ReferralCtrl extends Controller
             'patients.sex',
             DB::raw("if(
                 patients.brgy,
-                concat(patients.region,', ',patients.province,', ',muncity.description,', ',barangay.description),
+                concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
                 concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
             ) as patient_address"),
             'pregnant_form.woman_reason',

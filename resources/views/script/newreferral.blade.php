@@ -25,7 +25,7 @@
         Lobibox.notify('success', {
             delay: false,
             title: 'New Referral',
-            msg: data.name+' was referred by Dr. '+data.referring_md+' of '+data.referring_name,
+            msg: data.patient_name+' was referred by Dr. '+data.referring_md+' of '+data.referring_name,
             img: "{{ url('resources/img/ro7.png') }}",
             sound: false
         });
