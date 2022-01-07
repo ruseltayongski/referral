@@ -224,11 +224,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <tr>
                                 <td colspan="6">
                                     <div class="file-upload">
-                                        <!--
-                                        <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
-                                        -->
                                         <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
                                             <div class="drag-text">
                                                 <h3>Drag and drop a file or select add Image</h3>
                                             </div>
@@ -247,7 +244,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                        <button type="submit" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                        <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -300,6 +297,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
     $("#clear_icd").hide();
     $("#clear_notes").hide();
     $("#clear_other_diag").hide();
+
+    $("#sbmitBtn").on('click',function(e){
+        if(!($("#icd").val()) && !($("#other_diag").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearICD() {
         $("#icd_selected").html("");
@@ -371,7 +377,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
             if(this.checked){
-                $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input type="hidden" name="icd_ids[]" value="'+id+'">');
+                $("#icd_selected").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);
@@ -397,7 +403,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         setTimeout(function(){
             $("#others_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 
