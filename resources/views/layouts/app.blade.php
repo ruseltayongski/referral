@@ -285,11 +285,12 @@
                                     @endforeach
                                 </ul>
                             </li>
-                            <li><a href="{{ url('admin/reason-referral') }}" ><i class="fa fa-wrench"></i>&nbsp; Reason for Referral</a></li>
+                            <li><a href="{{ url('admin/reason-referral') }}" ><i class="fa fa-wrench"></i> Reason for Referral</a></li>
+                            <li><a href="{{ url('admin/icd') }}"><i class="fa fa-file-text-o"></i> ICD-10</a></li>
+                            <!-- <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li> -->
                         </ul>
                     </li>
                     @include('layouts.report_menu')
-                    <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li>
                 @elseif($user->level=='eoc_region')
                 <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                 <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>

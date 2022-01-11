@@ -534,3 +534,7 @@ Route::post('mobile/get/v2/facility', 'Mobile\MobileCtrlV2@latestFacilityAPI');
 Route::post('mobile/get/v2/province', 'Mobile\MobileCtrlV2@latestProvinceAPI');
 Route::post('mobile/get/v2/municipality', 'Mobile\MobileCtrlV2@latestMuncityAPI');
 Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
+
+// ADMIN MANAGE ICD 
+Route::get('admin/icd','admin\IcdCtrl@view');
+Route::get('admin/icd/search', 'admin\IcdCtrl@search');

@@ -346,10 +346,10 @@ class ExcelCtrl extends Controller
 
             }
 
-            return back()->with('success', 'Successfully import!');
+            return back()->with('success', 'Successfully imported!');
         }
 
-        return view('admin.excel.import_excel');
+        return view('admin.icd.icd');
     }
 
 }

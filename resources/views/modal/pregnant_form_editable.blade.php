@@ -172,8 +172,7 @@
                                 <tr>
                                     <td colspan="6">
                                         <button type="button" id="clear_icd_pregnant" class="btn btn-sm btn-danger" onclick="clearICDPregnant()" hidden="hidden"> Clear ICD-10</button>
-                                        <div id="icd_selected_pregnant" required>
-                                        </div>
+                                        <div><span class="text-green" id="icd_selected_pregnant"></span></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -416,7 +415,6 @@
 
     function getAllCheckBoxPregnant() {
         $('#icd-modal-pregnant').modal('toggle');
-        $("#icd_selected_pregnant").html("");
         $("#clear_icd_pregnant").show();
         var values = [];
 
@@ -425,7 +423,7 @@
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
             if(this.checked){
-                $("#icd_selected_pregnant").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input id="icd_preg" type="hidden" name="icd_ids[]" value="'+id+'">');
+                $("#icd_selected_pregnant").append('=> '+icd_description+' '+'<br><input id="icd_preg" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);

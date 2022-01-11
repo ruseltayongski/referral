@@ -156,7 +156,7 @@ $referral_reasons = \App\ReasonForReferral::get();
                             <tr>
                                 <td colspan="6">
                                     <button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
-                                    <div id="selected_icd"></div>
+                                    <div><span class="text-green" id="selected_icd"></span></div>
                                 </td>
                             </tr>
                             <tr>
@@ -332,7 +332,6 @@ $referral_reasons = \App\ReasonForReferral::get();
 
     function getAllCheckbox() {
         $('#modal-icd').modal('toggle');
-        $("#selected_icd").html("");
         $("#clear_icd_walkin").show();
         var values = [];
         $('input[name="icd_checkbox[]"]:checked').each(function () {
@@ -340,7 +339,7 @@ $referral_reasons = \App\ReasonForReferral::get();
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
             if(this.checked){
-                $("#selected_icd").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input id="icd_walkin" type="hidden" name="icd_ids[]" value="'+id+'">');
+                $("#selected_icd").append('=> '+icd_description+' '+'<br><input id="icd_walkin" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);
