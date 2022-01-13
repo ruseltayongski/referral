@@ -115,7 +115,6 @@
     <div class="row">
         <title>ICD-10 Codes</title>
         <div class="box">
-            <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
                     List of ICD-10 Codes    
@@ -123,18 +122,19 @@
                 <ol class="breadcrumb form-inline my-2 my-lg-0">
                     <form action="{{ asset('admin/icd/search') }}" method="GET">
                         {{ csrf_field() }}
-                        <input type="search" class="form-control" name="keyword" style="width: 50%;">
+                        <input type="search" class="form-control" name="keyword" style="width: 45%;">
                         <button type="submit" class="btn btn-success btn-sm btn-flat"><i class="fa fa-search"></i> Search</button>
                         <button type="button" class="btn btn-primary btn-sm btn-flat" href="#import_icd" data-toggle="modal">
                             <i class="fa fa-file-excel-o"></i> Import
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm btn-flat" href="#add_icd" data-toggle="modal" onclick="addICD()">
+                            <i class="fa fa-plus"></i> Add
                         </button>
                     </form>
                 </ol><br>
             </section>
 
-            <!-- Main content -->
             <section class="content">
-                <!-- Small boxes (Stat box) -->
                 <div class="row">
                     <section class="col-lg-12">
                         <div class="box">
@@ -151,13 +151,20 @@
                                     </tr>
                                     @foreach($icd as $row)
                                         <tr>
-                                            <td>{{ $row->code }}</td>
+                                            <td>
+                                                <a href="#icd_update_modal" 
+                                                   data-toggle="modal" 
+                                                   data-id = "{{ $row->id }}"
+                                                   onclick="editICD('<?php echo $row->id ?>')">
+                                                    {{ $row->code }}
+                                                </a>
+                                            </td>
                                             <td>{{ $row->description }}</td>
                                             <td>{{ $row->group }}</td>
                                             <td>{{ $row->case_rate }}</td>
                                             <td>{{ $row->professional_fee }}</td>
                                             <td>{{ $row->health_care_fee }}</td>
-                                            <td>{{ $row->source }}</td>
+                                            <td>{{ $row->source }}</td> 
                                         </tr>
                                     @endforeach
                                 </table>
@@ -174,15 +181,87 @@
     @include('admin.excel.import_excel')
 @endsection
 
+<div class="modal fade" role="dialog" id="icd_update_modal">
+    <div class="modal-dialog modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-body icd_body">
+                <center>
+                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form action="{{ asset('admin/icd/add') }}" method="POST">
+    <div class="modal fade" role="dialog" id="add_icd">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-body icd_add_body">
+                    <center>
+                        <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form action="{{ asset('admin/icd/delete') }}" method="POST">
+    {{ csrf_field() }}
+    <div class="modal modal-danger sm fade" id="icd_delete">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="hidden" value="" name="id_delete" class="icd_del">
+                    <strong>Are you sure you want to delete?</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-outline"><i class="fa fa-trash"></i> Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 @section('js')
-    <script>
-        @if (Session::has('success'))
+<script>
+    @if(Session::get('icd_notif'))
         Lobibox.notify('success', {
-            title: "",
-            msg: "<?php echo Session::get("success"); ?>",
+            msg: "<?php echo Session::get('icd_msg'); ?>",
             size: 'mini',
             rounded: true
         });
-        @endif
-    </script>
+        <?php
+        Session::put("icd_notif",false);
+        ?>
+    @endif
+
+    function editICD(id) {
+        var url = "<?php echo asset('admin/icd/update'); ?>";
+        var json = {
+            "icd_id" : id,
+            "_token" : "<?php echo csrf_token(); ?>"
+        };
+        $.post(url,json,function(result){
+            $(".icd_body").html(result);
+        });
+    }
+
+    function addICD(){
+        var url = "<?php echo asset('admin/icd/add'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>"
+        }
+        $.post(url,json, function(result){
+            $(".icd_add_body").html(result);
+        });
+    }
+
+    function deleteICD(id) {
+        console.log("icd id: " + id);
+        $(".icd_del").val(id);
+    }
+</script>
 @endsection

@@ -184,7 +184,6 @@ Route::get('doctor/patient/info/{id}','doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add','doctor\PatientCtrl@addPatient');
 Route::post('doctor/patient/store','doctor\PatientCtrl@storePatient');
 Route::post('doctor/patient/update','doctor\PatientCtrl@updatePatient');
-Route::post('doctor/patient/update','doctor\PatientCtrl@updatePatient');
 
 Route::post('doctor/patient/refer/walkin/{type}','doctor\PatientCtrl@referPatientWalkin');
 Route::post('doctor/patient/refer/{type}','doctor\PatientCtrl@referPatient');
@@ -538,3 +537,7 @@ Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
 // ADMIN MANAGE ICD 
 Route::get('admin/icd','admin\IcdCtrl@view');
 Route::get('admin/icd/search', 'admin\IcdCtrl@search');
+Route::post('admin/icd/update', 'admin\IcdCtrl@update');
+Route::post('admin/icd/add', 'admin\IcdCtrl@add');
+Route::post('admin/icd/delete', 'admin\IcdCtrl@delete');
+Route::post('admin/icd/get', 'admin\IcdCtrl@get');
