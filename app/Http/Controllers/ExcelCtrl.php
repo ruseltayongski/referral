@@ -315,7 +315,7 @@ class ExcelCtrl extends Controller
 
     }
 
-    public function importExcel(Request $request){
+    public function importExcel(Request $request) {
         if($request->isMethod('post')) {
             $import = new ExcelImport();
             Excel::import($import, request()->file('import_file'));
@@ -330,6 +330,7 @@ class ExcelCtrl extends Controller
                         $row[5] == "health_care_fee" &&
                         $row[6] == "source"
                     )
+
                 ){
                     if(!Icd10::where("code",$row[0])->first()){
                         Icd10::create([
@@ -346,10 +347,10 @@ class ExcelCtrl extends Controller
 
             }
 
-            return back()->with('success', 'Successfully import!');
+            return back()->with('success', 'Successfully imported!');
         }
 
-        return view('admin.excel.import_excel');
+        return view('admin.icd.icd');
     }
 
 }

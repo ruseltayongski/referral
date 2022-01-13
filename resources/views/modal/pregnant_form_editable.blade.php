@@ -172,8 +172,7 @@
                                 <tr>
                                     <td colspan="6">
                                         <button type="button" id="clear_icd_pregnant" class="btn btn-sm btn-danger" onclick="clearICDPregnant()" hidden="hidden"> Clear ICD-10</button>
-                                        <div id="icd_selected_pregnant">
-                                        </div>
+                                        <div><span class="text-green" id="icd_selected_pregnant"></span></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -275,7 +274,7 @@
                     </div>
                     <div class="file-upload">
                         <div class="image-upload-wrap">
-                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
                             <div class="drag-text">
                                 <h3>Drag and drop a file or select add Image</h3>
                             </div>
@@ -292,7 +291,7 @@
                 <hr />
                      <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                        <button type="submit" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                        <button type="submit" id="sbmtPreg" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -345,6 +344,15 @@
     $("#clear_icd_pregnant").hide();
     $("#clear_notes_pregnant").hide();
     $("#clear_other_diag_pregnant").hide();
+
+    $("#sbmtPreg").on('click',function(e){
+        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearICDPregnant() {
         $("#icd_selected_pregnant").html("");
@@ -407,7 +415,6 @@
 
     function getAllCheckBoxPregnant() {
         $('#icd-modal-pregnant').modal('toggle');
-        $("#icd_selected_pregnant").html("");
         $("#clear_icd_pregnant").show();
         var values = [];
 
@@ -416,7 +423,7 @@
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
             if(this.checked){
-                $("#icd_selected_pregnant").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input type="hidden" name="icd_ids[]" value="'+id+'">');
+                $("#icd_selected_pregnant").append('=> '+icd_description+' '+'<br><input id="icd_preg" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);
@@ -429,7 +436,7 @@
         setTimeout(function(){
             $("#others_diagnosis_pregnant").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 

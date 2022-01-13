@@ -72,14 +72,15 @@ $user = Session::get('auth');
                                             <span class="text-muted">{{ $type }}</span>
                                         </td>
                                         <td>
-                                            <a href="{{ $modal }}" class="view_form"
-                                               data-toggle="modal"
-                                               data-type="{{ $row->type }}"
-                                               data-id="{{ $row->id }}"
-                                               data-code="{{ $row->code }}">
-                                                <span class="text-primary">{{ $row->patient_name }}</span>
-                                                <br />
-                                                <small class="text-warning">{{ $row->code }}</small>
+                                            <a data-toggle="modal" href="#referralForm"
+                                                data-type="{{ $row->type }}"
+                                                data-id="{{ $row->id }}"
+                                                data-code="{{ $row->code }}"
+                                                data-referral_status="referring"
+                                                class="view_form">
+                                                    <span class="text-primary">{{ $row->patient_name }}</span>
+                                                    <br />
+                                                    <small class="text-warning">{{ $row->code }}</small>
                                             </a>
                                         </td>
                                         <?php
@@ -117,10 +118,11 @@ $user = Session::get('auth');
         </div>
 
     </div>
-    @include('modal.view_form')
+    @include('modal.accept_reject')
 @endsection
 @include('script.firebase')
 @section('js')
+
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();

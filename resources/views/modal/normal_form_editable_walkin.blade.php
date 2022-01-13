@@ -156,7 +156,7 @@ $referral_reasons = \App\ReasonForReferral::get();
                             <tr>
                                 <td colspan="6">
                                     <button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
-                                    <div id="selected_icd"></div>
+                                    <div><span class="text-green" id="selected_icd"></span></div>
                                 </td>
                             </tr>
                             <tr>
@@ -209,7 +209,7 @@ $referral_reasons = \App\ReasonForReferral::get();
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                        <button type="submit" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                        <button type="submit" id="sbmtWalkin" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -261,6 +261,15 @@ $referral_reasons = \App\ReasonForReferral::get();
     $("#clear_icd_walkin").hide();
     $("#clear_notes_walkin").hide();
     $("#clear_other_diag_walkin").hide();
+
+    $("#sbmtWalkin").on('click',function(e){
+        if(!($("#icd_walkin").val()) && !($("#other_diag_walkin").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearIcd(){
         $('#selected_icd').html("");
@@ -323,7 +332,6 @@ $referral_reasons = \App\ReasonForReferral::get();
 
     function getAllCheckbox() {
         $('#modal-icd').modal('toggle');
-        $("#selected_icd").html("");
         $("#clear_icd_walkin").show();
         var values = [];
         $('input[name="icd_checkbox[]"]:checked').each(function () {
@@ -331,7 +339,7 @@ $referral_reasons = \App\ReasonForReferral::get();
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
             if(this.checked){
-                $("#selected_icd").append('<span class="text-green">'+'=> '+icd_description+' '+'</span><br><input type="hidden" name="icd_ids[]" value="'+id+'">');
+                $("#selected_icd").append('=> '+icd_description+' '+'<br><input id="icd_walkin" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
         });
         console.log(values);
@@ -344,7 +352,7 @@ $referral_reasons = \App\ReasonForReferral::get();
         setTimeout(function(){
             $("#other_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control reason_referral" name="other_diagnoses" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control reason_referral" id="other_diag_walkin" name="other_diagnoses" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 </script>

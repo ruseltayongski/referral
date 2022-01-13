@@ -536,3 +536,7 @@ Route::post('mobile/get/v2/municipality', 'Mobile\MobileCtrlV2@latestMuncityAPI'
 Route::post('mobile/get/v2/barangay', 'Mobile\MobileCtrlV2@latestBarangayAPI');
 Route::post('mobile/get/v2/reason_for_referral', 'Mobile\MobileCtrlV2@latestReasonForReferralAPI');
 Route::post('mobile/get/v2/icd10', 'Mobile\MobileCtrlV2@latestIcd10API');
+
+// ADMIN MANAGE ICD
+Route::get('admin/icd','admin\IcdCtrl@view');
+Route::get('admin/icd/search', 'admin\IcdCtrl@search');

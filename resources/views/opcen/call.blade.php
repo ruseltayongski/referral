@@ -74,7 +74,7 @@
                     <option value="region_10" <?php if(isset($client->region)){if($client->region == 'region_10')echo 'selected';} ?>>Region 10</option>
                     <option value="region_11" <?php if(isset($client->region)){if($client->region == 'region_11')echo 'selected';} ?>>Region 11</option>
                     <option value="region_12" <?php if(isset($client->region)){if($client->region == 'region_12')echo 'selected';} ?>>Region 12</option>
-                    <option value="region_13" <?php if(isset($client->region)){if($client->region == 'region_13')echo 'selected';} ?>>Region 14</option>
+                    <option value="region_13" <?php if(isset($client->region)){if($client->region == 'region_13')echo 'selected';} ?>>Region 13</option>
                     <option value="barmm" <?php if(isset($client->region)){if($client->region == '')echo 'barmm';} ?>>BARMM</option>
                 </select>
             </td>
