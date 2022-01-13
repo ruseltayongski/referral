@@ -344,13 +344,9 @@ class ExcelCtrl extends Controller
                         ]);
                     }
                 }
-
             }
-
             return back()->with('success', 'Successfully imported!');
         }
-
         return view('admin.icd.icd');
     }
-
 }

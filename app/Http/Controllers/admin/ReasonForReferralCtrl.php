@@ -17,7 +17,8 @@ class ReasonForReferralCtrl extends Controller
     public function view(){
         $reasons = ReasonForReferral::OrderBy('reason', 'asc')->paginate(20);
         return view('admin/reason_referral.reason_referral',[
-                "reasons" => $reasons
+            'title' => 'Reasons for Referral',
+            "reasons" => $reasons
         ]);
     }
 
@@ -33,7 +34,7 @@ class ReasonForReferralCtrl extends Controller
     public function showUpdateModal(Request $request){
         $reason = ReasonForReferral::find($request->reason_id);
         return view('admin/reason_referral.update_reason',[
-                "reason" => $reason
+            "reason" => $reason
         ]);
     }
 
@@ -51,13 +52,12 @@ class ReasonForReferralCtrl extends Controller
     public function search(Request $request){
         if(isset($request->keyword)){
             $keyword = $request->keyword;
-            $reasons = ReasonForReferral::where('reason', 'like', '%'.$keyword.'%')->OrderBy('reason', 'asc')->paginate(20)
-                            ->appends(["keyword" => $keyword]);
+            $reasons = ReasonForReferral::where('reason', 'like', '%'.$keyword.'%')->OrderBy('reason', 'asc')->paginate(20)->appends(["keyword" => $keyword]);
         }else{
             $reasons = ReasonForReferral::OrderBy('reason', 'asc')->paginate(20);   
         }
         return view('admin/reason_referral.reason_referral',[
-                "reasons" => $reasons
+            "reasons" => $reasons
         ]);
     }
 }
