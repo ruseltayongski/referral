@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Mobile;
 use App\Barangay;
 use App\Facility;
 use App\Http\Controllers\Controller;
+use App\Icd10;
 use App\Muncity;
 use App\Province;
+use App\ReasonForReferral;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -101,4 +103,28 @@ class MobileCtrlV2 extends Controller {
     	}
     	return $bar;
     }
+
+    public function latestIcd10API(Request $req){
+        $last_dl = $req->date;
+        if($last_dl == "0000-00-00 00:00:00"){
+            $icd = Icd10::
+                    select('code', 'description', 'group', 'case_rate', 'professional_fee', 'health_care_fee', 'source')->get();
+        }else{
+            $icd = Icd10::where("updated_at",">=",$last_dl)
+                    ->select('code', 'description', 'group', 'case_rate', 'professional_fee', 'health_care_fee', 'source')->get();
+        }
+        return $icd;
+    }
+
+    public function latestReasonForReferralAPI(Request $req){
+        $last_dl = $req->date;
+        if($last_dl == "0000-00-00 00:00:00"){
+            $reason = ReasonForReferral::select('reason')->get();
+        }else{
+            $reason = ReasonForReferral::where("updated_at",">=",$last_dl)->select('reason')->get();
+        }
+        return $reason;
+    }
+
+
 }
