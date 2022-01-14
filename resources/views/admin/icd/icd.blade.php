@@ -234,7 +234,7 @@
             rounded: true
         });
         <?php
-        Session::put("icd_notif",false);
+            Session::put("icd_notif",false);
         ?>
     @endif
 

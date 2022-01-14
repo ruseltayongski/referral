@@ -540,4 +540,4 @@ Route::get('admin/icd/search', 'admin\IcdCtrl@search');
 Route::post('admin/icd/update', 'admin\IcdCtrl@update');
 Route::post('admin/icd/add', 'admin\IcdCtrl@add');
 Route::post('admin/icd/delete', 'admin\IcdCtrl@delete');
-Route::post('admin/icd/get', 'admin\IcdCtrl@get');
+Route::post('admin/icd/checkIfExistICD', 'admin\IcdCtrl@checkIfExistICD');

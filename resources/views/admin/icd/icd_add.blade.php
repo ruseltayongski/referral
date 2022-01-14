@@ -5,6 +5,7 @@
 <div class="form-group">
     <label>Code:</label>
     <input type="text" class="form-control" id="code_add" name="code" required>
+    <span id="code_exist_warning" style="color: red;"></span>
 </div>
 <div class="form-group">
     <label>Description:</label>
@@ -32,5 +33,27 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-    <button type="submit" value="true" name="add_btn" id="add_icd_btn" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
+    <button type="submit" value="true" name="add_btn" id="add_btn" class="btn btn-success btn-sm" disabled><i class="fa fa-check"></i> Save</button>
 </div>
+
+<script>
+    $('#code_add').on('input', function( event ) {
+        var code = $("#code_add").val();
+        $('#code_add').val(code.toUpperCase());
+        var url = "{{ url('admin/icd/checkIfExistICD') }}";
+        var json = {
+            "code" : code
+        }
+        $.post(url,json, function(checkIfExist){
+            if(checkIfExist['exist'] == '1') {
+                event.preventDefault();
+                $('#code_exist_warning').html("Code already exists!");
+                $('#code_add').focus();
+                $('#add_btn').prop('disabled', true);
+            }else {
+                $('#code_exist_warning').html("");
+                $('#add_btn').prop('disabled', false);
+            }
+        });
+    });
+</script>

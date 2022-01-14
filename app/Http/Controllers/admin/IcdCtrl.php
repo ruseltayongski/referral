@@ -76,8 +76,11 @@ class IcdCtrl extends Controller
         ]);
     }
 
-    public function get(Request $request) {
-        $icd = Icd10::where('code',$request->code)->first();
-        return $icd;
+    public function checkIfExistICD(Request $request) {
+        $icd = Icd10::where('code', $request->code)->first();
+        if($icd)
+            return ['exist' => 1, 'id' => $icd->id];
+
+        return ['exist' => 0];
     }
 }

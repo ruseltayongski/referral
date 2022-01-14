@@ -4,9 +4,10 @@
         <legend><i class="fa fa-pencil"></i> Update ICD</legend>
     </fieldset>
     <div class="form-group">
-        <input type="hidden" name="icd_id" value="{{ $data->id }}">
+        <input type="hidden" name="icd_id" id="id_update" value="{{ $data->id }}">
         <label>Code:</label>
-        <input type="text" class="form-control" name="code" value="{{ $data->code }}" required>
+        <input type="text" class="form-control" name="code" id="code_update" value="{{ $data->code }}" required>
+        <span id="code_warning" style="color: red;"></span>
     </div>
     <div class="form-group">
         <label>Description:</label>
@@ -35,6 +36,28 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
         <button type="button" data-toggle="modal" data-target="#icd_delete" class="btn btn-danger btn-sm" onclick= "deleteICD({{ $data->id }})"><i class="fa fa-trash"></i> Delete</button>
-        <button type="submit" value="true" name="icd_update_btn" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
+        <button type="submit" value="true" id="icd_update_btn" name="icd_update_btn" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
     </div>
 </form>
+
+<script>
+    $('#code_update').on('input', function( event ) {
+        var code = $("#code_update").val();
+        $('#code_update').val(code.toUpperCase());
+        var url = "{{ url('admin/icd/checkIfExistICD') }}";
+        var json = {
+            "code" : code
+        }
+        $.post(url,json, function(checkIfExist) {
+            if(checkIfExist['id'] == $('#id_update').val() || checkIfExist['exist'] == 0 ) {
+                $('#code_warning').html("");
+                $('#icd_update_btn').prop('disabled', false);
+            }else {
+                event.preventDefault();
+                $('#code_warning').html("Code already exists!");
+                $('#code_update').focus();
+                $('#icd_update_btn').prop('disabled', true);
+            }
+        });
+    });
+</script>

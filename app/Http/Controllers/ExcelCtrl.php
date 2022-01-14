@@ -344,7 +344,9 @@ class ExcelCtrl extends Controller
                     }
                 }
             }
-            return back()->with('success', 'Successfully imported!');
+            Session::put('icd_notif',true);
+            Session::put('icd_msg','Successfully imported!');
+            return back();
         }
         return view('admin.icd.icd');
     }
