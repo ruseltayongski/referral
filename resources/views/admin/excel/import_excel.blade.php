@@ -9,6 +9,7 @@
                             <h4><b>IMPORT EXCEL FILE</b></h4>
                         </div>
                         <form action="{{ asset('excel/import') }}" method="POST" enctype="multipart/form-data">
+                            {{ csrf_field() }}
                             <div class="file-upload">
                                 <div class="image-upload-wrap">
                                     <input class="file-upload-input" type='file' name="import_file" onchange="readURL(this);" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
