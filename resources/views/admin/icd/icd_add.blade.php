@@ -42,7 +42,8 @@
         $('#code_add').val(code.toUpperCase());
         var url = "{{ url('admin/icd/checkIfExistICD') }}";
         var json = {
-            "code" : code
+            "code" : code,
+            "_token" : "<?php echo csrf_token(); ?>",
         }
         $.post(url,json, function(checkIfExist){
             if(checkIfExist['exist'] == '1') {

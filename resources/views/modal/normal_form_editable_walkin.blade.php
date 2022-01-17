@@ -246,7 +246,7 @@ $referral_reasons = \App\ReasonForReferral::get();
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD()">Find</button>
                     </span>
                 </div><br>
-                <div class="body_icd"></div>
+                <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -317,7 +317,7 @@ $referral_reasons = \App\ReasonForReferral::get();
 
     function searchICD() {
         $("#other_diagnosis").html("");
-        $(".body_icd").html(loading);
+        $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token" : "<?php echo csrf_token(); ?>",
@@ -325,7 +325,7 @@ $referral_reasons = \App\ReasonForReferral::get();
         };
         $.post(url,json,function(result){
             setTimeout(function(){
-                $(".body_icd").html(result);
+                $(".icd_body").html(result);
             },500);
         });
     }

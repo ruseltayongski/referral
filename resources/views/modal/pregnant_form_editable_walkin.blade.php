@@ -278,7 +278,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD10PregWalkin()">Find</button>
                     </span>
                 </div><br>
-                <div class="icd_body_preg_walkin"></div>
+                <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -351,7 +351,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     function searchICD10PregWalkin() {
         $("#others_diagnosis_preg_walkin").html("");
-        $(".icd_body_preg_walkin").html(loading);
+        $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token" : "<?php echo csrf_token(); ?>",
@@ -359,7 +359,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         };
         $.post(url,json,function(result){
             setTimeout(function(){
-                $(".icd_body_preg_walkin").html(result);
+                $(".icd_body").html(result);
             },500);
         });
     }

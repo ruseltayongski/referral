@@ -327,7 +327,7 @@
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD10Pregnant()">Find</button>
                     </span>
                 </div><br>
-                <div class="icd_body_pregnant"></div>
+                <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -400,7 +400,7 @@
 
     function searchICD10Pregnant() {
         $("#others_diagnosis_pregnant").html("");
-        $(".icd_body_pregnant").html(loading);
+        $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token" : "<?php echo csrf_token(); ?>",
@@ -408,7 +408,7 @@
         };
         $.post(url,json,function(result){
             setTimeout(function(){
-                $(".icd_body_pregnant").html(result);
+                $(".icd_body").html(result);
             },500);
         });
     }
