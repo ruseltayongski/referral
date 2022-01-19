@@ -92,13 +92,13 @@
             @if(isset($form['pregnant']->notes_diagnoses))
                 <tr>
                     <td colspan="4">
-                        Notes in diagnosis:
+                        Diagnosis/Impression:
                         <br />
                         <span class="diagnosis form-details">{!! nl2br($form['pregnant']->notes_diagnoses) !!}</span>
                     </td>
                 </tr>
             @endif
-            @if(isset($form['pregnant']->other_diagnoses)) 
+            @if(isset($form['pregnant']->other_diagnoses))
                 <tr>
                     <td colspan="4">
                         Other Diagnoses:

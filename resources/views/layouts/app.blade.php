@@ -85,6 +85,23 @@
             font-size: 12pt;
             color: #e08e0b;;
         }
+
+        @media
+        only screen and (min-device-width: 280px)
+        and (max-device-width: 568px) {
+            #icd_table_group, tr td:nth-child(3) { display: none; visibility: hidden; }
+            #icd_table_cr, tr td:nth-child(4) { display: none; visibility: hidden; }
+            #icd_table_pf, tr td:nth-child(5) { display: none; visibility: hidden; }
+            #icd_table_hcf, tr td:nth-child(6) { display: none; visibility: hidden; }
+            #icd_table_source, tr td:nth-child(7) { display: none; visibility: hidden; }
+
+            .file-upload {
+                background-color: #ffffff;
+                width: 350px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 

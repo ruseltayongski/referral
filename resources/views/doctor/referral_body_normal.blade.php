@@ -70,13 +70,13 @@
     @if(isset($form->diagnosis))
         <tr>
             <td colspan="6">
-                Notes in diagnosis:
+                Diagnosis/Impression:
                 <br />
                 <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
             </td>
         </tr>
     @endif
-    @if(isset($form->other_diagnoses)) 
+    @if(isset($form->other_diagnoses))
         <tr>
             <td colspan="6">
                 Other Diagnoses:
