@@ -33,7 +33,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-    <button type="submit" value="true" name="add_btn" id="add_btn" class="btn btn-success btn-sm" disabled><i class="fa fa-check"></i> Save</button>
+    <button type="submit" value="true" name="add_btn" id="add_btn" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
 </div>
 
 <script>
@@ -42,10 +42,12 @@
         $('#code_add').val(code.toUpperCase());
         var url = "{{ url('admin/icd/checkIfExistICD') }}";
         var json = {
-            "code" : code
-        }
+            "code" : code,
+            "_token" : "<?php echo csrf_token(); ?>"
+        };
         $.post(url,json, function(checkIfExist){
-            if(checkIfExist['exist'] == '1') {
+            console.log(checkIfExist);
+            if(checkIfExist['exist'] == 1) {
                 event.preventDefault();
                 $('#code_exist_warning').html("Code already exists!");
                 $('#code_add').focus();

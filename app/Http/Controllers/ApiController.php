@@ -293,40 +293,13 @@ class ApiController extends Controller
     }
 
     public function apiReport(Request $request,$date_start,$date_end){
-        $data = \DB::connection('mysql')->select("call statistics_report_incoming('$request->request_type','$date_start','$date_end','$request->province')");
-        return $data;
+        if($request->request_type == "incoming")
+            return \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province')");
+
+        return \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province')");
     }
 
     public function apiBedAvailability(Request $request){
-        /*$emergency_room_covid_vacant = $bed->emergency_room_covid_vacant ? $bed->emergency_room_covid_vacant : 0;
-        $icu_covid_vacant= $bed->icu_covid_vacant ? $bed->icu_covid_vacant : 0;
-        $beds_covid_vacant = $bed->beds_covid_vacant ? $bed->beds_covid_vacant : 0;
-        $isolation_covid_vacant = $bed->isolation_covid_vacant ? $bed->isolation_covid_vacant : 0;
-
-        $UnusedCovid = $emergency_room_covid_vacant + $icu_covid_vacant + $beds_covid_vacant + $isolation_covid_vacant;
-
-        $emergency_room_covid_occupied = $bed->emergency_room_covid_occupied ? $bed->emergency_room_covid_occupied : 0;
-        $icu_covid_occupied = $bed->icu_covid_occupied ? $bed->icu_covid_occupied : 0;
-        $beds_covid_occupied = $bed->beds_covid_occupied ? $bed->beds_covid_occupied : 0;
-        $isolation_covid_occupied = $bed->isolation_covid_occupied ? $bed->isolation_covid_occupied : 0;
-
-        $UsedCovid = $emergency_room_covid_occupied + $icu_covid_occupied + $beds_covid_occupied + $isolation_covid_occupied;
-
-
-        $emergency_room_non_vacant = $bed->emergency_room_non_vacant ? $bed->emergency_room_non_vacant : 0;
-        $icu_non_vacant = $bed->icu_non_vacant ? $bed->icu_non_vacant : 0;
-        $beds_non_vacant = $bed->beds_non_vacant ? $bed->beds_non_vacant : 0;
-        $isolation_non_vacant = $bed->isolation_non_vacant ? $bed->isolation_non_vacant : 0;
-
-        $UnusedNoncovid = $emergency_room_non_vacant + $icu_non_vacant + $beds_non_vacant + $isolation_non_vacant;
-
-        $emergency_room_non_occupied = $bed->emergency_room_non_occupied ? $bed->emergency_room_non_occupied : 0;
-        $icu_non_occupied = $bed->icu_non_occupied ? $bed->icu_non_occupied : 0;
-        $beds_non_occupied = $bed->beds_non_occupied ? $bed->beds_non_occupied : 0;
-        $isolation_non_occupied = $bed->isolation_non_occupied ? $bed->isolation_non_occupied : 0;
-
-        $UsedNoncovid = $emergency_room_non_occupied + $icu_non_occupied + $beds_non_occupied + $isolation_non_occupied;*/
-
         $facility = Facility::
         select(
             "id",

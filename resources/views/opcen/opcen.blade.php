@@ -122,7 +122,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     legendText: "{label}",
                     indexLabel: "{label} ({y})",
                     yValueFormatString:"#,##0.#"%"",
-                    dataPoints: [
+                    dataPo`ints: [
                         { label: "Inquiry", y: "{{ $inquiry }}" },
                         { label: "Referral", y: "{{ $referral }}" },
                         { label: "Others", y: "{{ $others }}" }
