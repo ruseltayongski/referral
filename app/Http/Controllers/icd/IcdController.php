@@ -17,11 +17,15 @@ class IcdController extends Controller
         $keyword = $request->icd_keyword;
 
         if(!$keyword)
-            return "";
+        return "";
 
-        $icd = Icd10::where("description","like","%$keyword%")->orWhere("code","like","%$keyword%")->get();
-        return view("icd.icd_search",[
-            "icd" => $icd
-        ]);
+        $icd = Icd10::where("description","like","%$keyword%")->orWhere("code","like","%$keyword%")
+            ->paginate(15);
+
+        if($request->pagination_table == 'true') {
+            return view("icd.icd_content", ["icd" => $icd, "icd_keyword" => $keyword]);
+        }
+
+        return view("icd.icd_search",["icd" => $icd, "icd_keyword" => $keyword]);
     }
 }

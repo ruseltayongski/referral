@@ -48,7 +48,7 @@
         var json = {
             "code" : code,
             "_token" : "<?php echo csrf_token(); ?>"
-        }
+        };
         $.post(url,json, function(checkIfExist) {
             if(checkIfExist['id'] == $('#id_update').val() || checkIfExist['exist'] == 0 ) {
                 $('#code_warning').html("");

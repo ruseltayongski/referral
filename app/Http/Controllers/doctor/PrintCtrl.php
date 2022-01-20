@@ -142,14 +142,14 @@ class PrintCtrl extends Controller
         $pdf->MultiCell(0, 7, self::staticBlack($pdf,"Information Given to the Woman and Companion About the Reason for Referral : ")."\n".self::staticGreen($pdf,$data->woman_information_given), 1, 'L');
 
         if(isset($record->icd)) {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 1, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf,"ICD-10: "), 1, 'L');
             foreach($record->icd as $icd) {
                 $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code." - ".$icd->description), 0, 'L');
             }
         }
 
         if(isset($data->notes_diagnoses)) {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Additional notes in diagnosis: "), 1, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 1, 'L');
             $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
         }
 
@@ -311,7 +311,7 @@ class PrintCtrl extends Controller
         // $pdf->Ln();
 
         if(isset($data2->icd[0])) {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf,"ICD-10: "), 0, 'L');
             $pdf->SetTextColor(102,56,0);
             $pdf->SetFont('Arial','I',10);
             foreach($data2->icd as $icd) {
@@ -321,7 +321,7 @@ class PrintCtrl extends Controller
         }
 
         if(isset($data->diagnosis)) {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Additional notes in diagnosis: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
             $pdf->SetTextColor(102,56,0);
             $pdf->SetFont('Arial','I',10);
             $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');

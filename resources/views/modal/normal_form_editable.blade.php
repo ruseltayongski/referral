@@ -153,19 +153,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                                 </td>
                             </tr>
-                            {{--<tr>
-                                <td colspan="6">
-                                    <span class="text-success">
-                                        @if(Session::get('auth')->level == 'opcen')
-                                            Chief Complaints
-                                        @else
-                                            Diagnosis/Impression:
-                                        @endif
-                                    </span> <span class="text-red">*</span>
-                                    <br />
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
-                                </td>
-                            </tr>--}}
+                            {{--<tr>--}}
+                                {{--<td colspan="6">--}}
+                                    {{--<span class="text-success">--}}
+                                        {{--@if(Session::get('auth')->level == 'opcen')--}}
+                                            {{--Chief Complaints--}}
+                                        {{--@else--}}
+                                            {{--Diagnosis/Impression:--}}
+                                        {{--@endif--}}
+                                    {{--</span> <span class="text-red">*</span>--}}
+                                    {{--<br />--}}
+                                    {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
                             <tr>
                                 <td colspan="6">
                                     <span class="text-success">Diagnosis</span> <span class="text-red">*</span>

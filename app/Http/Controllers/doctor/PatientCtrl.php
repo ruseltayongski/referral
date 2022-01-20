@@ -489,6 +489,7 @@ class PatientCtrl extends Controller
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
                 'notes_diagnoses' => $req->notes_diagnosis,
+//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
@@ -636,9 +637,10 @@ class PatientCtrl extends Controller
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
                 'notes_diagnoses' => $req->notes_diagnosis,
+//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
-                'other_diagnoses' => $req->other_diagnosis,
+//                'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PregnantForm::updateOrCreate($match,$data);
 

@@ -891,6 +891,13 @@ class ReferralCtrl extends Controller
         );
         Activity::create($data);
 
+//        foreach($req->icd_ids as $i) {
+//            $icd = new Icd();
+//            $icd->code = $track->code;
+//            $icd->icd_id = $i;
+//            $icd->save();
+//        }
+
         $hosp = Facility::find($user->facility_id)->name;
         $msg = "$track->code discharged from $hosp.";
         DeviceTokenCtrl::send('Discharged',$msg,$track->referred_from);

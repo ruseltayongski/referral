@@ -159,6 +159,19 @@
                                         <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </td>
                                 </tr>
+                                {{--<tr>--}}
+                                    {{--<td colspan="6">--}}
+                                    {{--<span class="text-success">--}}
+                                        {{--@if(Session::get('auth')->level == 'opcen')--}}
+                                            {{--Chief Complaints--}}
+                                        {{--@else--}}
+                                            {{--Diagnosis/Impression:--}}
+                                        {{--@endif--}}
+                                    {{--</span> <span class="text-red">*</span>--}}
+                                        {{--<br />--}}
+                                        {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
                                 <tr>
                                      <td colspan="6">
                                         <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
@@ -327,7 +340,7 @@
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD10Pregnant()">Find</button>
                     </span>
                 </div><br>
-                <div class="icd_body_pregnant"></div>
+                <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -400,7 +413,7 @@
 
     function searchICD10Pregnant() {
         $("#others_diagnosis_pregnant").html("");
-        $(".icd_body_pregnant").html(loading);
+        $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token" : "<?php echo csrf_token(); ?>",
@@ -408,7 +421,7 @@
         };
         $.post(url,json,function(result){
             setTimeout(function(){
-                $(".icd_body_pregnant").html(result);
+                $(".icd_body").html(result);
             },500);
         });
     }

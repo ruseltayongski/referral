@@ -1,6 +1,7 @@
+{{ csrf_field() }}
 @if(!empty($icd) && count($icd) > 0)
     <input type="hidden" id="icd_keyword" value="{{ $icd_keyword }}">
-    <table class="table table-bordered table-hover icd-table">
+    <table class="table table-bordered table-hover">
         <thead>
         <tr>
             <th>Code</th>
@@ -40,27 +41,3 @@
         </div>
     </div>
 @endif
-
-<script>
-    $(document).ready( function () {
-        $(document).on('click', '.pagination a', function(event){
-            event.preventDefault();
-            var page = $(this).attr('href').split('page=')[1];
-            changePage(page);
-        });
-    });
-
-    function changePage(page) {
-        var url = "<?php echo asset('icd/search');?>";
-        url = url + "?page=" + page;
-
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "pagination_table" : "true",
-            "icd_keyword" : $('#icd_keyword').val()
-        };
-        $.post(url,json,function(result){
-            $('.icd_body').html(result);
-        });
-    }
-</script>
