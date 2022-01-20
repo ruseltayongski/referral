@@ -159,49 +159,49 @@
                                         <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </td>
                                 </tr>
+                                {{--<tr>--}}
+                                    {{--<td colspan="6">--}}
+                                    {{--<span class="text-success">--}}
+                                        {{--@if(Session::get('auth')->level == 'opcen')--}}
+                                            {{--Chief Complaints--}}
+                                        {{--@else--}}
+                                            {{--Diagnosis/Impression:--}}
+                                        {{--@endif--}}
+                                    {{--</span> <span class="text-red">*</span>--}}
+                                        {{--<br />--}}
+                                        {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
                                 <tr>
-                                    <td colspan="6">
-                                    <span class="text-success">
-                                        @if(Session::get('auth')->level == 'opcen')
-                                            Chief Complaints
-                                        @else
-                                            Diagnosis/Impression:
-                                        @endif
-                                    </span> <span class="text-red">*</span>
-                                        <br />
-                                        <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
+                                     <td colspan="6">
+                                        <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
+                                        <br><br>
+                                        <a data-toggle="modal" data-target="#icd-modal-pregnant" type="button" class="btn btn-sm btn-success" onclick="searchICD10Pregnant()">
+                                            <i class="fa fa-medkit"></i>  Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregnant()" hidden="hidden"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                     </td>
                                 </tr>
-                                {{--<tr>--}}
-                                     {{--<td colspan="6">--}}
-                                        {{--<span class="text-success">Diagnosis</span> <span class="text-red">*</span>--}}
-                                        {{--<br><br>--}}
-                                        {{--<a data-toggle="modal" data-target="#icd-modal-pregnant" type="button" class="btn btn-sm btn-success" onclick="searchICD10Pregnant()">--}}
-                                            {{--<i class="fa fa-medkit"></i>  Add ICD-10--}}
-                                        {{--</a>--}}
-                                        {{--<button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregnant()" hidden="hidden"><i class="fa fa-plus"></i> Add notes in diagnosis</button>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                                {{--<tr>--}}
-                                    {{--<td colspan="6">--}}
-                                        {{--<button type="button" id="clear_icd_pregnant" class="btn btn-sm btn-danger" onclick="clearICDPregnant()" hidden="hidden"> Clear ICD-10</button>--}}
-                                        {{--<div><span class="text-green" id="icd_selected_pregnant"></span></div>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                                {{--<tr>--}}
-                                    {{--<td colspan="6">--}}
-                                        {{--<button type="button" id="clear_notes_pregnant" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnant()" hidden="hidden"> Clear notes diagnosis</button>--}}
-                                        {{--<div id="add_notes_diagnosis_pregnant">--}}
-                                        {{--</div>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                                {{--<tr>--}}
-                                    {{--<td colspan="6">--}}
-                                        {{--<button type="button" id="clear_other_diag_pregnant" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnant()" hidden="hidden"> Clear other diagnosis</button>--}}
-                                        {{--<div id="others_diagnosis_pregnant">--}}
-                                        {{--</div>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
+                                <tr>
+                                    <td colspan="6">
+                                        <button type="button" id="clear_icd_pregnant" class="btn btn-sm btn-danger" onclick="clearICDPregnant()" hidden="hidden"> Clear ICD-10</button>
+                                        <div><span class="text-green" id="icd_selected_pregnant"></span></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <button type="button" id="clear_notes_pregnant" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnant()" hidden="hidden"> Clear notes diagnosis</button>
+                                        <div id="add_notes_diagnosis_pregnant">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <button type="button" id="clear_other_diag_pregnant" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnant()" hidden="hidden"> Clear other diagnosis</button>
+                                        <div id="others_diagnosis_pregnant">
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
                             <div class="row">
                                 <div class="col-md-12">
@@ -358,14 +358,14 @@
     $("#clear_notes_pregnant").hide();
     $("#clear_other_diag_pregnant").hide();
 
-//    $("#sbmtPreg").on('click',function(e){
-//        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
-//            Lobibox.alert("error", {
-//                msg: "Select ICD-10 diagnosis!"
-//            });
-//            return false;
-//        }
-//    });
+    $("#sbmtPreg").on('click',function(e){
+        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearICDPregnant() {
         $("#icd_selected_pregnant").html("");

@@ -128,49 +128,49 @@ $referral_reasons = \App\ReasonForReferral::get();
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                                 </td>
                             </tr>
+                            {{--<tr>--}}
+                                {{--<td colspan="6">--}}
+                                    {{--Diagnosis/Impression:--}}
+                                    {{--<br />--}}
+                                    {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
                             <tr>
                                 <td colspan="6">
-                                    Diagnosis/Impression:
+                                    Reason for referral:
                                     <br />
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
+                                    <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>
                                 </td>
                             </tr>
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--Reason for referral:--}}
-                                    {{--<br />--}}
-                                    {{--<textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<span class="text-success">Diagnosis</span>--}}
-                                    {{--<span class="text-red">*</span><br><br>--}}
-                                    {{--<a data-toggle="modal" data-target="#modal-icd" type="button" class="btn btn-sm btn-success" onclick="searchICD()">--}}
-                                        {{--<i class="fa fa-medkit"></i> Add ICD-10--}}
-                                    {{--</a>--}}
-                                    {{--<button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnoses()"><i class="fa fa-plus"></i> Add Notes in Diagnosis--}}
-                                    {{--</button>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>--}}
-                                    {{--<div><span class="text-green" id="selected_icd"></span></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_notes_walkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnoses()">Clear notes diagnosis</button>--}}
-                                    {{--<div id="add_diagnosis_notes"></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_other_diag_walkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnoses()">Clear other Diagnosis</button>--}}
-                                    {{--<div id="other_diagnosis"></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
+                            <tr>
+                                <td colspan="6">
+                                    <span class="text-success">Diagnosis</span>
+                                    <span class="text-red">*</span><br><br>
+                                    <a data-toggle="modal" data-target="#modal-icd" type="button" class="btn btn-sm btn-success" onclick="searchICD()">
+                                        <i class="fa fa-medkit"></i> Add ICD-10
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnoses()"><i class="fa fa-plus"></i> Add Notes in Diagnosis
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
+                                    <div><span class="text-green" id="selected_icd"></span></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_notes_walkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnoses()">Clear notes diagnosis</button>
+                                    <div id="add_diagnosis_notes"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_other_diag_walkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnoses()">Clear other Diagnosis</button>
+                                    <div id="other_diagnosis"></div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td colspan="6">
                                     <span class="text-success">Reason for Referral: </span>
@@ -262,14 +262,14 @@ $referral_reasons = \App\ReasonForReferral::get();
     $("#clear_notes_walkin").hide();
     $("#clear_other_diag_walkin").hide();
 
-//    $("#sbmtWalkin").on('click',function(e){
-//        if(!($("#icd_walkin").val()) && !($("#other_diag_walkin").val())){
-//            Lobibox.alert("error", {
-//                msg: "Select ICD-10 diagnosis!"
-//            });
-//            return false;
-//        }
-//    });
+    $("#sbmtWalkin").on('click',function(e){
+        if(!($("#icd_walkin").val()) && !($("#other_diag_walkin").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearIcd(){
         $('#selected_icd').html("");

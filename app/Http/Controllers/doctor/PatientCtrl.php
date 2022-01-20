@@ -411,7 +411,7 @@ class PatientCtrl extends Controller
                 'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
-//                'other_diagnoses' => $req->other_diagnosis,
+                'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PatientForm::create($data);
 
@@ -430,12 +430,12 @@ class PatientCtrl extends Controller
             }
             $form->save();
 
-//            foreach($req->icd_ids as $i) {
-//                $icd = new Icd();
-//                $icd->code = $form->code;
-//                $icd->icd_id = $i;
-//                $icd->save();
-//            }
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
         }
@@ -488,8 +488,8 @@ class PatientCtrl extends Controller
                 'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
-//                'notes_diagnoses' => $req->notes_diagnosis,
-                'notes_diagnoses' => $req->diagnosis,
+                'notes_diagnoses' => $req->notes_diagnosis,
+//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
@@ -511,12 +511,12 @@ class PatientCtrl extends Controller
             }
             $form->save();
 
-//            foreach($req->icd_ids as $i) {
-//                $icd = new Icd();
-//                $icd->code = $form->code;
-//                $icd->icd_id = $i;
-//                $icd->save();
-//            }
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
@@ -571,16 +571,16 @@ class PatientCtrl extends Controller
                 'referred_md' => ($req->referred_md) ? $req->referred_md: 0,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
-//                'other_diagnoses' => $req->other_diagnoses,
+                'other_diagnoses' => $req->other_diagnoses,
             );
             $form = PatientForm::updateOrCreate($match,$data);
 
-//            foreach($req->icd_ids as $i) {
-//                $icd = new Icd();
-//                $icd->code = $code;
-//                $icd->icd_id = $i;
-//                $icd->save();
-//            }
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             if($form->wasRecentlyCreated){
                 PatientForm::where('unique_id',$unique_id)
@@ -636,20 +636,20 @@ class PatientCtrl extends Controller
                 'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
-//                'notes_diagnoses' => $req->notes_diagnosis,
-                'notes_diagnoses' => $req->diagnosis,
+                'notes_diagnoses' => $req->notes_diagnosis,
+//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
 //                'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PregnantForm::updateOrCreate($match,$data);
 
-//            foreach($req->icd_ids as $i) {
-//                $icd = new Icd();
-//                $icd->code = $code;
-//                $icd->icd_id = $i;
-//                $icd->save();
-//            }
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
 
             if($form->wasRecentlyCreated){
                 PregnantForm::where('unique_id',$unique_id)

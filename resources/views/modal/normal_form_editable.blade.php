@@ -153,47 +153,47 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                                 </td>
                             </tr>
+                            {{--<tr>--}}
+                                {{--<td colspan="6">--}}
+                                    {{--<span class="text-success">--}}
+                                        {{--@if(Session::get('auth')->level == 'opcen')--}}
+                                            {{--Chief Complaints--}}
+                                        {{--@else--}}
+                                            {{--Diagnosis/Impression:--}}
+                                        {{--@endif--}}
+                                    {{--</span> <span class="text-red">*</span>--}}
+                                    {{--<br />--}}
+                                    {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
                             <tr>
                                 <td colspan="6">
-                                    <span class="text-success">
-                                        @if(Session::get('auth')->level == 'opcen')
-                                            Chief Complaints
-                                        @else
-                                            Diagnosis/Impression:
-                                        @endif
-                                    </span> <span class="text-red">*</span>
-                                    <br />
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
+                                    <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
+                                    <br><br>
+                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                        <i class="fa fa-medkit"></i> Add ICD-10
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                 </td>
                             </tr>
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<span class="text-success">Diagnosis</span> <span class="text-red">*</span>--}}
-                                    {{--<br><br>--}}
-                                    {{--<a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">--}}
-                                        {{--<i class="fa fa-medkit"></i> Add ICD-10--}}
-                                    {{--</a>--}}
-                                    {{--<button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>--}}
-                                    {{--<div><span class="text-green" id="icd_selected"></span></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>--}}
-                                    {{--<div id="add_notes_diagnosis"></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>--}}
-                                    {{--<div id="others_diagnosis"></div>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
+                                    <div><span class="text-green" id="icd_selected"></span></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                    <div id="add_notes_diagnosis"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
+                                    <div id="others_diagnosis"></div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td colspan="6">
                                     <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
@@ -298,14 +298,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
     $("#clear_notes").hide();
     $("#clear_other_diag").hide();
 
-//    $("#sbmitBtn").on('click',function(e){
-//        if(!($("#icd").val()) && !($("#other_diag").val())){
-//            Lobibox.alert("error", {
-//                msg: "Select ICD-10 diagnosis!"
-//            });
-//            return false;
-//        }
-//    });
+    $("#sbmitBtn").on('click',function(e){
+        if(!($("#icd").val()) && !($("#other_diag").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     function clearICD() {
         $("#icd_selected").html("");
