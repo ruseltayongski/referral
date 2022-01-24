@@ -43,10 +43,8 @@
         var action_md = data.action_md;
         var facility_calling = data.facility_calling;
 
-        var msg = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call from '+data.referred_name+
-            '<br />'+ data.date;
-        var msg2 = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call from '+data.referred_name+
-            '\n'+ data.date;
+        var msg = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call. <br />'+ data.date;
+        var msg2 = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call \n'+ data.date;
         verify(data.code,'warning','Requesting a Call',msg,msg2);
     });
 
