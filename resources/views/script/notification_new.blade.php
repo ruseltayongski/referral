@@ -44,7 +44,7 @@
         var facility_calling = data.facility_calling;
 
         var msg = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call. <br />'+ data.date;
-        var msg2 = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call \n'+ data.date;
+        var msg2 = 'Dr. '+action_md+' of '+facility_calling+' is requesting a call. \n'+ data.date;
         verify(data.code,'warning','Requesting a Call',msg,msg2);
     });
 
@@ -55,9 +55,9 @@
         var patient_name = data.patient_name;
         var current_facility = data.current_facility;
 
-        var msg = patient_name+' arrived at '+current_facility+
+        var msg = patient_name+' has arrived at '+current_facility+
             '<br />'+ data.date;
-        var msg2 = patient_name+' arrived at '+current_facility+
+        var msg2 = patient_name+' has arrived at '+current_facility+
             '\n'+ data.date;
         verify(data.code,'success','Arrived',msg,msg2);
     });
@@ -67,9 +67,9 @@
         var patient_name = data.patient_name;
         var current_facility = data.current_facility;
 
-        var msg = patient_name+' admitted at '+current_facility+
+        var msg = patient_name+' was admitted at '+current_facility+
             '<br />'+ data.date;
-        var msg2 = patient_name+' admitted at '+current_facility+
+        var msg2 = patient_name+' was admitted at '+current_facility+
             '\n'+ data.date;
         verify(data.code,'info','Admitted',msg,msg2);
     });
@@ -80,9 +80,9 @@
         var patient_name = data.patient_name;
         var current_facility = data.current_facility;
 
-        var msg = patient_name+' discharged from '+current_facility+
+        var msg = patient_name+' was discharged from '+current_facility+
             '<br />'+ data.date;
-        var msg2 = patient_name+' discharged from '+current_facility+
+        var msg2 = patient_name+' was discharged from '+current_facility+
             '\n'+ data.date;
         verify(data.code,'info','Discharged',msg,msg2);
     });
