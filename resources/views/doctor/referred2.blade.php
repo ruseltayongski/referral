@@ -182,7 +182,9 @@ $user = Session::get('auth');
                             </div>
                         </div>
                         @if(count($activities) > 0)
-                            <?php $first = 0; ?>
+                            <?php $first = 0;
+                            $latest_act = \App\Activity::where('code',$row->code)->latest('updated_at')->first();
+                            ?>
                             <div class="tracking col-md-12">
                                 <div class="table-responsive">
                                     <table width="100%">
@@ -217,9 +219,9 @@ $user = Session::get('auth');
                                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                         <br />
-                                                        @if($user->facility_id==$act->referred_from)
+                                                        @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
                                                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
-                                                                <i class="fa fa-ambulance"></i> Redirect to other facility
+                                                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
                                                             </button>
                                                         @endif
                                                     </td>
@@ -286,7 +288,7 @@ $user = Session::get('auth');
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                     <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> admitted at <span class="txtHospital">{{ $new_facility }}</span>.
+                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                     </td>
                                                 </tr>
@@ -294,7 +296,7 @@ $user = Session::get('auth');
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                     <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> discharged from <span class="txtHospital">{{ $new_facility }}</span>.
+                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                         <?php
                                                         ($row->type=='normal') ? $covid_discharge = \App\PatientForm::where("code",$act->code)->first() : $covid_discharge = \App\PregnantForm::where("code",$act->code)->first();
@@ -337,7 +339,7 @@ $user = Session::get('auth');
                                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                     <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was departure by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
+                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
                                                     </td>
                                                 </tr>
                                             @endif

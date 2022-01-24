@@ -10,9 +10,9 @@
         referred_from = $(this).data('referred_from');
         patient_name = $(this).data('patient_name');
         facility = $(item).find('.facility').html();
-        referral_status = $(this).data('referral_status');
+        var referral_status = $(this).data('referral_status');
 
-        if(referral_status == 'referred') {
+        if(referral_status == 'referred' || referral_status == 'redirected') {
             var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
             $.ajax({
                 url: seenUrl,
