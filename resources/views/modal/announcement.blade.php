@@ -8,25 +8,13 @@
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 4.5</strong><br>
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.6</strong><br>
                                 <ol>
                                     <li>
-                                        BED AVAILABILITY STATUS <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        ICD-10 <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        NOT ACCEPTED within 30 minutes <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        WALK-IN Monitoring <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        Issue and Concern <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        Onboard Users <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        Login Status <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        Attachment File <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
@@ -51,9 +39,8 @@
                                     </ol>
                                     <li >Server - The request URL not found</li>
                                     <ol>
-                                        <li>Garizaldy B. Epistola - 09338161374</li>
-                                        <li>Reyan M. Sugabo - 09359504269</li>
                                         <li>Gerwin D. Gorosin - 09436467174 or 09154512989</li>
+                                        <li>Reyan M. Sugabo - 09359504269</li>
                                         <li>Harry John Divina - 09323633961 or 09158411553</li>
                                     </ol>
                                     <li >System Implementation/Training</li>
@@ -67,7 +54,6 @@
                                     </li>
                                     <ol>
                                         <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
-                                        <li>Rogemar Sumalinog - 09914100134 </li>
                                         <li>Remwel Sanchez - 09067334425 </li>
                                         <li>Jonaden Dela Cerna - 09068482000 </li>
                                         <li>Val Vincent Villan - 09686361161 </li>
