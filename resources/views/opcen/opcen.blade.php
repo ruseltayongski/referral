@@ -122,7 +122,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                     legendText: "{label}",
                     indexLabel: "{label} ({y})",
                     yValueFormatString:"#,##0.#"%"",
-                    dataPo`ints: [
+                    dataPoints: [
                         { label: "Inquiry", y: "{{ $inquiry }}" },
                         { label: "Referral", y: "{{ $referral }}" },
                         { label: "Others", y: "{{ $others }}" }
@@ -130,7 +130,6 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 }]
             };
             $("#reason_calling").CanvasJSChart(options1);
-
 
             var options = {
                 title: {
