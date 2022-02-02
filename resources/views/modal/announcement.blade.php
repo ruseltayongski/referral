@@ -54,11 +54,10 @@
                                         Register Account and Forget Password
                                     </li>
                                     <ol>
-                                        <li>Jaypee Dingal - 260 9740 local(436) - 09267313376 </li>
+                                        <li>Jaypee Dingal - 09267313376 </li>
                                         <li>Remwel Sanchez - 09067334425 </li>
                                         <li>Jonaden Dela Cerna - 09068482000 </li>
                                         <li>Val Vincent Villan - 09686361161 </li>
-                                        <li>Alex Jumao-as - 09997416211 </li>
                                     </ol>
                                 </ol>
                                 <li>Non - Technical</li>
