@@ -37,7 +37,8 @@ class PrintCtrl extends Controller
         {
             $data = ReferralCtrl::normalForm($track_id, $form_status, $form_type);
             return self::printNormal($data->form, $data);
-        }else if($form_type=='pregnant'){
+        }
+        else if($form_type=='pregnant'){
             $data = ReferralCtrl::pregnantForm($track_id, $form_status);
             return self::printPregnant($data);
         }
@@ -212,22 +213,9 @@ class PrintCtrl extends Controller
     public function printNormal($data, $data2)
     {
        //print_r($data);
-        $address='';
-        $patient_address='';
-        $referred_address = '';
-
-        $address .= ($data->facility_brgy) ? $data->facility_brgy .', ': '';
-        $address .= ($data->facility_muncity) ? $data->facility_muncity .', ': '';
-        $address .= ($data->facility_province) ? $data->facility_province: '';
-
-        $referred_address .= ($data->ff_brgy) ? $data->ff_brgy .', ': '';
-        $referred_address .= ($data->ff_muncity) ? $data->ff_muncity .', ': '';
-        $referred_address .= ($data->ff_province) ? $data->ff_province: '';
-
-        $patient_address .= ($data->patient_brgy) ? $data->patient_brgy.', ': '';
-        $patient_address .= ($data->patient_muncity) ? $data->patient_muncity.', ': '';
-        $patient_address .= ($data->patient_province) ? $data->patient_province: '';
-
+        $patient_address = $data->patient_address;
+        $referring_address = $data->referring_address;
+        $referred_address = $data->referred_address;
 
         $pdf = new Fpdf();
         $x = ($pdf->w)-20;
@@ -246,7 +234,7 @@ class PrintCtrl extends Controller
         $pdf->Ln(5);
         $pdf->MultiCell(0, 7, self::black($pdf,"Name of Referring Facility: ").self::orange($pdf,$data->referring_name,"Name of Referring Facility:"), 0, 'L');
         $pdf->MultiCell(0, 7, self::black($pdf,"Facility Contact #: ").self::orange($pdf,$data->referring_contact,"Facility Contact #:"), 0, 'L');
-        $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$address,"Address:"), 0, 'L');
+        $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$referring_address,"Address:"), 0, 'L');
 
 
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Referred to: ").self::orange($pdf,$data->referred_name,"Referred to:"), 0, 'L');
