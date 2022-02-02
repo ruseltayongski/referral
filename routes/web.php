@@ -543,3 +543,7 @@ Route::post('admin/icd/update', 'admin\IcdCtrl@update');
 Route::post('admin/icd/add', 'admin\IcdCtrl@add');
 Route::post('admin/icd/delete', 'admin\IcdCtrl@delete');
 Route::post('admin/icd/checkIfExistICD', 'admin\IcdCtrl@checkIfExistICD');
+
+Route::get('revised/referral', function (){
+    return view('modal/revised_normal_form');
+});
