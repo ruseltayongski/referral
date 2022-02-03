@@ -125,9 +125,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         border: 0;
         transition: all .2s ease;
     }
-</style>
 
-<style>
     .container-referral {
         border: 1px solid lightgrey;
         width: 100%;
@@ -277,10 +275,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                    <b>HISTORY OF PRESENT ILLNESS</b>
-                                    <span id="plus-sign-1" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="1" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
+                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_illness_history" style="width: 100%">
                                     {{--CASE SUMMARY--}}
                                     <b>CASE SUMMARY:</b>
@@ -294,11 +294,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                    <b>DIAGNOSIS</b>
-                                    <span id="plus-sign-1" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
-                                <div class="collapse" id="collapse_diagnosis" style="width: 100%">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="2" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
+                                        <b>DIAGNOSIS</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                     <b>ICD-10 Diagnosis</b><br>
                                     <div class="container-referral">
                                         <div class="row">
@@ -334,10 +336,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
-                                    <b>PAST MEDICAL HISTORY</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="3" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
+                                        <b>PAST MEDICAL HISTORY</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
                                     <b>COMORBIDITIES</b><br>
                                     <div class="container-referral">
@@ -348,17 +352,17 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                <span> Hypertension x <input type="number" id="comor_hyper" min="0" style="width: 20%"> years
+                                                Hypertension <span id="comor_hyper">x <input type="number" min="0" style="width: 20%"> years
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                <span> Diabetes Mellitus x <input type="number" id="comor_diab" min="0" style="width: 20%"> years</span>
+                                                Diabetes Mellitus <span id="comor_diab"> x <input type="number" min="0" style="width: 20%"> years</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                <span> Bronchial Asthma x <input type="number" id="comor_asthma" min="0" style="width: 20%"> years</span>
+                                                Bronchial Asthma <span id="comor_asthma"> x <input type="number" min="0" style="width: 20%"> years</span>
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
@@ -468,10 +472,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
-                                    <b>PEDIATRIC HISTORY</b> <i> (as applicable)</i>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="4" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
+                                        <b>PEDIATRIC HISTORY</b> <i> (as applicable)</i>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
                                     <b>PRENATAL</b>
                                     <div class="container-referral">
@@ -523,7 +529,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <option value="fullterm">Full Term</option>
                                                         <option value="postterm">Post Term</option>
                                                     </select>
-                                                    , weighing <input type="number" style="width: 8%" min="0"> kg,
+                                                    , weighing <input type="number" style="width: 8%" min="0" step="0.01"> kg,
                                                     BR <input type="text" style="width: 20%">, with Good Cry
                                                     <select class="form-control-select">
                                                         <option value="1">Yes</option>
@@ -578,11 +584,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" id="dev_miles_under"> {{--TODO: FIX RADIO BUTTONS--}}
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under"> {{--TODO: FIX RADIO BUTTONS--}}
                                                 <label for="dev_miles_under">
                                                     Under developed
                                                 </label>
-                                                <input type="radio" id="dev_miles_par">
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par">
                                                 <label for="dev_miles_par">
                                                     At par with age
                                                 </label>
@@ -596,16 +602,18 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
-                                    <b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" id="collapse_button" value="5" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                        <b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
                                     <b>MENARCHE </b> @ <input type="number" min="9" style="width: 10%;"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE: </b>&emsp;
-                                    <input type="radio" id="menopausal">
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal">
                                     <label for="menopausal">Yes</label>
-                                    <input type="radio" id="non_menopausal">
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal">
                                     <label for="non_menopausal">No</label>
                                     <span id="menopausal_age">(age) <input type="number" style="width: 10%;" min="9"></span><br><br>
 
@@ -613,24 +621,24 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="radio" id="menstrual_reg">
-                                                <label for="menstrual_reg">Regular</label>
-                                                <input type="radio" id="menstrual_irreg">
-                                                <label for="menstrual_irreg">Irregular</label>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio">
+                                                <label for="mens_reg_radio">Regular</label>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_irreg_radio">
+                                                <label for="mens_irreg_radio">Irregular</label>
                                                 <span id="mens_irreg">x <input type="number" style="width: 15%;" min="0"> mos</span>
                                             </div>
                                             <div class="col-md-6">
                                                 <b>Dysmenorrhea:</b> &emsp;
-                                                <input type="radio" id="dysme_yes">
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes">
                                                 <label for="dysme_yes">Yes</label>
-                                                <input type="radio" id="dysme_no">
+                                                <input type="radio"  class="referral-radio-btn" name="dysme" id="dysme_no">
                                                 <label for="dysme_no">No</label><br>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <b>Duration:</b> <input type="number" style="width:15%;" min="0"> days &emsp;
-                                                <b>Pads/day</b> <input type="number" style="width:15%;" min="0">
+                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0">
                                             </div>
                                             <div class="col-md-6">
                                                 <b>Medication: </b> <input type="text" style="width:70%;">
@@ -642,25 +650,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> None
+                                                <input class="form-check-input" id="contraceptive_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> None
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Pills
+                                                <input class="form-check-input" id="contraceptive_pills_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Pills
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> IUD
+                                                <input class="form-check-input" id="contraceptive_iud_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> IUD
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Rhythm
+                                                <input class="form-check-input" id="contraceptive_rhythm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Rhythm
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Condom
+                                                <input class="form-check-input" id="contraceptive_condom_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Condom
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Other(s)
-                                                <textarea class="form-control" name="contraceptive_other" style="resize: none;width: 50%;" rows="2"></textarea><br>
+                                                <input class="form-check-input" id="contraceptive_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Other(s)
+                                                <textarea class="form-control" id="contraceptive_others" name="contraceptive_other" style="resize: none;width: 50%;" rows="2"></textarea><br>
                                             </div>
                                         </div>
                                     </div><br>
@@ -689,30 +697,65 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>AOG</b>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-2">
-                                                <b>by LNMP </b> <input type="number" min="0" style="width:15%;"> <b>wks</b>
+                                            <div class="col-md-4">
+                                                <b>by LNMP </b> <input type="number" min="0" style="width:25%;"> <b>wks</b>
                                             </div>
-                                            <div class="col-md-2">
-                                                <b>by EUTZ </b> <input type="number" min="0" style="width:15%;"> <b>wks</b>
+                                            <div class="col-md-4">
+                                                <b>by EUTZ </b> <input type="number" min="0" style="width:25%;"> <b>wks</b>
                                             </div>
                                         </div>
                                     </div><br>
 
                                     <b>PRENATAL HISTORY</b><br>
-                                    <div class="container-referral">
-                                        <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"></textarea><br><br>
-                                        <div class="row">
-                                            <div class="col-md-1"><span class="center-align"><b>Pregnancy Order</b></span></div>
-                                            <div class="col-md-1"><span class="center-align"><b>Year</b></span></div>
-                                            <div class="col-md-1"><span class="center-align"><b>Gestation Completed</b></span></div>
-                                            <div class="col-md-2"><span class="center-align"><b>Pregnancy Outcome</b></span></div>
-                                            <div class="col-md-2"><span class="center-align"><b>Place of Birth</b></span></div>
-                                            <div class="col-md-1"><span class="center-align"><b>Sex</b></span></div>
-                                            <div class="col-md-1"><span class="center-align"><b>Birth Weight</b></span></div>
-                                            <div class="col-md-1"><span class="center-align"><b>Present Status</b></span></div>
-                                            <div class="col-md-2"><span class="center-align"><b>Complication(s)</b></span></div>
-                                        </div>
-                                        <div class="row"> {{--TODO: FIX TABLE--}}
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"></textarea><br><br>
+                                    <div style="overflow-x: auto">
+                                        <table class="table-sm table-responsive table-bordered" id="prenatal_table">
+                                            <thead>
+                                            <tr style="font-size: 11pt;">
+                                                <th width="50%" class="text-center">Pregnancy Order</th>
+                                                <th class="text-center">Year</th>
+                                                <th class="text-center">Gestation Completed</th>
+                                                <th class="text-center">Pregnancy Outcome</th>
+                                                <th class="text-center">Place of Birth</th>
+                                                <th class="text-center">Sex</th>
+                                                <th class="text-center">Birth Weight</th>
+                                                <th class="text-center">Present Status</th>
+                                                <th class="text-center">Complication(s)</th>
+                                            </tr>
+                                            </thead>
+                                            <tr style="font-size: 10pt">
+                                                <td><input class="form-control" type="text"></td>
+                                                <td><input class="form-control" type="number" min="1900"></td>
+                                                <td><input class="form-control" id="gestation" type="text"></td>
+                                                <td><input class="form-control" type="text"></td>
+                                                <td><input class="form-control" type="text"></td>
+                                                <td width="150%">
+                                                    <select class="select" name="prenatal_history_sex">
+                                                        <option value="">Choose...</option>
+                                                        <option value="M">Male</option>
+                                                        <option value="F">Female</option>
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control" type="number" min="0" step="0.01"></td>
+                                                <td><input class="form-control" type="text"></td>
+                                                <td><input class="form-control" type="text"></td>
+                                            </tr>
+                                        </table><br>
+                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
+                                            <i class="fa fa-plus"> Add Row</i>
+                                        </button><br><br>
+                                        {{--<div class="row" style="text-align: center">
+                                            <div class="col-md-1"><span><b>Pregnancy Order</b></span></div>
+                                            <div class="col-md-1"><span><b>Year</b></span></div>
+                                            <div class="col-md-1"><span><b>Gestation Completed</b></span></div>
+                                            <div class="col-md-2"><span><b>Pregnancy Outcome</b></span></div>
+                                            <div class="col-md-2"><span><b>Place of Birth</b></span></div>
+                                            <div class="col-md-1"><span><b>Sex</b></span></div>
+                                            <div class="col-md-1"><span><b>Birth Weight</b></span></div>
+                                            <div class="col-md-1"><span><b>Present Status</b></span></div>
+                                            <div class="col-md-2"><span><b>Complication(s)</b></span></div>
+                                        </div>--}}
+                                        {{--<div class="row"> --}}{{--TODO: FIX TABLE--}}{{--
                                             <div class="col-md-1"><input type="text"></div>
                                             <div class="col-md-1"><input type="text"></div>
                                             <div class="col-md-1"><input type="text"></div>
@@ -721,8 +764,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-1"><input type="text"></div>
                                             <div class="col-md-1"><input type="text"></div>
                                             <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text" style="width:30%;"></div>
-                                        </div>
+                                            <div class="col-md-2"><input type="text" style="width:100%;"></div>
+                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -730,24 +773,26 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history" aria-expanded="false" aria-controls="collapse_persocial_history">
-                                    <b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="6" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history" aria-expanded="false" aria-controls="collapse_persocial_history">
+                                        <b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_persocial_history" style="width: 100%;">
                                     <b>SMOKING</b>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-2"> {{--TODO: FIX RADIO BUTTON--}}
-                                                <input type="radio" id="smoke_yes">
+                                            <div class="col-md-2">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes">
                                                 <label for="smoke_yes">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" id="smoke_no">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no">
                                                 <label for="smoke_no">No</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" id="smoke_quit">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit">
                                                 <label for="smoke_quit">Quit</label>
                                             </div>
                                             <div class="col-md-6">
@@ -759,16 +804,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>ALCOHOL DRINKING</b>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-2"> {{--TODO: FIX RADIO BUTTON--}}
-                                                <input type="radio" id="alcohol_yes">
-                                                <label for="alcohol_yes">Yes</label>
+                                            <div class="col-md-2">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio">
+                                                <label for="alcohol_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" id="alcohol_no">
-                                                <label for="alcohol_no">No</label>
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio">
+                                                <label for="alcohol_no_radio">No</label>
                                             </div>
                                             <div class="col-md-5">
-                                                <span>Bottles per day: <input type="number" min="0"></span>
+                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0"></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -776,15 +821,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>ILLICIT DRUGS</b>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-2"> {{--TODO: FIX RADIO BUTTON--}}
-                                                <input type="radio" id="drugs_yes">
-                                                <label for="drugs_yes">Yes</label>
+                                            <div class="col-md-2">
+                                                <input type="radio" name="illicit_drugs" id="drugs_yes_radio" class="referral-radio-btn">
+                                                <label for="drugs_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" id="drugs_no">
-                                                <label for="drugs_no">No</label>
+                                                <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn">
+                                                <label for="drugs_no_radio">No</label>
                                             </div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-8" id="drugs_text">
                                                 If yes, specify:
                                                 <textarea class="form-control" style="resize: none;width:50%;" name="illicit_drugs_token"></textarea>
                                             </div>
@@ -796,10 +841,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
-                                    <b>CURRENT MEDICATION(S)</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="7" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
+                                        <b>CURRENT MEDICATION(S)</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_medication" style="width: 100%;">
                                     <i>Specify number of doses given and time of last dose given.</i>
                                     <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"></textarea><br><br>
@@ -809,10 +856,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
-                                    <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="8" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
+                                        <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_lab_procedures" style="width: 100%;">
                                     <i> Attach all applicable labs in one file.</i>
                                     <div class="container-referral">
@@ -855,10 +904,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
-                                    <b>REVIEW OF SYSTEMS</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="9" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
+                                        <b>REVIEW OF SYSTEMS</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_review_system" style="width: 100%;">
                                     <b>SKIN</b>
                                     <div class="container-referral">
@@ -1447,25 +1498,35 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
-                                    <b>NUTRITIONAL STATUS</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="10" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
+                                        <b>NUTRITIONAL STATUS</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_nutri_status" style="width: 100%;">
                                     <b>Diet</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="radio"> Oral
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none">
+                                                <label for="diet_none"> None </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="radio"> Tube
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral">
+                                                <label for="diet_oral"> Oral </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="radio"> TPN
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube">
+                                                <label for="diet_tube"> Tube </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="radio"> NPO
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn">
+                                                <label for="diet_tpn"> TPN </label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio", id="diet_npo">
+                                                <label for="diet_npo"> NPO </label>
                                             </div>
                                         </div><br>
                                         <div class="row">
@@ -1480,10 +1541,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
-                                    <b>LATEST VITAL SIGNS</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" id="collapse_button" value="11" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
+                                        <b>LATEST VITAL SIGNS</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_vital_signs" style="width: 100%;">
                                     <div class="container-referral">
                                         <div class="row">
@@ -1512,64 +1575,86 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
-                                    <b>GLASGOW COMA SCALE</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" id="collapse_button" value="12" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
+                                        <b>GLASGOW COMA SCALE</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_glasgow" style="width: 100%;">
                                     <b>Pupil Size Chart</b>
-                                    <div class="container-referral">
-                                        <div class="row" style="text-align: center;">
-                                            <div class="col-md-1"></div>
-                                            <div class="col-md-1 col-sm-1">
-                                                <b>1</b><br>
-                                                <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                    <div class="container-referral d-flex justify-content-center">
+                                        <div class="row">
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_1">
+                                                    <b>1</b><br>
+                                                    <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_1">
                                             </div>
-                                            <div class="col-md-1 col-sm-1">
-                                                <b>2</b><br>
-                                                <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_2">
+                                                    <b>2</b><br>
+                                                    <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_2">
                                             </div>
-                                            <div class="col-md-1 col-sm-1">
-                                                <b>3</b><br>
-                                                <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_3">
+                                                    <b>3</b><br>
+                                                    <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_3">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>4</b><br>
-                                                <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_4">
+                                                    <b>4</b><br>
+                                                    <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_4">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>5</b><br>
-                                                <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_5">
+                                                    <b>5</b><br>
+                                                    <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_5">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>6</b><br>
-                                                <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_6">
+                                                    <b>6</b><br>
+                                                    <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_6">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>7</b><br>
-                                                <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow-7">
+                                                    <b>7</b><br>
+                                                    <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow-7">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>8</b><br>
-                                                <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_8">
+                                                    <b>8</b><br>
+                                                    <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_8">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>9</b><br>
-                                                <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_9">
+                                                    <b>9</b><br>
+                                                    <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_9">
                                             </div>
-                                            <div class="col-md-1">
-                                                <b>10</b><br>
-                                                <span class="glasgow-dot" style="height: 40px; width: 40px;"></span><br>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio">
+                                            <div class="col-lg-1">
+                                                <label for="glasgow_10">
+                                                    <b>10</b><br>
+                                                    <span class="glasgow-dot" style="height: 40px; width: 40px;"></span><br>
+                                                </label>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_10">
                                             </div>
                                         </div>
                                     </div><br>
@@ -1679,8 +1764,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>--}}
                                         <div class="col-md-6">
                                             <b>Motor Response</b>
-                                            <div class="container-referral">
-                                                <table class="table-sm table-bordered">
+                                            <div class="container-referral" style="overflow-x:auto">
+                                                <table class="table-sm table-bordered table-responsive">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
                                                         <th style="width:35%; text-align: center">ADULT AND CHILD</th>
@@ -1694,37 +1779,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <td>Obeys Command</td>
                                                         <td>Spontaneous Movement</td>
                                                         <td style="text-align: center">6</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=6></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Localizes Pain</td>
                                                         <td>Withdraws (Touch)</td>
                                                         <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[2]" name="motor_radio" value=5></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Withdraws</td>
                                                         <td>Withdraws (Pain)</td>
                                                         <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[3]" name="motor_radio" value=4></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Flexion to Pain</td>
                                                         <td>Flexion to Pain</td>
                                                         <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=3></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Extension to Pain</td>
                                                         <td>Extension to Pain</td>
                                                         <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=2></td>
                                                     </tr>
                                                     <tr>
                                                         <td>None</td>
                                                         <td>None</td>
                                                         <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=1></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -1732,8 +1817,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="col-md-6">
                                             <b>Verbal Response</b>
-                                            <div class="container-referral">
-                                                <table class="table-sm table-bordered">
+                                            <div class="container-referral" style="overflow-x:auto">
+                                                <table class="table-sm table-bordered table-responsive">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
                                                         <th style="width:35%; text-align: center">ADULT AND CHILD</th>
@@ -1747,25 +1832,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <td>Oriented</td>
                                                         <td>Coos and Babbles</td>
                                                         <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=5></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Confused</td>
                                                         <td>Irritable Cry</td>
                                                         <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=4></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Inappropriate</td>
                                                         <td>Cries to Pain</td>
+                                                        <td style="text-align: center">3</td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=3></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Incomprehensible</td>
+                                                        <td>Moans to Pain</td>
                                                         <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=2></td>
                                                     </tr>
                                                     <tr>
                                                         <td>None</td>
                                                         <td>None</td>
                                                         <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=1></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -1775,8 +1866,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="row">
                                         <div class="col-md-6">
                                             <b>Eye Response</b>
-                                            <div class="container-referral">
-                                                <table class="table-sm table-bordered">
+                                            <div class="container-referral" style="overflow-x:auto">
+                                                <table class="table-sm table-bordered table-responsive">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
                                                         <th style="width:40%; text-align: center">ADULT AND CHILD</th>
@@ -1789,34 +1880,34 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <tr>
                                                         <td>Spontaneous</td>
                                                         <td>Spontaneous</td>
-                                                        <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center">4 </td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4></td>
                                                     </tr>
                                                     <tr>
                                                         <td>To Command</td>
                                                         <td>To Voice</td>
-                                                        <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center">3 </td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3></td>
                                                     </tr>
                                                     <tr>
                                                         <td>To Pain</td>
                                                         <td>To Pain</td>
-                                                        <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center">2 </td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2></td>
                                                     </tr>
                                                     <tr>
                                                         <td>None</td>
                                                         <td>None</td>
-                                                        <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"></td>
+                                                        <td style="text-align: center">1 </td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <br><br><b>GCS</b>
-                                            Score: <input class="text" id="gcs_score" style="text-align: center" readonly>
+                                            <br><br><input type="button" class="btn-m btn-info btn-rounded" onclick="calculateGCS()" value="Calculate GCS Score:">
+                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center"min="0" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -1825,10 +1916,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                    <b>REASON FOR REFERRAL</b>
-                                    <span id="plus-sign-2" class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" id="collapse_button" value="13" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                        <b>REASON FOR REFERRAL</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
                                 <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
@@ -1844,8 +1937,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
-
-
 
                         <hr />
                         <div class="form-fotter pull-right">
@@ -1902,9 +1993,58 @@ $reason_for_referral = \App\ReasonForReferral::get();
 <script>
     $("#normalFormModal").modal("show");
 
+    $(document).ready(function(){
+        $(".collapse").on('show.bs.collapse', function(){
+            $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hide.bs.collapse', function(){
+            $(this).prev(".container-referral2").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
+
+    $('#prenatal_add_row').on('click', function() {
+        $('#prenatal_table').append('<tr style="font-size: 10pt">\n' +
+            '<td><input class="form-control" type="text" style="width:100%;"></td>\n' +
+            '<td><input class="form-control" type="number" min="1900"></td>\n' +
+            '<td><input class="form-control" id="gestation" type="text" style="width:100%;"></td>\n' +
+            '<td><input class="form-control" type="text"></td>\n' +
+            '<td><input class="form-control" type="text"></td>\n' +
+            '<td width="150%">\n' +
+            '        <select class="select" name="prenatal_history_sex">\n' +
+            '        <option value="">Choose...</option>\n' +
+            '        <option value="M">Male</option>\n' +
+            '        <option value="F">Female</option>\n' +
+            '        </select>\n' +
+            '</td>\n' +
+            '<td><input class="form-control" type="number" min="0" step="0.01"></td>\n' +
+            '<td><input class="form-control" type="text"></td>\n' +
+            '<td><input class="form-control" type="text"></td>\n' +
+            '</tr>');
+    });
+
     /* *****COMORBIDITY***** */
-    $('#comor_cancer').hide();
-    $('#comor_others').hide();
+    $('#comor_diab, #comor_asthma, #comor_hyper, #comor_cancer, #comor_others').hide();
+    $('#comor_hyper_cbox').on('click', function() {
+       if($(this).is(':checked')){
+           $('#comor_hyper').show();
+           $('#comor_none_cbox').prop('checked', false);
+       }else
+           $('#comor_hyper').hide();
+    });
+    $('#comor_diab_cbox').on('click', function() {
+        if($(this).is(':checked')){
+            $('#comor_diab').show();
+            $('#comor_none_cbox').prop('checked', false);
+        }else
+            $('#comor_diab').hide();
+    });
+    $('#comor_asthma_cbox').on('click', function() {
+        if($(this).is(':checked')){
+           $('#comor_asthma').show();
+           $('#comor_none_cbox').prop('checked', false);
+       }
+       else
+           $('#comor_asthma').hide();
+    });
     $('#comor_cancer_cbox').on('click', function() {
         if($(this).is(':checked')) {
             $('#comor_cancer').show();
@@ -1921,28 +2061,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
         else
             $('#comor_others').hide();
     });
-    $('#comor_hyper_cbox,#comor_diab_cbox,#comor_asthma_cbox,#comor_copd_cbox,#comor_dyslip_cbox,#comor_thyroid_cbox').on('click', function() {
+    $('#comor_copd_cbox,#comor_dyslip_cbox,#comor_thyroid_cbox').on('click', function() {
         $('#comor_none_cbox').prop('checked', false);
     });
     $('#comor_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-            $('#comor_hyper_cbox').prop('checked', false);
-            $('#comor_diab_cbox').prop('checked', false);
-            $('#comor_asthma_cbox').prop('checked', false);
-            $('#comor_copd_cbox').prop('checked', false);
-            $('#comor_dyslip_cbox').prop('checked', false);
-            $('#comor_thyroid_cbox').prop('checked', false);
-            $('#comor_cancer_cbox').prop('checked', false);
-            $('#comor_others_cbox').prop('checked', false);
-            $('#comor_cancer').hide();
-            $('#comor_others').hide();
+            $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
+            $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
+            $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
         }
     });
 
     /* *****ALLERGY***** */
-    $('#allergy_food').hide();
-    $('#allergy_drug').hide();
-    $('#allergy_other').hide();
+    $('#allergy_food, #allergy_drug, #allergy_other').hide();
     $('#allergy_food_cbox').on('click', function() {
         if($(this).is(':checked')) {
             $('#allergy_food').show();
@@ -1969,23 +2100,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
     $('#allergy_none_cbox').on('click', function() {
        if($(this).is(':checked')) {
-           $('#allergy_food_cbox').prop('checked', false);
-           $('#allergy_drug_cbox').prop('checked', false);
-           $('#allergy_other_cbox').prop('checked', false);
-           $('#allergy_food').hide();
-           $('#allergy_drug').hide();
-           $('#allergy_other').hide();
+           $('#allergy_food_cbox, #allergy_drug_cbox, #allergy_other_cbox').prop('checked', false);
+           $('#allergy_food, #allergy_drug, #allergy_other').hide();
        }
     });
 
     /* *****HEREDOFAMILIAL***** */
-    $('#heredo_hyper').hide();
-    $('#heredo_diab').hide();
-    $('#heredo_asthma').hide();
-    $('#heredo_cancer').hide();
-    $('#heredo_kidney').hide();
-    $('#heredo_thyroid').hide();
-    $('#heredo_others').hide();
+    $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
     $('#heredo_hyper_cbox').on('click', function() {
         if($(this).is(':checked')) {
             $('#heredo_hyper').show();
@@ -2045,20 +2166,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
     $('#heredo_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-           $('#heredo_hyper_cbox').prop('checked', false);
-           $('#heredo_diab_cbox').prop('checked', false);
-           $('#heredo_asthma_cbox').prop('checked', false);
-           $('#heredo_cancer_cbox').prop('checked', false);
-           $('#heredo_kidney_cbox').prop('checked', false);
-           $('#heredo_thyroid_cbox').prop('checked', false);
-           $('#heredo_others_cbox').prop('checked', false);
-           $('#heredo_hyper').hide();
-           $('#heredo_diab').hide();
-           $('#heredo_asthma').hide();
-           $('#heredo_cancer').hide();
-           $('#heredo_kidney').hide();
-           $('#heredo_thyroid').hide();
-           $('#heredo_others').hide();
+           $('#heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
+           $('#heredo_kidney_cbox, #heredo_thyroid_cbox, #heredo_others_cbox').prop('checked', false);
+           $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
        }
     });
 
@@ -2067,8 +2177,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
     $('#prenatal_radiowith').on('click', function() {
         if($(this).is(':checked'))
             $('#prenatal_mat_illness').show();
-        else
-            $('#prenatal_mat_illness').hide();
     });
     $('#prenatal_radiowout').on('click', function() {
        if($(this).is(':checked'))
@@ -2076,8 +2184,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 
     /* *****POST NATAL (FEEDING HISTORY)****** */
-    $('#breastfed').hide();
-    $('#formula_fed').hide();
+    $('#breastfed, #formula_fed').hide();
     $('#postnatal_bfeed').on('click', function() {
         if($(this).is(':checked'))
             $('#breastfed').show();
@@ -2092,9 +2199,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 
     /* *****POST NATAL (IMMUNIZATION HISTORY)****** */
-    $('#immu_dpt').hide();
-    $('#immu_hepb').hide();
-    $('#immu_others').hide();
+    $('#immu_dpt, #immu_hepb, #immu_others').hide();
     $('#immu_dpt_cbox').on('click', function() {
         if($(this).is(':checked'))
             $('#immu_dpt').show();
@@ -2102,22 +2207,106 @@ $reason_for_referral = \App\ReasonForReferral::get();
             $('#immu_dpt').hide();
     });
     $('#immu_hepb_cbox').on('click', function() {
-       if($(this).is('checked'))
+       if($(this).is(':checked'))
            $('#immu_hepb').show();
        else
            $('#immu_hepb').hide();
     });
     $('#immu_others_cbox').on('click', function() {
-       if($(this).is('checked'))
+       if($(this).is(':checked'))
            $('#immu_others').show();
        else
            $('#immu_others').hide();
     });
 
+    /* *****MENSTRUAL/MENOPAUSAL***** */
+    $('#mens_irreg, #menopausal_age').hide();
+    $('#mens_irreg_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#mens_irreg').show();
+    });
+    $('#mens_reg_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#mens_irreg').hide();
+    });
+    $('#menopausal').on('click', function() {
+        if($(this).is(':checked'))
+            $('#menopausal_age').show();
+    });
+    $('#non_menopausal').on('click', function() {
+        if($(this).is(':checked'))
+            $('#menopausal_age').hide();
+    });
 
-    $("#clear_icd").hide();
-    $("#clear_notes").hide();
-    $("#clear_other_diag").hide();
+    /* *****CONTRACEPTIVES***** */
+    $('#contraceptive_others').hide();
+    $('#contraceptive_others_cbox').on('click', function() {
+       if($(this).is(':checked')) {
+           $('#contraceptive_others').show();
+           $('#contraceptive_none_cbox').prop('checked', false);
+       }
+       else
+           $('#contraceptive_others').hide();
+    });
+    $('#contraceptive_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#contraceptive_others').hide();
+            $('#contraceptive_pills_cbox, #contraceptive_iud_cbox, #contraceptive_rhythm_cbox, #contraceptive_condom_cbox, #contraceptive_others_cbox').prop('checked', false);
+        }
+    });
+    $('#contraceptive_pills_cbox,#contraceptive_iud_cbox,#contraceptive_rhythm_cbox,#contraceptive_condom_cbox').on('click', function() {
+        $('#comor_none_cbox').prop('checked', false);
+    });
+
+    /* *****ALCOHOL***** */
+    $('#alcohol_bottles').hide();
+    $('#alcohol_yes_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#alcohol_bottles').show();
+    })
+    $('#alcohol_no_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#alcohol_bottles').hide();
+    });
+
+    /* *****ILLICIT DRUGS***** */
+    $('#drugs_text').hide();
+    $('#drugs_yes_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#drugs_text').show();
+    });
+    $('#drugs_no_radio').on('click', function() {
+        if($(this).is(':checked'))
+            $('#drugs_text').hide();
+    });
+
+    /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
+    function calculateGCS() {
+        var motor_radio = $('input[name="motor_radio"]:checked');
+        var verbal_radio = $('input[name="verbal_radio"]:checked');
+        var eye_radio = $('input[name="eye_radio"]:checked');
+
+        var total = 0;
+        if(motor_radio.length > 0) {
+            total = total + parseInt(motor_radio.val(), 10);
+        }
+
+        if(verbal_radio.length > 0) {
+            total = total + parseInt(verbal_radio.val(), 10);
+        }
+
+        if(eye_radio.length > 0) {
+            total = total + parseInt(eye_radio.val(), 10);
+        }
+
+        console.log('gcs score: '+total);
+        $('#gcs_score').val(total);
+    }
+
+    /**************************************************************************/
+
+
+    $("#clear_icd, #clear_notes, #clear_other_diag").hide();
 
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
