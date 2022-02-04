@@ -151,6 +151,32 @@ $reason_for_referral = \App\ReasonForReferral::get();
         width:18px;
         vertical-align: middle;
     }
+
+    .mobile-view {
+        display: none;
+        visibility: hidden;
+    }
+
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}
+
+    @media only screen and (max-width: 720px) {
+        .web-view {
+            display: none;
+            visibility: hidden;
+        }
+        .mobile-view {
+            display: block;
+            visibility: visible;
+        }
+    }
 </style>
 
 <div class="modal fade" role="dialog" id="normalFormModal" >
@@ -474,7 +500,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" id="collapse_button" value="4" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
-                                        <b>PEDIATRIC HISTORY</b> <i> (as applicable)</i>
+                                        <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -604,7 +631,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" id="collapse_button" value="5" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
-                                        <b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i>
+                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -775,7 +803,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" id="collapse_button" value="6" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history" aria-expanded="false" aria-controls="collapse_persocial_history">
-                                        <b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i>
+                                        <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>PERSONAL and SOCIAL HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -858,8 +887,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" id="collapse_button" value="8" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
-                                        <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                        <div class="web-view">
+                                            <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
+                                            <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                        </div>
+                                        <div class="mobile-view">
+                                            <b>PERTINENT LABORATORY and <br>OTHER ANCILLARY PROCEDURES</b><br> <i>(include Dates)</i>
+                                            <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                        </div>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_lab_procedures" style="width: 100%;">
@@ -1582,79 +1617,156 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_glasgow" style="width: 100%;">
-                                    <b>Pupil Size Chart</b>
-                                    <div class="container-referral d-flex justify-content-center">
-                                        <div class="row">
+                                    <b>Pupil Size Chart</b> &emsp;
+                                    <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
+                                    <div class="container-referral">
+                                        <div class="row web-view">
                                             <div class="col-lg-1"></div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_1">
                                                     <b>1</b><br>
                                                     <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_1">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_1">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_2">
                                                     <b>2</b><br>
                                                     <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_2">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_2">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_3">
                                                     <b>3</b><br>
                                                     <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_3">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_3">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_4">
                                                     <b>4</b><br>
                                                     <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_4">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_4">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_5">
                                                     <b>5</b><br>
                                                     <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_5">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_5">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_6">
                                                     <b>6</b><br>
                                                     <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_6">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_6">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow-7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow-7">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow-7">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_8">
                                                     <b>8</b><br>
                                                     <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_8">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_8">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_9">
                                                     <b>9</b><br>
                                                     <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_9">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_btn" type="radio" id="glasgow_9">
                                             </div>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-1" style="text-align: center">
+                                                <b>10</b><br>
                                                 <label for="glasgow_10">
-                                                    <b>10</b><br>
-                                                    <span class="glasgow-dot" style="height: 40px; width: 40px;"></span><br>
+                                                    <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                 </label>
                                                 <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_10">
+                                            </div>
+                                        </div>
+                                        <div class="mobile-view">
+                                            <div class="row">
+                                                <div class="col-md-1">
+                                                    <b>1</b>
+                                                    <label for="glasgow_1">
+                                                    <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_1">&emsp;&emsp;
+
+                                                    <b>2</b>
+                                                    <label for="glasgow_2">
+                                                        <span class="glasgow-dot" style="height: 10px; width: 10px;"></span>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_2">&emsp;&emsp;
+
+                                                    <b>3</b>
+                                                    <label for="glasgow_3">
+                                                        <br><span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_3">
+                                                </div>
+                                            </div><br>
+                                            <div class="row">
+                                                <div class="col-md-1">
+                                                    <b>4</b>
+                                                    <label for="glasgow_4">
+                                                        <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_4">&emsp;&emsp;
+
+                                                    <b>5</b>
+                                                    <label for="glasgow_5">
+                                                        <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_5">&emsp;&emsp;
+
+                                                    <b>6</b>
+                                                    <label for="glasgow_6">
+                                                        <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_6">
+                                                </div>
+                                            </div><br>
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-1">
+                                                    <b>7</b>
+                                                    <label for="glasgow-7">
+                                                        <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow-7">&emsp;&emsp;
+
+                                                    <b>8</b>
+                                                    <label for="glasgow_8">
+                                                        <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_8">
+                                                </div>
+                                            </div><br>
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-1">
+                                                    <b>9</b>
+                                                    <label for="glasgow_9">
+                                                        <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_9">&emsp;&emsp;
+
+                                                    <b>10</b>
+                                                    <label for="glasgow_10">
+                                                        <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
+                                                    </label>
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_btn" type="radio" id="glasgow_10">
+                                                </div>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1764,14 +1876,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>--}}
                                         <div class="col-md-6">
                                             <b>Motor Response</b>
-                                            <div class="container-referral" style="overflow-x:auto">
-                                                <table class="table-sm table-bordered table-responsive">
+                                            <div class="container-referral table-responsive" style="overflow-x:auto">
+                                                <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
-                                                        <th style="width:35%; text-align: center">ADULT AND CHILD</th>
-                                                        <th style="text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="width:15%; text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
+                                                        <th id="glasgow_table_1" style="text-align: center">ADULT AND CHILD</th>
+                                                        <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                        <th id="table_col_3" style="text-align: center">POINTS</th>
+                                                        <th id="table_col_4" style="text-align: center">OPTIONS</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -1817,14 +1929,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="col-md-6">
                                             <b>Verbal Response</b>
-                                            <div class="container-referral" style="overflow-x:auto">
-                                                <table class="table-sm table-bordered table-responsive">
+                                            <div class="container-referral table-responsive" style="overflow-x:auto">
+                                                <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
-                                                        <th style="width:35%; text-align: center">ADULT AND CHILD</th>
-                                                        <th style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="width:20%; text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
+                                                        <th id="table_col_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
+                                                        <th id="table_col_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
+                                                        <th id="table_col_3" style="width:20%; text-align: center">POINTS</th>
+                                                        <th id="table_col_4" style="text-align: center">OPTIONS</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -1866,14 +1978,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="row">
                                         <div class="col-md-6">
                                             <b>Eye Response</b>
-                                            <div class="container-referral" style="overflow-x:auto">
-                                                <table class="table-sm table-bordered table-responsive">
+                                            <div class="container-referral table-responsive" style="overflow-x:auto">
+                                                <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                     <tr style="font-size: 11px;">
-                                                        <th style="width:40%; text-align: center">ADULT AND CHILD</th>
-                                                        <th style="text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="width:20%; text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
+                                                        <th id="table_col_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
+                                                        <th id="table_col_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                        <th id="table_col_3" style="width:20%; text-align: center">POINTS</th>
+                                                        <th id="table_col_4" style="text-align: center">OPTIONS</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -2255,7 +2367,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#contraceptive_pills_cbox,#contraceptive_iud_cbox,#contraceptive_rhythm_cbox,#contraceptive_condom_cbox').on('click', function() {
-        $('#comor_none_cbox').prop('checked', false);
+        $('#contraceptive_none_cbox').prop('checked', false);
     });
 
     /* *****ALCOHOL***** */
@@ -2281,6 +2393,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
+    function resetPupilSize() {
+        $('input[name="glasgow_btn"]:checked').each(function() {
+            if($(this).is(':checked'))
+                $(this).prop('checked', false);
+        })
+    }
     function calculateGCS() {
         var motor_radio = $('input[name="motor_radio"]:checked');
         var verbal_radio = $('input[name="verbal_radio"]:checked');
