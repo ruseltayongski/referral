@@ -2370,7 +2370,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('#contraceptive_none_cbox').prop('checked', false);
     });
 
-    /* *****ALCOHOL***** */
+    /* *****ALCOHOL***** */ 
     $('#alcohol_bottles').hide();
     $('#alcohol_yes_radio').on('click', function() {
         if($(this).is(':checked'))
