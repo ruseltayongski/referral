@@ -188,6 +188,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                     <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
+                        <input type="hidden" class="pt_age"/>
                         <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
                         <input type="hidden" name="code" value="" />
                         <input type="hidden" name="source" value="{{ $source }}" />
@@ -325,35 +326,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
-                                    <b>ICD-10 Diagnosis</b><br>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                                    <i class="fa fa-medkit"></i> Add ICD-10
-                                                </a>
-                                                <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
-                                                <div><span class="text-green" id="icd_selected"></span></div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                                <div id="add_notes_diagnosis"></div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
-                                                <div id="others_diagnosis"></div>
-                                            </div>
-                                        </div>
-                                    </div><br><br>
+                                    <b>Diagnosis/Impression: </b>
+                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
                                 </div>
                             </div>
                         </div>
@@ -367,26 +341,56 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
-                                    <b>COMORBIDITIES</b><br>
+                                    <b>COMORBIDITIES</b>
                                     <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input class="form-check-input" id="comor_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span>Select All</span>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> None</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                Hypertension <span id="comor_hyper">x <input type="number" min="0" style="width: 20%"> years
+                                                <input class="form-check-input" id="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Hypertension
+                                                <span id="comor_hyper"> since
+                                                    <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year) {
+                                                            echo "<option>$year</option>\n";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                Diabetes Mellitus <span id="comor_diab"> x <input type="number" min="0" style="width: 20%"> years</span>
+                                                <input class="form-check-input" id="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Diabetes Mellitus
+                                                <span id="comor_diab"> since
+                                                    <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year) {
+                                                            echo "<option>$year</option>\n";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                Bronchial Asthma <span id="comor_asthma"> x <input type="number" min="0" style="width: 20%"> years</span>
+                                                <input class="form-check-input" id="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Bronchial Asthma
+                                                <span id="comor_asthma"> since
+                                                    <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year) {
+                                                            echo "<option>$year</option>\n";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </span>
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
@@ -415,8 +419,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </div><br>
 
-                                    <b>ALLERGIES</b><br>
+                                    <b>ALLERGIES</b><i> (Specify)</i><br>
                                     <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-1">
                                                 <input class="form-check-input" id="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
@@ -424,12 +434,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                <span> Food(s): </span>
+                                                <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
                                                 <textarea class="form-control" id="allergy_food" name="allergy_food" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                <span> Drug(s): </span>
+                                                <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
                                                 <textarea class="form-control" id="allergy_drug" name="allergy_drug" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
@@ -440,8 +450,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </div><br>
 
-                                    <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family)</i>
+                                    <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                     <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
@@ -734,29 +750,36 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                                     <b>PRENATAL HISTORY</b><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"></textarea><br><br>
-                                    <div style="overflow-x: auto">
-                                        <table class="table-sm table-responsive table-bordered" id="prenatal_table">
+                                    <div class="table-responsive" style="overflow-x: auto">
+                                        <table class="table table-bordered" id="prenatal_table">
                                             <thead>
-                                            <tr style="font-size: 11pt;">
-                                                <th width="50%" class="text-center">Pregnancy Order</th>
-                                                <th class="text-center">Year</th>
+                                            <tr style="font-size: 10pt;">
+                                                <th class="text-center" style="width:50%;">Pregnancy Order</th>
+                                                <th class="text-center" style="width:20%;">Year</th>
                                                 <th class="text-center">Gestation Completed</th>
                                                 <th class="text-center">Pregnancy Outcome</th>
                                                 <th class="text-center">Place of Birth</th>
                                                 <th class="text-center">Sex</th>
-                                                <th class="text-center">Birth Weight</th>
+                                                <th class="text-center" style="width:50%;">Birth Weight</th>
                                                 <th class="text-center">Present Status</th>
                                                 <th class="text-center">Complication(s)</th>
                                             </tr>
                                             </thead>
                                             <tr style="font-size: 10pt">
                                                 <td><input class="form-control" type="text"></td>
-                                                <td><input class="form-control" type="number" min="1900"></td>
+                                                <td>
+                                                    <select class="form-control select" name="pregnancy_history_year">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year)
+                                                            echo "<option>".$year."</option>";
+                                                        ?>
+                                                    </select>
+                                                </td>
                                                 <td><input class="form-control" id="gestation" type="text"></td>
                                                 <td><input class="form-control" type="text"></td>
                                                 <td><input class="form-control" type="text"></td>
-                                                <td width="150%">
-                                                    <select class="select" name="prenatal_history_sex">
+                                                <td>
+                                                    <select class="select form-control" name="prenatal_history_sex">
                                                         <option value="">Choose...</option>
                                                         <option value="M">Male</option>
                                                         <option value="F">Female</option>
@@ -766,32 +789,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <td><input class="form-control" type="text"></td>
                                                 <td><input class="form-control" type="text"></td>
                                             </tr>
-                                        </table><br>
+                                        </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
                                             <i class="fa fa-plus"> Add Row</i>
                                         </button><br><br>
-                                        {{--<div class="row" style="text-align: center">
-                                            <div class="col-md-1"><span><b>Pregnancy Order</b></span></div>
-                                            <div class="col-md-1"><span><b>Year</b></span></div>
-                                            <div class="col-md-1"><span><b>Gestation Completed</b></span></div>
-                                            <div class="col-md-2"><span><b>Pregnancy Outcome</b></span></div>
-                                            <div class="col-md-2"><span><b>Place of Birth</b></span></div>
-                                            <div class="col-md-1"><span><b>Sex</b></span></div>
-                                            <div class="col-md-1"><span><b>Birth Weight</b></span></div>
-                                            <div class="col-md-1"><span><b>Present Status</b></span></div>
-                                            <div class="col-md-2"><span><b>Complication(s)</b></span></div>
-                                        </div>--}}
-                                        {{--<div class="row">
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-2"><input type="text"></div>
-                                            <div class="col-md-2"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-1"><input type="text"></div>
-                                            <div class="col-md-2"><input type="text" style="width:100%;"></div>
-                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -810,20 +811,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>SMOKING</b>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes">
-                                                <label for="smoke_yes">Yes</label>
+                                                <label for="smoke_yes">Yes</label><br>
+                                                <span id="smoking_sticks">Sticks per day: <input type="number" min="0" style="width:30%;"></span>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no">
                                                 <label for="smoke_no">No</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit">
                                                 <label for="smoke_quit">Quit</label>
+                                                <span id="smoking_quit_year"> since
+                                                    <select class="form-control select" name="smoking_year_quit">
+                                                        <?php
+                                                            foreach(range(date('Y'), 1950) as $year)
+                                                                echo "<option>".$year."</option>";
+                                                        ?>
+                                                    </select>
+                                                </span>
                                             </div>
-                                            <div class="col-md-6">
-                                                <span>Other Remarks: <input type="text" style="width:100%;"></span>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <span>Other Remarks: <textarea class="form-control" style="resize: none;width:50%;" rows="2" name="smoking_other_remarks"></textarea></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -839,8 +851,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio">
                                                 <label for="alcohol_no_radio">No</label>
                                             </div>
-                                            <div class="col-md-5">
-                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0"></span>
+                                            <div class="col-md-3">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio">
+                                                <label for="alcohol_quit_radio">Quit</label>
+                                                <span id="alcohol_quit_year"> since
+                                                    <select class="form-control select" name="alcohol_year_quit">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year)
+                                                            echo "<option>".$year."</option>";
+                                                        ?>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2"></textarea></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;"></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -856,9 +885,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn">
                                                 <label for="drugs_no_radio">No</label>
                                             </div>
+                                            <div class="col-md-4">
+                                                <input type="radio" name="illicit_drugs" id="drugs_quit_radio" class="referral-radio-btn">
+                                                <label for="drugs_quit_radio">Quit</label>
+                                                <span id="drugs_quit_year"> since
+                                                    <select class="form-control select" name="drugs_year_quit">
+                                                        <?php
+                                                        foreach(range(date('Y'), 1950) as $year)
+                                                            echo "<option>".$year."</option>";
+                                                        ?>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-8" id="drugs_text">
-                                                If yes, specify:
-                                                <textarea class="form-control" style="resize: none;width:50%;" name="illicit_drugs_token"></textarea>
+                                                Specify drugs taken:
+                                                <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_token"></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -899,17 +942,27 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <i> Attach all applicable labs in one file.</i>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ua_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> UA</span>
                                             </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_cbc_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> CBC</span>
                                             </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_xray_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> X-RAY</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-check-input" id="lab_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Others:
+                                                <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2"></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -946,6 +999,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_review_system" style="width: 100%;">
                                     <b>SKIN</b>
                                     <div class="container-referral">
+                                        {{--<div class="row">--}}
+                                            {{--<div class="col-md-3">--}}
+                                                {{--<input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">--}}
+                                                {{--<span> Select All</span>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
@@ -1769,109 +1828,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </div><br>
                                     <div class="row">
-                                        {{--<div class="col-md-6">
-                                            <b>Motor Response</b>
-                                            <div class="container glasgow-table">
-                                                <div class="row" style="background-color:#ddd;">
-                                                    <div class="col-md-4" style="text-align: center;">
-                                                        <b>ADULT AND CHILD</b>
-                                                    </div>
-                                                    <div class="col-md-4" style="text-align: center;">
-                                                        <b>INFANT (2 MONTHS)</b>
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        <b>POINTS</b>
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <b>OPTION</b>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        Obeys Command
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        Spontaneous Movement
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        6
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="background-color: #e8e4e473;">
-                                                    <div class="col-md-4">
-                                                        Localizes Pain
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        Withdraws (Touch)
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        5
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        Withdraws
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        Withdraws (Pain)
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        4
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="background-color: #e8e4e473;">
-                                                    <div class="col-md-4">
-                                                        Flexion to Pain
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        Flexion to Pain
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        3
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        Extension to Pain
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        Extension to Pain
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        2
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="background-color: #e8e4e473;">
-                                                    <div class="col-md-4">
-                                                        None
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        None
-                                                    </div>
-                                                    <div class="col-md-2" style="text-align: center;">
-                                                        1
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align: center;">
-                                                        <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>--}}
                                         <div class="col-md-6">
                                             <b>Motor Response</b>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
@@ -1889,37 +1845,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <td>Obeys Command</td>
                                                         <td>Spontaneous Movement</td>
                                                         <td style="text-align: center">6</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=6></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio"  value=6></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Localizes Pain</td>
                                                         <td>Withdraws (Touch)</td>
                                                         <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[2]" name="motor_radio" value=5></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=5></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Withdraws</td>
                                                         <td>Withdraws (Pain)</td>
                                                         <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[3]" name="motor_radio" value=4></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=4></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Flexion to Pain</td>
                                                         <td>Flexion to Pain</td>
                                                         <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=3></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=3></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Extension to Pain</td>
                                                         <td>Extension to Pain</td>
                                                         <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=2></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=2></td>
                                                     </tr>
                                                     <tr>
                                                         <td>None</td>
                                                         <td>None</td>
                                                         <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="motor_radio[]" name="motor_radio" value=1></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=1></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -1942,31 +1898,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <td>Oriented</td>
                                                         <td>Coos and Babbles</td>
                                                         <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=5></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=5></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Confused</td>
                                                         <td>Irritable Cry</td>
                                                         <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=4></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=4></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Inappropriate</td>
                                                         <td>Cries to Pain</td>
                                                         <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=3></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=3></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Incomprehensible</td>
                                                         <td>Moans to Pain</td>
                                                         <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=2></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=2></td>
                                                     </tr>
                                                     <tr>
                                                         <td>None</td>
                                                         <td>None</td>
                                                         <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="verbal_radio" name="verbal_radio" value=1></td>
+                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=1></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -2016,8 +1972,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <br><br><input type="button" class="btn-m btn-info btn-rounded" onclick="calculateGCS()" value="Calculate GCS Score:">
-                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center"min="0" value="0" readonly>
+                                            <br><br><b>GCS Score: </b>
+                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="0" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2095,25 +2051,22 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 <button type="button" class="btn btn-warning" onclick="othersDiagnosis()"> Other Diagnosis</button>
                 <button type="button" class="btn btn-success" onclick="getAllCheckBox()"><i class="fa fa-save"></i> Save selected check</button>
             </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>
 
 @section('js')
 <script>
     $("#normalFormModal").modal("show");
-//    $('#pedia_show').hide();
-//    $('#menarche_show').hide();
-//
-//    var pt_age = $('.patient_age').val();
-//    var pt_sex = $('.patient_sex').val();
-//    console.log("pt age: " + pt_age + "   patient_sex: " + pt_sex);
-//    if(pt_age <= 18)
-////        $('#pedia_show').show();
-//    else if(pt_age >= 9 && pt_sex == 'Female')
-//        $('#menarche_show').show();
+
+    $('#pedia_show').hide();
+    $('#menarche_show').hide();
+
+    var pt_age = parseInt($('.pt_age').val(), 10);
+    if(pt_age > 18)
+        $('#pedia_show').show();
+    if($('.patient_sex').val() === "Female")
+        $('#menarche_show').show();
 
     $(".collapse").on('show.bs.collapse', function(){
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
@@ -2121,19 +2074,28 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-minus").addClass("fa-plus");
     });
 
+    <?php
+        $select_year = "";
+        foreach(range(date('Y'), 1950) as $year)
+            $select_year .= "<option>".$year."</option>";
+    ?>
+    var select_year = "<?php echo $select_year; ?>";
+
     $('#prenatal_add_row').on('click', function() {
-        $('#prenatal_table').append('<tr style="font-size: 10pt">\n' +
-            '<td><input class="form-control" type="text" style="width:100%;"></td>\n' +
-            '<td><input class="form-control" type="number" min="1900"></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" style="width:100%;"></td>\n' +
+        $('#prenatal_table').append('<tr style="font-size: 11pt">\n' +
+            '<td><input class="form-control" type="text"></td>\n' +
+            '<td><select class="form-control select">\n'+
+            select_year+
+            '</select></td>\n' +
+            '<td><input class="form-control" id="gestation" type="text"></td>\n' +
             '<td><input class="form-control" type="text"></td>\n' +
             '<td><input class="form-control" type="text"></td>\n' +
             '<td width="150%">\n' +
-            '        <select class="select" name="prenatal_history_sex">\n' +
+        '        <select class="select form-control" name="prenatal_history_sex">\n' +
             '        <option value="">Choose...</option>\n' +
             '        <option value="M">Male</option>\n' +
             '        <option value="F">Female</option>\n' +
-            '        </select>\n' +
+        '        </select>\n' +
             '</td>\n' +
             '<td><input class="form-control" type="number" min="0" step="0.01"></td>\n' +
             '<td><input class="form-control" type="text"></td>\n' +
@@ -2143,50 +2105,60 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* *****COMORBIDITY***** */
     $('#comor_diab, #comor_asthma, #comor_hyper, #comor_cancer, #comor_others').hide();
-    $('#comor_hyper_cbox').on('click', function() {
-       if($(this).is(':checked')){
-           $('#comor_hyper').show();
+    $('#comor_all_cbox').on('click', function() {
+       if($(this).is(':checked')) {
            $('#comor_none_cbox').prop('checked', false);
-       }else
+           $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', true);
+           $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox').prop('checked', true);
+           $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer').show();
+       } else {
+           $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
+           $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
+           $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
+       }
+    });
+    $('#comor_hyper_cbox').on('click', function() {
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
+        $('#comor_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
+           $('#comor_hyper').show();
+        else
            $('#comor_hyper').hide();
     });
     $('#comor_diab_cbox').on('click', function() {
-        if($(this).is(':checked')){
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#comor_diab').show();
-            $('#comor_none_cbox').prop('checked', false);
-        }else
+        else
             $('#comor_diab').hide();
     });
     $('#comor_asthma_cbox').on('click', function() {
-        if($(this).is(':checked')){
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
            $('#comor_asthma').show();
-           $('#comor_none_cbox').prop('checked', false);
-       }
-       else
+        else
            $('#comor_asthma').hide();
     });
     $('#comor_cancer_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#comor_cancer').show();
-            $('#comor_none_cbox').prop('checked', false);
-        }
         else
             $('#comor_cancer').hide();
     });
     $('#comor_others_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#comor_others').show();
-            $('#comor_none_cbox').prop('checked', false);
-        }
         else
             $('#comor_others').hide();
     });
     $('#comor_copd_cbox,#comor_dyslip_cbox,#comor_thyroid_cbox').on('click', function() {
-        $('#comor_none_cbox').prop('checked', false);
+        $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
     });
     $('#comor_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-            $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
+            $('#comor_all_cbox, #comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
             $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
             $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
         }
@@ -2194,102 +2166,132 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* *****ALLERGY***** */
     $('#allergy_food, #allergy_drug, #allergy_other').hide();
-    $('#allergy_food_cbox').on('click', function() {
+    $('#allergy_all_cbox').on('click', function () {
         if($(this).is(':checked')) {
-            $('#allergy_food').show();
             $('#allergy_none_cbox').prop('checked', false);
+            $('#allergy_food_cbox, #allergy_drug_cbox').prop('checked', true);
+            $('#allergy_food, #allergy_drug').show();
+        } else {
+            $('#allergy_food_cbox, #allergy_drug_cbox').prop('checked', false);
+            $('#allergy_food, #allergy_drug').hide();
         }
+    });
+    $('#allergy_food_cbox').on('click', function() {
+        $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
+            $('#allergy_food').show();
         else
             $('#allergy_food').hide();
     });
     $('#allergy_drug_cbox').on('click', function() {
-       if($(this).is(':checked')) {
+        $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
            $('#allergy_drug').show();
-           $('#allergy_none_cbox').prop('checked', false);
-       }
-       else
+        else
            $('#allergy_drug').hide();
     });
     $('#allergy_other_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#allergy_other').show();
-            $('#allergy_none_cbox').prop('checked', false);
-        }
         else
             $('#allergy_other').hide();
     });
     $('#allergy_none_cbox').on('click', function() {
        if($(this).is(':checked')) {
-           $('#allergy_food_cbox, #allergy_drug_cbox, #allergy_other_cbox').prop('checked', false);
+           $('#allergy_food_cbox, #allergy_drug_cbox, #allergy_other_cbox, #allergy_all_cbox').prop('checked', false);
            $('#allergy_food, #allergy_drug, #allergy_other').hide();
        }
     });
 
     /* *****HEREDOFAMILIAL***** */
     $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
-    $('#heredo_hyper_cbox').on('click', function() {
+    $('#heredo_all_cbox').on('click', function() {
         if($(this).is(':checked')) {
-            $('#heredo_hyper').show();
             $('#heredo_none_cbox').prop('checked', false);
+            $('#heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', true);
+            $('#heredo_kidney_cbox, #heredo_thyroid_cbox').prop('checked', true);
+            $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid').show();
+        } else {
+            $('#heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
+            $('#heredo_kidney_cbox, #heredo_thyroid_cbox').prop('checked', false);
+            $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid').hide();
         }
+    });
+    $('#heredo_hyper_cbox').on('click', function() {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
+            $('#heredo_hyper').show();
         else
             $('#heredo_hyper').hide();
     });
     $('#heredo_diab_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_diab').show();
-            $('#heredo_none_cbox').prop('checked', false);
-        }
         else
             $('#heredo_diab').hide();
     });
     $('#heredo_asthma_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_asthma').show();
-            $('#heredo_none_cbox').prop('checked', false);
-
-        }
         else
             $('#heredo_asthma').hide();
     });
     $('#heredo_cancer_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_cancer').show();
-            $('#heredo_none_cbox').prop('checked', false);
-        }
         else
             $('#heredo_cancer').hide();
     });
     $('#heredo_kidney_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_kidney').show();
-            $('#heredo_none_cbox').prop('checked', false);
-        }
         else
             $('#heredo_kidney').hide();
     });
     $('#heredo_thyroid_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_thyroid').show();
-            $('#heredo_none_cbox').prop('checked', false);
-        }
         else
             $('#heredo_thyroid').hide();
     });
     $('#heredo_others_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
+        if($(this).is(':checked'))
             $('#heredo_others').show();
-            $('#heredo_none_cbox').prop('checked', false);
-        }
         else
             $('#heredo_others').hide();
     });
     $('#heredo_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-           $('#heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
+           $('#heredo_all_cbox, #heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
            $('#heredo_kidney_cbox, #heredo_thyroid_cbox, #heredo_others_cbox').prop('checked', false);
            $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
        }
+    });
+
+    /* *****LAB PROCEDURES***** */
+    $('#lab_others').hide();
+    $('#lab_all_cbox').on('click', function () {
+       if($(this).is(':checked'))
+           $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', true);
+       else
+           $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', false);
+    });
+    $('#lab_others_cbox').on('click', function () {
+        $('#lab_all_cbox').prop('checked', false);
+        if($(this).is(':checked'))
+            $('#lab_others').show();
+        else
+            $('#lab_others').hide();
+    });
+    $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').on('click', function () {
+        $('#lab_all_cbox').prop('checked', false);
     });
 
     /* *****PRENATAL***** */
@@ -2378,26 +2380,74 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('#contraceptive_none_cbox').prop('checked', false);
     });
 
+    /* *****SMOKING***** */
+    $('#smoking_sticks').hide();
+    $('#smoking_quit_year').hide();
+    $('#smoke_yes').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#smoking_sticks').show();
+            $('#smoking_quit_year').hide();
+        }
+    });
+    $('#smoke_quit').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#smoking_quit_year').show();
+            $('#smoking_sticks').hide();
+        }
+    });
+    $('#smoke_no').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#smoking_sticks').hide();
+            $('#smoking_quit_year').hide();
+        }
+    });
+
     /* *****ALCOHOL***** */
     $('#alcohol_bottles').hide();
+    $('#alcohol_type').hide();
+    $('#alcohol_quit_year').hide();
     $('#alcohol_yes_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if($(this).is(':checked')) {
             $('#alcohol_bottles').show();
+            $('#alcohol_type').show();
+            $('#alcohol_quit_year').hide();
+        }
     })
     $('#alcohol_no_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if($(this).is(':checked')) {
             $('#alcohol_bottles').hide();
+            $('#alcohol_type').hide();
+            $('#alcohol_quit_year').hide();
+        }
+    });
+    $('#alcohol_quit_radio').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#alcohol_quit_year').show();
+            $('#alcohol_bottles').hide();
+            $('#alcohol_type').hide();
+        }
     });
 
     /* *****ILLICIT DRUGS***** */
     $('#drugs_text').hide();
+    $('#drugs_quit_year').hide();
     $('#drugs_yes_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if($(this).is(':checked')) {
             $('#drugs_text').show();
+            $('#drugs_quit_year').hide();
+        }
     });
     $('#drugs_no_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if($(this).is(':checked')) {
             $('#drugs_text').hide();
+            $('#drugs_quit_year').hide();
+        }
+    });
+    $('#drugs_quit_radio').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#drugs_quit_year').show();
+            $('#drugs_text').hide();
+        }
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
@@ -2407,32 +2457,45 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 $(this).prop('checked', false);
         })
     }
-    function calculateGCS() {
-        var motor_radio = $('input[name="motor_radio"]:checked');
-        var verbal_radio = $('input[name="verbal_radio"]:checked');
-        var eye_radio = $('input[name="eye_radio"]:checked');
-
+    var last_motor = last_verbal = last_eye = 0;
+    $('input[name="motor_radio"]').on('change', function() {
+        var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
+        var gcs = parseInt($('#gcs_score').val(), 10);
         var total = 0;
-        if(motor_radio.length > 0) {
-            total = total + parseInt(motor_radio.val(), 10);
-        }
+        if(last_motor == 0)
+            total = gcs + motor;
+        else
+            total = (gcs - last_motor) + motor;
 
-        if(verbal_radio.length > 0) {
-            total = total + parseInt(verbal_radio.val(), 10);
-        }
-
-        if(eye_radio.length > 0) {
-            total = total + parseInt(eye_radio.val(), 10);
-        }
-
-        console.log('gcs score: '+total);
+        last_motor = motor;
         $('#gcs_score').val(total);
-    }
+    });
+    $('input[name="verbal_radio"]').on('change', function() {
+        var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
+        var gcs = parseInt($('#gcs_score').val(), 10);
+        var total = 0;
+        if(last_verbal == 0)
+            total = gcs + verbal;
+        else
+            total = (gcs - last_verbal) + verbal;
+
+        last_verbal = verbal;
+        $('#gcs_score').val(total);
+    });
+    $('input[name="eye_radio"]').on('change', function() {
+        var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
+        var gcs = parseInt($('#gcs_score').val(), 10);
+        var total = 0;
+        if(last_eye == 0)
+            total = gcs + eye;
+        else
+            total = (gcs - last_eye) + eye;
+
+        last_eye = eye;
+        $('#gcs_score').val(total);
+    });
 
     /**************************************************************************/
-
-
-    $("#clear_icd, #clear_notes, #clear_other_diag").hide();
 
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
@@ -2442,35 +2505,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
             return false;
         }
     });
-
-    function clearICD() {
-        $("#icd_selected").html("");
-        $("#clear_icd").hide();
-    }
-
-    function clearOtherDiagnosis() {
-        $("#others_diagnosis").html("");
-        $("#clear_other_diag").hide();
-    }
-
-    function clearNotesDiagnosis() {
-        $("#add_notes_diagnosis").html("");
-        $("#clear_notes").hide();
-    }
-
-    function clearOtherReasonReferral() {
-        $("#other_reason_referral").html("");
-    }
-
-    function addNotesDiagnosis() {
-        $("#add_notes_diagnosis").html(loading);
-        $("#clear_notes").show();
-        setTimeout(function(){
-            $("#add_notes_diagnosis").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
-                '                                <br />\n' +
-                '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
-        },500);
-    }
 
     $('.reason_referral').on('change', function() {
         var value = $(this).val();
@@ -2486,49 +2520,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
             clearOtherReasonReferral();
         }
     });
-
-    function searchICD10() {
-        $("#others_diagnosis").html("");
-        $(".icd_body").html(loading);
-        var url = "<?php echo asset('icd/search'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "icd_keyword" : $("#icd10_keyword").val()
-        };
-        $.post(url,json,function(result){
-            setTimeout(function(){
-                $(".icd_body").html(result);
-            },500);
-        });
-    }
-
-    function getAllCheckBox() {
-        $('#icd-modal').modal('toggle');
-        $("#clear_icd").show();
-        var values = [];
-
-        $('input[name="icd_checkbox[]"]:checked').each(function () {
-            values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
-            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
-            var id = $(this).val();
-            if(this.checked){
-                $("#icd_selected").append('=> '+icd_description+' '+'<br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');
-                console.log("icd id: " + id);
-            }
-        });
-        console.log(values);
-    }
-
-    function othersDiagnosis(){
-        $('#icd-modal').modal('hide');
-        $("#others_diagnosis").html(loading);
-        $("#clear_other_diag").show();
-        setTimeout(function(){
-            $("#others_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
-                '                                <br />\n' +
-                '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
-        },500);
-    }
 
     function readURL(input) {
         if (input.files && input.files[0]) {

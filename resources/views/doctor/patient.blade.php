@@ -130,6 +130,17 @@
             border: 0;
             transition: all .2s ease;
         }
+
+        @media
+        only screen and (min-device-width: 280px)
+        and (max-device-width: 568px) {
+            .file-upload {
+                background-color: #ffffff;
+                width: 350px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+        }
     </style>
 
     <div class="row">
@@ -239,7 +250,7 @@
                                                data-backdrop="static"
                                                data-toggle="modal"
                                                data-type="normal"
-                                               class="btn btn-warning btn-xs profile_info hide">
+                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
                                             </a>
@@ -443,6 +454,7 @@
                 $('.phic_id').val(phic_id);
                 $('.patient_sex').val(sex);
                 $('.patient_age').html(age);
+                $('.pt_age').val(age);
                 $('.civil_status').val(civil_status);
                 $('.patient_id').val(patient_id);
             },
