@@ -92,7 +92,9 @@
                                 <th>Not Seen</th>
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
+                                <!--
                                 <th class="bg-red">Cancelled</th>
+                                -->
                             </tr>
                             </thead>
                             <tr>
@@ -166,10 +168,12 @@
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected_spam','{{ $date_range }}')">{{ $row['data']['redirected_spam'] }}</span>
                                         <br><br>
                                     </td>
+                                    <!--
                                     <td width="10%">
                                         <span class="text-red" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['cancelled'] }}</span>
                                         <br><br>
                                     </td>
+                                    -->
                                 </tr>
                                 <tr>
                                     <?php
