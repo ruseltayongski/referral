@@ -90,6 +90,8 @@ Route::get('admin/report/patient/incoming','admin\PatientCtrl@incoming');
 Route::post('admin/report/patient/incoming','admin\PatientCtrl@incomingDateRange');
 Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
+Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
+Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');

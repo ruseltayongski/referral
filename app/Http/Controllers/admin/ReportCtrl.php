@@ -5,7 +5,11 @@ namespace App\Http\Controllers\admin;
 use App\Activity;
 use App\Facility;
 use App\Http\Controllers\ApiController;
+use App\Icd;
+use App\Icd10;
 use App\Login;
+use App\PatientForm;
+use App\PregnantForm;
 use App\Province;
 use App\Tracking;
 use App\User;
@@ -272,8 +276,70 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function sottoReports(){
+    public function sottoReports() {
         return view("admin.report.sotto_reports");
+    }
+
+    public function topIcd(Request $request) {
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = '2022-01-13 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $icd = Icd::
+                select("icd.icd_id","icd10.code","icd10.description",DB::raw("count(icd.icd_id) as count"))
+                ->leftJoin("icd10","icd10.id","=","icd.icd_id")
+                ->whereBetween("icd.created_at",[$date_start,$date_end])
+                ->groupBy("icd.icd_id")
+                ->OrderBY(DB::raw("count(icd.icd_id)"),"desc")
+                ->limit(10)
+                ->get();
+
+        return view("admin.report.top_icd",[
+            "icd" => $icd,
+            "date_start" => $date_start,
+            "date_end" => $date_end
+        ]);
+    }
+
+    public function topReasonForReferral(Request $request) {
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = '2022-01-13 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        $pregnant_form = PregnantForm::
+            select("reason_referral")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->whereBetween("created_at",[$date_start,$date_end]);
+
+        $union = PatientForm::
+            select("reason_referral")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->whereBetween("created_at",[$date_start,$date_end])
+            ->unionAll($pregnant_form);
+
+        $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
+            ->mergeBindings($union->getQuery())
+            ->leftJoin("reason_referral","reason_referral.id","=","sub.reason_referral")
+            ->select("reason_referral.id","reason_referral.reason",DB::raw("count(reason_referral.id) as count"))
+            ->groupBy("reason_referral.id")
+            ->OrderBY(DB::raw("count(reason_referral.id)"),"desc")
+            ->get();
+
+        return view("admin.report.top_reason_for_referral",[
+            "reason_for_referral" => $reason_for_referral,
+            "date_start" => $date_start,
+            "date_end" => $date_end
+        ]);
     }
 
 }

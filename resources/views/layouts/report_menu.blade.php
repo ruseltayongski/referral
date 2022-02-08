@@ -55,7 +55,9 @@
             <li><a href="{{ url('admin/report/graph/bar_chart') }}"><i class="fa fa-bar-chart-o"></i>Graph</a></li>
         -->
         @if($user->level=='admin')
-        <li><a href="{{ url('reports') }}"><i class="fa fa-certificate"></i>Reports</a></li>
+            <li><a href="{{ url('reports') }}"><i class="fa fa-caret-square-o-right"></i>Dashboard Report</a></li>
         @endif
+        <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
+        <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
     </ul>
 </li>
