@@ -2221,14 +2221,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 <script>
     $("#normalFormModal").modal("show");
 
-    $('#pedia_show').hide();
-    $('#menarche_show').hide();
-
-    var pt_age = parseInt($('.pt_age').val(), 10);
-    if(pt_age > 18)
-        $('#pedia_show').show();
-    if($('.patient_sex').val() === "Female")
-        $('#menarche_show').show();
+//    $('#pedia_show').hide();
+//    $('#menarche_show').hide();
+//
+//    var pt_age = parseInt($('.pt_age').val(), 10);
+//    if(pt_age > 18)
+//        $('#pedia_show').show();
+//    if($('.patient_sex').val() === "Female")
+//        $('#menarche_show').show();
 
     $(".collapse").on('show.bs.collapse', function(){
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
