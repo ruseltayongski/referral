@@ -348,12 +348,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input class="form-check-input" id="comor_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span>Select All</span>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> None</span>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Hypertension
                                                 <span id="comor_hyper"> since
@@ -378,8 +378,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     </select>
                                                 </span>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Bronchial Asthma
                                                 <span id="comor_asthma"> since
@@ -392,6 +390,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     </select>
                                                 </span>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> COPD</span>
@@ -400,12 +400,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input class="form-check-input" id="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Dyslipidemia</span>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Thyroid Disease</span>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <input class="form-check-input" id="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Cancer <i>(specify)</i>:</span>
@@ -422,17 +422,17 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>ALLERGIES</b><i> (Specify)</i><br>
                                     <div class="container-referral">
                                         <div class="row">
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <input class="form-check-input" id="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Select All</span>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-1">
+                                            <div class="col-md-4">
                                                 <input class="form-check-input" id="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> None</span>
                                             </div>
-                                            <div class="col-md-3">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
                                                 <input class="form-check-input" id="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
                                                 <textarea class="form-control" id="allergy_food" name="allergy_food" style="resize: none;width: 100%;" rows="2"></textarea>
@@ -457,12 +457,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input class="form-check-input" id="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Select All</span>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> None</span>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Hypertension: </span>
@@ -478,13 +478,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <span> Bronchial Asthma: </span>
                                                 <input type="text" id="heredo_asthma" name="heredo_asthma_side">
                                             </div>
-                                        </div><br>
-                                        <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Cancer: </span>
                                                 <input type="text" id="heredo_cancer" name="heredo_cancer_side">
                                             </div>
+                                        </div><br>
+                                        <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Kidney: </span>
@@ -999,23 +999,27 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_review_system" style="width: 100%;">
                                     <b>SKIN</b>
                                     <div class="container-referral">
-                                        {{--<div class="row">--}}
-                                            {{--<div class="col-md-3">--}}
-                                                {{--<input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">--}}
-                                                {{--<span> Select All</span>--}}
-                                            {{--</div>--}}
-                                        {{--</div>--}}
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_skin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_skin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_skin_rashes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Rashes</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_skin_itching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Itching</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_skin_hairchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change in hair or nails</span>
                                             </div>
                                         </div>
@@ -1025,11 +1029,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_head_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_head_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_head_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Headaches</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Head injury</span>
                                             </div>
                                         </div>
@@ -1039,33 +1051,43 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_eyes_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_eyes_glasses_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Glasses or Contacts</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_vision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change in vision</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Eye pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_doublevision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Double Vision</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_flashing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Flashing lights</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Last eye exam</span>
                                             </div>
                                         </div>
@@ -1075,23 +1097,33 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_ears_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_ears_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_ears_changehearing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change in hearing</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_ears_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Ear pain</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_ears_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Ear discharge</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_ears_ringing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Ringing</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_ears_dizziness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Dizziness</span>
                                             </div>
                                         </div>
@@ -1101,15 +1133,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_nose_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_nose_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_nose_bleeds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Nose bleeds</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_nose_stuff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Nasal stuffiness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_nose_colds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Frequent Colds</span>
                                             </div>
                                         </div>
@@ -1119,19 +1161,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_mouth_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_mouth_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_mouth_bleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Bleeding gums</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_mouth_soretongue_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Sore tongue</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_mouth_sorethroat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Sore throat</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_mouth_hoarse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Hoarseness</span>
                                             </div>
                                         </div>
@@ -1141,19 +1193,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neck_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neck_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neck_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Lumps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neck_swollen_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Swollen glands</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neck_goiter_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Goiter</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neck_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Stiffness</span>
                                             </div>
                                         </div>
@@ -1163,19 +1225,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_breast_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_breast_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_breast_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Lumps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_breast_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_breast_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Nipple discharge</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> BSE</span>
                                             </div>
                                         </div>
@@ -1185,73 +1257,83 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_respi_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_respi_shortness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Shortness of breath</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_cough_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Cough</span>
                                             </div>
                                             <div class="col-sm-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_phlegm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Production of phlegm, color</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_wheezing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Wheezing</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_coughblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Coughing up blood</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_chestpain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Chest pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_fever_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Fever</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_sweats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Night sweats</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_swelling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Swelling in hands/feet</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_bluefingers_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Blue fingers/toes</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_highbp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> High blood pressure</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_skipheartbeats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Skipping heart beats</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_heartmurmur_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Heart murmur</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_hxheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> HX of heart medication</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_brochitis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Bronchitis/emphysema</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_respi_rheumaticheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Rheumatic heart disease</span>
                                             </div>
                                         </div>
@@ -1260,70 +1342,80 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <b>GASTROINTESTINAL</b>
                                     <div class="container-referral">
                                         <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_gastro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_gastro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-sm-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change of appetite or weight</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_swallow_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Problems swallowing</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_nausea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Nausea</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_heartburn_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Heartburn</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_vomit_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Vomiting</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_vomitblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Vomiting Blood</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_constipation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Constipation</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_diarrhea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Diarrhea</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_bowel_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change in bowel habits</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_abdominal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Abdominal pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_belching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Excessive belching</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_flatus_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Excessive flatus</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_jaundice_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Yellow color of skin (Jaundice/Hepatitis)</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_intolerance_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Food intolerance</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_gastro_rectalbleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Rectal bleeding/Hemorrhoids</span>
                                             </div>
                                         </div>
@@ -1333,43 +1425,53 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_urin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_urin_difficult_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Difficulty in urination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Pain or burning on urination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_frequent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Frequent urination at night</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_urgent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Urgent need to urinate</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_incontinence_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Incontinence of urine</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_dribbling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Dribbling</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_decreased_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Decreased urine stream</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_blood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Blood in urine</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_urin_uti_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> UTI/stones/prostate infection</span>
                                             </div>
                                         </div>
@@ -1379,15 +1481,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_peri_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peri_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peri_legcramp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Leg cramps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_peri_varicose_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Varicose veins</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_peri_veinclot_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Clots in veins</span>
                                             </div>
                                         </div>
@@ -1397,37 +1509,47 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_swell_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Swelling</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Stiffness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_decmotion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Decreased joint motion</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Broken bone</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Serious sprains</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_arthritis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Arthritis</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_muscle_gout_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Gout</span>
                                             </div>
                                         </div>
@@ -1437,55 +1559,65 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Headaches</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_seizure_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Seizures</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_faint_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Loss of Consciousness/Fainting</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_paralysis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Paralysis</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_weakness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Weakness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Loss of muscle size</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Muscle Spasm</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_tremor_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Tremor</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_involuntary_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Involuntary movement</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Incoordination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_numbness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Numbness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_neuro_tingles_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Feeling of "pins and needles/tingles"</span>
                                             </div>
                                         </div>
@@ -1495,15 +1627,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_hema_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_hema_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_hema_anemia_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Anemia</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_hema_bruising_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Easy bruising/bleeding</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rss_hema_transfusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Past Transfusions</span>
                                             </div>
                                         </div>
@@ -1513,37 +1655,47 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_endo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_endo_abnormal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Abnormal growth</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Increased appetite</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_thirst_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Increased thirst</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_urine_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Increased urine production</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Thyroid trouble</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_heatcold_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Heat/cold intolerance</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Excessive sweating</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_endo_diabetes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Diabetes</span>
                                             </div>
                                         </div>
@@ -1553,33 +1705,43 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psych_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <span> None</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psych_tension_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Tension/Anxiety</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_depression_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Depression/suicide ideation</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_memory_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Memory problems</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_unusual_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Unusual problems</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_sleep_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Sleep problems</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_treatment_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Past treatment with psychiatrist</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="rs_psych_moodchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
                                                 <span> Change in mood/change in attitude towards family/friends</span>
                                             </div>
                                         </div>
@@ -2074,6 +2236,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-minus").addClass("fa-plus");
     });
 
+    /* *****PRENATAL ADD ROW***** */
     <?php
         $select_year = "";
         foreach(range(date('Y'), 1950) as $year)
@@ -2493,6 +2656,344 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
         last_eye = eye;
         $('#gcs_score').val(total);
+    });
+
+    /* *****REVIEW OF SYSTEMS***** */
+    /* SKIN */
+    $('#rs_skin_all_cbox').on('click', function () {
+       if($(this).is(':checked')) {
+           $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', true);
+           $('#rs_skin_none_cbox').prop('checked', false);
+       } else
+           $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+    });
+    $('#rs_skin_none_cbox').on('click', function () {
+       if($(this).is(':checked'))
+           $('#rs_skin_all_cbox, #rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+    });
+    $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').on('click', function() {
+        $('#rs_skin_all_cbox, #rs_skin_none_cbox').prop('checked', false);
+    });
+
+    /* HEAD */
+    $('#rs_head_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', true);
+            $('#rs_head_none_cbox').prop('checked', false);
+        } else
+            $('#rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', false);
+    });
+    $('#rs_head_none_cbox').on('click', function() {
+       if($(this).is(':checked'))
+           $('#rs_head_all_cbox, #rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', false);
+    });
+    $('#rs_head_headache_cbox, #rs_head_injury_cbox').on('click', function() {
+        $('#rs_head_all_cbox, #rs_head_none_cbox').prop('checked', false);
+    })
+
+    /* EYES */
+    $('#rs_eyes_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', true);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', true);
+            $('#rs_eyes_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_eyes_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
+            $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').on('click', function() {
+        $('#rs_eyes_all_cbox, #rs_eyes_none_cbox').prop('checked', false);
+    });
+
+    /* EARS */
+    $('#rs_ears_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', true);
+            $('#rs_ears_none_cbox').prop('checked', false);
+        } else
+            $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', false);
+    });
+    $('#rs_ears_none_cbox').on('click', function() {
+       if($(this).is(':checked'))
+           $('#rs_ears_all_cbox, #rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', false);
+    });
+    $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').on('click', function() {
+       $('#rs_ears_all_cbox, #rs_ears_none_cbox').prop('checked', false);
+    });
+
+    /* NOSE/SINUSES */
+    $('#rs_nose_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', true);
+            $('#rs_nose_none_cbox').prop('checked', false);
+        }else
+            $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', false);
+    });
+    $('#rs_nose_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_nose_all_cbox, #rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', false);
+    });
+    $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').on('click', function() {
+       $('#rs_nose_all_cbox, #rs_nose_none_cbox').prop('checked', false);
+    });
+
+    /* MOUTH/THROAT */
+    $('#rs_mouth_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', true);
+            $('#rs_mouth_none_cbox').prop('checked', false);
+        } else
+            $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', false);
+    });
+    $('#rs_mouth_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_mouth_all_cbox, #rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', false);
+    });
+    $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').on('click', function() {
+       $('#rs_mouth_all_cbox, #rs_mouth_none_cbox').prop('checked', false);
+    });
+
+    /* NECK */
+    $('#rs_neck_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', true);
+            $('#rs_neck_none_cbox').prop('checked', false);
+        } else
+            $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', false);
+    });
+    $('#rs_neck_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_neck_all_cbox, #rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', false);
+    });
+    $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').on('click', function() {
+        $('#rs_neck_all_cbox, #rs_neck_none_cbox').prop('checked', false);
+    });
+
+    /* BREAST */
+    $('#rs_breast_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', true);
+            $('#rs_breast_none_cbox').prop('checked', false);
+        } else
+            $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', false);
+    });
+    $('#rs_breast_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_breast_all_cbox, #rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', false);
+    });
+    $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').on('click', function() {
+        $('#rs_breast_all_cbox, #rs_breast_none_cbox').prop('checked', false);
+    });
+
+    /* RESPIRATORY/CARDIAC */
+    $('#rs_respi_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').prop('checked', true);
+            $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').prop('checked', true);
+            $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').prop('checked', true);
+            $('#rs_respi_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').prop('checked', false);
+            $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').prop('checked', false);
+            $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_respi_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_respi_all_cbox, #rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').prop('checked', false);
+            $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').prop('checked', false);
+            $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').on('click', function() {
+       $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
+    });
+    $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').on('click', function() {
+        $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
+    });
+    $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').on('click', function() {
+        $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
+    });
+
+    /* GASTROINTESTINAL */
+    $('#rs_gastro_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').prop('checked', true);
+            $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').prop('checked', true);
+            $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').prop('checked', true);
+            $('#rs_gastro_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').prop('checked', false);
+            $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').prop('checked', false);
+            $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_gastro_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').prop('checked', false);
+            $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').prop('checked', false);
+            $('#rs_gastro_all_cbox, #rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').on('click', function() {
+        $('#rs_gastro_all_cbox, #rs_gastro_none_cbox').prop('checked', false);
+    });
+    $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').on('click', function() {
+        $('#rs_gastro_all_cbox, #rs_gastro_none_cbox').prop('checked', false);
+    });
+    $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').on('click', function() {
+        $('#rs_gastro_all_cbox, #rs_gastro_none_cbox').prop('checked', false);
+    });
+
+    /* URINARY */
+    $('#rs_urin_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', true);
+            $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', true);
+            $('#rs_urin_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', false);
+            $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_urin_none_cbox').on('click', function() {
+       if($(this).is(':checked')) {
+           $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', false);
+           $('#rs_urin_all_cbox, #rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', false);
+       }
+    });
+    $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').on('click', function() {
+        $('#rs_urin_all_cbox, #rs_urin_none_cbox').prop('checked', false);
+    });
+    $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').on('click', function() {
+        $('#rs_urin_all_cbox, #rs_urin_none_cbox').prop('checked', false);
+    });
+
+    /* PERIPHERAL VASCULAR */
+    $('#rs_peri_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', true);
+            $('#rs_peri_none_cbox').prop('checked', false);
+        } else
+            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
+    });
+    $('#rs_peri_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
+    });
+    $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').on('click', function() {
+        $('#rs_peri_all_cbox, #rs_peri_none_cbox').prop('checked', false);
+    });
+
+    /* MUSCULOSKELETAL */
+    $('#rs_muscle_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', true);
+            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', true);
+            $('#rs_muscle_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
+            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_muscle_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
+            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').on('click', function() {
+        $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
+    });
+    $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').on('click', function() {
+        $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
+    });
+
+    /* NEUROLOGIC */
+    $('#rs_neuro_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', true);
+            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
+            $('#rs_neuro_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
+            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_neuro_none_cbox').on('click', function() {
+       if($(this).is(':checked')) {
+           $('#rs_neuro_all_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
+           $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+       }
+    });
+    $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').on('click', function() {
+        $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
+    });
+    $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
+        $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
+    });
+
+    /* HEMATOLOGIC */
+    $('#rs_hema_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', true);
+            $('#rs_hema_none_cbox').prop('checked', false);
+        } else
+            $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', false);
+    });
+    $('#rs_hema_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_hema_all_cbox, #rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', false);
+    });
+    $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').on('click', function() {
+        $('#rs_hema_all_cbox, #rs_hema_none_cbox').prop('checked', false);
+    });
+
+    /* ENDOCRINE */
+    $('#rs_endo_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', true);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', true);
+            $('#rs_endo_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_endo_none_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
+            $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+        }
+    });
+    $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').on('click', function() {
+        $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
+    });
+    $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').on('click', function() {
+        $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
+    });
+
+    /* PSYCHIATRIC */
+    $('#rs_psych_all_cbox').on('click', function() {
+        if($(this).is(':checked')) {
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
+            $('#rs_psych_none_cbox').prop('checked', false);
+        } else
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+    });
+    $('#rs_psych_none_cbox').on('click', function() {
+        if($(this).is(':checked'))
+            $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+    });
+    $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
+        $('#rs_psych_all_cbox, #rs_psych_none_cbox').prop('checked', false);
     });
 
     /**************************************************************************/
