@@ -10,7 +10,7 @@
     <div class="row col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3>Average User's Login Per Month</h3>
+                <h3>Average User's Login Per Day</h3>
             </div>
             <div class="box-body">
                 <div id="chartContainer" style="height: 370px; width: 100%;"></div>
