@@ -180,20 +180,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <tr>
                                         <td colspan="4">
                                             <button type="button" id="clear_icd_pwalkin" class="btn btn-sm btn-danger" onclick="clearICDPregWalkin()"> Clear ICD-10</button>
-                                            <div><span class="text-green" id="icd_selected_preg_walkin"></span></div>
+                                            <div class="text-green" id="icd_selected_preg_walkin" style="padding-top: 5px;"></div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">
                                             <button type="button" id="clear_notes_pwalkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregWalkin()"> Clear notes diagnosis</button>
-                                            <div id="add_notes_diagnosis_preg_walkin">
+                                            <div id="add_notes_diagnosis_preg_walkin" style="padding-top: 5px;">
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">
                                             <button type="button" id="clear_other_diag_pwalkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregWalkin()"> Clear other diagnosis</button>
-                                            <div id="others_diagnosis_preg_walkin">
+                                            <div id="others_diagnosis_preg_walkin" style="padding-top: 5px;">
                                             </div>
                                         </td>
                                     </tr>
@@ -365,7 +365,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $("#add_notes_diagnosis_preg_walkin").html(loading);
         $("#clear_notes_pwalkin").show();
         setTimeout(function(){
-            $("#add_notes_diagnosis_preg_walkin").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#add_notes_diagnosis_preg_walkin").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>');
         },500);
@@ -376,7 +376,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         if(value == '-1') {
             $("#other_reason_referral_preg_walkin").html(loading);
             setTimeout(function(){
-                $("#other_reason_referral_preg_walkin").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
+                $("#other_reason_referral_preg_walkin").html('<small class="text-success">OTHER REASON FOR REFERRAL:</small> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>');
             },500);
@@ -422,7 +422,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $("#others_diagnosis_preg_walkin").html(loading);
         $("#clear_other_diag_pwalkin").show();
         setTimeout(function(){
-            $("#others_diagnosis_preg_walkin").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#others_diagnosis_preg_walkin").html('<span class="text-success">OTHER DIAGNOSIS:</span> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control reason_referral" id="other_preg_walkin" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>');
         },500);

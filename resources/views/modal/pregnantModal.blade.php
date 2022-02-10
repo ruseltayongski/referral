@@ -1,6 +1,14 @@
-<div class="modal fade" role="dialog" id="pregnantModal">
+<style>
+    @media only screen and (max-width: 720px) {
+        #pregnant-content {
+            width: 70%;
+        }
+    }
+</style>
+
+<div class="modal fade" role="dialog" id="pregnantModal" style="text-align: center">
     <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
+        <div class="modal-content" id="pregnant-content">
             <div class="modal-header">
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>
@@ -21,9 +29,9 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" role="dialog" id="pregnantModalWalkIn">
+<div class="modal fade" role="dialog" id="pregnantModalWalkIn" style="text-align: center">
     <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
+        <div class="modal-content" id="pregnant-content">
             <div class="modal-header">
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>

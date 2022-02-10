@@ -213,21 +213,19 @@
                                 <tr>
                                     <td colspan="6">
                                         <button type="button" id="clear_icd_pregnant" class="btn btn-sm btn-danger" onclick="clearICDPregnant()" hidden="hidden"> Clear ICD-10</button>
-                                        <div><span class="text-green" id="icd_selected_pregnant"></span></div>
+                                        <div class="text-green" id="icd_selected_pregnant" style="padding-top: 5px;"></div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="6">
                                         <button type="button" id="clear_notes_pregnant" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnant()" hidden="hidden"> Clear notes diagnosis</button>
-                                        <div id="add_notes_diagnosis_pregnant">
-                                        </div>
+                                        <div id="add_notes_diagnosis_pregnant" style="padding-top: 5px;"></div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="6">
                                         <button type="button" id="clear_other_diag_pregnant" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnant()" hidden="hidden"> Clear other diagnosis</button>
-                                        <div id="others_diagnosis_pregnant">
-                                        </div>
+                                        <div id="others_diagnosis_pregnant" style="padding-top: 5px;"></div>
                                     </td>
                                 </tr>
                             </table>
@@ -419,7 +417,7 @@
         $("#add_notes_diagnosis_pregnant").html(loading);
         $("#clear_notes_pregnant").show();
         setTimeout(function(){
-            $("#add_notes_diagnosis_pregnant").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#add_notes_diagnosis_pregnant").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
@@ -430,7 +428,7 @@
         if(value == '-1') {
             $("#other_reason_referral_pregnant").html(loading);
             setTimeout(function(){
-                $("#other_reason_referral_pregnant").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
+                $("#other_reason_referral_pregnant").html('<small class="text-success">OTHER REASON FOR REFERRAL:</small> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
             },500);
@@ -476,7 +474,7 @@
         $("#others_diagnosis_pregnant").html(loading);
         $("#clear_other_diag_pregnant").show();
         setTimeout(function(){
-            $("#others_diagnosis_pregnant").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#others_diagnosis_pregnant").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);

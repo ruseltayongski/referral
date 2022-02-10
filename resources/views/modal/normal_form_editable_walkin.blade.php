@@ -193,23 +193,23 @@ $referral_reasons = \App\ReasonForReferral::get();
                                 <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnoses()"><i class="fa fa-plus"></i> Add Notes in Diagnosis
                                 </button>
                             </div>
-                        </div><br>
-                        <div class="row">
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
                             <div class="col-md-12">
                                 <button type="button" id="clear_icd_walkin" class="btn btn-sm btn-danger" onclick="clearIcd()">Clear ICD-10</button>
-                                <div><span class="text-green" id="selected_icd"></span></div>
+                                <div class="text-green" id="selected_icd" style="padding-top: 5px;"></div>
                             </div>
-                        </div><br>
-                        <div class="row">
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
                             <div class="col-md-12">
                                 <button type="button" id="clear_notes_walkin" class="btn btn-sm btn-info" onclick="clearNotesDiagnoses()">Clear notes diagnosis</button>
-                                <div id="add_diagnosis_notes"></div>
+                                <div id="add_diagnosis_notes" style="padding-top: 5px;"></div>
                             </div>
                         </div><br>
-                        <div class="row">
+                        <div class="row" style="padding-top: 10px;">
                             <div class="col-md-12">
                                 <button type="button" id="clear_other_diag_walkin" class="btn btn-sm btn-warning" onclick="clearOtherDiagnoses()">Clear other Diagnosis</button>
-                                <div id="other_diagnosis"></div>
+                                <div id="other_diagnosis" style="padding-top: 5px;"></div>
                             </div>
                         </div><br>
 
@@ -225,8 +225,8 @@ $referral_reasons = \App\ReasonForReferral::get();
                                     @endforeach
                                 </select>
                             </div>
-                        </div><br>
-                        <div class="row">
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
                             <div class="col-md-12">
                                 <div id="other_referral_reason"></div>
                             </div>
@@ -332,7 +332,7 @@ $referral_reasons = \App\ReasonForReferral::get();
         $("#add_diagnosis_notes").html(loading);
         $("#clear_notes_walkin").show();
         setTimeout(function(){
-            $("#add_diagnosis_notes").html('<span class="text-success">Add notes in diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#add_diagnosis_notes").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
@@ -343,7 +343,7 @@ $referral_reasons = \App\ReasonForReferral::get();
         if(value == '-1') {
             $("#other_referral_reason").html(loading);
             setTimeout(function(){
-                $("#other_referral_reason").html('<span class="text-success">Other Reason for Referral:</span> <span class="text-red">*</span>\n' +
+                $("#other_referral_reason").html('<small class="text-success">OTHER REASON FOR REFERRAL:</small> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
             },500);
@@ -388,7 +388,7 @@ $referral_reasons = \App\ReasonForReferral::get();
         $("#other_diagnosis").html(loading);
         $("#clear_other_diag_walkin").show();
         setTimeout(function(){
-            $("#other_diagnosis").html('<span class="text-success">Other diagnosis:</span> <span class="text-red">*</span>\n' +
+            $("#other_diagnosis").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control reason_referral" id="other_diag_walkin" name="other_diagnoses" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
