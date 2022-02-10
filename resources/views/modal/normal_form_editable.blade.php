@@ -27,38 +27,38 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Name of Referring Facility</small><br>
+                                <small class="text-success"><b>NAME OF REFERRING FACILITY:</b></small><br>
                                 &nbsp;<span>{{ $myfacility->name }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
+                                <small class="text-success"><b>ADDRESS:</b></small><br>
                                 &nbsp;<span >{{ $facility_address['address'] }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Name of referring MD/HCW</small><br>
+                                <small class="text-success"><b>NAME OF REFERRING MD/HCW:</b></small><br>
                                 &nbsp;<span >Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
-                        </div>
-                        <br>
+                        </div><br>
+
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Date/Time Referred (ReCo)</small><br>
-                                <span >{{ date('l F d, Y h:i A') }}</span>
+                                <small class="text-success"><b>DATE/TIME REFERRED (ReCo):</b></small><br>
+                                &nbsp;<span >{{ date('l F d, Y h:i A') }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Name of Patient</small><br>
-                                <span class="patient_name"></span>
+                                <small class="text-success"><b>NAME OF PATIENT:</b></small><br>
+                                &nbsp;<span class="patient_name"></span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
-                                <span class="patient_address"></span>
+                                <small class="text-success"><b>ADDRESS:</b></small><br>
+                                &nbsp;<span class="patient_address"></span>
                             </div>
-                        </div>
-                        <br>
+                        </div><br>
+
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <select name="referred_facility" class="select2 select_facility" required>
+                                <small class="text-success"><b>REFERRED TO:</b></small> &nbsp;<span class="text-red">*</span><br>
+                                <select name="referred_facility" class="select2 select_facility form-control" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -66,50 +66,83 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Department</small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control-select select_department select_department_normal" style="width: 100%;" required>
+                                <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
+                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
                                     <option value="">Select Option</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
-                                <span class="text-yellow facility_address"></span>
+                                <small class="text-success"><b>ADDRESS:</b></small><br>
+                                &nbsp;<span class="text-yellow facility_address"></span>
+                            </div>
+                        </div><br>
+
+                        <div class="web-view">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-success"><b>AGE: </b></small><br>
+                                    &nbsp;<span class="patient_age"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success"><b>SEX: </b></small> <span class="text-red">*</span><br>
+                                    <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
+                                        <option value="">Select...</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success"><b>CIVIL STATUS: </b></small> <span class="text-red">*</span><br>
+                                    <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
+                                        <option value="">Select...</option>
+                                        <option>Single</option>
+                                        <option>Married</option>
+                                        <option>Divorced</option>
+                                        <option>Separated</option>
+                                        <option>Widowed</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="mobile-view">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <small class="text-success"><b>AGE: </b></small><br>
+                                        &nbsp;<span class="patient_age"></span>
+                                    </td>
+                                    <td>
+                                        <small class="text-success"><b>SEX: </b></small> <span class="text-red">*</span><br>
+                                        <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
+                                            <option value="">Select...</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <small class="text-success"><b>CIVIL STATUS: </b></small> <span class="text-red">*</span><br>
+                                        <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
+                                            <option value="">Select...</option>
+                                            <option>Single</option>
+                                            <option>Married</option>
+                                            <option>Divorced</option>
+                                            <option>Separated</option>
+                                            <option>Widowed</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Age</small><br>
-                                <span class="patient_age"></span>
+                                <small class="text-success"><b>COVID NUMBER</b></small><br>
+                                <input type="text" class="form-control" name="covid_number" style="width: 100%;">
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Sex</small> <span class="text-red">*</span><br>
-                                <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
-                                    <option value="">Select...</option>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
-                                <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                    <option value="">Select...</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                </select>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <small class="text-success">Covid Number</small><br>
-                                <input type="text" name="covid_number" style="width: 100%;">
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Clinical Status</small><br>
+                                <small class="text-success"><b>CLINICAL STATUS</b></small><br>
                                 <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="asymptomatic">Asymptomatic</option>
@@ -120,7 +153,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Surveillance Category</small><br>
+                                <small class="text-success"><b>SURVEILLANCE CATEGORY</b></small><br>
                                 <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="contact_pum">Contact (PUM)</option>
@@ -129,117 +162,111 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <option value="confirmed">Confirmed</option>
                                 </select>
                             </div>
+                        </div><br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>CASE SUMMARY:</b> <i>(pertinent Hx/PE, including meds, labs, course etc.)</i></small> <span class="text-red">*</span><br />
+                                <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+                            </div>
+                        </div><br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>SUMMARY OF RECO:</b> <i>(pls. refer to ReCo Guide in Referring Patients Checklist)</i></small> <span class="text-red">*</span><br />
+                                <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+                            </div>
+                        </div><br>
+
+                        {{--<div class="row">--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--<span class="text-success">--}}
+                                {{--@if(Session::get('auth')->level == 'opcen')--}}
+                                {{--Chief Complaints--}}
+                                {{--@else--}}
+                                {{--Diagnosis/Impression:--}}
+                                {{--@endif--}}
+                                {{--</span> <span class="text-red">*</span>--}}
+                                {{--<br />--}}
+                                {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                <br><br>
+                                <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                    <i class="fa fa-medkit"></i> Add ICD-10
+                                </a>
+                                <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
+                                <div><span class="text-green" id="icd_selected"></span></div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                <div id="add_notes_diagnosis"></div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
+                                <div id="others_diagnosis"></div>
+                            </div>
+                        </div><br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>REASON FOR REFERRAL:</b></small> <span class="text-red">*</span><br>
+                                <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                    <option value="">Select reason for referral</option>
+                                    <option value="-1">Other reason for referral</option>
+                                    @foreach($reason_for_referral as $reason_referral)
+                                        <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="other_reason_referral"></div>
+                            </div>
+                        </div><br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                    <option value="">Any...</option>
+                                </select>
+                            </div>
+                        </div><br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>FILE ATTACHMENT:</b></small><br>
+                                <div class="file-upload">
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                        <div class="drag-text">
+                                            <h3>Drag and drop a file or select add Image</h3>
+                                        </div>
+                                    </div>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" />
+                                        <div class="image-title-wrap">
+                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <table class="table table-striped">
-                            <!--
-                            <tr>
-                                <td colspan="6">
-                                    Diagnosis/Impression: <small class="text-primary">(Auto search from ICD10)</small>
-                                    <input type="text" value="" id="icd_code" name="icd_code" readonly><br>
-                                    <textarea class="form-control" onkeyup="Icd10Checker($(this))" id="diagnosis" rows="4" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>
-                                </td>
-                            </tr>
-                            -->
-                            <tr>
-                                <td colspan="6">
-                                    <span class="text-success">Case Summary (pertinent Hx/PE, including meds, labs, course etc.):</span> <span class="text-red">*</span><br />
-                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <span class="text-success">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):</span> <span class="text-red">*</span>
-                                    <br />
-                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
-                                </td>
-                            </tr>
-                            {{--<tr>--}}
-                                {{--<td colspan="6">--}}
-                                    {{--<span class="text-success">--}}
-                                        {{--@if(Session::get('auth')->level == 'opcen')--}}
-                                            {{--Chief Complaints--}}
-                                        {{--@else--}}
-                                            {{--Diagnosis/Impression:--}}
-                                        {{--@endif--}}
-                                    {{--</span> <span class="text-red">*</span>--}}
-                                    {{--<br />--}}
-                                    {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            <tr>
-                                <td colspan="6">
-                                    <span class="text-success">Diagnosis</span> <span class="text-red">*</span>
-                                    <br><br>
-                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                        <i class="fa fa-medkit"></i> Add ICD-10
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <button type="button" id="clear_icd" class="btn btn-sm btn-danger" onclick="clearICD()"> Clear ICD-10</button>
-                                    <div><span class="text-green" id="icd_selected"></span></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <button type="button" id="clear_notes" class="btn btn-sm btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                    <div id="add_notes_diagnosis"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <button type="button" id="clear_other_diag" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
-                                    <div id="others_diagnosis"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <span class="text-success">Reason for referral:</span> <span class="text-red">*</span>
-                                    <br>
-                                    <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
-                                        <option value="">Select reason for referral</option>
-                                        <option value="-1">Other reason for referral</option>
-                                        @foreach($reason_for_referral as $reason_referral)
-                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                        @endforeach
-                                    </select><br><br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <div id="other_reason_referral">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <span class="text-success">Name of referred: (MD/HCW- Mobile Contact # (ReCo))</span><br>
-                                    <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
-                                        <option value="">Any...</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <div class="file-upload">
-                                        <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
-                                            <div class="drag-text">
-                                                <h3>Drag and drop a file or select add Image</h3>
-                                            </div>
-                                        </div>
-                                        <div class="file-upload-content">
-                                            <img class="file-upload-image" src="#" alt="your image" />
-                                            <div class="image-title-wrap">
-                                                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
@@ -352,7 +379,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 
     function searchICD10() {
-        $("#others_diagnosis").html("");
         $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
@@ -379,21 +405,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 $("#icd_selected").append('=> '+icd_description+' '+'<br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');
                 console.log("icd id: " + id);
             }
+            clearOtherDiagnosis();
         });
         console.log(values);
-    }
-
-    function reasonReferralCheck(data) {
-        if(data.val() == 'others') {
-            $("#reason_referral_others_body").html(loading);
-            setTimeout(function(){
-                $("#reason_referral_others_body").html('<span class="text-success">Reason for referral others:</span> <span class="text-red">*</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control reason_referral" name="reason" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            },500);
-        } else {
-            $("#reason_referral_others_body").html("");
-        }
     }
 
     function othersDiagnosis(){

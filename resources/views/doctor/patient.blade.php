@@ -131,14 +131,36 @@
             transition: all .2s ease;
         }
 
-        @media
-        only screen and (min-device-width: 280px)
-        and (max-device-width: 568px) {
+        .mobile-view {
+            display: none;
+            visibility: hidden;
+        }
+
+        .container-referral {
+            border: 1px solid lightgrey;
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        @media only screen and (max-width: 720px) {
             .file-upload {
                 background-color: #ffffff;
-                width: 350px;
+                width: 300px;
                 margin: 0 auto;
                 padding: 20px;
+            }
+
+            .web-view {
+                display: none;
+                visibility: hidden;
+            }
+
+            .mobile-view {
+                display: block;
+                visibility: visible;
             }
         }
     </style>
