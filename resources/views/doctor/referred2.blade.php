@@ -425,7 +425,7 @@ $user = Session::get('auth');
                                 @endif
                             </a>
                         @endif
-                        @if(!$checkForCancellation)
+                        @if(!$checkForCancellation && !isset($_GET['referredCode']))
                             <a href="#cancelModal" data-toggle="modal"
                                data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                         @endif
