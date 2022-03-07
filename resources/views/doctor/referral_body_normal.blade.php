@@ -1,3 +1,29 @@
+<style>
+    .mobile-view {
+        display: none;
+        visibility: hidden;
+    }
+
+    @media only screen and (max-width: 720px) {
+        .file-upload {
+            background-color: #ffffff;
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .web-view {
+            display: none;
+            visibility: hidden;
+        }
+
+        .mobile-view {
+            display: block;
+            visibility: visible;
+        }
+    }
+</style>
+
 @include('include.header_form')
 <table class="table table-striped form-label referral-table">
     <tr>
@@ -22,7 +48,13 @@
     </tr>
     <tr>
         <td colspan="3">Name of Patient: <span class="patient_name form-details">{{ $form->patient_name }}</span></td>
-        <td>Age: <span class="patient_age form-details">{{ $form->patient_age }}</span></td>
+        <td>Age: <span class="patient_age form-details">
+            @if($age_type == "y")
+                {{ $patient_age }} years
+            @elseif($age_type == "m")
+                {{ $patient_age['month'] }} mos, {{ $patient_age['days'] }} days
+            @endif
+            </span></td>
         <td>Sex: <span class="patient_sex form-details">{{ $form->patient_sex }}</span></td>
         <td>Status: <span class="patient_status form-details">{{ $form->patient_status }}</span></td>
     </tr>
@@ -90,7 +122,7 @@
             <td colspan="6">
                 Reason for referral:
                 <br />
-                <span class="reason form-details">{{ $reason }}</span>
+                <span class="reason form-details">{{ $reason->reason }}</span>
             </td>
         </tr>
     @endif
@@ -128,7 +160,10 @@
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 <div class="form-fotter pull-right">
+    {{--@if($cur_status == 'cancelled')--}}
+    {{--<button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>--}}
     @if($referral_status == 'referred' || $referral_status == 'redirected')
+    <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     <button class="btn btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
     <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
     <button class="btn btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
