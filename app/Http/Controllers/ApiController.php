@@ -9,6 +9,7 @@ use App\BedTracker;
 use App\Department;
 use App\Facility;
 use App\Feedback;
+use App\Icd;
 use App\Icd10;
 use App\Issue;
 use App\ModeTransportation;
@@ -702,6 +703,7 @@ class ApiController extends Controller
 
     public function apiReferPatient(Request $req)
     {
+        return $req->all();
         if(!$province = Province::where("province_code","like","$req->province%")->first())
             return 'Invalid Province Code';
 
@@ -803,13 +805,42 @@ class ApiController extends Controller
             'case_summary' => $req->case_summary,
             'reco_summary' => $req->reco_summary,
             'diagnosis' => $req->diagnosis,
-            //'icd_code' => $req->icd_code,
             'reason' => $req->reason,
             'referring_md' => $referring_doctor->id,
             'referred_md' => ($referred_doctor->id) ? $referred_doctor->id: 0,
+            'covid_number' => $req->covid_number,
+            'refer_clinical_status' => $req->clinical_status,
+            'refer_sur_category' => $req->sur_category,
+            'reason_referral' => $req->reason_referral1,
+            'other_reason_referral' => $req->other_reason_referral,
+            'other_diagnoses' => $req->other_diagnosis,
         );
 
         $form = PatientForm::create($data);
+
+        if($_FILES["file_upload"]["name"]) {
+            $username = $referring_doctor->username;
+            $file = $_FILES['file_upload']['name'];
+            $dir = public_path()."\\fileupload\\".$username."\\";
+
+            if(!file_exists($dir) && !is_dir($dir)) { // if directory does not exist, create it
+                mkdir($dir);
+            }
+
+            if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { // upload file to directory
+                $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
+            }
+        }
+        $form->save();
+
+        foreach($req->icd_ids as $i) {
+            if($icd10 = Icd10::where("code",$i)->first()) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $icd10->id;
+                $icd->save();
+            }
+        }
         $type = 'normal';
         $this->addTracking($code,$patient->id,$referring_doctor,$referred_doctor,$req,$type,$form->id,'refer');
 
