@@ -159,7 +159,7 @@ class PrintCtrl extends Controller
         }
 
         if(isset($record->reason)) {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: ")."\n".self::staticGreen($pdf, $record->reason), 1, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: ")."\n".self::staticGreen($pdf, $record->reason['reason']), 1, 'L');
         }
 
         if(isset($data->other_reason_referral)) {
@@ -336,7 +336,7 @@ class PrintCtrl extends Controller
             $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
             $pdf->SetTextColor(102,56,0);
             $pdf->SetFont('Arial','I',10);
-            $pdf->MultiCell(0, 5, $data2->reason, 0, 'L');
+            $pdf->MultiCell(0, 5, $data2->reason['reason'], 0, 'L');
             $pdf->Ln();
         }
 
