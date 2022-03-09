@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Activity;
+use App\Baby;
 use App\Department;
 use App\Facility;
 use App\Feedback;
@@ -19,12 +20,15 @@ use App\Seen;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use PhpParser\Node\Param;
+use Psy\Util\Json;
 
 class ReferralCtrl extends Controller
 {
@@ -47,7 +51,7 @@ class ReferralCtrl extends Controller
         $data = Tracking::select(
                     'tracking.*',
                     DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-                    DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+                    DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS patient_age"),
                     'patients.sex',
                     'facility.name as facility_name',
                     DB::raw('CONCAT(
@@ -60,6 +64,7 @@ class ReferralCtrl extends Controller
                 ->leftJoin('users','users.id','=','tracking.referring_md')
                 ->leftJoin('users as action','action.id','=','tracking.action_md')
                 ->where('referred_to',$user->facility_id);
+
         if($request->search)
         {
             $keyword = $request->search;
@@ -180,24 +185,29 @@ class ReferralCtrl extends Controller
     }
 
     public static function normalForm($id,$referral_status,$form_type) {
-        $track = Tracking::select('code')->where('id', $id)->first();
+        $track = Tracking::select('code', 'status')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code',$track->code)->get();
         $path = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
         $file_name = basename($path);
 
-        $reason = ReasonForReferral::select("reason_referral.reason")
+        $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
                 ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
                 ->where('patient_form.code', $track->code)->first();
 
+        $form = self::normalFormData($id);
         return view("doctor.referral_body_normal",[
-            "form" => self::normalFormData($id),
-            "reason" => $reason->reason,
+            "form" => $form['form'],
+            "id" => $id,
+            "patient_age" => $form['age'],
+            "age_type" => $form['ageType'],
+            "reason" => $reason,
             "icd" => $icd,
             "file_path" => $path,
             "file_name" => $file_name,
             "referral_status" => $referral_status,
+            "cur_status" => $track->status,
             "form_type" => $form_type
         ]);
     }
@@ -207,7 +217,7 @@ class ReferralCtrl extends Controller
             DB::raw("'$id' as tracking_id"),
             'patient_form.code as code',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS patient_age"),
+            'patients.dob as dob',
             'patients.sex as patient_sex',
             'patients.civil_status as patient_status',
             'patients.phic_status',
@@ -270,8 +280,17 @@ class ReferralCtrl extends Controller
             })
             ->orderBy('act.date_referred','desc')
             ->first();
-
-        return $form;
+        $age =  ParamCtrl::getAge($form['dob']);
+        $ageType = "y";
+        if($age == 0){
+            $age = ParamCtrl::getMonths($form['dob']);
+            $ageType = "m";
+        }
+        return [
+            "form" => $form,
+            "age" => $age,
+            "ageType" => $ageType
+        ];
     }
 
     public static function pregnantForm($id,$referral_status) {
@@ -282,13 +301,14 @@ class ReferralCtrl extends Controller
         $path = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
         $file_name = basename($path);
 
-        $reason = ReasonForReferral::select("reason_referral.reason")
+        $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
                 ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
                 ->where('pregnant_form.code', $track->code)->first();
 
         return view('doctor.referral_body_pregnant',[
             "form" => self::pregnantFormData($id),
-            "reason" => $reason->reason,
+            "id" => $id,
+            "reason" => $reason,
             "icd" => $icd,
             "file_path" => $path,
             "file_name" => $file_name,
@@ -343,7 +363,9 @@ class ReferralCtrl extends Controller
             'pregnant_form.refer_clinical_status',
             'pregnant_form.refer_sur_category',
             'pregnant_form.dis_clinical_status',
-            'pregnant_form.dis_sur_category'
+            'pregnant_form.dis_sur_category',
+            'patients.id as mother_id'
+
         )
         ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
         ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
@@ -368,6 +390,10 @@ class ReferralCtrl extends Controller
         {
             $baby = PregnantForm::select(
                         DB::raw('CONCAT(baby.fname," ",baby.mname," ",baby.lname) as baby_name'),
+                        'pregnant_form.patient_baby_id as baby_id',
+                        'baby.fname as baby_fname',
+                        'baby.mname as baby_mname',
+                        'baby.lname as baby_lname',
                         DB::raw("DATE_FORMAT(baby.dob,'%M %d, %Y %h:%i %p') as baby_dob"),
                         'bb.weight',
                         'bb.gestational_age',
@@ -385,7 +411,17 @@ class ReferralCtrl extends Controller
                     ->join('tracking','tracking.form_id','=','pregnant_form.id')
                     ->where('tracking.id',$id)
                     ->first();
+
+//            if($baby['baby_dob'] === null) { /*TODO fix eloquent*/
+//                $dob_ = Patients::select(DB::raw("DATE_FORMAT(patients.dob,'%M %d, %Y %h:%i %p') as baby_dob"))
+//                    ->join('pregnant_form as pregnant','pregnant.patient_baby_id','=','patients.id')
+//                    ->join('tracking','tracking.code','=','pregnant.code')
+//                    ->where('tracking.id',$id)
+//                    ->first();
+//                $baby['baby_dob'] = (isset($dob)) ? $dob->baby_dob : '';
+//            }
         }
+
         return array(
             'pregnant' => $form,
             'baby' => $baby
@@ -891,7 +927,7 @@ class ReferralCtrl extends Controller
         );
         Activity::create($data);
 
-//        foreach($req->icd_ids as $i) {
+//        foreach($req->icd_ids as $i) { /* FOR WHEN ICD IS TRANSFERRED TO "DISCHARGE" */
 //            $icd = new Icd();
 //            $icd->code = $track->code;
 //            $icd->icd_id = $i;
@@ -1341,4 +1377,194 @@ class ReferralCtrl extends Controller
         return 0;
     }
 
+    public static function editInfo($id,$form_type,$referral_status)
+    {
+        $track = Tracking::select('code')->where('id', $id)->first();
+        $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code',$track->code)->get();
+
+        if($form_type == 'normal') {
+            $path = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+            $file_name = basename($path);
+            $reason = ReasonForReferral::select('patient_form.reason_referral as id', 'reason_referral.reason as reason')
+                ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
+                ->where('patient_form.code', $track->code)->first();
+            $form = self::normalFormData($id);
+            return view("doctor.edit_referral_normal", [
+                "form" => $form['form'],
+                "id" => $id,
+                "patient_age" => $form['age'],
+                "age_type" => $form['ageType'],
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "form_type" => $form_type,
+                "referral_status" => $referral_status
+            ]);
+        }else if($form_type == 'pregnant') {
+            $path = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+            $file_name = basename($path);
+            $reason = ReasonForReferral::select('pregnant_form.reason_referral as id', 'reason_referral.reason as reason')
+                ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+                ->where('pregnant_form.code', $track->code)->first();
+
+            return view("doctor.edit_referral_pregnant", [
+                "form" => self::pregnantFormData($id),
+                "id" => $id,
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "referral_status" => $referral_status,
+                "form_type" => "$form_type"
+            ]);
+        }
+    }
+
+    public static function editForm(Request $req)
+    {
+        $id = $req->id;
+        $track = Tracking::select('code')->where('id', $id)->first()->code;
+        $form_type = $req->form_type;
+        $user = Session::get('auth');
+
+        $data_update = $req->all();
+
+        if($form_type === 'normal') {
+            $data = PatientForm::where('code', $track)->first();
+
+            if($req->notes_diag_cleared == "true") {
+                $data->update(['diagnosis' => NULL]);
+                unset($data_update['diagnosis']);
+            }
+            unset($data_update['notes_diag_cleared']);
+        }
+
+        else if($form_type === 'pregnant') {
+            $data = PregnantForm::where('code', $track)->first();
+            $baby_id = $req->baby_id;
+            $match = Patients::where('id', $baby_id)->first();
+            $baby = array(
+                "fname" => $req->baby_fname,
+                "mname" => $req->baby_mname,
+                "lname" => $req->baby_lname,
+                "dob" => $req->baby_dob
+            );
+            if(isset($match))
+                $match->update($baby);
+            else
+                $baby_id = PatientCtrl::storeBabyAsPatient($baby,$req->mother_id);
+
+            $match = Baby::where("baby_id", $req->baby_id)->first();
+            $baby = array(
+                "baby_id" => $baby_id,
+                "mother_id" => $req->mother_id,
+                "weight" => $req->baby_weight,
+                "gestational_age" => $req->baby_gestational_age,
+                "birth_date" => $req->baby_dob
+            );
+
+            if(isset($match)) {
+                $match->update($baby);
+                $match->birth_date = $req->baby_dob;
+                $match->save();
+            } else {
+                $match = array(
+                    "baby_id" => $baby_id,
+                    "mother_id" => $req->mother_id
+                );
+                Baby::updateOrCreate($match,$baby);
+            }
+
+            unset($data_update['baby_fname']);
+            unset($data_update['baby_mname']);
+            unset($data_update['baby_lname']);
+            unset($data_update['baby_dob']);
+            unset($data_update['baby_weight']);
+            unset($data_update['baby_gestational_age']);
+            unset($data_update['baby_id']);
+            unset($data_update['mother_id']);
+
+            if($req->notes_diag_cleared == "true") {
+                $data->update(['notes_diagnoses' => NULL]);
+                unset($data_update['notes_diagnoses']);
+            }
+            unset($data_update['notes_diag_cleared']);
+
+            $data_update['patient_baby_id'] = $baby_id;
+            $data_update['baby_last_feed'] = date('Y-m-d H:i:s',strtotime($req->baby_last_feed));
+            $data_update['woman_before_given_time'] = date('Y-m-d H:i:s',strtotime($req->woman_before_given_time));
+            $data_update['woman_transport_given_time'] = date('Y-m-d H:i:s',strtotime($req->woman_transport_given_time));
+            $data_update['baby_before_given_time'] = date('Y-m-d H:i:s',strtotime($req->baby_before_given_time));
+            $data_update['baby_transport_given_time'] =  date('Y-m-d H:i:s',strtotime($req->baby_transport_given_time));
+        }
+
+        if($req->other_diag_cleared == "true") {
+            $data->update(['other_diagnoses' => NULL]);
+            unset($data_update['other_diagnoses']);
+        }
+        unset($data_update['other_diag_cleared']);
+
+        if($req->icd_cleared === 'true')
+            Icd::where('code', $track)->delete();
+        unset($data_update['icd_cleared']);
+
+        foreach($req->icd_ids as $i) {
+            $value = Icd::where('code', $track)->where('icd_id', $i)->first();
+            if(!isset($value)) {
+                $icd = new Icd();
+                $icd->code = $track;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
+        }
+        unset($data_update['icd_ids']);
+
+        if($_FILES["file_upload"]["name"]) {
+            $username = $user->username;
+            $file = $_FILES['file_upload']['name'];
+            $dir = public_path()."\\fileupload\\".$username."\\";
+
+            if(!file_exists($dir) && !is_dir($dir)) {
+                mkdir($dir);
+            }
+
+            if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) {
+                $data->update([
+                    'file_path' => "\\public\\fileupload\\".$username."\\".$file
+                ]);
+            }
+        }
+
+        unset($data_update['file_upload']);
+
+        unset($data_update['id']);
+        unset($data_update['referral_status']);
+        unset($data_update['form_type']);
+
+        $data->update($data_update);
+        Session::put('referral_update_save',true);
+        Session::put('message','Successfully updated referral form!');
+        return redirect()->back();
+    }
+
+    public static function undoCancel(Request $req)
+    {
+        $id = $req->undo_cancel_id;
+
+        $user = Session::get('auth');
+        $date = date('Y-m-d H:i:s');
+        $track = Tracking::find($id);
+        $activity = Activity::where("code",$track->code)->orderBy("id","desc")->skip(1)->first();
+
+        Tracking::where('id',$id)
+            ->update([
+                'status' => $activity->status
+            ]);
+        Activity::where("code",$track->code)->orderBy("id","desc")->first()->delete();
+
+        return redirect()->back();
+    }
 }

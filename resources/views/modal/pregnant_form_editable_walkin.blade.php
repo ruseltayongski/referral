@@ -278,7 +278,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
+                        <button class="btn btn-default btn-flat cancelWalkin" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
                         <button type="submit" id="sbmtPregWalkin" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>

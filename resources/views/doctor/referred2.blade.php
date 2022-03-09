@@ -459,6 +459,19 @@ $user = Session::get('auth');
 @section('js')
     @include('script.referred')
     <script>
+        @if(Session::get('referral_update_save'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "<?php echo Session::get("message"); ?>",
+            size: 'mini',
+            rounded: true
+        });
+        <?php
+        Session::put("referral_update_save",false);
+        Session::put("message",false)
+        ?>
+        @endif
+
         @if(session()->has('issueReferral'))
         Lobibox.notify('success', {
             title: '',

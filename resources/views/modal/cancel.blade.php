@@ -26,3 +26,27 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal modal-danger fade" role="dialog" id="undoCancelModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h5>UNDO CANCEL</h5>
+                <hr />
+                <form action="{{ asset('doctor/referral/undo_cancel') }}" method="POST" id="undoCancelForm">
+                    {{ csrf_field() }}
+                    <div class="form-group" style="text-align: center">
+                        <b>ARE YOU SURE YOU WANT TO UNDO CANCELLATION? </b>
+                    </div>
+                    <hr />
+                    <div class="form-footer undo_cancel_body" style="text-align: center">
+                        <input type="hidden" id="undo_cancel_id" name="undo_cancel_id" value="">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
+                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Yes</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -6,6 +6,7 @@ $user = Session::get('auth');
 
 @section('content')
     <style>
+
         .timeline .facility {
             color: #ff8456;
         }
@@ -21,6 +22,30 @@ $user = Session::get('auth');
             }
             100% {
                 opacity: 1;
+            }
+        }
+
+        .mobile-view {
+            display: none;
+            visibility: hidden;
+        }
+
+        @media only screen and (max-width: 720px) {
+            .file-upload {
+                background-color: #ffffff;
+                width: 300px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .web-view {
+                display: none;
+                visibility: hidden;
+            }
+
+            .mobile-view {
+                display: block;
+                visibility: visible;
             }
         }
     </style>
@@ -211,6 +236,19 @@ $user = Session::get('auth');
                 msg: "This form was already accepted"
             });
         <?php Session::put("incoming_denied",false); ?>
+        @endif
+
+        @if(Session::get('referral_update_save'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "<?php echo Session::get("message"); ?>",
+            size: 'mini',
+            rounded: true
+        });
+        <?php
+        Session::put("referral_update_save",false);
+        Session::put("message",false)
+        ?>
         @endif
     </script>
 

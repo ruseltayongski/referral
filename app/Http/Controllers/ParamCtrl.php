@@ -9,8 +9,10 @@ use App\PatientForm;
 use App\PregnantForm;
 use App\Tracking;
 use App\User;
+use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ParamCtrl extends Controller
 {
@@ -24,6 +26,11 @@ class ParamCtrl extends Controller
             ? ((date("Y") - $birthDate[2]) - 1)
             : (date("Y") - $birthDate[2]));
         return $age;
+    }
+
+    static function getMonths($date){
+        $diff = date_diff(date_create($date), date_create('now'));
+        return ['month' => $diff->m, 'days' => $diff->d];
     }
 
     function getDoctorList($facility_id,$department_id)

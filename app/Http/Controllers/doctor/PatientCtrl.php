@@ -19,6 +19,7 @@ use App\Province;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -217,6 +218,7 @@ class PatientCtrl extends Controller
             $data->update($data_update);
             Session::put('patient_update_save',true);
             Session::put('patient_message','Successfully updated patient');
+            $data = Patients::find($request->patient_id);
             return Redirect::back();
         }
         return view('doctor.patient_body',[
@@ -239,6 +241,11 @@ class PatientCtrl extends Controller
 
         $data->patient_name = "$data->fname $data->mname $data->lname";
         $data->age = ParamCtrl::getAge($data->dob);
+        $data->ageType = "y";
+        if($data->age == 0) {
+            $data->age = ParamCtrl::getMonths($data->dob);
+            $data->ageType = "m";
+        }
         return $data;
     }
 
@@ -455,7 +462,8 @@ class PatientCtrl extends Controller
                 'mother_id' => $patient_id
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
+//                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
@@ -489,7 +497,6 @@ class PatientCtrl extends Controller
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
                 'notes_diagnoses' => $req->notes_diagnosis,
-//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
@@ -601,6 +608,7 @@ class PatientCtrl extends Controller
                 'dob' => ($req->baby_dob) ? $req->baby_dob: '',
                 'civil_status' => 'Single'
             );
+
             $baby_id = self::storeBabyAsPatient($baby,$patient_id);
 
             Baby::updateOrCreate([
@@ -608,7 +616,8 @@ class PatientCtrl extends Controller
                 'mother_id' => $patient_id
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
+//                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
@@ -637,10 +646,8 @@ class PatientCtrl extends Controller
                 'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
                 'notes_diagnoses' => $req->notes_diagnosis,
-//                'notes_diagnoses' => $req->diagnosis,
                 'reason_referral' => $req->reason_referral1,
-                'other_reason_referral' => $req->other_reason_referral,
-//                'other_diagnoses' => $req->other_diagnosis,
+                'other_reason_referral' => $req->other_reason_referral
             );
             $form = PregnantForm::updateOrCreate($match,$data);
 
@@ -667,14 +674,18 @@ class PatientCtrl extends Controller
         );
     }
 
-    function storeBabyAsPatient($data,$mother_id)
+    static function storeBabyAsPatient($data,$mother_id)
     {
         if($data['fname']){
+            if($data['mname'] == "")
+                $data['mname'] = " ";
+
             $mother = Patients::find($mother_id);
             $data['brgy'] = $mother->brgy;
             $data['muncity'] = $mother->muncity;
             $data['province'] = $mother->province;
             $dob = date('ymd',strtotime($data['dob']));
+
             $tmp = array(
                 $data['fname'],
                 $data['mname'],
@@ -1078,5 +1089,4 @@ class PatientCtrl extends Controller
             "date_end" => $date_end
         ]);
     }
-
 }

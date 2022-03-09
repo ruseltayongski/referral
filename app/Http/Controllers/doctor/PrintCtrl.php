@@ -252,9 +252,17 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name of Patient: ").self::orange($pdf,$data->patient_name,"Name of Patient:"), 0, 'L');
         $y = $pdf->getY();
         $pdf->SetXY($x/2+10, $y-7);
-        $pdf->MultiCell($x/4, 7, self::black($pdf,"Age: ").self::orange($pdf,$data->patient_age,"age:"), 0);
+
+        $patient_age = "";
+        if(strcmp($data2->age_type, "y") == 0)
+            $patient_age = $data2->patient_age." years";
+        elseif(strcmp($data2->age_type, "m") == 0)
+            $patient_age = $data2->patient_age['month']." mos, ".$data2->patient_age['days']." days";
+
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"age:"), 0);
+
         $y = $pdf->getY();
-        $pdf->SetXY(($x/2)+($x/4) - 15, $y-7);
+        $pdf->SetXY(($x/2)+($x/4) - 5, $y-7);
         $pdf->MultiCell($x/4, 7, self::black($pdf,"Sex: ").self::orange($pdf,$data->patient_sex,"sex:"), 0);
         $y = $pdf->getY();
         $pdf->SetXY(($x/2)+($x/2) - 30, $y-7);

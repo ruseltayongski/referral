@@ -703,7 +703,7 @@ class ApiController extends Controller
 
     public function apiReferPatient(Request $req)
     {
-        
+
         if(!$province = Province::where("province_code","like","$req->province%")->first())
             return 'Invalid Province Code';
 

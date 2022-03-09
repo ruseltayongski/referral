@@ -357,7 +357,7 @@ $user = Session::get('auth');
 @include('script.firebase')
 @section('js')
     @include('script.referred')
-
+    @include('script.edit_referral_normal')
 @endsection
 
 

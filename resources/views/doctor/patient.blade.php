@@ -182,7 +182,7 @@
                                 <th>Age/DOB</th>
                                 <th>Region/Province</th>
                                 <th>Municipality/Barangay</th>
-                                <th style="width:18%;">Action</th>
+                                <th style="width:18%; text-align: center">Action</th>
                             </tr>
                             @foreach($data as $row)
                                 <?php
@@ -206,8 +206,13 @@
                                         <small class="text-success">{{ $row->civil_status }}</small>
                                     </td>
                                     <td>
-                                        <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);?>
-                                        {{ $age }} years old
+                                        <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);
+                                            $month = \App\Http\Controllers\ParamCtrl::getMonths($row->dob)?>
+                                        @if( $age > 0)
+                                            {{ $age }} years old
+                                        @else
+                                            {{ $month['month'] }} mos, {{ $month['days'] }} days
+                                        @endif
                                         <br />
                                         <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
                                     </td>
@@ -245,14 +250,17 @@
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
-                                               class="btn btn-primary btn-xs profile_info hide">
+                                               class="btn btn-primary btn-xs profile_info hide"
+                                               style="margin-right: 13px;">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#pregnantModalWalkIn"
+                                            <a href="#"
+                                               id="walkinPregnant"
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
+                                               onclick="promptWalkinPregnant()"
                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
@@ -263,16 +271,19 @@
                                                data-backdrop="static"
                                                data-toggle="modal"
                                                data-type="normal"
-                                               class="btn btn-primary btn-xs profile_info hide">
+                                               class="btn btn-primary btn-xs profile_info hide"
+                                               style="margin-right: 13px;">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#normalFormModalWalkIn"
+                                            <a href="#"
+                                               id="walkinNormal"
                                                data-patient_id = "{{ $row->id }}"
                                                data-backdrop="static"
                                                data-toggle="modal"
                                                data-type="normal"
-                                                class="btn btn-warning btn-xs profile_info hide">
+                                               onclick="promptWalkinNormal()"
+                                               class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
                                             </a>
@@ -310,6 +321,45 @@
 @include('script.firebase')
 @include('script.datetime')
 <script>
+    function promptWalkinPregnant() {
+        Lobibox.confirm({
+            msg: "Do you want to proceed to walkin?",
+            callback: function ($this, type, ev) {
+                if(type == 'yes') {
+                    $('#walkinPregnant').attr('onclick', "");
+                    $('#walkinPregnant').attr('href','#pregnantModalWalkIn');
+                    $('#walkinPregnant').click();
+                } else {
+                    $('#walkinPregnant').attr('onClick','promptWalkinPregnant()');
+                    $('#walkinPregnant').attr('href', '#');
+                }
+            }
+        });
+    }
+
+    $('.cancelWalkin').on('click', function() {
+        $('#walkinPregnant').attr('href', '#');
+        $('#walkinPregnant').attr('onClick','promptWalkinPregnant()');
+        $('#walkinNormal').attr('href', '#');
+        $('#walkinNormal').attr('onClick','promptWalkinNormal()');
+    });
+
+    function promptWalkinNormal() {
+        Lobibox.confirm({
+            msg: "Do you want to proceed to walkin?",
+            callback: function ($this, type, ev) {
+                if(type == 'yes') {
+                    $('#walkinNormal').attr('onclick', "");
+                    $('#walkinNormal').attr('href','#normalFormModalWalkIn');
+                    $('#walkinNormal').click();
+                } else {
+                    $('#walkinNormal').attr('onClick','promptWalkinNormal()');
+                    $('#walkinNormal').attr('href', '#');
+                }
+            }
+        });
+    }
+
     //custom autocomplete (category selection)
     /*jQuery(function($) {
         $.widget("custom.catcomplete", $.ui.autocomplete, {
@@ -326,10 +376,7 @@
             }
         });
 
-        var icd10 = [];
-        $.each(<?php /*echo json_encode($icd10); */?>, function (x, data) {
-            icd10.push({label: data.description, id: data.id, icd_code: data.code});
-        });
+
 
         var icd_code = '';
         $("#diagnosis").catcomplete({
@@ -475,8 +522,10 @@
                 $('input[name="phic_status"][value="'+phic_status+'"]').attr('checked',true);
                 $('.phic_id').val(phic_id);
                 $('.patient_sex').val(sex);
-                $('.patient_age').html(age);
-                $('.pt_age').val(age);
+                if(data.ageType == 'y')
+                    $('.patient_age').html(age + " years");
+                else if(data.ageType == 'm')
+                    $('.patient_age').html(age.month + " month/s, " + age.days + " days");
                 $('.civil_status').val(civil_status);
                 $('.patient_id').val(patient_id);
             },

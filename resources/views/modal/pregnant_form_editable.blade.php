@@ -158,7 +158,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4">
-                                        <small class="text-success"><b>MAJOR FINDINGS</b> <i> (Clinical and BP,Temp,Lab)</i>
+                                        <small class="text-success"><b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i>
                                         <br />
                                         <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </td>

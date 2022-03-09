@@ -120,7 +120,7 @@
                     $('span.clinical_status').html(data.refer_clinical_status);
                     $('span.surveillance_category').html(data.refer_sur_category);
 
-                    var print_url = "{{ url('doctor/print/form/') }}/"+data.tracking_id;
+{{--                    var print_url = {{ url('doctor/print/form/') }}/"+data.tracking_id;--}}
                     $('.btn-refer-pregnant').attr('href',print_url);
                     console.log(data);
 
@@ -226,6 +226,38 @@
                 $('#serverModal').modal();
             }
         });
+    });
+
+    $('body').on('click', '.exit_edit_btn', function (e) {
+       $('#editReferralForm').hide();
+       $('#referralForm').show();
+    });
+    $('body').on('click','.edit_form_btn',function(e) {
+        $('#referralForm').hide();
+        form_id = $(this).data('id');
+        type = $(this).data('type');
+        status = $(this).data('referral_status');
+
+        var form_url = "{{ url('doctor/referral/edit_info') }}/"+form_id+"/"+type+"/"+status;
+        $(".edit_referral_body").html(loading);
+        $.ajax({
+            url: form_url,
+            type: "GET",
+            success: function(data) {
+                console.log("form url: " + form_url);
+                setTimeout(function(){
+                    $('.edit_referral_body').html(data);
+                },300);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
+    $('body').on('click','.undo_cancel_btn',function(e) {
+        form_id = $(this).data('id');
+        $('#undo_cancel_id').val(form_id);
     });
 
     function getDateReferred()
