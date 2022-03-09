@@ -1,0 +1,381 @@
+<?php
+$user = Session::get('auth');
+$reason_for_referral = \App\ReasonForReferral::get();
+?>
+
+<style>
+    .file-upload {
+        background-color: #ffffff;
+        width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .file-upload-btn:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+
+    .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+
+    .file-upload-content {
+        display: none;
+        text-align: center;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
+
+    .image-dropping,
+    .image-upload-wrap:hover {
+        background-color: #1FB264;
+        border: 4px dashed #ffffff;
+    }
+
+    .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+
+    .file-upload-image {
+        max-height: 200px;
+        max-width: 200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .drag-text {
+        text-align: center;
+    }
+
+    .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #15824B;
+        padding: 60px 0;
+    }
+
+    .remove-image {
+        width: 200px;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+
+    .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+</style>
+
+<div>
+    @include('include.header_form')<br>
+    <form action="{{ url('doctor/referral/edit') }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <input type="hidden" name="id" value="{{ $id }}">
+        <input type="hidden" name="referral_status" value="{{ $referral_status }}">
+        <input type="hidden" name="form_type" value="normal">
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>NAME OF REFERRING FACILITY: </b></small><span class="referring_name">{{ $form->referring_name }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>FACILITY CONTACT #: </b></small><span class="referring_contact">{{ $form->referring_contact }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>ADDRESS: </b></small><span class="referring_address">{{ $form->referring_address }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-7">
+                <small class="text-success"><b>REFERRED TO: </b></small><span class="referred_name">{{ $form->referred_name }}</span>
+            </div>
+            <div class="col-md-5">
+                <small class="text-success"><b>DEPARTMENT: </b></small><span class="department_name">{{ $form->department }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>ADDRESS: </b></small><span class="referred_address">{{ $form->referred_address }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-7">
+                <small class="text-success"><b>DATE/TIME REFERRED <i>(ReCo)</i>: </b></small><span class="date_referred">{{ $form->date_referred }}</span>
+            </div>
+            <div class="col-md-5">
+                <small class="text-success"><b>DATE/TIME TRANSFERRED: </b></small><span class="date_transferred"></span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <small class="text-success"><b>NAME OF PATIENT: <br></b></small>
+                &nbsp;<span class="patient_name">{{ $form->patient_name }}</span>
+            </div>
+            <div class="col-md-2">
+                <small class="text-success"><b>AGE: </b></small><br> &nbsp;
+                <span class="patient_age">
+                    @if($age_type == "y")
+                        {{ $patient_age }} years
+                    @elseif($age_type == "m")
+                        {{ $patient_age['month'] }} mos, {{ $patient_age['days'] }} days
+                    @endif
+                </span>
+            </div>
+            <div class="col-md-3">
+                <small class="text-success"><b>SEX: </b></small><br>&nbsp;
+                <span class="patient_sex"></span>
+            </div>
+            <div class="col-md-3">
+                <small class="text-success"><b>STATUS: </b></small><br> &nbsp;
+                <span class="civil_status"></span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>ADDRESS: </b></small>
+                <span class="patient_address">{{ $form->patient_address }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-6">
+                <small class="text-success"><b>PHILHEALTH STATUS: </b></small>
+                <span class="phic_status">{{ $form->phic_status }}</span>
+            </div>
+            <div class="col-md-6">
+                <small class="text-success"><b>PHILHEALTH #: </b></small>
+                <span class="phic_id">{{ $form->phic_id }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <small class="text-success"><b>COVID NUMBER</b></small><br>
+                <input type="text" class="form-control covid_number" name="covid_number" style="width: 100%;">
+            </div>
+            <div class="col-md-4">
+                <small class="text-success"><b>CLINICAL STATUS</b></small><br>
+                <select name="refer_clinical_status" id="" class="form-control-select clinical_status" style="width: 100%;">
+                    <option value="">Select option</option>
+                    <option value="asymptomatic">Asymptomatic</option>
+                    <option value="mild">Mild</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="severe">Severe</option>
+                    <option value="critical">Critical</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <small class="text-success"><b>SURVEILLANCE CATEGORY</b></small><br>
+                <select name="refer_sur_category" id="" class="form-control-select surve_category" style="width: 100%;">
+                    <option value="">Select option</option>
+                    <option value="contact_pum">Contact (PUM)</option>
+                    <option value="suspect">Suspect</option>
+                    <option value="probable">Probable</option>
+                    <option value="confirmed">Confirmed</option>
+                </select>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>CASE SUMMARY:</b> <i>(pertinent Hx/PE, including meds, labs, course etc.)</i></small> <span class="text-red">*</span><br />
+                <textarea class="form-control case_summary" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>SUMMARY OF RECO:</b> <i>(pls. refer to ReCo Guide in Referring Patients Checklist)</i></small> <span class="text-red">*</span><br />
+                <textarea class="form-control reco_summary" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                <br><br>
+                <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                    <i class="fa fa-medkit"></i> Add ICD-10
+                </a>
+                <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+            </div>
+        </div><br>
+
+        <div class="row icd_selected" style="padding-top: 10px;">
+            <div class="col-md-12">
+                <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                <div id="icd_selected" style="padding-top: 5px">
+                    @if(isset($icd))
+                        @foreach($icd as $i)
+                            <span> => {{ $i->description }}</span><br>
+                            <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div><br>
+
+        <div class="row notes_diagnosis" style="padding-top: 10px;">
+            <div class="col-md-12">
+                <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5"></textarea>
+            </div>
+        </div><br>
+
+        <div class="row other_diag" style="padding-top: 10px">
+            <div class="col-md-12">
+                <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
+                <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5"></textarea>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span><br>
+                <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                    <option value="">Select reason for referral</option>
+                    <option value="-1">Other reason for referral</option>
+                    @foreach($reason_for_referral as $reason_referral)
+                        <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <span class="other_reason_referral"></span>
+            </div>
+        </div><br>
+
+        @if(isset($file_path))
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>FILE ATTACHMENT: </b></small>
+                {{--<input type="hidden" name="file_cleared" id="file_cleared" value="">--}}
+                {{--<button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Clear notes diagnosis</button>--}}
+                {{--<br/>--}}
+                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+            </div>
+        </div><br>
+        @else
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>FILE ATTACHMENT:</b></small><br>
+                <div class="file-upload">
+                    <div class="image-upload-wrap">
+                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                        <div class="drag-text">
+                            <h3>Drag and drop a file or select add Image</h3>
+                        </div>
+                    </div>
+                    <div class="file-upload-content">
+                        <img class="file-upload-image" src="#" alt="your image" />
+                        <div class="image-title-wrap">
+                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        @endif
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>NAME OF REFERRING MD/HCW: </b></small>
+                <span class="referring_md">{{ $form->md_referring }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>CONTACT # OF REFERRING MD/HCW: </b></small>
+                <span class="referring_md_contact">{{ $form->referring_md_contact }}</span>
+            </div>
+        </div><br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <small class="text-success"><b>NAME OF REFERRED MD/HCW - MOBILE CONTACT # (ReCo): </b></small>
+                <span class="referred_md">{{ $form->md_referred }}</span>
+            </div>
+        </div>
+
+        <hr />
+        <button class="btn btn-default btn-flat exit_edit_btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+        <div class="form-fotter pull-right">
+            <button type="submit" class="btn btn-success btn-flat btn-submit" id="edit_save_btn"><i class="fa fa-send"></i> Save </button>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+
+@include('script.edit_referred')

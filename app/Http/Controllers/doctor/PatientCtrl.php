@@ -463,7 +463,7 @@ class PatientCtrl extends Controller
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
                 'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-//                'birth_date' => $baby['dob']
+                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
@@ -617,7 +617,7 @@ class PatientCtrl extends Controller
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
                 'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-//                'birth_date' => $baby['dob']
+                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
@@ -647,7 +647,8 @@ class PatientCtrl extends Controller
                 'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
                 'notes_diagnoses' => $req->notes_diagnosis,
                 'reason_referral' => $req->reason_referral1,
-                'other_reason_referral' => $req->other_reason_referral
+                'other_reason_referral' => $req->other_reason_referral,
+                'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PregnantForm::updateOrCreate($match,$data);
 
