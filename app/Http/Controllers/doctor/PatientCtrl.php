@@ -463,7 +463,7 @@ class PatientCtrl extends Controller
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
                 'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-                'birth_date' => $baby['dob']
+//                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
@@ -617,7 +617,7 @@ class PatientCtrl extends Controller
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
                 'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-                'birth_date' => $baby['dob']
+//                'birth_date' => $baby['dob']
             ]);
 
             $data = array(
