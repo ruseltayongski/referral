@@ -549,3 +549,8 @@ Route::post('admin/icd/checkIfExistICD', 'admin\IcdCtrl@checkIfExistICD');
 Route::get('revised/referral', function (){
     return view('modal/revised_normal_form');
 });
+
+Route::get('doctor/referral/edit_info/{id}/{form_type}/{referral_status}','doctor\ReferralCtrl@editInfo');
+Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
+
+Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
