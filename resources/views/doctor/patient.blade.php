@@ -208,10 +208,21 @@
                                     <td>
                                         <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);
                                             $month = \App\Http\Controllers\ParamCtrl::getMonths($row->dob)?>
-                                        @if( $age > 0)
+                                        @if( $age == 1)
+                                            {{ $age }} year old
+                                        @elseif( $age > 0)
                                             {{ $age }} years old
                                         @else
-                                            {{ $month['month'] }} mos, {{ $month['days'] }} days
+                                            @if($month['month'] == 1)
+                                                {{ $month['month'] }} mo,
+                                            @else
+                                                {{ $month['month'] }} mos,
+                                            @endif
+                                            @if($month['days'] == 1)
+                                                {{ $month['days'] }} day
+                                            @else
+                                                {{ $month['days'] }} days
+                                            @endif
                                         @endif
                                         <br />
                                         <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
@@ -255,12 +266,12 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#"
-                                               id="walkinPregnant"
+                                            <a href="#pregnantModalWalkIn"
+                                               {{--id="walkinPregnant"--}}
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
-                                               onclick="promptWalkinPregnant()"
+                                               {{--onclick="promptWalkinPregnant()"--}}
                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
@@ -276,13 +287,13 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#"
-                                               id="walkinNormal"
+                                            <a href="#normalFormModalWalkIn"
+                                               {{--id="walkinNormal"--}}
                                                data-patient_id = "{{ $row->id }}"
                                                data-backdrop="static"
                                                data-toggle="modal"
                                                data-type="normal"
-                                               onclick="promptWalkinNormal()"
+                                               {{--onclick="promptWalkinNormal()"--}}
                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
@@ -522,10 +533,25 @@
                 $('input[name="phic_status"][value="'+phic_status+'"]').attr('checked',true);
                 $('.phic_id').val(phic_id);
                 $('.patient_sex').val(sex);
-                if(data.ageType == 'y')
-                    $('.patient_age').html(age + " years");
-                else if(data.ageType == 'm')
-                    $('.patient_age').html(age.month + " month/s, " + age.days + " days");
+                if(data.ageType === 'y') {
+                    if(age === 1)
+                        $('.patient_age').html(age + " year old");
+                    else
+                        $('.patient_age').html(age + " years old");
+                } else if(data.ageType === 'm') {
+                    var age_str = "";
+                    if(age.month === 1)
+                        age_str = age.month + " month, ";
+                    else
+                        age_str = age.month + " months, ";
+
+                    if(age.days === 1)
+                        age_str += age.days + " day old";
+                    else
+                        age_str += age.days + " days old";
+
+                    $('.patient_age').html(age_str);
+                }
                 $('.civil_status').val(civil_status);
                 $('.patient_id').val(patient_id);
             },

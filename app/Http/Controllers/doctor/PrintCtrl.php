@@ -255,9 +255,9 @@ class PrintCtrl extends Controller
 
         $patient_age = "";
         if(strcmp($data2->age_type, "y") == 0)
-            $patient_age = $data2->patient_age." years";
+            $patient_age = $data2->patient_age.(($data2->patient_age == 1) ? " year" : " years")." old ";
         elseif(strcmp($data2->age_type, "m") == 0)
-            $patient_age = $data2->patient_age['month']." mos, ".$data2->patient_age['days']." days";
+            $patient_age = $data2->patient_age['month'].(($data2->patient_age['month'] == 1) ? " mo, " : " mos, ").$data2->patient_age['days'].(($data2->patient_age['days'] == 1) ? " day old" : " days old");
 
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"age:"), 0);
 
