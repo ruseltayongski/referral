@@ -706,31 +706,31 @@ class ApiController extends Controller
 
         if(!$province = Province::where("province_code","like","$req->province%")->first())
             return array(
-                'code' => 204,
+                'code' => 227,
                 'message' => 'Invalid Province Code. Province not found.'
             );
 
         if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first())
             return array(
-                'code' => 204,
+                'code' => 228,
                 'message' => 'Invalid Municipality Code. Municipality not found.'
             );
 
         if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first())
             return array(
-                'code' => 204,
+                'code' => 229,
                 'message' => 'Invalid Barangay Code. Barangay not found.'
             );
 
         if(!$referring_facility = Facility::where("facility_code",$req->referring_facility)->first())
             return array(
-                'code' => 204,
+                'code' => 230,
                 'message' => 'Invalid Referring Facility. Facility not found.'
             );
 
         if(!$referred_facility = Facility::where("facility_code",$req->referred_facility)->first())
             return array(
-                'code' => 204,
+                'code' => 231,
                 'message' => 'Invalid Referred Facility. Facility not found.'
             );
 
