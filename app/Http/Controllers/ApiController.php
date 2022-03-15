@@ -705,19 +705,34 @@ class ApiController extends Controller
     {
 
         if(!$province = Province::where("province_code","like","$req->province%")->first())
-            return 'Invalid Province Code';
+            return array(
+                'code' => 204,
+                'message' => 'Invalid Province Code. Province not found.'
+            );
 
         if(!$muncity = Muncity::where("muncity_code",$req->muncity)->first())
-            return 'Invalid Municipality Code';
+            return array(
+                'code' => 204,
+                'message' => 'Invalid Municipality Code. Municipality not found.'
+            );
 
         if(!$barangay = Barangay::where("barangay_code",$req->barangay)->first())
-            return 'Invalid Barangay Code';
+            return array(
+                'code' => 204,
+                'message' => 'Invalid Barangay Code. Barangay not found.'
+            );
 
         if(!$referring_facility = Facility::where("facility_code",$req->referring_facility)->first())
-            return 'Invalid Referring Facility';
+            return array(
+                'code' => 204,
+                'message' => 'Invalid Referring Facility. Facility not found.'
+            );
 
         if(!$referred_facility = Facility::where("facility_code",$req->referred_facility)->first())
-            return 'Invalid Referred Facility';
+            return array(
+                'code' => 204,
+                'message' => 'Invalid Referred Facility. Facility not found.'
+            );
 
 
         $unique = array(
@@ -844,7 +859,10 @@ class ApiController extends Controller
         $type = 'normal';
         $this->addTracking($code,$patient->id,$referring_doctor,$referred_doctor,$req,$type,$form->id,'refer');
 
-        return "success";
+        return array(
+            'code' => http_response_code(),
+            'message' => "Successfully referred patient!"
+        );
     }
 
     function addTracking($code,$patient_id,$referring_doctor,$referred_doctor,$req,$type,$form_id,$status='')
