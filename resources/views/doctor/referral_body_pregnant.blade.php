@@ -1,3 +1,7 @@
+<?php
+$user = Session::get('auth');
+?>
+
 <style>
     .mobile-view {
         display: none;
@@ -30,7 +34,7 @@
     </tr>
     <tr>
         <td>Who is Referring</td>
-        <td>Record Number: <span class="record_no"></span></td>
+        <td>Record Number: <span class="record_no form-details">{{ $form['pregnant']->record_no }}</span></td>
         <td colspan="2">Referred Date: <span class="referred_date form-details">{{ $form['pregnant']->referred_date }}</span></td>
     </tr>
     <tr>
@@ -212,11 +216,12 @@
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 <div class="pull-right">
-    {{--@if($referral_status == 'referring')--}}
-        {{--<button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>--}}
-    {{--@endif--}}
-{{--    @if($cur_status == 'cancelled' && $referral_status == 'referring')--}}
-    {{--<button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>--}}
+    @if($cur_status == 'referred' && $user->facility_id == $referring_fac_id)
+        <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
+    @endif
+    @if($cur_status == 'cancelled' && $user->facility_id == $referring_fac_id)
+    <button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+    @endif
     @if($referral_status == 'referred' || $referral_status == 'redirected')
     <button class="btn btn-info btn_call_request btn-flat btn-call button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request</button>
     <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>

@@ -1,9 +1,11 @@
 <script>
+    $('#diag_prompt').hide();
+
     $("#edit_save_btn").on('click',function(e){
         if(!($('input[name="icd_ids[]"]').val()) && !($(".other_diagnosis").val())){
-            Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
-            });
+            e.preventDefault();
+            $('#diag_prompt').show();
+            $('#diag_prompt').focus();
             return false;
         }
     });
@@ -73,6 +75,18 @@
     @endif
     $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;' rows='3'>" + "<?php echo $form['pregnant']->other_reason_referral;?>" + "</textarea>");
 
+    @if(isset($file_path))
+    $('.with_file_attached').removeClass('hide');;
+    @else
+    $('.no_file_attached').removeClass('hide');
+    @endif
+
+    function clearFileUpload() {
+        $('.with_file_attached').addClass('hide');
+        $('.no_file_attached').removeClass('hide');
+        $('#file_cleared').val("true");
+    }
+
     function clearIcdNormal() {
         $("#icd_selected").html("");
         $(".icd_selected").hide();
@@ -121,6 +135,7 @@
     function othersDiagnosis() {
         $('#icd-modal').modal('hide');
         $(".other_diag").show();
+        $('#diag_prompt').hide();
     }
 
     $('.reason_referral').on('change', function() {
@@ -142,6 +157,7 @@
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $('.icd_selected').show();
+        $('#diag_prompt').hide();
         var values = [];
 
         $('input[name="icd_checkbox[]"]:checked').each(function () {

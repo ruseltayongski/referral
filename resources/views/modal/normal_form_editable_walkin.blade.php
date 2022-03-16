@@ -303,7 +303,7 @@ $referral_reasons = \App\ReasonForReferral::get();
     $("#sbmtWalkin").on('click',function(e){
         if(!($("#icd_walkin").val()) && !($("#other_diag_walkin").val())){
             Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
+                msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }

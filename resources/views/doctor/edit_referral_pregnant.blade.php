@@ -285,7 +285,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <small class="text-success"><b>DIAGNOSIS: </b></small><span class="text-red">*</span><br/>
+                        <small class="text-success"><b>DIAGNOSIS: </b></small><span class="text-red">*</span>
+                        <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:70%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
                         <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
                             <i class="fa fa-medkit"></i> Add ICD-10
                         </a>
@@ -409,10 +410,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </div>
     <div class="row">
         <div class="col-md-12">
-            @if(isset($file_path))
-                <small class="text-success"><b>FILE ATTACHMENT: </b></small>
+            <div class="with_file_attached hide">
+                <small class="text-success"><b>FILE ATTACHMENT: </b></small> &emsp;
+                <input type="hidden" name="file_cleared" id="file_cleared" value="">
+                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
                 <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
-            @else
+            </div>
+            <div class="no_file_attached hide">
                 <small class="text-success"><b>FILE ATTACHMENT: </b></small>
                 <div class="file-upload">
                     <div class="image-upload-wrap">
@@ -428,7 +432,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
     <hr />

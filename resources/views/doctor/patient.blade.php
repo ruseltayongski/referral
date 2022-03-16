@@ -1,5 +1,6 @@
 <?php
     $user = Session::get('auth');
+    $counter = 0;
 ?>
 
 @extends('layouts.app')
@@ -266,12 +267,12 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#pregnantModalWalkIn"
-                                               {{--id="walkinPregnant"--}}
+                                            <a href="#"
+                                               id="walkinPregnant{{ $counter }}"
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
-                                               {{--onclick="promptWalkinPregnant()"--}}
+                                               onclick="promptWalkinPregnant(<?php echo $counter++?>)"
                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
@@ -287,13 +288,13 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Refer
                                             </a>
-                                            <a href="#normalFormModalWalkIn"
-                                               {{--id="walkinNormal"--}}
+                                            <a href="#"
+                                               id="walkinNormal{{ $counter }}"
                                                data-patient_id = "{{ $row->id }}"
                                                data-backdrop="static"
                                                data-toggle="modal"
                                                data-type="normal"
-                                               {{--onclick="promptWalkinNormal()"--}}
+                                               onclick="promptWalkinNormal(<?php echo $counter++?>)"
                                                class="btn btn-warning btn-xs profile_info hide">
                                                 <i class="fa fa-ambulance"></i>
                                                 Walk-In
@@ -332,40 +333,43 @@
 @include('script.firebase')
 @include('script.datetime')
 <script>
-    function promptWalkinPregnant() {
+    function promptWalkinPregnant(counter) {
         Lobibox.confirm({
             msg: "Do you want to proceed to walkin?",
             callback: function ($this, type, ev) {
                 if(type == 'yes') {
-                    $('#walkinPregnant').attr('onclick', "");
-                    $('#walkinPregnant').attr('href','#pregnantModalWalkIn');
-                    $('#walkinPregnant').click();
+                    $('#walkinPregnant'+counter).attr('onclick', "");
+                    $('#walkinPregnant'+counter).attr('href','#pregnantModalWalkIn');
+                    $('#walkinPregnant'+counter).click();
                 } else {
-                    $('#walkinPregnant').attr('onClick','promptWalkinPregnant()');
-                    $('#walkinPregnant').attr('href', '#');
+                    $('#walkinPregnant'+counter).attr('onClick','promptWalkinPregnant('+counter+')');
+                    $('#walkinPregnant'+counter).attr('href', '#');
                 }
             }
         });
     }
 
     $('.cancelWalkin').on('click', function() {
-        $('#walkinPregnant').attr('href', '#');
-        $('#walkinPregnant').attr('onClick','promptWalkinPregnant()');
-        $('#walkinNormal').attr('href', '#');
-        $('#walkinNormal').attr('onClick','promptWalkinNormal()');
+        var counter = "<?php echo $counter;?>";
+        for(var i = 0; i < counter; i++){
+            $('#walkinPregnant'+i).attr('href', '#');
+            $('#walkinPregnant'+i).attr('onClick','promptWalkinPregnant('+i+')');
+            $('#walkinNormal'+i).attr('href', '#');
+            $('#walkinNormal'+i).attr('onClick','promptWalkinNormal('+i+')');
+        }
     });
 
-    function promptWalkinNormal() {
+    function promptWalkinNormal(counter) {
         Lobibox.confirm({
             msg: "Do you want to proceed to walkin?",
             callback: function ($this, type, ev) {
                 if(type == 'yes') {
-                    $('#walkinNormal').attr('onclick', "");
-                    $('#walkinNormal').attr('href','#normalFormModalWalkIn');
-                    $('#walkinNormal').click();
+                    $('#walkinNormal'+counter).attr('onclick', "");
+                    $('#walkinNormal'+counter).attr('href','#normalFormModalWalkIn');
+                    $('#walkinNormal'+counter).click();
                 } else {
-                    $('#walkinNormal').attr('onClick','promptWalkinNormal()');
-                    $('#walkinNormal').attr('href', '#');
+                    $('#walkinNormal'+counter).attr('onClick','promptWalkinNormal('+counter+')');
+                    $('#walkinNormal'+counter).attr('href', '#');
                 }
             }
         });

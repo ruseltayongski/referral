@@ -70,8 +70,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <small class="text-success"><b>ACCOMPANIED BY THE HEALTH WORKER: </b></small>
-                            <input type="text" class="form-control web-view" name="health_worker" style="width: 50%;" placeholder="Name of Health Worker"/>
-                            <input type="text" class="form-control mobile-view" name="health_worker" style="width: 100%;" placeholder="Name of Health Worker"/>
+                            <input type="text" class="form-control" name="health_worker" style="width: 50%;" placeholder="Name of Health Worker"/>
                         </div>
                     </div><br class="mobile-view">
 
@@ -388,7 +387,7 @@
     $("#sbmtPreg").on('click',function(e){
         if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
             Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
+                msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }

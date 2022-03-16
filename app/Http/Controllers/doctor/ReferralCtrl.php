@@ -185,7 +185,7 @@ class ReferralCtrl extends Controller
     }
 
     public static function normalForm($id,$referral_status,$form_type) {
-        $track = Tracking::select('code', 'status')->where('id', $id)->first();
+        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code',$track->code)->get();
@@ -208,6 +208,7 @@ class ReferralCtrl extends Controller
             "file_name" => $file_name,
             "referral_status" => $referral_status,
             "cur_status" => $track->status,
+            "referring_fac_id" => $track->referring_fac_id,
             "form_type" => $form_type
         ]);
     }
@@ -294,7 +295,7 @@ class ReferralCtrl extends Controller
     }
 
     public static function pregnantForm($id,$referral_status) {
-        $track = Tracking::select('code')->where('id', $id)->first();
+        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code',$track->code)->get();
@@ -313,6 +314,8 @@ class ReferralCtrl extends Controller
             "file_path" => $path,
             "file_name" => $file_name,
             "referral_status" => $referral_status,
+            "cur_status" => $track->status,
+            "referring_fac_id" => $track->referring_fac_id,
             "form_type" => "pregnant"
         ]);
     }
@@ -394,7 +397,7 @@ class ReferralCtrl extends Controller
                         'baby.fname as baby_fname',
                         'baby.mname as baby_mname',
                         'baby.lname as baby_lname',
-                        DB::raw("DATE_FORMAT(baby.dob,'%M %d, %Y %h:%i %p') as baby_dob"),
+                        DB::raw("DATE_FORMAT(bb.birth_date,'%M %d, %Y %h:%i %p') as baby_dob"),
                         'bb.weight',
                         'bb.gestational_age',
                         'pregnant_form.baby_reason',
@@ -412,14 +415,14 @@ class ReferralCtrl extends Controller
                     ->where('tracking.id',$id)
                     ->first();
 
-//            if($baby['baby_dob'] === null) { /*TODO fix eloquent*/
-//                $dob_ = Patients::select(DB::raw("DATE_FORMAT(patients.dob,'%M %d, %Y %h:%i %p') as baby_dob"))
-//                    ->join('pregnant_form as pregnant','pregnant.patient_baby_id','=','patients.id')
-//                    ->join('tracking','tracking.code','=','pregnant.code')
-//                    ->where('tracking.id',$id)
-//                    ->first();
-//                $baby['baby_dob'] = (isset($dob)) ? $dob->baby_dob : '';
-//            }
+            if($baby['baby_dob'] === null) {
+                $dob_ = Patients::select(DB::raw("DATE_FORMAT(patients.dob,'%M %d, %Y %h:%i %p') as baby_dob"))
+                    ->join('pregnant_form as pregnant','pregnant.patient_baby_id','=','patients.id')
+                    ->join('tracking','tracking.code','=','pregnant.code')
+                    ->where('tracking.id',$id)
+                    ->first();
+                $baby['baby_dob'] = $dob_->baby_dob;
+            }
         }
 
         return array(
@@ -1429,54 +1432,52 @@ class ReferralCtrl extends Controller
         $track = Tracking::select('code')->where('id', $id)->first()->code;
         $form_type = $req->form_type;
         $user = Session::get('auth');
+        $dob = date('y-m-d h-i-s', strtotime($req->baby_dob));
+        $data = '';
 
         $data_update = $req->all();
 
         if($form_type === 'normal') {
             $data = PatientForm::where('code', $track)->first();
 
-            if($req->notes_diag_cleared == "true") {
+            if($req->notes_diag_cleared == "true")
                 $data->update(['diagnosis' => NULL]);
-                unset($data_update['diagnosis']);
-            }
+
             unset($data_update['notes_diag_cleared']);
         }
-
         else if($form_type === 'pregnant') {
             $data = PregnantForm::where('code', $track)->first();
             $baby_id = $req->baby_id;
             $match = Patients::where('id', $baby_id)->first();
+
             $baby = array(
                 "fname" => $req->baby_fname,
                 "mname" => $req->baby_mname,
                 "lname" => $req->baby_lname,
-                "dob" => $req->baby_dob
+                "dob" => $dob
             );
             if(isset($match))
                 $match->update($baby);
             else
                 $baby_id = PatientCtrl::storeBabyAsPatient($baby,$req->mother_id);
 
-            $match = Baby::where("baby_id", $req->baby_id)->first();
-            $baby = array(
-                "baby_id" => $baby_id,
-                "mother_id" => $req->mother_id,
-                "weight" => $req->baby_weight,
-                "gestational_age" => $req->baby_gestational_age,
-                "birth_date" => $req->baby_dob
-            );
+            $match = Baby::where("baby_id", $baby_id)->first();
 
             if(isset($match)) {
-                $match->update($baby);
-                $match->birth_date = $req->baby_dob;
+                $match->weight = ($req->baby_weight) ? $req->baby_weight : '';
+                $match->gestational_age = ($req->baby_gestational_age) ? $req->baby_gestational_age : '';
+                $match->birth_date = $dob;
                 $match->save();
             } else {
-                $match = array(
-                    "baby_id" => $baby_id,
-                    "mother_id" => $req->mother_id
-                );
-                Baby::updateOrCreate($match,$baby);
+                $b = new Baby();
+                $b->baby_id = $baby_id;
+                $b->mother_id = $req->mother_id;
+                $b->weight = ($req->baby_weight) ? $req->baby_weight : '';
+                $b->gestational_age = ($req->baby_gestational_age) ? $req->baby_gestational_age : '';
+                $b->birth_date = $dob;
+                $b->save();
             }
+
 
             unset($data_update['baby_fname']);
             unset($data_update['baby_mname']);
@@ -1487,23 +1488,22 @@ class ReferralCtrl extends Controller
             unset($data_update['baby_id']);
             unset($data_update['mother_id']);
 
-            if($req->notes_diag_cleared == "true") {
+            if($req->notes_diag_cleared == "true")
                 $data->update(['notes_diagnoses' => NULL]);
-                unset($data_update['notes_diagnoses']);
-            }
+
             unset($data_update['notes_diag_cleared']);
 
             $data_update['patient_baby_id'] = $baby_id;
-            $data_update['baby_last_feed'] = date('Y-m-d H:i:s',strtotime($req->baby_last_feed));
-            $data_update['woman_before_given_time'] = date('Y-m-d H:i:s',strtotime($req->woman_before_given_time));
-            $data_update['woman_transport_given_time'] = date('Y-m-d H:i:s',strtotime($req->woman_transport_given_time));
-            $data_update['baby_before_given_time'] = date('Y-m-d H:i:s',strtotime($req->baby_before_given_time));
-            $data_update['baby_transport_given_time'] =  date('Y-m-d H:i:s',strtotime($req->baby_transport_given_time));
+
+            $data_update['woman_before_given_time'] = ($req->woman_before_given_time) ? date('y-m-d h-i-s', strtotime($req->woman_before_given_time)) : '';
+            $data_update['woman_transport_given_time'] = ($req->woman_transport_given_time) ? date('y-m-d h-i-s', strtotime($req->woman_transport_given_time)) : '';
+            $data_update['baby_last_feed'] = ($req->baby_last_feed) ? date('y-m-d h-i-s', strtotime($req->baby_last_feed)) : '';
+            $data_update['baby_before_given_time'] = ($req->baby_before_given_time) ? date('y-m-d h-i-s', strtotime($req->baby_before_given_time)) : '';
+            $data_update['baby_transport_given_time'] = ($req->baby_transport_given_time) ? date('y-m-d h-i-s', strtotime($req->baby_transport_given_time)) : '';
         }
 
         if($req->other_diag_cleared == "true") {
             $data->update(['other_diagnoses' => NULL]);
-            unset($data_update['other_diagnoses']);
         }
         unset($data_update['other_diag_cleared']);
 
@@ -1521,6 +1521,13 @@ class ReferralCtrl extends Controller
             }
         }
         unset($data_update['icd_ids']);
+
+        if($req->file_cleared == "true") {
+            $data->update([
+                'file_path' => null
+            ]);
+        }
+        unset($data_update['file_cleared']);
 
         if($_FILES["file_upload"]["name"]) {
             $username = $user->username;

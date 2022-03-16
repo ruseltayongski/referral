@@ -254,7 +254,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         <div class="row">
             <div class="col-md-12">
                 <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                <br><br>
+                <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
                 <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
                     <i class="fa fa-medkit"></i> Add ICD-10
                 </a>
@@ -315,18 +315,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
             </div>
         </div><br>
 
-        @if(isset($file_path))
-        <div class="row">
+        <div class="row with_file_attached hide">
             <div class="col-md-12">
-                <small class="text-success"><b>FILE ATTACHMENT: </b></small>
-                {{--<input type="hidden" name="file_cleared" id="file_cleared" value="">--}}
-                {{--<button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Clear notes diagnosis</button>--}}
-                {{--<br/>--}}
+                <small class="text-success"><b>FILE ATTACHMENT: </b></small> &emsp;
+                <input type="hidden" name="file_cleared" id="file_cleared" value="">
+                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
                 <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
             </div>
         </div><br>
-        @else
-        <div class="row">
+
+        <div class="row no_file_attached hide">
             <div class="col-md-12">
                 <small class="text-success"><b>FILE ATTACHMENT:</b></small><br>
                 <div class="file-upload">
@@ -346,7 +344,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
             </div>
         </div>
         <br>
-        @endif
 
         <div class="row">
             <div class="col-md-12">

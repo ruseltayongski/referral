@@ -326,7 +326,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
             Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
+                msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }

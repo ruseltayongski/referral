@@ -177,15 +177,12 @@ $user = Session::get('auth');
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 <div class="form-fotter pull-right">
-    {{--@if($referral_status == 'referring')--}}
-        {{--TODO: FIX THIS KAY SA TRACKING MAKITA ANG EDIT BUTTON FOR ALL FACILITIES --}}
-        {{--TODO: for the reason nga si referral_status, "referring" na ang iyang value didto sa tracking --}}
-        {{--TODO: POSSIBLE SOLUTION #1: go to controller and fix referral status--}}
-        {{--TODO: POSSIBLE SOLUTION #2: find another way to trap "edit" and "cancel" buttons--}}
-    {{--<button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>--}}
-    {{--@endif--}}
-    {{--@if($cur_status == 'cancelled' && $referral_status == 'referring')--}}
-    {{--<button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>--}}
+    @if($cur_status == 'referred' && $user->facility_id == $referring_fac_id)
+        <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
+    @endif
+    @if($cur_status == 'cancelled' && $user->facility_id == $referring_fac_id)
+    <button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+    @endif
     @if($referral_status == 'referred' || $referral_status == 'redirected')
     <button class="btn btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
     <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>

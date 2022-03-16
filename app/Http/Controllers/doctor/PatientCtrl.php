@@ -457,14 +457,16 @@ class PatientCtrl extends Controller
             );
             $baby_id = self::storeBabyAsPatient($baby,$patient_id);
 
-            Baby::updateOrCreate([
+            $baby2 = Baby::updateOrCreate([
                 'baby_id' => $baby_id,
                 'mother_id' => $patient_id
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-//                'birth_date' => $baby['dob']
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
             ]);
+
+            $baby2->birth_date = ($req->baby_dob) ? $req->baby_dob : '';
+            $baby2->save();
 
             $data = array(
                 'unique_id' => $unique_id,
@@ -611,14 +613,16 @@ class PatientCtrl extends Controller
 
             $baby_id = self::storeBabyAsPatient($baby,$patient_id);
 
-            Baby::updateOrCreate([
+            $baby2 = Baby::updateOrCreate([
                 'baby_id' => $baby_id,
                 'mother_id' => $patient_id
             ],[
                 'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: '',
-//                'birth_date' => $baby['dob']
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
             ]);
+
+            $baby2->birth_date = ($req->baby_dob) ? $req->baby_dob : '';
+            $baby2->save();
 
             $data = array(
                 'referring_facility' => ($req->referring_facility_walkin) ? $req->referring_facility_walkin: '',

@@ -1,9 +1,11 @@
 <script>
+    $('#diag_prompt').hide();
+
     $("#edit_save_btn").on('click',function(e){
         if(!($('input[name="icd_ids[]"]').val()) && !($("#other_diagnosis").val())){
-            Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
-            });
+            e.preventDefault();
+            $('#diag_prompt').show();
+            $('#diag_prompt').focus();
             return false;
         }
     });
@@ -34,6 +36,18 @@
     $('.other_diag').show();
     $('#other_diagnosis').val("<?php echo $form->other_diagnoses;?>");
     @endif
+
+    @if(isset($file_path))
+    $('.with_file_attached').removeClass('hide');;
+    @else
+    $('.no_file_attached').removeClass('hide');
+    @endif
+
+    function clearFileUpload() {
+        $('.with_file_attached').addClass('hide');
+        $('.no_file_attached').removeClass('hide');
+        $('#file_cleared').val("true");
+    }
 
     $('.reason_referral').val("<?php echo $reason->id;?>");
     @if(isset($form->other_reason_referral))
@@ -91,6 +105,7 @@
     function othersDiagnosis() {
         $('#icd-modal').modal('hide');
         $(".other_diag").show();
+        $('#diag_prompt').hide();
     }
 
     $('.reason_referral').on('change', function() {
@@ -112,6 +127,7 @@
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $('.icd_selected').show();
+        $('#diag_prompt').hide();
         var values = [];
 
         $('input[name="icd_checkbox[]"]:checked').each(function () {
