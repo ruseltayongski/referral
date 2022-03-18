@@ -1,1 +1,1 @@
-<script src="{{ url('resources/plugin/Chart.js/chart.js') }}"></script>
+<script src="{{ url('resources/plugin/Chart.js/Chart.js') }}"></script>

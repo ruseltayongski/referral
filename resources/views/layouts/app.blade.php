@@ -404,7 +404,7 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Go Top</button>
 <footer class="footer">
     <div class="container">
-        <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 5.6</p>
+        <p class="pull-right">All Rights Reserved {{ date("Y") }} | Version 5.7</p>
     </div>
 </footer>
 

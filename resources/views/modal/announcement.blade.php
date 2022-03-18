@@ -8,13 +8,16 @@
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.6</strong><br>
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.7</strong><br>
                                 <ol>
                                     <li>
-                                        ICD-10 <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        Undo the canceled referral <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        Attachment File <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        The referring user can update the e-referral form <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                    </li>
+                                    <li>
+                                        Add prompt confirmation when clicking the walk-in button <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
