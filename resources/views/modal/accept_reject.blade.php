@@ -27,7 +27,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" role="dialog" id="editReferralForm">
+<div class="modal fade" role="dialog" id="editReferralForm" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">

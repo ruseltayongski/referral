@@ -179,17 +179,17 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div><br>
 
                         {{--<div class="row">--}}
-                            {{--<div class="col-md-12">--}}
-                                {{--<span class="text-success">--}}
-                                {{--@if(Session::get('auth')->level == 'opcen')--}}
-                                {{--Chief Complaints--}}
-                                {{--@else--}}
-                                {{--Diagnosis/Impression:--}}
-                                {{--@endif--}}
-                                {{--</span> <span class="text-red">*</span>--}}
-                                {{--<br />--}}
-                                {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
-                            {{--</div>--}}
+                        {{--<div class="col-md-12">--}}
+                        {{--<span class="text-success">--}}
+                        {{--@if(Session::get('auth')->level == 'opcen')--}}
+                        {{--Chief Complaints--}}
+                        {{--@else--}}
+                        {{--Diagnosis/Impression:--}}
+                        {{--@endif--}}
+                        {{--</span> <span class="text-red">*</span>--}}
+                        {{--<br />--}}
+                        {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
+                        {{--</div>--}}
                         {{--</div>--}}
 
                         <div class="row">
@@ -322,7 +322,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
-
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
             Lobibox.alert("error", {
@@ -331,26 +330,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
             return false;
         }
     });
-
     function clearICD() {
         $("#icd_selected").html("");
         $("#clear_icd, #icd_selected").hide();
     }
-
     function clearOtherDiagnosis() {
         $("#others_diagnosis").html("");
         $("#clear_other_diag").hide();
     }
-
     function clearNotesDiagnosis() {
         $("#add_notes_diagnosis").html("");
         $("#clear_notes").hide();
     }
-
     function clearOtherReasonReferral() {
         $("#other_reason_referral").html("");
     }
-
     function addNotesDiagnosis() {
         $("#add_notes_diagnosis").html(loading);
         $("#clear_notes").show();
@@ -360,7 +354,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
-
     $('.reason_referral').on('change', function() {
         var value = $(this).val();
         if(value == '-1') {
@@ -375,7 +368,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
             clearOtherReasonReferral();
         }
     });
-
     function searchICD10() {
         $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
@@ -389,12 +381,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
             },500);
         });
     }
-
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $('#clear_icd, #icd_selected').show();
         var values = [];
-
         $('input[name="icd_checkbox[]"]:checked').each(function () {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
@@ -407,7 +397,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         });
         console.log(values);
     }
-
     function othersDiagnosis(){
         $('#icd-modal').modal('hide');
         $("#others_diagnosis").html(loading);
@@ -418,34 +407,26 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
-
     function readURL(input) {
         if (input.files && input.files[0]) {
-
             var reader = new FileReader();
-
             reader.onload = function(e) {
                 $('.image-upload-wrap').hide();
-
                 $('.file-upload-image').attr('src', e.target.result);
                 $('.file-upload-content').show();
-
                 $('.image-title').html(input.files[0].name);
             };
-
             reader.readAsDataURL(input.files[0]);
-                      
+
         } else {
             removeUpload();
         }
     }
-
     function removeUpload() {
         $('.file-upload-input').replaceWith($('.file-upload-input').clone());
         $('.file-upload-content').hide();
         $('.image-upload-wrap').show();
     }
-
     $('.image-upload-wrap').bind('dragover', function () {
         $('.image-upload-wrap').addClass('image-dropping');
     });
