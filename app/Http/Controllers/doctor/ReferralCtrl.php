@@ -240,6 +240,7 @@ class ReferralCtrl extends Controller
             DB::raw("concat(pp.description,', ',mm.description,', ',pp.description) as referred_address"),
             'facility.name as referring_name',
             'ff.name as referred_name',
+            'ff.id as referred_fac_id',
             DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
             DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
             DB::raw('CONCAT(
@@ -250,10 +251,12 @@ class ReferralCtrl extends Controller
                         )
                 ,users.fname," ",users.mname," ",users.lname) as md_referring'),
             DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname," / ",u.contact) as md_referred'),
+            'u.id as md_referred_id',
             'facility.contact as referring_contact',
             'ff.contact as referred_contact',
             'users.contact as referring_md_contact',
             'department.description as department',
+            'department.id as department_id',
             DB::raw("DATE_FORMAT(act.date_referred,'%M %e, %Y %r') as date_referred")
         )
             ->join('patients','patients.id','=','patient_form.patient_id')
@@ -339,6 +342,7 @@ class ReferralCtrl extends Controller
             'm.description as facility_muncity',
             'p.description as facility_province',
             'ff.name as referred_facility',
+            'ff.id as referred_facility_id',
             'bb.description as ff_brgy',
             'mm.description as ff_muncity',
             'pp.description as ff_province',
@@ -362,6 +366,7 @@ class ReferralCtrl extends Controller
             'ff.contact as referred_contact',
             'users.contact as referring_md_contact',
             'department.description as department',
+            'department.id as department_id',
             'pregnant_form.covid_number',
             'pregnant_form.refer_clinical_status',
             'pregnant_form.refer_sur_category',
@@ -1429,7 +1434,19 @@ class ReferralCtrl extends Controller
     public static function editForm(Request $req)
     {
         $id = $req->id;
-        $track = Tracking::select('code')->where('id', $id)->first()->code;
+
+        $tracking = Tracking::where('id', $id)->first();
+        $track = $tracking->code;
+
+        $tracking->referred_to = $req->referred_to;
+        $tracking->department_id = $req->department_id;
+        $tracking->save();
+
+        $activity = Activity::where('code',$track)->first();
+        $activity->referred_to = $req->referred_to;
+        $activity->department_id = $req->department_id;
+        $activity->save();
+
         $form_type = $req->form_type;
         $user = Session::get('auth');
         $dob = date('y-m-d h-i-s', strtotime($req->baby_dob));
@@ -1444,6 +1461,12 @@ class ReferralCtrl extends Controller
                 $data->update(['diagnosis' => NULL]);
 
             unset($data_update['notes_diag_cleared']);
+
+            $tracking->action_md = $req->referred_md;
+            $tracking->save();
+
+            $activity->action_md = $req->referred_md;
+            $activity->save();
         }
         else if($form_type === 'pregnant') {
             $data = PregnantForm::where('code', $track)->first();

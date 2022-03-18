@@ -1,6 +1,11 @@
 <?php
 $user = Session::get('auth');
 $reason_for_referral = \App\ReasonForReferral::get();
+$facilities = \App\Facility::select('id','name')
+    ->where('id','!=',$user->facility_id)
+    ->where('status',1)
+    ->where('referral_used','yes')
+    ->orderBy('name','asc')->get();
 ?>
 
 <style>
@@ -143,17 +148,28 @@ $reason_for_referral = \App\ReasonForReferral::get();
         </div><br>
 
         <div class="row">
-            <div class="col-md-7">
-                <small class="text-success"><b>REFERRED TO: </b></small><span class="referred_name">{{ $form->referred_name }}</span>
+            <div class="col-md-4">
+                <small class="text-success"><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
+                <select name="referred_to" class="select2 edit_facility_normal form-control" required>
+                    <option value="">Select Facility...</option>
+                    @foreach($facilities as $row)
+                        @if($row->id == $form->referred_fac_id)
+                            <option data-name="{{ $row->name }}" value="{{ $row->id }}" selected>{{ $row->name }}</option>
+                        @else
+                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                        @endif
+                    @endforeach
+                </select>
             </div>
-            <div class="col-md-5">
-                <small class="text-success"><b>DEPARTMENT: </b></small><span class="department_name">{{ $form->department }}</span>
+            <div class="col-md-4">
+                <small class="text-success"><b>DEPARTMENT: </b></small> <span class="text-red">*</span><br>
+                <select name="department_id" class="form-control edit_department_normal" style="width: 100%;" required>
+                    <option value="">Select Option</option>
+                </select>
             </div>
-        </div><br>
-
-        <div class="row">
-            <div class="col-md-12">
-                <small class="text-success"><b>ADDRESS: </b></small><span class="referred_address">{{ $form->referred_address }}</span>
+            <div class="col-md-4">
+                <small class="text-success"><b>ADDRESS:</b></small><br>
+                &nbsp;<span class="text-yellow edit_fac_address_normal"></span>
             </div>
         </div><br>
 
@@ -343,7 +359,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 </div>
             </div>
         </div>
-        <br>
 
         <div class="row">
             <div class="col-md-12">
@@ -361,8 +376,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
         <div class="row">
             <div class="col-md-12">
-                <small class="text-success"><b>NAME OF REFERRED MD/HCW - MOBILE CONTACT # (ReCo): </b></small>
-                <span class="referred_md">{{ $form->md_referred }}</span>
+                <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                <select name="referred_md" class="form-control edit_action_md" style="width: 100%;">
+                    <option value="">Any</option>
+                </select>
             </div>
         </div>
 
@@ -375,4 +392,5 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </form>
 </div>
 
+@include('script.datetime')
 @include('script.edit_referred')

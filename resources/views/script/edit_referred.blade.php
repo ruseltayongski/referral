@@ -10,6 +10,129 @@
         }
     });
 
+    setDepartment();
+    function setDepartment() {
+        var id = $('.edit_facility_normal').val();
+        var url = "{{ url('location/facility/') }}";
+        $.ajax({
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.edit_fac_address_normal').html(data.address);
+
+                $('.edit_department_normal').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.edit_department_normal').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+                });
+                $('.edit_department_normal').val("<?php echo $form->department_id;?>");
+                setReferredMd();
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+
+    }
+
+    $('.edit_facility_normal').on('change',function(){
+        var id = $(this).val();
+        var url = "{{ url('location/facility/') }}";
+        $.ajax({
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.edit_fac_address_normal').html(data.address);
+
+                $('.edit_department_normal').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.edit_department_normal').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+                });
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
+    function setReferredMd() {
+        var referred_facility = $('.edit_facility_normal').val();
+        var id = $('.edit_department_normal').val();
+        var list = "{{ url('list/doctor') }}";
+        if(id){
+            if(referred_facility==0){
+                referred_facility = "{{ $user->facility_id }}";
+            }
+            $.ajax({
+                url: list+'/'+referred_facility+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    $('.edit_action_md').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Any...'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('.edit_action_md').append($('<option>', {
+                            value: val.id,
+                            text: 'Dr. ' + val.fname + ' ' + val.mname + ' ' + val.lname + ' - ' + val.contact,
+                        }));
+                    });
+                    $('.edit_action_md').val("<?php echo $form->md_referred_id;?>");
+                },
+                error:function(){
+                    $('#serverModal').modal();
+                }
+            });
+        }
+    }
+
+    $('.edit_department_normal').on('change',function() {
+        var referred_facility = $('.edit_facility_normal').val();
+        var id = $(this).val();
+        var list = "{{ url('list/doctor') }}";
+        if(id){
+            if(referred_facility==0){
+                referred_facility = "{{ $user->facility_id }}";
+            }
+            $.ajax({
+                url: list+'/'+referred_facility+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    $('.edit_action_md').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Any...'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('.edit_action_md').append($('<option>', {
+                            value: val.id,
+                            text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
+                        }));
+                    });
+                },
+                error:function(){
+                    $('#serverModal').modal();
+                }
+            });
+        }
+    });
+
     $('.icd_selected, .notes_diagnosis, .other_diag').hide();
 
     $('.patient_sex').html("<?php echo $form->patient_sex;?>");
@@ -175,4 +298,6 @@
     $('.image-upload-wrap').bind('dragleave', function () {
         $('.image-upload-wrap').removeClass('image-dropping');
     });
+
+    $(".select2").select2({ width: '100%' });
 </script>

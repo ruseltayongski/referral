@@ -10,6 +10,62 @@
         }
     });
 
+    $('.edit_facility_pregnant').val("<?php echo $form['pregnant']->referred_facility_id;?>");
+
+    setDepartment();
+    function setDepartment() {
+        var id = $('.edit_facility_pregnant').val();
+        var url = "{{ url('location/facility/') }}";
+        $.ajax({
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.edit_department_pregnant').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.edit_department_pregnant').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+                });
+                $('.edit_department_pregnant').val("<?php echo $form['pregnant']->department_id;?>");
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    }
+
+    $('.edit_facility_pregnant').on('change',function(){
+        var id = $(this).val();
+        var url = "{{ url('location/facility/') }}";
+        $.ajax({
+            url: url+'/'+id,
+            type: 'GET',
+            success: function(data){
+                console.log(data);
+                $('.edit_department_pregnant').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select Department...'
+                    }));
+                jQuery.each(data.departments, function(i,val){
+                    $('.edit_department_pregnant').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+                });
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
+
     /* INITIALIZE WOMAN VALUES */
     $('.covid_number').val("<?php echo $form['pregnant']->covid_number;?>");
     $('.clinical_status').val("<?php echo $form['pregnant']->refer_clinical_status;?>");
@@ -205,4 +261,6 @@
     $('.image-upload-wrap').bind('dragleave', function () {
         $('.image-upload-wrap').removeClass('image-dropping');
     });
+
+    $(".select2").select2({ width: '100%' });
 </script>

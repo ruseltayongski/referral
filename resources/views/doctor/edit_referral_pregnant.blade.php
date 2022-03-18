@@ -1,6 +1,11 @@
 <?php
 $user = Session::get('auth');
 $reason_for_referral = \App\ReasonForReferral::get();
+$facilities = \App\Facility::select('id','name')
+    ->where('id','!=',$user->facility_id)
+    ->where('status',1)
+    ->where('referral_used','yes')
+    ->orderBy('name','asc')->get();
 ?>
 
 <style>
@@ -164,14 +169,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </div><br>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <small class="text-success"><b>REFERRING FACILITY: </b></small>
             <span class="referring_facility">{{ $form['pregnant']->referring_facility }}</span>
         </div><br class="mobile-view">
-        <div class="col-md-4">
-            <small class="text-success"><b>DEPARTMENT: </b></small>
-            <span class="department_name">{{ $form['pregnant']->department }}</span>
-        </div>
     </div><br>
 
     <div class="row">
@@ -186,12 +187,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
             <small class="text-success"><b>ACCOMPANIED BY THE HEALTH WORKER: </b></small>
             <span class="health_worker">{{ $form['pregnant']->health_worker }}</span>
         </div>
-    </div><br class="mobile-view">
+    </div><br>
 
     <div class="row">
-        <div class="col-md-12">
-            <small class="text-success"><b>REFERRED TO: </b></small>
-            <span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>
+        <div class="col-md-6">
+            <small class="text-success"><b>REFERRED TO: </b></small><br>
+            <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
+                <option value="">Select Facility...</option>
+                @foreach($facilities as $row)
+                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                @endforeach
+            </select>
+            {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
+        </div>
+        <div class="col-md-4">
+            <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
+            <select name="department_id" class="form-control-select edit_department_pregnant" required>
+                <option value="">Select Department...</option>
+            </select>
+            {{--<span class="department_name">{{ $form['pregnant']->department }}</span>--}}
         </div>
     </div><br>
 
