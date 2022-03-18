@@ -142,22 +142,18 @@
     $('.covid_number').val("<?php echo $form->covid_number;?>");
     $('.clinical_status').val("<?php echo $form->refer_clinical_status;?>");
     $('.surve_category').val("<?php echo $form->refer_sur_category;?>");
-    $('.case_summary').val("<?php echo $form->case_summary;?>");
-    $('.reco_summary').val("<?php echo $form->reco_summary;?>");
 
     @if(isset($icd[0]))
-        $('.icd_selected').show();;
+        $('.icd_selected').show();
     @endif
 
     @if(isset($form->diagnosis))
     $('.notes_diagnosis').show();
-    $('.normal_notes_diagnosis').val("<?php echo $form->diagnosis;?>");
     $('.add_notes_btn').hide();
     @endif
 
     @if(isset($form->other_diagnoses))
     $('.other_diag').show();
-    $('#other_diagnosis').val("<?php echo $form->other_diagnoses;?>");
     @endif
 
     @if(isset($file_path))
@@ -178,7 +174,6 @@
     @else
         $('.other_reason_referral').hide();
     @endif
-    $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3'>" + "<?php echo $form->other_reason_referral;?>" + "</textarea>");
 
     function clearIcdNormal() {
         $("#icd_selected").html("");
@@ -236,11 +231,7 @@
         if(value == '-1') {
             setTimeout(function(){
                 $('.other_reason_referral').show();
-                @if(isset($form->other_reason_referral))
-                    $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3'>" + "<?php echo $form->other_reason_referral;?>" + "</textarea>");
-                @else
-                    $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral'></textarea>");
-                @endif
+                $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral'></textarea>");
             },500);
         }else{
             clearOtherReasonReferral();

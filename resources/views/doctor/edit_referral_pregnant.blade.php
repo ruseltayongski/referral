@@ -262,16 +262,16 @@ $facilities = \App\Facility::select('id','name')
                 <tr>
                     <td colspan="4">
                         <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
-                        <label><input <?php if($form['pregnant']->woman_reason=='None') echo 'selected'; ?> type="radio" name="woman_reason" value="None" checked /> None </label>
-                        <label><input <?php if($form['pregnant']->woman_reason=='Emergency') echo 'selected'; ?> type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
-                        <label><input <?php if($form['pregnant']->woman_reason=='Non-Emergency') echo 'selected'; ?> type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
-                        <label><input <?php if($form['pregnant']->woman_reason=='To accompany the baby') echo 'selected'; ?> type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                        <label><input <?php if($form['pregnant']->woman_reason=='None') echo 'checked'; ?> type="radio" name="woman_reason" value="None" checked /> None </label>
+                        <label><input <?php if($form['pregnant']->woman_reason=='Emergency') echo 'checked'; ?> type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                        <label><input <?php if($form['pregnant']->woman_reason=='Non-Emergency') echo 'checked'; ?> type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                        <label><input <?php if($form['pregnant']->woman_reason=='To accompany the baby') echo 'checked'; ?> type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="4">
                         <small class="text-success"><b>MAJOR FINDINGS: </b><i> (Clinical and BP,Temp,Lab)</i></small>
-                        <textarea class="form-control woman_major_findings" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                        <textarea class="form-control woman_major_findings" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required>{{ $form['pregnant']->woman_major_findings }}</textarea>
                     </td>
                 </tr>
                 <tr class="bg-gray">
@@ -294,7 +294,7 @@ $facilities = \App\Facility::select('id','name')
                 <tr>
                     <td colspan="4">
                         <small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small><br/>
-                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;" rows="5" required></textarea>
+                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;" rows="5" required>{{ $form['pregnant']->woman_information_given }}</textarea>
                     </td>
                 </tr>
                 <tr>
@@ -327,7 +327,7 @@ $facilities = \App\Facility::select('id','name')
                         <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
                         <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
                         <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosisPregnant()">Clear Notes Diagnosis</button>
-                        <textarea class="form-control notes_diagnosis" name="notes_diagnoses" style="resize: none;" rows="5"></textarea>
+                        <textarea class="form-control notes_diagnosis" name="notes_diagnoses" style="resize: none;" rows="5">{{ $form['pregnant']->notes_diagnoses }}</textarea>
                     </td>
                 </tr>
                 <tr class="other_diag">
@@ -335,7 +335,7 @@ $facilities = \App\Facility::select('id','name')
                         <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
                         <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
                         <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosisPregnant()">Clear other diagnosis</button>
-                        <textarea class="form-control other_diagnosis" name="other_diagnoses" style="resize: none;" rows="5"></textarea>
+                        <textarea class="form-control other_diagnosis" name="other_diagnoses" style="resize: none;" rows="5">{{ $form['pregnant']->other_diagnoses }}</textarea>
                     </td>
                 </tr>
                 <tr>
@@ -352,7 +352,7 @@ $facilities = \App\Facility::select('id','name')
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <span class="other_reason_referral"></span>
+                        <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;' rows='3'>{{ $form['pregnant']->other_reason_referral }}</textarea>
                     </td>
                 </tr>
             </table>
@@ -380,16 +380,16 @@ $facilities = \App\Facility::select('id','name')
                 <tr>
                     <td colspan="4">
                         <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
-                        <label><input <?php if($form['baby']->baby_reason=='None') echo 'selected';?> type="radio" name="baby_reason" value="None"> None </label>
-                        <label><input <?php if($form['baby']->baby_reason=='Emergency') echo 'selected';?> type="radio" name="baby_reason" value="Emergency"> Emergency </label>
-                        <label><input <?php if($form['baby']->baby_reason=='Non-Emergency') echo 'selected';?> type="radio" name="baby_reason" value="Non-Emergency"> Non-Emergency </label>
-                        <label><input <?php if($form['baby']->baby_reason=='To accompany the mother') echo 'selected';?> type="radio" name="baby_reason" value="To accompany the mother"> To accompany the mother </label>
+                        <label><input <?php if($form['baby']->baby_reason=='None') echo 'checked';?> type="radio" name="baby_reason" value="None"> None </label>
+                        <label><input <?php if($form['baby']->baby_reason=='Emergency') echo 'checked';?> type="radio" name="baby_reason" value="Emergency"> Emergency </label>
+                        <label><input <?php if($form['baby']->baby_reason=='Non-Emergency') echo 'checked';?> type="radio" name="baby_reason" value="Non-Emergency"> Non-Emergency </label>
+                        <label><input <?php if($form['baby']->baby_reason=='To accompany the mother') echo 'checked';?> type="radio" name="baby_reason" value="To accompany the mother"> To accompany the mother </label>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="4">
                         <small class="text-success"><b>MAJOR FINDINGS: </b><i> (Clinics and BP,Temp,Lab) </i></small><br/>
-                        <textarea class="form-control baby_major_findings" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea>
+                        <textarea class="form-control baby_major_findings" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{ $form['baby']->baby_major_findings }}</textarea>
                     </td>
                 </tr>
                 <tr>
@@ -416,7 +416,7 @@ $facilities = \App\Facility::select('id','name')
                     <td colspan="4">
                         <small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
                         <br />
-                        <textarea class="form-control baby_information_given" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea>
+                        <textarea class="form-control baby_information_given" name="baby_information_given" style="resize: none;width: 100%" rows="5">{{ $form['baby']->baby_information_given }}</textarea>
                     </td>
                 </tr>
             </table>

@@ -256,14 +256,14 @@ $facilities = \App\Facility::select('id','name')
         <div class="row">
             <div class="col-md-12">
                 <small class="text-success"><b>CASE SUMMARY:</b> <i>(pertinent Hx/PE, including meds, labs, course etc.)</i></small> <span class="text-red">*</span><br />
-                <textarea class="form-control case_summary" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+                <textarea class="form-control case_summary" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{ $form->case_summary }}</textarea>
             </div>
         </div><br>
 
         <div class="row">
             <div class="col-md-12">
                 <small class="text-success"><b>SUMMARY OF RECO:</b> <i>(pls. refer to ReCo Guide in Referring Patients Checklist)</i></small> <span class="text-red">*</span><br />
-                <textarea class="form-control reco_summary" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
+                <textarea class="form-control reco_summary" name="reco_summary" style="resize: none;width: 100%;" rows="7" required>{{ $form->reco_summary }}</textarea>
             </div>
         </div><br>
 
@@ -299,7 +299,7 @@ $facilities = \App\Facility::select('id','name')
                 <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
                 <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
                 <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5"></textarea>
+                <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
             </div>
         </div><br>
 
@@ -308,7 +308,7 @@ $facilities = \App\Facility::select('id','name')
                 <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
                 <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
                 <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
-                <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5"></textarea>
+                <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
             </div>
         </div><br>
 
@@ -327,7 +327,7 @@ $facilities = \App\Facility::select('id','name')
 
         <div class="row">
             <div class="col-md-12">
-                <span class="other_reason_referral"></span>
+                <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3'>{{ $form->other_reason_referral }}</textarea>
             </div>
         </div><br>
 
