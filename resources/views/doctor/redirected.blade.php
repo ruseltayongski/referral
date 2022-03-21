@@ -1,5 +1,16 @@
 <?php
 $user = Session::get('auth');
+
+$start = \Illuminate\Support\Facades\Session::get('startRedirectedDate');
+$end = \Illuminate\Support\Facades\Session::get('endRedirectedDate');
+if(!$start)
+    $start = \Carbon\Carbon::now()->subWeeks(52)->startOfYear()->format('m/d/Y');
+
+if(!$end)
+    $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
+
+$start = \Carbon\Carbon::parse($start)->format('m/d/Y');
+$end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 ?>
 @extends('layouts.app')
 
@@ -22,7 +33,7 @@ $user = Session::get('auth');
                         <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordRedirected') }}" name="keyword">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control form-control-sm" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
+                        <input type="text" class="form-control form-control-sm" value="{{ $start.' - '.$end }}" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
                     </div>
                     <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
                 </form>
@@ -45,7 +56,6 @@ $user = Session::get('auth');
                                     <th width="25%">Referring Facility</th>
                                     <th width="25%">Patient Name/Code</th>
                                     <th width="25%">Date Redirected</th>
-                                    <th width="25%">Reason</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -84,9 +94,6 @@ $user = Session::get('auth');
                                             </a>
                                         </td>
                                         <td>{{ \App\Http\Controllers\doctor\PatientCtrl::getRedirectedDate('redirected',$row->code) }}</td>
-                                        <td>
-                                            {!! nl2br(\App\Http\Controllers\doctor\PatientCtrl::getRedirectedReason('redirected',$row->code)) !!}
-                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -121,28 +128,12 @@ $user = Session::get('auth');
     @include('script.datetime')
     @include('script.accepted')
 
-    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
-    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
-    <?php
-    $start = \Illuminate\Support\Facades\Session::get('startRedirectedDate');
-    $end = \Illuminate\Support\Facades\Session::get('endRDate');
-    if(!$start)
-        $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
-
-    if(!$end)
-        $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
-
-    $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
-    $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
-    ?>
     <script>
         $('#daterange').daterangepicker({
+            "singleDatePicker": false,
             "startDate": "{{ $start }}",
             "endDate": "{{ $end }}",
             "opens": "left"
-        }, function(start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-            console.log("{{ $start }}");
         });
     </script>
 @endsection

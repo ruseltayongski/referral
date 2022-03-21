@@ -1118,16 +1118,6 @@ class PatientCtrl extends Controller
         return date('F d, Y h:i A',strtotime($date));
     }
 
-    static function getRedirectedReason($status, $code)
-    {
-        $reason = Tracking::where('code',$code)
-            ->where('status',$status)
-            ->first();
-        if($reason)
-            return $reason->remarks;
-        return '';
-    }
-
     static function getCancellationReason($status, $code)
     {
         $act = Activity::where('code',$code)
