@@ -386,7 +386,7 @@ class PatientCtrl extends Controller
         $user = Session::get('auth');
         $patient_id = $req->patient_id;
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
-        $code = date('ymd').'-'.$user_code.'-'.date('His');
+        $code = date('ymd').'-'.$user_code.'-'.date('His')."$user->facility_id"."$user->id";
         $unique_id = "$patient_id-$user->facility_id-".date('ymdHis');
         $tracking_id = 0; //default declaration
         if($type==='normal')
