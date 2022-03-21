@@ -202,6 +202,9 @@ Route::post('doctor/cancelled','doctor\PatientCtrl@searchCancelled');
 Route::get('doctor/archived','doctor\PatientCtrl@archived');
 Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
 
+Route::get('doctor/redirected', 'doctor\PatientCtrl@redirected');
+Route::post('doctor/redirected', 'doctor\PatientCtrl@searchRedirected');
+
 Route::get('doctor/feedback/{code}','doctor\ReferralCtrl@feedback');
 Route::get('doctor/feedback/reply/{id}','doctor\ReferralCtrl@replyFeedback');
 Route::get('doctor/feedback/load/{code}','doctor\ReferralCtrl@loadFeedback');

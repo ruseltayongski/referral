@@ -45,8 +45,7 @@ $user = Session::get('auth');
         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact form-details">{{ $form['pregnant']->referring_md_contact }}</span></td>
     </tr>
     <tr>
-        <td colspan="2">Referring Facility: <span class="referring_facility form-details">{{ $form['pregnant']->referring_facility }}</span></td>
-        <td colspan="2">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
+        <td colspan="4">Referring Facility: <span class="referring_facility form-details">{{ $form['pregnant']->referring_facility }}</span></td>
     </tr>
     <tr>
         <td colspan="4">Facility Contact #: <span class="referring_contact form-details">{{ $form['pregnant']->referring_contact }}</span></td>
@@ -55,7 +54,8 @@ $user = Session::get('auth');
         <td colspan="4">Accompanied by the Health Worker: <span class="health_worker form-details">{{ $form['pregnant']->health_worker }}</span></td>
     </tr>
     <tr>
-        <td colspan="4">Referred To: <span class="referred_name form-details">{{ $form['pregnant']->referred_facility }}</span></td>
+        <td colspan="2">Referred To: <span class="referred_name form-details">{{ $form['pregnant']->referred_facility }}</span></td>
+        <td colspan="2">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
     </tr>
     <tr>
         <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $form['pregnant']->covid_number }}</span></td>
