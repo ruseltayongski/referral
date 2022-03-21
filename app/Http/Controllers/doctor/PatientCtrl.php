@@ -1047,6 +1047,87 @@ class PatientCtrl extends Controller
         return redirect('/doctor/archived');
     }
 
+    function redirected() {
+        $user = Session::get('auth');
+        $keyword = Session::get('keywordRedirected');
+        $start = Session::get('startRedirectedDate');
+        $end = Session::get('endRedirectedDate');
+
+        $data = Tracking::select(
+            'tracking.id',
+            'tracking.type',
+            'tracking.code',
+            'facility.name',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->where('referred_to',$user->facility_id)
+            ->where('tracking.status','redirected');
+
+        if($keyword){
+            $data = $data->where(function($q) use ($keyword){
+                $q->where('patients.fname','like',"%$keyword%")
+                    ->orwhere('patients.mname','like',"%$keyword%")
+                    ->orwhere('patients.lname','like',"%$keyword%")
+                    ->orwhere('tracking.code','like',"%$keyword%");
+            });
+        }
+
+        if($start && $end){
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+        }
+
+        $data = $data->orderBy('date_referred','desc')
+            ->paginate(15);
+
+        return view('doctor.redirected',[
+            'title' => 'Redirected Patients',
+            'data' => $data
+        ]);
+    }
+
+    public function searchRedirected(Request $req) {
+        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/',$range[0]);
+        $tmp2 = explode('/',$range[1]);
+
+        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
+        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+
+        Session::put('startRedirectedDate',$start);
+        Session::put('endRedirectedDate',$end);
+        Session::put('keywordRedirected',$req->keyword);
+
+        return redirect('/doctor/redirected');
+    }
+
+    static function getRedirectedDate($status, $code)
+    {
+        $date = Tracking::where('code',$code)
+            ->where('status',$status)
+            ->first();
+        if($date)
+            $date = $date->updated_at;
+        else
+            return false;
+
+        return date('F d, Y h:i A',strtotime($date));
+    }
+
+    static function getRedirectedReason($status, $code)
+    {
+        $reason = Tracking::where('code',$code)
+            ->where('status',$status)
+            ->first();
+        if($reason)
+            return $reason->remarks;
+        return '';
+    }
+
     static function getCancellationReason($status, $code)
     {
         $act = Activity::where('code',$code)
