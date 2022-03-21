@@ -19,6 +19,9 @@
                                     <li>
                                         Add prompt confirmation when clicking the walk-in button <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
+                                    <li>
+                                        E-referral records for redirected patients <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                    </li>
                                 </ol>
                             </span>
                     </div>
