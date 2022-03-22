@@ -250,6 +250,7 @@ class ReferralCtrl extends Controller
                             ""
                         )
                 ,users.fname," ",users.mname," ",users.lname) as md_referring'),
+            'users.id as md_referring_id',
             DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname," / ",u.contact) as md_referred'),
             'u.id as md_referred_id',
             'facility.contact as referring_contact',
@@ -337,6 +338,7 @@ class ReferralCtrl extends Controller
             DB::raw('CONCAT(
                 if(users.level="doctor","Dr. ","")
             ,users.fname," ",users.mname," ",users.lname) as md_referring'),
+            'users.id as md_referring_id',
             'facility.name as referring_facility',
             'b.description as facility_brgy',
             'm.description as facility_muncity',
