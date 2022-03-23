@@ -94,6 +94,7 @@ class PatientCtrl extends Controller
                     'lname' => ($req->lname) ? $req->lname: '',
                     'dob' => ($req->dob) ? $req->dob: '',
                     'sex' => ($req->sex) ? $req->sex: '',
+                    'civil_status' => ($req->civil_status) ? $req->civil_status : '',
                     'muncity' => ($req->muncity_id) ? $req->muncity_id : '',
                     'province' => ($req->province_id) ? $req->province_id : '',
                     'brgy' => ($req->barangay_id) ? $req->barangay_id: ''
