@@ -93,13 +93,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                                 <div class="col-md-4">
                                     <small class="text-success"><b>CIVIL STATUS: </b></small> <span class="text-red">*</span><br>
-                                    <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
+                                    <select name="civil_status" style="width: 100%;" id="civil_status_web" class="civil_status form-control" required>
                                         <option value="">Select...</option>
-                                        <option>Single</option>
-                                        <option>Married</option>
-                                        <option>Divorced</option>
-                                        <option>Separated</option>
-                                        <option>Widowed</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Divorced">Divorced</option>
+                                        <option value="Separated">Separated</option>
+                                        <option value="Widowed">Widowed</option>
                                     </select>
                                 </div>
                             </div>
@@ -122,13 +122,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </td>
                                     <td>
                                         <small class="text-success"><b>CIVIL STATUS: </b></small> <span class="text-red">*</span><br>
-                                        <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
+                                        <select name="civil_status" style="width: 100%;" id="civil_status_mobile" class="civil_status form-control">
                                             <option value="">Select...</option>
-                                            <option>Single</option>
-                                            <option>Married</option>
-                                            <option>Divorced</option>
-                                            <option>Separated</option>
-                                            <option>Widowed</option>
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Divorced">Divorced</option>
+                                            <option value="Separated">Separated</option>
+                                            <option value="Widowed">Widowed</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -143,7 +143,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>CLINICAL STATUS</b></small><br>
-                                <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <select name="clinical_status" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
@@ -154,7 +154,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>SURVEILLANCE CATEGORY</b></small><br>
-                                <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <select name="sur_category" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -177,20 +177,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea>
                             </div>
                         </div><br>
-
-                        {{--<div class="row">--}}
-                        {{--<div class="col-md-12">--}}
-                        {{--<span class="text-success">--}}
-                        {{--@if(Session::get('auth')->level == 'opcen')--}}
-                        {{--Chief Complaints--}}
-                        {{--@else--}}
-                        {{--Diagnosis/Impression:--}}
-                        {{--@endif--}}
-                        {{--</span> <span class="text-red">*</span>--}}
-                        {{--<br />--}}
-                        {{--<textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea>--}}
-                        {{--</div>--}}
-                        {{--</div>--}}
 
                         <div class="row">
                             <div class="col-md-12">

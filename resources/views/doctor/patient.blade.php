@@ -584,7 +584,6 @@
                 $('#serverModal').modal();
             }
         });
-
     });
 
     $('.normal_form_walkin').on('submit',function(e){
