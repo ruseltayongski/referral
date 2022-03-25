@@ -216,7 +216,7 @@ $user = Session::get('auth');
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 <div class="pull-right">
-    @if($cur_status == 'referred' && $user->id == $form['pregnant']->md_referring_id)
+    @if(($cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
     @if($cur_status == 'cancelled' && $user->id == $form['pregnant']->md_referring_id)
