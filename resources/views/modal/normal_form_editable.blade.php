@@ -77,7 +77,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div><br>
 
-                        <div class="web-view">
+                        <div>
                             <div class="row">
                                 <div class="col-md-4">
                                     <small class="text-success"><b>AGE: </b></small><br>
@@ -103,36 +103,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="mobile-view">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <small class="text-success"><b>AGE: </b></small><br>
-                                        &nbsp;<span class="patient_age"></span>
-                                    </td>
-                                    <td>
-                                        <small class="text-success"><b>SEX: </b></small> <span class="text-red">*</span><br>
-                                        <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
-                                            <option value="">Select...</option>
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <small class="text-success"><b>CIVIL STATUS: </b></small> <span class="text-red">*</span><br>
-                                        <select name="civil_status" style="width: 100%;" id="civil_status_mobile" class="civil_status form-control">
-                                            <option value="">Select...</option>
-                                            <option value="Single">Single</option>
-                                            <option value="Married">Married</option>
-                                            <option value="Divorced">Divorced</option>
-                                            <option value="Separated">Separated</option>
-                                            <option value="Widowed">Widowed</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
                         </div>
 
                         <br>
@@ -307,6 +277,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 </div>
 
 <script>
+
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
