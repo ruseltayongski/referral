@@ -41,7 +41,7 @@
                                 <ol type="A">
                                     <li >System Error</li>
                                     <ol>
-                                        <li>Rusel T. Tayong - 09238309990</li>
+                                        <li>Rusel Tayong - 09238309990</li>
                                         <li>Christine Anne I. Catubig - 09226204186</li>
                                         <li>Flora May Joy Maningo - 09171562951</li>
                                     </ol>
