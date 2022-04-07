@@ -557,3 +557,4 @@ Route::get('doctor/referral/edit_info/{id}/{form_type}/{referral_status}','docto
 Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
 
 Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
+Route::post('file_upload','ApiController@fileUpload');

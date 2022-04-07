@@ -701,6 +701,29 @@ class ApiController extends Controller
         return $patient;
     }
 
+    public static function fileUploadUrl(){
+        return 'https://fileupload.user.edgecloudph.com/';
+    }
+
+    public static function fileUpload(Request $request) {
+        $filePath = $_FILES['file_upload']['tmp_name'];
+        $type=$_FILES['file_upload']['type'];
+        $fileName = $_FILES['file_upload']['name'];
+
+        $data = array(
+            'file_upload' => curl_file_create($filePath, $type, $fileName),
+            'username' => $request->username
+        );
+        $url = self::fileUploadUrl().'file_upload.php';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_exec($ch);
+        curl_close($ch);
+    }
+
     public function apiReferPatient(Request $req)
     {
 
@@ -834,20 +857,14 @@ class ApiController extends Controller
         $form = PatientForm::create($data);
 
         if($_FILES["file_upload"]["name"]) {
-            $username = $referring_doctor->username;
+            $req->username = $referring_doctor->username;
             $file = $_FILES['file_upload']['name'];
-            $dir = public_path()."\\fileupload\\".$username."\\";
 
-            if(!file_exists($dir) && !is_dir($dir)) { // if directory does not exist, create it
-                mkdir($dir);
-            }
-
-            if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { // upload file to directory
-                $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
-            }
+            self::fileUpload($req);
+            $form->file_path = self::fileUploadUrl().$req->username."/".$file;
         }
-        $form->save();
 
+        $form->save();
         foreach($req->icd_ids as $i) {
             if($icd10 = Icd10::where("code",$i)->first()) {
                 $icd = new Icd();

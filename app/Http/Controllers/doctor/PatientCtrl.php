@@ -26,12 +26,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Controllers\ApiController;
 
 class PatientCtrl extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
         //$this->middleware('doctor');
     }
 
@@ -94,7 +95,6 @@ class PatientCtrl extends Controller
                     'lname' => ($req->lname) ? $req->lname: '',
                     'dob' => ($req->dob) ? $req->dob: '',
                     'sex' => ($req->sex) ? $req->sex: '',
-                    'civil_status' => ($req->civil_status) ? $req->civil_status : '',
                     'muncity' => ($req->muncity_id) ? $req->muncity_id : '',
                     'province' => ($req->province_id) ? $req->province_id : '',
                     'brgy' => ($req->barangay_id) ? $req->barangay_id: ''
@@ -325,7 +325,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    function addTracking($code,$patient_id,$user,$req,$type, $form_id,$status='')
+    public function addTracking($code,$patient_id,$user,$req,$type, $form_id,$status='')
     {
         $match = array(
             'code' => $code
@@ -382,7 +382,7 @@ class PatientCtrl extends Controller
         return $tracking_id;
     }
 
-    function referPatient(Request $req,$type)
+    public function referPatient(Request $req,$type)
     {
         $user = Session::get('auth');
         $patient_id = $req->patient_id;
@@ -424,20 +424,14 @@ class PatientCtrl extends Controller
             $form = PatientForm::create($data);
 
             if($_FILES["file_upload"]["name"]) {
-                $username = $user->username;
+                $req->username = $user->username;
                 $file = $_FILES['file_upload']['name'];
-                $dir = public_path()."\\fileupload\\".$username."\\";
 
-                if(!file_exists($dir) && !is_dir($dir)) { // if directory does not exist, create it
-                    mkdir($dir);
-                }
-
-                if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { // upload file to directory
-                    $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
-                }
+                ApiController::fileUpload($req);
+                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
             }
-            $form->save();
 
+            $form->save();
             foreach($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $form->code;
@@ -507,17 +501,11 @@ class PatientCtrl extends Controller
             $form = PregnantForm::create($data);
 
             if($_FILES["file_upload"]["name"]) {
-                $username = $user->username;
+                $req->username = $user->username;
                 $file = $_FILES['file_upload']['name'];
-                $dir = public_path()."\\fileupload\\".$username."\\";
 
-                if(!file_exists($dir) && !is_dir($dir)) { 
-                    mkdir($dir);
-                }
-
-                if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) { 
-                    $form->file_path = "\\public\\fileupload\\".$username."\\".$file;
-                }
+                ApiController::fileUpload($req);
+                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
             }
             $form->save();
 

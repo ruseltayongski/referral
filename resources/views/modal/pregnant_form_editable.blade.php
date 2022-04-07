@@ -311,6 +311,7 @@
                         </div>
                     </div>
 
+                    <!--
                     <div class="file-upload">
                         <div class="image-upload-wrap">
                             <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
@@ -325,6 +326,8 @@
                             </div>
                         </div>
                     </div>
+                    -->
+
                 </div>
                 <table class="table table-striped col-sm-6"></table>
                 <hr />

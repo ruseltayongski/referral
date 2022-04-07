@@ -156,7 +156,7 @@ $user = Session::get('auth');
         <tr>
             <td colspan="6">
                 File Attachment:
-                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+                <a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>
             </td>
         </tr>
     @endif
@@ -177,7 +177,7 @@ $user = Session::get('auth');
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 <div class="form-fotter pull-right">
-    @if($cur_status == 'referred' && $user->id == $form->md_referring_id)
+    @if(($cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
     @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
@@ -191,3 +191,4 @@ $user = Session::get('auth');
     <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
+

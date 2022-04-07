@@ -7,6 +7,7 @@ use App\Baby;
 use App\Department;
 use App\Facility;
 use App\Feedback;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Icd;
@@ -1555,19 +1556,13 @@ class ReferralCtrl extends Controller
         unset($data_update['file_cleared']);
 
         if($_FILES["file_upload"]["name"]) {
-            $username = $user->username;
+            $req->username = $user->username;
             $file = $_FILES['file_upload']['name'];
-            $dir = public_path()."\\fileupload\\".$username."\\";
 
-            if(!file_exists($dir) && !is_dir($dir)) {
-                mkdir($dir);
-            }
-
-            if(move_uploaded_file($_FILES["file_upload"]["tmp_name"], $dir.$file)) {
-                $data->update([
-                    'file_path' => "\\public\\fileupload\\".$username."\\".$file
-                ]);
-            }
+            ApiController::fileUpload($req);
+            $data->update([
+                'file_path' => ApiController::fileUploadUrl().$req->username."/".$file
+            ]);
         }
 
         unset($data_update['file_upload']);

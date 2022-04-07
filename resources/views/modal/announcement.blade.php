@@ -42,8 +42,8 @@
                                     <li >System Error</li>
                                     <ol>
                                         <li>Rusel T. Tayong - 09238309990</li>
-                                        <li>Christine Anne Catubig - 09226204186</li>
-                                        <li>Flora May Joy Maningo - 09296301192</li>
+                                        <li>Christine Anne I. Catubig - 09226204186</li>
+                                        <li>Flora May Joy Maningo - 09171562951</li>
                                     </ol>
                                     <li >Server - The request URL not found</li>
                                     <ol>
@@ -63,8 +63,8 @@
                                     <ol>
                                         <li>Jaypee Dingal - 09267313376 </li>
                                         <li>Remwel Sanchez - 09067334425 </li>
-                                        <li>Jonaden Dela Cerna - 09068482000 </li>
-                                        <li>Val Vincent Villan - 09686361161 </li>
+                                        <li>Mechelle Añora - 09912043267</li>
+                                        <li>Real Mark Sabuero - 09058277663</li>
                                     </ol>
                                 </ol>
                                 <li>Non - Technical</li>
