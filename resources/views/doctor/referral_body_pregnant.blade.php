@@ -157,14 +157,14 @@ $user = Session::get('auth');
                     </td>
                 </tr>
             @endif
-            @if(isset($file_path))
+            {{--@if(isset($file_path))
                 <tr>
                     <td colspan="4">
                         File Attachment:
                         <a href="{{ asset($file_path) }}" target="_blank" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
                     </td>
                 </tr>
-            @endif
+            @endif--}}
         </table>
     </div>
 
