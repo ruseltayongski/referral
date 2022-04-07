@@ -425,7 +425,6 @@ $facilities = \App\Facility::select('id','name')
         </div>
     </div>
 
-    <!--
     <div class="row">
         <div class="col-md-12">
             <div class="with_file_attached hide">
@@ -454,7 +453,6 @@ $facilities = \App\Facility::select('id','name')
         </div>
     </div>
     <hr />
-    -->
 
     <button class="btn btn-default btn-flat exit_edit_btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
     <div class="form-fotter pull-right">

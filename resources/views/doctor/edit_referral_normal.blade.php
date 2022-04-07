@@ -333,7 +333,6 @@ $facilities = \App\Facility::select('id','name')
         </div><br>
         @endif
 
-        <!--
         <div class="row with_file_attached hide">
             <div class="col-md-12">
                 <small class="text-success"><b>FILE ATTACHMENT: </b></small> &emsp;
@@ -362,7 +361,6 @@ $facilities = \App\Facility::select('id','name')
                 </div>
             </div>
         </div>
-        -->
 
         <div class="row">
             <div class="col-md-12">

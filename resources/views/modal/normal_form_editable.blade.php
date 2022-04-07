@@ -204,7 +204,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div><br>
 
-                        <!--
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>FILE ATTACHMENT:</b></small><br>
@@ -224,7 +223,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
-                        -->
 
                     </div>
                     <hr />

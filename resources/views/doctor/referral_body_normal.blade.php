@@ -152,14 +152,14 @@ $user = Session::get('auth');
             </td>
         </tr>
     @endif
-    {{--@if(isset($file_path))
+    @if(isset($file_path))
         <tr>
             <td colspan="6">
                 File Attachment:
                 <a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>
             </td>
         </tr>
-    @endif--}}
+    @endif
     <tr>
         <td colspan="6">
             Name of referring MD/HCW: <span class="referring_md form-details">{{ $form->md_referring }}</span>
