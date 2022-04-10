@@ -231,7 +231,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span>
-                                    <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                    <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required>
                                         <option value="">Select reason for referral</option>
                                         <option value="-1">Other reason for referral</option>
                                         @foreach($reason_for_referral as $reason_referral)

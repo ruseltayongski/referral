@@ -231,7 +231,7 @@
         if(value == '-1') {
             setTimeout(function(){
                 $('.other_reason_referral').show();
-                $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral'></textarea>");
+                $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral' required></textarea>");
             },500);
         }else{
             clearOtherReasonReferral();
