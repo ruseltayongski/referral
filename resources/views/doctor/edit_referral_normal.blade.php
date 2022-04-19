@@ -325,11 +325,13 @@ $facilities = \App\Facility::select('id','name')
             </div>
         </div><br>
 
+        @if($form->other_reason_referral)
         <div class="row">
             <div class="col-md-12">
-                <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3'>{{ $form->other_reason_referral }}</textarea>
+                <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' required>{{ $form->other_reason_referral }}</textarea>
             </div>
         </div><br>
+        @endif
 
         <div class="row with_file_attached hide">
             <div class="col-md-12">

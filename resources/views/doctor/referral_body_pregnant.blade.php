@@ -92,6 +92,9 @@ $user = Session::get('auth');
                     <span class="woman_major_findings form-details">{!! nl2br($form['pregnant']->woman_major_findings) !!}</span>
                 </td>
             </tr>
+            <tr>
+                <td></td>
+            </tr>
             <tr class="bg-gray">
                 <td colspan="4">Treatments Give Time</td>
             </tr>
@@ -158,7 +161,7 @@ $user = Session::get('auth');
                 <tr>
                     <td colspan="4">
                         File Attachment:
-                        <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+                        <a href="{{ asset($file_path) }}" target="_blank" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
                     </td>
                 </tr>
             @endif

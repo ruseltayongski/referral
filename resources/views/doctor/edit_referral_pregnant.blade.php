@@ -316,7 +316,7 @@ $facilities = \App\Facility::select('id','name')
                             @if(isset($icd))
                                 @foreach($icd as $i)
                                     <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                    <span> => {{ $i->description }}</span><br>
+                                    <small> => {{ $i->description }}</small><br>
                                 @endforeach
                             @endif
                         </div>
@@ -350,11 +350,13 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </td>
                 </tr>
+                @if($form['pregnant']->other_reason_referral)
                 <tr>
                     <td colspan="4">
                         <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;' rows='3'>{{ $form['pregnant']->other_reason_referral }}</textarea>
                     </td>
                 </tr>
+                @endif
             </table>
         </div>
         <div class="col-sm-6">
@@ -422,6 +424,7 @@ $facilities = \App\Facility::select('id','name')
             </table>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="with_file_attached hide">
@@ -450,6 +453,7 @@ $facilities = \App\Facility::select('id','name')
         </div>
     </div>
     <hr />
+
     <button class="btn btn-default btn-flat exit_edit_btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
     <div class="form-fotter pull-right">
         <button type="submit" class="btn btn-success btn-flat btn-submit" id="edit_save_btn"><i class="fa fa-send"></i> Save </button>

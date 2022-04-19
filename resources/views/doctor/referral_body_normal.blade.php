@@ -156,7 +156,7 @@ $user = Session::get('auth');
         <tr>
             <td colspan="6">
                 File Attachment:
-                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>
+                <a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>
             </td>
         </tr>
     @endif
@@ -191,3 +191,4 @@ $user = Session::get('auth');
     <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
+

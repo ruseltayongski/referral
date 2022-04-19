@@ -580,7 +580,8 @@
                 console.log(data);
                 sendNormalData(data);
             },
-            error: function(){
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 $('#serverModal').modal();
             }
         });
@@ -647,7 +648,8 @@
                     window.location.reload(false);
                 },500);
             },
-            error: function(){
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 $('#serverModal').modal();
             }
         });
