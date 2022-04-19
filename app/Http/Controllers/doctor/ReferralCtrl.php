@@ -1071,6 +1071,13 @@ class ReferralCtrl extends Controller
         if($track->type=='pregnant'){
             $form_type = '#pregnantFormModal';
         }
+
+        if($form_type == '#normalFormModal') {
+            $pt = PatientForm::where('code',$code)->update(array('department_id' => $req->department));
+        } else if($form_type == '#pregnantFormModal') {
+            $pt = PregnantForm::where('code',$code)->update(array('department_id' => $req->department));
+        }
+
         if($user->level == 'doctor')
             $referring_md = "Dr. ".$user->fname.' '.$user->lname;
         else
