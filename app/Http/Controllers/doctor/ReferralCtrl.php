@@ -1025,11 +1025,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        $track = Activity::select('activity.*','tracking.type','tracking.form_id')
-                ->join('tracking','tracking.code','=','activity.code')
-                ->where('activity.code',$code)
-                ->first();
-
+        $track = Tracking::where("code",$code)->first();
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1040,25 +1036,20 @@ class ReferralCtrl extends Controller
             'remarks' => '',
             'status' => 'redirected'
         );
+
         $activity = Activity::create($data);
 
-        $tracking = Tracking::where('code',$track->code)
-            ->where('referred_from',$user->facility_id)
-            ->first();
-
-        if($tracking){
-            $tracking->update([
-                'date_referred' => $date,
-                'department_id' => $req->department,
-                'date_arrived' => '',
-                'date_seen' => '',
-                'referred_from' => $user->facility_id,
-                'referred_to' => $req->facility,
-                'remarks' => '',
-                'referring_md' => $user->id,
-                'status' => 'redirected'
-            ]);
-        }
+        $track->update([
+            'date_referred' => $date,
+            'department_id' => $req->department,
+            'date_arrived' => '',
+            'date_seen' => '',
+            'referred_from' => $user->facility_id,
+            'referred_to' => $req->facility,
+            'remarks' => '',
+            'referring_md' => $user->id,
+            'status' => 'redirected'
+        ]);
 
         $patient = Patients::select(
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -1069,29 +1060,22 @@ class ReferralCtrl extends Controller
             ->first();
 
         $form_type = '#normalFormModal';
-        if($track->type=='pregnant'){
+        if($track->type=='pregnant')
             $form_type = '#pregnantFormModal';
-        }
-
-        if($form_type == '#normalFormModal') {
-            $pt = PatientForm::where('code',$code)->update(array('department_id' => $req->department));
-        } else if($form_type == '#pregnantFormModal') {
-            $pt = PregnantForm::where('code',$code)->update(array('department_id' => $req->department));
-        }
 
         if($user->level == 'doctor')
             $referring_md = "Dr. ".$user->fname.' '.$user->lname;
         else
             $referring_md = $user->fname.' '.$user->lname;
 
-        return array(
+        return array (
             'code' => $track->code,
             'date' => date('M d, Y h:i A',strtotime($date)),
             'patient_name' => $patient->patient_name,
             'age' => $patient->age,
             'sex' => $patient->sex,
             'form_type' => $form_type,
-            'track_id' => $tracking->id,
+            'track_id' => $track->id,
             'activity_id' => $activity->id,
             'referred_from' => $user->facility_id,
             'referring_md' => $referring_md,
