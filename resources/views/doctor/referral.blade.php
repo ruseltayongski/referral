@@ -49,33 +49,32 @@ $user = Session::get('auth');
             }
         }
     </style>
-    <div class="col-md-3">
-        @include('sidebar.filter_referral')
-        @include('sidebar.quick')
-    </div>
-    <div class="col-md-9">
-        <div class="jim-content">
-            @if(count($data) > 0)
-                <div class="alert alert-warning">
-                    <div class="text-warning">
-                        <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a><br>
-                        <i class="fa fa-warning"></i> Referrals that are not accepted within 30 minutes will get a call from 711 DOH CVCHD HealthLine
-                    </div>
-                </div>
-                <div class="alert alert-info">
-                    <div class="text-info">
-                        <i class="fa fa-info-circle"></i> Incoming patients referred to a particular department can only be accepted by those registered doctors who are assigned in that department.
-                    </div>
-                </div>
-            @endif
-            <h3 class="page-header">
-                Incoming Patients
-            </h3>
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- The time line -->
 
-                    @if(count($data) > 0)
+    <div class="row">
+        <div class="col-md-3">
+            @include('sidebar.filter_referral')
+            @include('sidebar.quick')
+        </div>
+        <div class="col-md-9">
+            <div class="jim-content">
+                @if(count($data) > 0)
+                    <div class="alert alert-warning">
+                        <div class="text-warning">
+                            <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a><br>
+                            <i class="fa fa-warning"></i> Referrals that are not accepted within 30 minutes will get a call from 711 DOH CVCHD HealthLine
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <div class="text-info">
+                            <i class="fa fa-info-circle"></i> Incoming patients referred to a particular department can only be accepted by those registered doctors who are assigned in that department.
+                        </div>
+                    </div>
+                @endif
+                <h3 class="page-header">
+                    Incoming Patients
+                </h3>
+                @if(count($data) > 0)
+                    <div class="row">
                         <ul class="timeline">
                             <!-- timeline time label -->
 
@@ -155,8 +154,8 @@ $user = Session::get('auth');
                                                 </strong>
                                                 was <span class="badge bg-green">{{ $row->status }}</span> by
                                                 <span class="text-success">
-                                            Dr. {{ $row->action_md }}
-                                            </span>
+                                        Dr. {{ $row->action_md }}
+                                        </span>
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
@@ -168,35 +167,36 @@ $user = Session::get('auth');
                         <div class="text-center">
                             {{ $data->links() }}
                         </div>
-                    @else
-                        <div class="alert-section">
-                            <div class="alert alert-warning">
-                                <span class="text-warning">
-                                    <i class="fa fa-warning"></i> No referrals!
+                    </div>
+                @else
+                    <div class="alert-section">
+                        <div class="alert alert-warning">
+                            <span class="text-warning">
+                                <i class="fa fa-warning"></i> No referrals!
+                                <ul>
+                                    <li>Filer List:</li>
                                     <ul>
-                                        <li>Filer List:</li>
-                                        <ul>
-                                            @if(isset($search_referral['keyword']))
-                                                <li>Code - {{ $search_referral['keyword'] }}</li>
-                                            @endif
-                                            <li>Date range - {{ $start.' - '.$end }}</li>
-                                            @if(isset($search_referral['department']))
-                                                <li>Department - {{ \App\Department::find($search_referral['department'])->description }}</li>
-                                            @endif
-                                        </ul>
+                                        @if(isset($search_referral['keyword']))
+                                            <li>Code - {{ $search_referral['keyword'] }}</li>
+                                        @endif
+                                        <li>Date range - {{ $start.' - '.$end }}</li>
+                                        @if(isset($search_referral['department']))
+                                            <li>Department - {{ \App\Department::find($search_referral['department'])->description }}</li>
+                                        @endif
                                     </ul>
-                                </span>
-                            </div>
+                                </ul>
+                            </span>
                         </div>
+                    </div>
 
-                        <ul class="timeline">
-                        </ul>
-                    @endif
-                </div><!-- /.col -->
-            </div><!-- /.row -->
+                    <ul class="timeline">
+                    </ul>
+                @endif
+            </div>
+
         </div>
-
     </div>
+
     @include('modal.accept_reject')
     @include('modal.reject')
     @include('modal.refer')
@@ -213,7 +213,7 @@ $user = Session::get('auth');
     @include('script.referral')
 
     <script>
-        $('.select2').select2();
+        $(".select2").select2({ width: '100%' });
 
         function clearFieldsSidebar(){
             <?php

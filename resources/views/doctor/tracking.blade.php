@@ -41,9 +41,9 @@ $user = Session::get('auth');
         .bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
         .bs-wizard-stepnum { color: #4caf50 !important;}
         /*END Form Wizard*/
-        @media only screen and (max-width: 440px) {
+        /*@media only screen and (max-width: 440px) {
             .bs-wizard-stepnum { visibility: hidden; }
-        }
+        }*/
     </style>
     <div class="col-md-3">
         @include('sidebar.track_referred')

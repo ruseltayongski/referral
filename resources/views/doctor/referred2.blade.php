@@ -1,6 +1,4 @@
-<?php
-$user = Session::get('auth');
-?>
+<?php $user = Session::get('auth'); ?>
 @extends('layouts.app')
 
 @section('content')
@@ -10,21 +8,20 @@ $user = Session::get('auth');
         .txtPatient { font-weight: bold; font-size: 1em; color: #22a114 }
         .txtHospital { font-weight: bold; color: #9d7311; }
         .txtInfo { font-weight: bold; color: #437ea9; }
-        .tracking { background : #efefef; padding:5px;}
+        /*.tracking { background : #efefef; padding:5px;}
         .tracking table td { font-size: 0.9em; padding:10px 15px; vertical-align: top; letter-spacing: 0.5px; }
-        .tracking table td:first-child { white-space: nowrap; color: #959595; letter-spacing: normal; width: 100px;  }
+        .tracking table td:first-child { white-space: nowrap; color: #959595; letter-spacing: normal; width: 100px;  }*/
         .remarks { display: block; color: #df9e38}
         .txtCode { color: #f39c12}
         .txtSub { font-size: 0.7em; font-weight: normal;color: #737373}
     </style>
     <style type="text/css">
         .bs-wizard {margin-top: 20px;}
-
         /*Form Wizard*/
         .bs-wizard {border-bottom: solid 1px #4caf50; padding: 0 0 10px 0;}
         .bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
         .bs-wizard > .bs-wizard-step + .bs-wizard-step {}
-        .bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+        .bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; margin-bottom: 5px;}
         .bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
         .bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #4caf50; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;}
         .bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #4caf50; border-radius: 50px; position: absolute; top: 8px; left: 8px; }
@@ -42,77 +39,81 @@ $user = Session::get('auth');
         .bs-wizard-stepnum { color: #4caf50 !important;}
         /*END Form Wizard*/
         @media only screen and (max-width: 440px) {
-            .bs-wizard-stepnum { visibility: hidden; }
-            .tracking table td:first-child { color: #959595; letter-spacing: normal; white-space: normal;}
+            .bs-wizard-stepnum {
+                font-size: 14px;
+                text-transform: lowercase;
+            }
         }
     </style>
-    <div class="col-md-3">
-        @if($referredCode)
-            @include('sidebar.track_referred')
-        @else
-            @include('sidebar.search_referred')
-        @endif
-        @include('sidebar.quick')
-    </div>
-    <div class="col-md-9">
-        @if(count($data) > 0)
-            @foreach($data as $row)
-                <?php
-                $type = ($row->type=='normal') ? 'success':'danger';
-                $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
 
-                $activities = \App\Activity::select(
-                    'activity.*',
-                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
-                    DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
-                    'users.contact',
-                    'fac_rejected.name as fac_rejected',
-                    'referring_md as referring_md_id'
-                )
-                    ->where('activity.code',$row->code)
-                    ->where('activity.id','>=',function($q) use($row,$user){
-                        $q->select('id')
-                            ->from('activity')
-                            ->where('code',$row->code)
-                            ->where(function($q){
-                                $q->where('status','referred')
-                                    ->orwhere('status','rejected')
-                                    ->orwhere('status','transferred');
-                            })
-                            ->first()
-                        ;
-                    })
-                    ->leftJoin('users','users.id','=','activity.action_md')
-                    ->leftJoin('users as u','u.id','=','activity.referring_md')
-                    ->leftJoin('facility as fac_rejected','fac_rejected.id','=','users.facility_id')
-                    ->orderBy('id','desc')
-                    ->get();
+    <div class="row">
+        <div class="col-md-3">
+            @if($referredCode)
+                @include('sidebar.track_referred')
+            @else
+                @include('sidebar.search_referred')
+            @endif
+            @include('sidebar.quick')
+        </div>
+        <div class="col-md-9">
+            @if(count($data) > 0)
+                @foreach($data as $row)
+                    <?php
+                    $type = ($row->type=='normal') ? 'success':'danger';
+                    $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                    $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
 
-                $department_name = 'N/A';
-                $dept = \App\Department::find($row->department_id);
-                if($dept){
-                    $department_name = $dept->description;
-                }
-                $patient = \App\Patients::find($row->patient_id);
-                if(isset($patient->brgy)) {
-                    $patient_address = $patient->region.', '.\App\Province::find($patient->province)->description.', '.\App\Muncity::find($patient->muncity)->description.', '.\App\Barangay::find($patient->brgy)->description;
-                }
-                else {
-                    $patient_address = $patient->region.', '.$patient->province_others.', '.$patient->muncity_others.', '.$patient->brgy_others;
-                }
+                    $activities = \App\Activity::select(
+                        'activity.*',
+                        DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as md_name'),
+                        DB::raw('CONCAT(u.fname," ",u.mname," ",u.lname) as referring_md'),
+                        'users.contact',
+                        'fac_rejected.name as fac_rejected',
+                        'referring_md as referring_md_id'
+                    )
+                        ->where('activity.code',$row->code)
+                        ->where('activity.id','>=',function($q) use($row,$user){
+                            $q->select('id')
+                                ->from('activity')
+                                ->where('code',$row->code)
+                                ->where(function($q){
+                                    $q->where('status','referred')
+                                        ->orwhere('status','rejected')
+                                        ->orwhere('status','transferred');
+                                })
+                                ->first()
+                            ;
+                        })
+                        ->leftJoin('users','users.id','=','activity.action_md')
+                        ->leftJoin('users as u','u.id','=','activity.referring_md')
+                        ->leftJoin('facility as fac_rejected','fac_rejected.id','=','users.facility_id')
+                        ->orderBy('id','desc')
+                        ->get();
 
-                $seen = \App\Seen::where('tracking_id',$row->id)->count();
-                $checkForCancellation = \App\Http\Controllers\doctor\ReferralCtrl::checkForCancellation($row->code);
+                    $department_name = 'N/A';
+                    $dept = \App\Department::find($row->department_id);
+                    if($dept){
+                        $department_name = $dept->description;
+                    }
+                    $patient = \App\Patients::find($row->patient_id);
+                    if(isset($patient->brgy)) {
+                        $patient_address = $patient->region.', '.\App\Province::find($patient->province)->description.', '.\App\Muncity::find($patient->muncity)->description.', '.\App\Barangay::find($patient->brgy)->description;
+                    }
+                    else {
+                        $patient_address = $patient->region.', '.$patient->province_others.', '.$patient->muncity_others.', '.$patient->brgy_others;
+                    }
 
-                $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
-                $feedback = \App\Feedback::where('code',$row->code)->count();
-                $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
-                $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
-                ?>
-                <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
-                    <div class="panel-heading">
-                        <span class="txtTitle"><i class="fa fa-wheelchair"></i> {{ ucwords(strtolower($row->patient_name)) }} <small class="txtSub">[ {{ $row->sex }}, {{ $row->age }} ] from {{ $patient_address }}. </small></span>
+                    $seen = \App\Seen::where('tracking_id',$row->id)->count();
+                    $checkForCancellation = \App\Http\Controllers\doctor\ReferralCtrl::checkForCancellation($row->code);
+
+                    $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
+                    $feedback = \App\Feedback::where('code',$row->code)->count();
+                    $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
+                    $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
+                    ?>
+                    <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
+                        <div class="panel-heading">
+                            <span class="txtTitle"><i class="fa fa-wheelchair"></i> {{ ucwords(strtolower($row->patient_name)) }} <small class="txtSub">[ {{ $row->sex }}, {{ $row->age }} ] from {{ $patient_address }}. </small></span>
                             <br />
                             @if($row->contact)
                                 Patient Contact Number: <strong class="text-primary">{{ $row->contact }}</strong>
@@ -129,322 +130,323 @@ $user = Session::get('auth');
                                 ?>
                                 {{ $referring_md }}
                         </span>
-                        <br />
-                        Patient Code: <span class="txtCode">{{ $row->code }}</span>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row bs-wizard" style="border-bottom:0;">
-
-                            <div class="col-xs-2 bs-wizard-step @if($step==1) active @elseif($step>=1) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">
-                                    @if($step==0)
-                                        <span class="text-danger">Cancelled</span>
-                                    @else
-                                        Referred
-                                    @endif
-                                </div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==0) Cancelled @else Referred @endif" @if($step==0) style="background-color:#a94442;" @endif ></a>
-                            </div>
-
-                            <div class="col-xs-2 bs-wizard-step @if($step==2) active @elseif($step>=2) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">Seen</div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Seen"></a>
-                            </div>
-
-                            <div class="col-xs-2 bs-wizard-step @if($step==3) active @elseif($step>=3) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">Accepted</div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Accepted"></a>
-                            </div>
-
-                            <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">
-                                    @if($step==4.5)
-                                        <span class="text-danger">Didn't Arrive</span>
-                                    @else
-                                        Arrived
-                                    @endif
-                                </div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==4.5) Didn't Arrive @else Arrived @endif" @if($step==4.5) style="background-color:#a94442;" @endif></a>
-                            </div>
-                            <div class="col-xs-2 bs-wizard-step @if($step==5) active @elseif($step>=5) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">Admitted</div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Admitted"></a>
-                            </div>
-                            <div class="col-xs-2 bs-wizard-step @if($step==6) active @elseif($step>=6) complete @else disabled @endif"><!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">Discharged</div>
-                                <div class="progress"><div class="progress-bar"></div></div>
-                                <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Discharged/Transferred"></a>
-                            </div>
+                            <br />
+                            Patient Code: <span class="txtCode">{{ $row->code }}</span>
                         </div>
-                        @if(count($activities) > 0)
-                            <?php $first = 0;
-                            $latest_act = \App\Activity::where('code',$row->code)->latest('updated_at')->first();
-                            ?>
-                            <div class="tracking col-md-12">
-                                <div class="table-responsive">
-                                    <table width="100%">
-                                        <thead class="prepend_from_firebase{{ $row->code }}"></thead>
-                                        @foreach($activities as $act)
-                                            <?php
-                                            $act_name = \App\Patients::find($act->patient_id);
-                                            $old_facility_data = \App\Facility::find($act->referred_from);
-                                            $old_facility = $old_facility_data->name;
-                                            $old_facility_id = $old_facility_data->id;
-                                            if($act->status=='transferred' || $act->status=='redirected'|| $act->status=='referred' || $act->status=='calling'){
-                                                $act_icon = 'fa-ambulance';
-                                            }
-
-                                            $new_facility = 'N/A';
-                                            $tmp_new = \App\Facility::find($act->referred_to);
-
-                                            if($act->referred_to==0)
-                                            {
-                                                $tmp_new = \App\Facility::find($act->referred_from);
-                                            }
-
-                                            if($tmp_new){
-                                                $new_facility = $tmp_new->name;
-                                            }
-
-                                            ?>
-                                            @if($act->status=='rejected')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                        <br />
-                                                        @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
-                                                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
-                                                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
-                                                            </button>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='referred' || $act->status=='redirected')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        @if($act->referring_md_id!=0)
-                                                            <?php
-                                                            if($old_facility_id == 63)
-                                                                $referred_md = $act->referring_md;
-                                                            else
-                                                                $referred_md = 'Dr. '.$act->referring_md;
-                                                            ?>
-                                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
-                                                        @else
-                                                            <strong>Walk-In Patient:</strong> <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='transferred')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='redirected')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='calling')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> is requesting a call from <span class="txtHospital">{{ $old_facility }}</span>.
-                                                        @if($user->facility_id==$act->referred_from)
-                                                            Please contact this number <span class="txtInfo">({{ $act->contact }})</span> .
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='accepted')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was accepted by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='arrived')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='admitted')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='discharged')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                        <?php
-                                                        ($row->type=='normal') ? $covid_discharge = \App\PatientForm::where("code",$act->code)->first() : $covid_discharge = \App\PregnantForm::where("code",$act->code)->first();
-                                                        ?>
-                                                        @if($covid_discharge->dis_clinical_status or $covid_discharge->dis_sur_category)
-                                                            <span class="remarks">Clinical Status: <b>{{ ucfirst($covid_discharge->dis_clinical_status) }}</b></span>
-                                                            <span class="remarks">Surveillance Category: <b>{{ ucfirst($covid_discharge->dis_sur_category) }}</b></span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='archived')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='cancelled')
-                                                <?php
-                                                $doctor = \App\User::find($act->action_md);
-                                                ?>
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        Referral was cancelled by
-                                                        <span class="txtDoctor">
-                                                    <?php
-                                                            if($doctor->facility_id == 63)
-                                                                $cancel_doctor = $doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
-                                                            else
-                                                                $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
-                                                            ?>
-                                                            {{ $cancel_doctor }}
-                                                </span>.
-                                                        <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                    </td>
-                                                </tr>
-                                            @elseif($act->status=='travel')
-                                                <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                    <td>
-                                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                            <?php $first = 1; ?>
-                                        @endforeach
-                                    </table>
-                                </div>
-                                @if(count($activities)>1)
-                                    <div style="border-top: 1px solid #ccc;">
-                                        <div class="text-center">
-                                            <a href="#toggle" data-id="{{ $row->id }}">View More</a> <small class="text-muted">({{ count($activities) }})</small>
-                                        </div>
+                        <div class="panel-body">
+                            <div class="bs-wizard" style="border-bottom:0;">
+                                <div class="col-xs-2 bs-wizard-step @if($step==1) active @elseif($step>=1) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">
+                                        @if($step==0)
+                                            <span class="text-danger">Cancelled</span>
+                                        @else
+                                            Referred
+                                        @endif
                                     </div>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                    <div class="panel-footer">
-                        <a data-toggle="modal" href="#referralForm"
-                                data-type="{{ $row->type }}"
-                                data-id="{{ $row->id }}"
-                                data-code="{{ $row->code }}"
-                                data-referral_status="referring"
-                                class="view_form btn btn-warning btn-xs">
-                                <i class="fa fa-folder"></i> View Form
-                        </a>
-                        @if($seen>0)
-                            <a href="#seenModal" data-toggle="modal"
-                               data-id="{{ $row->id }}"
-                               class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen
-                                @if($seen>0)
-                                    <small class="badge bg-green-active">{{ $seen }}</small>
-                                @endif
-                            </a>
-                        @endif
-                        @if($caller_md > 0)
-                            <a href="#callerModal" data-toggle="modal"
-                               data-id="{{ $row->id }}"
-                               class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
-                                @if($caller_md>0)
-                                    <small class="badge bg-blue-active">{{ $caller_md }}</small>
-                                @endif
-                            </a>
-                        @endif
-                        @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
-                            <a href="#transferModal" data-toggle="modal"
-                               data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
-                        @endif
-                        <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
-                                data-target="#feedbackModal"
-                                data-code="{{ $row->code }}">
-                            <i class="fa fa-comments"></i> ReCo
-                            @if($feedback>0)
-                                <span class="badge bg-blue">{{ $feedback }}</span>
-                            @endif
-                        </button>
-                        <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
-                        <button class="btn btn-xs btn-danger btn-issue-referred" data-toggle="modal"
-                                data-target="#IssueAndConcern"
-                                data-code="{{ $row->code }}"
-                                data-referred_from="{{ $row->referred_from }}"
-                                data-tracking_id="{{ $row->id }}">
-                            <i class="fa fa fa-exclamation-triangle"></i> Issue and Concern
-                            @if($issue_and_concern>0)
-                                <span class="badge bg-red">{{ $issue_and_concern }}</span>
-                            @endif
-                        </button>
-                        <?php $doh_remarks = \App\Monitoring::where("code","=",$row->code)->count(); ?>
-                        @if($doh_remarks>0)
-                            <button class="btn btn-xs btn-doh" data-toggle="modal" style="background-color: #dd7556;color: white"
-                                    data-target="#feedbackDOH"
-                                    data-code="{{ $row->code }}">
-                                <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
-                                <span class="badge bg-green">{{ $doh_remarks }}</span>
-                            </button>
-                        @endif
-                        @if($redirected > 0)
-                            <a href="#" data-toggle="modal"
-                               data-id="{{ $row->id }}"
-                               class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
-                                @if($redirected>0)
-                                    <small class="badge bg-red-active">{{ $redirected }}</small>
-                                @endif
-                            </a>
-                        @endif
-                        @if(!$checkForCancellation && !isset($_GET['referredCode']))
-                            <a href="#cancelModal" data-toggle="modal"
-                               data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
-                        @endif
-                    </div>
-                </div>
-            @endforeach
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==0) Cancelled @else Referred @endif" @if($step==0) style="background-color:#a94442;" @endif ></a>
+                                </div>
 
-            <div class="text-center">
-                {{ $data->links() }}
-            </div>
-        @else
-            <div class="alert alert-warning">
+                                <div class="col-xs-2 bs-wizard-step @if($step==2) active @elseif($step>=2) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">Seen</div>
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Seen"></a>
+                                </div>
+
+                                <div class="col-xs-2 bs-wizard-step @if($step==3) active @elseif($step>=3) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">Accepted</div>
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Accepted"></a>
+                                </div>
+
+                                <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">
+                                        @if($step==4.5)
+                                            <span class="text-danger">Didn't Arrive</span>
+                                        @else
+                                            Arrived
+                                        @endif
+                                    </div>
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==4.5) Didn't Arrive @else Arrived @endif" @if($step==4.5) style="background-color:#a94442;" @endif></a>
+                                </div>
+                                <div class="col-xs-2 bs-wizard-step @if($step==5) active @elseif($step>=5) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">Admitted</div>
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Admitted"></a>
+                                </div>
+                                <div class="col-xs-2 bs-wizard-step @if($step==6) active @elseif($step>=6) complete @else disabled @endif"><!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">Discharged</div>
+                                    <div class="progress"><div class="progress-bar"></div></div>
+                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Discharged/Transferred"></a>
+                                </div>
+                            </div>
+                            @if(count($activities) > 0)
+                                <?php $first = 0;
+                                $latest_act = \App\Activity::where('code',$row->code)->latest('updated_at')->first();
+                                ?>
+                                <div class="row">
+                                    <div class="tracking col-sm-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" style="font-size: 9pt;">
+                                                <thead class="prepend_from_firebase{{ $row->code }}"></thead>
+                                                @foreach($activities as $act)
+                                                    <?php
+                                                    $act_name = \App\Patients::find($act->patient_id);
+                                                    $old_facility_data = \App\Facility::find($act->referred_from);
+                                                    $old_facility = $old_facility_data->name;
+                                                    $old_facility_id = $old_facility_data->id;
+                                                    if($act->status=='transferred' || $act->status=='redirected'|| $act->status=='referred' || $act->status=='calling'){
+                                                        $act_icon = 'fa-ambulance';
+                                                    }
+
+                                                    $new_facility = 'N/A';
+                                                    $tmp_new = \App\Facility::find($act->referred_to);
+
+                                                    if($act->referred_to==0)
+                                                    {
+                                                        $tmp_new = \App\Facility::find($act->referred_from);
+                                                    }
+
+                                                    if($tmp_new){
+                                                        $new_facility = $tmp_new->name;
+                                                    }
+
+                                                    ?>
+                                                    @if($act->status=='rejected')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                                <br />
+                                                                @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
+                                                                    <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
+                                                                        <i class="fa fa-ambulance"></i> Redirect to other facility<br>
+                                                                    </button>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='referred' || $act->status=='redirected')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                @if($act->referring_md_id!=0)
+                                                                    <?php
+                                                                    if($old_facility_id == 63)
+                                                                        $referred_md = $act->referring_md;
+                                                                    else
+                                                                        $referred_md = 'Dr. '.$act->referring_md;
+                                                                    ?>
+                                                                    <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                                @else
+                                                                    <strong>Walk-In Patient:</strong> <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='transferred')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='redirected')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='calling')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> is requesting a call from <span class="txtHospital">{{ $old_facility }}</span>.
+                                                                @if($user->facility_id==$act->referred_from)
+                                                                    Please contact this number <span class="txtInfo">({{ $act->contact }})</span> .
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='accepted')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was accepted by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='arrived')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='admitted')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='discharged')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                                <?php
+                                                                ($row->type=='normal') ? $covid_discharge = \App\PatientForm::where("code",$act->code)->first() : $covid_discharge = \App\PregnantForm::where("code",$act->code)->first();
+                                                                ?>
+                                                                @if($covid_discharge->dis_clinical_status or $covid_discharge->dis_sur_category)
+                                                                    <span class="remarks">Clinical Status: <b>{{ ucfirst($covid_discharge->dis_clinical_status) }}</b></span>
+                                                                    <span class="remarks">Surveillance Category: <b>{{ ucfirst($covid_discharge->dis_sur_category) }}</b></span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='archived')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='cancelled')
+                                                        <?php
+                                                        $doctor = \App\User::find($act->action_md);
+                                                        ?>
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                Referral was cancelled by
+                                                                <span class="txtDoctor">
+                                                                <?php
+                                                                    if($doctor->facility_id == 63)
+                                                                        $cancel_doctor = $doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                                    else
+                                                                        $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
+                                                                    ?>
+                                                                    {{ $cancel_doctor }}
+                                                            </span>.
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='travel')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                    <?php $first = 1; ?>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                        @if(count($activities)>1)
+                                            <div style="border-top: 1px solid #ccc;">
+                                                <div class="text-center">
+                                                    <a href="#toggle" data-id="{{ $row->id }}">View More</a> <small class="text-muted">({{ count($activities) }})</small>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="panel-footer">
+                            <a data-toggle="modal" href="#referralForm"
+                               data-type="{{ $row->type }}"
+                               data-id="{{ $row->id }}"
+                               data-code="{{ $row->code }}"
+                               data-referral_status="referring"
+                               class="view_form btn btn-warning btn-xs">
+                                <i class="fa fa-folder"></i> View Form
+                            </a>
+                            @if($seen>0)
+                                <a href="#seenModal" data-toggle="modal"
+                                   data-id="{{ $row->id }}"
+                                   class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen
+                                    @if($seen>0)
+                                        <small class="badge bg-green-active">{{ $seen }}</small>
+                                    @endif
+                                </a>
+                            @endif
+                            @if($caller_md > 0)
+                                <a href="#callerModal" data-toggle="modal"
+                                   data-id="{{ $row->id }}"
+                                   class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
+                                    @if($caller_md>0)
+                                        <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                    @endif
+                                </a>
+                            @endif
+                            @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
+                                <a href="#transferModal" data-toggle="modal"
+                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
+                            @endif
+                            <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                                    data-target="#feedbackModal"
+                                    data-code="{{ $row->code }}">
+                                <i class="fa fa-comments"></i> ReCo
+                                @if($feedback>0)
+                                    <span class="badge bg-blue">{{ $feedback }}</span>
+                                @endif
+                            </button>
+                            <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
+                            <button class="btn btn-xs btn-danger btn-issue-referred" data-toggle="modal"
+                                    data-target="#IssueAndConcern"
+                                    data-code="{{ $row->code }}"
+                                    data-referred_from="{{ $row->referred_from }}"
+                                    data-tracking_id="{{ $row->id }}">
+                                <i class="fa fa fa-exclamation-triangle"></i> Issue and Concern
+                                @if($issue_and_concern>0)
+                                    <span class="badge bg-red">{{ $issue_and_concern }}</span>
+                                @endif
+                            </button>
+                            <?php $doh_remarks = \App\Monitoring::where("code","=",$row->code)->count(); ?>
+                            @if($doh_remarks>0)
+                                <button class="btn btn-xs btn-doh" data-toggle="modal" style="background-color: #dd7556;color: white"
+                                        data-target="#feedbackDOH"
+                                        data-code="{{ $row->code }}">
+                                    <i class="fa fa-phone-square"></i> 711 DOH CVCHD HealthLine
+                                    <span class="badge bg-green">{{ $doh_remarks }}</span>
+                                </button>
+                            @endif
+                            @if($redirected > 0)
+                                <a href="#" data-toggle="modal"
+                                   data-id="{{ $row->id }}"
+                                   class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
+                                    @if($redirected>0)
+                                        <small class="badge bg-red-active">{{ $redirected }}</small>
+                                    @endif
+                                </a>
+                            @endif
+                            @if(!$checkForCancellation && !isset($_GET['referredCode']))
+                                <a href="#cancelModal" data-toggle="modal"
+                                   data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+
+                <div class="text-center">
+                    {{ $data->links() }}
+                </div>
+            @else
+                <div class="alert alert-warning">
                 <span class="text-warning" style="font-weight: bold; font-size: 1.2em;">
                     <i class="fa fa-warning"></i> No Referred Patients!
                 </span>
-            </div>
-        @endif
+                </div>
+            @endif
+        </div>
     </div>
-
 
     @include('modal.accept')
     @include('modal.refer')
@@ -519,7 +521,7 @@ $user = Session::get('auth');
     </script>
 
     <script>
-        $('.select2').select2();
+        $(".select2").select2({ width: '100%' });
 
         $('#daterange').daterangepicker({
             "singleDatePicker": false,

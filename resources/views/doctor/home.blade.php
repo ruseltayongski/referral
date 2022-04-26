@@ -116,7 +116,6 @@
         });
     @endif
 
-
     var doctor_monthly_report = <?php echo json_encode($doctor_monthly_report); ?>;
     console.log(doctor_monthly_report);
 

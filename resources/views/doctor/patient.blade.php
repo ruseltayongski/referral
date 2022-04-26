@@ -208,7 +208,7 @@
                                     </td>
                                     <td>
                                         <?php $age = \App\Http\Controllers\ParamCtrl::getAge($row->dob);
-                                            $month = \App\Http\Controllers\ParamCtrl::getMonths($row->dob)?>
+                                        $month = \App\Http\Controllers\ParamCtrl::getMonths($row->dob)?>
                                         @if( $age == 1)
                                             {{ $age }} year old
                                         @elseif( $age > 0)
@@ -231,8 +231,8 @@
                                     <td>
                                         {{ $row->region }}<br />
                                         <?php
-                                            if(!$province_display = \App\Province::find($row->province)->description)
-                                                $province_display = $row->province_others;
+                                        if(!$province_display = \App\Province::find($row->province)->description)
+                                            $province_display = $row->province_others;
                                         ?>
                                         <small class="text-success">{{ $province_display }}</small>
                                     </td>
@@ -248,10 +248,10 @@
                                         ?>
 
                                         <?php
-                                            if(!$brgy = \App\Barangay::find($brgy_id)->description)
-                                                $brgy = $row->brgy_others;
-                                            if(!$city = \App\Muncity::find($city_id)->description)
-                                                $city = $row->muncity_others;
+                                        if(!$brgy = \App\Barangay::find($brgy_id)->description)
+                                            $brgy = $row->brgy_others;
+                                        if(!$city = \App\Muncity::find($city_id)->description)
+                                            $city = $row->muncity_others;
                                         ?>
                                         {{ $city }}<br />
                                         <small class="text-success">{{ $brgy }}</small>
@@ -321,6 +321,7 @@
             </div>
         </div>
     </div>
+
     @include('modal.pregnantModal')
     @include('modal.normal_form_editable')
     @include('modal.normal_form_editable_walkin')
@@ -449,6 +450,7 @@
     }
 
     $(".select2").select2({ width: '100%' });
+
     var referring_facility = "{{ $user->facility_id }}";
     var referred_facility = '';
     var referring_facility_name = $(".referring_name").val();

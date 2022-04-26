@@ -1,7 +1,7 @@
 <style>
     @media only screen and (max-width: 720px) {
         #pregnant-content {
-            width: 70%;
+            width: 100%;
         }
     }
 </style>

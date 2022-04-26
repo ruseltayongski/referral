@@ -29,7 +29,7 @@
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date_range" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="form-control select2" name="facility_filter" id="facility">
+                <select class="select2" name="facility_filter" id="facility">
                     <option value="">All Facility</option>
                     @foreach($fac as $f)
                         <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>
