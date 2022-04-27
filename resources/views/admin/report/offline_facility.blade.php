@@ -10,7 +10,7 @@
         <div class="box box-success">
             <div class="box-header with-border">
                 <div class="pull-right">
-                    <form action="{{ asset('offline/facility') }}" method="POST" class="form-inline">
+                    <form action="{{ asset('offline/facility').'/'.$province_id }}" method="POST" class="form-inline">
                         {{ csrf_field() }}
                         <div class="form-group-sm">
                             <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">

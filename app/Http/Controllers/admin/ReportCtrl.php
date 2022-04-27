@@ -148,18 +148,18 @@ class ReportCtrl extends Controller
     }
 
     public function offlineFacility(Request $request,$province_id){
-        if($request->isMethod('post') && isset($request->day_date)){
+        if($request->isMethod('post') && isset($request->day_date))
             $day_date = date('Y-m-d',strtotime($request->day_date));
-        } else {
+        else
             $day_date = date('Y-m-d');
-        }
 
         $data = \DB::connection('mysql')->select("call offline_facility('$day_date','$province_id')");
 
         return view('admin.report.offline_facility',[
             'title' => 'Offline Facility',
             "data" => $data,
-            'day_date' => $day_date
+            'day_date' => $day_date,
+            'province_id' => $province_id
         ]);
     }
 
