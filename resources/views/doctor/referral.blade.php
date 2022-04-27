@@ -193,7 +193,6 @@ $user = Session::get('auth');
                     </ul>
                 @endif
             </div>
-
         </div>
     </div>
 
