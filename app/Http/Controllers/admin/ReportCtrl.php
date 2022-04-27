@@ -68,12 +68,11 @@ class ReportCtrl extends Controller
     public function online1() //12/23/2019 created
     {
         $date = Session::get('dateReportOnline');
-        if(!$date){
+        if(!$date)
             $date = date('Y-m-d');
-        }
 
-        $start = $date.' 00:00:00';
-        $end = $date.' 23:59:59';
+        $start = date('Y-m-d',strtotime($date)).' 00:00:00';
+        $end = date('Y-m-d',strtotime($date)).' 23:59:59';
 
         $data = \DB::connection('mysql')->select("call AttendanceFunc('$start','$end')");
 
