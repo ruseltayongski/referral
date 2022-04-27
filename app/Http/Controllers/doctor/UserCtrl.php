@@ -58,9 +58,7 @@ class UserCtrl extends Controller
 
         $data = $data->join('users','users.id','=','login.userId')
                 ->join('facility','facility.id','=','users.facility_id')
-                ->leftJoin('department','department.id','=','users.department_id');
-
-        $data = $data
+                ->leftJoin('department','department.id','=','users.department_id')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->orderBy('login.id','desc')

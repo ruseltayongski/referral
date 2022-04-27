@@ -43,6 +43,7 @@ class LoginCtrl extends Controller
                 $l->login = $last_login;
                 $l->logout = date("Y-m-d H:i:s",strtotime("0000-00-00 00:00:00"));
                 $l->status = 'login';
+                $l->type = $req->login_type;
                 $l->save();
 
                 if($checkLastLogin > 0 ){

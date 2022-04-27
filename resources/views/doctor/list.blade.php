@@ -5,13 +5,10 @@ $user = Session::get('auth');
 
 @section('content')
     <style>
-        .title-name {
-            font-weight:bold;
-        }
         .widget-user-header {
             padding: 10px 15px !important;
         }
-        .widget-user-2 .widget-user-username {
+        .widget-user-2 {
             margin-top: 5px;
             margin-bottom: 0px;
             font-weight: 300;
@@ -28,11 +25,16 @@ $user = Session::get('auth');
                             if($row->status=='login_off'){
                                 $status = '<em>OFF DUTY</em>';
                                 $color = 'yellow';
-                            } else {
+                            }
+                            else if($row->type == 'cloud') {
+                                $color = 'blue';
+                                $status = 'ON DUTY';
+                            }
+                            else {
                                 $color = 'green';
                                 $status = 'ON DUTY';
-                                $doctor_online_count++;
                             }
+                            $doctor_online_count++;
                         ?>
                         <div class="col-md-4">
                             <!-- Widget: user widget style 1 -->
