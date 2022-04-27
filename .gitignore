@@ -13,3 +13,4 @@ yarn-error.log
 .env
 /config/database.php
 artisan.php
+/app/Providers/AppServiceProvider.php
