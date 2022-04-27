@@ -22,17 +22,16 @@ $status = session::get('status');
         }
     </style>
     <div class="col-md-9">
-        <div class="jim-content">
-            <h3 class="page-header">{{ $title }}
-            </h3>
-            <div class="row">
+        <div class="row">
+            <div class="jim-content">
+                <h3 class="page-header">{{ $title }}</h3>
                 <div class="col-md-12">
                     @if($status == 'added')
-                    <div class="alert alert-success">
-                        <span class="text-success">
-                            <i class="fa fa-check"></i> Added Successfully!
-                        </span>
-                    </div>
+                        <div class="alert alert-success">
+                    <span class="text-success">
+                        <i class="fa fa-check"></i> Added Successfully!
+                    </span>
+                        </div>
                     @endif
 
                     <form method="POST" class="form-horizontal form-submit" id="form-submit" action="{{ asset('doctor/patient/'.$method) }}">
@@ -131,7 +130,7 @@ $status = session::get('status');
                             <tr class="has-group ">
                                 <td>Municipality/City :</td>
                                 <td class="muncity_holder">
-                                    <select class="form-control muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
+                                    <select class="muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
 
                                     </select>
                                 </td>
@@ -139,7 +138,7 @@ $status = session::get('status');
                             <tr class="has-group">
                                 <td>Barangay :</td>
                                 <td class="barangay_holder">
-                                    <select class="form-control barangay select2" name="brgy" required>
+                                    <select class="barangay select2" name="brgy" required>
                                         <option value="">Select Barangay</option>
                                     </select>
                                 </td>
@@ -158,12 +157,13 @@ $status = session::get('status');
                         </table>
                     </form>
                 </div><!-- /.col -->
-            </div><!-- /.row -->
+            </div>
         </div>
-
     </div>
     <div class="col-md-3">
-        @include('sidebar.quick')
+        <div class="row">
+            @include('sidebar.quick')
+        </div>
     </div>
 @endsection
 @section('js')
