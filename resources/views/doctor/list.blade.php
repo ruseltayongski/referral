@@ -17,22 +17,63 @@ $user = Session::get('auth');
     <div class="row">
         <div class="col-md-8">
             <div class="jim-content" style="background: rgba(255, 255, 255, 0.4)">
-                <h3 class="page-header">{{ $title }} <span class="badge bg-blue doctor_online">0</span></h3>
-                <?php $doctor_online_count = 0; ?>
+                <h3 class="page-header">{{ strtoupper($title) }}</h3>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="text-left" width="180px;">TOTAL ONLINE</td>
+                            <td ><span class="badge bg-orange doctor_online">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="100px;">DOH SERVER</td>
+                            <td ><span class="badge bg-green doh_server">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="100px;">CLOUD SERVER</td>
+                            <td ><span class="badge bg-blue cloud_server">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="100px;">OFF DUTY BUT ONLINE</td>
+                            <td >
+                                <span class="badge bg-green cloud_server_off_duty">0</span>
+                                <span class="badge bg-blue cloud_server_off_duty">0</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
+                    $doctor_online_count = 0;
+                    $doh_server = 0;
+                    $cloud_server = 0;
+                    $doh_server_off_duty = 0;
+                    $cloud_server_off_duty = 0;
+                ?>
                 @if(count($data)>0)
                     @foreach($data as $row)
                         <?php
-                            if($row->status=='login_off'){
-                                $status = '<em>OFF DUTY</em>';
-                                $color = 'yellow';
-                            }
-                            else if($row->type == 'cloud') {
-                                $color = 'blue';
-                                $status = 'ON DUTY';
+                            if($row->type == 'cloud') {
+                                if($row->status=='login_off'){
+                                    $status = '<em>OFF DUTY</em>';
+                                    $color = 'yellow';
+                                    $cloud_server_off_duty++;
+                                }
+                                else {
+                                    $color = 'blue';
+                                    $status = 'ON DUTY';
+                                    $cloud_server++;
+                                }
                             }
                             else {
-                                $color = 'green';
-                                $status = 'ON DUTY';
+                                if($row->status=='login_off'){
+                                    $status = '<em>OFF DUTY</em>';
+                                    $color = 'yellow';
+                                    $doh_server_off_duty++;
+                                }
+                                else {
+                                    $color = 'green';
+                                    $status = 'ON DUTY';
+                                    $doh_server++;
+                                }
                             }
                             $doctor_online_count++;
                         ?>
@@ -81,6 +122,11 @@ $user = Session::get('auth');
 @section('js')
     <script>
         $(".doctor_online").text("<?php echo $doctor_online_count; ?>");
+        $(".doh_server").text("<?php echo $doh_server; ?>");
+        $(".cloud_server").text("<?php echo $cloud_server; ?>");
+        $(".doh_server_off_duty").text("<?php echo $doh_server_off_duty; ?>");
+        $(".cloud_server_off_duty").text("<?php echo $cloud_server_off_duty; ?>");
+
         $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
     </script>
 @endsection
