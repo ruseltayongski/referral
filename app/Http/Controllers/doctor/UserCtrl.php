@@ -34,7 +34,6 @@ class UserCtrl extends Controller
     {
         ParamCtrl::lastLogin();
 
-
         $start = Carbon::now()->startOfDay();
         $end = Carbon::now()->endOfDay();
 
