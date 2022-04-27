@@ -48,7 +48,8 @@ class UserCtrl extends Controller
             'facility.abbr as abbr',
             'department.description as department',
             'login.login as login',
-            'login.status as status'
+            'login.status as status',
+            'login.type as type'
         );
 
         $data = $data->where(function($q) {
