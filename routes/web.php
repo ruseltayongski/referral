@@ -92,12 +92,13 @@ Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
 Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
+Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
 Route::match(['GET','POST'],'admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
 Route::get('admin/no_action/{facility_id}/{date_start}/{date_end}/{type}','admin\PatientCtrl@NoAction');
-Route::get('admin/report/consolidated/outgoing','admin\PatientCtrl@consolidatedOutgoing');
+Route::get('admin/report/tat','admin\ReportCtrl@turnAroundTime');
 
 
 Route::get('admin/daily/users','admin\DailyCtrl@users');

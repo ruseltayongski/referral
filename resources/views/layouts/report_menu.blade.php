@@ -59,5 +59,6 @@
         @endif
         <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
         <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
+        <li><a href="{{ url('admin/report/tat') }}"><i class="fa fa-clock-o"></i>Turn Around Time</a></li>
     </ul>
 </li>
