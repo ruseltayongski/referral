@@ -114,7 +114,7 @@
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
                             <h5 class="description-header">{{ $admit_to_discharge_redirect }} minutes</h5>
-                            <span class="description-text">ADMITTED TO DISCHARGE ssss</span>
+                            <span class="description-text">ADMITTED TO DISCHARGE</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
