@@ -170,7 +170,7 @@ class ReportCtrl extends Controller
         return $days.$hours.$mins;
     }
 
-    public function turnAroundTime(Request $request) {
+    public function turnAroundTime(Request $request) { //tat
         $user = Session::get('auth');
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
