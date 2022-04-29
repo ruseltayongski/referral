@@ -73,7 +73,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $redirect_to_seen }} minutes</h5>
+                            <h5 class="description-header">{{ $redirect_to_seen }}</h5>
                             <span class="description-text">REDIRECTED TO SEEN</span>
                         </div>
                         <!-- /.description-block -->
@@ -81,7 +81,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $seen_to_accept_redirect }} minutes</h5>
+                            <h5 class="description-header">{{ $seen_to_accept_redirect }}</h5>
                             <span class="description-text">SEEN TO ACCEPTED</span>
                         </div>
                         <!-- /.description-block -->
@@ -89,7 +89,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $seen_to_reject_redirect}} minutes</h5>
+                            <h5 class="description-header">{{ $seen_to_reject_redirect}}</h5>
                             <span class="description-text">Seen to Recommend to Redirect</span>
                         </div>
                         <!-- /.description-block -->
@@ -97,7 +97,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $accept_to_arrive_redirect }} minutes</h5>
+                            <h5 class="description-header">{{ $accept_to_arrive_redirect }}</h5>
                             <span class="description-text">ACCEPTED TO ARRIVED</span>
                         </div>
                         <!-- /.description-block -->
@@ -105,7 +105,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $arrive_to_admit_redirect }} minutes</h5>
+                            <h5 class="description-header">{{ $arrive_to_admit_redirect }}</h5>
                             <span class="description-text">ARRIVED TO ADMITTED</span>
                         </div>
                         <!-- /.description-block -->
@@ -113,7 +113,7 @@
                     <!-- /.col -->
                     <div class="col-sm-2 col-xs-6">
                         <div class="description-block border-right">
-                            <h5 class="description-header">{{ $admit_to_discharge_redirect }} minutes</h5>
+                            <h5 class="description-header">{{ $admit_to_discharge_redirect }}</h5>
                             <span class="description-text">ADMITTED TO DISCHARGE</span>
                         </div>
                         <!-- /.description-block -->
