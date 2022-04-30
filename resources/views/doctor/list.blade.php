@@ -35,7 +35,7 @@ $user = Session::get('auth');
                         <tr>
                             <td class="text-left" width="100px;">OFF DUTY BUT ONLINE</td>
                             <td >
-                                <span class="badge bg-green cloud_server_off_duty">0</span>
+                                <span class="badge bg-green doh_server_off_duty">0</span>
                                 <span class="badge bg-blue cloud_server_off_duty">0</span>
                             </td>
                         </tr>
