@@ -169,41 +169,4 @@
     </div>
 </div>
 
-<script>
-    {{--$("#clear_icd").hide();--}}
 
-    {{--function clearICD() {--}}
-        {{--$("#icd_selected").html("");--}}
-        {{--$("#clear_icd").hide();--}}
-    {{--}--}}
-
-    {{--function searchICD10() {--}}
-        {{--$(".icd_body").html(loading);--}}
-        {{--var url = "<?php echo asset('icd/search'); ?>";--}}
-        {{--var json = {--}}
-            {{--"_token" : "<?php echo csrf_token(); ?>",--}}
-            {{--"icd_keyword" : $("#icd10_keyword").val()--}}
-        {{--};--}}
-        {{--$.post(url,json,function(result){--}}
-            {{--setTimeout(function(){--}}
-                {{--$(".icd_body").html(result);--}}
-            {{--},500);--}}
-        {{--});--}}
-    {{--}--}}
-
-    {{--function getAllCheckBox() {--}}
-        {{--$('#icd-modal-discharge').modal('toggle');--}}
-        {{--$("#clear_icd").show();--}}
-        {{--var values = [];--}}
-
-        {{--$('input[name="icd_checkbox[]"]:checked').each(function () {--}}
-            {{--values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");--}}
-            {{--var icd_description = $(this).parent().parent().siblings("td").eq(1).text();--}}
-            {{--var id = $(this).val();--}}
-            {{--if(this.checked){--}}
-                {{--$("#icd_selected").append('=> '+icd_description+' '+'<br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');--}}
-            {{--}--}}
-        {{--});--}}
-        {{--console.log(values);--}}
-    {{--}--}}
-</script>
