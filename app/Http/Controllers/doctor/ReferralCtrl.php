@@ -511,7 +511,6 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
 
         } else {
-            $user = Session::get('auth');
             $data = Tracking::select(
                 'tracking.*',
                 DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -552,20 +551,13 @@ class ReferralCtrl extends Controller
             }
 
             if($option_filter)
-            {
                 $data = $data->where('tracking.status',$option_filter);
-            }
             if($facility_filter)
-            {
                 $data = $data->where('tracking.referred_to',$facility_filter);
-            }
             if($department_filter)
-            {
                 $data = $data->where('tracking.department_id',$department_filter);
-            }
 
-            if($date)
-            {
+            if($date) {
                 $range = explode('-',str_replace(' ', '', $date));
                 $start = $range[0];
                 $end = $range[1];

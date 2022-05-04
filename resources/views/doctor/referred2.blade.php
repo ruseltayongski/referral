@@ -269,10 +269,6 @@
                                     <div class="step-counter">2</div>
                                     <div class="step-name">Seen</div>
                                 </div>
-                                <div class="stepper-item @if($referred_travel_track || $referred_rejected_track || $referred_accepted_track) completed @endif">
-                                    <div class="step-counter">3</div>
-                                    <div class="step-name">Travel</div>
-                                </div>
                                 <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif">
                                     <div class="step-counter
                                                 <?php
@@ -281,7 +277,7 @@
                                     elseif($referred_cancelled_track)
                                         echo "bg-yellow";
                                     ?>
-                                            ">4</div>
+                                            ">3</div>
                                     <div class="step-name "><?php
                                         if($referred_rejected_track)
                                             echo 'Rejected';
@@ -290,6 +286,10 @@
                                         else
                                             echo 'Accepted' ;
                                         ?></div>
+                                </div>
+                                <div class="stepper-item @if($referred_travel_track || $referred_arrived_track) completed @endif">
+                                    <div class="step-counter">4</div>
+                                    <div class="step-name">Travel</div>
                                 </div>
                                 <div class="stepper-item @if($referred_arrived_track && !$referred_rejected_track) completed @endif">
                                     <div class="step-counter">5</div>
@@ -358,11 +358,7 @@
                                             <div class="step-counter">2</div>
                                             <div class="step-name">Seen</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_travel_track || $redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
-                                            <div class="step-counter">3</div>
-                                            <div class="step-name">Travel</div>
-                                        </div>
-                                        <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
                                             <div class="step-counter
                                                 <?php
                                             if($redirected_rejected_track)
@@ -370,7 +366,7 @@
                                             elseif($redirected_cancelled_track)
                                                 echo "bg-yellow";
                                             ?>
-                                                    ">4</div>
+                                                    ">3</div>
                                             <div class="step-name "><?php
                                                 if($redirected_rejected_track)
                                                     echo 'Rejected';
@@ -379,6 +375,10 @@
                                                 else
                                                     echo 'Accepted' ;
                                                 ?></div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_travel_track || $redirected_arrived_track) completed @endif">
+                                            <div class="step-counter">4</div>
+                                            <div class="step-name">Travel</div>
                                         </div>
                                         <div class="stepper-item @if($redirected_arrived_track) completed @endif">
                                             <div class="step-counter">5</div>
