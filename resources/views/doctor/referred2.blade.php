@@ -264,7 +264,7 @@
                                     <div class="step-counter">2</div>
                                     <div class="step-name">Seen</div>
                                 </div>
-                                <div class="stepper-item @if($referred_travel_track || $referred_rejected_track || $referred_arrived_track) completed @endif">
+                                <div class="stepper-item @if($referred_travel_track || $referred_rejected_track || $referred_accepted_track || $referred_cancelled_track) completed @endif">
                                     <div class="step-counter">3</div>
                                     <div class="step-name">Travel</div>
                                 </div>
@@ -339,7 +339,7 @@
                                             <div class="step-counter">2</div>
                                             <div class="step-name">Seen</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_travel_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_travel_track || $redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
                                             <div class="step-counter">3</div>
                                             <div class="step-name">Travel</div>
                                         </div>
