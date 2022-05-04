@@ -566,9 +566,8 @@ class ReferralCtrl extends Controller
             $start_date = Carbon::parse($start)->startOfDay();
             $end_date = Carbon::parse($end)->endOfDay();
 
-            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
-
-            $data = $data->orderBy('date_referred','desc')
+            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date])
+                ->orderBy('date_referred','desc')
                 ->paginate(10);
         }
 

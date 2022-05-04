@@ -137,7 +137,6 @@
 
                     $type = ($row->type=='normal') ? 'success':'danger';
                     $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                    $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
 
                     $activities = \App\Activity::select(
                         'activity.*',
