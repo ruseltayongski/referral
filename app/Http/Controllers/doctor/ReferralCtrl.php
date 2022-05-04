@@ -478,6 +478,7 @@ class ReferralCtrl extends Controller
 
     public function referred(Request $request)
     {
+        $user = Session::get('auth');
         ParamCtrl::lastLogin();
         $search = $request->search;
         $option_filter = $request->option_filter;
@@ -588,7 +589,8 @@ class ReferralCtrl extends Controller
             'search' => $search,
             'option_filter' => $option_filter,
             'facility_filter' => $facility_filter,
-            'department_filter' => $department_filter
+            'department_filter' => $department_filter,
+            'user' => $user
         ]);
     }
 
