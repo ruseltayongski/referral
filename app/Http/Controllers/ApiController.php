@@ -910,7 +910,7 @@ class ApiController extends Controller
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
             'date_seen' => '',
-            'referred_from' => $referred_doctor->id,
+            'referred_from' => $referred_doctor->facility_id,
             'referred_to' => $referring_doctor->facility_id,
             'department_id' => $req->department_id,
             'referring_md' => $referring_doctor->id,
