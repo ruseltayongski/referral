@@ -197,6 +197,9 @@ Route::post('doctor/accepted','doctor\PatientCtrl@searchAccepted');
 Route::get('doctor/discharge','doctor\PatientCtrl@discharge');
 Route::post('doctor/discharge','doctor\PatientCtrl@searchDischarged');
 
+Route::get('doctor/transferred','doctor\PatientCtrl@transferred');
+Route::post('doctor/transferred','doctor\PatientCtrl@searchTransferred');
+
 Route::get('doctor/cancelled','doctor\PatientCtrl@cancel');
 Route::post('doctor/cancelled','doctor\PatientCtrl@searchCancelled');
 
@@ -205,6 +208,9 @@ Route::post('doctor/archived','doctor\PatientCtrl@searchArchived');
 
 Route::get('doctor/redirected', 'doctor\PatientCtrl@redirected');
 Route::post('doctor/redirected', 'doctor\PatientCtrl@searchRedirected');
+
+Route::get('doctor/redirect/reco', 'doctor\PatientCtrl@redirectReco');
+Route::post('doctor/redirect/reco', 'doctor\PatientCtrl@searchRedirectReco');
 
 Route::get('doctor/feedback/{code}','doctor\ReferralCtrl@feedback');
 Route::get('doctor/feedback/reply/{id}','doctor\ReferralCtrl@replyFeedback');

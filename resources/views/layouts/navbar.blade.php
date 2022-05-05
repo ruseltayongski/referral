@@ -24,10 +24,12 @@
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
-                    <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-ambulance"></i> Discharged/Transfered Patients</a></li>
+                    <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-users"></i> Discharged Patients</a></li>
+                    <li><a href="{{ url('doctor/transferred') }}"><i class="fa fa-ambulance"></i> Transferred Patients</a></li>
                     <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                     <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
                     <li><a href="{{ url('doctor/redirected') }}"><i class="fa fa-external-link"></i> Redirected Patients <span class="badge bg-red"> New</span></a></li>
+                    <li><a href="{{ url('doctor/redirect/reco') }}"><i class="fa fa-external-link-square"></i> Recommended to be Redirected</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                     <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
