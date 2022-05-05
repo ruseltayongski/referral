@@ -478,6 +478,7 @@ class ReferralCtrl extends Controller
 
     public function referred(Request $request)
     {
+        $user = Session::get('auth');
         ParamCtrl::lastLogin();
         $search = $request->search;
         $option_filter = $request->option_filter;
@@ -510,7 +511,6 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
 
         } else {
-            $user = Session::get('auth');
             $data = Tracking::select(
                 'tracking.*',
                 DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -551,20 +551,13 @@ class ReferralCtrl extends Controller
             }
 
             if($option_filter)
-            {
                 $data = $data->where('tracking.status',$option_filter);
-            }
             if($facility_filter)
-            {
                 $data = $data->where('tracking.referred_to',$facility_filter);
-            }
             if($department_filter)
-            {
                 $data = $data->where('tracking.department_id',$department_filter);
-            }
 
-            if($date)
-            {
+            if($date) {
                 $range = explode('-',str_replace(' ', '', $date));
                 $start = $range[0];
                 $end = $range[1];
@@ -573,9 +566,8 @@ class ReferralCtrl extends Controller
             $start_date = Carbon::parse($start)->startOfDay();
             $end_date = Carbon::parse($end)->endOfDay();
 
-            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
-
-            $data = $data->orderBy('date_referred','desc')
+            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date])
+                ->orderBy('date_referred','desc')
                 ->paginate(10);
         }
 
@@ -588,7 +580,8 @@ class ReferralCtrl extends Controller
             'search' => $search,
             'option_filter' => $option_filter,
             'facility_filter' => $facility_filter,
-            'department_filter' => $department_filter
+            'department_filter' => $department_filter,
+            'user' => $user
         ]);
     }
 

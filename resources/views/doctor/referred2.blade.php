@@ -1,4 +1,3 @@
-<?php $user = Session::get('auth'); ?>
 @extends('layouts.app')
 
 @section('content')
@@ -43,6 +42,82 @@
                 font-size: 14px;
                 text-transform: lowercase;
             }
+            .step-name {
+                font-size : 9px;
+            }
+        }
+
+        .stepper-wrapper {
+            font-family: Arial;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .stepper-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .stepper-item::before {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #ccc;
+            width: 100%;
+            top: 20px;
+            left: -50%;
+            z-index: 2;
+        }
+
+        .stepper-item::after {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #ccc;
+            width: 100%;
+            top: 20px;
+            left: 50%;
+            z-index: 2;
+        }
+
+        .stepper-item .step-counter {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-bottom: 6px;
+        }
+
+        .stepper-item.active {
+            font-weight: bold;
+        }
+
+        .stepper-item.completed .step-counter {
+            background-color: #4bb543;
+        }
+
+        .stepper-item.completed::after {
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid #4bb543;
+            width: 100%;
+            top: 20px;
+            left: 50%;
+            z-index: 3;
+        }
+
+        .stepper-item:first-child::before {
+            content: none;
+        }
+        .stepper-item:last-child::after {
+            content: none;
         }
     </style>
 
@@ -59,9 +134,9 @@
             @if(count($data) > 0)
                 @foreach($data as $row)
                     <?php
+
                     $type = ($row->type=='normal') ? 'success':'danger';
                     $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
-                    $date = ($row->status=='referred') ? date('M d, Y h:i A',strtotime($row->date_referred)) : date('M d, Y h:i A',strtotime($row->date_seen));
 
                     $activities = \App\Activity::select(
                         'activity.*',
@@ -92,7 +167,7 @@
 
                     $department_name = 'N/A';
                     $dept = \App\Department::find($row->department_id);
-                    if($dept){
+                    if($dept) {
                         $department_name = $dept->description;
                     }
                     $patient = \App\Patients::find($row->patient_id);
@@ -106,7 +181,6 @@
                     $seen = \App\Seen::where('tracking_id',$row->id)->count();
                     $checkForCancellation = \App\Http\Controllers\doctor\ReferralCtrl::checkForCancellation($row->code);
 
-                    $step = \App\Http\Controllers\doctor\ReferralCtrl::step($row->code);
                     $feedback = \App\Feedback::where('code',$row->code)->count();
                     $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                     $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
@@ -134,53 +208,192 @@
                             Patient Code: <span class="txtCode">{{ $row->code }}</span>
                         </div>
                         <div class="panel-body">
-                            <div class="bs-wizard" style="border-bottom:0;">
-                                <div class="col-xs-2 bs-wizard-step @if($step==1) active @elseif($step>=1) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">
-                                        @if($step==0)
-                                            <span class="text-danger">Cancelled</span>
-                                        @else
-                                            Referred
-                                        @endif
-                                    </div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==0) Cancelled @else Referred @endif" @if($step==0) style="background-color:#a94442;" @endif ></a>
+                            <?php
+                                $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
+                                $position_count = 0;
+                                $referred_track = \App\Activity::where("code",$row->code)->where("status","referred")->first();
+                                $referred_seen_track = \App\Seen::where("code",$referred_track->code)
+                                    ->where("facility_id",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->exists();
+                                $referred_accepted_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","accepted")
+                                    ->exists();
+                                $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","rejected")
+                                    ->exists();
+                                $referred_cancelled_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","cancelled")
+                                    ->exists();
+                                $referred_travel_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","travel")
+                                    ->exists();
+                                $referred_arrived_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_from",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","arrived")
+                                    ->exists();
+                                $referred_admitted_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_from",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","admitted")
+                                    ->exists();
+                                $referred_discharged_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_from",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","discharged")
+                                    ->exists();
+                                $redirected_track = \App\Activity::where("code",$row->code)
+                                            ->where(function($query) {
+                                                $query->where("status","redirected")
+                                                    ->orWhere("status","transferred");
+                                            })
+                                            ->get();
+                            ?>
+                            <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
+                            <div class="stepper-wrapper">
+                                <div class="stepper-item completed">
+                                    <div class="step-counter">1</div>
+                                    <div class="step-name">Referred</div>
                                 </div>
-
-                                <div class="col-xs-2 bs-wizard-step @if($step==2) active @elseif($step>=2) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">Seen</div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Seen"></a>
+                                <div class="stepper-item @if($referred_seen_track || $referred_accepted_track || $referred_rejected_track) completed @endif">
+                                    <div class="step-counter">2</div>
+                                    <div class="step-name">Seen</div>
                                 </div>
-
-                                <div class="col-xs-2 bs-wizard-step @if($step==3) active @elseif($step>=3) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">Accepted</div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Accepted"></a>
+                                <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif">
+                                    <div class="step-counter
+                                                <?php
+                                    if($referred_rejected_track)
+                                        echo "bg-red";
+                                    elseif($referred_cancelled_track)
+                                        echo "bg-yellow";
+                                    ?>
+                                            ">3</div>
+                                    <div class="step-name "><?php
+                                        if($referred_rejected_track)
+                                            echo 'Rejected';
+                                        elseif($referred_cancelled_track)
+                                            echo 'Cancelled';
+                                        else
+                                            echo 'Accepted' ;
+                                        ?></div>
                                 </div>
-
-                                <div class="col-xs-2 bs-wizard-step @if($step==4 || $step==4.5) active @elseif($step>=4) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">
-                                        @if($step==4.5)
-                                            <span class="text-danger">Didn't Arrive</span>
-                                        @else
-                                            Arrived
-                                        @endif
-                                    </div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="@if($step==4.5) Didn't Arrive @else Arrived @endif" @if($step==4.5) style="background-color:#a94442;" @endif></a>
+                                <div class="stepper-item @if($referred_travel_track || $referred_arrived_track) completed @endif">
+                                    <div class="step-counter">4</div>
+                                    <div class="step-name">Travel</div>
                                 </div>
-                                <div class="col-xs-2 bs-wizard-step @if($step==5) active @elseif($step>=5) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">Admitted</div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Admitted"></a>
+                                <div class="stepper-item @if($referred_arrived_track && !$referred_rejected_track) completed @endif">
+                                    <div class="step-counter">5</div>
+                                    <div class="step-name">Arrived</div>
                                 </div>
-                                <div class="col-xs-2 bs-wizard-step @if($step==6) active @elseif($step>=6) complete @else disabled @endif"><!-- complete -->
-                                    <div class="text-center bs-wizard-stepnum">Discharged</div>
-                                    <div class="progress"><div class="progress-bar"></div></div>
-                                    <a href="javascript:void(0)" class="bs-wizard-dot" data-toggle="tooltip" data-placement="top" title="Discharged/Transferred"></a>
+                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif">
+                                    <div class="step-counter">6</div>
+                                    <div class="step-name">Admitted</div>
+                                </div>
+                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif">
+                                    <div class="step-counter">7</div>
+                                    <div class="step-name">Discharged</div>
                                 </div>
                             </div>
+                            @if(count($redirected_track) > 0)
+                                @foreach($redirected_track as $redirect_track)
+                                    <?php
+                                        $position_count++;
+                                        $redirected_seen_track = \App\Seen::where("code",$redirect_track->code)
+                                            ->where("facility_id",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->exists();
+                                        $redirected_accepted_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","accepted")
+                                            ->exists();
+                                        $redirected_rejected_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","rejected")
+                                            ->exists();
+                                        $redirected_cancelled_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","cancelled")
+                                            ->exists();
+                                        $redirected_travel_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","travel")
+                                            ->exists();
+                                        $redirected_arrived_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_from",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","arrived")
+                                            ->exists();
+                                        $redirected_admitted_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_from",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","admitted")
+                                            ->exists();
+                                        $redirected_discharged_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_from",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","discharged")
+                                            ->exists();
+                                    ?>
+                                    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
+                                    <div class="stepper-wrapper">
+                                        <div class="stepper-item completed">
+                                            <div class="step-counter">1</div>
+                                            <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_seen_track) completed @endif">
+                                            <div class="step-counter">2</div>
+                                            <div class="step-name">Seen</div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
+                                            <div class="step-counter
+                                                <?php
+                                            if($redirected_rejected_track)
+                                                echo "bg-red";
+                                            elseif($redirected_cancelled_track)
+                                                echo "bg-yellow";
+                                            ?>
+                                                    ">3</div>
+                                            <div class="step-name "><?php
+                                                if($redirected_rejected_track)
+                                                    echo 'Rejected';
+                                                elseif($redirected_cancelled_track)
+                                                    echo 'Cancelled';
+                                                else
+                                                    echo 'Accepted' ;
+                                                ?></div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_travel_track || $redirected_arrived_track) completed @endif">
+                                            <div class="step-counter">4</div>
+                                            <div class="step-name">Travel</div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_arrived_track) completed @endif">
+                                            <div class="step-counter">5</div>
+                                            <div class="step-name">Arrived</div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif">
+                                            <div class="step-counter">6</div>
+                                            <div class="step-name">Admitted</div>
+                                        </div>
+                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif">
+                                            <div class="step-counter">7</div>
+                                            <div class="step-name">Discharged</div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                             @if(count($activities) > 0)
                                 <?php $first = 0;
                                 $latest_act = \App\Activity::where('code',$row->code)->latest('updated_at')->first();
@@ -386,7 +599,7 @@
                                     @endif
                                 </a>
                             @endif
-                            @if($step==3 && empty(\App\Activity::where("code",$row->code)->where("status","travel")->first()))
+                            @if($referred_accepted_track && !$referred_arrived_track)
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
                             @endif

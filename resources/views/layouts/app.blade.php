@@ -158,7 +158,7 @@
                                 'vaccine/facility/cebu','vaccine/facility/mandaue','vaccine/facility/lapu','weekly/report/1','weekly/report/2','weekly/report/3','weekly/report/4',
                                 'admin/statistics/incoming1','admin/statistics/incoming','admin/statistics/1','admin/statistics/2','admin/statistics/3','admin/statistics/4','admin/statistics/0',
 
-                                'vaccine','bed_admin','reports','monitoring', 'admin/report/tat'
+                                'vaccine','bed_admin','reports','monitoring', 'admin/report/tat','bed/'.$user->facility_id
                                 ]))
                                 ? 'container-fluid'
                                 : 'container'
@@ -180,7 +180,7 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Go Top</button>
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 5.7 </p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 5.8 </p>
     </div>
 </footer>
 

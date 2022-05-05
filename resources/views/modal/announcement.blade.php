@@ -8,19 +8,13 @@
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                             <span class="text-info" style="font-size:1.1em;">
-                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.7</strong><br>
+                                <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.8</strong><br>
                                 <ol>
                                     <li>
-                                        Undo the canceled referral <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        Turn around time reports <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                     <li>
-                                        The referring user can update the e-referral form <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        Add prompt confirmation when clicking the walk-in button <small class="badge bg-red" style="font-size: 6pt;"> New</small>
-                                    </li>
-                                    <li>
-                                        E-referral records for redirected patients <small class="badge bg-red" style="font-size: 6pt;"> New</small>
+                                        Tracking for redirected and transferred on the referred page. <small class="badge bg-red" style="font-size: 6pt;"> New</small>
                                     </li>
                                 </ol>
                             </span>
