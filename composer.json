@@ -6,15 +6,15 @@
     "type": "project",
     "require": {
         "php": ">=7.1.3",
+        "beyondcode/laravel-websockets": "1.3",
+        "doctrine/dbal": "^2.0",
         "kawankoding/laravel-fcm": "^0.1.3",
-        "laravel/framework": "5.6.*",
+        "kylekatarnls/laravel-carbon-2": "^1.0.0",
+        "laravel/framework": "5.7.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^3.1",
-        "pusher/pusher-php-server": "^4.1",
-        "twilio/sdk": "^6.9",
-        "kylekatarnls/laravel-carbon-2": "^1.0.0",
         "nesbot/carbon": "2.27.0 as 1.39.0",
-        "doctrine/dbal" : "^2.0"
+        "twilio/sdk": "^6.9"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
