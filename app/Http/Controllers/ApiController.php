@@ -919,7 +919,7 @@ class ApiController extends Controller
             'status' => 'referred'
         );
 
-        Activity::create($activity);
+        Activity::create($activity); //save the tracking
 
         $this->sendNotification($code,$referred_doctor->facility_id);
     }
