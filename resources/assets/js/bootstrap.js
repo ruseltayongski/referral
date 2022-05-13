@@ -50,3 +50,5 @@ window.Echo = new Echo({
     disableStats: true,
     //enabledTransports: ['ws', 'wss'] // <- added this param
 });
+
+console.log(window.location.hostname);
