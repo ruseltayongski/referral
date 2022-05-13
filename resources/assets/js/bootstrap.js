@@ -44,12 +44,10 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     authEndpoint: "broadcasting/auth",
     key: process.env.MIX_PUSHER_APP_KEY,
-    wsHost: "192.168.111.44",
-    //wsHost: window.location.hostname,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
     disableStats: true,
-    //enabledTransports: ['ws', 'wss'] // <- added this param
+    enabledTransports: ['ws', 'wss'] // <- added this param
 });
-
-console.log(window.location.hostname);
