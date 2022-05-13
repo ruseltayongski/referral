@@ -16,10 +16,8 @@ class FacilityCtrl extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        //$this->middleware('admin');
-        //$this->middleware('doctor');
+        $this->middleware('admin');
     }
-
 
     public function index(Request $request)
     {
@@ -71,6 +69,8 @@ class FacilityCtrl extends Controller
     public function FacilityAdd(Request $request){
         $data = $request->all();
         unset($data['_token']);
+
+        $data['abbr'] = isset($request->abbr) ? $request->abbr : '';
 
         if(isset($request->id)){
             Facility::find($request->id)->update($data);
