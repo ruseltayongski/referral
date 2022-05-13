@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>{{ (isset($title)) ? $title : 'Referral System'}}</title>
@@ -211,9 +212,9 @@
 <!-- TABLE-HEADER-FIXED -->
 <script src="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.js') }}"></script>
 
-<audio id="carteSoudCtrl">
-    <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
-</audio>
+<!-- Scripts -->
+<script src="{{ asset('public/js/app.js?version=').date('YmdHis') }}" defer></script>
+{{--<script src="{{ asset('public/js/app.js?version=3') }}" defer></script>--}}
 
 @include('layouts.app_script')
 @include('script.firebase')

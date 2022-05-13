@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use App\User;
 use App\Message;
@@ -106,13 +107,36 @@ class ContactsController extends Controller
     public function send(Request $request)
     {
         $message = Message::create([
-            'from' => Session::get('auth')->id,
-            'to' => $request->contact_id,
+            'from' => $request->from,
+            'to' => $request->to,
             'text' => $request->text
         ]);
 
-        broadcast(new NewMessage($message));
+        broadcast(new MessageSent($this->chatUserOnboard(), $message))->toOthers();
+        return ['status' => 'Message Sent!'];
+    }
 
-        return response()->json($message);
+    public function getContact() {
+        $user = Session::get('auth');
+        $picture = asset('resources/img/receiver.png');
+        $data = User::
+        select(
+            "users.id",
+            DB::raw("'$picture' as picture"),
+            DB::raw("if(
+                            users.level = 'doctor',concat('Dr. ',users.fname,' ',users.lname),concat(users.fname,' ',users.lname)
+                        ) as name"),
+            "facility.name as facility",
+            "users.contact"
+        )
+            ->leftJoin("facility","facility.id","=","users.facility_id")
+            ->where('users.id', '=', $user->id)
+            ->first();
+
+        return $data;
+    }
+
+    public function chatUserOnboard(){
+        return $this->getContact();
     }
 }

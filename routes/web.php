@@ -448,6 +448,7 @@ Route::get('/chat', 'ContactsController@index')->name('home');
 Route::get('/contacts', 'ContactsController@get');
 Route::get('/conversation/{id}', 'ContactsController@getMessagesFor');
 Route::post('/conversation/send', 'ContactsController@send');
+Route::get('/chat/user/onboard', 'ContactsController@chatUserOnboard');
 
 //set logout
 Route::post('/logout/set','doctor\UserCtrl@setLogoutTime');

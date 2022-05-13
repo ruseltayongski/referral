@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Message;
 use App\User;
+use App\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,10 +12,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewMessage implements ShouldBroadcast
+class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * User that sent the message
+     *
+     * @var \App\User
+     */
+    public $user;
+
+    /**
+     * Message details
+     *
+     * @var \App\Message
+     */
     public $message;
 
     /**
@@ -23,27 +35,27 @@ class NewMessage implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Message $message)
+
+    public function __construct($sender, Message $message)
     {
+        $this->user = [
+            "id" => $sender->id,
+            "picture" => $sender->picture,
+            "name" => $sender->name,
+            "facility" => $sender->facility,
+            "contact" => $sender->contact
+        ];
+
         $this->message = $message;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('messages.' . $this->message->to);
-    }
-
-    public function broadcastWith()
-    {
-        $this->message->load('fromContact');
-
-        //return User::order("id","desc")->first();
-
-        return ["message" => $this->message];
+        return new PresenceChannel('chat');
     }
 }
