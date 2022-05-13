@@ -56,7 +56,7 @@
             }
         },
         created() {
-            console.log("WELCOME to VUE JS!!")
+            console.log("WELCOME to VUE JS..")
             this.getUserOnboard()
             Echo.join('chat')
                 .here(users => {
