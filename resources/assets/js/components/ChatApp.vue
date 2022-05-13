@@ -60,7 +60,7 @@
             this.getUserOnboard()
             Echo.join('chat')
                 .here(users => {
-                    console.log("Listen here!")
+                    console.log("Listen here!!!")
                     //this.users = users;
                     this.users = users.filter((user) => user.id !== this.user_login.id)
                 })
