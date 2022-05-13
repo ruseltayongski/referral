@@ -19950,7 +19950,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   authEndpoint: "broadcasting/auth",
   key: "websocketkey",
-  wsHost: window.location.hostname,
+  wsHost: "192.168.111.44",
+  //wsHost: window.location.hostname,
   wsPort: 6001,
   wssPort: 6001,
   disableStats: true //enabledTransports: ['ws', 'wss'] // <- added this param
