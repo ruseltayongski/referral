@@ -40,6 +40,7 @@ import Echo from 'laravel-echo'
 
 window.Pusher = require('pusher-js');
 
+/*
 window.Echo = new Echo({
     broadcaster: 'pusher',
     authEndpoint: "broadcasting/auth",
@@ -52,4 +53,14 @@ window.Echo = new Echo({
     disableStats: true,
     forceTLS: true,
     //enabledTransports: ['ws', 'wss'] // <- added this param
+});*/
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    authEndpoint: "broadcasting/auth",
+    key: process.env.MIX_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'] // <- added this param
 });
