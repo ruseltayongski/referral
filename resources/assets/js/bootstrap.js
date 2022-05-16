@@ -45,7 +45,7 @@ window.Echo = new Echo({
     authEndpoint: "broadcasting/auth",
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    wsHost: "referral.user.edgecloudph.com",
+    wsHost: "180.232.110.208",
     //wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
