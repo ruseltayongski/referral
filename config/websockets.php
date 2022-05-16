@@ -60,20 +60,20 @@ return [
          * in a separate file specified by local_pk.
          */
         //'local_cert' => "C:/xampp/apache/crt/site.test/server.crt",
-        'local_cert' => null,
+        'local_cert' => '/root/.acme.sh/referral.cvchd7.com/referral.cvchd7.com.csr',
 
         /*
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
         //'local_pk' => "C:/xampp/apache/crt/site.test/server.key",
-        'local_pk' => null,
+        'local_pk' => '/root/.acme.sh/referral.cvchd7.com/referral.cvchd7.com.key',
 
         /*
          * Passphrase with which your local_cert file was encoded.
          */
         'passphrase' => null,
-        //'verify_peer' => false,
+        'verify_peer' => false,
     ],
 
     'statistics' => [
