@@ -19946,27 +19946,14 @@ if (token) {
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-/*
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    authEndpoint: "broadcasting/auth",
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    //wsHost: "180.232.110.49",
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    //wssPort: 6001,
-    disableStats: true,
-    forceTLS: true,
-    //enabledTransports: ['ws', 'wss'] // <- added this param
-});*/
-
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   authEndpoint: "broadcasting/auth",
   key: "websocketkey",
-  wsHost: window.location.hostname,
-  wsPort: 6001,
+  cluster: "",
+  wsHost: "192.168.81.3",
+  //wsHost: window.location.hostname,
+  //wsPort: 6001,
   wssPort: 6001,
   disableStats: true,
   enabledTransports: ['ws', 'wss'] // <- added this param
