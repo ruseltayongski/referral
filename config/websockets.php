@@ -60,14 +60,14 @@ return [
          * in a separate file specified by local_pk.
          */
         //'local_cert' => "C:/xampp/apache/crt/site.test/server.crt",
-        'local_cert' => null,
+        'local_cert' => '/var/lib/jelastic/SSL/jelastic.crt',
 
         /*
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
         //'local_pk' => "C:/xampp/apache/crt/site.test/server.key",
-        'local_pk' => null,
+        'local_pk' => '/var/lib/jelastic/SSL/jelastic.key',
 
         /*
          * Passphrase with which your local_cert file was encoded.
