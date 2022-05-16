@@ -48,7 +48,8 @@ window.Echo = new Echo({
     //wsHost: "180.232.110.49",
     wsHost: window.location.hostname,
     wsPort: 6001,
-    wssPort: 6001,
+    //wssPort: 6001,
     disableStats: true,
-    enabledTransports: ['ws', 'wss'] // <- added this param
+    forceTLS: true,
+    //enabledTransports: ['ws', 'wss'] // <- added this param
 });
