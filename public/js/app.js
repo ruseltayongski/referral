@@ -19490,7 +19490,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    console.log("WELCOME to VUE JS!!");
+    console.log("WELCOME to VUE JS...");
     this.getUserOnboard();
     Echo.join('chat').here(function (users) {
       console.log("Listen here!!!"); //this.users = users;
@@ -19951,7 +19951,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   authEndpoint: "broadcasting/auth",
   key: "websocketkey",
   cluster: "",
-  wsHost: "180.232.110.49",
+  wsHost: "referral.cvchd7.com",
   //wsHost: window.location.hostname,
   //wsPort: 6001,
   wssPort: 6001,
