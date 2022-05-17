@@ -118,7 +118,7 @@ class ContactsController extends Controller
 
     public function getContact() {
         $user = Session::get('auth');
-        $picture = asset('resources/img/receiver.png');
+        $picture = "https://cvehrs.doh.gov.ph/dummy/referral/resources/img/receiver.png";
         $data = User::
         select(
             "users.id",
