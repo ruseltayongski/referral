@@ -19951,7 +19951,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   authEndpoint: "broadcasting/auth",
   key: "websocketkey",
   cluster: "",
-  wsHost: "192.168.81.3",
+  wsHost: "180.232.110.41",
   //wsHost: window.location.hostname,
   //wsPort: 6001,
   wssPort: 6001,
