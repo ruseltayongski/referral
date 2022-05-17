@@ -45,7 +45,7 @@ window.Echo = new Echo({
     authEndpoint: "broadcasting/auth",
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    wsHost: "180.232.110.41",
+    wsHost: "180.232.110.49",
     //wsHost: window.location.hostname,
     //wsPort: 6001,
     wssPort: 6001,
