@@ -177,7 +177,7 @@ class ReportCtrl extends Controller
         return round(abs($to_time - $from_time) / 60,2);
     }
 
-    public function turnAroundTime(Request $request) { //tat
+    public function turnAroundTimeIncoming(Request $request) { //tat
         $user = Session::get('auth');
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
@@ -396,103 +396,121 @@ class ReportCtrl extends Controller
             ];
         }
 
-        /*for($day = 1; $day <= 15; $day++) {
+        return view('admin.report.tat_incoming',[
+            "data_points" => $data,
+
+            "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_holder)->avg(),2)),
+            "seen_to_accept" => $this->formatTheTAT(round(collect($seen_accept_holder)->avg(),2)),
+            "seen_to_reject" => $this->formatTheTAT(round(collect($seen_reject_holder)->avg(),2)),
+            "accept_to_arrive" => $this->formatTheTAT(round(collect($accept_arrive_holder)->avg(),2)),
+            "arrive_to_admit" => $this->formatTheTAT(round(collect($arrive_admit_holder)->avg(),2)),
+            "admit_to_discharge" => $this->formatTheTAT(round(collect($admit_discharge_holder)->avg(),2)),
+
+
+            "redirect_to_seen" => $this->formatTheTAT(round(collect($redirect_seen_holder)->avg(),2)),
+            "seen_to_accept_redirect" => $this->formatTheTAT(round(collect($seen_accept_holder_redirect)->avg(),2)),
+            "seen_to_reject_redirect" => $this->formatTheTAT(round(collect($seen_reject_holder_redirect)->avg(),2)),
+            "accept_to_arrive_redirect" => $this->formatTheTAT(round(collect($accept_arrive_holder_redirect)->avg(),2)),
+            "arrive_to_admit_redirect" => $this->formatTheTAT(round(collect($arrive_admit_holder_redirect)->avg(),2)),
+            "admit_to_discharge_redirect" => $this->formatTheTAT(round(collect($admit_discharge_holder_redirect)->avg(),2)),
+
+            "date_start" => $date_start,
+            "date_end" => $date_end
+        ]);
+    }
+
+    public function turnAroundTimeOutgoing(Request $request) { //tat
+        $user = Session::get('auth');
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
+        } else {
+            $date_start = date('Y-m-d',strtotime(Carbon::now()->subDays(15)));
+            $date_end = date('Y-m-d');
+        }
+
+        $iDateFrom = mktime(1, 0, 0, substr($date_start, 5, 2), substr($date_start, 8, 2), substr($date_start, 0, 4));
+        $iDateTo = mktime(1, 0, 0, substr($date_end, 5, 2), substr($date_end, 8, 2), substr($date_end, 0, 4));
+
+        $iDateFrom -= 86400;
+        while ($iDateFrom < $iDateTo) {
+            $iDateFrom += 86400; // add 24 hours
+            $per_day = date("Y-m-d",$iDateFrom);
+
             $referred = Activity::
-                select("activity.code","activity.created_at")
-                ->where("activity.referred_to",$user->facility_id)
-                ->whereBetween("activity.created_at",["2022-04-$day 00:00:00","2022-04-$day 23:59:59"])
+            select("activity.code","activity.created_at","activity.referred_to")
+                ->where("activity.referred_from",$user->facility_id) //done
+                ->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','referred')
                 ->get();
 
             $redirected = Activity::
-                select("activity.code","activity.created_at")
-                ->where("activity.referred_to",$user->facility_id)
-                ->whereBetween("activity.created_at",["2022-04-$day 00:00:00","2022-04-$day 23:59:59"])
+            select("activity.code","activity.created_at","activity.referred_to")
+                ->where("activity.referred_from",$user->facility_id) //done
+                ->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','redirected')
                 ->get();
 
             $transferred = Activity::
-                select("activity.code","activity.created_at")
-                ->where("activity.referred_to",$user->facility_id)
-                ->whereBetween("activity.created_at",["2022-04-$day 00:00:00","2022-04-$day 23:59:59"])
+            select("activity.code","activity.created_at","activity.referred_to")
+                ->where("activity.referred_from",$user->facility_id) //done
+                ->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','transferred')
                 ->get();
 
             foreach($referred as $refer) {
                 $refer_to_seen = Seen::where("code",$refer->code)
-                        ->where("created_at",">=",$refer->created_at)
-                        ->where("facility_id",$user->facility_id)
-                        ->first();
+                    ->where("created_at",">=",$refer->created_at)
+                    ->where("facility_id",$refer->referred_to) //done
+                    ->first();
 
                 if($refer_to_seen) {
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer->created_at);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer_to_seen->created_at);
-                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                    $refer_seen_holder[] = $diff_in_minutes; //refer to seen
-
+                    $refer_seen_holder[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
 
                     $seen_to_accept = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id)
+                        ->where("referred_from",$user->facility_id) //done
                         ->where("status","accepted")
                         ->first();
-                    if($seen_to_accept) {
-                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer_to_seen->created_at);
-                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_accept->created_at);
-                        $diff_in_minutes = $to->diffInMinutes($from);
 
-                        $seen_accept_holder[] = $diff_in_minutes; // seen to accept
+                    if($seen_to_accept) {
+                        $seen_accept_holder[] = $this->getMinutes($refer_to_seen->created_at,$seen_to_accept->created_at); // seen to accept
 
                         $accept_to_arrive = Activity::where("code",$seen_to_accept->code)
                             ->where("created_at",">=",$seen_to_accept->created_at)
-                            ->where("referred_from",$user->facility_id)
+                            //->where("referred_to",$user->facility_id) //previous
+                            ->where("referred_from",$seen_to_accept->referred_to) //done must change i think done
                             ->where("status","arrived")
                             ->first();
-                        if($accept_to_arrive) {
-                            $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_accept->created_at);
-                            $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive->created_at);
-                            $diff_in_minutes = $to->diffInMinutes($from);
 
-                            $accept_arrive_holder[] = $diff_in_minutes; // accept to arrive
+                        if($accept_to_arrive) {
+                            $accept_arrive_holder[] = $this->getMinutes($seen_to_accept->created_at,$accept_to_arrive->created_at); // accept to arrive
 
                             $arrive_to_admit = Activity::where("code",$accept_to_arrive->code)
                                 ->where("created_at",">=",$accept_to_arrive->created_at)
-                                ->where("referred_from",$user->facility_id)
+                                ->where("referred_to",$user->facility_id) //done
                                 ->where("status","admitted")
                                 ->first();
 
                             if($arrive_to_admit) {
-                                $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive->created_at);
-                                $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $arrive_to_admit->created_at);
-                                $diff_in_minutes = $to->diffInMinutes($from);
-
-                                $arrive_admit_holder[] = $diff_in_minutes; // arrive to admit
+                                $arrive_admit_holder[] = $this->getMinutes($accept_to_arrive->created_at,$arrive_to_admit->created_at); // arrive to admit
 
                                 $admit_to_discharge = Activity::where("code",$arrive_to_admit->code)
                                     ->where("created_at",">=",$arrive_to_admit->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_to",$user->facility_id) //done
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge) {
-                                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $arrive_to_admit->created_at);
-                                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $admit_to_discharge->created_at);
-                                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                                    $admit_discharge_holder[] = $diff_in_minutes; // admit to discharge
+                                    $admit_discharge_holder[] = $this->getMinutes($arrive_to_admit->created_at,$admit_to_discharge->created_at); // admit to discharge
                                 }
                                 else {
                                     $admit_to_discharge = Activity::where("code","220409-063-113421631859")
                                         ->where("created_at",">=",$accept_to_arrive->created_at)
-                                        ->where("referred_from",$user->facility_id)
+                                        ->where("referred_to",$user->facility_id) //done
                                         ->where("status","discharged")
                                         ->first();
                                     if($admit_to_discharge) {
-                                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive->created_at);
-                                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $admit_to_discharge->created_at);
-                                        $diff_in_minutes = $to->diffInMinutes($from);
-
-                                        $admit_discharge_holder[] = $diff_in_minutes; // admit to discharge
+                                        $admit_discharge_holder[] = $this->getMinutes($accept_to_arrive->created_at,$admit_to_discharge->created_at); // admit to discharge
                                     }
                                 }
                             }
@@ -501,107 +519,77 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id)
+                        ->where("referred_from",$user->facility_id) //done
                         ->where("status","rejected")
                         ->first();
                     if($seen_to_reject) {
-                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer_to_seen->created_at);
-                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_reject->created_at);
-                        $diff_in_minutes = $to->diffInMinutes($from);
-
-                        $seen_reject_holder[] = $diff_in_minutes; // seen to rejected
+                        $seen_reject_holder[] = $this->getMinutes($refer_to_seen->created_at,$seen_to_reject->created_at); // seen to rejected
                     }
                 }
 
                 $refer_to_accept = Activity::where("code",$refer->code)
                     ->where("created_at",">=",$refer->created_at)
-                    ->where("referred_to",$user->facility_id)
+                    ->where("referred_from",$user->facility_id) //done
                     ->where("status","accepted")
                     ->first();
 
                 if($refer_to_accept) {
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer->created_at);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $refer_to_accept->created_at);
-                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                    $refer_accept_holder[] = $diff_in_minutes;
+                    $refer_accept_holder[] = $this->getMinutes($refer->created_at,$refer_to_accept->created_at);
                 }
             }
 
             foreach($redirected as $redirect) {
                 $redirect_to_seen = Seen::where("code",$redirect->code)
                     ->where("created_at",">=",$redirect->created_at)
-                    ->where("facility_id",$user->facility_id)
+                    ->where("facility_id",$redirect->referred_to) //done must change and last change
                     ->first();
 
                 if($redirect_to_seen) {
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect->created_at);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect_to_seen->created_at);
-                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                    $redirect_seen_holder[] = $diff_in_minutes; //redirect to seen
+                    $redirect_seen_holder[] = $this->getMinutes($redirect->created_at,$redirect_to_seen->created_at); //redirect to seen
 
                     $seen_to_accept_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id)
+                        //->where("referred_to",$user->facility_id) //previous
+                        ->where("referred_to",$redirect_to_seen->facility_id) //done must change and last change
                         ->where("status","accepted")
                         ->first();
-                    if($seen_to_accept_redirect) {
-                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect_to_seen->created_at);
-                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_accept_redirect->created_at);
-                        $diff_in_minutes = $to->diffInMinutes($from);
 
-                        $seen_accept_holder_redirect[] = $diff_in_minutes; // seen to accept
+                    if($seen_to_accept_redirect) {
+                        $seen_accept_holder_redirect[] = $this->getMinutes($redirect_to_seen->created_at,$seen_to_accept_redirect->created_at); // seen to accept
 
                         $accept_to_arrive_redirect = Activity::where("code",$seen_to_accept_redirect->code)
                             ->where("created_at",">=",$seen_to_accept_redirect->created_at)
-                            ->where("referred_from",$user->facility_id)
+                            ->where("referred_to",$user->facility_id) //done
                             ->where("status","arrived")
                             ->first();
                         if($accept_to_arrive_redirect) {
-                            $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_accept_redirect->created_at);
-                            $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive_redirect->created_at);
-                            $diff_in_minutes = $to->diffInMinutes($from);
-
-                            $accept_arrive_holder_redirect[] = $diff_in_minutes; // accept to arrive
+                            $accept_arrive_holder_redirect[] = $this->getMinutes($seen_to_accept_redirect->created_at,$accept_to_arrive_redirect->created_at); // accept to arrive
 
                             $arrive_to_admit_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
                                 ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                ->where("referred_from",$user->facility_id)
+                                ->where("referred_to",$user->facility_id) //done
                                 ->where("status","admitted")
                                 ->first();
 
                             if($arrive_to_admit_redirect) {
-                                $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive_redirect->created_at);
-                                $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $arrive_to_admit_redirect->created_at);
-                                $diff_in_minutes = $to->diffInMinutes($from);
-
-                                $arrive_admit_holder_redirect[] = $diff_in_minutes; // arrive to admit
+                                $arrive_admit_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$arrive_to_admit_redirect->created_at); // arrive to admit
 
                                 $admit_to_discharge_redirect = Activity::where("code",$arrive_to_admit_redirect->code)
                                     ->where("created_at",">=",$arrive_to_admit_redirect->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_to",$user->facility_id) //done
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge_redirect) {
-                                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $arrive_to_admit_redirect->created_at);
-                                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $admit_to_discharge_redirect->created_at);
-                                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                                    $admit_discharge_holder_redirect[] = $diff_in_minutes; // admit to discharge
+                                    $admit_discharge_holder_redirect[] = $this->getMinutes($arrive_to_admit_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
                                 }
                                 else {
                                     $admit_to_discharge_redirect = Activity::where("code","220409-063-113421631859")
                                         ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                        ->where("referred_from",$user->facility_id)
+                                        ->where("referred_to",$user->facility_id) //done
                                         ->where("status","discharged")
                                         ->first();
                                     if($admit_to_discharge_redirect) {
-                                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $accept_to_arrive_redirect->created_at);
-                                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $admit_to_discharge_redirect->created_at);
-                                        $diff_in_minutes = $to->diffInMinutes($from);
-
-                                        $admit_discharge_holder_redirect[] = $diff_in_minutes; // admit to discharge
+                                        $admit_discharge_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
                                     }
                                 }
                             }
@@ -610,52 +598,40 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id)
+                        ->where("referred_from",$user->facility_id) //done
                         ->where("status","rejected")
                         ->first();
                     if($seen_to_reject_redirect) {
-                        $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect_to_seen->created_at);
-                        $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $seen_to_reject_redirect->created_at);
-                        $diff_in_minutes = $to->diffInMinutes($from);
-
-                        $seen_reject_holder_redirect[] = $diff_in_minutes; // seen to rejected
+                        $seen_reject_holder_redirect[] = $this->getMinutes($redirect_to_seen->created_at,$seen_to_reject_redirect->created_at); // seen to rejected
                     }
                 }
 
 
                 $redirect_to_accept = Activity::where("code",$redirect->code)
                     ->where("created_at",">=",$redirect->created_at)
-                    ->where("referred_to",$user->facility_id)
+                    ->where("referred_from",$user->facility_id) //done
                     ->where("status","accepted")
                     ->first();
 
                 if($redirect_to_accept) {
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect->created_at);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $redirect_to_accept->created_at);
-                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                    $redirect_accept_holder[] = $diff_in_minutes;
+                    $redirect_accept_holder[] = $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at); //redirect to accept
                 }
             }
 
             foreach($transferred as $transfer) {
                 $transfer_to_accept = Activity::where("code",$transfer->code)
                     ->where("created_at",">=",$transfer->created_at)
-                    ->where("referred_to",$user->facility_id)
+                    ->where("referred_from",$user->facility_id) //done
                     ->where("status","accepted")
                     ->first();
 
                 if($transfer_to_accept) {
-                    $to = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $transfer->created_at);
-                    $from = \Carbon\Carbon::createFromFormat('Y-m-d H:s:i', $transfer_to_accept->created_at);
-                    $diff_in_minutes = $to->diffInMinutes($from);
-
-                    $transfer_accept_holder[] = $diff_in_minutes;
+                    $transfer_accept_holder[] = $this->getMinutes($transfer->created_at,$transfer_to_accept->created_at); // transfer to accept
                 }
             }
 
             $data[] = [
-                "date" => "April ".$day,
+                "date" => date("M d",strtotime($per_day)),
                 "referred" => count($referred),
                 "redirected" => count($redirected),
                 "transferred" => count($transferred),
@@ -663,9 +639,9 @@ class ReportCtrl extends Controller
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
-        }*/
+        }
 
-        return view('admin.report.tat',[
+        return view('admin.report.tat_outgoing',[
             "data_points" => $data,
 
             "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_holder)->avg(),2)),

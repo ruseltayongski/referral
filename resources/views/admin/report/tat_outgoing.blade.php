@@ -4,14 +4,14 @@
     <div class="row">
         <div class="col-md-12">
             <div style="background-color: white;padding: 10px;">
-                <form action="{{ asset('admin/report/tat') }}" method="GET" class="form-inline">
+                <form action="{{ asset('admin/report/tat/outgoing') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
-                        <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/tat') }}'"><i class="fa fa-search"></i> View All</button>
+                        <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/tat/outgoing') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
                 </form><br>
             </div>
@@ -167,7 +167,7 @@
 
             var chart = new CanvasJS.Chart("chartContainer", {
                 title:{
-                    text: "Turn Around Time"
+                    text: "Turn Around Time - Outgoing"
                 },
                 axisY: {
                     title: "Number of Referral",

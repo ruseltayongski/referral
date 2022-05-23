@@ -2,7 +2,7 @@
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
     ->where('id','!=',$user->facility_id)
-    ->where('province',$user->province)
+    //->where('province',$user->province)
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();

@@ -178,7 +178,9 @@
         @if($user->level != 'vaccine')
             <li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual </a></li>
             <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> Bed Availability Status </a></li>
-            <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring </a></li>
+            @if($user->level == 'admin')
+                <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring </a></li>
+            @endif
             <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NOT ACCEPTED within 30 minutes </a></li>
             <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issues and Concerns </a></li>
             <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
