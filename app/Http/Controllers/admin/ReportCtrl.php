@@ -223,8 +223,6 @@ class ReportCtrl extends Controller
                     ->first();
 
                 if($refer_to_seen) {
-                    //return $this->getMinutes('2022-04-02 00:41:20','2022-04-02 00:49:33');
-                    //return $refer->created_at."===".$refer_to_seen->created_at;
                     $refer_seen_holder[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
 
                     $seen_to_accept = Activity::where("code",$refer_to_seen->code)
@@ -257,18 +255,17 @@ class ReportCtrl extends Controller
                                     ->where("referred_from",$user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
-                                if($admit_to_discharge) {
+                                if($admit_to_discharge)
                                     $admit_discharge_holder[] = $this->getMinutes($arrive_to_admit->created_at,$admit_to_discharge->created_at); // admit to discharge
-                                }
-                                else {
-                                    $admit_to_discharge = Activity::where("code","220409-063-113421631859")
-                                        ->where("created_at",">=",$accept_to_arrive->created_at)
-                                        ->where("referred_from",$user->facility_id)
-                                        ->where("status","discharged")
-                                        ->first();
-                                    if($admit_to_discharge) {
-                                        $admit_discharge_holder[] = $this->getMinutes($accept_to_arrive->created_at,$admit_to_discharge->created_at); // admit to discharge
-                                    }
+                            }
+                            else {
+                                $admit_to_discharge = Activity::where("code",$accept_to_arrive->code)
+                                    ->where("created_at",">=",$accept_to_arrive->created_at)
+                                    ->where("referred_from",$user->facility_id)
+                                    ->where("status","discharged")
+                                    ->first();
+                                if($admit_to_discharge) {
+                                    $admit_discharge_holder[] = $this->getMinutes($accept_to_arrive->created_at,$admit_to_discharge->created_at); // admit to discharge
                                 }
                             }
                         }
@@ -334,18 +331,17 @@ class ReportCtrl extends Controller
                                     ->where("referred_from",$user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
-                                if($admit_to_discharge_redirect) {
+                                if($admit_to_discharge_redirect)
                                     $admit_discharge_holder_redirect[] = $this->getMinutes($arrive_to_admit_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
-                                }
-                                else {
-                                    $admit_to_discharge_redirect = Activity::where("code","220409-063-113421631859")
-                                        ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                        ->where("referred_from",$user->facility_id)
-                                        ->where("status","discharged")
-                                        ->first();
-                                    if($admit_to_discharge_redirect) {
-                                        $admit_discharge_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
-                                    }
+                            }
+                            else {
+                                $admit_to_discharge_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
+                                    ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
+                                    ->where("referred_from",$user->facility_id)
+                                    ->where("status","discharged")
+                                    ->first();
+                                if($admit_to_discharge_redirect) {
+                                    $admit_discharge_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
                                 }
                             }
                         }
@@ -394,6 +390,9 @@ class ReportCtrl extends Controller
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
+            $refer_accept_holder = [];
+            $redirect_accept_holder = [];
+            $transfer_accept_holder = [];
         }
 
         return view('admin.report.tat_incoming',[
@@ -479,7 +478,7 @@ class ReportCtrl extends Controller
                         $accept_to_arrive = Activity::where("code",$seen_to_accept->code)
                             ->where("created_at",">=",$seen_to_accept->created_at)
                             //->where("referred_to",$user->facility_id) //previous
-                            ->where("referred_from",$seen_to_accept->referred_to) //done must change i think done
+                            ->where("referred_from",$seen_to_accept->referred_to) //done kay if arrived ang action naka locate sa from
                             ->where("status","arrived")
                             ->first();
 
@@ -488,7 +487,8 @@ class ReportCtrl extends Controller
 
                             $arrive_to_admit = Activity::where("code",$accept_to_arrive->code)
                                 ->where("created_at",">=",$accept_to_arrive->created_at)
-                                ->where("referred_to",$user->facility_id) //done
+                                //->where("referred_to",$user->facility_id) //previous
+                                ->where("referred_from",$accept_to_arrive->referred_from) //done kay if admitted ang action naka locate sa from
                                 ->where("status","admitted")
                                 ->first();
 
@@ -497,21 +497,23 @@ class ReportCtrl extends Controller
 
                                 $admit_to_discharge = Activity::where("code",$arrive_to_admit->code)
                                     ->where("created_at",">=",$arrive_to_admit->created_at)
-                                    ->where("referred_to",$user->facility_id) //done
+                                    //->where("referred_to",$user->facility_id) //previous
+                                    ->where("referred_from",$arrive_to_admit->referred_from) //done kay if discharged ang action naka locate sa from
+                                    ->where("status","discharged")
+                                    ->first();
+
+                                if($admit_to_discharge)
+                                    $admit_discharge_holder[] = $this->getMinutes($arrive_to_admit->created_at,$admit_to_discharge->created_at); // admit to discharge
+                            }
+                            else {
+                                $admit_to_discharge = Activity::where("code",$accept_to_arrive->code)
+                                    ->where("created_at",">=",$accept_to_arrive->created_at)
+                                    //->where("referred_to",$user->facility_id) //previous
+                                    ->where("referred_from",$accept_to_arrive->referred_from) //done kay if discharged ang action naka locate sa from
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge) {
-                                    $admit_discharge_holder[] = $this->getMinutes($arrive_to_admit->created_at,$admit_to_discharge->created_at); // admit to discharge
-                                }
-                                else {
-                                    $admit_to_discharge = Activity::where("code","220409-063-113421631859")
-                                        ->where("created_at",">=",$accept_to_arrive->created_at)
-                                        ->where("referred_to",$user->facility_id) //done
-                                        ->where("status","discharged")
-                                        ->first();
-                                    if($admit_to_discharge) {
-                                        $admit_discharge_holder[] = $this->getMinutes($accept_to_arrive->created_at,$admit_to_discharge->created_at); // admit to discharge
-                                    }
+                                    $admit_discharge_holder[] = $this->getMinutes($accept_to_arrive->created_at,$admit_to_discharge->created_at); // admit to discharge
                                 }
                             }
                         }
@@ -559,15 +561,18 @@ class ReportCtrl extends Controller
 
                         $accept_to_arrive_redirect = Activity::where("code",$seen_to_accept_redirect->code)
                             ->where("created_at",">=",$seen_to_accept_redirect->created_at)
-                            ->where("referred_to",$user->facility_id) //done
+                            //->where("referred_to",$user->facility_id) //previous
+                            ->where("referred_from",$seen_to_accept_redirect->referred_to) //done from siya if ang action kay arrived
                             ->where("status","arrived")
                             ->first();
+
                         if($accept_to_arrive_redirect) {
                             $accept_arrive_holder_redirect[] = $this->getMinutes($seen_to_accept_redirect->created_at,$accept_to_arrive_redirect->created_at); // accept to arrive
 
                             $arrive_to_admit_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
                                 ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                ->where("referred_to",$user->facility_id) //done
+                                //->where("referred_to",$user->facility_id) //previous
+                                ->where("referred_from",$accept_to_arrive_redirect->referred_from) //done from siya if ang action kay admitted
                                 ->where("status","admitted")
                                 ->first();
 
@@ -576,21 +581,22 @@ class ReportCtrl extends Controller
 
                                 $admit_to_discharge_redirect = Activity::where("code",$arrive_to_admit_redirect->code)
                                     ->where("created_at",">=",$arrive_to_admit_redirect->created_at)
-                                    ->where("referred_to",$user->facility_id) //done
+                                    //->where("referred_to",$user->facility_id) //previous
+                                    ->where("referred_from",$arrive_to_admit_redirect->referred_from) //done from siya if ang action kay discharged
+                                    ->where("status","discharged")
+                                    ->first();
+                                if($admit_to_discharge_redirect)
+                                    $admit_discharge_holder_redirect[] = $this->getMinutes($arrive_to_admit_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
+                            }
+                            else {
+                                $admit_to_discharge_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
+                                    ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
+                                    //->where("referred_to",$user->facility_id) //previous
+                                    ->where("referred_from",$accept_to_arrive_redirect->referred_from) //done from siya if ang action kay discharged
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge_redirect) {
-                                    $admit_discharge_holder_redirect[] = $this->getMinutes($arrive_to_admit_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
-                                }
-                                else {
-                                    $admit_to_discharge_redirect = Activity::where("code","220409-063-113421631859")
-                                        ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                        ->where("referred_to",$user->facility_id) //done
-                                        ->where("status","discharged")
-                                        ->first();
-                                    if($admit_to_discharge_redirect) {
-                                        $admit_discharge_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
-                                    }
+                                    $admit_discharge_holder_redirect[] = $this->getMinutes($accept_to_arrive_redirect->created_at,$admit_to_discharge_redirect->created_at); // admit to discharge
                                 }
                             }
                         }
@@ -621,7 +627,8 @@ class ReportCtrl extends Controller
             foreach($transferred as $transfer) {
                 $transfer_to_accept = Activity::where("code",$transfer->code)
                     ->where("created_at",">=",$transfer->created_at)
-                    ->where("referred_from",$user->facility_id) //done
+                    //->where("referred_from",$user->facility_id) //previous
+                    ->where("referred_to",$transfer->referred_to) //done referred_to siya kay outgoing
                     ->where("status","accepted")
                     ->first();
 
@@ -639,6 +646,9 @@ class ReportCtrl extends Controller
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
+            $refer_accept_holder = [];
+            $redirect_accept_holder = [];
+            $transfer_accept_holder = [];
         }
 
         return view('admin.report.tat_outgoing',[
