@@ -232,7 +232,7 @@
                                     ->where("status","cancelled")
                                     ->exists();
                                 $referred_travel_track = \App\Activity::where("code",$referred_track->code)
-                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("referred_to",$referred_track->referred_from)
                                     ->where("created_at",">=",$referred_track->created_at)
                                     ->where("status","travel")
                                     ->exists();
@@ -288,7 +288,7 @@
                                 </div>
                                 <div class="stepper-item @if($referred_travel_track || $referred_arrived_track) completed @endif">
                                     <div class="step-counter">4</div>
-                                    <div class="step-name">Travel</div>
+                                    <div class="step-name">Departed</div>
                                 </div>
                                 <div class="stepper-item @if($referred_arrived_track && !$referred_rejected_track) completed @endif">
                                     <div class="step-counter">5</div>
@@ -327,7 +327,7 @@
                                             ->where("status","cancelled")
                                             ->exists();
                                         $redirected_travel_track = \App\Activity::where("code",$redirect_track->code)
-                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("referred_to",$redirect_track->referred_from)
                                             ->where("created_at",">=",$redirect_track->created_at)
                                             ->where("status","travel")
                                             ->exists();
@@ -377,7 +377,7 @@
                                         </div>
                                         <div class="stepper-item @if($redirected_travel_track || $redirected_arrived_track) completed @endif">
                                             <div class="step-counter">4</div>
-                                            <div class="step-name">Travel</div>
+                                            <div class="step-name">Departed</div>
                                         </div>
                                         <div class="stepper-item @if($redirected_arrived_track) completed @endif">
                                             <div class="step-counter">5</div>
@@ -599,9 +599,9 @@
                                     @endif
                                 </a>
                             @endif
-                            @if($referred_accepted_track && !$referred_arrived_track)
+                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_arrived_track)
                                 <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Travel</a>
+                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif
                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                     data-target="#feedbackModal"
