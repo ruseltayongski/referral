@@ -49,6 +49,7 @@ class ReferralCtrl extends Controller
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
+
         $data = Tracking::select(
                     'tracking.*',
                     DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -130,7 +131,6 @@ class ReferralCtrl extends Controller
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
         $data = $data
-                //->orderBy(DB::raw("IF( ((tracking.status='referred' or tracking.status='seen' or tracking.status = 'transferred') && tracking.department_id = '$user->department_id' ), now(), tracking.date_referred )"),"desc")
                 ->orderBy("tracking.date_referred","desc")
                 ->paginate(15);
 
@@ -511,7 +511,7 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
 
         } else {
-            $data = Tracking::select(
+            /*$data = Tracking::select(
                 'tracking.*',
                 DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
                 DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -568,6 +568,67 @@ class ReferralCtrl extends Controller
 
             $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date])
                 ->orderBy('date_referred','desc')
+                ->paginate(10);*/
+
+            $data = Activity::select(
+                'tracking.*',
+                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+                DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
+                'patients.sex',
+                'facility.name as facility_name',
+                'facility.id as facility_id',
+                'patients.id as patient_id',
+                'patients.contact',
+                'users.level as user_level'
+            )
+                ->leftJoin('patients','patients.id','=','activity.patient_id')
+                ->leftJoin('facility','facility.id','=','activity.referred_to')
+                ->leftJoin('tracking','tracking.code','=','activity.code')
+                ->leftJoin('users','users.id','=','activity.referring_md')
+                ->where('activity.referred_from',$user->facility_id)
+                /*->where(function($q){
+                    $q->where('activity.status','referred')
+                        ->orwhere('activity.status','seen')
+                        ->orwhere('activity.status','accepted')
+                        ->orwhere('activity.status','arrived')
+                        ->orwhere('activity.status','admitted')
+                        ->orwhere('activity.status','transferred')
+                        ->orwhere('activity.status','discharged')
+                        ->orwhere('activity.status','cancelled')
+                        ->orwhere('activity.status','archived')
+                        ->orwhere('activity.status','rejected')
+                        ->orWhere('activity.status','redirected');
+                })*/;
+
+            if($search){
+                $data = $data->where(function($q) use ($search){
+                    $q->where('patients.fname','like',"%$search%")
+                        ->orwhere('patients.mname','like',"%$search%")
+                        ->orwhere('patients.lname','like',"%$search%")
+                        ->orwhere('activity.code','like',"%$search%");
+                });
+            }
+
+            if($option_filter)
+                $data = $data->where('activity.status',$option_filter);
+            if($facility_filter)
+                $data = $data->where('activity.referred_to',$facility_filter);
+            if($department_filter)
+                $data = $data->where('activity.department_id',$department_filter);
+
+            if($date) {
+                $range = explode('-',str_replace(' ', '', $date));
+                $start = $range[0];
+                $end = $range[1];
+            }
+
+            $start_date = Carbon::parse($start)->startOfDay();
+            $end_date = Carbon::parse($end)->endOfDay();
+
+            $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
+                ->orderBy('date_referred','desc')
+                ->groupBy("activity.code")
                 ->paginate(10);
         }
 
@@ -721,7 +782,7 @@ class ReferralCtrl extends Controller
         if($track->status=='accepted' || $track->status=='rejected') {
             Session::put('incoming_denied',true);
             return 'denied';
-        }
+        } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
             ->update([

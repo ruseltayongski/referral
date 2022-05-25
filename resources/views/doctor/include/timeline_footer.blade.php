@@ -1,6 +1,7 @@
 <div class="timeline-footer">
     <div class="form-inline">
-        @if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )
+        {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
+        @if( $row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' )
             <div class="form-group">
                 <a class="btn btn-warning btn-xs view_form" href="#referralForm"
                    data-toggle="modal"

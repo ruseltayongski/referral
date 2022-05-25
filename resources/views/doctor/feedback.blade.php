@@ -20,6 +20,7 @@
             ?>
             <div class="direct-chat-msg {{ $position }}">
                 <div class="direct-chat-info clearfix">
+                    <span class="direct-chat-name text-info pull-{{ $position }}">{{ $row->facility }}</span><br>
                     <span class="direct-chat-name pull-{{ $position }}">{{ ucwords(mb_strtolower($row->fname)) }} {{ ucwords(mb_strtolower($row->lname)) }}</span>
                     <span class="direct-chat-timestamp pull-{{ $pull }}">{{ date('d M h:i a',strtotime($row->date)) }}</span>
                 </div>

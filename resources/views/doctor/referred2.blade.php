@@ -353,7 +353,7 @@
                                             <div class="step-counter">1</div>
                                             <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_seen_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif">
                                             <div class="step-counter">2</div>
                                             <div class="step-name">Seen</div>
                                         </div>
@@ -599,9 +599,9 @@
                                     @endif
                                 </a>
                             @endif
-                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_arrived_track)
+                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_arrived_track && $row->referred_from == $user->facility_id)
                                 <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
+                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart </a>
                             @endif
                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                     data-target="#feedbackModal"
