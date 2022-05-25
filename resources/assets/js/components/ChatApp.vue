@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-8">
         <h3>Inbox</h3>
-        <div v-if="messages.length > 0" class="card card-default">
+        <div v-if="messages.length > 0 || selected" class="card card-default">
             <div class="card-body">
                 <chat-messages :messages="messages" :user="user_login" :selected="selected"></chat-messages>
             </div>
