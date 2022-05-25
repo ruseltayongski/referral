@@ -580,12 +580,13 @@ class ReferralCtrl extends Controller
                 'facility.id as facility_id',
                 'patients.id as patient_id',
                 'patients.contact',
-                'users.level as user_level'
+                'users.level as user_level',
+                'activity.referring_md as wew'
             )
                 ->leftJoin('patients','patients.id','=','activity.patient_id')
                 ->leftJoin('facility','facility.id','=','activity.referred_to')
                 ->leftJoin('tracking','tracking.code','=','activity.code')
-                ->leftJoin('users','users.id','=','activity.referring_md')
+                ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
                 ->where('activity.referred_from',$user->facility_id)
                 /*->where(function($q){
                     $q->where('activity.status','referred')
@@ -627,7 +628,7 @@ class ReferralCtrl extends Controller
             $end_date = Carbon::parse($end)->endOfDay();
 
             $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
-                ->orderBy('date_referred','desc')
+                ->orderBy('activity.id','desc')
                 ->groupBy("activity.code")
                 ->paginate(10);
         }
