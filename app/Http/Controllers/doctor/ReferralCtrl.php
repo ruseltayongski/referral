@@ -1374,7 +1374,6 @@ class ReferralCtrl extends Controller
     public function saveFeedback(Request $req)
     {
         $user = Session::get('auth');
-
         $data = array(
             'code'=> $req->code,
             'sender'=> $user->id,
@@ -1382,21 +1381,14 @@ class ReferralCtrl extends Controller
             'message'=> $req->message,
         );
 
-        $f = Feedback::create($data);
+        Feedback::create($data);
 
         $doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
 
-        /*$msg = "From: Dr. $name\nReferral Code: $req->code\nMessage: $req->message";
-        $facility_id = Tracking::where('code',$req->code)
-                            ->first()
-                            ->referred_from;
-
-        DeviceTokenCtrl::send('New Feedback/Comment',$msg,$facility_id);
-        return $f->id;*/
-
         return view('doctor.feedback_append',[
             "name" => $name,
+            "facility" => Facility::find($user->facility_id)->name,
             "message" => $req->message
         ]);
     }
