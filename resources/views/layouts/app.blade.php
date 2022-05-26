@@ -96,6 +96,7 @@
     <nav class="navbar navbar-default fixed-top">
         <div class="header" style="background-color:#2F4054;padding:8px;">
             <div class="col-lg-4">
+                <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
                 <div style="padding: 2px;">
                     <?php
                     $user = Session::get('auth');

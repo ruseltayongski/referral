@@ -43,7 +43,7 @@ window.Pusher = require('pusher-js');
 window.Echo = new Echo({
     broadcaster: 'pusher',
     //authEndpoint: "broadcasting/auth",
-    authEndpoint: "https://"+window.location.hostname+"/doh/referral/broadcasting/auth",
+    authEndpoint: $("#broadcasting_url").val()+"/broadcasting/auth",
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     wsHost: "referral.cvchd7.com",
@@ -53,6 +53,7 @@ window.Echo = new Echo({
     disableStats: true,
     enabledTransports: ['ws', 'wss'] // <- added this param
 });
+
 
 
 
