@@ -7,10 +7,8 @@
             count_referral: Number
         },
         created() {
-            console.log(this.user)
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log(event.payload)
                     if(this.user.facility_id === event.payload.referred_to) {
                         console.log("append the refer patient");
                         let type = event.payload.form_type;
