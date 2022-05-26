@@ -51,6 +51,7 @@ $user = Session::get('auth');
     </style>
 
     <div class="row">
+        <input type="hidden" id="referral_page_check" value="1">
         <div class="col-md-3">
             @include('sidebar.filter_referral')
             @include('sidebar.quick')
