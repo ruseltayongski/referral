@@ -1,12 +1,4 @@
 <script>
-
-    var audioElement = document.createElement('audio');
-    audioElement.setAttribute('src', "{{ url('public/notify.mp3') }}");
-
-    audioElement.addEventListener('ended', function() {
-        this.play();
-    }, false);
-
     $(".select2").select2({ width: '100%' });
 
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";

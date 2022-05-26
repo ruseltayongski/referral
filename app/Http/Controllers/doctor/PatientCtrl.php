@@ -5,6 +5,8 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Baby;
 use App\Barangay;
+use App\Department;
+use App\Events\NewReferral;
 use App\Facility;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
@@ -325,7 +327,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function addTracking($code,$patient_id,$user,$req,$type, $form_id,$status='')
+    public function addTracking($code,$patient_id,$user,$req,$type,$form_id,$status='')
     {
         $match = array(
             'code' => $code
@@ -368,7 +370,26 @@ class PatientCtrl extends Controller
             'status' => 'referred'
         );
 
+        $patient = Patients::find($patient_id);
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find($req->referred_facility)->name,
+            "referred_to" => (int)$req->referred_facility,
+            "referred_department" => Department::find($req->referred_department)->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $type,
+            "tracking_id" => $tracking->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $code
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+
         Activity::create($activity);
+
         if($status=='walkin'){
             $activity['date_seen'] = date('Y-m-d H:i:s');
             $activity['status'] = 'accepted';

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Activity;
+use App\Department;
 use App\Facility;
 use App\Http\Controllers\ParamCtrl;
 use App\Login;
+use App\Patients;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\Events\NewReferral;
 
 class HomeCtrl extends Controller
 {
@@ -20,6 +23,27 @@ class HomeCtrl extends Controller
     {
         $this->middleware('auth');
         //$this->middleware('doctor');
+    }
+
+    public function sendNotification() {
+        $user = User::find(25);
+        $patient = Patients::find(5);
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find(23)->name,
+            "referred_to" => 24,
+            "referred_department" => Department::find(4)->description,
+            "referred_from" => $user->facility,
+            "form_type" => "normal",
+            "tracking_id" => 1111,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => "220524-004-1129554755"
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }
 
     public function index()

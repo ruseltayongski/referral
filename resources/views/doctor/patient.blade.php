@@ -579,8 +579,8 @@
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data){
-                console.log(data);
-                sendNormalData(data);
+                window.location.reload(false);
+                //sendNormalData(data);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus); console.log("Error: " + errorThrown);

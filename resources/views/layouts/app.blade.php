@@ -11,6 +11,9 @@
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>{{ (isset($title)) ? $title : 'Referral System'}}</title>
+    <audio id="carteSoudCtrl">
+        <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
+    </audio>
     <!-- SELECT 2 -->
     <link href="{{ asset('resources/plugin/select2/select2.min.css') }}" rel="stylesheet">
     <!-- Bootstrap core CSS -->
@@ -165,7 +168,10 @@
                                 : 'container'
                 }}" >
         <div class="loading"></div>
-        @yield('content')
+            <div id="app_layout">
+                <referral-app :user="{{ Session::get('auth') }}" :count_referral="{{ (int)$count }}"></referral-app>
+            </div>
+            @yield('content')
         <div class="clearfix"></div>
     </div> <!-- /container -->
 </body>
@@ -212,9 +218,8 @@
 <!-- TABLE-HEADER-FIXED -->
 <script src="{{ asset('resources/plugin/table-fixed-header/table-fixed-header.js') }}"></script>
 
-<!-- Scripts -->
-<script src="{{ asset('public/js/app.js?version=').date('YmdHis') }}" defer></script>
-{{--<script src="{{ asset('public/js/app.js?version=3') }}" defer></script>--}}
+<!-- VUE Scripts -->
+<script src="{{ asset('public/js/app_layout.js?version=').date('YmdHis') }}" defer></script>
 
 @include('layouts.app_script')
 @include('script.firebase')
