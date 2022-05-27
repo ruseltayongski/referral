@@ -623,8 +623,8 @@
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data){
-                console.log(data);
-                sendNormalData(data);
+                window.location.reload(false);
+                //sendNormalData(data);
             },
             error: function(){
                 $('#serverModal').modal();
