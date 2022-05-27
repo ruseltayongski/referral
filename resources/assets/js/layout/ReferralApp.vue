@@ -25,6 +25,7 @@
             }
         },
         created() {
+            console.log("VUE JS VERSION 3...")
             this.initializedAudio()
             this.increment_referral = count_referral
             Echo.join('new_referral')
