@@ -25,27 +25,6 @@ class HomeCtrl extends Controller
         //$this->middleware('doctor');
     }
 
-    public function sendNotification() {
-        $user = User::find(25);
-        $patient = Patients::find(5);
-        $new_referral = [
-            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
-            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
-            "referring_name" => Facility::find($user->facility_id)->name,
-            "referred_name" => Facility::find(24)->name,
-            "referred_to" => 163,
-            "referred_department" => Department::find(4)->description,
-            "referred_from" => $user->facility,
-            "form_type" => "pregnant",
-            "tracking_id" => 1111,
-            "referred_date" => date('M d, Y h:i A'),
-            "patient_sex" => $patient->sex,
-            "age" => ParamCtrl::getAge($patient->dob),
-            "patient_code" => "220524-004-1129554755"
-        ];
-        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-    }
-
     public function index()
     {
         ParamCtrl::lastLogin();

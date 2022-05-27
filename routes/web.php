@@ -568,4 +568,4 @@ Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
 Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload','ApiController@fileUpload');
 
-Route::get('send_notification','doctor\HomeCtrl@sendNotification');
+Route::get('test_websocket','apiController@testWebsocket');
