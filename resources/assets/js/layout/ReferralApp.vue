@@ -6,10 +6,25 @@
             user: Object,
             count_referral: Number
         },
+        methods: {
+            playAudio() {
+                audioElement.play();
+                setTimeout(function(){
+                    audioElement.pause();
+                },10000);
+            },
+            initializedAudio() {
+                let audioElement = document.createElement('audio');
+                audioElement.setAttribute('src', "https://cvehrs.doh.gov.ph/doh/referral/public/notify.mp3");
+                //this.playAudio();
+            }
+        },
         created() {
+            this.initializedAudio()
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
                     if(this.user.facility_id === event.payload.referred_to) {
+                        this.playAudio()
                         if($("#referral_page_check").val()) {
                             console.log("append the refer patient");
                             let type = event.payload.form_type;
@@ -58,7 +73,6 @@
                             img: "https://cvehrs.doh.gov.ph/doh/referral/resources/img/ro7.png",
                             sound: false
                         });
-                        $('#carteSoudCtrl')[0].play();
                     }
                 });
         }

@@ -11,9 +11,9 @@
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>{{ (isset($title)) ? $title : 'Referral System'}}</title>
-    <audio id="carteSoudCtrl">
+    {{--<audio id="carteSoudCtrl">
         <source src="{{ url('public/notify.mp3') }}" type="audio/mpeg">
-    </audio>
+    </audio>--}}
     <!-- SELECT 2 -->
     <link href="{{ asset('resources/plugin/select2/select2.min.css') }}" rel="stylesheet">
     <!-- Bootstrap core CSS -->
