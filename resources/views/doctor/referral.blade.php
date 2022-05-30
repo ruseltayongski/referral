@@ -106,13 +106,13 @@ $user = Session::get('auth');
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                             <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
-                                                <strong class="text-bold">
+                                                <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
-                                                </strong>
+                                                </span>
                                                 <small class="status">
-                                                    [ {{ $row->sex }}, {{ $row->age }} ]
+                                                    [ {{ $row->sex }}, {{ $row->patient_age }} ]
                                                 </small>
-                                                was <span class="badge bg-blue">referred</span> to
+                                                was <span class="text-blue">{{ $row->status }}</span> to
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>
@@ -124,9 +124,9 @@ $user = Session::get('auth');
                                         <div class="timeline-item">
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <strong class="text-bold">
+                                                <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
-                                                </strong>
+                                                </span>
                                                 RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                             </h3>
                                             @include('doctor.include.timeline_footer')
@@ -136,10 +136,10 @@ $user = Session::get('auth');
                                         <div class="timeline-item">
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <strong class="text-bold">
+                                                <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
-                                                </strong>
-                                                was <span class="badge bg-red">{{ $row->status }}</span> by
+                                                </span>
+                                                was <span class="text-red">{{ $row->status }}</span> by
                                                 {{ $row->referring_md }}
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
@@ -150,13 +150,13 @@ $user = Session::get('auth');
                                         <div class="timeline-item">
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <strong class="text-bold">
+                                                <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
-                                                </strong>
-                                                was <span class="badge bg-green">{{ $row->status }}</span> by
+                                                </span>
+                                                was <span class="text-green">{{ $row->status }}</span> by
                                                 <span class="text-success">
-                                        Dr. {{ $row->action_md }}
-                                        </span>
+                                                    Dr. {{ $row->action_md }}
+                                                </span>
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
