@@ -27,7 +27,6 @@
                 Lobibox.notify("success", {
                     title: code,
                     size: 'normal',
-                    sound: false,
                     delay: false,
                     closeOnClick: false,
                     img: picture,
@@ -36,7 +35,7 @@
             }
         },
         created() {
-            console.log("VUE JS VERSION 3")
+            console.log("VUE JS VERSION 3..")
             this.initializedAudio()
             this.increment_referral = count_referral
             Echo.join('new_referral')

@@ -205,7 +205,7 @@
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script src="{{ asset('resources/assets/js/script.js') }}?v=1"></script>
 
-<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=1"></script>
+<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
 <script src="{{ asset('resources/plugin/select2/select2.min.js') }}?v=1"></script>
 
 <!-- Bootstrap WYSIHTML5 -->
