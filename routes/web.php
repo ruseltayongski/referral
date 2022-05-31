@@ -569,7 +569,7 @@ Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload','ApiController@fileUpload');
 
 Route::get('test/socket/referral','apiController@testSocketReferral');
-Route::post('test/socket/reco/{code}','apiController@testSocketReco');
+Route::get('test/socket/reco','apiController@testSocketReco');
 Route::get('activity/check/{code}/{facility_id}','apiController@checkCode');
 
 
