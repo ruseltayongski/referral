@@ -55,9 +55,9 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }
 
-    public function testSocketReco() {
+    public function testSocketReco($code) {
         $user = User::find(25);
-        $reco_json = ParamCtrl::feedbackContent("220526-024-1651442490",$user->id,"The quick brown fox jumps over the lazy dog");
+        $reco_json = ParamCtrl::feedbackContent($code,$user->id,"The quick brown fox jumps over the lazy dog");
         broadcast(new SocketReco($reco_json));
     }
 

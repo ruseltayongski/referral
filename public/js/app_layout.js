@@ -19565,7 +19565,7 @@ __webpack_require__.r(__webpack_exports__);
     Echo.join('reco').listen('SocketReco', function (event) {
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this.user.facility_id).then(function (response) {
-        if (response && event.payload.sender_facility !== _this.user.facility_id) {
+        if (response.data && event.payload.sender_facility !== _this.user.facility_id) {
           console.log("New Reco");
           $(".reco-body").append(event.payload.feedback_receiver);
 

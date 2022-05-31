@@ -105,7 +105,7 @@
                 .listen('SocketReco', (event) => {
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
-                        if(response && event.payload.sender_facility !== this.user.facility_id) {
+                        if(response.data && event.payload.sender_facility !== this.user.facility_id) {
                             console.log("New Reco")
                             $(".reco-body").append(event.payload.feedback_receiver);
                             try {
