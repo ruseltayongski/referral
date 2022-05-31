@@ -5,7 +5,7 @@
     var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
 
-    $('.btn-feedback').on('click',function () {
+    /*$('.btn-feedback').on('click',function () {
         console.log("feedback");
         code = $(this).data('code');
         $('.feedback_code').html(code);
@@ -22,7 +22,7 @@
         });
 
         $("#current_code").val(code);
-    });
+    });*/
 
     function scrolldownFeedback(code){
         console.log(code);
@@ -32,7 +32,6 @@
             objDiv.scrollTop = objDiv.scrollHeight;
         },500);
     }
-
 
     function reloadMessage() {
         $("#message").val('').focus();
@@ -89,9 +88,8 @@
                 code : code
             },
             success: function(data) {
-                //console.log(data);
                 $(".reco-body").append(data);
-                feedbackRef.push({
+                /*feedbackRef.push({
                     id: data,
                     code: code,
                     msg: msg,
@@ -101,8 +99,7 @@
                     setTimeout(function(){
                         feedbackRef.child(data.key).remove();
                     },200);
-                });
-
+                });*/
                 var objDiv = document.getElementById(code);
                 objDiv.scrollTop = objDiv.scrollHeight;
                 $("#message").val('').attr('placeholder','Type Message...');

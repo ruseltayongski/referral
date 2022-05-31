@@ -22,10 +22,21 @@
                 let audioElement = document.createElement('audio');
                 audioElement.setAttribute('src', "https://cvehrs.doh.gov.ph/doh/referral/public/notify.mp3");
                 //this.playAudio();
+            },
+            notifyReco(code, picture, content) {
+                Lobibox.notify("success", {
+                    title: code,
+                    size: 'normal',
+                    sound: false,
+                    delay: false,
+                    closeOnClick: false,
+                    img: picture,
+                    msg: content
+                });
             }
         },
         created() {
-            console.log("VUE JS VERSION 3...")
+            console.log("VUE JS VERSION 3")
             this.initializedAudio()
             this.increment_referral = count_referral
             Echo.join('new_referral')
@@ -64,7 +75,7 @@
                                 '                   data-backdrop="static">\n' +
                                 '                <i class="fa fa-folder"></i> View Form\n' +
                                 '               </a>' +
-                                '               <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal" data-target="#feedbackModal" data-code="'+event.payload.patient_code+'">\n' +
+                                '               <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal" onclick="viewReco($(this))" data-target="#feedbackModal" data-code="'+event.payload.patient_code+'">\n' +
                                 '                   <i class="fa fa-comments"></i>\n' +
                                 '                       ReCo' +
                                 '                </button>'+
@@ -88,6 +99,26 @@
                             sound: false
                         });
                     }
+                });
+
+            Echo.join('reco')
+                .listen('SocketReco', (event) => {
+                    $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
+                    axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
+                        if(response && event.payload.sender_facility !== this.user.facility_id) {
+                            console.log("New Reco")
+                            $(".reco-body").append(event.payload.feedback_receiver);
+                            try {
+                                let objDiv = document.getElementById(event.payload.code);
+                                objDiv.scrollTop = objDiv.scrollHeight;
+                                if (!objDiv.scrollTop)
+                                    this.notifyReco(event.payload.code, event.payload.picture, event.payload.content)
+                            } catch(err){
+                                console.log("modal not open");
+                                this.notifyReco(event.payload.code, event.payload.picture, event.payload.content)
+                            }
+                        }
+                    });
                 });
         }
     }

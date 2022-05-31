@@ -30,8 +30,8 @@
                         <div class="input-group">
                             <textarea name="message" id="message" rows="2" required placeholder="Type Message ..." class="form-control"></textarea>
                             <span class="input-group-btn">
-                        <button type="submit" class="btn btn-success btn-lg">Send</button>
-                      </span>
+                                <button type="submit" class="btn btn-success btn-lg">Send</button>
+                            </span>
                         </div>
                     </form>
                 </div>

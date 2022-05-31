@@ -29,11 +29,12 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Login;
 use Illuminate\Support\Facades\Session;
+use App\Events\SocketReco;
 
 class ApiController extends Controller
 {
 
-    public function testWebsocket() {
+    public function testSocketReferral() {
         $user = User::find(25);
         $patient = Patients::find(5);
         $new_referral = [
@@ -52,6 +53,21 @@ class ApiController extends Controller
             "patient_code" => "220527-023-151044231016"
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+    }
+
+    public function testSocketReco() {
+        $user = User::find(25);
+        $reco_json = ParamCtrl::feedbackContent("220526-024-1651442490",$user->id,"The quick brown fox jumps over the lazy dog");
+        broadcast(new SocketReco($reco_json));
+    }
+
+    public function checkCode($code, $facility_id) {
+        $activity = Activity::where("code",$code)
+            ->where(function($q) use($facility_id){
+                $q->where("referred_from",$facility_id)->orWhere("referred_to",$facility_id);
+            })
+            ->first();
+        return $activity ? json_encode(true) : json_encode(false);
     }
 
     public function api(Request $request)

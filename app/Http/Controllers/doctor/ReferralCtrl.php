@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Baby;
 use App\Department;
+use App\Events\SocketReco;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\ApiController;
@@ -1384,9 +1385,13 @@ class ReferralCtrl extends Controller
 
         Feedback::create($data);
 
+        //reco websocket
+        $reco_json = ParamCtrl::feedbackContent($req->code,$user->id,$req->message);
+        broadcast(new SocketReco($reco_json));
+        //end reco websocket
+
         $doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
-
         return view('doctor.feedback_append',[
             "name" => $name,
             "facility" => Facility::find($user->facility_id)->name,

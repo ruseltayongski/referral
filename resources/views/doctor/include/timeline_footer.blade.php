@@ -53,12 +53,12 @@
         @endif
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
-                data-code="{{ $row->code }}">
+                data-code="{{ $row->code }}"
+                onclick="viewReco($(this))"
+        >
             <i class="fa fa-comments"></i>
             ReCo
-            @if($feedback>0)
-                <span class="badge bg-blue">{{ $feedback }}</span>
-            @endif
+            <span class="badge bg-blue" id="reco_count{{ $row->code }}">{{ $feedback }}</span>
         </button>
         <?php $doh_remarks = \App\Monitoring::where("code","=",$row->code)->count(); ?>
         @if($doh_remarks>0)

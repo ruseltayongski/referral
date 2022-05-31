@@ -305,7 +305,7 @@ Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 
 Route::get('/fcm/send','FcmCtrl@send');
-Route::get('/doctor/feedback_send/{id}/{user_id}/{msg}','ParamCtrl@getDoctorName');
+/*Route::get('/doctor/feedback_send/{id}/{user_id}/{msg}','ParamCtrl@feedbackContent');*/
 
 //MANAGE MCC PAGE
 Route::get('/mcc','doctor\HomeCtrl@index');
@@ -568,4 +568,8 @@ Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
 Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload','ApiController@fileUpload');
 
-Route::get('test_websocket','apiController@testWebsocket');
+Route::get('test/socket/referral','apiController@testSocketReferral');
+Route::get('test/socket/reco','apiController@testSocketReco');
+Route::get('activity/check/{code}/{facility_id}','apiController@checkCode');
+
+

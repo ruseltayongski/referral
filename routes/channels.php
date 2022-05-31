@@ -18,3 +18,7 @@ Broadcast::channel('chat', function ($user) {
 Broadcast::channel('new_referral', function ($referral) {
     return $referral;
 });
+
+Broadcast::channel('reco', function ($reco) {
+    return $reco;
+});
