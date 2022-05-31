@@ -34,7 +34,7 @@ use App\Events\SocketReco;
 class ApiController extends Controller
 {
 
-    public function testSocketReferral() {
+    public function testSocketReferred() {
         $user = User::find(25);
         $patient = Patients::find(5);
         $new_referral = [
@@ -50,7 +50,45 @@ class ApiController extends Controller
             "referred_date" => date('M d, Y h:i A'),
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
-            "patient_code" => "220527-023-151044231016"
+            "patient_code" => "220527-023-151044231016",
+            "status" => "referred",
+            "count_reco" => 0
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+    }
+
+    public function testSocketRedirected(Request $request) {
+        $user = User::find(25);
+        $patient = Patients::find(5);
+        $count_activity = Activity::where("code",$request->code)
+                                ->where(function($query){
+                                    $query->where("status","referred")
+                                        ->orWhere("status","redirected")
+                                        ->orWhere("status","transferred");
+                                })
+                                ->groupBy("code")
+                                ->count();
+        $tracking = Tracking::where("code",$request->code)->first();
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$request->code)->count();
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find(24)->name,
+            "referred_to" => (int)163,
+            "referred_department" => Department::find(4)->description,
+            "referred_from" => $user->facility,
+            "form_type" => "pregnant",
+            "tracking_id" => $tracking->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $request->code,
+            "status" => "redirected",
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }

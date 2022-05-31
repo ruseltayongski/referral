@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Baby;
 use App\Department;
+use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Facility;
 use App\Feedback;
@@ -29,8 +30,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
-use PhpParser\Node\Param;
-use Psy\Util\Json;
+use Illuminate\Support\Facades\Redirect;
 
 class ReferralCtrl extends Controller
 {
@@ -588,20 +588,7 @@ class ReferralCtrl extends Controller
                 ->leftJoin('facility','facility.id','=','activity.referred_to')
                 ->leftJoin('tracking','tracking.code','=','activity.code')
                 ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
-                ->where('activity.referred_from',$user->facility_id)
-                /*->where(function($q){
-                    $q->where('activity.status','referred')
-                        ->orwhere('activity.status','seen')
-                        ->orwhere('activity.status','accepted')
-                        ->orwhere('activity.status','arrived')
-                        ->orwhere('activity.status','admitted')
-                        ->orwhere('activity.status','transferred')
-                        ->orwhere('activity.status','discharged')
-                        ->orwhere('activity.status','cancelled')
-                        ->orwhere('activity.status','archived')
-                        ->orwhere('activity.status','rejected')
-                        ->orWhere('activity.status','redirected');
-                })*/;
+                ->where('activity.referred_from',$user->facility_id);
 
             if($search){
                 $data = $data->where(function($q) use ($search){
@@ -1076,12 +1063,12 @@ class ReferralCtrl extends Controller
         );
     }
 
-    public function redirect(Request $req, $code)
+    public function redirect(Request $req)
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        $track = Tracking::where("code",$code)->first();
+        $track = Tracking::where("code",$req->code)->first();
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1093,8 +1080,7 @@ class ReferralCtrl extends Controller
             'status' => 'redirected'
         );
 
-        $activity = Activity::create($data);
-
+        Activity::create($data);
         $track->update([
             'date_referred' => $date,
             'department_id' => $req->department,
@@ -1107,7 +1093,41 @@ class ReferralCtrl extends Controller
             'status' => 'redirected'
         ]);
 
-        $patient = Patients::select(
+        $patient = Patients::find($track->patient_id);
+        $count_activity = Activity::where("code",$req->code)
+            ->where(function($query){
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred");
+            })
+            ->groupBy("code")
+            ->count();
+        $tracking = Tracking::where("code",$req->code)->first();
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$req->code)->count();
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find($req->facility)->name,
+            "referred_to" => (int)$req->facility,
+            "referred_department" => Department::find($req->department)->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $track->type,
+            "tracking_id" => $track->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $req->code,
+            "status" => "redirected",
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+        return Redirect::back();
+
+        /*$patient = Patients::select(
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex',
             DB::raw('CONCAT(fname," ",mname," ",lname) as patient_name')
@@ -1138,7 +1158,7 @@ class ReferralCtrl extends Controller
             'referring_facility' => Facility::find($user->facility_id)->name,
             'department_id' => $req->department,
             'department_name' => Department::find($req->department)->description
-        );
+        );*/
     }
 
     public function seenBy($track_id,$code)

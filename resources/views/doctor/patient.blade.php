@@ -743,8 +743,8 @@
 
     @if(Session::get('refer_patient'))
         Lobibox.notify('success', {
-            title: "Sucessfully",
-            msg: "Referred Patient!"
+            title: "Success",
+            msg: "Successfully Referred Patient!"
         });
         <?php
         Session::put("refer_patient",false);

@@ -674,34 +674,14 @@
 @section('js')
     @include('script.referred')
     <script>
-        @if(Session::get('referral_update_save'))
-        Lobibox.notify('success', {
-            title: "",
-            msg: "<?php echo Session::get("message"); ?>",
-            size: 'mini',
-            rounded: true
-        });
-        <?php
-        Session::put("referral_update_save",false);
-        Session::put("message",false)
-        ?>
-        @endif
-
-        @if(session()->has('issueReferral'))
-        Lobibox.notify('success', {
-            title: '',
-            msg: "<?php echo session()->get('issueReferral'); ?>",
-            size: 'mini',
-            rounded: true
-        });
-        @endif
-        @if(session()->has('transferReferral'))
-        Lobibox.notify('success', {
-            title: '',
-            msg: "<?php echo session()->get('transferReferral'); ?>",
-            size: 'mini',
-            rounded: true
-        });
+        @if(Session::get('redirected_patient'))
+            Lobibox.notify('success', {
+                title: "Success",
+                msg: "Successfully Redirected Patient!"
+            });
+            <?php
+                Session::put("redirected_patient",false);
+            ?>
         @endif
 
         $('body').on('click','.btn-transfer',function(){

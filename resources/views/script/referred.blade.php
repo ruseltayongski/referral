@@ -255,73 +255,12 @@
 
 {{--script for refer to other facility--}}
 <script>
-    var activity_code = 0;
     $('body').on('click','.btn-redirected',function(){
         console.log("redirected!");
-        activity_code = $(this).data('activity_code');
+        $("#redirected_code").val($(this).data('activity_code'));
     });
-
     $('body').on('submit','#redirectedForm',function(e){
-        e.preventDefault();
-        $('.loading').show();
-        var referred_to = $('#redirectedForm').find('.new_facility').val();
-        var department_name = $('.select_department_referred :selected').text();
-        var department_id = $('.select_department_referred').val();
-        $(this).ajaxSubmit({
-            url: "{{ url('doctor/referral/redirect/') }}/"+activity_code,
-            type: 'POST',
-            success: function(data) {
-                console.log("redirected to other hospital!");
-
-                /*var redirectedRef = dbRef.ref('Redirected');
-                redirectedRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        redirectedRef.child(data.key).remove();
-                        window.location.reload(false);
-                    },500);
-                });*/
-
-                var redirectedRef = dbRef.ref('Redirected');
-                redirectedRef.push(data);
-                redirectedRef.on('child_added',function(d) {
-                    redirectedRef.child(d.key).remove();
-                    window.location.reload(false);
-                });
-
-                var data = {
-                    "to": "/topics/ReferralSystem"+referred_to,
-                    "data": {
-                        "subject": "New Referral",
-                        "date": data.date,
-                        "body": data.patient_name+" was referred to your facility from "+myfacility_name+"!"
-                    }
-                };
-
-                $.ajax({
-                    url: 'https://fcm.googleapis.com/fcm/send',
-                    type: 'post',
-                    data: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log(data);
-                        setTimeout(function () {
-                            console.log("Force refresh!");
-                            window.location.reload(false);
-                        },15000);
-                    }
-                });
-
-            },
-            error: function(){
-                $('#serverModal').modal();
-                window.location.reload(false);
-            }
-
-        });
+        $("#redirected_submit").attr("disabled",true);
     });
 </script>
 

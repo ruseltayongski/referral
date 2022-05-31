@@ -38,7 +38,8 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;">Redirect to other facility</h4>
                 <hr />
-                <form method="post" id="redirectedForm">
+                <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedForm">
+                    <input type="hidden" name="code" id="redirected_code" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label style="padding:0px;">SELECT FACILITY:</label>
@@ -58,7 +59,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Redirected</button>
+                        <button type="submit" id="redirected_submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Redirected</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

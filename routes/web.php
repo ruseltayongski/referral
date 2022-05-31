@@ -168,7 +168,7 @@ Route::post('doctor/referral/archive/{track_id}','doctor\ReferralCtrl@archive');
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
 Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
-Route::post('doctor/referral/redirect/{code}','doctor\ReferralCtrl@redirect');//if patient is discharge
+Route::post('doctor/referral/redirect','doctor\ReferralCtrl@redirect');//if patient is discharge
 
 
 Route::get('doctor/referral/data/normal/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@normalForm');
@@ -568,7 +568,8 @@ Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
 Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload','ApiController@fileUpload');
 
-Route::get('test/socket/referral','apiController@testSocketReferral');
+Route::get('test/socket/referred','apiController@testSocketReferred');
+Route::get('test/socket/redirected','apiController@testSocketRedirected');
 Route::get('test/socket/reco','apiController@testSocketReco');
 Route::get('activity/check/{code}/{facility_id}','apiController@checkCode');
 

@@ -384,7 +384,8 @@ class PatientCtrl extends Controller
             "referred_date" => date('M d, Y h:i A'),
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
-            "patient_code" => $code
+            "patient_code" => $code,
+            "status" => "referred"
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
 
