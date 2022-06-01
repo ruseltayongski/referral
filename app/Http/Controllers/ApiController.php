@@ -62,13 +62,13 @@ class ApiController extends Controller
         $user = User::find(25);
         $patient = Patients::find(5);
         $count_activity = Activity::where("code",$request->code)
-                                ->where(function($query){
-                                    $query->where("status","referred")
-                                        ->orWhere("status","redirected")
-                                        ->orWhere("status","transferred");
-                                })
-                                ->groupBy("code")
-                                ->count();
+            ->where(function($query){
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred");
+            })
+            ->groupBy("code")
+            ->count();
         $tracking = Tracking::where("code",$request->code)->first();
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
         $count_reco = Feedback::where("code",$request->code)->count();
@@ -359,14 +359,14 @@ class ApiController extends Controller
         return $data;
 
         $data = Activity::select(
-                "activity.code",
-                DB::raw("concat(capitalize_name(pat.fname),' ',capitalize_name(pat.mname),'. ',capitalize_name(pat.lname)) as patient_name"),
-                DB::raw("YEAR(CURRENT_TIMESTAMP) - YEAR(pat.dob) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(pat.dob, 5)) as age"),
-                "fac_from.name as referring_facility",
-                "fac_to.name as referred_facility",
-                DB::raw("if(tra.type = 'normal',patient_f.diagnosis,pregnant_f.woman_major_findings) as diagnosis"),
-                DB::raw("if(tra.type = 'normal',patient_f.reason,pregnant_f.woman_reason) as reason")
-            )
+            "activity.code",
+            DB::raw("concat(capitalize_name(pat.fname),' ',capitalize_name(pat.mname),'. ',capitalize_name(pat.lname)) as patient_name"),
+            DB::raw("YEAR(CURRENT_TIMESTAMP) - YEAR(pat.dob) - (RIGHT(CURRENT_TIMESTAMP, 5) < RIGHT(pat.dob, 5)) as age"),
+            "fac_from.name as referring_facility",
+            "fac_to.name as referred_facility",
+            DB::raw("if(tra.type = 'normal',patient_f.diagnosis,pregnant_f.woman_major_findings) as diagnosis"),
+            DB::raw("if(tra.type = 'normal',patient_f.reason,pregnant_f.woman_reason) as reason")
+        )
             ->whereBetween("activity.date_referred",[$date_start,$date_end]);
 
         if($request->request_type == 'incoming')
@@ -377,11 +377,11 @@ class ApiController extends Controller
             return 'ERROR API';
 
         $data = $data->leftJoin('tracking as tra','tra.code','=','activity.code')
-                    ->leftJoin('patients as pat','pat.id','=','activity.patient_id')
-                    ->leftJoin('patient_form as patient_f','patient_f.code','=','activity.code')
-                    ->leftJoin('pregnant_form as pregnant_f','pregnant_f.code','=','activity.code')
-                    ->leftJoin('facility as fac_from','fac_from.id','=','activity.referred_from')
-                    ->leftJoin('facility as fac_to','fac_to.id','=','activity.referred_to')
+            ->leftJoin('patients as pat','pat.id','=','activity.patient_id')
+            ->leftJoin('patient_form as patient_f','patient_f.code','=','activity.code')
+            ->leftJoin('pregnant_form as pregnant_f','pregnant_f.code','=','activity.code')
+            ->leftJoin('facility as fac_from','fac_from.id','=','activity.referred_from')
+            ->leftJoin('facility as fac_to','fac_to.id','=','activity.referred_to')
         ;
 
         if($request->status == 'cancelled')
@@ -389,18 +389,18 @@ class ApiController extends Controller
 
         if($request->status == 'seen_only'){
             $data = $data->join("seen as see","see.code","=","activity.code")
-                        ->leftJoin("activity as act1",function($join){
-                            $join->on("activity.code","=",'act1.code');
-                            $join->on("activity.id",'<','act1.id');
-                            $join->on('act1.referred_to','=','activity.referred_to');
-                        })
-                    ->where(function($query){
-                        $query->where('activity.status','=','referred');
-                        $query->orWhere('activity.status','=','redirected');
-                        $query->orWhere('activity.status','=','transferred');
-                    })
-                    ->whereNull("act1.id")
-                    ->groupBy('activity.code');
+                ->leftJoin("activity as act1",function($join){
+                    $join->on("activity.code","=",'act1.code');
+                    $join->on("activity.id",'<','act1.id');
+                    $join->on('act1.referred_to','=','activity.referred_to');
+                })
+                ->where(function($query){
+                    $query->where('activity.status','=','referred');
+                    $query->orWhere('activity.status','=','redirected');
+                    $query->orWhere('activity.status','=','transferred');
+                })
+                ->whereNull("act1.id")
+                ->groupBy('activity.code');
         }
         else
             $data = $data->where("activity.status",$request->status);
@@ -429,9 +429,9 @@ class ApiController extends Controller
             DB::raw("COALESCE(emergency_room_non_vacant,0) + COALESCE(icu_non_vacant,0) + COALESCE(beds_non_vacant,0) + COALESCE(isolation_non_vacant,0) AS UnusedNoncovid"),
             DB::raw("COALESCE(emergency_room_non_occupied,0) + COALESCE(icu_non_occupied,0) + COALESCE(beds_non_occupied,0) + COALESCE(isolation_non_occupied,0) AS UsedNoncovid")
         )
-        ->where(function($q){
-            $q->where("hospital_type","government")->orWhere("hospital_type","private");
-        })
+            ->where(function($q){
+                $q->where("hospital_type","government")->orWhere("hospital_type","private");
+            })
             ->where("referral_used","yes");
 
         if($request->top == "most_bed")
@@ -530,7 +530,7 @@ class ApiController extends Controller
         $pass = $req->pass;
 
         $login = User::
-              select('users.*','facility.name as hospital','department.description as department')
+        select('users.*','facility.name as hospital','department.description as department')
             ->leftJoin('facility','facility.id','=','users.facility_id')
             ->leftJoin('department','department.id','=','users.department_id')
             ->where('username','=',$user)
@@ -833,8 +833,8 @@ class ApiController extends Controller
         );
         $url = self::fileUploadUrl().'file_upload.php';
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
