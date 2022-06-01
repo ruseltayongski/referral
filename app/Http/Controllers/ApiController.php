@@ -840,6 +840,7 @@ class ApiController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_exec($ch);
         //Check for errors.
+
         if(curl_errno($ch)){
             throw new Exception(curl_error($ch));
         }
