@@ -388,7 +388,6 @@ class PatientCtrl extends Controller
             "status" => "referred",
             "count_reco" => 0
         ];
-        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
 
         Activity::create($activity);
 
@@ -401,6 +400,8 @@ class PatientCtrl extends Controller
         }
 
         $tracking_id = $tracking->id;
+
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
 
         return $tracking_id;
     }

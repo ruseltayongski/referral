@@ -994,8 +994,7 @@ class ReferralCtrl extends Controller
         return date('M d, Y h:i A',strtotime($date));
     }
 
-    public function transfer(Request $req, $track_id)
-    {
+    public function transfer(Request $req, $track_id) {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 

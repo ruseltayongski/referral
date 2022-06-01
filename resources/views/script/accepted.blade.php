@@ -185,7 +185,8 @@
 
     });
 
-    $('body').on('submit','#referAcceptForm',function(e){
+    $('body').on('submit','#referAcceptForm',function(e) {
+        console.log("Transfer wewewewewe!");
         $('.loading').show();
         e.preventDefault();
         referred_to = $('#referAcceptForm').find('.new_facility').val();
@@ -197,8 +198,9 @@
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/transfer/') }}/"+track_id,
             type: 'POST',
-            success: function(data){
-                console.log(data);
+            success: function(data) {
+
+                /*console.log(data);
                 transferRef.push({
                     date: data.date,
                     item: track_id,
@@ -267,10 +269,7 @@
                             window.location.reload(false);
                         },15000);
                     }
-                });
-            },
-            error: function(){
-                $('#serverModal').modal();
+                });*/
             }
         });
     });
