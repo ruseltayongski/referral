@@ -819,7 +819,7 @@ class ApiController extends Controller
     }
 
     public static function fileUploadUrl(){
-        return 'https://fileupload.user.edgecloudph.com/';
+        return 'http://180.232.110.44/';
     }
 
     public static function fileUpload(Request $request) {
