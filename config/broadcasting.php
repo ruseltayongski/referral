@@ -37,7 +37,7 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'host' => 'referral.cvchd7.com',
+                'host' => 'cvchd7.com',
                 'port' => 6001,
                 'scheme' => 'https',
                 'curl_options' => [
