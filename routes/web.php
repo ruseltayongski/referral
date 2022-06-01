@@ -568,9 +568,9 @@ Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
 Route::post('doctor/referral/undo_cancel','doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload','ApiController@fileUpload');
 
-Route::get('test/socket/referred','apiController@testSocketReferred');
-Route::get('test/socket/redirected','apiController@testSocketRedirected');
-Route::get('test/socket/reco','apiController@testSocketReco');
-Route::get('activity/check/{code}/{facility_id}','apiController@checkCode');
+Route::get('test/socket/referred','ApiController@testSocketReferred');
+Route::get('test/socket/redirected','ApiController@testSocketRedirected');
+Route::get('test/socket/reco','ApiController@testSocketReco');
+Route::get('activity/check/{code}/{facility_id}','ApiController@checkCode');
 
 
