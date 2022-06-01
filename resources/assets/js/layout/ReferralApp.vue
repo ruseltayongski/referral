@@ -20,7 +20,7 @@
             },
             initializedAudio() {
                 let audioElement = document.createElement('audio');
-                audioElement.setAttribute('src', "https://cvehrs.doh.gov.ph/doh/referral/public/notify.mp3");
+                audioElement.setAttribute('src', $("#broadcasting_url").val()+"/public/notify.mp3");
             },
             notifyReco(code, picture, content) {
                 Lobibox.notify("success", {
@@ -37,7 +37,7 @@
                     delay: false,
                     title: 'New Referral',
                     msg: patient_name+' was referred by Dr. '+referring_md+' of '+referring_name,
-                    img: "https://cvehrs.doh.gov.ph/doh/referral/resources/img/ro7.png",
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                     sound: false
                 });
             },
