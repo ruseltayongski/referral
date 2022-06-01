@@ -833,8 +833,8 @@ class ApiController extends Controller
         );
         $url = self::fileUploadUrl().'file_upload.php';
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
