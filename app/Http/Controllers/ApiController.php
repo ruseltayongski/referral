@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Login;
 use Illuminate\Support\Facades\Session;
+use Matrix\Exception;
 use App\Events\SocketReco;
 
 class ApiController extends Controller
@@ -831,12 +832,17 @@ class ApiController extends Controller
             'username' => $request->username
         );
         $url = self::fileUploadUrl().'file_upload.php';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_exec($ch);
+        //Check for errors.
+        if(curl_errno($ch)){
+            throw new Exception(curl_error($ch));
+        }
         curl_close($ch);
     }
 
