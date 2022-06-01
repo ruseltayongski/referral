@@ -61,7 +61,7 @@
             }
         },
         created() {
-            console.log("VUE JS VERSION 3..")
+            console.log("VUE JS VERSION 3 cvchd!")
             this.initializedAudio()
             this.increment_referral = count_referral
             Echo.join('new_referral')
