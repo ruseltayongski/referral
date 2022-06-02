@@ -616,6 +616,11 @@ class ReferralCtrl extends Controller
             $end_date = Carbon::parse($end)->endOfDay();
 
             $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
+                ->where(function($q){
+                    $q->where('tracking.status','referred')
+                        ->orwhere('tracking.status','redirected')
+                        ->orwhere('tracking.status','transferred');
+                })
                 ->orderBy('activity.id','desc')
                 ->groupBy("activity.code")
                 ->paginate(10);
