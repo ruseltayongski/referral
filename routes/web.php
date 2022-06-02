@@ -167,7 +167,7 @@ Route::post('doctor/referral/arrive/{track_id}','doctor\ReferralCtrl@arrive');//
 Route::post('doctor/referral/archive/{track_id}','doctor\ReferralCtrl@archive');//if patient is archived
 Route::post('doctor/referral/admit/{track_id}','doctor\ReferralCtrl@admit');//if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}','doctor\ReferralCtrl@discharge');//if patient is discharge
-Route::post('doctor/referral/transfer/{track_id}','doctor\ReferralCtrl@transfer');//if patient is discharge
+Route::post('doctor/referral/transfer','doctor\ReferralCtrl@transfer');//if patient is discharge
 Route::post('doctor/referral/redirect','doctor\ReferralCtrl@redirect');//if patient is discharge
 
 
@@ -570,6 +570,7 @@ Route::post('file_upload','ApiController@fileUpload');
 
 Route::get('test/socket/referred','ApiController@testSocketReferred');
 Route::get('test/socket/redirected','ApiController@testSocketRedirected');
+Route::get('test/socket/transferred','ApiController@testSocketTransferred');
 Route::get('test/socket/reco','ApiController@testSocketReco');
 Route::get('activity/check/{code}/{facility_id}','ApiController@checkCode');
 

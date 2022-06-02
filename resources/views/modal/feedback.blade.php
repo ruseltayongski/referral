@@ -1,5 +1,5 @@
 <div class="modal fade" role="dialog" id="feedbackModal">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="box box-success direct-chat direct-chat-primary">
                 <div class="box-header with-border">

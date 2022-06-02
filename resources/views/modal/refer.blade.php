@@ -75,8 +75,9 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;">Transfer to other facility</h4>
                 <hr />
-                <form method="post" id="referAcceptForm">
+                <form method="post" id="referAcceptForm" action="{{ asset("doctor/referral/transfer") }}">
                     {{ csrf_field() }}
+                    <input type="hidden" id="transfer_tracking_id" name="transfer_tracking_id">
                     <div class="form-group">
                         <label style="padding:0px;">REMARKS:</label>
                         <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
@@ -99,7 +100,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Refer</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="transferred_submit"><i class="fa fa-ambulance"></i> Refer</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

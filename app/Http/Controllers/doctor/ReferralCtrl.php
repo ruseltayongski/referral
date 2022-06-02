@@ -1011,11 +1011,11 @@ class ReferralCtrl extends Controller
         return date('M d, Y h:i A',strtotime($date));
     }
 
-    public function transfer(Request $req, $track_id) {
+    public function transfer(Request $req) {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
-        $track = Tracking::where('id',$track_id)->first();
+        $track = Tracking::where('id',$req->transfer_tracking_id)->first();
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1027,7 +1027,7 @@ class ReferralCtrl extends Controller
             'remarks' => $req->remarks,
             'status' => "transferred"
         );
-        $activity = Activity::create($data);
+        Activity::create($data);
 
         $new_data = array(
             'code' => $track->code,
@@ -1046,8 +1046,44 @@ class ReferralCtrl extends Controller
         );
         $track->update($new_data);
 
+        //websocket
+        $patient = Patients::find($track->patient_id);
+        $count_activity = Activity::where("code",$req->code)
+            ->where(function($query){
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred");
+            })
+            ->groupBy("code")
+            ->count();
 
-        $patient = Patients::select(
+        $count_seen = Seen::where('tracking_id',$track->id)->count();
+        $count_reco = Feedback::where("code",$req->code)->count();
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find($req->facility)->name,
+            "referred_to" => (int)$req->facility,
+            "referred_department" => Department::find($req->department)->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $track->type,
+            "tracking_id" => $track->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $req->code,
+            "status" => "transferred",
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
+        ];
+        broadcast(new NewReferral($new_referral));
+        //end websocket
+
+        return Redirect::back();
+
+        /*$patient = Patients::select(
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex'
         )
@@ -1059,7 +1095,7 @@ class ReferralCtrl extends Controller
         $form_type = '#normalFormModal';
         if($track->type=='pregnant'){
             $form_type = '#pregnantFormModal';
-        }
+        }*/
 
         /*$hosp = Facility::find($user->facility_id)->name;
         $hospTo = Facility::find($req->facility)->name;
@@ -1067,7 +1103,7 @@ class ReferralCtrl extends Controller
         $msg = "$track->code transferred to $hospTo from $hosp.";
         DeviceTokenCtrl::send('Transferred',$msg,$track->referred_from);*/
 
-        return array(
+        /*return array(
             'date' => date('M d, Y h:i A',strtotime($date)),
             'age' => $patient->age,
             'sex' => $patient->sex,
@@ -1076,7 +1112,7 @@ class ReferralCtrl extends Controller
             'track_id' => $track->id,
             'activity_id' => $activity->id,
             'referred_facility' => $track->referred_to
-        );
+        );*/
     }
 
     public function redirect(Request $req)

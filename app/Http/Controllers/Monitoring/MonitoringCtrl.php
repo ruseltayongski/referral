@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Session;
 
 class MonitoringCtrl extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function monitoring(Request $request){
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';

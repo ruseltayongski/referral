@@ -94,6 +94,42 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }
 
+    public function testSocketTransferred(Request $request) {
+        $user = User::find(25);
+        $patient = Patients::find(5);
+        $count_activity = Activity::where("code",$request->code)
+            ->where(function($query){
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred");
+            })
+            ->groupBy("code")
+            ->count();
+        $tracking = Tracking::where("code",$request->code)->first();
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$request->code)->count();
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find(163)->name,
+            "referred_to" => (int)163,
+            "referred_department" => Department::find(4)->description,
+            "referred_from" => $user->facility,
+            "form_type" => "pregnant",
+            "tracking_id" => $tracking->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $request->code,
+            "status" => "transferred",
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+    }
+
     public function testSocketReco(Request $request) {
         $reco_json = $this->feedbackContent($request->code,$request->sender,$request->reciever,"The quick brown fox jumps over the lazy dog");
         broadcast(new SocketReco($reco_json));

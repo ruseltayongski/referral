@@ -150,12 +150,6 @@
         });
     });
 
-
-
-    $('body').on('click','.btn-transfer',function(){
-        $('.loading').hide();
-    });
-
     $('.select_facility').on('change',function(){
         var id = $(this).val();
         var url = "{{ url('location/facility/') }}";
@@ -185,10 +179,14 @@
 
     });
 
+    $('body').on('click','.btn-transfer',function() {
+        $("#transfer_tracking_id").val($(this).data("track_id"));
+    });
+
     $('body').on('submit','#referAcceptForm',function(e) {
-        console.log("Transfer wewewewewe!");
-        $('.loading').show();
-        e.preventDefault();
+        console.log("Transfer submit!");
+        $("#transferred_submit").attr("disabled",true);
+        /*e.preventDefault();
         referred_to = $('#referAcceptForm').find('.new_facility').val();
         var new_facility = $('#referAcceptForm').find('.new_facility').find(':selected').html();
         var referred_to = $('#referAcceptForm').find('.new_facility').val();
@@ -200,7 +198,7 @@
             type: 'POST',
             success: function(data) {
 
-                /*console.log(data);
+                console.log(data);
                 transferRef.push({
                     date: data.date,
                     item: track_id,
@@ -269,9 +267,9 @@
                             window.location.reload(false);
                         },15000);
                     }
-                });*/
+                });
             }
-        });
+        });*/
     });
 
     $('.view_form').on('click',function() {
