@@ -85,7 +85,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
         </div>
     </div>
 
-    <div>
+    {{--<div>
         <div class="row col-md-12">
             <div class="jim-content">
                 <h3 class="page-header">Last 15 days number of available COVID beds</h3>
@@ -93,7 +93,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
             </div>
         </div>
-    </div>
+    </div>--}}
 @endsection
 
 @section('js')
@@ -184,7 +184,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
         $("#number_of_transaction").CanvasJSChart(options_activity);
 
         //line chart
-        var emergency_room_covid = [];
+        /*var emergency_room_covid = [];
         var icu_covid = [];
         var beds_covid = [];
         var isolation_covid = [];
@@ -280,7 +280,7 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             ]
         };
 
-        $("#bed_past_transaction").CanvasJSChart(options_days);
+        $("#bed_past_transaction").CanvasJSChart(options_days);*/
 
 
         function toogleDataSeries(e){
