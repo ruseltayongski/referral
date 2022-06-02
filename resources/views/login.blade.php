@@ -71,7 +71,6 @@ $dateNow = date('Y-m-d');
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
 
         });
-        console.log("login");
     </script>
   </body>
 </html>
