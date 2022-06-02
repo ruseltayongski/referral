@@ -90,6 +90,8 @@
             color: #e08e0b;;
         }
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206765991148995"
+            crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Fixed navbar -->
