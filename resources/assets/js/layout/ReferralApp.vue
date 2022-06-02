@@ -61,7 +61,7 @@
             }
         },
         created() {
-            console.log("VUE JS VERSION 3....")
+            console.log("VUE JS VERSION 3!!!")
             this.initializedAudio()
             this.increment_referral = count_referral
             Echo.join('new_referral')
@@ -101,7 +101,7 @@
                                 '                <i class="fa fa-folder"></i> View Form\n' +
                                 '               </a>' +
                                                 this.buttonSeen(event.payload.count_seen, event.payload.tracking_id)+
-                                                this.buttonActivity(event.payload.count_seen, event.payload.tracking_id)+
+                                                this.buttonActivity(event.payload.count_activity, event.payload.tracking_id)+
                                                 this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
                                 '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>'+
                                 '             </div>';

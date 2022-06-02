@@ -186,12 +186,22 @@ class ReferralCtrl extends Controller
         return $activity->id;
     }
 
+    public static function securedFile($file_link){
+        $file_explode = explode("/",$file_link);
+        if($file_explode[0] == "http:")
+            return "https://fileupload.user.edgecloudph.com/".$file_explode[3]."/".$file_explode[4];
+
+        return $file_link;
+    }
+
     public static function normalForm($id,$referral_status,$form_type) {
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code',$track->code)->get();
-        $path = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+
+        $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        $path = self::securedFile($file_link);
         $file_name = basename($path);
 
         $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
@@ -305,7 +315,9 @@ class ReferralCtrl extends Controller
         $icd = Icd::select('icd10.code', 'icd10.description')
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code',$track->code)->get();
-        $path = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+
+        $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        $path = self::securedFile($file_link);
         $file_name = basename($path);
 
         $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
@@ -1463,8 +1475,10 @@ class ReferralCtrl extends Controller
             ->where('icd.code',$track->code)->get();
 
         if($form_type == 'normal') {
-            $path = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+            $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+            $path = self::securedFile($file_link);
             $file_name = basename($path);
+
             $reason = ReasonForReferral::select('patient_form.reason_referral as id', 'reason_referral.reason as reason')
                 ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
                 ->where('patient_form.code', $track->code)->first();
@@ -1481,9 +1495,11 @@ class ReferralCtrl extends Controller
                 "form_type" => $form_type,
                 "referral_status" => $referral_status
             ]);
-        }else if($form_type == 'pregnant') {
-            $path = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        } else if($form_type == 'pregnant') {
+            $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+            $path = self::securedFile($file_link);
             $file_name = basename($path);
+
             $reason = ReasonForReferral::select('pregnant_form.reason_referral as id', 'reason_referral.reason as reason')
                 ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
                 ->where('pregnant_form.code', $track->code)->first();
