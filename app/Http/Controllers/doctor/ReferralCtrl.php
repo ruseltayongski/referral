@@ -52,21 +52,21 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
 
         $data = Tracking::select(
-                    'tracking.*',
-                    DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-                    DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS patient_age"),
-                    'patients.sex',
-                    'facility.name as facility_name',
-                    DB::raw('CONCAT(
+            'tracking.*',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS patient_age"),
+            'patients.sex',
+            'facility.name as facility_name',
+            DB::raw('CONCAT(
                         if(users.level="doctor","Dr. ",""),
                     users.fname," ",users.mname," ",users.lname) as referring_md'),
-                    DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md')
-                )
-                ->join('patients','patients.id','=','tracking.patient_id')
-                ->join('facility','facility.id','=','tracking.referred_from')
-                ->leftJoin('users','users.id','=','tracking.referring_md')
-                ->leftJoin('users as action','action.id','=','tracking.action_md')
-                ->where('referred_to',$user->facility_id);
+            DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md')
+        )
+            ->join('patients','patients.id','=','tracking.patient_id')
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('users','users.id','=','tracking.referring_md')
+            ->leftJoin('users as action','action.id','=','tracking.action_md')
+            ->where('referred_to',$user->facility_id);
 
         if($request->search)
         {
@@ -132,8 +132,8 @@ class ReferralCtrl extends Controller
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date]);
 
         $data = $data
-                ->orderBy("tracking.date_referred","desc")
-                ->paginate(15);
+            ->orderBy("tracking.date_referred","desc")
+            ->paginate(15);
 
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
@@ -181,8 +181,8 @@ class ReferralCtrl extends Controller
             ->orderBy('id','desc')
             ->first();
         $activity->update([
-                'date_seen' => $date
-            ]);
+            'date_seen' => $date
+        ]);
         return $activity->id;
     }
 
@@ -197,16 +197,16 @@ class ReferralCtrl extends Controller
     public static function normalForm($id,$referral_status,$form_type) {
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
-                    ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
-                    ->where('icd.code',$track->code)->get();
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code',$track->code)->get();
 
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
         $path = self::securedFile($file_link);
         $file_name = basename($path);
 
         $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
-                ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
-                ->where('patient_form.code', $track->code)->first();
+            ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
+            ->where('patient_form.code', $track->code)->first();
 
         $form = self::normalFormData($id);
         return view("doctor.referral_body_normal",[
@@ -313,16 +313,16 @@ class ReferralCtrl extends Controller
     public static function pregnantForm($id,$referral_status) {
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
-                    ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
-                    ->where('icd.code',$track->code)->get();
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code',$track->code)->get();
 
         $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
         $path = self::securedFile($file_link);
         $file_name = basename($path);
 
         $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
-                ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
-                ->where('pregnant_form.code', $track->code)->first();
+            ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+            ->where('pregnant_form.code', $track->code)->first();
 
         return view('doctor.referral_body_pregnant',[
             "form" => self::pregnantFormData($id),
@@ -391,50 +391,50 @@ class ReferralCtrl extends Controller
             'patients.id as mother_id'
 
         )
-        ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
-        ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
-        ->leftJoin('facility','facility.id','=','tracking.referred_from')
-        ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
-        ->leftJoin('users','users.id','=','pregnant_form.referred_by')
-        ->leftJoin('barangay','barangay.id','=','patients.brgy')
-        ->leftJoin('muncity','muncity.id','=','patients.muncity')
-        ->leftJoin('province','province.id','=','patients.province')
-        ->leftJoin('barangay as b','b.id','=','facility.brgy')
-        ->leftJoin('muncity as m','m.id','=','facility.muncity')
-        ->leftJoin('province as p','p.id','=','facility.province')
-        ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
-        ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
-        ->leftJoin('province as pp','pp.id','=','ff.province')
-        ->leftJoin('department','department.id','=','pregnant_form.department_id')
-        ->where('tracking.id',$id)
-        ->first();
+            ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
+            ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
+            ->leftJoin('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','pregnant_form.referred_by')
+            ->leftJoin('barangay','barangay.id','=','patients.brgy')
+            ->leftJoin('muncity','muncity.id','=','patients.muncity')
+            ->leftJoin('province','province.id','=','patients.province')
+            ->leftJoin('barangay as b','b.id','=','facility.brgy')
+            ->leftJoin('muncity as m','m.id','=','facility.muncity')
+            ->leftJoin('province as p','p.id','=','facility.province')
+            ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
+            ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
+            ->leftJoin('province as pp','pp.id','=','ff.province')
+            ->leftJoin('department','department.id','=','pregnant_form.department_id')
+            ->where('tracking.id',$id)
+            ->first();
 
         $baby = array();
         if(isset($form->patient_baby_id) && $form->patient_baby_id > 0)
         {
             $baby = PregnantForm::select(
-                        DB::raw('CONCAT(baby.fname," ",baby.mname," ",baby.lname) as baby_name'),
-                        'pregnant_form.patient_baby_id as baby_id',
-                        'baby.fname as baby_fname',
-                        'baby.mname as baby_mname',
-                        'baby.lname as baby_lname',
-                        DB::raw("DATE_FORMAT(bb.birth_date,'%M %d, %Y %h:%i %p') as baby_dob"),
-                        'bb.weight',
-                        'bb.gestational_age',
-                        'pregnant_form.baby_reason',
-                        'pregnant_form.baby_major_findings',
-                        DB::raw("DATE_FORMAT(pregnant_form.baby_last_feed,'%M %d, %Y %h:%i %p') as baby_last_feed"),
-                        'pregnant_form.baby_before_treatment',
-                        DB::raw("DATE_FORMAT(pregnant_form.baby_before_given_time,'%M %d, %Y %h:%i %p') as baby_before_given_time"),
-                        'pregnant_form.baby_during_transport',
-                        DB::raw("DATE_FORMAT(pregnant_form.baby_transport_given_time,'%M %d, %Y %h:%i %p') as baby_transport_given_time"),
-                        'pregnant_form.baby_information_given'
-                    )
-                    ->join('baby as bb','bb.baby_id','=','pregnant_form.patient_baby_id')
-                    ->join('patients as baby','baby.id','=','pregnant_form.patient_baby_id')
-                    ->join('tracking','tracking.form_id','=','pregnant_form.id')
-                    ->where('tracking.id',$id)
-                    ->first();
+                DB::raw('CONCAT(baby.fname," ",baby.mname," ",baby.lname) as baby_name'),
+                'pregnant_form.patient_baby_id as baby_id',
+                'baby.fname as baby_fname',
+                'baby.mname as baby_mname',
+                'baby.lname as baby_lname',
+                DB::raw("DATE_FORMAT(bb.birth_date,'%M %d, %Y %h:%i %p') as baby_dob"),
+                'bb.weight',
+                'bb.gestational_age',
+                'pregnant_form.baby_reason',
+                'pregnant_form.baby_major_findings',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_last_feed,'%M %d, %Y %h:%i %p') as baby_last_feed"),
+                'pregnant_form.baby_before_treatment',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_before_given_time,'%M %d, %Y %h:%i %p') as baby_before_given_time"),
+                'pregnant_form.baby_during_transport',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_transport_given_time,'%M %d, %Y %h:%i %p') as baby_transport_given_time"),
+                'pregnant_form.baby_information_given'
+            )
+                ->join('baby as bb','bb.baby_id','=','pregnant_form.patient_baby_id')
+                ->join('patients as baby','baby.id','=','pregnant_form.patient_baby_id')
+                ->join('tracking','tracking.form_id','=','pregnant_form.id')
+                ->where('tracking.id',$id)
+                ->first();
 
             if($baby['baby_dob'] === null) {
                 $dob_ = Patients::select(DB::raw("DATE_FORMAT(patients.dob,'%M %d, %Y %h:%i %p') as baby_dob"))
@@ -628,11 +628,11 @@ class ReferralCtrl extends Controller
             $end_date = Carbon::parse($end)->endOfDay();
 
             $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
-                ->where(function($q){
+                /*->where(function($q){
                     $q->where('tracking.status','referred')
                         ->orwhere('tracking.status','redirected')
                         ->orwhere('tracking.status','transferred');
-                })
+                })*/
                 ->orderBy('activity.id','desc')
                 ->groupBy("activity.code")
                 ->paginate(10);
@@ -716,8 +716,8 @@ class ReferralCtrl extends Controller
     {
         $step = 0;
         $seen = Tracking::where('code',$code)
-                    ->where('date_seen','<>','')
-                    ->first();
+            ->where('date_seen','<>','')
+            ->first();
         if(self::hasStatus('referred',$code))
             $step = 1;
         if($seen)
@@ -741,8 +741,8 @@ class ReferralCtrl extends Controller
     static function hasStatus($status,$code)
     {
         $check = Activity::where('code',$code)
-                ->where('status',$status)
-                ->first();
+            ->where('status',$status)
+            ->first();
         if($check)
             return true;
         return false;
@@ -886,14 +886,14 @@ class ReferralCtrl extends Controller
         Activity::create($data);
 
         Tracking::where("id",$track_id)
-                ->update([
-                    'date_arrived' => $date,
-                    'status' => 'arrived'
-                ]);
+            ->update([
+                'date_arrived' => $date,
+                'status' => 'arrived'
+            ]);
         PregnantForm::where('id',$track->form_id)
-                ->update([
-                    'arrival_date' => $date
-                ]);
+            ->update([
+                'arrival_date' => $date
+            ]);
 
         $hosp = Facility::find($user->facility_id)->name;
         $msg = "$track->code arrived at $hosp.";
@@ -920,14 +920,14 @@ class ReferralCtrl extends Controller
         Activity::create($data);
 
         Tracking::where("id",$track_id)
-                ->update([
-                    'date_arrived' => $date,
-                    'status' => 'archived'
-                ]);
+            ->update([
+                'date_arrived' => $date,
+                'status' => 'archived'
+            ]);
         PregnantForm::where('id',$track->form_id)
-                ->update([
-                    'arrival_date' => $date
-                ]);
+            ->update([
+                'arrival_date' => $date
+            ]);
 
         return date('M d, Y h:i A',strtotime($date));
     }
@@ -1048,11 +1048,11 @@ class ReferralCtrl extends Controller
 
 
         $patient = Patients::select(
-                        DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-                        'patients.sex'
-                    )
-                    ->where('id',$track->patient_id)
-                    ->first();
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+            'patients.sex'
+        )
+            ->where('id',$track->patient_id)
+            ->first();
         $user_md = User::find($user->id);
 
 
@@ -1187,7 +1187,7 @@ class ReferralCtrl extends Controller
             'user_md' => $user->id
         );
         Tracking::find($track_id)->update([
-           "date_seen" => date("Y-m-d H:i:s")
+            "date_seen" => date("Y-m-d H:i:s")
         ]);
 
         Seen::create($data);
@@ -1196,24 +1196,24 @@ class ReferralCtrl extends Controller
     public function seenByList($track_id)
     {
         $data = Seen::select(
-                    DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as user_md'),
-                    DB::raw("DATE_FORMAT(seen.created_at,'%M %d, %Y %h:%i %p') as date_seen"),
-                    'users.contact'
-                )
-                ->join('users','users.id','=','seen.user_md')
-                ->where('seen.tracking_id',$track_id)
-                ->orderBy('seen.created_at','desc')
-                ->get();
+            DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as user_md'),
+            DB::raw("DATE_FORMAT(seen.created_at,'%M %d, %Y %h:%i %p') as date_seen"),
+            'users.contact'
+        )
+            ->join('users','users.id','=','seen.user_md')
+            ->where('seen.tracking_id',$track_id)
+            ->orderBy('seen.created_at','desc')
+            ->get();
         return $data;
     }
 
     public function callerByList($track_id)
     {
         $data = \App\Tracking::select(
-                    \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
-                    DB::raw("DATE_FORMAT(activity.created_at,'%M %d, %Y %h:%i %p') as date_call"),
-                    "users.contact"
-            )
+            \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
+            DB::raw("DATE_FORMAT(activity.created_at,'%M %d, %Y %h:%i %p') as date_call"),
+            "users.contact"
+        )
             ->Join("activity","activity.code","=","tracking.code")
             ->Join("users","users.id","=","activity.action_md")
             ->where('tracking.id',$track_id)
@@ -1226,15 +1226,15 @@ class ReferralCtrl extends Controller
     static function checkForCancellation($code)
     {
         $check = Activity::where('code',$code)
-                ->where(function($q) {
-                    $q->where('status','arrived')
-                        ->orwhere('status','admitted')
-                        ->orwhere('status','discharged')
-                        ->orwhere('status','cancelled')
-                        ->orwhere('status','archived')
-                        ->orwhere('status','transferred');
-                })
-                ->first();
+            ->where(function($q) {
+                $q->where('status','arrived')
+                    ->orwhere('status','admitted')
+                    ->orwhere('status','discharged')
+                    ->orwhere('status','cancelled')
+                    ->orwhere('status','archived')
+                    ->orwhere('status','transferred');
+            })
+            ->first();
         if($check)
             return true;
         return false;
@@ -1247,11 +1247,11 @@ class ReferralCtrl extends Controller
         $track = Tracking::find($id);
         $activity = Activity::where("code",$track->code)->where(function($q){
             $q->where("status","referred")
-              ->orWhere("status","redirected")
-              ->orWhere("status","transferred");
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
         })
-        ->orderBy("id","desc")
-        ->first();
+            ->orderBy("id","desc")
+            ->first();
         $data = array(
             'code' => $activity->code,
             'patient_id' => $activity->patient_id,
@@ -1312,20 +1312,20 @@ class ReferralCtrl extends Controller
 
     public function feedback($code){
         $data = Feedback::select(
-                    'feedback.id as id',
-                    'feedback.sender as sender',
-                    'feedback.message',
-                    'users.fname as fname',
-                    'users.lname as lname',
-                    'facility.name as facility',
-                    'facility.abbr as abbr',
-                    'feedback.created_at as date'
-                )
-                ->leftJoin('users','users.id','=','feedback.sender')
-                ->leftJoin('facility','facility.id','=','users.facility_id')
-                ->where('code',$code)
-                ->orderBy("id","asc")
-                ->get();
+            'feedback.id as id',
+            'feedback.sender as sender',
+            'feedback.message',
+            'users.fname as fname',
+            'users.lname as lname',
+            'facility.name as facility',
+            'facility.abbr as abbr',
+            'feedback.created_at as date'
+        )
+            ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->where('code',$code)
+            ->orderBy("id","asc")
+            ->get();
 
         return view('doctor.feedback',[
             'data' => $data
@@ -1451,11 +1451,11 @@ class ReferralCtrl extends Controller
         $facility_id = $user->facility_id;
         $dr = User::find($user_id);
         $check = Tracking::where(function($q) use ($facility_id){
-                    $q->where('referred_from',$facility_id)
-                        ->orwhere('referred_to',$facility_id);
-                })
-                ->where('code',$code)
-                ->first();
+            $q->where('referred_from',$facility_id)
+                ->orwhere('referred_to',$facility_id);
+        })
+            ->where('code',$code)
+            ->first();
         if($check){
             $data['check'] = 1;
             $data['info'] = array(

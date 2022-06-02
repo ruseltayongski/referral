@@ -26,7 +26,8 @@ $dateNow = date('Y-m-d');
         </center>
           <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
               {{ csrf_field() }}
-              <input type="hidden" name="login_type" value="{{ url()->current() == 'https://cvchd7.com/login' || url()->current() == 'https://referral.user.edgecloudph.com/login' ? 'cloud' : 'doh' }}">
+              <input type="hidden" name="login_type" value="{{ url()->current() == 'https://cvchd7.com/login' ? 'cloud' : 'doh' }}">
+              <input type="hidden" name="login_link" value="{{ url()->current() }}">
               <div class="login-box-body">
                 <p class="login-box-msg">Sign in to start your session</p>
                   <div class="form-group has-feedback {{ Session::has('error') ? ' has-error' : '' }}">
