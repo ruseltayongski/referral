@@ -15,6 +15,8 @@ $dateNow = date('Y-m-d');
     <link rel="stylesheet" href="{{ asset('resources/assets/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('resources/assets/css/AdminLTE.min.css') }}">
     <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206765991148995"
+          crossorigin="anonymous"></script>
   </head>
   <body class="hold-transition login-page">
    <div class="login-box">
@@ -71,7 +73,7 @@ $dateNow = date('Y-m-d');
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
 
         });
-
+        console.log("login");
     </script>
   </body>
 </html>
