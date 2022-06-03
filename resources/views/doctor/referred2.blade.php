@@ -264,9 +264,9 @@
                                     <div class="step-counter">1</div>
                                     <div class="step-name">Referred</div>
                                 </div>
-                                <div class="stepper-item @if($referred_seen_track || $referred_accepted_track || $referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if($referred_seen_track || $referred_accepted_track || $referred_rejected_track) completed @endif" id="seen_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">2</div>
-                                    <div class="step-name">Seen {{ $referred_track->id }}</div>
+                                    <div class="step-name">Seen</div>
                                 </div>
                                 <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif">
                                     <div class="step-counter
@@ -357,7 +357,7 @@
                                         </div>
                                         <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">2</div>
-                                            <div class="step-name">Seen {{ $redirect_track->id }}</div>
+                                            <div class="step-name">Seen</div>
                                         </div>
                                         <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
                                             <div class="step-counter
