@@ -11,20 +11,6 @@
         facility = $(item).find('.facility').html();
         var referral_status = $(this).data('referral_status');
 
-        if(referral_status === 'referred' || referral_status === 'redirected' || referral_status === 'transferred') {
-            var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
-            $.ajax({
-                url: seenUrl,
-                type: "GET",
-                success: function(result){
-
-                },
-                error: function(){
-                    console.log('error');
-                }
-            });
-        }
-
         if(type === 'normal') {
             form_type = '#referralForm';
             var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
@@ -61,6 +47,21 @@
             });
 
         }
+
+        if(referral_status === 'referred' || referral_status === 'redirected' || referral_status === 'transferred') {
+            var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
+            $.ajax({
+                url: seenUrl,
+                type: "GET",
+                success: function(result){
+
+                },
+                error: function(){
+                    console.log('error');
+                }
+            });
+        }
+
     });
 
     $('body').on('submit','#acceptForm',function(e) {
