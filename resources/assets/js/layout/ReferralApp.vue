@@ -41,7 +41,8 @@
                     sound: false
                 });
             },
-            notifyReferralSeen(patient_name, seen_by, seen_by_facility) {
+            notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id) {
+                $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 Lobibox.notify('info', {
                     delay: false,
                     title: 'Referral Seen',
@@ -149,7 +150,7 @@
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
                     if(event.payload.referring_facility_id === this.user.facility_id) {
-                        this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility)
+                        this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id)
                     }
                 });
 

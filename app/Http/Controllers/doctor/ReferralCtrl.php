@@ -1232,6 +1232,13 @@ class ReferralCtrl extends Controller
         //start websocket
         $tracking = Tracking::find($track_id);
         $patient = Patients::find($tracking->patient_id);
+        $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+        ->orderBy("id","desc")
+        ->first();
         $seen_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "seen_by" => ucfirst($user->fname).' '.ucfirst($user->lname),//
@@ -1241,7 +1248,8 @@ class ReferralCtrl extends Controller
             "referred_date" => date('M d, Y h:i A'),
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
-            "patient_code" => $code
+            "patient_code" => $code,
+            "activity_id" => $latest_activity->id
         ];
         broadcast(new SocketReferralSeen($seen_referral));
         //end websocket
