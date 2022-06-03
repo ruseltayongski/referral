@@ -7,6 +7,7 @@ use App\Baby;
 use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
+use App\Events\SocketReferralSeen;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\ApiController;
@@ -1227,6 +1228,23 @@ class ReferralCtrl extends Controller
         ]);
 
         Seen::create($data);
+
+        //start websocket
+        $tracking = Tracking::find($track_id);
+        $patient = Patients::find($tracking->patient_id);
+        $seen_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "seen_by" => ucfirst($user->fname).' '.ucfirst($user->lname),//
+            "seen_by_facility" => Facility::find($user->facility_id)->name,//
+            "referring_name" => Facility::find($tracking->referred_to)->name,
+            "referring_facility_id" => (int)$tracking->referred_from,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $code
+        ];
+        broadcast(new SocketReferralSeen($seen_referral));
+        //end websocket
     }
 
     public function seenByList($track_id)

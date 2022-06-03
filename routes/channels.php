@@ -22,3 +22,7 @@ Broadcast::channel('new_referral', function ($referral) {
 Broadcast::channel('reco', function ($reco) {
     return $reco;
 });
+
+Broadcast::channel('referral_seen', function ($referral_seen) {
+    return $referral_seen;
+});

@@ -369,7 +369,19 @@ class PatientCtrl extends Controller
             'remarks' => ($req->reason) ? $req->reason: '',
             'status' => 'referred'
         );
+        Activity::create($activity);
 
+        if($status=='walkin'){
+            $activity['date_seen'] = date('Y-m-d H:i:s');
+            $activity['status'] = 'accepted';
+            $activity['remarks'] = 'Walk-In Patient';
+            $activity['action_md'] = $user->id;
+            Activity::create($activity);
+        }
+
+        $tracking_id = $tracking->id;
+
+        //start websocket
         $patient = Patients::find($patient_id);
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
@@ -388,20 +400,8 @@ class PatientCtrl extends Controller
             "status" => "referred",
             "count_reco" => 0
         ];
-
-        Activity::create($activity);
-
-        if($status=='walkin'){
-            $activity['date_seen'] = date('Y-m-d H:i:s');
-            $activity['status'] = 'accepted';
-            $activity['remarks'] = 'Walk-In Patient';
-            $activity['action_md'] = $user->id;
-            Activity::create($activity);
-        }
-
-        $tracking_id = $tracking->id;
-
-        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+        broadcast(new NewReferral($new_referral));
+        //end websocket
 
         return $tracking_id;
     }

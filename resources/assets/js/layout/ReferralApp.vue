@@ -41,6 +41,14 @@
                     sound: false
                 });
             },
+            notifyReferralSeen(patient_name, seen_by, seen_by_facility) {
+                Lobibox.notify('info', {
+                    delay: false,
+                    title: 'Referral Seen',
+                    msg: patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -137,6 +145,14 @@
                         }
                     });
                 });
+
+            Echo.join('referral_seen')
+                .listen('SocketReferralSeen', (event) => {
+                    if(event.payload.referring_facility_id === this.user.facility_id) {
+                        this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility)
+                    }
+                });
+
         }
     }
 </script>

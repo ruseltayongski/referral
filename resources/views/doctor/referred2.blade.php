@@ -270,21 +270,23 @@
                                 </div>
                                 <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif">
                                     <div class="step-counter
-                                                <?php
-                                    if($referred_rejected_track)
-                                        echo "bg-red";
-                                    elseif($referred_cancelled_track)
-                                        echo "bg-yellow";
-                                    ?>
-                                            ">3</div>
-                                    <div class="step-name "><?php
+                                        <?php
+                                        if($referred_rejected_track)
+                                            echo "bg-red";
+                                        elseif($referred_cancelled_track)
+                                            echo "bg-yellow";
+                                        ?>
+                                    ">3</div>
+                                    <div class="step-name ">
+                                        <?php
                                         if($referred_rejected_track)
                                             echo 'Rejected';
                                         elseif($referred_cancelled_track)
                                             echo 'Cancelled';
                                         else
                                             echo 'Accepted' ;
-                                        ?></div>
+                                        ?>
+                                    </div>
                                 </div>
                                 <div class="stepper-item @if($referred_travel_track || $referred_arrived_track) completed @endif">
                                     <div class="step-counter">4</div>
