@@ -1239,6 +1239,7 @@ class ReferralCtrl extends Controller
         })
         ->orderBy("id","desc")
         ->first();
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
         $seen_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "seen_by" => ucfirst($user->fname).' '.ucfirst($user->lname),//
@@ -1249,7 +1250,8 @@ class ReferralCtrl extends Controller
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $code,
-            "activity_id" => $latest_activity->id
+            "activity_id" => $latest_activity->id,
+            "count_seen" => $count_seen
         ];
         broadcast(new SocketReferralSeen($seen_referral));
         //end websocket
@@ -1260,9 +1262,11 @@ class ReferralCtrl extends Controller
         $data = Seen::select(
             DB::raw('CONCAT(users.fname," ",users.mname," ",users.lname) as user_md'),
             DB::raw("DATE_FORMAT(seen.created_at,'%M %d, %Y %h:%i %p') as date_seen"),
-            'users.contact'
+            'users.contact',
+            'facility.name as facility_name'
         )
-            ->join('users','users.id','=','seen.user_md')
+            ->leftJoin('users','users.id','=','seen.user_md')
+            ->leftJoin('facility', 'facility.id','=','users.facility_id')
             ->where('seen.tracking_id',$track_id)
             ->orderBy('seen.created_at','desc')
             ->get();

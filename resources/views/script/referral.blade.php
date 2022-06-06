@@ -225,17 +225,22 @@ $('body').on('click','.btn_call_request',function(){
 
                 jQuery.each(data, function(i,val){
                     content += '<a href="#" class="list-group-item clearfix">\n' +
-                        '<span class="title-info">Dr. '+val.user_md+'</span>\n' +
+                        '<strong class="text-green">Dr. '+val.user_md+'</strong>\n' +
                         '<br />\n' +
-                        '<small class="text-primary">\n' +
-                        'Seen: '+val.date_seen+'\n' +
+                        '<small>\n' +
+                        'Facility: <b>'+val.facility_name+'</b>\n' +
                         '</small>\n' +
                         '<br />\n' +
-                        '<small class="text-success">\n' +
-                        'Contact: '+val.contact+'\n' +
+                        '<small>\n' +
+                        'Seen: <b>'+val.date_seen+'</b>\n' +
+                        '</small>\n' +
+                        '<br />\n' +
+                        '<small>\n' +
+                        'Contact: <b>'+val.contact+'</b>\n' +
                         '</small>\n' +
                         '</a>';
                 });
+
                 content += '</div>';
                 setTimeout(function () {
                     $('#seenBy_section').html(content);
