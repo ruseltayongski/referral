@@ -157,28 +157,11 @@ $('body').on('click','.btn_call_request',function(){
     console.log("btn_call_request");
     $('.referring_contact').html(referring_contact);
     $('.referring_md_contact').html(referring_md_contact);
-
-//    var callRef = dbRef.ref('Call');
-//    var call_data = {
-//        date: date, //can be change to returne date
-//        facility_calling: my_facility_name,
-//        action_md: action_md,
-//        tracking_id: form_id,
-//        code: code,
-//        contact: my_contact
-//    };
-//    callRef.push(call_data);
-//    callRef.on('child_added',function(data){
-//        setTimeout(function(){
-//            //callRef.child(data.key).remove();
-//            $('.loading').hide();
-//        },300);
-//    });
     $.ajax({
         url: "{{ url('doctor/referral/calling/') }}/" + form_id,
         type: 'GET',
         success: function(data) {
-            console.log(data);
+            /*console.log(data);
             var callRef = dbRef.ref('Call');
             var call_data = {
                 date: data.date, //can be change to returne date
@@ -197,7 +180,7 @@ $('body').on('click','.btn_call_request',function(){
                     callRef.child(data.key).remove();
                     $('.loading').hide();
                 },300);
-            });
+            });*/
         },
         error: function(error){
             console.log(error);

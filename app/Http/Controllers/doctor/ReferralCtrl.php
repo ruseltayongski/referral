@@ -8,6 +8,7 @@ use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Events\SocketReferralAccepted;
+use App\Events\SocketReferralCall;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Facility;
@@ -895,15 +896,25 @@ class ReferralCtrl extends Controller
         $activity = Activity::create($data);
 
         $doc = User::find($user->id);
-        $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
-        $hosp = Facility::find($track->referred_to)->name;
-        $msg = "Dr. $name of $hosp is requesting a call regarding on $track->code. Please contact this number $doc->contact";
-        //DeviceTokenCtrl::send('Requesting a Call',$msg,$track->referred_from);
 
-        return array(
-            'date' => date('M d, Y h:i A',strtotime($date)),
-            'activity_id' => $activity->id
-        );
+        $caller_by = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
+        $caller_by_facility = Facility::find($track->referred_to)->name;
+        $called_to_facility = Facility::find($track->referred_from)->name;
+        $count_caller = Activity::where("code",$track->code)->where("status","=","calling")->count();
+        //start websocket
+        $patient = Patients::find($track->patient_id);
+        $referral_call = [
+            "patient_code" => $track->code,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "caller_by" => $caller_by,
+            "caller_by_contact" => $user->contact,
+            "caller_by_facility" => $caller_by_facility,
+            "caller_date" => date('M d, Y h:i A',strtotime($activity->created_at)),
+            "called_to" => $activity->referred_from,
+            "called_to_facility" => $called_to_facility,
+            "count_caller" => $count_caller
+        ];
+        broadcast(new SocketReferralCall($referral_call));
     }
 
     public function arrive(Request $req, $track_id)

@@ -80,12 +80,28 @@
                     '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
                     '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
                     '                                                            </button>\n' +
-                    '                                                                                                            </td>\n' +
+                    '                                                     </td>\n' +
                     '                                                </tr>');
                 Lobibox.notify('error', {
                     delay: false,
                     title: 'Rejected',
                     msg: patient_name+' was recommend to redirect by Dr. '+rejected_by+' of '+rejected_by_facility,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                });
+            },
+            notifyReferralCall(patient_code, count_caller, caller_date, caller_by, caller_by_facility, called_to_facility, caller_by_contact) {
+                $("#count_caller"+patient_code).html(count_caller);
+                $("#prepend_from_websocket"+patient_code).prepend('<tr>\n' +
+                    '                                                       <td>'+caller_date+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtDoctor">Dr. '+caller_by+'</span> of <span class="txtHospital">'+caller_by_facility+'</span> is requesting a call from <span class="txtHospital">'+called_to_facility+'</span>.\n' +
+                    '                                                                 Please contact this number <span class="txtInfo">('+caller_by_contact+')</span> .\n' +
+                    '                                                           </td>\n' +
+                    '                                                        </tr>');
+                Lobibox.notify('warning', {
+                    delay: false,
+                    title: 'Requesting a Call',
+                    msg: 'Dr. '+caller_by+' of '+caller_by_facility+' is requesting a call. Please contact this number ('+caller_by_contact+') <br>'+ caller_date,
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });
             },
@@ -205,6 +221,13 @@
                 .listen('SocketReferralRejected', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id)
+                    }
+                });
+
+            Echo.join('referral_call')
+                .listen('SocketReferralCall', (event) => {
+                    if(event.payload.called_to === this.user.facility_id) {
+                        this.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact)
                     }
                 });
 

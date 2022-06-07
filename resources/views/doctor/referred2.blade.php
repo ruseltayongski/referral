@@ -597,7 +597,7 @@
                                    data-id="{{ $row->id }}"
                                    class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
                                     @if($caller_md>0)
-                                        <small class="badge bg-blue-active">{{ $caller_md }}</small>
+                                        <small class="badge bg-blue-active" id="count_caller{{ $row->code }}">{{ $caller_md }}</small>
                                     @endif
                                 </a>
                             @endif
