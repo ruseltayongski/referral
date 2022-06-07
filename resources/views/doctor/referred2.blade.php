@@ -268,7 +268,7 @@
                                     <div class="step-counter">2</div>
                                     <div class="step-name">Seen</div>
                                 </div>
-                                <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter
                                         <?php
                                         if($referred_rejected_track)
@@ -359,7 +359,7 @@
                                             <div class="step-counter">2</div>
                                             <div class="step-name">Seen</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter
                                                 <?php
                                             if($redirected_rejected_track)
@@ -404,7 +404,7 @@
                                     <div class="tracking col-sm-12">
                                         <div class="table-responsive">
                                             <table class="table table-striped" style="font-size: 9pt;">
-                                                <thead class="prepend_from_firebase{{ $row->code }}"></thead>
+                                                <thead class="prepend_from_firebase{{ $row->code }}" id="prepend_from_websocket{{ $row->code }}"></thead>
                                                 @foreach($activities as $act)
                                                     <?php
                                                     $act_name = \App\Patients::find($act->patient_id);

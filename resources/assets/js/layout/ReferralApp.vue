@@ -50,6 +50,22 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
+            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, date_accepted, remarks) {
+                $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle67525" style="display: table-row;">\n' +
+                    '                                                            <td>'+date_accepted+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtPatient">'+patient_name+'</span>  was accepted by <span class="txtDoctor">Dr. '+accepting_doctor+'</span> of <span class="txtHospital">'+accepting_facility_name+'</span>.\n' +
+                    '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '                                                            </td>\n' +
+                    '                                                        </tr>');
+                Lobibox.notify('success', {
+                    delay: false,
+                    title: 'Accepted',
+                    msg: patient_name+' was accepted by Dr. '+accepting_doctor+' of '+accepting_facility_name,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                });
+            },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -152,6 +168,13 @@
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
                     if(event.payload.referring_facility_id === this.user.facility_id) {
                         this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id)
+                    }
+                });
+
+            Echo.join('referral_accepted')
+                .listen('SocketReferralAccepted', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.date_accepted, event.payload.remarks)
                     }
                 });
 

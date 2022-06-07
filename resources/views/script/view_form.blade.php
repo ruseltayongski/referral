@@ -66,15 +66,14 @@
 
     $('body').on('submit','#acceptForm',function(e) {
         e.preventDefault();
-        console.log(code);
         $('.loading').show();
         var tracking_id = form_id;
-        var reason = $('.accept_remarks').val();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/accept/') }}/" + tracking_id,
             type: 'POST',
-            success: function (tracking_id) {
-                if(tracking_id=='denied') {
+            success: function () {
+                window.location.reload(false);
+                /*if(tracking_id=='denied') {
                     window.location.reload(false);
                 } else {
                     console.log(patient_name);
@@ -94,7 +93,7 @@
                             window.location.reload(false);
                         },500);
                     });
-                }
+                }*/
             }
         });
     });

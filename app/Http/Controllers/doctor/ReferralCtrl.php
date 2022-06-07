@@ -7,6 +7,7 @@ use App\Baby;
 use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
+use App\Events\SocketReferralAccepted;
 use App\Events\SocketReferralSeen;
 use App\Facility;
 use App\Feedback;
@@ -784,11 +785,10 @@ class ReferralCtrl extends Controller
     public function accept(Request $req,$track_id)
     {
         $user = Session::get('auth');
-
         $track = Tracking::find($track_id);
         if($track->status=='accepted' || $track->status=='rejected') {
             Session::put('incoming_denied',true);
-            return 'denied';
+            return Redirect::back();
         } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
@@ -812,15 +812,28 @@ class ReferralCtrl extends Controller
             'status' => $track->status
         );
 
-        Activity::create($data);
+        $activity = Activity::create($data);
 
-        /*$doc = User::find($user->id);
-        $name = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
-        $hosp = Facility::find($user->facility_id)->name;
-        $msg = "Referral code $track->code was accepted by Dr. $name of $hosp.";
-        DeviceTokenCtrl::send('Referral Accepted',$msg,$track->referred_from);*/
-
-        return $track_id;
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $patient = Patients::find($latest_activity->patient_id);
+        $referral_accepted = [
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "accepting_facility_name" => Facility::find($latest_activity->referred_from)->name,
+            "referred_from" => $latest_activity->referred_from,
+            "patient_code" => $latest_activity->code,
+            "activity_id" => $latest_activity->id,
+            "date_accepted" => date('M d, Y h:i A',strtotime($activity->date_referred)),
+            "remarks" => $activity->remarks
+        ];
+        broadcast(new SocketReferralAccepted($referral_accepted));
+        //end websocket
     }
 
     public function call($activity_id)
