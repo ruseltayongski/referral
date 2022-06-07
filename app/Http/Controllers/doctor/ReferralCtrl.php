@@ -8,6 +8,7 @@ use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Events\SocketReferralAccepted;
+use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Facility;
 use App\Feedback;
@@ -755,8 +756,10 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
 
-        if($track->status=='accepted' || $track->status=='rejected')
-            return 'denied';
+        if($track->status=='accepted' || $track->status=='rejected') {
+            Session::put('incoming_denied',true);
+            return false;
+        } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
             ->update([
@@ -777,9 +780,29 @@ class ReferralCtrl extends Controller
             'remarks' => $req->remarks,
             'status' => $track->status
         );
-        $act = Activity::create($data);
+        $activity = Activity::create($data);
 
-        return $act->id;
+        //start websocket
+        $latest_referred_or_redirected = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $patient = Patients::find($act->patient_id);
+        $referral_rejected = [
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname), //
+            "rejected_by" => ucfirst($user->fname).' '.ucfirst($user->lname), //
+            "rejected_by_facility" => Facility::find($activity->referred_to)->name,
+            "referred_from" => $activity->referred_from, //
+            "patient_code" => $activity->code, //
+            "date_rejected" => date('M d, Y h:i A',strtotime($activity->created_at)), //
+            "remarks" => $activity->remarks, //
+            "activity_id" => $latest_referred_or_redirected->id
+        ];
+        broadcast(new SocketReferralRejected($referral_rejected));
+        //end websocket
     }
 
     public function accept(Request $req,$track_id)
@@ -788,7 +811,7 @@ class ReferralCtrl extends Controller
         $track = Tracking::find($track_id);
         if($track->status=='accepted' || $track->status=='rejected') {
             Session::put('incoming_denied',true);
-            return Redirect::back();
+            return false;
         } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
@@ -814,6 +837,7 @@ class ReferralCtrl extends Controller
 
         $activity = Activity::create($data);
 
+        //start websocket
         $latest_activity = Activity::where("code",$track->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")

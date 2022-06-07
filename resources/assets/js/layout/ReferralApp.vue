@@ -66,6 +66,29 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });
             },
+            notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id) {
+                $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#rejected_progress"+patient_code+activity_id).addClass("bg-red");
+                $("#rejected_name"+patient_code+activity_id).html("Rejected");
+                $("#prepend_from_websocket"+patient_code).prepend('' +
+                    '<tr>\n' +
+                    '                                                    <td>'+date_rejected+'</td>\n' +
+                    '                                                    <td>\n' +
+                    '                                                        <span class="txtDoctor">'+rejected_by+'</span> of <span class="txtHospital">'+rejected_by_facility+'</span> recommended to redirect <span class="txtPatient">'+patient_name+'</span> to other facility.\n' +
+                    '                                                        <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '                                                        <br>\n' +
+                    '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
+                    '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
+                    '                                                            </button>\n' +
+                    '                                                                                                            </td>\n' +
+                    '                                                </tr>');
+                Lobibox.notify('error', {
+                    delay: false,
+                    title: 'Rejected',
+                    msg: patient_name+' was recommend to redirect by Dr. '+rejected_by+' of '+rejected_by_facility,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                });
+            },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -175,6 +198,13 @@
                 .listen('SocketReferralAccepted', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.date_accepted, event.payload.remarks)
+                    }
+                });
+
+            Echo.join('referral_rejected')
+                .listen('SocketReferralRejected', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id)
                     }
                 });
 

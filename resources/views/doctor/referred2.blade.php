@@ -276,8 +276,8 @@
                                         elseif($referred_cancelled_track)
                                             echo "bg-yellow";
                                         ?>
-                                    ">3</div>
-                                    <div class="step-name ">
+                                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}">3</div>
+                                    <div class="step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                                         <?php
                                         if($referred_rejected_track)
                                             echo 'Rejected';
@@ -362,13 +362,13 @@
                                         <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter
                                                 <?php
-                                            if($redirected_rejected_track)
-                                                echo "bg-red";
-                                            elseif($redirected_cancelled_track)
-                                                echo "bg-yellow";
-                                            ?>
-                                                    ">3</div>
-                                            <div class="step-name "><?php
+                                                    if($redirected_rejected_track)
+                                                        echo "bg-red";
+                                                    elseif($redirected_cancelled_track)
+                                                        echo "bg-yellow";
+                                                ?>
+                                                " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">3</div>
+                                            <div class="step-name" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
                                                 if($redirected_rejected_track)
                                                     echo 'Rejected';
                                                 elseif($redirected_cancelled_track)

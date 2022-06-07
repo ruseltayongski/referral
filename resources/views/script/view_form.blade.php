@@ -108,9 +108,10 @@
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/reject/') }}/"+form_id,
             type: 'POST',
-            success: function(tracking_id){
+            success: function(tracking_id) {
+                window.location.reload(false);
                 console.log(tracking_id);
-                if(tracking_id=='denied')
+                /*if(tracking_id=='denied')
                 {
                     window.location.reload(false);
                 }else{
@@ -133,8 +134,7 @@
                             window.location.reload(false);
                         },500);
                     });
-                }
-
+                }*/
             },
             error: function() {
                 $('#serverModal').modal();

@@ -30,3 +30,7 @@ Broadcast::channel('referral_seen', function ($referral_seen) {
 Broadcast::channel('referral_accepted', function ($referral_accepted) {
     return $referral_accepted;
 });
+
+Broadcast::channel('referral_rejected', function ($referral_rejected) {
+    return $referral_rejected;
+});
