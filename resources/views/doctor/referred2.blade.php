@@ -134,7 +134,6 @@
             @if(count($data) > 0)
                 @foreach($data as $row)
                     <?php
-
                     $type = ($row->type=='normal') ? 'success':'danger';
                     $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
 
@@ -257,6 +256,16 @@
                                                     ->orWhere("status","transferred");
                                             })
                                             ->get();
+
+                                //reset the variable in redirected if redirected not exist
+                                $redirected_accepted_track = 0;
+                                $redirected_rejected_track = 0;
+                                $redirected_cancelled_track = 0;
+                                $redirected_travel_track = 0;
+                                $redirected_arrived_track = 0;
+                                $redirected_admitted_track = 0;
+                                $redirected_discharged_track = 0;
+                                //end reset
                             ?>
                             <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
                             <div class="stepper-wrapper">
@@ -593,7 +602,7 @@
                                 </a>
                             @endif
                             @if($caller_md > 0)
-                                <a href="#callerModal" data-toggle="modal"
+                                <a href="#callerModal" data-toggle="modal" id="caller_button{{ $row->code }}"
                                    data-id="{{ $row->id }}"
                                    class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
                                     @if($caller_md>0)
@@ -601,9 +610,10 @@
                                     @endif
                                 </a>
                             @endif
-                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_arrived_track && $row->referred_from == $user->facility_id)
+                            <div id="html_websocket_departed{{ $row->code }}" style="display: inline;"></div>
+                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_travel_track && !$redirected_travel_track && !$referred_arrived_track && !$redirected_arrived_track && $row->referred_from == $user->facility_id)
                                 <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart </a>
+                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif
                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                     data-target="#feedbackModal"
@@ -681,15 +691,27 @@
                 title: "Success",
                 msg: "Successfully Redirected Patient!"
             });
-            <?php
-                Session::put("redirected_patient",false);
-            ?>
+            <?php Session::put("redirected_patient",false); ?>
+        @endif
+        @if(Session::get('departed'))
+            Lobibox.notify('success', {
+                title: "Success",
+                msg: "Successfully Departed Patient!"
+            });
+        <?php Session::put("departed",false); ?>
+        @endif
+        @if(Session::get('already_departed'))
+        Lobibox.alert("error",
+            {
+                msg: "This referral was already departed"
+            });
+        <?php Session::put("already_departed",false); ?>
         @endif
 
-        $('body').on('click','.btn-transfer',function(){
+        $('body').on('click','.btn-transfer',function() {
             $(".transportation_body").html(''); //clear data
             var id = $(this).data('id');
-            var url = "{{ url('doctor/referred/transfer') }}/"+id;
+            var url = "{{ url('doctor/referred/departed') }}/"+id;
             var transportation_all = <?php echo \App\ModeTransportation::get(); ?>;
             var select_transportation = "<select class='form-control' onchange='addOthers()' name='mode_transportation' id='mode_transportation' >";
             $.each(transportation_all,function($x,$y){

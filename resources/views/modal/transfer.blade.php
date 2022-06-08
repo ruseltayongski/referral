@@ -29,7 +29,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
-    function addOthers(){
+    function addOthers() {
         var transportation_val = $("#mode_transportation").val();
         console.log(transportation_val);
         if(transportation_val == 5){

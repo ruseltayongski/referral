@@ -38,3 +38,23 @@ Broadcast::channel('referral_rejected', function ($referral_rejected) {
 Broadcast::channel('referral_call', function ($referral_call) {
     return $referral_call;
 });
+
+Broadcast::channel('referral_departed', function ($referral_departed) {
+    return $referral_departed;
+});
+
+Broadcast::channel('referral_arrived', function ($referral_arrived) {
+    return $referral_arrived;
+});
+
+Broadcast::channel('referral_not_arrived', function ($referral_not_arrived) {
+    return $referral_not_arrived;
+});
+
+Broadcast::channel('referral_admitted', function ($referral_admitted) {
+    return $referral_admitted;
+});
+
+Broadcast::channel('referral_discharged', function ($referral_discharged) {
+    return $referral_discharged;
+});

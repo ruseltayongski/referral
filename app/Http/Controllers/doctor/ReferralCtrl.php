@@ -9,6 +9,7 @@ use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Events\SocketReferralAccepted;
 use App\Events\SocketReferralCall;
+use App\Events\SocketReferralDeparted;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Facility;
@@ -18,6 +19,7 @@ use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Icd;
 use App\Issue;
+use App\ModeTransportation;
 use App\Monitoring;
 use App\PatientForm;
 use App\Patients;
@@ -853,6 +855,7 @@ class ReferralCtrl extends Controller
             "accepting_facility_name" => Facility::find($latest_activity->referred_from)->name,
             "referred_from" => $latest_activity->referred_from,
             "patient_code" => $latest_activity->code,
+            "tracking_id" => $track_id,
             "activity_id" => $latest_activity->id,
             "date_accepted" => date('M d, Y h:i A',strtotime($activity->date_referred)),
             "remarks" => $activity->remarks
@@ -895,9 +898,7 @@ class ReferralCtrl extends Controller
         );
         $activity = Activity::create($data);
 
-        $doc = User::find($user->id);
-
-        $caller_by = ucwords(mb_strtolower($doc->fname))." ".ucwords(mb_strtolower($doc->lname));
+        $caller_by = ucwords(mb_strtolower($user->fname))." ".ucwords(mb_strtolower($user->lname));
         $caller_by_facility = Facility::find($track->referred_to)->name;
         $called_to_facility = Facility::find($track->referred_from)->name;
         $count_caller = Activity::where("code",$track->code)->where("status","=","calling")->count();
@@ -1386,7 +1387,7 @@ class ReferralCtrl extends Controller
         return redirect()->back();
     }
 
-    public function transferReferral(Request $req, $tracking_id){
+    public function departedReferral(Request $req, $tracking_id){
         $mode_transportation = $req->mode_transportation;
         $other_transportation = $req->other_transportation;
         if($mode_transportation == "5"){
@@ -1396,9 +1397,9 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
 
         $track = Tracking::find($tracking_id);
-        if($track->status=='travel')
-        {
-            return 'denied';
+        if($track->status=='travel') {
+            Session::put("already_departed",true);
+            return false;
         }
 
         $track->update([
@@ -1419,9 +1420,24 @@ class ReferralCtrl extends Controller
             'status' => 'travel'
         );
 
-        Activity::create($data);
+        $activity = Activity::create($data);
+        Session::put("departed",true);
 
-        return redirect()->back()->with('transferReferral','Successfully Transfer!');
+        //start websocket
+        $departed_by = ucwords(mb_strtolower($user->fname))." ".ucwords(mb_strtolower($user->lname));
+        $departed_by_facility = Facility::find($track->referred_to)->name;
+        $patient = Patients::find($track->patient_id);
+        $departed = [
+            "patient_code" => $track->code,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "departed_by" => $departed_by,
+            "departed_by_facility" => $departed_by_facility,
+            "referred_to" => $track->referred_to,
+            "mode_transportation" => $activity->remarks == 5 ? $other_transportation : ModeTransportation::find($activity->remarks)->transportation,
+            "departed_date" => date('M d, Y h:i A',strtotime($activity->created_at)),
+        ];
+        broadcast(new SocketReferralDeparted($departed));
+        return redirect()->back();
     }
 
     public function feedback($code){

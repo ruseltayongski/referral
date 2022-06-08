@@ -177,7 +177,7 @@ Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','d
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
 Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
-Route::post('doctor/referred/transfer/{id}','doctor\ReferralCtrl@transferReferral');
+Route::post('doctor/referred/departed/{id}','doctor\ReferralCtrl@departedReferral');
 Route::post('doctor/referred/search','doctor\ReferralCtrl@searchReferred');
 Route::match(["get","post"],'doctor/referred/track','doctor\ReferralCtrl@trackReferral');
 

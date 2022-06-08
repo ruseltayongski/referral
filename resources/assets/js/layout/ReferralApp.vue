@@ -50,8 +50,9 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, date_accepted, remarks) {
+            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle67525" style="display: table-row;">\n' +
                     '                                                            <td>'+date_accepted+'</td>\n' +
                     '                                                            <td>\n' +
@@ -105,6 +106,27 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });
             },
+            notifyReferralDeparted(patient_name, departed_by, departed_by_facility, departed_date, mode_transportation) {
+                Lobibox.notify('info', {
+                    delay: false,
+                    closeOnClick: false,
+                    title: 'Referral Departed',
+                    msg: patient_name+' was departed by Dr. '+departed_by+' of '+departed_by_facility+' and transported by '+mode_transportation+'<br>'+departed_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+            notifyReferralArrived() {
+
+            },
+            notifyReferralNotArrived() {
+
+            },
+            notifyReferralAdmitted() {
+
+            },
+            notifyReferralDischarged() {
+
+            },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -122,6 +144,14 @@
                     '            ReCo\n' +
                     '            <span class="badge bg-blue" id="reco_count'+code+'">'+count_reco+'</span>\n' +
                     '        </button>';
+            },
+            buttonDeparted(tracking_id) {
+                return '<a href="#transferModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>';
+            },
+            buttonTrack(patient_code) {
+                return '<br><a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+patient_code+'" class="btn btn-xs btn-warning" target="_blank">\n' +
+                    '                                                <i class="fa fa-stethoscope"></i> Track\n' +
+                    '                                            </a>';
             }
         },
         created() {
@@ -213,7 +243,7 @@
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
-                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.date_accepted, event.payload.remarks)
+                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks)
                     }
                 });
 
@@ -228,6 +258,13 @@
                 .listen('SocketReferralCall', (event) => {
                     if(event.payload.called_to === this.user.facility_id) {
                         this.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact)
+                    }
+                });
+
+            Echo.join('referral_departed')
+                .listen('SocketReferralDeparted', (event) => {
+                    if(event.payload.referred_to === this.user.facility_id) {
+                        this.notifyReferralDeparted(event.payload.patient_name, event.payload.departed_by, event.payload.departed_by_facility, event.payload.departed_date, event.payload.mode_transportation)
                     }
                 });
 
