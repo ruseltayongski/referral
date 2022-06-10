@@ -137,7 +137,7 @@
                         <ul>
                             <li>Expedite the referral from facility to facility</li>
                             <li>Lessen the number of times a patient is referred and transported back and forth from one facility to another</li>
-                            <li>Real-time and paperless transaction</li>
+                            <li>Real-time and paperless transaction with notification</li>
                             <li>If referral is not accepted within 30 minutes, the 711 agents will call the receiving facility for an update</li>
                         </ul>
                         <div class="text-center">
@@ -303,7 +303,7 @@
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-dna"></i></div>
                         <h4><a href="">Admit Patient</a></h4>
-                        <p>Allows to admit the patient as soon as the patient was arrived in the accepting facility.</p>
+                        <p>Allows to admit the patient as soon as the patient has arrived in the accepting facility.</p>
                     </div>
                 </div>
 
@@ -318,8 +318,8 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-notes-medical"></i></div>
-                        <h4><a href="">Tranfer Patient</a></h4>
-                        <p>Allows to transfer patient upon arrival in the accepting facility when the patient requested to be transfer to another hospital.</p>
+                        <h4><a href="">Transfer Patient</a></h4>
+                        <p>Allows to Transfer a patient upon arrival in the accepting facility if the patient requested to be transferred to another facility.</p>
                     </div>
                 </div>
 
@@ -940,7 +940,7 @@
                     </li>
 
                     <li data-aos="fade-up" data-aos-delay="200">
-                        <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">How can a user's reset a password? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                        <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">How can a user reset a password? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                         <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
                             <p>
                                 <b>For IT/ Admin Account:</b> To update account, send an email or call the 711 DOH CV CHD Health Line Tech Support Team. After setting up or updating your account, our Tech Support representative will contact you to provide an update on your reported issues.
@@ -1122,64 +1122,64 @@
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-1.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-1.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery1.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery1.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-2.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-2.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery2.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery2.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-3.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-3.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery3.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery3.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-4.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-4.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery4.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery4.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-5.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-5.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery51.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery51.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-6.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-6.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery61.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery61.jpg') }}" style="height: 280px;width: 700px;" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-7.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-7.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery7.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery7.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/gallery/gallery-8.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/gallery/gallery-8.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/gallery8.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/gallery8.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
