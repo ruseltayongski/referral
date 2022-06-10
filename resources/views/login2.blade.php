@@ -8,6 +8,7 @@
     <title>Referral System</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
+    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
 
     <!-- Favicons -->
     <link href="{{ asset('resources/img/favicon.png') }}" rel="icon">
@@ -663,7 +664,7 @@
         <div class="container">
 
             <div class="section-title">
-                <h2>System Implementation/Training</h2>
+                <h2>System Implementation / Training</h2>
                 <p>Responsible for conducting and facilitating training and orientation for the effective implementation and sustainability of the electronic referral system of local health facilities within the Region 7 network. Perform other tasks such as observing and gathering data about implementation in order to support continuous improvement of the system.</p>
             </div>
 
@@ -803,7 +804,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-6 mt-4">
+                {{--<div class="col-lg-6 mt-4">
                     <div class="member d-flex align-items-start">
                         <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/realmark_pic.png') }}" style="width: 165px;" class="img-fluid" alt=""></div>
                         <div class="member-info">
@@ -818,7 +819,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>--}}
 
             </div>
 
@@ -961,7 +962,7 @@
                         <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-5" class="collapsed">How can a user's account be deleted if he or she is no longer connected to the facility? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                         <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
                             <p>
-                                We cannot delete, however your CVeHRS/ eReferral Admin can manage the status of each user's account by signing in to their Admin Account. Just simply click the <b>"Manage Users"</b> menu (users directory will displayed); input the user name on <b>sear box</b> and click search button, once the name is displayed select username you wish to deactivate. Then go to <b>"status field"</b> and change to <b>"Inactive"</b>  then click <b>"Update Button"</b>, for changes to take effect. The user will no longer be able to log in to his/ her account after deactivated.
+                                We cannot delete, however your CVeHRS/ eReferral Admin can manage the status of each user's account by signing in to their Admin Account. Just simply click the <b>"Manage Users"</b> menu (users directory will displayed); input the user name on <b>search box</b> and click search button, once the name is displayed select username you wish to deactivate. Then go to <b>"status field"</b> and change to <b>"Inactive"</b>  then click <b>"Update Button"</b>, for changes to take effect. The user will no longer be able to log in to his/ her account after deactivation.
                             </p>
                         </div>
                     </li>
@@ -1112,7 +1113,7 @@
         <div class="container">
 
             <div class="section-title">
-                <h2>Conducting a Training</h2>
+                <h2>Our Journey</h2>
                 <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
             </div>
         </div>
