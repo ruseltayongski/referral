@@ -136,7 +136,7 @@
                         <h3>Why Choose E-REFERRAL?</h3>
                         <ul>
                             <li>Expedite the referral from facility to facility</li>
-                            <li>Lessen the number of times a patient is referred and transported back and forth from from one facility to another</li>
+                            <li>Lessen the number of times a patient is referred and transported back and forth from one facility to another</li>
                             <li>Real-time and paperless transaction</li>
                             <li>If referral is not accepted within 30 minutes, the 711 agents will call the receiving facility for an update</li>
                         </ul>
