@@ -18,7 +18,16 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login');
+        return view('login2');
+    }
+
+    public function index2()
+    {
+        if($login = Session::get('auth')){
+            return redirect($login->level);
+        }
+
+        return view('login2');
     }
 
     public function validateLogin(Request $req)

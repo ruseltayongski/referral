@@ -244,6 +244,7 @@ Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
 Route::get('login','LoginCtrl@index');
+Route::get('login2','LoginCtrl@index2');
 Route::get('login/update/token/{token}','LoginCtrl@updateToken');
 Route::post('login','LoginCtrl@validateLogin');
 Route::post('reset/password','LoginCtrl@resetPassword');
