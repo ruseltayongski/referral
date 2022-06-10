@@ -8,7 +8,6 @@
     <title>Referral System</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
-    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
 
     <!-- Favicons -->
     <link href="{{ asset('resources/img/favicon.png') }}" rel="icon">
@@ -28,7 +27,7 @@
     <link href="{{ asset('resources/medilab/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="{{ asset('resources/medilab/assets/css/style.css?version=3') }}" rel="stylesheet">
+    <link href="{{ asset('resources/medilab/assets/css/style.css?version=2') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -50,9 +49,17 @@
 </div>
 
 <!-- ======= Header ======= -->
+{{--<header id="header" class="fixed-top" style="background-color: #59ab91;">
+    <div class="container d-flex align-items-center">
+        <h1 class="logo me-auto"><a href="#">E-REFERRAL</a></h1>
+        <a href="#appointment" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make an</span> Appointment</a>
+    </div>
+</header>--}}<!-- End Header -->
+
+<!-- ======= Header ======= -->
 <header id="header" class="fixed-top" style="background-color: #59ab91;">
     <div class="container d-flex align-items-center">
-        <h1 class="logo me-auto d-xl-none"><a href="#"><img src="{{ asset('resources/img/doh.png') }}" style="width: 50px;"> E-REFERRAL REG 7</a></h1>
+        <h1 class="logo me-auto d-xl-none"><a href="#"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL REG 7</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -95,10 +102,10 @@
 
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center">
-    <div class="container">
+    <div class="container" style="margin-top: 150px;">
         <h1>Welcome to E-REFERRAL</h1>
         <h2>It is an online and real-time web-based application</h2>
-        <div class="row" style="margin-top: 40px;">
+        <div class="row" style="margin-top: 30px;">
             <div class="col-lg-7 d-flex align-items-stretch">
                 <div class="content">
                     {{--<a href="#about" class="btn-get-started scrollto">Get Started</a>--}}
@@ -112,8 +119,8 @@
                                 <input id="password" type="password" class="form-control" name="password" placeholder="Password">
                                 <span class="help-block">
                                 @if(Session::has('error'))
-                                    <strong class="text-danger">{{ Session::get('error') }}</strong><br><br>
-                                @endif
+                                        <strong class="text-danger">{{ Session::get('error') }}</strong><br><br>
+                                    @endif
                             </span>
                                 <button type="submit" class="btn-submit">Login</button>
                             </div>
@@ -122,11 +129,11 @@
                 </div>
             </div>
         </div>
+        {{--<a href="#about" class="btn-get-started scrollto">Get Started</a>--}}
     </div>
 </section><!-- End Hero -->
 
 <main id="main">
-
     <!-- ======= Why Us Section ======= -->
     <section id="why-us" class="why-us">
         <div class="container">
