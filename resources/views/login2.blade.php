@@ -102,7 +102,7 @@
 
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center">
-    <div class="container" style="margin-top: 150px;">
+    <div class="container" style="margin-top: 50px;">
         <h1>Welcome to E-REFERRAL</h1>
         <h2>It is an online and real-time web-based application</h2>
         <div class="row" style="margin-top: 30px;">
