@@ -503,7 +503,7 @@
 
                 <div class="col-lg-6">
                     <div class="member d-flex align-items-start">
-                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/tayong.r.jpg') }}" class="img-fluid" alt=""></div>
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/tayong_rusel.jpg') }}" class="img-fluid" alt=""></div>
                         <div class="member-info">
                             <h4>Rusel T. Tayong</h4>
                             <span>Information System Analyst II</span>
