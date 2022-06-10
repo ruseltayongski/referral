@@ -278,7 +278,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-heartbeat"></i></div>
-                        <h4><a href="">Refer Patient's</a></h4>
+                        <h4><a href="">Refer Patient</a></h4>
                         <p>Allows to refer a patient from one facility to another facility.</p>
                     </div>
                 </div>
@@ -286,7 +286,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-pills"></i></div>
-                        <h4><a href="">Accept Patient's</a></h4>
+                        <h4><a href="">Accept Patient</a></h4>
                         <p>Allows to accept patient referrals from the referring facility.</p>
                     </div>
                 </div>
@@ -294,7 +294,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-hospital-user"></i></div>
-                        <h4><a href="">Arrive Patient's</a></h4>
+                        <h4><a href="">Arrive Patient</a></h4>
                         <p>Indication that the patient is arrived in the accepting facility</p>
                     </div>
                 </div>
@@ -302,7 +302,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-dna"></i></div>
-                        <h4><a href="">Admit Patient's</a></h4>
+                        <h4><a href="">Admit Patient</a></h4>
                         <p>Allows to admit the patient as soon as the patient was arrived in the accepting facility.</p>
                     </div>
                 </div>
@@ -310,7 +310,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-wheelchair"></i></div>
-                        <h4><a href="">Discharge Patient's</a></h4>
+                        <h4><a href="">Discharge Patient</a></h4>
                         <p>Allows to update the patient status whenever the patient is already recovered and discharged from the hospital.</p>
                     </div>
                 </div>
@@ -318,7 +318,7 @@
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
                     <div class="icon-box">
                         <div class="icon"><i class="fas fa-notes-medical"></i></div>
-                        <h4><a href="">Tranfer Patient's</a></h4>
+                        <h4><a href="">Tranfer Patient</a></h4>
                         <p>Allows to transfer patient upon arrival in the accepting facility when the patient requested to be transfer to another hospital.</p>
                     </div>
                 </div>
