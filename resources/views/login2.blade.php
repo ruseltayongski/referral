@@ -52,7 +52,7 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-        <h1 class="logo me-auto"><a href="index.html"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL 7</a></h1>
+        <h1 class="logo me-auto"><a href="{{ asset("/") }}"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL 7</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -1054,12 +1054,12 @@
                     <div class="swiper-slide">
                         <div class="testimonial-wrap">
                             <div class="testimonial-item">
-                                <img src="{{ asset('resources/medilab/assets/img/testimonials/testimonials-1.jpg') }}" class="testimonial-img" alt="">
-                                <h3>Saul Goodman</h3>
-                                <h4>Ceo &amp; Founder</h4>
+                                <img src="{{ asset('resources/medilab/assets/img/testimonials/tagbilaran.jpg') }}" class="testimonial-img" alt="">
+                                <h3>Tagbilaran City Health Office</h3>
+                                <h4>RHU</h4>
                                 <p>
                                     <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                    Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
+                                    What is good about the system in that it is great way to reduce the waiting time of the patient at the emergency unit and we will know who is the referring unit or who accepted the patient with their contact numbers and communicate with them for lacking information or updates, however because not all is computer literate and not all using the system yet, we still have to let patient bring the paper form just in case they need to be rushed to the emergency as soon possible so they can be entertained. Hopefully, everything will be paperless and the healthcare system will be better.
                                     <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                 </p>
                             </div>
@@ -1069,12 +1069,12 @@
                     <div class="swiper-slide">
                         <div class="testimonial-wrap">
                             <div class="testimonial-item">
-                                <img src="{{ asset('resources/medilab/assets/img/testimonials/testimonials-2.jpg') }}" class="testimonial-img" alt="">
-                                <h3>Sara Wilsson</h3>
-                                <h4>Designer</h4>
+                                <img src="{{ asset('resources/medilab/assets/img/testimonials/gmph.jpg') }}" class="testimonial-img" alt="">
+                                <h3>Garcia Memorial Provincial Hospital</h3>
+                                <h4>Level 1</h4>
                                 <p>
                                     <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                    Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
+                                    When I attended the launching of the E-Referral a few months back. I was skeptical as to the outcome. Well, am I glad to be proven wrong. There are already tangible improvements as far as inter hospital/local health units referrals is concern. Although we encountered issue & problems along the way. It doesn't in any way hamper our services, with more health units implementing the system, patients will definitely benefit from such. As proper, coordinated medical inyervention between health institutions is achieved, resulting to a better health outcome especially patients.
                                     <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                 </p>
                             </div>
@@ -1084,12 +1084,12 @@
                     <div class="swiper-slide">
                         <div class="testimonial-wrap">
                             <div class="testimonial-item">
-                                <img src="{{ asset('resources/medilab/assets/img/testimonials/testimonials-3.jpg') }}" class="testimonial-img" alt="">
-                                <h3>Jena Karlis</h3>
-                                <h4>Store Owner</h4>
+                                <img src="{{ asset('resources/medilab/assets/img/testimonials/gallares.jpg') }}" class="testimonial-img" alt="">
+                                <h3>Gov. Celestino Gallares Memorial Hospital</h3>
+                                <h4>Level 3</h4>
                                 <p>
                                     <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                    Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
+                                    The E-Referral system had definitely leveled-up the patient transfer are being facilitated from one medical unit to another here in Bohol. For those patients transfer who have utilized this system, it has resulted in better coordination between healthcare workers and in better patient outcomes.
                                     <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                 </p>
                             </div>
@@ -1139,7 +1139,7 @@
 
             <div class="section-title">
                 <h2>Our Journey</h2>
-                <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+                <p>The Department of Health Central Visayas Center for Health Development (DOH CVCHD) conducts training, orientations, and meetings to create a safe environment by emphasizing precautions, safety, and welfare of everyone.</p>
             </div>
         </div>
 

@@ -185,7 +185,7 @@
 @include('modal.incoming')
 @include('modal.feedback')
 
-<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Go Top</button>
+<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i></button>
 <footer class="footer">
     <div class="container">
         <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 5.8 </p>
