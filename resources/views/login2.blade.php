@@ -49,21 +49,42 @@
 </div>
 
 <!-- ======= Header ======= -->
-{{--<header id="header" class="fixed-top" style="background-color: #59ab91;">
+<header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
-        <h1 class="logo me-auto"><a href="#">E-REFERRAL</a></h1>
+
+        <h1 class="logo me-auto"><a href="index.html"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL 7</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+        <nav id="navbar" class="navbar order-last order-lg-0">
+            <ul>
+                <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+                <li><a class="nav-link scrollto" href="#about">Tutorial</a></li>
+                {{--<li><a class="nav-link scrollto" href="#services">Services</a></li>
+                <li><a class="nav-link scrollto" href="#departments">Departments</a></li>--}}
+                <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
+                <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
+                <li><a class="nav-link scrollto" href="#training">Training</a></li>
+                <li><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
+                <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
+                <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+
         <a href="#appointment" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make an</span> Appointment</a>
+
     </div>
-</header>--}}<!-- End Header -->
+</header><!-- End Header -->
 
 <!-- ======= Header ======= -->
-<header id="header" class="fixed-top" style="background-color: #59ab91;">
+{{--<header id="header" class="fixed-top" style="background-color: #59ab91;">
     <div class="container d-flex align-items-center">
         <h1 class="logo me-auto d-xl-none"><a href="#"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL REG 7</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-        <!-- <nav id="navbar" class="navbar order-last order-lg-0">
+        <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
             <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
             <li><a class="nav-link scrollto" href="#about">About</a></li>
@@ -90,7 +111,7 @@
             <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav> -->
+        </nav>
         <!-- .navbar -->
 
         <!-- <a href="#appointment" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make an</span> Appointment</a> -->
@@ -98,7 +119,7 @@
             <img src="{{ asset('resources/img/referral_banner.png') }}" class="img-responsive">
         </div>
     </div>
-</header><!-- End Header -->
+</header>--}}<!-- End Header -->
 
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center">
@@ -499,7 +520,7 @@
     </section><!-- End Departments Section -->
 
     <!-- ======= Doctors Section ======= -->
-    <section id="doctors" class="doctors">
+    <section id="system_error" class="doctors">
         <div class="container">
 
             <div class="section-title">
@@ -584,7 +605,7 @@
 
 
     <!-- ======= Doctors Section ======= -->
-    <section id="doctors" class="doctors">
+    <section id="system_down" class="doctors">
         <div class="container">
 
             <div class="section-title">
@@ -667,7 +688,7 @@
         </div>
     </section><!-- End Doctors Section -->
 
-    <section id="doctors" class="doctors">
+    <section id="training" class="doctors">
         <div class="container">
 
             <div class="section-title">
@@ -750,7 +771,7 @@
         </div>
     </section><!-- End Doctors Section -->
 
-    <section id="doctors" class="doctors">
+    <section id="register_account" class="doctors">
         <div class="container">
 
             <div class="section-title">
@@ -833,7 +854,7 @@
         </div>
     </section><!-- End Doctors Section -->
 
-    <section id="doctors" class="doctors">
+    <section id="non-technical" class="doctors">
         <div class="container">
 
             <div class="section-title">
