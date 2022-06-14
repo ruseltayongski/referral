@@ -852,7 +852,7 @@ class ReferralCtrl extends Controller
         $referral_accepted = [
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
             "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
-            "accepting_facility_name" => Facility::find($latest_activity->referred_from)->name,
+            "accepting_facility_name" => Facility::find($user->facility_id)->name,
             "referred_from" => $latest_activity->referred_from,
             "patient_code" => $latest_activity->code,
             "tracking_id" => $track_id,
