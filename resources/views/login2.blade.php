@@ -63,7 +63,7 @@
                 <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
                 <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
                 <li><a class="nav-link scrollto" href="#training">Training</a></li>
-                <li class="d-lg-none d-xl-block"><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
+                <li class="d-lg-none d-xl-block d-xl-block"><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
                 <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
                 <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
             </ul>
@@ -142,7 +142,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="d-none d-lg-block d-xl-none">
+                    <div class="d-none d-lg-block d-xl-block">
                         <br><br>
                     </div>
                 </div>
