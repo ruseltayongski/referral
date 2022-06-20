@@ -402,8 +402,6 @@ class PatientCtrl extends Controller
         ];
         broadcast(new NewReferral($new_referral));
         //end websocket
-
-        return $tracking_id;
     }
 
     public function referPatient(Request $req,$type)
@@ -413,7 +411,6 @@ class PatientCtrl extends Controller
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
         $code = date('ymd').'-'.$user_code.'-'.date('His')."$user->facility_id"."$user->id";
         $unique_id = "$patient_id-$user->facility_id-".date('ymdHis');
-        $tracking_id = 0; //default declaration
         if($type==='normal')
         {
             Patients::where('id',$patient_id)
@@ -463,7 +460,7 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
-            $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
+            self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
         }
         else if($type==='pregnant')
         {
@@ -540,16 +537,10 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
-            $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+            self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
         Session::put("refer_patient",true);
-
-        return array(
-            'id' => $tracking_id,
-            'patient_code' => $code,
-            'referred_date' => date('M d, Y h:i A')
-        );
     }
 
     function referPatientWalkin(Request $req,$type)
