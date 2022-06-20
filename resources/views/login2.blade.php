@@ -1096,7 +1096,7 @@
                         </div>
                     </div><!-- End testimonial item -->
 
-                    <div class="swiper-slide">
+                    {{--<div class="swiper-slide">
                         <div class="testimonial-wrap">
                             <div class="testimonial-item">
                                 <img src="{{ asset('resources/medilab/assets/img/testimonials/testimonials-4.jpg') }}" class="testimonial-img" alt="">
@@ -1124,7 +1124,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div><!-- End testimonial item -->
+                    </div><!-- End testimonial item -->--}}
 
                 </div>
                 <div class="swiper-pagination"></div>
