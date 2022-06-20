@@ -27,7 +27,7 @@
     <link href="{{ asset('resources/medilab/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="{{ asset('resources/medilab/assets/css/style.css?version=2') }}" rel="stylesheet">
+    <link href="{{ asset('resources/medilab/assets/css/style.css?version=4') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -60,12 +60,10 @@
             <ul>
                 <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
                 <li><a class="nav-link scrollto" href="#about">Tutorial</a></li>
-                {{--<li><a class="nav-link scrollto" href="#services">Services</a></li>
-                <li><a class="nav-link scrollto" href="#departments">Departments</a></li>--}}
                 <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
                 <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
                 <li><a class="nav-link scrollto" href="#training">Training</a></li>
-                <li><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
+                <li class="d-lg-none d-xl-block"><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
                 <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
                 <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
             </ul>
@@ -124,10 +122,10 @@
         <h1>Welcome to E-REFERRAL</h1>
         <h2>It is an online and real-time web-based application</h2>
         <div class="row" style="margin-top: 30px;">
-            <div class="col-lg-7 d-flex align-items-stretch">
-                <div class="content">
+            <div class="col-lg-5 d-flex align-items-stretch">
+                <div class="content" style="width: 100%">
                     {{--<a href="#about" class="btn-get-started scrollto">Get Started</a>--}}
-                    <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit" >
+                    <form role="form" method="POST" action="{{ asset('login') }}" class="form-submit">
                         {{ csrf_field() }}
                         <input type="hidden" name="login_type" value="{{ url()->current() == 'https://cvchd7.com/login' ? 'cloud' : 'doh' }}">
                         <input type="hidden" name="login_link" value="{{ url()->current() }}">
@@ -144,6 +142,9 @@
                             </div>
                         </div>
                     </form>
+                    <div class="d-none d-lg-block d-xl-none">
+                        <br><br>
+                    </div>
                 </div>
             </div>
         </div>

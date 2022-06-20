@@ -209,7 +209,7 @@ h1, h2, h3, h4, h5, h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /**
-* Desktop Navigation 
+* Desktop Navigation
 */
 .navbar {
   padding: 0;
@@ -306,7 +306,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /**
-* Mobile Navigation 
+* Mobile Navigation
 */
 .mobile-nav-toggle {
   color: #2c4964;
@@ -1532,7 +1532,8 @@ section {
 
 /* RUSEL */
 .login-block {
-  width: 450px;
+  /*width: 450px;*/
+  width: 100%;
   padding: 20px;
   background: #fff;
   border-radius: 5px;
@@ -1605,11 +1606,20 @@ section {
 .login-block button:hover {
   background: #1977cc;
 }
+
+/*
 @media only screen and (max-width: 440px) {
   .login-block{
     width: 362px;
   }
 }
+*/
+
+/*@media (min-width: 768px) and (max-width: 1024px){
+  .login-block{
+    width: 12px;
+  }
+}*/
 
 .has-error input {
   border-style: solid;
