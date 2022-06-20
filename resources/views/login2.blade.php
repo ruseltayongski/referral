@@ -118,7 +118,7 @@
 
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center">
-    <div class="container" style="margin-top: 50px;">
+    <div class="container" id="hero_content_modify">
         <h1>Welcome to E-REFERRAL</h1>
         <h2>It is an online and real-time web-based application</h2>
         <div class="row" style="margin-top: 30px;">
@@ -129,7 +129,7 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="login_type" value="{{ url()->current() == 'https://cvchd7.com/login' ? 'cloud' : 'doh' }}">
                         <input type="hidden" name="login_link" value="{{ url()->current() }}">
-                        <div class="login-block">
+                        <div class="login-block" id="login_form_card">
                             <div class="{{ Session::has('error') ? ' has-error' : '' }}">
                                 <input id="username" autocomplete="off" type="text" placeholder="Username" class="form-control" name="username" value="{{ Session::get('username') }}">
                                 <input id="password" type="password" class="form-control" name="password" placeholder="Password">
