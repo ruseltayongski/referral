@@ -1024,7 +1024,7 @@ class ApiController extends Controller
         }
 
         $form->save();
-        foreach($req->icd_ids as $i) {
+        foreach($req->icd_code as $i) {
             if($icd10 = Icd10::where("code",$i)->first()) {
                 $icd = new Icd();
                 $icd->code = $form->code;
