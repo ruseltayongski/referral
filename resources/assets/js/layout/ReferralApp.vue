@@ -158,9 +158,12 @@
             console.log("VUE JS VERSION 3......")
             this.initializedAudio()
             this.increment_referral = count_referral
+            Echo.join('chat')
+                .here(users => {
+                    console.log("Websocket is connected...")
+                })
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log("Listen here....");
                     if(this.user.facility_id === event.payload.referred_to) {
                         this.playAudio()
                         this.increment_referral++
