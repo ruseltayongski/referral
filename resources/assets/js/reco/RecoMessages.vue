@@ -40,6 +40,10 @@
     }
 </script>
 <style lang="scss" scoped>
+    @import './css/main.scss';
+</style>
+<!--
+<style lang="scss" scoped>
     .feed {
         background: #f0f0f0;
         height: 100%;
@@ -284,4 +288,4 @@
     li {
         cursor: pointer;
     }
-</style>
+</style>-->

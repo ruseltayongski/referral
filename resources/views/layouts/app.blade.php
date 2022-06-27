@@ -95,7 +95,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default fixed-top">
         <div class="header" style="background-color:#2F4054;padding:8px;">
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
                 <div style="padding: 2px;">
                     <?php
@@ -114,7 +114,7 @@
                     <span class="title-info">Welcome , </span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-3">
                 <div style="padding: 2px;">
                     <?php
                     $user_logs = \App\Login::where("userId",$user->id)->orderBy("id","desc")->first();
@@ -126,12 +126,15 @@
                     <button href="#setLogoutTime" data-toggle="modal" class="btn btn-xs btn-danger" onclick="openLogoutTime();"><i class="fa clock-o"></i> Set Time to Logout</button>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-3">
                 <div style="padding: 2px;">
                     @if($user->level != 'vaccine')
                         <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
                     @endif
                 </div>
+            </div>
+            <div class="col-md-2">
+                <span class="title-info">WebSocket: </span> <span class="title-desc websocket_status">Connecting...</span>
             </div>
             <div class="clearfix"></div>
         </div>

@@ -33,12 +33,6 @@ class FeedbackCtrl extends Controller
 
     public function recoFetch(Request $request) {
         $user = Session::get('auth');
-        /*$search = $request->search;
-        $option_filter = $request->option_filter;*/
-        //$date = $request->date_range;
-        /*$facility_filter = $request->facility_filter;
-        $department_filter = $request->department_filter;*/
-
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
@@ -60,32 +54,15 @@ class FeedbackCtrl extends Controller
             ->leftJoin('tracking','tracking.code','=','activity.code')
             ->leftJoin('users','users.id','=',\DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
             ->join("feedback","feedback.code","=","activity.code")
+            ->leftJoin('feedback as fac2',function($join){
+                $join->on("feedback.code","=","fac2.code");
+                $join->on("feedback.id","<","fac2.id");
+            })
+            ->whereNull("fac2.id")
             ->where(function($query) use ($user) {
                 $query->where("activity.referred_from",$user->facility_id)
                         ->orWhere("activity.referred_to",$user->facility_id);
             });
-
-        /*if($search){
-            $data = $data->where(function($q) use ($search){
-                $q->where('patients.fname','like',"%$search%")
-                    ->orwhere('patients.mname','like',"%$search%")
-                    ->orwhere('patients.lname','like',"%$search%")
-                    ->orwhere('activity.code','like',"%$search%");
-            });
-        }*/
-
-        /*if($option_filter)
-            $data = $data->where('activity.status',$option_filter);
-        if($facility_filter)
-            $data = $data->where('activity.referred_to',$facility_filter);
-        if($department_filter)
-            $data = $data->where('activity.department_id',$department_filter);*/
-
-        /*if($date) {
-            $range = explode('-',str_replace(' ', '', $date));
-            $start = $range[0];
-            $end = $range[1];
-        }*/
 
         $start_date = Carbon::parse($start)->startOfDay();
         $end_date = Carbon::parse($end)->endOfDay();
@@ -96,10 +73,8 @@ class FeedbackCtrl extends Controller
                     ->orwhere('activity.status','redirected')
                     ->orwhere('activity.status','transferred');
             })
-            ->orderBy('activity.id','desc')
             ->groupBy("activity.code")
             ->get();
-
 
         return $data;
     }
@@ -123,7 +98,6 @@ class FeedbackCtrl extends Controller
             ->leftJoin('users','users.id','=','feedback.sender')
             ->where("activity.code",$code)
             ->groupBy("feedback.id")
-            ->orderBy('activity.id','desc')
             ->get();
 
         return $data;
