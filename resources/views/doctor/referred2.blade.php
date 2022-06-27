@@ -407,7 +407,7 @@
                             @endif
                             @if(count($activities) > 0)
                                 <?php $first = 0;
-                                $latest_act = \App\Activity::where('code',$row->code)->latest('updated_at')->first();
+                                    $latest_act = \App\Activity::where('code',$row->code)->latest('created_at')->first();
                                 ?>
                                 <div class="row">
                                     <div class="tracking col-sm-12">

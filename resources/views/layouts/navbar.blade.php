@@ -183,7 +183,8 @@
             @endif
             <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NOT ACCEPTED within 30 minutes </a></li>
             <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issues and Concerns </a></li>
-            <li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
+            {{--<li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>--}}
+            <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> Reco <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
         @endif
         <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
         <li class="dropdown">

@@ -575,4 +575,9 @@ Route::get('test/socket/transferred','ApiController@testSocketTransferred');
 Route::get('test/socket/reco','ApiController@testSocketReco');
 Route::get('activity/check/{code}/{facility_id}','ApiController@checkCode');
 
+//reco
+Route::get('reco','FeedbackCtrl@recoView');
+Route::get('reco/fetch','FeedbackCtrl@recoFetch');
+Route::get('reco/select/{code}','FeedbackCtrl@recoSelect');
+
 

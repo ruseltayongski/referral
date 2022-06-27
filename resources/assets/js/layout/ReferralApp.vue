@@ -160,6 +160,7 @@
             this.increment_referral = count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
+                    console.log("Listen here....");
                     if(this.user.facility_id === event.payload.referred_to) {
                         this.playAudio()
                         this.increment_referral++
