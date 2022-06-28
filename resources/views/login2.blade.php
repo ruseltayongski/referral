@@ -1181,32 +1181,32 @@
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/training/launching5.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/training/launching5.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/launch1.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/launch1.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/training/launching4.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/training/launching4.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/launch2.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/launch2.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/training/launching2.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/training/launching2.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/launch3.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/launch3.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
-                        <a href="{{ asset('resources/medilab/assets/img/training/launching1.jpg') }}" class="galelry-lightbox">
-                            <img src="{{ asset('resources/medilab/assets/img/training/launching1.jpg') }}" alt="" class="img-fluid">
+                        <a href="{{ asset('resources/medilab/assets/img/training/launch4.jpg') }}" class="galelry-lightbox">
+                            <img src="{{ asset('resources/medilab/assets/img/training/launch4.jpg') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
