@@ -46,8 +46,7 @@ class FeedbackCtrl extends Controller
             'facility.id as facility_id',
             'patients.id as patient_id',
             'patients.contact',
-            'users.level as user_level',
-            'activity.referring_md as wew'
+            'users.level as user_level'
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
             ->leftJoin('facility','facility.id','=','activity.referred_to')
@@ -84,7 +83,7 @@ class FeedbackCtrl extends Controller
         $data = Activity::select(
             'feedback.id',
             'feedback.message',
-            \DB::raw("if(users.facility_id = $facility_id, 'me', 'you') as position"),
+            \DB::raw("if(users.facility_id = $facility_id, 'right','left') as position"),
             \DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex',
