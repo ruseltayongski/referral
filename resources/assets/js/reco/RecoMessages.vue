@@ -8,8 +8,9 @@
             <div class="direct-chat-messages" style="height: 520px;" :id="select_rec.code">
                 <div v-for="message in messages" :key="message.id" class="direct-chat-msg" v-bind:class="message.position">
                     <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name" v-bind:class="{ 'pull-right' : message.position == 'right','pull-left' : message.position == 'left' }">Sarah Bullock</span>
-                        <span class="direct-chat-timestamp" v-bind:class="{ 'pull-left' : message.position == 'right','pull-right' : message.position == 'left' }">23 Jan 2:05 pm</span>
+                        <span class="direct-chat-name text-primary" v-bind:class="{ 'pull-right' : message.position == 'right','pull-left' : message.position == 'left' }">{{ message.facility_name }}</span><br>
+                        <span class="direct-chat-name" v-bind:class="{ 'pull-right' : message.position == 'right','pull-left' : message.position == 'left' }">{{ message.sender_name }}</span>
+                        <span class="direct-chat-timestamp" v-bind:class="{ 'pull-left' : message.position == 'right','pull-right' : message.position == 'left' }">{{ message.send_date }}</span>
                     </div>
                     <img class="direct-chat-img" :src="logo" alt="message user image">
                     <div class="direct-chat-text">

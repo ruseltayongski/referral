@@ -42,14 +42,11 @@ class FeedbackCtrl extends Controller
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             \DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
             'patients.sex',
-            'facility.name as facility_name',
-            'facility.id as facility_id',
             'patients.id as patient_id',
             'patients.contact',
             'users.level as user_level'
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
-            ->leftJoin('facility','facility.id','=','activity.referred_to')
             ->leftJoin('tracking','tracking.code','=','activity.code')
             ->leftJoin('users','users.id','=',\DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
             ->join("feedback","feedback.code","=","activity.code")
@@ -73,6 +70,7 @@ class FeedbackCtrl extends Controller
                     ->orwhere('activity.status','transferred');
             })
             ->groupBy("activity.code")
+            ->orderBy("activity.created_at","desc")
             ->get();
 
         return $data;
@@ -83,18 +81,23 @@ class FeedbackCtrl extends Controller
         $data = Activity::select(
             'feedback.id',
             'feedback.message',
+            \DB::raw("DATE_FORMAT(feedback.created_at, '%d %b %l:%i %p') as send_date"),
             \DB::raw("if(users.facility_id = $facility_id, 'right','left') as position"),
             \DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             'patients.sex',
             'patients.id as patient_id',
             'patients.contact',
-            'activity.referring_md as wew'
+            'facility.name as facility_name',
+            \DB::raw('CONCAT(
+                if(users.level="doctor","Dr. ",""),
+            users.fname," ",users.mname," ",users.lname) as sender_name')
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
             ->leftJoin('tracking','tracking.code','=','activity.code')
             ->leftJoin("feedback","feedback.code","=","activity.code")
             ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('facility','facility.id','=','users.facility_id')
             ->where("activity.code",$code)
             ->groupBy("feedback.id")
             ->get();
