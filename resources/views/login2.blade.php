@@ -27,7 +27,7 @@
     <link href="{{ asset('resources/medilab/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="{{ asset('resources/medilab/assets/css/style.css?version=5') }}" rel="stylesheet">
+    <link href="{{ asset('resources/medilab/assets/css/style.css?version=6') }}" rel="stylesheet">
 </head>
 
 <body>
