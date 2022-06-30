@@ -116,16 +116,16 @@
                 });
             },
             notifyReferralArrived() {
-
+                //code here
             },
             notifyReferralNotArrived() {
-
+                //code here
             },
             notifyReferralAdmitted() {
-
+                //code here
             },
             notifyReferralDischarged() {
-
+                //code here
             },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
@@ -222,9 +222,9 @@
                 .listen('SocketReco', (event) => {
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
-                        if(response.data && event.payload.sender_facility !== this.user.facility_id) {
+                        if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
                             console.log("New Reco")
-                            $(".reco-body").append(event.payload.feedback_receiver);
+                            $(".reco-body"+event.payload.code).append(event.payload.feedback_receiver);
                             try {
                                 let objDiv = document.getElementById(event.payload.code);
                                 objDiv.scrollTop = objDiv.scrollHeight;

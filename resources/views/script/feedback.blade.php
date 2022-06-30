@@ -42,9 +42,9 @@
         scrolldownFeedback(code);
     }
 
-    function viewReco(data){
+    function viewReco(data) {
         code = data.data("code");
-        console.log("viewReco");
+        console.log("viewRecos");
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
         $('#message').addClass("message input-"+code+"-{{ $user->id }}");
@@ -88,18 +88,7 @@
                 code : code
             },
             success: function(data) {
-                $(".reco-body").append(data);
-                /*feedbackRef.push({
-                    id: data,
-                    code: code,
-                    msg: msg,
-                    user_id: "{{ $user->id }}"
-                });
-                feedbackRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        feedbackRef.child(data.key).remove();
-                    },200);
-                });*/
+                $(".reco-body"+code).append(data);
                 var objDiv = document.getElementById(code);
                 objDiv.scrollTop = objDiv.scrollHeight;
                 $("#message").val('').attr('placeholder','Type Message...');

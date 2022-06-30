@@ -3,7 +3,7 @@
     $user = \Illuminate\Support\Facades\Session::get('auth');
     $session = 0;
 ?>
-<div class="reco-body">
+<div class="reco-body{{ $code }}">
     @if(count($data)>0)
         @foreach($data as $row)
             <?php

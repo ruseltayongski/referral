@@ -280,7 +280,11 @@ class ParamCtrl extends Controller
             "feedback_receiver" => $feedback_receiver,
             "feedback_count" => $feedback_count,
             "sender_facility" => $sender->facility_id,
-            "user_facility" => $user->facility_id
+            "user_facility" => $user->facility_id,
+            "message" => $msg,
+            "userid_sender" => $sender->id,
+            "name_sender" => $name_sender,
+            "facility_sender" => Facility::find($sender->facility_id)->name
         ];
     }
 

@@ -579,5 +579,7 @@ Route::get('activity/check/{code}/{facility_id}','ApiController@checkCode');
 Route::get('reco','FeedbackCtrl@recoView');
 Route::get('reco/fetch','FeedbackCtrl@recoFetch');
 Route::get('reco/select/{code}','FeedbackCtrl@recoSelect');
+Route::get('reco/new/{code}','FeedbackCtrl@recoNew');
+Route::post('reco/seen','FeedbackCtrl@recoSeen');
 
 
