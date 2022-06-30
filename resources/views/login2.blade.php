@@ -27,7 +27,7 @@
     <link href="{{ asset('resources/medilab/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="{{ asset('resources/medilab/assets/css/style.css?version=4') }}" rel="stylesheet">
+    <link href="{{ asset('resources/medilab/assets/css/style.css?version=5') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -42,8 +42,8 @@
         <div class="d-none d-lg-flex social-links align-items-center">
             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-            <!-- <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a> -->
+            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
         </div>
     </div>
 </div>
@@ -52,7 +52,7 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-        <h1 class="logo me-auto"><a href="{{ asset("/") }}"><img src="{{ asset('resources/img/doh.png') }}" style="width: 60px;"> E-REFERRAL 7</a></h1>
+        <h1 class="logo me-auto"><a href="{{ asset("/") }}"><img src="{{ asset('resources/img/doh.png') }}"> E-REFERRAL 7</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -142,9 +142,9 @@
                             </div>
                         </div>
                     </form>
-                    <div class="d-none d-lg-block d-xl-block">
+                    {{--<div class="d-none d-lg-block d-xl-block">
                         <br><br>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>

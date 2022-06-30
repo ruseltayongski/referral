@@ -3,8 +3,8 @@
         <li v-for="rec in reco" :key="rec.id" @click="selectReco(rec)" :class="{ 'selected': rec.code == selected }">
             <img :src="logo" class="doh_logo" alt="">
             <div>
-                <h2 v-if="rec.patient_name.length >= 27">
-                    <span :class="{ 'unread-reco': !rec.reco_seen }">{{ rec.patient_name.substring(0,27)+".." }}</span>
+                <h2 v-if="rec.patient_name.length >= 25">
+                    <span :class="{ 'unread-reco': !rec.reco_seen }">{{ rec.patient_name.substring(0,25)+".." }}</span>
                 </h2>
                 <h2 v-else>
                     <span :class="{ 'unread-reco': !rec.reco_seen }">{{ rec.patient_name }}</span>
