@@ -36,6 +36,7 @@
             return {
                 logo : String,
                 sender_name : "",
+                socket_message: "",
                 new_message : Object
             }
         },
@@ -71,6 +72,11 @@
                     }
                     this.messages.push(this.new_message)
                     this.scrolldownFeedback(this.select_rec.code)
+                    this.socket_message = {
+                        code : this.select_rec.code,
+                        message : str
+                    }
+                    axios.post('doctor/feedback', this.socket_message).then(response => {});
                 }
                 else {
                     Lobibox.alert("error",
@@ -92,7 +98,7 @@
             this.logo = $("#doh_logo").val()
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    if(event.payload.code === this.select_rec.code) {
+                    if(event.payload.code === this.select_rec.code && event.payload.userid_sender !== this.user.id) {
                         this.new_message = {
                             code: this.select_rec.code,
                             message: event.payload.message,
@@ -113,9 +119,8 @@
                             img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                         });
                     }
-                    else {
-                        this.$emit('listenreco', event.payload);
-                    }
+
+                    this.$emit('listenreco', event.payload);
                 });
         }
     }

@@ -34,13 +34,14 @@ class FeedbackCtrl extends Controller
 
     public function recoFetch() {
         $user = Session::get('auth');
-        $start = Carbon::now()->startOfMonth()->format('m/d/Y');
+        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(60)));;
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         $data = Activity::select(
             'feedback.message',
             'feedback.code',
             'feedback.id as reco_id',
+            'feedback.sender as userid_sender',
             'reco_seen.id as reco_seen',
             \DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -52,8 +53,8 @@ class FeedbackCtrl extends Controller
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
             ->leftJoin('tracking','tracking.code','=','activity.code')
-            ->leftJoin('users','users.id','=',\DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
             ->join("feedback","feedback.code","=","activity.code")
+            ->leftJoin('users','users.id','=','feedback.sender')
             ->leftJoin('feedback as fac2',function($join){
                 $join->on("feedback.code","=","fac2.code");
                 $join->on("feedback.id","<","fac2.id");
@@ -78,7 +79,7 @@ class FeedbackCtrl extends Controller
                     ->orwhere('activity.status','transferred');
             })
             ->groupBy("activity.code")
-            ->orderBy("activity.created_at","desc")
+            ->orderBy("feedback.created_at","desc")
             ->get();
 
         return $data;
@@ -91,6 +92,7 @@ class FeedbackCtrl extends Controller
             'feedback.message',
             'feedback.code',
             'feedback.id as reco_id',
+            'feedback.sender as userid_sender',
             'reco_seen.id as reco_seen',
             \DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -102,8 +104,8 @@ class FeedbackCtrl extends Controller
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
             ->leftJoin('tracking','tracking.code','=','activity.code')
-            ->leftJoin('users','users.id','=',\DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
             ->join("feedback","feedback.code","=","activity.code")
+            ->leftJoin('users','users.id','=','feedback.sender')
             ->leftJoin('reco_seen',function($join) use ($user) {
                 $join->on('reco_seen.reco_id','=','feedback.id')
                     ->where('reco_seen.seen_userid','=',$user->id);
@@ -158,12 +160,12 @@ class FeedbackCtrl extends Controller
     }
 
     public function recoSeen(Request $request) {
-        /*$reco_seen = new RecoSeen();
+        $reco_seen = new RecoSeen();
         $reco_seen->reco_id = $request->reco_id;
         $reco_seen->seen_userid = $request->seen_userid;
         $reco_seen->seen_facility_id = $request->seen_facility_id;
         $reco_seen->code = $request->code;
-        $reco_seen->save();*/
+        $reco_seen->save();
     }
 
 }
