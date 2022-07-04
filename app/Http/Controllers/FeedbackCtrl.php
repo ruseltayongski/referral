@@ -169,14 +169,14 @@ class FeedbackCtrl extends Controller
     }
 
     public function recoSeen1($code) {
-        /*$user = Session::get('auth');
+        $user = Session::get('auth');
         $reco_id = Feedback::where("code",$code)->orderBy("id","desc")->first()->id;
         $reco_seen = new RecoSeen();
         $reco_seen->reco_id = $reco_id;
         $reco_seen->seen_userid = $user->id;
         $reco_seen->seen_facility_id = $user->facility_id;
         $reco_seen->code = $code;
-        $reco_seen->save();*/
+        $reco_seen->save();
     }
 
 }
