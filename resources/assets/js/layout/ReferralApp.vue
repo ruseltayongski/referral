@@ -70,7 +70,7 @@
             notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#rejected_progress"+patient_code+activity_id).addClass("bg-red");
-                $("#rejected_name"+patient_code+activity_id).html("Rejected");
+                $("#rejected_name"+patient_code+activity_id).html("Declined");
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
                     '                                                    <td>'+date_rejected+'</td>\n' +
@@ -85,7 +85,7 @@
                     '                                                </tr>');
                 Lobibox.notify('error', {
                     delay: false,
-                    title: 'Rejected',
+                    title: 'Declined',
                     msg: patient_name+' was recommend to redirect by Dr. '+rejected_by+' of '+rejected_by_facility,
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });

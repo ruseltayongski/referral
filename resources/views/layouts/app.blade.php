@@ -97,7 +97,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default fixed-top">
         <div class="header" style="background-color:#2F4054;padding:8px;">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
                 <div style="padding: 2px;">
                     <?php
@@ -113,7 +113,7 @@
                         $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
 
                     ?>
-                    <span class="title-info">Welcome , </span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
+                    <span class="text-orange">Welcome , </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
                 </div>
             </div>
             <div class="col-md-3">
@@ -124,19 +124,19 @@
                     $user_logs->logout == "0000-00-00 00:00:00" ? $logout_time = explode(' ',$user_logs->login)[0].' 23:59:59' : $logout_time = $user_logs->logout;
                     $logout_time = date("M d, Y H:i:s",strtotime($logout_time));
                     ?>
-                    <span class="title-info">Logout Time: </span> <strong class="text-red" id="logout_time"> </strong>&nbsp;
+                    <span class="text-orange">Logout Time: </span> <span class="text-red" id="logout_time"> </span>&nbsp;
                     <button href="#setLogoutTime" data-toggle="modal" class="btn btn-xs btn-danger" onclick="openLogoutTime();"><i class="fa clock-o"></i> Set Time to Logout</button>
                 </div>
             </div>
             <div class="col-md-3">
                 <div style="padding: 2px;">
                     @if($user->level != 'vaccine')
-                        <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
+                        <span style="color: white">{{ \App\Facility::find($user->facility_id)->name }}</span>
                     @endif
                 </div>
             </div>
-            <div class="col-md-2">
-                <span class="title-info">WebSocket: </span> <span class="title-desc websocket_status">Connecting...</span>
+            <div class="col-md-3">
+                <span class="text-orange">WebSocket: </span> <span class="websocket_status" style="color: white">Connecting...</span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -153,7 +153,7 @@
                 @endif
             </div>
         </div>
-        <div class="container-fluid">
+        <div class="container">
             @include('layouts.navbar')
         </div>
     </nav>

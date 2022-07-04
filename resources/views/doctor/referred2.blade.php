@@ -289,7 +289,7 @@
                                     <div class="step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                                         <?php
                                         if($referred_rejected_track)
-                                            echo 'Rejected';
+                                            echo 'Declined';
                                         elseif($referred_cancelled_track)
                                             echo 'Cancelled';
                                         else
@@ -379,7 +379,7 @@
                                                 " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">3</div>
                                             <div class="step-name" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
                                                 if($redirected_rejected_track)
-                                                    echo 'Rejected';
+                                                    echo 'Declined';
                                                 elseif($redirected_cancelled_track)
                                                     echo 'Cancelled';
                                                 else
