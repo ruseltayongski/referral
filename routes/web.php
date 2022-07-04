@@ -278,7 +278,9 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 
-Route::get('sample','HomeCtrl@sample');
+Route::get('sample',function(){
+    return view('sample');
+});
 
 //reset password
 Route::get('resetPassword/{username}',function($username){
@@ -581,5 +583,6 @@ Route::get('reco/fetch','FeedbackCtrl@recoFetch');
 Route::get('reco/select/{code}','FeedbackCtrl@recoSelect');
 Route::get('reco/new/{code}','FeedbackCtrl@recoNew');
 Route::post('reco/seen','FeedbackCtrl@recoSeen');
+Route::get('reco/seen1/{code}','FeedbackCtrl@recoSeen1');
 
 

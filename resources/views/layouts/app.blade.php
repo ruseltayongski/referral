@@ -1,7 +1,8 @@
+{{--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">--}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,6 +44,7 @@
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
+
     <title>
         @yield('title','Home')
     </title>
@@ -213,6 +215,9 @@
 
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}?v=1"></script>
+
+<!-- tinymce -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
 
 <script src="{{ url('resources/plugin/daterangepicker_old/moment.min.js') }}"></script>
 <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>

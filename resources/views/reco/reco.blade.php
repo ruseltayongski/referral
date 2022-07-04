@@ -4,7 +4,6 @@
     <?php $user = Session::get('auth'); ?>
     <!-- VUE Scripts -->
     <script src="{{ asset('public/js/app_reco.js?version=').date('YmdHis') }}" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
     <input type="hidden" id="doh_logo" value="{{ asset('resources/img/doh.png') }}">
     <input type="hidden" id="receiver_pic" value="{{ asset('resources/img/receiver.png') }}">
     <input type="hidden" id="sender_pic" value="{{ asset('resources/img/sender.png') }}">
