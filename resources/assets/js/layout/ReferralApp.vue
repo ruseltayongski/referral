@@ -8,7 +8,8 @@
         },
         data(){
             return {
-                increment_referral: Number
+                increment_referral: Number,
+                reco_count : $("#reco_count_val").val()
             }
         },
         methods: {
@@ -223,7 +224,8 @@
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
                         if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
-                            console.log("New Reco")
+                            this.reco_count++
+                            $("#reco_count").html(this.reco_count)
                             $(".reco-body"+event.payload.code).append(event.payload.feedback_receiver);
                             try {
                                 let objDiv = document.getElementById(event.payload.code);

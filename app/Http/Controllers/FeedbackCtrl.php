@@ -85,6 +85,45 @@ class FeedbackCtrl extends Controller
         return $data;
     }
 
+    public static function recoCount() {
+        $user = Session::get('auth');
+        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(60)));;
+        $end = Carbon::now()->endOfDay()->format('m/d/Y');
+
+        $start_date = Carbon::parse($start)->startOfDay();
+        $end_date = Carbon::parse($end)->endOfDay();
+
+        $data = Activity::leftJoin('patients','patients.id','=','activity.patient_id')
+            ->leftJoin('tracking','tracking.code','=','activity.code')
+            ->join("feedback","feedback.code","=","activity.code")
+            ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('feedback as fac2',function($join){
+                $join->on("feedback.code","=","fac2.code");
+                $join->on("feedback.id","<","fac2.id");
+            })
+            ->leftJoin('reco_seen',function($join) use ($user) {
+                $join->on('reco_seen.reco_id','=','feedback.id')
+                    ->where('reco_seen.seen_userid','=',$user->id);
+            })
+            ->whereNull("fac2.id")
+            ->whereNull("reco_seen.id")
+            ->where('feedback.sender','!=',$user->id)
+            ->where(function($query) use ($user) {
+                $query->where("activity.referred_from",$user->facility_id)
+                    ->orWhere("activity.referred_to",$user->facility_id);
+            })->whereBetween('activity.created_at',[$start_date,$end_date])
+            ->where(function($q){
+                $q->where('activity.status','referred')
+                    ->orwhere('activity.status','redirected')
+                    ->orwhere('activity.status','transferred');
+            })
+            ->groupBy("activity.code")
+            ->orderBy("feedback.created_at","desc")
+            ->get();
+
+        return count($data);
+    }
+
     public function recoNew($code) {
         $user = Session::get('auth');
 

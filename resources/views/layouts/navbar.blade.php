@@ -9,11 +9,9 @@
 </div>
 <?php
     $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
-    $count_chat = \App\Message::where('to', $user->id)
-        ->where('read', false)
-        ->groupBy('to')
-        ->count();
+    $reco_count = \App\Http\Controllers\FeedbackCtrl::recoCount();
 ?>
+<input type="hidden" id="reco_count_val" value="{{ $reco_count }}">
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
     <ul class="nav navbar-nav">
         @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse')
@@ -184,7 +182,7 @@
             <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NA within 30 minutes </a></li>
             <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> Issues and Concerns </a></li>
             {{--<li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>--}}
-            <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>
+            <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
         @endif
         <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
         <li class="dropdown">
