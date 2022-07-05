@@ -34,7 +34,7 @@ class FeedbackCtrl extends Controller
 
     public function recoFetch() {
         $user = Session::get('auth');
-        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(10)));;
+        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(7)));;
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         $data = Activity::select(
@@ -87,7 +87,7 @@ class FeedbackCtrl extends Controller
 
     public static function recoCount() {
         $user = Session::get('auth');
-        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(10)));;
+        $start = date('m/d/Y',strtotime(Carbon::now()->subDays(7)));;
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         $start_date = Carbon::parse($start)->startOfDay();

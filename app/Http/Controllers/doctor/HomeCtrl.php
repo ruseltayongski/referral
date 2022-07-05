@@ -96,7 +96,7 @@ class HomeCtrl extends Controller
 
     public function index1()
     {
-        ParamCtrl::lastLogin();
+        //ParamCtrl::lastLogin();
         $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
         return view('doctor.home1',[
             "date_start" => date('F d,Y',strtotime($date_start)),
