@@ -88,17 +88,17 @@
         data() {
             return {
                 incoming_statistics : Object,
-                accept_percent : Number,
-                seen_only : Number,
-                no_action : Number
+                accept_percent : 0,
+                seen_only : 0,
+                no_action : 0
             }
         },
         created(){
+            this.proceedForm()
             this.barChart()
             this.optionPerDepartment()
             this.optionPerActivity()
             this.optionLastTransaction()
-            this.proceedForm()
         },
         methods : {
             proceedForm() {
@@ -107,7 +107,7 @@
                         msg: "Do you want to proceed to referral form?",
                         callback: function ($this, type, ev) {
                             if (type === 'yes')
-                                window.location.replace("{{ asset('doctor/patient') }}");
+                                window.location.replace("doctor/patient");
                         }
                     });
                 }
@@ -173,10 +173,11 @@
                 axios.get('doctor/option/per/activity').then(response => {
                     //for statistics
                     this.incoming_statistics = response.data
-                    this.accept_percent = (this.incoming_statistics.accepted / this.incoming_statistics.incoming) * 100;
-                    this.seen_only = this.incoming_statistics.seen_total - this.incoming_statistics.seen_accepted_redirected;
-                    this.no_action = this.incoming_statistics.incoming - (this.incoming_statistics.accepted + this.incoming_statistics.redirected + this.seen_only);
-                    this.no_action = this.no_action > 0 ? this.no_action : 0;
+                    this.accept_percent = (this.incoming_statistics.accepted / this.incoming_statistics.incoming) * 100
+                    this.accept_percent = this.accept_percent.toFixed(2)
+                    this.seen_only = this.incoming_statistics.seen_total - this.incoming_statistics.seen_accepted_redirected
+                    this.no_action = this.incoming_statistics.incoming - (this.incoming_statistics.accepted + this.incoming_statistics.redirected + this.seen_only)
+                    this.no_action = this.no_action > 0 ? this.no_action : 0
                     //
                     let options_activity = {
                         title: {
