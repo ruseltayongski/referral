@@ -173,7 +173,7 @@
                                 ? 'container-fluid'
                                 : 'container'
                 }}" >
-        <div class="loading"></div>
+            <div class="loading"></div>
             <div id="app_layout">
                 <referral-app :user="{{ Session::get('auth') }}" :count_referral="{{ (int)$count }}"></referral-app>
             </div>

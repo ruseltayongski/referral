@@ -72,7 +72,7 @@ class FeedbackCtrl extends Controller
         $start_date = Carbon::parse($start)->startOfDay();
         $end_date = Carbon::parse($end)->endOfDay();
 
-        $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
+        $data = $data->whereBetween('feedback.created_at',[$start_date,$end_date])
             ->where(function($q){
                 $q->where('activity.status','referred')
                     ->orwhere('activity.status','redirected')
@@ -111,7 +111,7 @@ class FeedbackCtrl extends Controller
             ->where(function($query) use ($user) {
                 $query->where("activity.referred_from",$user->facility_id)
                     ->orWhere("activity.referred_to",$user->facility_id);
-            })->whereBetween('activity.created_at',[$start_date,$end_date])
+            })->whereBetween('feedback.created_at',[$start_date,$end_date])
             ->where(function($q){
                 $q->where('activity.status','referred')
                     ->orwhere('activity.status','redirected')
