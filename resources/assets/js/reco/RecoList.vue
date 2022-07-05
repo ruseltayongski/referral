@@ -11,7 +11,7 @@
                 </h2>
                 <h3 v-if="rec.message.length >= 27">
                     <span class="status green"></span>&nbsp;
-                    <span :class="{ 'text-blue unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }">{{ rec.message.substring(0,27)+".." }}</span>
+                    <span :class="{ 'text-blue unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }" >{{ rec.message.substring(0,27)+'..' }}</span>
                 </h3>
                 <h3 v-else>
                     <span class="status green"></span>&nbsp;
@@ -43,6 +43,18 @@
 
                 this.selected = rec.code
                 this.$emit('selectrec', rec);
+            }
+        },
+        computed: {
+            strippedContent() {
+                let regex = /(<([^>]+)>)/ig;
+                return this.reco.content.rendered.replace(regex, "");
+            },
+            rtT: function () {
+                return function (salut) {
+                    let regex = /(<([^>]+)>)/ig;
+                    return salut.replace(regex, "")
+                };
             }
         }
     }
