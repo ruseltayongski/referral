@@ -151,7 +151,11 @@ Route::get('support/chat/messages/reply/{id}','support\ChatCtrl@reply');
 Route::get('support/chat/sample','support\ChatCtrl@sample');
 
 /*DOCTOR Pages*/
-Route::get('doctor','doctor\HomeCtrl@index');
+Route::get('doctor','doctor\HomeCtrl@index1');
+Route::get('doctor/monthly/report','doctor\HomeCtrl@doctorMonthlyReport');
+Route::get('doctor/option/per/department','doctor\HomeCtrl@optionPerDepartment');
+Route::get('doctor/option/per/activity','doctor\HomeCtrl@optionPerActivity');
+Route::get('doctor/option/last/transaction','doctor\HomeCtrl@optionLastTransaction');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
