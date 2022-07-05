@@ -116,7 +116,7 @@ Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
 //SUPPORT Page
-Route::get('support','doctor\HomeCtrl@index');
+Route::get('support','doctor\HomeCtrl@index1');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
 
 Route::get('support/users','support\UserCtrl@index');
