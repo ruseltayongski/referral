@@ -8,7 +8,8 @@
         },
         data(){
             return {
-                increment_referral: Number
+                increment_referral: Number,
+                reco_count : $("#reco_count_val").val()
             }
         },
         methods: {
@@ -70,7 +71,7 @@
             notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#rejected_progress"+patient_code+activity_id).addClass("bg-red");
-                $("#rejected_name"+patient_code+activity_id).html("Rejected");
+                $("#rejected_name"+patient_code+activity_id).html("Declined");
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
                     '                                                    <td>'+date_rejected+'</td>\n' +
@@ -85,7 +86,7 @@
                     '                                                </tr>');
                 Lobibox.notify('error', {
                     delay: false,
-                    title: 'Rejected',
+                    title: 'Declined',
                     msg: patient_name+' was recommend to redirect by Dr. '+rejected_by+' of '+rejected_by_facility,
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });
@@ -116,16 +117,16 @@
                 });
             },
             notifyReferralArrived() {
-
+                //code here
             },
             notifyReferralNotArrived() {
-
+                //code here
             },
             notifyReferralAdmitted() {
-
+                //code here
             },
             notifyReferralDischarged() {
-
+                //code here
             },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
@@ -222,9 +223,10 @@
                 .listen('SocketReco', (event) => {
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
-                        if(response.data && event.payload.sender_facility !== this.user.facility_id) {
-                            console.log("New Reco")
-                            $(".reco-body").append(event.payload.feedback_receiver);
+                        if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
+                            this.reco_count++
+                            $("#reco_count").html(this.reco_count)
+                            $(".reco-body"+event.payload.code).append(event.payload.feedback_receiver);
                             try {
                                 let objDiv = document.getElementById(event.payload.code);
                                 objDiv.scrollTop = objDiv.scrollHeight;

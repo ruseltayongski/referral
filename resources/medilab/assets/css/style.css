@@ -1623,16 +1623,11 @@ section {
 #hero_content_modify {
   margin-top: 50px;
 }
-@media (min-width: 500px) and (max-width: 1024px) {
-  #hero_content_modify {
-    margin-top: 100px;
+
+@media (min-width: 500px) and (max-width: 1366px) {
+  #hero {
+    height: 120vh;
   }
-  #why-us {
-    margin-top: 100px;
-  }
-  /*#login_form_card {
-    margin-bottom: 400px;
-  }*/
 }
 
 

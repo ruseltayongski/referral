@@ -1,4 +1,12 @@
 <script>
+    tinymce.init({
+        selector: ".mytextarea1",
+        plugins: "emoticons autoresize",
+        toolbar: "emoticons",
+        toolbar_location: "bottom",
+        menubar: false,
+        statusbar: false
+    });
     $(".select2").select2({ width: '100%' });
 
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";

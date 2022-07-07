@@ -116,7 +116,7 @@ Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
 //SUPPORT Page
-Route::get('support','doctor\HomeCtrl@index');
+Route::get('support','doctor\HomeCtrl@index1');
 Route::get('support/dashboard/count','support\HomeCtrl@count');
 
 Route::get('support/users','support\UserCtrl@index');
@@ -151,7 +151,11 @@ Route::get('support/chat/messages/reply/{id}','support\ChatCtrl@reply');
 Route::get('support/chat/sample','support\ChatCtrl@sample');
 
 /*DOCTOR Pages*/
-Route::get('doctor','doctor\HomeCtrl@index');
+Route::get('doctor','doctor\HomeCtrl@index1');
+Route::get('doctor/monthly/report','doctor\HomeCtrl@doctorMonthlyReport');
+Route::get('doctor/option/per/department','doctor\HomeCtrl@optionPerDepartment');
+Route::get('doctor/option/per/activity','doctor\HomeCtrl@optionPerActivity');
+Route::get('doctor/option/last/transaction','doctor\HomeCtrl@optionLastTransaction');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
@@ -278,7 +282,9 @@ Route::get('create/admin','ParamCtrl@admin');
 //});
 //
 
-Route::get('sample','HomeCtrl@sample');
+Route::get('sample',function(){
+    return view('sample');
+});
 
 //reset password
 Route::get('resetPassword/{username}',function($username){
@@ -579,5 +585,8 @@ Route::get('activity/check/{code}/{facility_id}','ApiController@checkCode');
 Route::get('reco','FeedbackCtrl@recoView');
 Route::get('reco/fetch','FeedbackCtrl@recoFetch');
 Route::get('reco/select/{code}','FeedbackCtrl@recoSelect');
+Route::get('reco/new/{code}','FeedbackCtrl@recoNew');
+Route::post('reco/seen','FeedbackCtrl@recoSeen');
+Route::get('reco/seen1/{code}','FeedbackCtrl@recoSeen1');
 
 

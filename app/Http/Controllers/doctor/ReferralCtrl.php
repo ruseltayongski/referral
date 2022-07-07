@@ -1474,7 +1474,8 @@ class ReferralCtrl extends Controller
             'users.lname as lname',
             'facility.name as facility',
             'facility.abbr as abbr',
-            'feedback.created_at as date'
+            'feedback.created_at as date',
+            'feedback.code'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
             ->leftJoin('facility','facility.id','=','users.facility_id')
@@ -1483,7 +1484,8 @@ class ReferralCtrl extends Controller
             ->get();
 
         return view('doctor.feedback',[
-            'data' => $data
+            'data' => $data,
+            'code' => $code
         ]);
     }
 
@@ -1575,7 +1577,6 @@ class ReferralCtrl extends Controller
         );
 
         Feedback::create($data);
-
         //reco websocket
         $reco_json = ParamCtrl::feedbackContent($req->code,$user->id,$req->message);
         broadcast(new SocketReco($reco_json));

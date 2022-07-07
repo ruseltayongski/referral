@@ -1,7 +1,8 @@
+{{--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">--}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,6 +44,7 @@
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
+
     <title>
         @yield('title','Home')
     </title>
@@ -95,7 +97,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default fixed-top">
         <div class="header" style="background-color:#2F4054;padding:8px;">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
                 <div style="padding: 2px;">
                     <?php
@@ -111,7 +113,7 @@
                         $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
 
                     ?>
-                    <span class="title-info">Welcome , </span> <span class="title-desc">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
+                    <span class="text-orange">Welcome , </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
                 </div>
             </div>
             <div class="col-md-3">
@@ -122,19 +124,19 @@
                     $user_logs->logout == "0000-00-00 00:00:00" ? $logout_time = explode(' ',$user_logs->login)[0].' 23:59:59' : $logout_time = $user_logs->logout;
                     $logout_time = date("M d, Y H:i:s",strtotime($logout_time));
                     ?>
-                    <span class="title-info">Logout Time: </span> <strong class="text-red" id="logout_time"> </strong>&nbsp;
+                    <span class="text-orange">Logout Time: </span> <span class="text-red" id="logout_time"> </span>&nbsp;
                     <button href="#setLogoutTime" data-toggle="modal" class="btn btn-xs btn-danger" onclick="openLogoutTime();"><i class="fa clock-o"></i> Set Time to Logout</button>
                 </div>
             </div>
             <div class="col-md-3">
                 <div style="padding: 2px;">
                     @if($user->level != 'vaccine')
-                        <span class="title-desc">{{ \App\Facility::find($user->facility_id)->name }}</span>
+                        <span style="color: white">{{ \App\Facility::find($user->facility_id)->name }}</span>
                     @endif
                 </div>
             </div>
-            <div class="col-md-2">
-                <span class="title-info">WebSocket: </span> <span class="title-desc websocket_status">Connecting...</span>
+            <div class="col-md-3">
+                <span class="text-orange">WebSocket: </span> <span class="websocket_status" style="color: white">Connecting...</span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -151,7 +153,7 @@
                 @endif
             </div>
         </div>
-        <div class="container-fluid">
+        <div class="container">
             @include('layouts.navbar')
         </div>
     </nav>
@@ -171,7 +173,7 @@
                                 ? 'container-fluid'
                                 : 'container'
                 }}" >
-        <div class="loading"></div>
+            <div class="loading"></div>
             <div id="app_layout">
                 <referral-app :user="{{ Session::get('auth') }}" :count_referral="{{ (int)$count }}"></referral-app>
             </div>
@@ -191,7 +193,7 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i></button>
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 5.8 </p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 5.9 </p>
     </div>
 </footer>
 
@@ -213,6 +215,9 @@
 
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset('resources/plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}?v=1"></script>
+
+<!-- tinymce -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
 
 <script src="{{ url('resources/plugin/daterangepicker_old/moment.min.js') }}"></script>
 <script src="{{ url('resources/plugin/daterangepicker_old/daterangepicker.js') }}"></script>

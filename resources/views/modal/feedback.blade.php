@@ -28,7 +28,7 @@
                         {{ csrf_field() }}
                         <input type="hidden" id="current_code" name="code" />
                         <div class="input-group">
-                            <textarea name="message" id="message" rows="2" required placeholder="Type Message ..." class="form-control"></textarea>
+                            <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-success btn-lg">Send</button>
                             </span>
@@ -41,7 +41,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 
 <div class="modal fade" role="dialog" id="feedbackDOH">
     <div class="modal-dialog modal-sm" role="document">
@@ -101,3 +100,4 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+

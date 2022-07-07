@@ -5,7 +5,7 @@
     var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
 
-    /*$('.btn-feedback').on('click',function () {
+    $('.btn-feedback').on('click',function () {
         console.log("feedback");
         code = $(this).data('code');
         $('.feedback_code').html(code);
@@ -22,7 +22,7 @@
         });
 
         $("#current_code").val(code);
-    });*/
+    });
 
     function scrolldownFeedback(code){
         console.log(code);
@@ -42,9 +42,20 @@
         scrolldownFeedback(code);
     }
 
-    function viewReco(data){
+    function viewReco(data) {
         code = data.data("code");
-        console.log("viewReco");
+        console.log("viewRecos");
+
+        var reco_seen_url = "<?php echo asset('reco/seen1').'/'; ?>"+code;
+        $.get(reco_seen_url,function(){ });
+
+        $('#feedbackModal').bind('shown', function() {
+            $('textarea.mytextarea1').tinymce({
+
+            });
+            console.log("wew")
+        });
+
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
         $('#message').addClass("message input-"+code+"-{{ $user->id }}");
@@ -75,36 +86,37 @@
     });
 
     $('#feedbackForm').submit(function (e) {
-        console.log("feedback_send");
         e.preventDefault();
-        var msg = $("#message").val();
-        $("#message").val('').attr('placeholder','Sending...');
-        $.ajax({
-            url: "{{ url('doctor/feedback') }}",
-            type: 'post',
-            data: {
-                _token : "{{ csrf_token() }}",
-                message: msg,
-                code : code
-            },
-            success: function(data) {
-                $(".reco-body").append(data);
-                /*feedbackRef.push({
-                    id: data,
-                    code: code,
-                    msg: msg,
-                    user_id: "{{ $user->id }}"
-                });
-                feedbackRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        feedbackRef.child(data.key).remove();
-                    },200);
-                });*/
-                var objDiv = document.getElementById(code);
-                objDiv.scrollTop = objDiv.scrollHeight;
-                $("#message").val('').attr('placeholder','Type Message...');
-            }
-        });
+        /*var msg = $("#message").val();
+        $("#message").val('').attr('placeholder','Sending...');*/
+        tinyMCE.triggerSave();
+        var str = $(".mytextarea1").val();
+        str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+        tinyMCE.activeEditor.setContent('');
+        if(str) {
+            console.log("feedback_send");
+            $.ajax({
+                url: "{{ url('doctor/feedback') }}",
+                type: 'post',
+                data: {
+                    _token : "{{ csrf_token() }}",
+                    message: str,
+                    code : code
+                },
+                success: function(data) {
+                    $(".reco-body"+code).append(data);
+                    var objDiv = document.getElementById(code);
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                    $("#message").val('').attr('placeholder','Type Message...');
+                }
+            });
+        }
+        else {
+            Lobibox.alert("error",
+            {
+                msg: "You ReCo was empty!"
+            });
+        }
     });
 
     $('body').on('click','.btn-issue-referred',function(){

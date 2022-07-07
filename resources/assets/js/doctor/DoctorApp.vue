@@ -1,0 +1,311 @@
+<template>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="jim-content">
+                <div class="alert alert-danger" v-if="error">
+                    <span class="text-danger">
+                        <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                    </span>
+                </div>
+                <h3 class="page-header">Monthly Activity</h3>
+                <div class="chart">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <h3 class="page-header" style="margin-top: 5%">Incoming Transaction as of <span class="text-primary" style="font-size: 10pt;"><i>{{ date_start }} to {{ date_end }}</i></span></h3>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <br>
+                            <h5 class="description-header">{{ incoming_statistics.incoming }}</h5>
+                            <span class="description-text">Incoming</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <span class="description-percentage text-green" v-if="accept_percent >= 50">
+                                <i class="fa fa-thumbs-o-up"></i> <b>({{ accept_percent+"%" }})</b>
+                            </span>
+                            <span class="description-percentage text-red" v-else>
+                                <i class="fa fa-thumbs-o-down"></i> <b>({{ accept_percent+"%" }})</b>
+                            </span>
+                            <h5 class="description-header">{{ incoming_statistics.accepted }}</h5>
+                            <span class="description-text">Accepted</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block border-right">
+                            <br>
+                            <h5 class="description-header">
+                                {{ seen_only }}
+                            </h5>
+                            <span class="description-text">Seen Only</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="description-block">
+                            <br>
+                            <h5 class="description-header">
+                                {{ no_action }}
+                            </h5>
+                            <span class="description-text">No Action</span>
+                        </div>
+                        <!-- /.description-block -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-success">
+                <div id="user_per_department" style="height: 300px; width: 100%;"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-success">
+                <div id="number_of_transaction" style="height: 300px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-md-12">
+        <div class="jim-content">
+            <h3 class="page-header">Last 15 days transaction</h3>
+            <div id="doctor_past_transaction" style="height: 370px; width: 100%;"></div>
+            <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name : "DoctorApp",
+        props : ["date_start","date_end","user","error"],
+        data() {
+            return {
+                incoming_statistics : Object,
+                accept_percent : 0,
+                seen_only : 0,
+                no_action : 0
+            }
+        },
+        created(){
+            this.proceedForm()
+            this.barChart()
+            this.optionPerDepartment()
+            this.optionPerActivity()
+            this.optionLastTransaction()
+        },
+        methods : {
+            proceedForm() {
+                if(this.user.level !== "support") {
+                    Lobibox.confirm({
+                        msg: "Do you want to proceed to referral form?",
+                        callback: function ($this, type, ev) {
+                            if (type === 'yes')
+                                window.location.replace("doctor/patient");
+                        }
+                    });
+                }
+            },
+            barChart() {
+                axios.get('doctor/monthly/report').then(response => {
+                    let doctor_monthly_report = response.data
+                    let chartdata = {
+                        type: 'bar',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                            // labels: month,
+                            datasets: [
+                                {
+                                    label: 'Referred',
+                                    backgroundColor: '#8e9cff',
+                                    data: doctor_monthly_report.referred
+                                },
+                                {
+                                    label: 'Accepted',
+                                    backgroundColor: '#26B99A',
+                                    data: doctor_monthly_report.accepted
+                                },
+                                {
+                                    label: 'Redirected',
+                                    backgroundColor: '#03586A',
+                                    data: doctor_monthly_report.redirected
+                                }
+                            ]
+                        }
+                    };
+
+                    let ctx = document.getElementById('barChart').getContext('2d');
+                    new Chart(ctx, chartdata);
+                });
+            },
+            optionPerDepartment() {
+                axios.get('doctor/option/per/department').then(response => {
+                    let options_user_per_department = {
+                        title: {
+                            text: "Login users per department as of today",
+                            fontFamily: "Arial"
+                        },
+                        legend: {
+                            horizontalAlign: "center", // "center" , "right"
+                            verticalAlign: "top"  // "top" , "bottom"
+                        },
+                        animationEnabled: true,
+                        data: [{
+                            type: "pie",
+                            startAngle: 80,
+                            showInLegend: "true",
+                            legendText: "{label}",
+                            indexLabel: "{label} ({y})",
+                            yValueFormatString:"#,##0.#"%"",
+                            dataPoints: response.data
+                        }]
+                    };
+                    $("#user_per_department").CanvasJSChart(options_user_per_department);
+                });
+            },
+            optionPerActivity() {
+                axios.get('doctor/option/per/activity').then(response => {
+                    //for statistics
+                    this.incoming_statistics = response.data
+                    this.accept_percent = (this.incoming_statistics.accepted / this.incoming_statistics.incoming) * 100
+                    this.accept_percent = this.accept_percent.toFixed(2)
+                    this.seen_only = this.incoming_statistics.seen_total - this.incoming_statistics.seen_accepted_redirected
+                    this.no_action = this.incoming_statistics.incoming - (this.incoming_statistics.accepted + this.incoming_statistics.redirected + this.seen_only)
+                    this.no_action = this.no_action > 0 ? this.no_action : 0
+                    //
+                    let options_activity = {
+                        title: {
+                            text: "Number of Activity",
+                            fontFamily: "Arial"
+                        },
+                        legend: {
+                            horizontalAlign: "center", // "center" , "right"
+                            verticalAlign: "top"  // "top" , "bottom"
+                        },
+                        animationEnabled: true,
+                        data: [{
+                            type: "doughnut",
+                            startAngle: 80,
+                            showInLegend: "true",
+                            legendText: "{label}",
+                            indexLabel: "{label} ({y})",
+                            yValueFormatString:"#,##0.#"%"",
+                            dataPoints: [
+                                { label: "Referred", y: response.data.referred },
+                                { label: "Accepted", y: response.data.accepted },
+                                { label: "Redirected", y: response.data.redirected },
+                                { label: "Called", y: response.data.calling },
+                                { label: "Arrived", y: response.data.arrived },
+                                { label: "Transferred", y: response.data.transferred },
+                                { label: "Admitted", y: response.data.accepted },
+                                { label: "Discharge", y: response.data.discharged }
+                            ]
+                        }]
+                    };
+                    $("#number_of_transaction").CanvasJSChart(options_activity);
+                });
+            },
+            optionLastTransaction() {
+                axios.get('doctor/option/last/transaction').then(response => {
+                    //line chart
+                    let datapoints_referred = [];
+                    let datapoints_accepted = [];
+                    let datapoints_redirected = [];
+                    let options_days = {
+                        animationEnabled: true,
+                        theme: "light2",
+                        title:{
+                            text: ""
+                        },
+                        axisX:{
+                            valueFormatString: "DD MMM"
+                        },
+                        axisY: {
+                            title: "",
+                            suffix: "",
+                            minimum: 0
+                        },
+                        toolTip:{
+                            shared:true
+                        },
+                        legend:{
+                            cursor:"pointer",
+                            verticalAlign: "bottom",
+                            horizontalAlign: "center",
+                            dockInsidePlotArea: false,
+                            fontSize: 15,
+                            itemclick: toogleDataSeries
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                showInLegend: true,
+                                name: "Referred",
+                                markerType: "square",
+                                xValueFormatString: "DD MMM, YYYY",
+                                yValueFormatString: "#,##",
+                                dataPoints: datapoints_referred
+                            }
+                            ,
+                            {
+                                type: "line",
+                                showInLegend: true,
+                                name: "Accepted",
+                                markerType: "square",
+                                yValueFormatString: "#,##",
+                                dataPoints: datapoints_accepted
+                            },
+                            {
+                                type: "line",
+                                showInLegend: true,
+                                name: "Redirected",
+                                markerType: "square",
+                                yValueFormatString: "#,##",
+                                dataPoints: datapoints_redirected
+                            },
+                        ]
+                    };
+
+                    $.each(response.data.referred_past, function( index, value ) {
+                        datapoints_referred.push({
+                            x: new Date(value.date),
+                            y: value.value
+                        });
+                    });
+
+                    $.each(response.data.accepted_past, function( index, value ) {
+                        datapoints_accepted.push({
+                            x: new Date(value.date),
+                            y: value.value
+                        });
+                    });
+
+                    $.each(response.data.redirected_past, function( index, value ) {
+                        datapoints_redirected.push({
+                            x: new Date(value.date),
+                            y: value.value
+                        });
+                    });
+
+                    $("#doctor_past_transaction").CanvasJSChart(options_days);
+
+                    function toogleDataSeries(e){
+                        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                            e.dataSeries.visible = false;
+                        } else{
+                            e.dataSeries.visible = true;
+                        }
+                        e.chart.render();
+                    }
+
+                });
+            }
+        }
+    }
+</script>
