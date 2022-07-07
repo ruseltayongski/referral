@@ -309,23 +309,31 @@
                                 </tr>
                             </table>
                         </div>
-                    </div>
+                    </div><br>
 
-                    <div class="file-upload">
-                        <div class="image-upload-wrap">
-                            <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
-                            <div class="drag-text">
-                                <h3>Drag and drop a file or select add Image</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                            <button type="button" class="btn btn-md btn-danger" id="preg_remove_files" onclick="removeFilePregnant()">Remove Files</button><br><br>
+                            <div class="pregnant_file_attachment">
+                                <div class="col-md-3" id="pregnant_upload1">
+                                    <div class="file-upload">
+                                        <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap1">
+                                            <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                            <img src="{{ asset('resources/img/file-plus.png') }}" style="width: 50%; height: 50%;">
+                                        </div>
+                                        <div class="file-upload-content" id="pregnant_file-upload-content1">
+                                            <img class="file-upload-image" id="pregnant_file-upload-image1"/>
+                                            <div class="image-title-wrap">
+                                                <b><small class="image-title" id="pregnant_image-title1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
+                                                {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1)" class="btn-sm remove-image">Remove</button>--}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="file-upload-content">
-                            <img class="file-upload-image" src="#" alt="your image" />
-                            <div class="image-title-wrap">
-                                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
-                            </div>
-                        </div>
                     </div>
-
                 </div>
                 <table class="table table-striped col-sm-6"></table>
                 <hr />
@@ -479,38 +487,93 @@
                 '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
+</script>
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-
-                $('.image-title').html(input.files[0].name);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-                      
-        } else {
-            removeUpload();
+<script>
+    var pregnant_pos = 2;
+    var pregnant_count = 0 ;
+    function readURLPregnant(input, pos) {
+        var word = '{{ asset('resources/img/icon_document.png') }}';
+        var pdf = '{{ asset('resources/img/icon_pdf.png') }}';
+        var excel = '{{ asset('resources/img/icon_sheet.png') }}';
+        if (input.files) {
+            var tmp_pos = pos;
+            for(var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if(file && file !== null) {
+                    var reader = new FileReader();
+                    var type = file.type;
+                    if(type === 'application/pdf') {
+                        $('#pregnant_file-upload-image'+pos).attr('src',pdf);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#pregnant_file-upload-image'+pos).attr('src',word);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#pregnant_file-upload-image'+pos).attr('src',excel);
+                        pos+=1;
+                    } else {
+                        reader.onloadend = function(e) {
+                            $('#pregnant_file-upload-image'+pos).attr('src',e.target.result);
+                            pos+=1;
+                        };
+                    }
+                    $('#pregnant_image-upload-wrap'+tmp_pos).hide();
+                    $('#pregnant_file-upload-content'+tmp_pos).show();
+                    $('#pregnant_image-title'+tmp_pos++).html(file.name);
+                    reader.readAsDataURL(file);
+                    pregnant_count+=1;
+                }
+                addFilePregnant();
+            }
         }
+        $('#preg_remove_files').show();
+    }
+    function addFilePregnant() {
+        var add_file_icon = '{{ asset('resources/img/file-plus.png') }}';
+
+        if((pregnant_count % 4) == 0) {
+            $('.pregnant_file_attachment').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.pregnant_file_attachment').append(
+            '<div class="col-md-3" id="pregnant_upload'+pregnant_pos+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap'+pregnant_pos+'">\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="pregnant_file-upload-content'+pregnant_pos+'">\n' +
+            '           <img class="file-upload-image" id="pregnant_file-upload-image'+pregnant_pos+'"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="pregnant_image-title'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
+            '               {{--<button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="btn-sm remove-image">Remove</button>--}}\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        pregnant_pos+=1;
     }
 
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
+    function removeFilePregnant() {
+        $('.pregnant_file_attachment').html("");
+        pregnant_count = 0;
+        pregnant_pos = 1;
+        $('#preg_remove_files').hide();
+        addFilePregnant();
     }
 
-    $('.image-upload-wrap').bind('dragover', function () {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function () {
-        $('.image-upload-wrap').removeClass('image-dropping');
+    $(document).ready(function() {
+        for (var i = 0; i < pregnant_count; i++) {
+            $('#pregnant_image-upload-wrap' + i).bind('dragover', function () {
+                $('#pregnant_image-upload-wrap' + i).addClass('image-dropping');
+            });
+            $('#pregnant_image-upload-wrap' + i).bind('dragleave', function () {
+                $('#pregnant_image-upload-wrap' + i).removeClass('image-dropping');
+            });
+        }
+        $('#preg_remove_files').hide();
     });
 </script>

@@ -41,7 +41,7 @@
             <small><i>Municipality</i></small>
             <div class="form-group muncity_holder">
                 <select class="muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
-
+                    <option value="">Select Muncity</option>
                 </select>
             </div>
             <small><i>Barangay</i></small>

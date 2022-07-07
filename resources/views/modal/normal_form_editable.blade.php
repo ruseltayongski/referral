@@ -11,6 +11,15 @@ $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
 $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
+<style>
+    .small-box {
+        width: 100px;
+        height: 100px;
+        border-width: 2px;
+        border-color: darkgray;
+    }
+</style>
+
 <div class="modal fade" role="dialog" id="normalFormModal" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -68,7 +77,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
                                 <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
-                                    <option value="">Select Option</option>
+                                    <option value="">Select Department...</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -206,24 +215,28 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <div class="row">
                             <div class="col-md-12">
-                                <small class="text-success"><b>FILE ATTACHMENT:</b></small><br>
-                                <div class="file-upload">
-                                    <div class="image-upload-wrap">
-                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
-                                        <div class="drag-text">
-                                            <h3>Drag and drop a file or select add Image</h3>
-                                        </div>
-                                    </div>
-                                    <div class="file-upload-content">
-                                        <img class="file-upload-image" src="#" alt="your image" />
-                                        <div class="image-title-wrap">
-                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                <button type="button" class="btn btn-md btn-danger" id="remove_files_btn" onclick="removeFiles()">Remove Files</button>
+                                <br><br>
+                                <div class="attachment">
+                                    <div class="col-md-3" id="upload1">
+                                        <div class="file-upload">
+                                            <div class="text-center image-upload-wrap" id="image-upload-wrap1">
+                                                <input class="file-upload-input files" multiple id="file_upload_input1" type='file' name="file_upload[]" onchange="readUrl(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                <img src="{{ asset('resources/img/file-plus.png') }}" style="width: 50%; height: 50%;">
+                                            </div>
+                                            <div class="file-upload-content" id="file-upload-content1">
+                                                <img class="file-upload-image" id="file-upload-image1" src="#"/>
+                                                <div class="image-title-wrap">
+                                                    <b><small class="image-title" id="image-title1" style="display:block; word-wrap: break-word;"></small></b>
+                                                    {{--<button type="button" onclick="removeFile(1)" class="remove-image"> Remove </button>--}}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
@@ -365,30 +378,93 @@ $reason_for_referral = \App\ReasonForReferral::get();
                 '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
-    function readURL(input) {
+</script>
+<script>
+    var upload_pos = 2;
+    var upload_count = 0;
+    function readUrl(input, pos) {
+        var word = '{{ asset('resources/img/icon_document.png') }}';
+        var pdf = '{{ asset('resources/img/icon_pdf.png') }}';
+        var excel = '{{ asset('resources/img/icon_sheet.png') }}';
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-                $('.image-title').html(input.files[0].name);
-            };
-            reader.readAsDataURL(input.files[0]);
+            var tmp_pos = pos;
+            for(var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if(file && file !== null) {
+                    var reader = new FileReader();
+                    var type = file.type;
+                    if(type === 'application/pdf') {
+                        $('#file-upload-image'+pos).attr('src',pdf);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#file-upload-image'+pos).attr('src',word);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#file-upload-image'+pos).attr('src',excel);
+                        pos+=1;
+                    } else {
+                        reader.onloadend = function(e) {
+                            $('#file-upload-image'+pos).attr('src', e.target.result);
+                            pos+=1;
+                        };
+                    }
+                    $('#image-upload-wrap'+tmp_pos).hide();
+                    $('#file-upload-content'+tmp_pos).show();
+                    $('#image-title' + tmp_pos++).html(file.name);
+                    reader.readAsDataURL(file);
+                    upload_count+=1;
 
-        } else {
-            removeUpload();
+                    addFile();
+                }
+            }
         }
+        $('#remove_files_btn').show();
     }
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
+
+    function addFile() {
+        var src = '{{ asset('resources/img/file-plus.png') }}';
+        if(upload_count % 4 == 0) {
+            $('.attachment').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.attachment').append(
+            '<div class="col-md-3" id="upload'+upload_pos+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="image-upload-wrap'+upload_pos+'">\n' +
+            '           <input class="file-upload-input files" multiple id="file_upload_input'+upload_pos+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="'+src+'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="file-upload-content'+upload_pos+'">\n' +
+            '           <img class="file-upload-image" id="file-upload-image'+upload_pos+'" src="#"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="image-title'+upload_pos+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
+            /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        upload_pos+=1;
     }
-    $('.image-upload-wrap').bind('dragover', function () {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function () {
-        $('.image-upload-wrap').removeClass('image-dropping');
+
+    function removeFiles() {
+        $('.attachment').html("");
+        upload_count = 0;
+        upload_pos = 1;
+        $('#remove_files_btn').hide();
+        addFile();
+    }
+
+    $(document).ready(function() {
+        for (var i = 0; i < upload_count; i++) {
+            $('#image-upload-wrap' + i).bind('dragover', function () {
+                $('#image-upload-wrap' + i).addClass('image-dropping');
+            });
+            $('#image-upload-wrap' + i).bind('dragleave', function () {
+                $('#image-upload-wrap' + i).removeClass('image-dropping');
+            });
+        }
+        $('#remove_files_btn').hide();
     });
 </script>

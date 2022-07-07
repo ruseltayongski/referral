@@ -33,7 +33,7 @@
             <div class="modal-header">
                 <button type="button" class="close exit_edit_btn" data-dismiss="modal">&times;</button>
             </div>
-            <div class="jim-content edit_referral_body">
+            <div class="edit_referral_body">
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
