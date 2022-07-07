@@ -223,7 +223,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="file-upload">
                                             <div class="text-center image-upload-wrap" id="image-upload-wrap1">
                                                 <input class="file-upload-input files" multiple id="file_upload_input1" type='file' name="file_upload[]" onchange="readUrl(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
-                                                <img src="{{ asset('resources/img/file-plus.png') }}" style="width: 50%; height: 50%;">
+                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                             </div>
                                             <div class="file-upload-content" id="file-upload-content1">
                                                 <img class="file-upload-image" id="file-upload-image1" src="#"/>
@@ -383,9 +383,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
     var upload_pos = 2;
     var upload_count = 0;
     function readUrl(input, pos) {
-        var word = '{{ asset('resources/img/icon_document.png') }}';
-        var pdf = '{{ asset('resources/img/icon_pdf.png') }}';
-        var excel = '{{ asset('resources/img/icon_sheet.png') }}';
+        var word = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
         if (input.files && input.files[0]) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
@@ -422,7 +422,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     function addFile() {
-        var src = '{{ asset('resources/img/file-plus.png') }}';
+        var src = '{{ asset('resources/img/add_file.png') }}';
         if(upload_count % 4 == 0) {
             $('.attachment').append(
                 '<div class="clearfix"></div>'

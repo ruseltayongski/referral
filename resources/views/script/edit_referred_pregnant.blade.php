@@ -220,9 +220,9 @@
     var pregnant_pos = 2;
     var pregnant_count = 0 ;
     function readURLPregnant(input, pos) {
-        var word = '{{ asset('resources/img/icon_document.png') }}';
-        var pdf = '{{ asset('resources/img/icon_pdf.png') }}';
-        var excel = '{{ asset('resources/img/icon_sheet.png') }}';
+        var word = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
         if (input.files) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
@@ -257,7 +257,7 @@
         $('#preg_remove_files').show();
     }
     function addFilePregnant() {
-        var add_file_icon = '{{ asset('resources/img/file-plus.png') }}';
+        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
 
         if((pregnant_count % 4) == 0) {
             $('.pregnant_file_attachment').append(
