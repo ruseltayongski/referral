@@ -90,9 +90,9 @@
                                 <th>Recommend to Redirect</th>
                                 <th>Seen Only</th>
                                 <th>Not Seen</th>
+                                <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
-                                <!--
                                 <th class="bg-red">Cancelled</th>
                                 -->
                             </tr>
@@ -160,6 +160,7 @@
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','not_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
                                         <br><br>
                                     </td>
+                                    <!--
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','request_call','{{ $date_range }}')">{{ $row['data']['request_call'] }}</span>
                                         <br><br>
@@ -168,7 +169,6 @@
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected_spam','{{ $date_range }}')">{{ $row['data']['redirected_spam'] }}</span>
                                         <br><br>
                                     </td>
-                                    <!--
                                     <td width="10%">
                                         <span class="text-red" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['cancelled'] }}</span>
                                         <br><br>
@@ -178,15 +178,15 @@
                                 <tr>
                                     <?php
                                         $left_sum += $row['data']['referred'] + $row['data']['redirected'] + $row['data']['transferred'];
-                                        $right_sum += $row['data']['accepted'] + $row['data']['denied'] + $row['data']['seen_only'] + $row['data']['not_seen'] + $row['data']['request_call'] + $row['data']['redirected_spam'];
+                                        $right_sum += $row['data']['accepted'] + $row['data']['denied'] + $row['data']['seen_only'] + $row['data']['not_seen'];
                                     ?>
                                     <td colspan="2">
 
                                     </td>
-                                    <td colspan="3" class="{{ $left_sum == $right_sum ? '' : 'bg-yellow' }}">
+                                    <td colspan="3" class="{{ $left_sum > $right_sum ? 'bg-yellow' : '' }}">
                                         <center style="font-size: 20pt;">{{ $left_sum }}</center>
                                     </td>
-                                    <td colspan="5" class="{{ $left_sum == $right_sum ? '' : 'bg-yellow' }}">
+                                    <td colspan="5" class="{{ $left_sum < $right_sum ? 'bg-yellow' : '' }}">
                                         <center style="font-size: 20pt;">{{ $right_sum }}</center>
                                     </td>
                                 </tr>
