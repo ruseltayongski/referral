@@ -196,7 +196,6 @@ class ReferralCtrl extends Controller
         $file_explode = explode("/",$file_link);
         if($file_explode[0] == "http:")
             return "https://fileupload.user.edgecloudph.com/".$file_explode[3]."/".$file_explode[4];
-
         return $file_link;
     }
 
@@ -207,8 +206,23 @@ class ReferralCtrl extends Controller
             ->where('icd.code',$track->code)->get();
 
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-        $path = self::securedFile($file_link);
-        $file_name = basename($path);
+
+//        $path = self::securedFile($file_link);
+//        $file_name = basename($path);
+
+        $path = [];
+        $file_name = [];
+
+        if($file_link != null && $file_link != "") {
+            $explode = explode("|",$file_link);
+            foreach($explode as $link) {
+                $path_tmp = self::securedFile($link);
+                if($path_tmp != '') {
+                    array_push($path, $path_tmp);
+                    array_push($file_name, basename($path_tmp));
+                }
+            }
+        }
 
         $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
             ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
@@ -323,8 +337,19 @@ class ReferralCtrl extends Controller
             ->where('icd.code',$track->code)->get();
 
         $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
-        $path = self::securedFile($file_link);
-        $file_name = basename($path);
+
+        $path = [];
+        $file_name = [];
+        if($file_link != null && $file_link != "") {
+            $explode = explode("|",$file_link);
+            foreach($explode as $link) {
+                $path_tmp = self::securedFile($link);
+                if($path_tmp != '') {
+                    array_push($path, $path_tmp);
+                    array_push($file_name, basename($path_tmp));
+                }
+            }
+        }
 
         $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
             ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
@@ -1606,8 +1631,22 @@ class ReferralCtrl extends Controller
 
         if($form_type == 'normal') {
             $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-            $path = self::securedFile($file_link);
-            $file_name = basename($path);
+//            $path = self::securedFile($file_link);
+//            $file_name = basename($path);
+
+            $path = array();
+            $file_name = array();
+
+            if($file_link != null) {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = self::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
+                }
+            }
 
             $reason = ReasonForReferral::select('patient_form.reason_referral as id', 'reason_referral.reason as reason')
                 ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
@@ -1623,12 +1662,25 @@ class ReferralCtrl extends Controller
                 "file_path" => $path,
                 "file_name" => $file_name,
                 "form_type" => $form_type,
-                "referral_status" => $referral_status
+                "referral_status" => $referral_status,
+                "username" => Session::get('auth')->username
             ]);
         } else if($form_type == 'pregnant') {
             $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
-            $path = self::securedFile($file_link);
-            $file_name = basename($path);
+
+            $path = array();
+            $file_name = array();
+
+            if($file_link != null) {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = self::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
+                }
+            }
 
             $reason = ReasonForReferral::select('pregnant_form.reason_referral as id', 'reason_referral.reason as reason')
                 ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
@@ -1642,7 +1694,8 @@ class ReferralCtrl extends Controller
                 "file_path" => $path,
                 "file_name" => $file_name,
                 "referral_status" => $referral_status,
-                "form_type" => "$form_type"
+                "form_type" => "$form_type",
+                "username" => Session::get('auth')->username
             ]);
         }
     }
@@ -1763,22 +1816,33 @@ class ReferralCtrl extends Controller
 
         if($req->file_cleared == "true") {
             $data->update([
-                'file_path' => null
+                'file_path' => ""
             ]);
         }
         unset($data_update['file_cleared']);
 
+        $file_paths = $data->file_path;
         if($_FILES["file_upload"]["name"]) {
-            $req->username = $user->username;
-            $file = $_FILES['file_upload']['name'];
-
             ApiController::fileUpload($req);
-            $data->update([
-                'file_path' => ApiController::fileUploadUrl().$req->username."/".$file
-            ]);
+            for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                $file = $_FILES['file_upload']['name'][$i];
+                if(isset($file) && !empty($file)) {
+                    $username = $user->username;
+                    $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
+                    if($i + 1 != count($_FILES["file_upload"]["name"])) {
+                        $file_paths .= "|";
+                    }
+                }
+            }
         }
+        $data->update([
+            'file_path' => $file_paths
+        ]);
+
+        echo $data->file_path;
 
         unset($data_update['file_upload']);
+        unset($data_update['username']);
 
         unset($data_update['id']);
         unset($data_update['referral_status']);

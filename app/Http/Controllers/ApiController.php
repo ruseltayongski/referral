@@ -859,28 +859,33 @@ class ApiController extends Controller
     }
 
     public static function fileUpload(Request $request) {
-        $filePath = $_FILES['file_upload']['tmp_name'];
-        $type=$_FILES['file_upload']['type'];
-        $fileName = $_FILES['file_upload']['name'];
+        $username = Session::get('auth')->username;
+        for($i = 0; $i < count(array_filter($_FILES["file_upload"]["tmp_name"])); $i++) {
+            $filePath = $_FILES['file_upload']['tmp_name'][$i];
+            if(!empty($filePath) && isset($filePath)) {
+                $type=$_FILES['file_upload']['type'][$i];
+                $fileName = $_FILES['file_upload']['name'][$i];
 
-        $data = array(
-            'file_upload' => curl_file_create($filePath, $type, $fileName),
-            'username' => $request->username
-        );
-        $url = self::fileUploadUrl().'file_upload.php';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_exec($ch);
-        //Check for errors.
+                $data = array(
+                    'file_upload' => curl_file_create($filePath, $type, $fileName),
+                    'username' => $username
+                );
 
-        if(curl_errno($ch)){
-            throw new Exception(curl_error($ch));
+                $url = self::fileUploadUrl().'file_upload.php';
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_exec($ch);
+                //Check for errors.
+                if(curl_errno($ch)){
+                    throw new Exception(curl_error($ch));
+                }
+                curl_close($ch);
+            }
         }
-        curl_close($ch);
     }
 
     public function apiReferPatient(Request $req)
@@ -1015,13 +1020,28 @@ class ApiController extends Controller
 
         $form = PatientForm::create($data);
 
+//        if($_FILES["file_upload"]["name"]) {
+//            $req->username = $referring_doctor->username;
+//            $file = $_FILES['file_upload']['name'];
+//
+//            self::fileUpload($req);
+//            $form->file_path = self::fileUploadUrl().$req->username."/".$file;
+//        }
+        $file_paths = "";
         if($_FILES["file_upload"]["name"]) {
-            $req->username = $referring_doctor->username;
-            $file = $_FILES['file_upload']['name'];
-
-            self::fileUpload($req);
-            $form->file_path = self::fileUploadUrl().$req->username."/".$file;
+            $username = $referring_doctor->username;
+            ApiController::fileUpload($req);
+            for($i = 0; $i < count(array_filter($_FILES["file_upload"]["name"])); $i++) {
+                $file = $_FILES['file_upload']['name'][$i];
+                if(isset($file) && !empty($file)) {
+                    $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
+                    if($i + 1 != count(array_filter($_FILES["file_upload"]["name"]))) {
+                        $file_paths .= "|";
+                    }
+                }
+            }
         }
+        $form->file_path = $file_paths;
 
         $form->save();
         foreach($req->icd_code as $i) {

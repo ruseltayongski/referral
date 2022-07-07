@@ -69,13 +69,13 @@ class PatientCtrl extends Controller
             $brgy_others = $session['brgy_others'];
 
             $tsekap = Profile::orderBy('lname','asc')
-                ->where('barangay_id',$brgy)
-                ->where('muncity_id',$mun)
                 ->where(function($q) use($keyword){
                     $q->where('lname',"like","%$keyword%")
                         ->orWhere('fname','like',"%$keyword%")
                         ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
                 })
+                ->where('barangay_id',$brgy)
+                ->where('muncity_id',$mun)
                 ->get();
 
             foreach($tsekap as $req) {
@@ -121,28 +121,34 @@ class PatientCtrl extends Controller
         $data = Patients::
             where(function($query) use ($keyword, $reg, $prov, $mun, $brgy) {
             $query->where(function($q) use($keyword, $reg, $prov, $mun, $brgy) {
-                $q->where('lname',"like","%$keyword%")
-                    ->orWhere('fname','like',"%$keyword%")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
+                $q->where('lname',"like","%".$keyword."%")
+                    ->orWhere('fname','like',"%".$keyword."%")
+                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%".$keyword."%");
             })
                 ->where('region',$reg)
                 ->where('province',$prov)
                 ->where('muncity',$mun)
                 ->where('brgy',$brgy);
             })
-            ->orWhere(function($query) use ($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
-                $query->where(function($q) use($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
-                    $q->where('lname',"like","%$keyword%")
-                        ->orWhere('fname','like',"%$keyword%")
-                        ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
-                })
-                    ->where('region',$reg)
-                    ->where('province_others',$prov_others)
-                    ->where('muncity_others',$mun_others)
-                    ->where('brgy_others',$brgy_others);
-            })
             ->orderBy('lname','asc')
             ->paginate(15);
+
+        if(count($data) == 0) {
+            $data = Patients::
+            where(function($query) use ($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
+            $query->where(function($q) use($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
+                $q->where('lname',"like","%".$keyword."%")
+                    ->orWhere('fname','like',"%".$keyword."%")
+                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%".$keyword."%");
+            })
+                ->where('region',$reg)
+                ->where('province_others',$prov_others)
+                ->where('muncity_others',$mun_others)
+                ->where('brgy_others',$brgy_others);
+            })
+            ->orderBy('lname','asc')
+            ->paginate(15);;
+        }
 
         //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
@@ -444,13 +450,21 @@ class PatientCtrl extends Controller
             );
             $form = PatientForm::create($data);
 
+            $file_paths = "";
             if($_FILES["file_upload"]["name"]) {
-                $req->username = $user->username;
-                $file = $_FILES['file_upload']['name'];
-
                 ApiController::fileUpload($req);
-                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
+                for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                    $file = $_FILES['file_upload']['name'][$i];
+                    if(isset($file) && !empty($file)) {
+                        $username = $user->username;
+                        $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
+                        if($i + 1 != count($_FILES["file_upload"]["name"])) {
+                            $file_paths .= "|";
+                        }
+                    }
+                }
             }
+            $form->file_path = $file_paths;
 
             $form->save();
             foreach($req->icd_ids as $i) {
@@ -521,13 +535,31 @@ class PatientCtrl extends Controller
             );
             $form = PregnantForm::create($data);
 
-            if($_FILES["file_upload"]["name"]) {
-                $req->username = $user->username;
-                $file = $_FILES['file_upload']['name'];
+            $file_paths = "";
 
+            if($_FILES["file_upload"]["name"]) {
                 ApiController::fileUpload($req);
-                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
+                for($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
+                    $file = $_FILES['file_upload']['name'][$i];
+                    if(isset($file) && !empty($file)) {
+                        $username = $user->username;
+                        $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
+                        if($i + 1 != count($_FILES["file_upload"]["name"])) {
+                            $file_paths .= "|";
+                        }
+                    }
+                }
             }
+            $form->file_path = $file_paths;
+
+//            if($_FILES["file_upload"]["name"]) {
+//                $req->username = $user->username;
+//                $file = $_FILES['file_upload']['name'];
+//
+//                ApiController::fileUpload($req);
+//                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
+//            }
+
             $form->save();
 
             foreach($req->icd_ids as $i) {

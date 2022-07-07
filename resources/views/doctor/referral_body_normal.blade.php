@@ -155,8 +155,14 @@ $user = Session::get('auth');
     @if(isset($file_path))
         <tr>
             <td colspan="6">
-                File Attachment:
-                <a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>
+                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
+                @for($i = 0; $i < count($file_path); $i++)
+                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                    @if($i + 1 != count($file_path))
+                        ,&nbsp
+                    @endif
+                @endfor
+                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
             </td>
         </tr>
     @endif
