@@ -35,6 +35,7 @@ Route::get('logout', function(){
                 'logout' => $logout
             ]);
     }
+    \Illuminate\Support\Facades\Session::put("auth",false);
     return redirect('login');
 });
 Route::get('login_expire', function(){
