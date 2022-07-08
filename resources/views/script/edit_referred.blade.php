@@ -259,9 +259,9 @@
     var upload_pos = 2;
     var upload_count = 0;
     function readUrl(input, pos) {
-        var word = '{{ asset('resources/img/icon_document.png') }}';
-        var pdf = '{{ asset('resources/img/icon_pdf.png') }}';
-        var excel = '{{ asset('resources/img/icon_sheet.png') }}';
+        var word = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
         if (input.files && input.files[0]) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
@@ -298,7 +298,7 @@
     }
 
     function addFile() {
-        var src = '{{ asset('resources/img/file-plus.png') }}';
+        var src = '{{ asset('resources/img/add_file.png') }}';
         if(upload_count % 4 == 0) {
             $('.attachment').append(
                 '<div class="clearfix"></div>'

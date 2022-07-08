@@ -358,7 +358,7 @@ $facilities = \App\Facility::select('id','name')
                             <div class="file-upload">
                                 <div class="text-center image-upload-wrap" id="image-upload-wrap1">
                                     <input class="file-upload-input files" multiple id="file_upload_input1" type='file' name="file_upload[]" onchange="readUrl(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
-                                    <img src="{{ asset('resources/img/file-plus.png') }}" style="width: 50%; height: 50%;">
+                                    <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                 </div>
                                 <div class="file-upload-content" id="file-upload-content1">
                                     <img class="file-upload-image" id="file-upload-image1" src="#"/>
