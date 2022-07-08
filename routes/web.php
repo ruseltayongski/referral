@@ -3,6 +3,9 @@ if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,16 +38,18 @@ Route::get('logout', function() {
                 'logout' => $logout
             ]);
 
-        \Illuminate\Support\Facades\Session::flush();
-        \Illuminate\Support\Facades\Session::put("auth",false);
+        Session::flush();
+        Session::forget('auth');
+        Session::put("auth",false);
     }
-    \Illuminate\Support\Facades\Session::flush();
-    \Illuminate\Support\Facades\Session::put("auth",false);
+    Session::flush();
+    Session::forget('auth');
+    Session::put("auth",false);
     return redirect('login');
 });
 
 Route::get('login_expire', function(){
-    \Illuminate\Support\Facades\Session::flush();
+    Session::flush();
     return redirect('login');
 });
 
