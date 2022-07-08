@@ -15,15 +15,15 @@ if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
 */
 
 Route::get('/', 'HomeCtrl@index');
-Route::get('logout', function(){
-    $user = \Illuminate\Support\Facades\Session::get('auth');
-    \Illuminate\Support\Facades\Session::flush();
+
+Route::get('logout', function() {
     if(isset($user)){
         \App\User::where('id',$user->id)
             ->update([
                 'login_status' => 'logout'
             ]);
         $logout = date('Y-m-d H:i:s');
+
         $logoutId = \App\Login::where('userId',$user->id)
             ->orderBy('id','desc')
             ->first()
@@ -34,10 +34,15 @@ Route::get('logout', function(){
                 'status' => 'login_off',
                 'logout' => $logout
             ]);
+
+        \Illuminate\Support\Facades\Session::flush();
+        \Illuminate\Support\Facades\Session::put("auth",false);
     }
+    \Illuminate\Support\Facades\Session::flush();
     \Illuminate\Support\Facades\Session::put("auth",false);
     return redirect('login');
 });
+
 Route::get('login_expire', function(){
     \Illuminate\Support\Facades\Session::flush();
     return redirect('login');
