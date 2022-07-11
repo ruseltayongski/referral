@@ -1450,7 +1450,7 @@ class ReferralCtrl extends Controller
 
         //start websocket
         $departed_by = ucwords(mb_strtolower($user->fname))." ".ucwords(mb_strtolower($user->lname));
-        $departed_by_facility = Facility::find($track->referred_to)->name;
+        $departed_by_facility = Facility::find($user->facility_id)->name;
         $patient = Patients::find($track->patient_id);
         $departed = [
             "patient_code" => $track->code,
