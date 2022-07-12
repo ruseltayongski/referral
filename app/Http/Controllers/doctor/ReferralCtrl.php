@@ -110,17 +110,39 @@ class ReferralCtrl extends Controller
         if($request->option_filter)
         {
             $option = $request->option_filter;
-            if($option=='referred'){
+            if($option == 'referred') {
                 $data = $data->where(function($q){
                     $q->where('tracking.status','referred')
+                        ->orWhere('tracking.status','redirected')
+                        ->orWhere('tracking.status','transferred')
                         ->orwhere('tracking.status','seen');
                 });
-            }elseif($option=='accepted'){
+            }
+            elseif($option == 'accepted') {
                 $data = $data->where(function($q){
                     $q->where('tracking.status','accepted');
                 });
             }
-        }else{
+            elseif($option == 'seen_only') {
+                $data = $data->join('seen',function($join) use ($user) {
+                    $join->on('seen.code','=','tracking.code');
+                    $join->on('seen.created_at','>=','tracking.created_at');
+                    //$join->on('seen.facility_id','=',$user->facility_id);
+                })
+                ->where(function($query) {
+                    $query->where('tracking.status','!=','accepted')
+                        ->where('tracking.status','!=','redirected')
+                        ->where('tracking.status','!=','rejected')
+                        ->where('tracking.status','!=','arrived')
+                        ->where('tracking.status','!=','admitted')
+                        ->where('tracking.status','!=','discharged')
+                        ->where('tracking.status','!=','transferred')
+                        ->where('tracking.status','!=','archived')
+                        ->where('tracking.status','!=','cancelled');
+                })
+                ->groupBy('tracking.code');
+            }
+        }else {
             $data = $data->where(function($q){
                 $q->where('tracking.status','referred')
                     ->orwhere('tracking.status','seen')
