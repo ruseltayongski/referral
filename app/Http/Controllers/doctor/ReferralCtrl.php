@@ -127,7 +127,6 @@ class ReferralCtrl extends Controller
                 $data = $data->join('seen',function($join) use ($user) {
                     $join->on('seen.code','=','tracking.code');
                     $join->on('seen.created_at','>=','tracking.created_at');
-                    //$join->on('seen.facility_id','=',$user->facility_id);
                 })
                 ->where(function($query) {
                     $query->where('tracking.status','!=','accepted')
