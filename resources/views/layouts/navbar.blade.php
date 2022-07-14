@@ -134,6 +134,8 @@
                     </li>
                     <li><a href="{{ url('admin/reason-referral') }}" ><i class="fa fa-wrench"></i> Reason for Referral</a></li>
                     <li><a href="{{ url('admin/icd') }}"><i class="fa fa-file-text-o"></i> ICD-10</a></li>
+                    <li><a href="{{ url('admin/appointment') }}"><i class="fa fa-pencil-square-o"></i> Appointments </a></li>
+                    <li><a href="{{ url('admin/user_feedback') }}"><i class="fa fa-comments-o"></i> User Feedbacks </a></li>
                 <!-- <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li> -->
                 </ul>
             </li>
