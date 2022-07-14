@@ -6,6 +6,6 @@
     </div>
     <img class="direct-chat-img" title="" src="{{ url('resources/img/sender.png') }}" alt="Message User Image"><!-- /.direct-chat-img -->
     <div class="direct-chat-text">
-        {{ $message }}
+        {!! nl2br($message) !!}
     </div>
 </div>

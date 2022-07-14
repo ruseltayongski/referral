@@ -252,39 +252,20 @@ class ParamCtrl extends Controller
 
         $name_sender = ucwords(mb_strtolower($sender->fname))." ".ucwords(mb_strtolower($sender->lname));
         $date_now = date('d M h:i a');
-        $picture_sender = url('resources/img/receiver.png');
-        $feedback_receiver = "<div class='direct-chat-msg left'>
-                                <div class='direct-chat-info clearfix'>
-                                    <span class='direct-chat-name pull-left'>$name_sender</span>
-                                    <span class='direct-chat-timestamp pull-right'>$date_now</span>
-                                </div>
-                                <img class='direct-chat-img' title='' src='$picture_sender' alt='Message User Image'>
-                                <div class='direct-chat-text'>
-                                    $msg
-                                </div>
-                            </div>";
-
         $feedback_count = Feedback::where("code",$code)->count();
 
         return [
             "code" => $code,
             "picture" => url('resources/img/ro7.png'),
-            "content" => "<button class='btn btn-xs btn-info' onclick='viewReco($(this))' data-toggle='modal'
-                               data-target='#feedbackModal'
-                               data-code='$code'
-                               >
-                           <i class='fa fa-comments'></i> ReCo <span class='badge bg-blue' id='reco_count".$code."'>$feedback_count</span>
-                       </button><a href='$redirect_track' class='btn btn-xs btn-warning' target='_blank'>
-                                                <i class='fa fa-stethoscope'></i> Track
-                                            </a>",
-            "feedback_receiver" => $feedback_receiver,
             "feedback_count" => $feedback_count,
             "sender_facility" => $sender->facility_id,
             "user_facility" => $user->facility_id,
             "message" => $msg,
             "userid_sender" => $sender->id,
             "name_sender" => $name_sender,
-            "facility_sender" => Facility::find($sender->facility_id)->name
+            "facility_sender" => Facility::find($sender->facility_id)->name,
+            "date_now" => $date_now,
+            "redirect_track" => $redirect_track
         ];
     }
 

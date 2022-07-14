@@ -53,30 +53,39 @@
                     tinyMCE.triggerSave();
                     let str = $("#mytextarea").val();
                     str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-                    tinyMCE.activeEditor.setContent('');
+                    if(str) {
+                        tinyMCE.activeEditor.setContent('');
 
-                    this.sender_name = ""
-                    if(this.user.level === "doctor")
-                       this.sender_name += "Dr. "
+                        this.sender_name = ""
+                        if (this.user.level === "doctor")
+                            this.sender_name += "Dr. "
 
-                    this.sender_name +=  this.user.fname+" "+this.user.mname+" "+this.user.lname
-                    this.new_message = {
-                        code: this.select_rec.code,
-                        message: str,
-                        sender: this.user.id,
-                        sender_name :  this.sender_name,
-                        send_date : moment().format('D MMM h:m a'),
-                        position: "right",
-                        chat_image: $("#receiver_pic").val(),
-                        facility_name: $("#facility_name").val()
+                        this.sender_name += this.user.fname + " " + this.user.mname + " " + this.user.lname
+                        this.new_message = {
+                            code: this.select_rec.code,
+                            message: str,
+                            sender: this.user.id,
+                            sender_name: this.sender_name,
+                            send_date: moment().format('D MMM h:m a'),
+                            position: "right",
+                            chat_image: $("#receiver_pic").val(),
+                            facility_name: $("#facility_name").val()
+                        }
+                        this.messages.push(this.new_message)
+                        this.scrolldownFeedback(this.select_rec.code)
+                        this.socket_message = {
+                            code: this.select_rec.code,
+                            message: str
+                        }
+                        axios.post('doctor/feedback', this.socket_message).then(response => {
+                        });
                     }
-                    this.messages.push(this.new_message)
-                    this.scrolldownFeedback(this.select_rec.code)
-                    this.socket_message = {
-                        code : this.select_rec.code,
-                        message : str
+                    else {
+                        Lobibox.alert("error",
+                            {
+                                msg: "ReCo message was empty!"
+                            });
                     }
-                    axios.post('doctor/feedback', this.socket_message).then(response => {});
                 }
                 else {
                     Lobibox.alert("error",

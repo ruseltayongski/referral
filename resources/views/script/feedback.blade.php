@@ -114,7 +114,7 @@
         else {
             Lobibox.alert("error",
             {
-                msg: "You ReCo was empty!"
+                msg: "ReCo message was empty!"
             });
         }
     });

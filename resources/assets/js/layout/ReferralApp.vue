@@ -23,15 +23,38 @@
                 let audioElement = document.createElement('audio');
                 audioElement.setAttribute('src', $("#broadcasting_url").val()+"/public/notify.mp3");
             },
-            notifyReco(code, picture, content) {
+            notifyReco(code, feedback_count, redirect_track) {
+                let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
+                    '                               data-target=\'#feedbackModal\'\n' +
+                    '                               data-code="'+code+'" ' +
+                    '                               >\n' +
+                    '                           <i class=\'fa fa-comments\'></i> ReCo <span class=\'badge bg-blue\' id="reco_count'+code+'">'+feedback_count+'</span>\n' +
+                    '                       </button><a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+                    '                                                <i class=\'fa fa-stethoscope\'></i> Track\n' +
+                    '                                            </a>';
                 Lobibox.notify("success", {
                     title: code,
                     size: 'normal',
                     delay: false,
                     closeOnClick: false,
-                    img: picture,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                     msg: content
                 });
+            },
+            appendReco(code, name_sender, facility_sender, date_now, msg) {
+                let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
+                let message = msg.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+                $(".reco-body"+code).append('<div class=\'direct-chat-msg left\'>\n' +
+                    '                    <div class=\'direct-chat-info clearfix\'>\n' +
+                    '                    <span class="direct-chat-name text-info pull-left">'+facility_sender+'</span><br>'+
+                    '                    <span class=\'direct-chat-name pull-left\'>'+name_sender+'</span>\n' +
+                    '                    <span class=\'direct-chat-timestamp pull-right\'>'+date_now+'</span>\n' +
+                    '                    </div>\n' +
+                    '                    <img class=\'direct-chat-img\' title=\'\' src="'+picture_sender+'" alt=\'Message User Image\'>\n' +
+                    '                    <div class=\'direct-chat-text\'>\n' +
+                    '                    '+message+'\n' +
+                    '                    </div>\n' +
+                    '                    </div>')
             },
             notifyReferral(patient_name, referring_md, referring_name) {
                 Lobibox.notify('success', {
@@ -226,15 +249,15 @@
                         if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
                             this.reco_count++
                             $("#reco_count").html(this.reco_count)
-                            $(".reco-body"+event.payload.code).append(event.payload.feedback_receiver);
+                            this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message)
                             try {
                                 let objDiv = document.getElementById(event.payload.code);
                                 objDiv.scrollTop = objDiv.scrollHeight;
                                 if (!objDiv.scrollTop)
-                                    this.notifyReco(event.payload.code, event.payload.picture, event.payload.content)
+                                    this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
                             } catch(err){
                                 console.log("modal not open");
-                                this.notifyReco(event.payload.code, event.payload.picture, event.payload.content)
+                                this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
                             }
                         }
                     });
