@@ -8,6 +8,7 @@ use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Events\SocketReferralAccepted;
+use App\Events\SocketReferralArrived;
 use App\Events\SocketReferralCall;
 use App\Events\SocketReferralDeparted;
 use App\Events\SocketReferralRejected;
@@ -967,8 +968,9 @@ class ReferralCtrl extends Controller
     public function arrive(Request $req, $track_id)
     {
         $user = Session::get('auth');
-        $date = date('Y-m-d H:i:s');
+        $date = date('M d, Y h:i A');
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -986,16 +988,27 @@ class ReferralCtrl extends Controller
                 'date_arrived' => $date,
                 'status' => 'arrived'
             ]);
-        PregnantForm::where('id',$track->form_id)
-            ->update([
-                'arrival_date' => $date
-            ]);
 
-        $hosp = Facility::find($user->facility_id)->name;
-        $msg = "$track->code arrived at $hosp.";
-        DeviceTokenCtrl::send('Arrived',$msg,$track->referred_from);
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+        ->orderBy("id","desc")
+        ->first();
 
-        return date('M d, Y h:i A',strtotime($date));
+        $new_arrive = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => $date,
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from,
+            "remarks" => $req->remarks
+        ];
+
+        broadcast(new SocketReferralArrived($new_arrive));
     }
 
     public function archive(Request $req, $track_id)

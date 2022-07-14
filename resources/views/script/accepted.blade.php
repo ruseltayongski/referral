@@ -17,35 +17,15 @@
     });
 
     $('#arriveForm').on('submit',function(e){
-        $('.loading').show();
-         e.preventDefault();
-         var remarks = $(this).find('.remarks').val();
+        $("#arrived_button").attr('disabled',true);
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/arrive/') }}/" + track_id,
             type: 'POST',
-            success: function(date){
-                var arrive_data = {
-                    code: code,
-                    patient_name: patient_name,
-                    track_id: track_id,
-                    date: date,
-                    current_facility: current_facility,
-                    remarks: remarks
-                };
-                $('.activity_'+code).html('ARRIVED');
-                arriveRef.push(arrive_data);
-                arriveRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        arriveRef.child(data.key).remove();
-                        var msg = 'Patient arrived to your facility';
-                        $('.info').removeClass('hide').find('.message').html(msg);
-                        $('#arriveModal').modal('hide');
-                        window.location.reload(true);
-                    },500);
-                });
+            success: function() {
+                window.location.reload(true);
             },
             error: function(){
-                $('#serverModal').modal();
+
             }
         });
     });

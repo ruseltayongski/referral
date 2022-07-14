@@ -16,12 +16,12 @@
                     <div class="form-group-lg">
                         <label style="padding: 0px;">Remarks: </label>
                         <br />
-                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none"></textarea>
+                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none" required></textarea>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="arrived_button"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
