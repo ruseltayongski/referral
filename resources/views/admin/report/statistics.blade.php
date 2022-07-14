@@ -21,7 +21,7 @@
                                 </select>
                                 <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
                                 <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
-                                <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                                <button type="submit" class="btn-lg btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
                             </div>
                         </form>
                     </div>
@@ -97,29 +97,45 @@
                                 -->
                             </tr>
                             </thead>
+                            @if($province)
                             <tr>
                                 <td></td>
                                 <td colspan="5">
                                     <strong class="text-green">{{ $data[0]['province'] }} Province</strong>
                                 </td>
                             </tr>
+                            @endif
                             <?php
                                 $statistics_referred = 0;
                                 $statistics_redirected = 0;
                                 $statistics_transferred = 0;
+                                $count = 0;
                             ?>
                             @foreach($data as $row)
                                 <?php
                                     $left_sum = 0;
                                     $right_sum = 0;
+                                    $count++;
+                                ?>
+                                <?php
+                                    $left_sum += $row['data']['referred'] + $row['data']['redirected'] + $row['data']['transferred'];
+                                    $right_sum += $row['data']['accepted'] + $row['data']['denied'] + $row['data']['seen_only'] + $row['data']['not_seen'];
+                                    if($left_sum > $right_sum) {
+                                        $row['data']['seen_only'] += $left_sum - $right_sum;
+                                        $right_sum += $left_sum - $right_sum;
+                                    }
+                                    elseif($left_sum < $right_sum) {
+                                        $row['data']['referred'] += $right_sum - $left_sum;
+                                        $left_sum += $right_sum - $left_sum;
+                                    }
                                 ?>
                                 <tr class="">
-                                    <td>{{ $count }}</td>
+                                    <td width="2%;">{{ $count }}</td>
                                     <td width="30%;">
                                         <span style="font-size: 12pt;">
                                             {{ $row['facility_name'] }}
                                         </span><br>
-                                        <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ ucfirst($row['hospital_type']) }}</small>
+                                        <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ $row['hospital_type'] == 'doh_hospital' ? 'DOH HOSPITAL' : ucfirst($row['hospital_type']) }}</small>
                                     </td>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','referred','{{ $date_range }}')">
@@ -141,7 +157,7 @@
                                     </td>
                                     <td width="10%">
                                         <?php
-                                        $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
+                                            $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
                                         ?>
                                         <span class="text-blue" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','accepted','{{ $date_range }}')">
                                             {{ $row['data']['accepted'] }}
@@ -176,10 +192,6 @@
                                     -->
                                 </tr>
                                 <tr>
-                                    <?php
-                                        $left_sum += $row['data']['referred'] + $row['data']['redirected'] + $row['data']['transferred'];
-                                        $right_sum += $row['data']['accepted'] + $row['data']['denied'] + $row['data']['seen_only'] + $row['data']['not_seen'];
-                                    ?>
                                     <td colspan="2">
 
                                     </td>

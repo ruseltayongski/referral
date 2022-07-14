@@ -297,7 +297,7 @@
                                         ?>
                                     </div>
                                 </div>
-                                <div class="stepper-item @if($referred_travel_track || $referred_arrived_track) completed @endif">
+                                <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track) && !$referred_rejected_track ) completed @endif">
                                     <div class="step-counter">4</div>
                                     <div class="step-name">Departed</div>
                                 </div>

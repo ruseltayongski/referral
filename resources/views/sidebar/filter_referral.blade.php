@@ -49,6 +49,7 @@
                     <option value="">Select All</option>
                     <option {{ ($option=='referred') ? 'selected': '' }} value="referred">New Referral</option>
                     <option {{ ($option=='accepted') ? 'selected': '' }} value="accepted">Accepted</option>
+                    <option {{ ($option=='seen_only') ? 'selected': '' }} value="seen_only">Seen Only</option>
                 </select>
             </div>
             <div class="btn-group">
