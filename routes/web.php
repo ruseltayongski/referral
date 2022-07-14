@@ -600,4 +600,13 @@ Route::get('reco/new/{code}','FeedbackCtrl@recoNew');
 Route::post('reco/seen','FeedbackCtrl@recoSeen');
 Route::get('reco/seen1/{code}','FeedbackCtrl@recoSeen1');
 
+// appointment
+Route::post('appointment/create','LoginCtrl@createAppointment');
+Route::match(['GET','POST'],'admin/appointment','admin\ApptCtrl@appointment');
+Route::post('admin/appointment/details','admin\ApptCtrl@appointmentDetails');
+Route::post('admin/appointment/approve','admin\ApptCtrl@approveAppointment');
 
+// feedback
+Route::match(['GET','POST'],'admin/user_feedback','admin\ApptCtrl@feedback');
+Route::post('admin/user_feedback/details','admin\ApptCtrl@feedbackDetails');
+Route::post('user_feedback/create','LoginCtrl@sendFeedback');

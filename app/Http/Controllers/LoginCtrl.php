@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Appointment;
 use App\Login;
 use App\User;
+use App\UserFeedback;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -160,4 +162,26 @@ class LoginCtrl extends Controller
                 ]);
     }
 
+    public function createAppointment(Request $req) {
+        $data = new Appointment();
+        $data->name = $req->name;
+        $data->email = $req->email;
+        $data->contact = $req->contact;
+        $data->preferred_date = $req->date;
+        $data->category = $req->category;
+        $data->message = $req->message;
+        $data->status = 'new';
+        $data->save();
+        return Redirect::back();
+    }
+
+    public function sendFeedback(Request $req) {
+        $data = new UserFeedback();
+        $data->name = $req->name;
+        $data->email = $req->email;
+        $data->subject = $req->subject;
+        $data->message = $req->message;
+        $data->save();
+        return Redirect::back();
+    }
 }
