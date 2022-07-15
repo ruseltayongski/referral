@@ -2,7 +2,7 @@
     //var objDiv = document.getElementById("feedback-181105-023-134025");
     <?php $user = \Illuminate\Support\Facades\Session::get('auth'); ?>
     var code = 0;
-    var feedbackRef = dbRef.ref('Feedback');
+    //var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
 
     $('.btn-feedback').on('click',function () {
@@ -201,7 +201,7 @@
         }
     });*/
 
-    feedbackRef.on('child_added',function(snapshot){
+    /*feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var c = data.code;
 
@@ -221,5 +221,5 @@
                 }
             }
         });
-    });
+    });*/
 </script>

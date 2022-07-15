@@ -101,16 +101,19 @@
                 <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
                 <div style="padding: 2px;">
                     <?php
-                    $user = Session::get('auth');
-                    $t = '';
-                    $dept_desc = '';
-                    if($user->level=='doctor')
-                        $t='Dr.';
-                    else if($user->level=='support')
-                        $dept_desc = ' / IT Support';
+                        $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
+                        $reco_count = \App\Http\Controllers\FeedbackCtrl::recoCount();
 
-                    if($user->department_id > 0)
-                        $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
+                        $user = Session::get('auth');
+                        $t = '';
+                        $dept_desc = '';
+                        if($user->level=='doctor')
+                            $t='Dr.';
+                        else if($user->level=='support')
+                            $dept_desc = ' / IT Support';
+
+                        if($user->department_id > 0)
+                            $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
 
                     ?>
                     <span class="text-orange">Welcome , </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
@@ -231,12 +234,12 @@
 <script src="{{ asset('public/js/app_layout.js?version=').date('YmdHis') }}" defer></script>
 
 @include('layouts.app_script')
-@include('script.firebase')
+{{--@include('script.firebase')--}}
 @include('script.newreferral')
 @include('script.password')
 @include('script.duty')
-@include('script.desktop-notification')
-@include('script.notification_new')
+{{--@include('script.desktop-notification')
+@include('script.notification_new')--}}
 @include('script.feedback')
 
 @yield('js')

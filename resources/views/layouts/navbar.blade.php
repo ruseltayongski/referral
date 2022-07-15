@@ -7,10 +7,6 @@
     </button>
     <a class="navbar-brand" href="#"></a>
 </div>
-<?php
-    $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
-    $reco_count = \App\Http\Controllers\FeedbackCtrl::recoCount();
-?>
 <input type="hidden" id="reco_count_val" value="{{ $reco_count }}">
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
     <ul class="nav navbar-nav">

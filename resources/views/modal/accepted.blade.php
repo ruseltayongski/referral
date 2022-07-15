@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Clinical Status</label>
                         <br />
-                        <select name="clinical_status" id="" class="form-control" >
+                        <select name="clinical_status" class="form-control" >
                             <option value="">Select option</option>
                             <option value="asymptomatic">Asymptomatic for at least 3 days</option>
                             <option value="recovered">Recovered</option>
@@ -119,7 +119,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Surveillance Category</label>
                         <br />
-                        <select name="sur_category" id="" class="form-control" >
+                        <select name="sur_category" class="form-control" >
                             <option value="">Select option</option>
                             <option value="contact_pum">Contact (PUM)</option>
                             <option value="suspect">Suspect</option>
@@ -144,7 +144,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" id="icd-modal-discharge">
+{{--<div class="modal fade" id="icd-modal-discharge">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -167,6 +167,6 @@
             </div>
         </div>
     </div>
-</div>
+</div>--}}
 
 

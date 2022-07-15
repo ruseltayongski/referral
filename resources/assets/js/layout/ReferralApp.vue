@@ -9,7 +9,8 @@
         data(){
             return {
                 increment_referral: Number,
-                reco_count : $("#reco_count_val").val()
+                reco_count : $("#reco_count_val").val(),
+                audioElement : ""
             }
         },
         methods: {
@@ -18,10 +19,6 @@
                 setTimeout(function(){
                     audioElement.pause();
                 },10000);
-            },
-            initializedAudio() {
-                let audioElement = document.createElement('audio');
-                audioElement.setAttribute('src', $("#broadcasting_url").val()+"/public/notify.mp3");
             },
             notifyReco(code, feedback_count, redirect_track) {
                 let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
@@ -242,8 +239,7 @@
                     websocket_element.html("CONNECTED")
                     websocket_element.addClass("text-green")
                 })
-            this.initializedAudio()
-            this.increment_referral = count_referral
+            this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
                     if(this.user.facility_id === event.payload.referred_to) {
@@ -255,7 +251,7 @@
                             let type = event.payload.form_type;
                             type = type=='normal' ? 'normal-section':'pregnant-section';
                             let referral_type = (type=='normal-section') ? 'normal':'pregnant';
-                            content = '<li>' +
+                            let content = '<li>' +
                                 '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
                                 '    <div class="timeline-item '+type+'" id="item-'+event.payload.tracking_id+'">\n' +
                                 '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span>\n' +

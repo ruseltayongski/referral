@@ -109,7 +109,7 @@
                         </div>
                         <div class="col-md-4">
                             <small class="text-success"><b>CLINICAL STATUS</b></small><br>
-                            <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                            <select name="clinical_status" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="asymptomatic">Asymptomatic</option>
                                 <option value="mild">Mild</option>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-md-4">
                             <small class="text-success"><b>SURVEILLANCE CATEGORY</b></small><br>
-                            <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                            <select name="sur_category" class="form-control-select" style="width: 100%;">
                                 <option value="">Select option</option>
                                 <option value="contact_pum">Contact (PUM)</option>
                                 <option value="suspect">Suspect</option>

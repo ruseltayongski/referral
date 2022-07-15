@@ -313,7 +313,7 @@
 
 @section('js')
 @include('script.filterMuncity')
-@include('script.firebase')
+{{--@include('script.firebase')--}}
 @include('script.datetime')
 <script>
     function promptWalkinPregnant(counter) {

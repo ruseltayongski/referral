@@ -705,7 +705,7 @@
 
 @section('js')
     @include('script.referred')
-    @include('script.firebase')
+    {{--@include('script.firebase')--}}
     <script>
         @if(Session::get('redirected_patient'))
             Lobibox.notify('success', {

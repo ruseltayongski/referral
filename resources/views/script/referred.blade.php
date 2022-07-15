@@ -1,7 +1,7 @@
 <script>
     <?php $user=Session::get('auth');?>
     var myfacility_name = "{{ \App\Facility::find($user->facility_id)->name }}";
-    var referralRef = dbRef.ref('Referral');
+    /*var referralRef = dbRef.ref('Referral');
     var seenRef = dbRef.ref('Seen');
     var acceptRef = dbRef.ref('Accept');
     var rejectRef = dbRef.ref('Reject');
@@ -25,7 +25,7 @@
         $(activity).removeClass('pregnant-section normal-section').addClass('read-section');
         $(activity).find('.icon').removeClass('fa-ambulance').addClass('fa-eye');
         $(activity).find('.date_activity').html(date);
-    });
+    });*/
 
 //    var referralContent = '';
 //    referralRef.on('child_added',function(snapshot){
@@ -55,7 +55,7 @@
 
     var acceptContent = '';
     var rejectContent = '';
-    acceptRef.on('child_added',function(snapshot){
+    /*acceptRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var date = data.date;
         var action_md = data.action_md;
@@ -75,7 +75,6 @@
             '    </div>\n' +
             '</li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(acceptContent);
-        //$('.code-'+data.code).append(acceptContent);
     });
 
     rejectRef.on('child_added',function(snapshot){
@@ -99,9 +98,9 @@
             '                                                            </button>\n' +
             '                                                                                                            </td>\n' +
             '                                                </tr>');
-    });
+    });*/
 
-    var callContent = '';
+    /*var callContent = '';
     callRef.on('child_added',function(snapshot){
         var data = snapshot.val();
 
@@ -130,10 +129,9 @@
             '\n' +
             '</div></li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(callContent);
-        //$('.code-'+data.code).append(callContent);
     });
-
-    var arriveContent = '';
+*/
+    /*var arriveContent = '';
     arriveRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var date = data.date;
@@ -152,11 +150,9 @@
             '\n' +
             '</div></li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(arriveContent);
-        //$('.code-'+data.code).append(arriveContent);
+    });*/
 
-    });
-
-    var admitContent = '';
+    /*var admitContent = '';
     admitRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var date = data.date;
@@ -173,7 +169,6 @@
             '\n' +
             '</div></li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(admitContent);
-//        $('.code-'+data.code).append(admitContent);
 
     });
 
@@ -196,7 +191,6 @@
             '\n' +
             '</div></li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(dischargeContent);
-//        $('.code-'+data.code).append(dischargeContent);
 
     });
 
@@ -222,8 +216,7 @@
             '    </a>\n' +
             '</div></li>';
         $('.code-'+data.code+' > li:nth-child(1)').after(transferContent);
-//        $('.code-'+data.code).append(transferContent);
-    });
+    });*/
 </script>
 
 {{--Script for Call Button--}}

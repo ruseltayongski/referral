@@ -226,7 +226,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
     @include('modal.refer')
     @include('modal.accepted')
     @include('modal.accept_reject')
-    @include('modal.feedback')
+    {{--@include('modal.feedback')--}}
 @endsection
 {{--@include('script.firebase')--}}
 @section('js')

@@ -1,10 +1,10 @@
 <script>
     <?php $user = Session::get('auth'); ?>
 
-    var arriveRef = dbRef.ref('Arrival');
+    /*var arriveRef = dbRef.ref('Arrival');
     var admitRef = dbRef.ref('Admit');
     var dischargetRef = dbRef.ref('Discharge');
-    var transferRef = dbRef.ref('Transfer');
+    var transferRef = dbRef.ref('Transfer');*/
     var referred_name = '';
     //initializes variables
     var current_facility, code, patient_name, track_id, form_type;

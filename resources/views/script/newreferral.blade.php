@@ -5,7 +5,7 @@
         this.play();
     }, false);
 
-    function play()
+    /*function play()
     {
         audioElement.play();
 
@@ -33,5 +33,5 @@
         count_referral = parseInt(count_referral);
         count_referral += 1;
         $('.count_referral').html(count_referral);
-    });
+    });*/
 </script>
