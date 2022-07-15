@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li v-for="rec in reco" :key="rec.id" @click="selectReco(rec)" :class="{ 'selected': rec.code == selected }">
+        <li v-for="rec in reco" :key="rec.reco_id" @click="selectReco(rec)" :class="{ 'selected': rec.code == selected }">
             <img :src="logo" class="doh_logo" alt="">
             <div>
                 <h2 v-if="rec.patient_name.length >= 25">
