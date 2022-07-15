@@ -87,14 +87,13 @@
 
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
-        /*var msg = $("#message").val();
-        $("#message").val('').attr('placeholder','Sending...');*/
+        e.stopImmediatePropagation();
         tinyMCE.triggerSave();
         var str = $(".mytextarea1").val();
         str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-        tinyMCE.activeEditor.setContent('');
+        console.log("feedback_sendsd");
         if(str) {
-            console.log("feedback_send");
+            tinyMCE.activeEditor.setContent('');
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
                 type: 'post',
@@ -114,7 +113,7 @@
         else {
             Lobibox.alert("error",
             {
-                msg: "ReCo message was empty!"
+                msg: "ReCo message was emptysss!"
             });
         }
     });
