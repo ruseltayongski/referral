@@ -317,11 +317,11 @@
                                         <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
                                     @endif
                                 </div>
-                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">6</div>
                                     <div class="step-name">Admitted</div>
                                 </div>
-                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">7</div>
                                     <div class="step-name">Discharged</div>
                                 </div>
@@ -415,11 +415,11 @@
                                                 <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
                                             @endif
                                         </div>
-                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">6</div>
                                             <div class="step-name">Admitted</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">7</div>
                                             <div class="step-name">Discharged</div>
                                         </div>
@@ -524,7 +524,7 @@
                                                         </tr>
                                                     @elseif($act->status=='arrived')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -532,7 +532,7 @@
                                                         </tr>
                                                     @elseif($act->status=='admitted')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -540,7 +540,7 @@
                                                         </tr>
                                                     @elseif($act->status=='discharged')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -555,7 +555,7 @@
                                                         </tr>
                                                     @elseif($act->status=='archived')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>

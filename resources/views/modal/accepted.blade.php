@@ -71,7 +71,7 @@
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" id="admitted_button" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -135,7 +135,7 @@
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="discharged_button"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

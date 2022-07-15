@@ -176,11 +176,36 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-            notifyReferralAdmitted() {
-                //code here
+            notifyReferralAdmitted(patient_code, activity_id, patient_name, current_facility, admitted_date) {
+                $("#admitted_progress"+patient_code+activity_id).addClass("completed");
+                $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle" style="display: table-row;">\n' +
+                    '                                                            <td>'+admitted_date+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtPatient">'+patient_name+'</span>  was admitted at '+current_facility+
+                    '                                                            </td>\n' +
+                    '                                                        </tr>');
+                Lobibox.notify('success', {
+                    delay: false,
+                    title: 'Admitted',
+                    msg: patient_name+' has admitted at '+current_facility+ '<br>'+ admitted_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
             },
-            notifyReferralDischarged() {
-                //code here
+            notifyReferralDischarged(patient_code, activity_id, patient_name, current_facility, discharged_date, remarks) {
+                $("#discharged_progress"+patient_code+activity_id).addClass("completed");
+                $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle" style="display: table-row;">\n' +
+                    '                                                            <td>'+discharged_date+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtPatient">'+patient_name+"</span>  was discharged at "+current_facility+
+                    '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '                                                            </td>\n' +
+                    '                                                        </tr>');
+                Lobibox.notify('success', {
+                    delay: false,
+                    title: 'Discharged',
+                    msg: patient_name+" has discharged at "+current_facility+ '<br>'+ discharged_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
             },
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
@@ -341,6 +366,20 @@
                 .listen('SocketReferralNotArrived', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks)
+                    }
+                });
+
+            Echo.join('referral_admitted')
+                .listen('SocketReferralAdmitted', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralAdmitted(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date)
+                    }
+                });
+
+            Echo.join('referral_discharged')
+                .listen('SocketReferralDischarged', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks)
                     }
                 });
 

@@ -37,94 +37,29 @@
             type: 'POST',
             success: function(){
                 window.location.reload(true);
-                /*var arrive_data = {
-                    code: code,
-                    patient_name: patient_name,
-                    track_id: track_id,
-                    date: date,
-                    current_facility: current_facility,
-                    remarks: remarks
-                };
-                $('.activity_'+code).html('ARCHIVED');
-                arriveRef.push(arrive_data);
-                arriveRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        arriveRef.child(data.key).remove();
-                        var msg = 'Patient archived';
-                        $('.info').removeClass('hide').find('.message').html(msg);
-                        $('#arriveModal').modal('hide');
-                        window.location.reload(true);
-                    },500);
-                });*/
-            },
-            error: function(){
-                $('#serverModal').modal();
             }
         });
     });
 
     $('#admitForm').on('submit',function(e){
-        $('.loading').show();
-        e.preventDefault();
+        $("#admitted_button").attr('disabled',true);
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/admit/') }}/" + track_id,
             type: 'POST',
-            success: function(date){
-                $('.activity_'+code).html('ADMITTED');
-                var arrive_data = {
-                    code: code,
-                    patient_name: patient_name,
-                    track_id: track_id,
-                    date: date,
-                    current_facility: current_facility
-                };
-                admitRef.push(arrive_data);
-                admitRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        admitRef.child(data.key).remove();
-                        var msg = 'Patient admitted to your facility';
-                        $('.info').removeClass('hide').find('.message').html(msg);
-                        $('#admitModal').modal('hide');
-                        window.location.reload(true);
-                    },500);
-                });
-            },
-            error: function(){
-                $('#serverModal').modal();
+            success: function(){
+                window.location.reload(true);
             }
         });
     });
 
 
     $('#dischargeForm').on('submit',function(e){
-        $('.loading').show();
-        e.preventDefault();
-        var remarks = $(this).find('.remarks').val();
+        $("#discharged_button").attr('disabled',true);
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/discharge/') }}/" + track_id,
             type: 'POST',
             success: function(date){
-                var msg = 'Patient admitted to your facility';
-                $('.info').removeClass('hide').find('.message').html(msg);
-                $('.activity_'+code).html('DISCHARGED');
-                var arrive_data = {
-                    code: code,
-                    patient_name: patient_name,
-                    track_id: track_id,
-                    date: date,
-                    current_facility: current_facility,
-                    remarks: remarks
-                };
-                dischargetRef.push(arrive_data);
-                dischargetRef.on('child_added',function(data){
-                    setTimeout(function(){
-                        dischargetRef.child(data.key).remove();
-                        window.location.reload(false);
-                    },500);
-                });
-            },
-            error: function(){
-                $('#serverModal').modal();
+                window.location.reload(true);
             }
         });
     });
