@@ -149,15 +149,32 @@
                     '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
                     '                                                            </td>\n' +
                     '                                                        </tr>');
-                Lobibox.notify('info', {
+                Lobibox.notify('success', {
                     delay: false,
-                    title: 'Patient Arrived',
+                    title: 'Arrived',
                     msg: patient_name+' has arrived at '+current_facility+ '<br>'+ arrived_date,
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-            notifyReferralNotArrived() {
-                //code here
+            notifyReferralNotArrived(patient_code, activity_id, patient_name, current_facility, arrived_date, remarks) {
+                $("#notarrived_progress"+patient_code+activity_id).addClass("bg-red");
+                $("#departed_progress"+patient_code+activity_id).addClass("completed");
+                let arrived_element = $("#arrived_name"+patient_code+activity_id);
+                arrived_element.html("Not Arrived");
+                arrived_element.addClass("not_arrived");
+                $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle" style="display: table-row;">\n' +
+                    '                                                            <td>'+arrived_date+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtPatient">'+patient_name+"</span>  didn't arrived at "+current_facility+
+                    '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '                                                            </td>\n' +
+                    '                                                        </tr>');
+                Lobibox.notify('error', {
+                    delay: false,
+                    title: 'Not Arrived',
+                    msg: patient_name+" didn't arrived at "+current_facility+ '<br>'+ arrived_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
             },
             notifyReferralAdmitted() {
                 //code here
@@ -317,6 +334,13 @@
                 .listen('SocketReferralArrived', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks)
+                    }
+                });
+
+            Echo.join('referral_not_arrived')
+                .listen('SocketReferralNotArrived', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks)
                     }
                 });
 

@@ -31,14 +31,13 @@
     });
 
     $('#archiveForm').on('submit',function(e){
-        $('.loading').show();
-         e.preventDefault();
-         var remarks = $(this).find('.remarks').val();
+        $("#notarrived_button").attr('disabled',true);
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/archive/') }}/" + track_id,
             type: 'POST',
-            success: function(date){
-                var arrive_data = {
+            success: function(){
+                window.location.reload(true);
+                /*var arrive_data = {
                     code: code,
                     patient_name: patient_name,
                     track_id: track_id,
@@ -56,7 +55,7 @@
                         $('#arriveModal').modal('hide');
                         window.location.reload(true);
                     },500);
-                });
+                });*/
             },
             error: function(){
                 $('#serverModal').modal();

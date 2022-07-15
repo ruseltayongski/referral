@@ -11,6 +11,7 @@ use App\Events\SocketReferralAccepted;
 use App\Events\SocketReferralArrived;
 use App\Events\SocketReferralCall;
 use App\Events\SocketReferralDeparted;
+use App\Events\SocketReferralNotArrived;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Facility;
@@ -1016,6 +1017,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1033,12 +1035,27 @@ class ReferralCtrl extends Controller
                 'date_arrived' => $date,
                 'status' => 'archived'
             ]);
-        PregnantForm::where('id',$track->form_id)
-            ->update([
-                'arrival_date' => $date
-            ]);
 
-        return date('M d, Y h:i A',strtotime($date));
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $new_notarrived = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => $date,
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from,
+            "remarks" => $req->remarks
+        ];
+
+        broadcast(new SocketReferralNotArrived($new_notarrived));
     }
 
     public function admit(Request $req, $track_id)
