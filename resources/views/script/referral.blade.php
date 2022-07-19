@@ -22,7 +22,7 @@
 </script>
 
 <script>
-    var action_md = "{{ $user->fname }} {{ $user->mname }} {{ $user->lname }}";
+    /*var action_md = "{{ $user->fname }} {{ $user->mname }} {{ $user->lname }}";
     referred_name = action_md;
     var content = '';
     connRef.child(myfacility).on('child_added', function(snapshot) {
@@ -64,7 +64,7 @@
 
         $('.timeline').prepend(content);
 
-    });
+    });*/
 </script>
 
 @include('script.view_form')

@@ -45,6 +45,9 @@
             .step-name {
                 font-size : 9px;
             }
+            .not_arrived {
+                font-size: 8px;
+            }
         }
 
         .stepper-wrapper {
@@ -240,6 +243,11 @@
                                     ->where("created_at",">=",$referred_track->created_at)
                                     ->where("status","arrived")
                                     ->exists();
+                                $referred_notarrived_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_from",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","archived")
+                                    ->exists();
                                 $referred_admitted_track = \App\Activity::where("code",$referred_track->code)
                                     ->where("referred_from",$referred_track->referred_to)
                                     ->where("created_at",">=",$referred_track->created_at)
@@ -297,19 +305,23 @@
                                         ?>
                                     </div>
                                 </div>
-                                <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track) && !$referred_rejected_track ) completed @endif">
+                                <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track ) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">4</div>
                                     <div class="step-name">Departed</div>
                                 </div>
-                                <div class="stepper-item @if($referred_arrived_track && !$referred_rejected_track) completed @endif">
-                                    <div class="step-counter">5</div>
-                                    <div class="step-name">Arrived</div>
+                                <div class="stepper-item @if( ($referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
+                                    <div class="step-counter {{ $referred_notarrived_track && !$referred_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">5</div>
+                                    @if($referred_notarrived_track)
+                                        <div class="step-name not_arrived">Not Arrived</div>
+                                    @else
+                                        <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
+                                    @endif
                                 </div>
-                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">6</div>
                                     <div class="step-name">Admitted</div>
                                 </div>
-                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif">
+                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">7</div>
                                     <div class="step-name">Discharged</div>
                                 </div>
@@ -346,6 +358,11 @@
                                             ->where("referred_from",$redirect_track->referred_to)
                                             ->where("created_at",">=",$redirect_track->created_at)
                                             ->where("status","arrived")
+                                            ->exists();
+                                        $redirected_notarrived_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_from",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","archived")
                                             ->exists();
                                         $redirected_admitted_track = \App\Activity::where("code",$redirect_track->code)
                                             ->where("referred_from",$redirect_track->referred_to)
@@ -386,19 +403,23 @@
                                                     echo 'Accepted' ;
                                                 ?></div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_travel_track || $redirected_arrived_track) completed @endif">
+                                        <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">4</div>
                                             <div class="step-name">Departed</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_arrived_track) completed @endif">
-                                            <div class="step-counter">5</div>
-                                            <div class="step-name">Arrived</div>
+                                        <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
+                                            <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">5</div>
+                                            @if($redirected_notarrived_track)
+                                                <div class="step-name not_arrived">Not Arrived</div>
+                                            @else
+                                                <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
+                                            @endif
                                         </div>
-                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">6</div>
                                             <div class="step-name">Admitted</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif">
+                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">7</div>
                                             <div class="step-name">Discharged</div>
                                         </div>
@@ -503,7 +524,7 @@
                                                         </tr>
                                                     @elseif($act->status=='arrived')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -511,7 +532,7 @@
                                                         </tr>
                                                     @elseif($act->status=='admitted')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -519,7 +540,7 @@
                                                         </tr>
                                                     @elseif($act->status=='discharged')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -534,7 +555,7 @@
                                                         </tr>
                                                     @elseif($act->status=='archived')
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -684,7 +705,7 @@
 
 @section('js')
     @include('script.referred')
-    @include('script.firebase')
+    {{--@include('script.firebase')--}}
     <script>
         @if(Session::get('redirected_patient'))
             Lobibox.notify('success', {

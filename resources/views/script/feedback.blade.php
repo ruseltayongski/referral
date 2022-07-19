@@ -2,7 +2,7 @@
     //var objDiv = document.getElementById("feedback-181105-023-134025");
     <?php $user = \Illuminate\Support\Facades\Session::get('auth'); ?>
     var code = 0;
-    var feedbackRef = dbRef.ref('Feedback');
+    //var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
 
     $('.btn-feedback').on('click',function () {
@@ -87,14 +87,13 @@
 
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
-        /*var msg = $("#message").val();
-        $("#message").val('').attr('placeholder','Sending...');*/
+        e.stopImmediatePropagation();
         tinyMCE.triggerSave();
         var str = $(".mytextarea1").val();
         str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-        tinyMCE.activeEditor.setContent('');
+        console.log("feedback_sendsd");
         if(str) {
-            console.log("feedback_send");
+            tinyMCE.activeEditor.setContent('');
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
                 type: 'post',
@@ -114,7 +113,7 @@
         else {
             Lobibox.alert("error",
             {
-                msg: "ReCo message was empty!"
+                msg: "ReCo message was emptysss!"
             });
         }
     });
@@ -201,7 +200,7 @@
         }
     });*/
 
-    feedbackRef.on('child_added',function(snapshot){
+    /*feedbackRef.on('child_added',function(snapshot){
         var data = snapshot.val();
         var c = data.code;
 
@@ -221,5 +220,5 @@
                 }
             }
         });
-    });
+    });*/
 </script>

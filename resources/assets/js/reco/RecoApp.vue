@@ -93,6 +93,7 @@
                     axios.get('reco/new/'+payload.code).then(response => {
                         if(response.data.code) {
                             this.reco_handler.unshift(response.data)
+                            this.reco.unshift(response.data)
                             this.newRecoNotification(response.data.message)
                         }
                     });

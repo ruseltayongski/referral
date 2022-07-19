@@ -16,12 +16,12 @@
                     <div class="form-group-lg">
                         <label style="padding: 0px;">Remarks: </label>
                         <br />
-                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none"></textarea>
+                        <textarea name="remarks" class="remarks form-control" rows="5" style="resize: none" required></textarea>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="arrived_button"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -46,7 +46,7 @@
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="notarrived_button"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -71,7 +71,7 @@
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" id="admitted_button" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Clinical Status</label>
                         <br />
-                        <select name="clinical_status" id="" class="form-control" >
+                        <select name="clinical_status" class="form-control" >
                             <option value="">Select option</option>
                             <option value="asymptomatic">Asymptomatic for at least 3 days</option>
                             <option value="recovered">Recovered</option>
@@ -119,7 +119,7 @@
                     <div class="form-group">
                         <label style="padding: 0px">Surveillance Category</label>
                         <br />
-                        <select name="sur_category" id="" class="form-control" >
+                        <select name="sur_category" class="form-control" >
                             <option value="">Select option</option>
                             <option value="contact_pum">Contact (PUM)</option>
                             <option value="suspect">Suspect</option>
@@ -135,7 +135,7 @@
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="discharged_button"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -144,7 +144,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" id="icd-modal-discharge">
+{{--<div class="modal fade" id="icd-modal-discharge">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -167,6 +167,6 @@
             </div>
         </div>
     </div>
-</div>
+</div>--}}
 
 

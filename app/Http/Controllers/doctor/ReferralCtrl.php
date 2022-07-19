@@ -8,8 +8,12 @@ use App\Department;
 use App\Events\NewReferral;
 use App\Events\SocketReco;
 use App\Events\SocketReferralAccepted;
+use App\Events\SocketReferralAdmitted;
+use App\Events\SocketReferralArrived;
 use App\Events\SocketReferralCall;
 use App\Events\SocketReferralDeparted;
+use App\Events\SocketReferralDischarged;
+use App\Events\SocketReferralNotArrived;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Facility;
@@ -967,8 +971,9 @@ class ReferralCtrl extends Controller
     public function arrive(Request $req, $track_id)
     {
         $user = Session::get('auth');
-        $date = date('Y-m-d H:i:s');
+        $date = date('M d, Y h:i A');
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -986,16 +991,26 @@ class ReferralCtrl extends Controller
                 'date_arrived' => $date,
                 'status' => 'arrived'
             ]);
-        PregnantForm::where('id',$track->form_id)
-            ->update([
-                'arrival_date' => $date
-            ]);
 
-        $hosp = Facility::find($user->facility_id)->name;
-        $msg = "$track->code arrived at $hosp.";
-        DeviceTokenCtrl::send('Arrived',$msg,$track->referred_from);
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+        ->orderBy("id","desc")
+        ->first();
+        $new_arrive = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => date('M d, Y h:i A',strtotime($date)),
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from,
+            "remarks" => $req->remarks
+        ];
 
-        return date('M d, Y h:i A',strtotime($date));
+        broadcast(new SocketReferralArrived($new_arrive));
     }
 
     public function archive(Request $req, $track_id)
@@ -1003,6 +1018,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1020,12 +1036,26 @@ class ReferralCtrl extends Controller
                 'date_arrived' => $date,
                 'status' => 'archived'
             ]);
-        PregnantForm::where('id',$track->form_id)
-            ->update([
-                'arrival_date' => $date
-            ]);
 
-        return date('M d, Y h:i A',strtotime($date));
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $new_notarrived = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => date('M d, Y h:i A',strtotime($date)),
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from,
+            "remarks" => $req->remarks
+        ];
+
+        broadcast(new SocketReferralNotArrived($new_notarrived));
     }
 
     public function admit(Request $req, $track_id)
@@ -1033,6 +1063,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1050,11 +1081,25 @@ class ReferralCtrl extends Controller
                 'status' => 'admitted'
             ]);
 
-        $hosp = Facility::find($user->facility_id)->name;
-        $msg = "$track->code admitted at $hosp.";
-        DeviceTokenCtrl::send('Admitted',$msg,$track->referred_from);
 
-        return date('M d, Y h:i A',strtotime($date));
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $new_admitted = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => date('M d, Y h:i A',strtotime($date)),
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from
+        ];
+
+        broadcast(new SocketReferralAdmitted($new_admitted));
     }
 
     public function discharge(Request $req, $track_id)
@@ -1062,6 +1107,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
+
         $track->update([
             'status' => 'discharged'
         ]);
@@ -1101,10 +1147,26 @@ class ReferralCtrl extends Controller
 //            $icd->save();
 //        }
 
-        $hosp = Facility::find($user->facility_id)->name;
-        $msg = "$track->code discharged from $hosp.";
-        DeviceTokenCtrl::send('Discharged',$msg,$track->referred_from);
-        return date('M d, Y h:i A',strtotime($date));
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $new_discharged = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "current_facility" => Facility::find($user->facility_id)->name,
+            "arrived_date" => date('M d, Y h:i A',strtotime($date)),
+            "patient_code" => $track->code,
+            "activity_id" => $latest_activity->id,
+            "referred_from" => $latest_activity->referred_from,
+            "remarks" => $req->remarks
+        ];
+
+        broadcast(new SocketReferralDischarged($new_discharged));
+
     }
 
     public function transfer(Request $req) {
