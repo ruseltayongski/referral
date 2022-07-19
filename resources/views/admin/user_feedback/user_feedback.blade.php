@@ -26,21 +26,19 @@ $counter = 1;
         <div class="box-body">
             @if(count($data)>0)
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped">
-                        <tr class="bg-success bg-navy-active">
-                            <th></th>
-                            <th class="text-center">Name/Facility Name</th>
-                            <th class="text-center">Email</th>
-                            <th class="text-center">Subject</th>
-                            <th class="text-center">Feedback</th>
+                    <table class="table table-striped table-hover">
+                        <tr class="bg-olive-active">
+                            <th class="text-center"> Name / Facility Name</th>
+                            <th class="text-center"> Email </th>
+                            <th class="text-center"> &emsp;Subject&emsp;</th>
+                            <th class="text-center"> Feedback </th>
                         </tr>
                         @foreach($data as $row)
                             <tr>
-                                <td> {{ $counter++ }} </td>
                                 <td><b> {{ $row->name }} </b></td>
                                 <td> {{ $row->email }} </td>
                                 <td class="text-center"> {{ $row->subject }} </td>
-                                <td> {{ $row->message}} </td>
+                                <td> {{ $row->message }} </td>
                             </tr>
                         @endforeach
                     </table>

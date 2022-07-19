@@ -7,11 +7,11 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
 <style>
     .bg_yellow_orange {
-        background-color: #f36f12c2;
+        background-color: #ffc297b0;
     }
 
     .bg_light_blue {
-        background-color: #22c7e657;
+        background-color: #97d4df4f;
     }
 
     .bg_gray {
@@ -26,7 +26,7 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 <form action="{{ asset('admin/appointment') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="appt_keyword"  placeholder="Search...">
+                            <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
@@ -49,18 +49,17 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
             <h2>APPOINTMENTS</h2>
             <div class="form-inline">
                 <h5><b>Legend:</b>&nbsp;&nbsp;
-                    <span style="border: 1px solid black; background-color: #f36f12c2;">&emsp;&nbsp;</span> New &emsp;
-                    <span style="border: 1px solid black; background-color: #22c7e657;">&emsp;&nbsp;</span> Seen &emsp;
+                    <span style="border: 1px solid black; background-color: #ffc297b0;">&emsp;&nbsp;</span> New &emsp;
+                    <span style="border: 1px solid black; background-color: #97d4df4f;">&emsp;&nbsp;</span> Seen &emsp;
                     {{--<span style="border: 1px solid black; background-color: #b5bbc873;">&emsp;&nbsp;</span> Approved--}}
                 </h5>
             </div>
         </div>
-        <div class="box-body">
+        <div class="box-body appointments">
             @if(count($data)>0)
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr class="bg-success bg-navy-active">
-                            <th></th>
                             <th class="text-center">Requester</th>
                             <th class="text-center">Email</th>
                             <th class="text-center">Contact</th>
@@ -78,7 +77,6 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 //                                $bg = 'bg_gray';
                             ?>
                             <tr class="{{ $bg }}" id="bgcolor{{$row->id}}" style="font-size: 13px">
-                                <td class="text-center">{{ $counter++ }}</td>
                                 <td style="white-space: nowrap;">
                                     <b>
                                         <a
@@ -103,7 +101,7 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                         @endforeach
                     </table>
                     <div class="text-center">
-                        {{ $data->links() }}
+                        {!! $data->links() !!}
                     </div>
                 </div>
             @else
