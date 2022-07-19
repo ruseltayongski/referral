@@ -23,6 +23,7 @@ class ApptCtrl extends Controller
         } else {
             $keyword = $req->appt_keyword;
         }
+
         $data = Appointment::orderBy('id', 'desc');
 
         if($keyword && $keyword != '') {
@@ -38,11 +39,12 @@ class ApptCtrl extends Controller
             $data = $data->where('preferred_date',$req->date_filter);
         }
 
-        $data = $data->paginate(25);
+        $data = $data->paginate(20);
 
         return view('admin.appointment.appt',[
             'title' => 'Appointment',
-            'data' => $data
+            'data' => $data,
+            'keyword' => ''
         ]);
     }
 
@@ -76,7 +78,7 @@ class ApptCtrl extends Controller
             $data = $data->where('name', 'like', '%'.$keyword.'%');
         }
 
-        $data = $data->paginate(25);
+        $data = $data->paginate(20);
 
         return view('admin.user_feedback.user_feedback',[
             'title' => 'User Feedback',

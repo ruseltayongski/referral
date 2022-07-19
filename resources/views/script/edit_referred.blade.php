@@ -10,6 +10,10 @@
         }
     });
 
+    $('#edit_save_btn').on('submit', function(e) {
+        $(this).prop('disabled', true);
+    });
+
     setDepartment();
     function setDepartment() {
         var id = $('.edit_facility_normal').val();

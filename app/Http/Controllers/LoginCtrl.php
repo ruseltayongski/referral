@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class LoginCtrl extends Controller
 {
@@ -172,7 +175,80 @@ class LoginCtrl extends Controller
         $data->message = $req->message;
         $data->status = 'new';
         $data->save();
-        return Redirect::back();
+
+        /* send email to user with the message that their appointment was created successfully */
+        $email_doh = $_ENV['EMAIL_ADDRESS'];
+        $email_password = $_ENV['EMAIL_PASSWORD'];
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = $email_doh;                             //SMTP username
+            $mail->Password   = $email_password;                        //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom($email_doh, 'DOH-CVCHD E-Referral');
+            $mail->addAddress($req->email);     //Add a recipient
+            $mail->addReplyTo($email_doh);
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Appointment Request Sent!';
+            $mail->AddEmbeddedImage('resources/img/doh.png', 'doh_logo');
+            $mail->AddEmbeddedImage('resources/img/f1.jpg', 'f1_logo');
+            $mail->Body    =
+                '<html><body>
+                <div align="center">
+                <div style="width: 600px; border: 20px groove whitesmoke; background: linear-gradient(to bottom right, #ffffff 23%, #ccffcc 104%); padding: 30px; margin: 10px;">
+                    <div align="center">
+                        <img src="cid:doh_logo" width="100"> &emsp;&emsp;
+                        <img src="cid:f1_logo" width="100"><br><br>
+                        <div style="font-size: 14px">
+                            Republic of the Philippines<br>&emsp;&emsp;
+                            DEPARTMENT OF HEALTH<br>
+                            <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
+                            Osmeña Boulevard,Sambag II,Cebu City, 6000 Philippines<br>
+                            Regional Director’s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109<br>
+                            Official Website: <a href="http://www.ro7.doh.gov.ph" target="_blank">http://www.ro7.doh.gov.ph</a> Email Address: dohro7@gmail.com<br>
+                        </div>
+                    </div>
+                
+                    <div align="center">
+                        <div align="center" style="font-family: Trebuchet MS; font-size: 14px; width: 500px; background-color: ghostwhite; border: 15px double darkgreen; padding: 25px; margin: 20px;">
+                            Good day!<br><br>
+                            
+                            This is to inform you that your appointment request has been successfully sent to the E-Referral team. 
+                            The team will evaluate your request and will get back to you as soon as possible.<br><br>
+                            Thank you and have a great day.<br><br><br>
+                            
+                            Sincerely, <br>
+                            The DOH-CVCHD E-Referral Team
+                        </div>
+                    </div>
+                </div></div>
+                </body></html>
+                ';
+            $mail->AltBody = '
+                    Good day!<br><br>
+                    
+                    This is to inform you that your appointment request has been successfully sent to the E-Referral team. 
+                    The team will evaluate your request and will get back to you as soon as possible.<br><br>
+                    
+                    Thank you and have a great day.<br><br><br>
+                    
+                    Sincerely, <br>
+                    The DOH-CVCHD E-Referral Team';
+            $mail->send();
+            return 'Email has been sent';
+        } catch (Exception $e) {
+            return "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
 
     public function sendFeedback(Request $req) {
@@ -182,6 +258,80 @@ class LoginCtrl extends Controller
         $data->subject = $req->subject;
         $data->message = $req->message;
         $data->save();
-        return Redirect::back();
+
+        /* send email to user with the message that their feedback was received successfully */
+        $email_doh = $_ENV['EMAIL_ADDRESS'];
+        $email_password = $_ENV['EMAIL_PASSWORD'];
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = $email_doh;                             //SMTP username
+            $mail->Password   = $email_password;                        //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom($email_doh, 'DOH-CVCHD E-Referral');
+            $mail->addAddress($req->email);     //Add a recipient
+            $mail->addReplyTo($email_doh);
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Feedback Received!';
+            $mail->AddEmbeddedImage('resources/img/doh.png', 'doh_logo');
+            $mail->AddEmbeddedImage('resources/img/f1.jpg', 'f1_logo');
+            $mail->Body    =
+                '<html><body>
+                <div align="center">
+                <div style="width: 600px; border: 20px groove whitesmoke; background: linear-gradient(to bottom right, #ffffff 23%, #ccffcc 104%); padding: 30px; margin: 10px;">
+                    <div align="center">
+                        <img src="cid:doh_logo" width="100"> &emsp;&emsp;
+                        <img src="cid:f1_logo" width="100"><br><br>
+                        <div style="font-size: 14px">
+                            Republic of the Philippines<br>&emsp;&emsp;
+                            DEPARTMENT OF HEALTH<br>
+                            <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
+                            Osmeña Boulevard,Sambag II,Cebu City, 6000 Philippines<br>
+                            Regional Director’s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109<br>
+                            Official Website: <a href="http://www.ro7.doh.gov.ph" target="_blank">http://www.ro7.doh.gov.ph</a> Email Address: dohro7@gmail.com<br>
+                        </div>
+                    </div>
+                
+                    <div align="center">
+                        <div align="center" style="font-family: Trebuchet MS; font-size: 14px; width: 500px; background-color: ghostwhite; border: 15px double darkgreen; padding: 25px; margin: 20px;">
+                            Good day!<br><br>
+                            
+                            We have received your feedback. Our team is always finding ways to improve the system.
+                            We appreciate your response and we will use it to further improve the system.<br><br>
+                
+                            Thank you and stay safe.<br><br><br>
+                
+                            Sincerely, <br>
+                            The DOH-CVCHD E-Referral Team
+                        </div>
+                    </div>
+                </div></div>
+                </body></html>
+                ';
+            $mail->AltBody =
+                'Good day!<br>
+                We have received your feedback. Our team is always finding ways to improve the system.
+                We appreciate your response and we will use it to further improve the system.<br>
+    
+                Thank you and stay safe.<br>
+    
+                Sincerely, <br>
+                The DOH-CVCHD E-Referral Team
+                ';
+            $mail->send();
+            return 'Email has been sent';
+        } catch (Exception $e) {
+            return "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
 }

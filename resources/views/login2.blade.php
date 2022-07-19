@@ -367,14 +367,12 @@
 
     <!-- ======= Appointment Section ======= -->
     <section id="appointment" class="appointment section-bg">
-
         <div class="container">
-
             <div class="section-title">
                 <h2>Make an Appointment</h2>
                 <p>Connect with our DOH CV CHD Team to set up a training request schedule or to address any of your issues and concerns.</p>
             </div>
-            <form method="post" action="{{ asset('appointment/create') }}">
+            <form method="post" action="{{ asset('appointment/create') }}" class="appt_form">
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -403,7 +401,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <textarea class="form-control" name="message" id="pointment_msg" rows="5" placeholder="Message" required></textarea>
+                    <textarea class="form-control" style="resize: none;" name="message" id="pointment_msg" rows="5" placeholder="Message" required></textarea>
                     <small class="text-danger" id="warning_pointment">
                         *Note: Please check if the entered information is correct before clicking submit button!</small><br>
                 </div><br>
@@ -1227,7 +1225,6 @@
 
         <div class="container">
             <div class="row mt-5">
-
                 <div class="col-lg-4">
                     <div class="info">
                         <div class="address">
@@ -1247,37 +1244,32 @@
                             <h4>Call:</h4>
                             <p>(032)411-6900</p>
                         </div>
-
                     </div>
-
                 </div>
 
                 <div class="col-lg-8 mt-5 mt-lg-0">
-                    <form action="{{ asset('user_feedback/create') }}" method="post">
+                    <form action="{{ asset('user_feedback/create') }}" method="post" class="feedback_form">
                         {{ csrf_field() }}
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name/Facility Name" required>
+                                <input type="text" name="name" class="form-control" id="feedback_name" placeholder="Your Name/Facility Name" required>
                             </div>
                             <div class="col-md-6 form-group mt-3 mt-md-0">
-                                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                                <input type="email" class="form-control" name="email" id="feedback_email" placeholder="Your Email" required>
                             </div>
                         </div>
                         <div class="form-group mt-3">
-                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                            <input type="text" class="form-control" name="subject" id="feedback_subject" placeholder="Subject" required>
                         </div>
                         <div class="form-group mt-3">
-                            <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                            <textarea style="resize: none;" class="form-control" id="feedback_msg" name="message" rows="5" placeholder="Message" required></textarea>
                         </div><br>
                         <div class="text-center">
-                            <button class="btn btn-sm btn-primary" type="submit">Send Feedback</button>
+                            <button class="btn btn-sm btn-primary" id="feedback_btn" type="submit">Send Feedback</button>
                         </div>
                     </form>
-
                 </div>
-
             </div>
-
         </div>
     </section><!-- End Contact Section -->
 
@@ -1375,6 +1367,8 @@
 <!-- Template Main JS File -->
 <script src="{{ asset('resources/medilab/assets/js/main.js') }}"></script>
 
+<script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
+
 <script>
     $('#warning_date').hide();
     $('.btn-submit').on('click',function() {
@@ -1392,6 +1386,53 @@
            $('#warning_date').hide();
            $('#btn_appt').prop('disabled', false);
        }
+    });
+
+    $('.appt_form').on('submit', function(e) {
+        e.preventDefault();
+        $('#btn_appt').attr('disabled',true);
+        $('#btn_appt').html('<i class="fa fa-spinner fa-spin"></i> Sending...');
+        $(this).ajaxSubmit({
+            url: "{{ asset('appointment/create') }}",
+            type: 'POST',
+            success: function(result){
+                console.log(result);
+                console.log("created appointment successfully!");
+                $('#pointment_name').val('');
+                $('#pointment_email').val('');
+                $('#pointment_phone').val('');
+                $('#pointment_category').val('');
+                $('#pointment_msg').val('');
+                $('#pointment_date').val('');
+                $('#btn_appt').attr('disabled',false);
+                $('#btn_appt').html('Make an Appointment');
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+            }
+        });
+    });
+
+    $('.feedback_form').on('submit', function(e) {
+        e.preventDefault();
+        $('#feedback_btn').attr('disabled',true);
+        $('#feedback_btn').html('<i class="fa fa-spinner fa-spin"></i> Sending...');
+        $(this).ajaxSubmit({
+            url: "{{ asset('user_feedback/create') }}",
+            type: 'POST',
+            success: function(){
+                console.log("sent feedback successfully!");
+                $('#feedback_name').val('');
+                $('#feedback_email').val('');
+                $('#feedback_subject').val('');
+                $('#feedback_msg').val('');
+                $('#feedback_btn').attr('disabled',false);
+                $('#feedback_btn').html('Send Feedback');
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+            }
+        });
     });
 </script>
 
