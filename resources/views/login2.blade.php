@@ -28,6 +28,9 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('resources/medilab/assets/css/style.css?version=6') }}" rel="stylesheet">
+
+    <!-- Lobibox -->
+    <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
 </head>
 
 <body>
@@ -1377,7 +1380,9 @@
 <!-- Template Main JS File -->
 <script src="{{ asset('resources/medilab/assets/js/main.js') }}"></script>
 
+<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
 <script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
+
 
 <script>
     $('#warning_date').hide();
@@ -1416,6 +1421,10 @@
                 $('#pointment_date').val('');
                 $('#btn_appt').attr('disabled',false);
                 $('#btn_appt').html('Make an Appointment');
+                Lobibox.notify('success', {
+                    size: 'mini',
+                    msg: "Appointment request sent successfully!"
+                });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
@@ -1438,6 +1447,10 @@
                 $('#feedback_msg').val('');
                 $('#feedback_btn').attr('disabled',false);
                 $('#feedback_btn').html('Send Feedback');
+                Lobibox.notify('success', {
+                    size: 'mini',
+                    msg: 'Feedback successfully sent!'
+                });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
