@@ -1370,9 +1370,9 @@
 <!-- Template Main JS File -->
 <script src="{{ asset('resources/medilab/assets/js/main.js') }}"></script>
 
-<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
-<script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
 
+<script src="{{ asset('resources/assets/js/jquery.form.min.js') }}"></script>
+<script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
 
 <script>
     $('#warning_date').hide();
@@ -1412,8 +1412,9 @@
                 $('#btn_appt').attr('disabled',false);
                 $('#btn_appt').html('Make an Appointment');
                 Lobibox.notify('success', {
-                    size: 'mini',
-                    msg: "Appointment request sent successfully!"
+                    title: 'Appointment request sent successfully!',
+                    img: '{{ asset('resources/img/doh.png') }}',
+                    msg: ""
                 });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1438,8 +1439,8 @@
                 $('#feedback_btn').attr('disabled',false);
                 $('#feedback_btn').html('Send Feedback');
                 Lobibox.notify('success', {
-                    size: 'mini',
-                    msg: 'Feedback successfully sent!'
+                    title: 'Feedback successfully sent!',
+                    img: '{{ asset('resources/img/doh.png') }}'
                 });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
