@@ -40,8 +40,8 @@
             <i class="bi bi-phone"></i> (032)411-6900
         </div>
         <div class="d-none d-lg-flex social-links align-items-center">
-            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+            <a href="https://facebook.com/DOH7govph" target="_blank" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com/DOH7govph" target="_blank" class="twitter"><i class="bi bi-twitter"></i></a>
             <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
             <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
         </div>
@@ -60,15 +60,11 @@
             <ul>
                 <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
                 <li><a class="nav-link scrollto" href="#about">Tutorial</a></li>
+                <li><a class="nav-link scrollto" href="#services">Services</a></li>
                 <li><a class="nav-link scrollto" href="#appointment">Appointment</a></li>
-                <li><a class="nav-link scrollto" href="#feedback">Feedback</a></li>
-                <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
-                <li><a class="nav-link scrollto" href="#footer">Links</a></li>
-                <li class="dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        Contact us
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li class="dropdown"><a href="#"><span>Contact us</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a class="nav-link scrollto" href="#call_center">711 HealthLine</a></li>
                         <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
                         <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
                         <li><a class="nav-link scrollto" href="#training">Training</a></li>
@@ -76,6 +72,11 @@
                         <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
                     </ul>
                 </li>
+                <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
+                <li class="d-lg-none d-xl-block d-xl-block"><a class="nav-link scrollto" href="#testimonials">Testimonials</a></li>
+                <li class="d-lg-none d-xl-block d-xl-block"><a class="nav-link scrollto" href="#gallery">Journey</a></li>
+                <li><a class="nav-link scrollto" href="#feedback">Feedback</a></li>
+                <li><a class="nav-link scrollto" href="#footer">Links</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
@@ -220,13 +221,13 @@
 
             <div class="row">
                 <div class="col-xl-5 col-lg-6 video-box d-flex justify-content-center align-items-stretch position-relative">
-                    <a href="https://www.youtube.com/watch?v=xWQJNKMZRA0" class="glightbox play-btn mb-4"></a>
+                    <a href="https://www.youtube.com/watch?v=00zumdAGgNc" class="glightbox play-btn mb-4"></a>
                 </div>
                 <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                 <span style="font-size:1.1em;">
-                    <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 5.8</strong><br>
+                    <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 6.0</strong><br>
                 </span>
                     </div>
                     <div class="icon-box">
@@ -510,10 +511,19 @@
         </div>
     </section><!-- End Departments Section -->
 
+    <section id="call_center" class="doctors">
+        <div class="container">
+            <center>
+                <div class="col-lg-6 d-flex align-items-stretch">
+                    <img src="{{ asset('resources/medilab/assets/img/contact/call_center.JPG') }}" alt class="img-fluid">
+                </div>
+            </center>
+        </div>
+    </section><!-- End Doctors Section -->
+
     <!-- ======= Doctors Section ======= -->
     <section id="system_error" class="doctors">
         <div class="container">
-
             <div class="section-title">
                 <h2>System Error</h2>
                 <p>Responsible for system development as well as troubleshooting and fixing concerns related to system usage</p>
@@ -529,10 +539,10 @@
                             <span>Information System Analyst II</span>
                             <p>09238309990</p>
                             <div class="social">
-                                <a href=""><i class="ri-twitter-fill"></i></a>
-                                <a href=""><i class="ri-facebook-fill"></i></a>
-                                <a href=""><i class="ri-instagram-fill"></i></a>
-                                <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                                <a href="https://twitter.com/DOH7govph" target="_blank"><i class="ri-twitter-fill"></i></a>
+                                <a href="https://www.facebook.com/DOH7govph" target="_blank"><i class="ri-facebook-fill"></i></a>
+                                <a href="#"><i class="ri-instagram-fill"></i></a>
+                                <a href="#"> <i class="ri-linkedin-box-fill"></i> </a>
                             </div>
                         </div>
                     </div>
