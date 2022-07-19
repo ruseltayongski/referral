@@ -60,12 +60,22 @@
             <ul>
                 <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
                 <li><a class="nav-link scrollto" href="#about">Tutorial</a></li>
-                <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
-                <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
-                <li><a class="nav-link scrollto" href="#training">Training</a></li>
-                <li class="d-lg-none d-xl-block d-xl-block"><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
-                <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
+                <li><a class="nav-link scrollto" href="#appointment">Appointment</a></li>
+                <li><a class="nav-link scrollto" href="#feedback">Feedback</a></li>
                 <li><a class="nav-link scrollto" href="#faq">FAQ</a></li>
+                <li><a class="nav-link scrollto" href="#footer">Links</a></li>
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Contact us
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="nav-link scrollto" href="#system_error">System Error</a></li>
+                        <li><a class="nav-link scrollto" href="#system_down">System Down</a></li>
+                        <li><a class="nav-link scrollto" href="#training">Training</a></li>
+                        <li><a class="nav-link scrollto" href="#register_account">Register Account</a></li>
+                        <li><a class="nav-link scrollto" href="#non-technical">Non-technical</a></li>
+                    </ul>
+                </li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
@@ -1202,7 +1212,7 @@
     </section><!-- End Gallery Section -->
 
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    <section id="feedback" class="contact">
         <div class="container">
 
             <div class="section-title">
@@ -1336,7 +1346,7 @@
                 <!-- You can delete the links only if you purchased the pro version. -->
                 <!-- Licensing information: https://bootstrapmade.com/license/ -->
                 <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/ -->
-                Designed by <a href="#">DOH-ICTU</a>
+                Designed by <a href="#">DOH 7-ICTU</a>
             </div>
         </div>
         <div class="social-links text-center text-md-right pt-3 pt-md-0">
