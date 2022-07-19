@@ -518,7 +518,7 @@
         <div class="container">
             <center>
                 <div class="col-lg-6 d-flex align-items-stretch">
-                    <img src="{{ asset('resources/medilab/assets/img/contact/call_center.JPG') }}" alt class="img-fluid">
+                    <img src="{{ asset('resources/medilab/assets/img/contact/call_center.jpg') }}" alt class="img-fluid">
                 </div>
             </center>
         </div>
