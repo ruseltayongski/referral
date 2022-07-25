@@ -11,11 +11,14 @@ use App\Events\SocketReferralAccepted;
 use App\Events\SocketReferralAdmitted;
 use App\Events\SocketReferralArrived;
 use App\Events\SocketReferralCall;
+use App\Events\SocketReferralCancelled;
 use App\Events\SocketReferralDeparted;
 use App\Events\SocketReferralDischarged;
 use App\Events\SocketReferralNotArrived;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
+use App\Events\SocketReferralUndoCancel;
+use App\Events\SocketReferralUpdateForm;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\ApiController;
@@ -1492,6 +1495,22 @@ class ReferralCtrl extends Controller
                 'status' => 'cancelled'
             ]);
 
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->orderBy("id","desc")->first();
+        $count_reco = Feedback::where("code",$track->code)->count();
+
+        $cancel = [
+            "patient_code" => $track->code,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
+            "activity_id" => $latest_activity->id,
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "cancelled_date" => date('M d, Y h:i A',strtotime($date)),
+            "remarks" => $req->reason,
+            "referred_to" => $latest_activity->referred_to,
+            "count_reco" => $count_reco
+        ];
+        broadcast(new SocketReferralCancelled($cancel));
         return redirect()->back();
     }
 
@@ -1537,7 +1556,7 @@ class ReferralCtrl extends Controller
         $patient = Patients::find($track->patient_id);
         $departed = [
             "patient_code" => $track->code,
-            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
             "departed_by" => $departed_by,
             "departed_by_facility" => $departed_by_facility,
             "referred_to" => $track->referred_to,
@@ -1934,7 +1953,42 @@ class ReferralCtrl extends Controller
 
         $data->update($data_update);
         Session::put('referral_update_save',true);
-        Session::put('message','Successfully updated referral form!');
+        Session::put('update_message','Successfully updated referral form!');
+
+        $patient = Patients::find($tracking->patient_id);
+        $date = date('Y-m-d H:i:s');
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$track)->count();
+        $count_activity = Activity::where("code",$track)
+            ->where(function($query){
+                $query->where("status","redirected");
+            })
+            ->groupBy("code")
+            ->count();
+        $latest_activity = Activity::where("code",$track)->orderBy("id","desc")->first();
+
+        $update = [
+            "patient_code" => $track,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
+            "activity_id" => $latest_activity->id,
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "update_date" => date('M d, Y h:i A',strtotime($date)),
+            "referred_to" => $latest_activity->referred_to,
+            "referred_name" => Facility::find($latest_activity->referred_to)->name,
+            "referred_department" => Department::where('id',$tracking->department_id)->first()->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $tracking->type,
+            "tracking_id" => $tracking->id,
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "status" => $latest_activity->status,
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
+        ];
+
+        broadcast(new SocketReferralUpdateForm($update));
         return redirect()->back();
     }
 
@@ -1952,6 +2006,40 @@ class ReferralCtrl extends Controller
                 'status' => $activity->status
             ]);
         Activity::where("code",$track->code)->orderBy("id","desc")->first()->delete();
+
+        $patient = Patients::find($track->patient_id);
+        $latest_activity = Activity::where("code",$track->code)->first();
+        $count_seen = Seen::where('tracking_id',$track->id)->count();
+        $count_reco = Feedback::where("code",$track->code)->count();
+        $count_activity = Activity::where("code",$track->code)
+            ->where(function($query){
+                $query->where("status","redirected");
+            })
+            ->groupBy("code")
+            ->count();
+
+        $undo = [
+            "patient_code" => $track->code,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "activity_id" => $latest_activity->id,
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find($latest_activity->referred_to)->name,
+            "referred_to" => $latest_activity->referred_to,
+            "referred_department" => Department::where('id',$track->department_id)->first()->description,
+            "referred_from" => $user->facility_id,
+            "undo_date" => date('M d, Y h:i A',strtotime($date)),
+            "form_type" => $track->type,
+            "tracking_id" => $track->id,
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "status" => $latest_activity->status,
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco
+        ];
+
+        broadcast(new SocketReferralUndoCancel($undo));
 
         return redirect()->back();
     }

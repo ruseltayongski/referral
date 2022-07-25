@@ -777,6 +777,19 @@
             ?>
             refreshPage();
         }
+
+        @if(Session::get('referral_update_save'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "<?php echo Session::get("update_message"); ?>",
+            size: 'mini',
+            rounded: true
+        });
+        <?php
+        Session::put("referral_update_save",false);
+        Session::put("update_message",false)
+        ?>
+        @endif
     </script>
 @endsection
 

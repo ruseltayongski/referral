@@ -100,7 +100,7 @@ $user = Session::get('auth');
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                                 $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
                                 ?>
-                                <li>
+                                <li id="referral_incoming{{ $row->code }}">
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
@@ -236,19 +236,6 @@ $user = Session::get('auth');
                 msg: "This referral was already accepted or rejected"
             });
         <?php Session::put("incoming_denied",false); ?>
-        @endif
-
-        @if(Session::get('referral_update_save'))
-        Lobibox.notify('success', {
-            title: "",
-            msg: "<?php echo Session::get("message"); ?>",
-            size: 'mini',
-            rounded: true
-        });
-        <?php
-        Session::put("referral_update_save",false);
-        Session::put("message",false)
-        ?>
         @endif
     </script>
 

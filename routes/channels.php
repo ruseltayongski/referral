@@ -58,3 +58,15 @@ Broadcast::channel('referral_admitted', function ($referral_admitted) {
 Broadcast::channel('referral_discharged', function ($referral_discharged) {
     return $referral_discharged;
 });
+
+Broadcast::channel('referral_cancelled', function ($referral_cancelled) {
+    return $referral_cancelled;
+});
+
+Broadcast::channel('referral_undo_cancel', function ($referral_undo_cancel) {
+    return $referral_undo_cancel;
+});
+
+Broadcast::channel('referral_update_form', function ($referral_update_form) {
+    return $referral_update_form;
+});

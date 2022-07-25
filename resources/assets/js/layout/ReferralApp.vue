@@ -200,10 +200,41 @@
                 Lobibox.notify('success', {
                     delay: false,
                     title: 'Discharged',
-                    msg: patient_name+" has discharged at "+current_facility+ '<br>'+ discharged_date,
+                    msg: patient_name+" was discharged at "+current_facility+ '<br>'+ discharged_date,
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
+
+            notifyReferralCancelled(patient_code, activity_id, patient_name, referring_md, referring_name, cancelled_date) {
+                $("#rejected_progress"+patient_code+activity_id).addClass("completed");
+                Lobibox.notify('error', {
+                    delay: false,
+                    title: 'Cancelled',
+                    closeOnClick: false,
+                    msg: patient_name+"'s referral was cancelled by Dr. "+referring_md+' of '+referring_name+ '<br>'+ cancelled_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+            notifyReferralUndoCancel(patient_code, activity_id, patient_name, referring_md, referring_name, undo_date) {
+                $("#rejected_progress"+patient_code+activity_id).addClass("completed");
+                Lobibox.notify('success', {
+                    delay: false,
+                    title: 'Referred',
+                    msg: patient_name+" was referred again by Dr. "+referring_md+' of '+referring_name+ '<br>'+ undo_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+            notifyReferralUpdateForm(patient_code, activity_id, patient_name, referring_md, referring_name, update_date) {
+                $("#rejected_progress"+patient_code+activity_id).addClass("completed");
+                Lobibox.notify('info', {
+                    delay: false,
+                    closeOnClick: false,
+                    title: 'Form Updated',
+                    msg: patient_name+"'s referral form was updated by Dr. "+referring_md+' of '+referring_name+ '<br>'+ update_date,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -251,7 +282,7 @@
                             let type = event.payload.form_type;
                             type = type=='normal' ? 'normal-section':'pregnant-section';
                             let referral_type = (type=='normal-section') ? 'normal':'pregnant';
-                            let content = '<li>' +
+                            let content = '<li id="referral_incoming'+event.payload.patient_code+'">' +
                                 '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
                                 '    <div class="timeline-item '+type+'" id="item-'+event.payload.tracking_id+'">\n' +
                                 '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span>\n' +
@@ -376,6 +407,112 @@
                 .listen('SocketReferralDischarged', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks)
+                    }
+                });
+
+            Echo.join('referral_cancelled')
+                .listen('SocketReferralCancelled', (event) => {
+                    if(event.payload.referred_to === this.user.facility_id) {
+                        let content =
+                            '    <i class="fa fa-ban bg-red"></i>\n' +
+                            '    <div class="timeline-item ">\n' +
+                            '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">'+event.payload.cancelled_date+'</span></span>\n' +
+                            '        <h3 class="timeline-header no-border">' +
+                            '           <strong class="text-bold">    '+
+                            '           <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
+                            '           </strong>'+
+                            '            was <span class="text-red"> cancelled </span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                            '        <div class="timeline-footer">\n'+
+                            '           <div class="form-group">' +
+                                            this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
+                            '           </div>\n' +
+                            '        </div>\n' +
+                            '    </div>\n';
+
+                        $('#referral_incoming'+event.payload.patient_code).html(content);
+                        this.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.remarks)
+                    }
+                });
+            Echo.join('referral_undo_cancel')
+                .listen('SocketReferralUndoCancel', (event) => {
+                    if(event.payload.referred_to === this.user.facility_id) {
+                        let type = event.payload.form_type;
+                        type = type==='normal' ? 'normal-section':'pregnant-section';
+                        let referral_type = (type==='normal-section') ? 'normal':'pregnant';
+                        let content =
+                            '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
+                            '    <div class="timeline-item '+type+'" id="item-'+event.payload.tracking_id+'">\n' +
+                            '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.undo_date+'</span></span>\n' +
+                            '        <h3 class="timeline-header no-border">' +
+                            '           <strong class="text-bold">    '+
+                            '           <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
+                            '           </strong>'+
+                            '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="badge bg-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                            '        <div class="timeline-footer">\n' +
+                            '           <div class="form-group">' +
+                            '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' +
+                            '                   data-toggle="modal"\n' +
+                            '                   data-code="'+event.payload.patient_code+'"\n' +
+                            '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
+                            '                   data-referral_status="referred"\n' +
+                            '                   data-type="'+referral_type+'"\n' +
+                            '                   data-id="'+event.payload.tracking_id+'"\n' +
+                            '                   data-referred_from="'+event.payload.referred_from+'"\n' +
+                            '                   data-patient_name="'+event.payload.patient_name+'"\n' +
+                            '                   data-backdrop="static">\n' +
+                            '                <i class="fa fa-folder"></i> View Form\n' +
+                            '               </a>' +
+                                                this.buttonSeen(event.payload.count_seen, event.payload.tracking_id)+
+                                                this.buttonActivity(event.payload.count_activity, event.payload.tracking_id)+
+                                                this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
+                            '             </div>\n' +
+                            '        </div>\n' +
+                            '    </div>\n';
+
+                        $('#referral_incoming'+event.payload.patient_code).html(content);
+                        this.notifyReferralUndoCancel(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.undo_date,)
+                    }
+                });
+            Echo.join('referral_update_form')
+                .listen('SocketReferralUpdateForm', (event) => {
+                    if(event.payload.referred_to === this.user.facility_id) {
+                        let type = event.payload.form_type;
+                        type = type==='normal' ? 'normal-section':'pregnant-section';
+                        let referral_type = (type==='normal-section') ? 'normal':'pregnant';
+                        let content =
+                            '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
+                            '    <div class="timeline-item '+type+'" id="item-'+event.payload.tracking_id+'">\n' +
+                            '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.update_date+'</span></span>\n' +
+                            '        <h3 class="timeline-header no-border">' +
+                            '           <strong class="text-bold">    '+
+                            '           <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
+                            '           </strong>'+
+                            '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="badge bg-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                            '        <div class="timeline-footer">\n' +
+                            '           <div class="form-group">' +
+                            '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' +
+                            '                   data-toggle="modal"\n' +
+                            '                   data-code="'+event.payload.patient_code+'"\n' +
+                            '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
+                            '                   data-referral_status="referred"\n' +
+                            '                   data-type="'+referral_type+'"\n' +
+                            '                   data-id="'+event.payload.tracking_id+'"\n' +
+                            '                   data-referred_from="'+event.payload.referred_from+'"\n' +
+                            '                   data-patient_name="'+event.payload.patient_name+'"\n' +
+                            '                   data-backdrop="static">\n' +
+                            '                <i class="fa fa-folder"></i> View Form\n' +
+                            '               </a>' +
+                                            this.buttonSeen(event.payload.count_seen, event.payload.tracking_id)+
+                                            this.buttonActivity(event.payload.count_activity, event.payload.tracking_id)+
+                                            this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
+                            '               <h5 class="text-red blink_new_referral pull-right">FORM HAS BEEN UPDATED!</h5>'+
+                            '             </div>\n' +
+                            '        </div>\n' +
+                            '    </div>\n';
+
+                        $('#referral_incoming'+event.payload.patient_code).html(content);
+
+                        this.notifyReferralUpdateForm(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.update_date)
                     }
                 });
 
