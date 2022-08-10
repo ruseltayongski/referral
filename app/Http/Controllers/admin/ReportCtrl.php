@@ -833,8 +833,17 @@ class ReportCtrl extends Controller
 
         $icd = Icd::
                 select("icd.icd_id","icd10.code","icd10.description",DB::raw("count(icd.icd_id) as count"))
-                ->leftJoin("icd10","icd10.id","=","icd.icd_id")
-                ->whereBetween("icd.created_at",[$date_start,$date_end])
+                ->leftJoin("icd10","icd10.id","=","icd.icd_id");
+
+
+        if($request->province_id) {
+            $icd = $icd->leftJoin("activity","activity.code","=","icd.code")
+                    ->leftJoin("facility","facility.id","=","activity.referred_to")
+                    ->where("facility.province",$request->province_id)
+                    ->groupBy("activity.code");
+        }
+
+        $icd =  $icd->whereBetween("icd.created_at",[$date_start,$date_end])
                 ->groupBy("icd.icd_id")
                 ->OrderBY(DB::raw("count(icd.icd_id)"),"desc")
                 ->limit(10)
@@ -843,7 +852,8 @@ class ReportCtrl extends Controller
         return view("admin.report.top_icd",[
             "icd" => $icd,
             "date_start" => $date_start,
-            "date_end" => $date_end
+            "date_end" => $date_end,
+            "province_id" => $request->province_id
         ]);
     }
 
@@ -859,14 +869,25 @@ class ReportCtrl extends Controller
         $pregnant_form = PregnantForm::
             select("reason_referral")
             ->whereNotNull("reason_referral")
-            ->where("reason_referral","!=","-1")
-            ->whereBetween("created_at",[$date_start,$date_end]);
+            ->where("reason_referral","!=","-1");
+
+        if($request->province_id) {
+            $pregnant_form = $pregnant_form->leftJoin("facility","facility.id","=","pregnant_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+        $pregnant_form = $pregnant_form->whereBetween("pregnant_form.created_at",[$date_start,$date_end]);
 
         $union = PatientForm::
             select("reason_referral")
             ->whereNotNull("reason_referral")
-            ->where("reason_referral","!=","-1")
-            ->whereBetween("created_at",[$date_start,$date_end])
+            ->where("reason_referral","!=","-1");
+
+        if($request->province_id) {
+            $union = $union->leftJoin("facility","facility.id","=","patient_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+
+        $union = $union->whereBetween("patient_form.created_at",[$date_start,$date_end])
             ->unionAll($pregnant_form);
 
         $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
@@ -880,7 +901,8 @@ class ReportCtrl extends Controller
         return view("admin.report.top_reason_for_referral",[
             "reason_for_referral" => $reason_for_referral,
             "date_start" => $date_start,
-            "date_end" => $date_end
+            "date_end" => $date_end,
+            "province_id" => $request->province_id
         ]);
     }
 
