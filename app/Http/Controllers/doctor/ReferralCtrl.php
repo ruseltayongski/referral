@@ -127,7 +127,10 @@ class ReferralCtrl extends Controller
             }
             elseif($option == 'accepted') {
                 $data = $data->where(function($q){
-                    $q->where('tracking.status','accepted');
+                    $q->where('tracking.status','accepted')
+                        ->orwhere('tracking.status','arrived')
+                        ->orwhere('tracking.status','admitted')
+                        ->orwhere('tracking.status','discharged');
                 });
             }
             elseif($option == 'seen_only') {
