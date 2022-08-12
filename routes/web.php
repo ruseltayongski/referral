@@ -274,6 +274,7 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/barangay/{province_id}/{muncity_id}','LocationCtrl@getBarangay1');
 Route::get('location/muncity/{province_id}','LocationCtrl@getMuncity');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
+Route::get('location/select/facility/byprovince/{province_id}','LocationCtrl@selectFacilityByProvince');
 Route::get('list/doctor/{facility_id}/{department_id}','ParamCtrl@getDoctorList');
 
 //Route::get('default','ParamCtrl@defaultTable');
