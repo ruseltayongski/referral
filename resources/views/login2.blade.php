@@ -872,7 +872,7 @@
                     <div class="member d-flex align-items-start">
                         <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/blanco_s.jpg') }}" class="img-fluid" alt=""></div>
                         <div class="member-info">
-                            <h4>Dr. Jera C. Armendarez</h4>
+                            <h4>Dr. Shelbay G. Blanco</h4>
                             <span>Medical Officer IV</span>
                             <p>HEMS Cluster Head</p>
                             <p>DRRM-H manager</p>
@@ -936,6 +936,40 @@
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="member d-flex align-items-start">
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/Liporada, Patrick.jpg') }}" class="img-fluid" alt=""></div>
+                        <div class="member-info">
+                            <h4>Patrick Liporada</h4>
+                            <span>Senior Health Program Officer</span>
+                            <p>09231586707</p>
+                            <div class="social">
+                                <a href=""><i class="ri-twitter-fill"></i></a>
+                                <a href=""><i class="ri-facebook-fill"></i></a>
+                                <a href=""><i class="ri-instagram-fill"></i></a>
+                                <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="member d-flex align-items-start">
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/theo.png') }}" class="img-fluid" alt=""></div>
+                        <div class="member-info">
+                            <h4>Theofanis P. Carpiso, Jr.</h4>
+                            <span>Nurse II</span>
+                            <p>09193460060</p>
+                            <div class="social">
+                                <a href=""><i class="ri-twitter-fill"></i></a>
+                                <a href=""><i class="ri-facebook-fill"></i></a>
+                                <a href=""><i class="ri-instagram-fill"></i></a>
+                                <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
