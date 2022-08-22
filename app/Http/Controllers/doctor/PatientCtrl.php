@@ -88,8 +88,6 @@ class PatientCtrl extends Controller
                 );
                 $unique = implode($unique);
 
-//                $match = array('fname' => $req->fname,'lname'=>$req->lname,'dob'=>$req->dob);
-
                 $match = array('unique_id'=>$unique);
                 $data = array(
                     'phic_status' => ($req->phic_status) ? $req->phic_status: '',
@@ -105,7 +103,10 @@ class PatientCtrl extends Controller
                     'region' => "Region VII"
                 );
 
-                Patients::updateOrCreate($match,$data);
+                $pt = Patients::where('fname',$req->fname)->where('lname',$req->lname)->where('dob',$req->dob)->get();
+                if(count($pt) == 0) {
+                    Patients::updateOrCreate($match,$data);
+                }
             }
         }
         else {
