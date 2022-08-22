@@ -884,4 +884,24 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function deactivated() {
+        $date = Session::get('dateReportDeact');
+
+        if(!$date){
+            $date = Carbon::now()->startOfMonth();
+        }
+
+        $data = User::where("status", "inactive")->where("updated_at","like",'%'.$date.'%')->orderBy('facility_id')->get();
+
+        return view("admin.report.deactivated", [
+            'title' => 'Deactivated Users',
+            "data" => $data
+        ]);
+    }
+
+    public function filterDeactivated(Request $req) {
+        Session::put('dateReportDeact',$req->date);
+        return self::deactivated();
+    }
+
 }

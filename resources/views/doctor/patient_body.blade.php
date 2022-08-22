@@ -46,6 +46,7 @@
     </div>
     <div class="form-group">
         <label>First Name:</label>
+        <input type="hidden" name="old_fname" value="@if(isset($data->fname)){{ $data->fname }}@endif">
         <input type="text" class="form-control" value="@if(isset($data->fname)){{ $data->fname }}@endif" name="fname" required>
     </div>
     <div class="form-group">
@@ -54,6 +55,7 @@
     </div>
     <div class="form-group">
         <label>Last Name:</label>
+        <input type="hidden" name="old_lname" value="@if(isset($data->lname)){{ $data->lname }}@endif">
         <input type="text" class="form-control" value="@if(isset($data->lname)){{ $data->lname }}@endif" name="lname" required>
     </div>
     <div class="form-group">
@@ -62,6 +64,7 @@
     </div>
     <div class="form-group">
         <label>Birth Date:</label>
+        <input type="hidden" name="old_dob" value="@if(isset($data->dob)){{ $data->dob }}@endif">
         <input type="date" class="form-control" value="@if(isset($data->dob)){{ $data->dob }}@endif" min="1910-05-11" max="{{ date('Y-m-d') }}" name="dob" required>
     </div>
     <div class="form-group">
@@ -140,7 +143,7 @@
     </div>
     <div class="form-group">
         <label>Municipality:</label>
-        <select class="form-control select_muncity" name="muncity" required>
+        <select class="form-control select2 select_muncity" name="muncity" required>
             @foreach(\App\Muncity::where("province_id",$data->province)->get() as $mun)
                 <option value="{{ $mun->id }}"
                 <?php
@@ -156,7 +159,7 @@
     </div>
     <div class="form-group">
         <label>Barangay:</label>
-        <select class="form-control select_barangay" name="brgy" required>
+        <select class="form-control select2 select_barangay" name="brgy" required>
             @if(isset($data->brgy))
                 @foreach(\App\Barangay::where("province_id",$data->province)->where("muncity_id",$data->muncity)->get() as $row)
                     <option value="{{ $row->id }}" <?php if($data->brgy == $row->id)echo 'selected'; ?> >{{ $row->description }}</option>
@@ -174,6 +177,7 @@
 </form>
 
 <script>
+    $(".select2").select2({ width: '100%' });
 
     $('.select_muncity').on('change',function(){
         var province_id = "<?php echo $user->province; ?>";

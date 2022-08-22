@@ -66,5 +66,10 @@
                 <li><a href="{{ url('admin/report/tat/outgoing') }}"> Outgoing</a></li>
             </ul>
         </li>
+        @if($user->level=='admin')
+        <li>
+            <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>
+        </li>
+        @endif
     </ul>
 </li>

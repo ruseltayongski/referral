@@ -149,6 +149,7 @@ $facilities = \App\Facility::select('id','name')
             <div class="row">
                 <div class="col-md-4">
                     <small class="text-success"><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
+                    <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
                     <select name="referred_to" class="select2 edit_facility_normal form-control" required>
                         <option value="">Select Facility...</option>
                         @foreach($facilities as $row)
@@ -324,13 +325,10 @@ $facilities = \App\Facility::select('id','name')
                 </div>
             </div><br>
 
-            @if($form->other_reason_referral)
-                <div class="row">
-                    <div class="col-md-12">
-                        <textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' required>{{ $form->other_reason_referral }}</textarea>
-                    </div>
-                </div><br>
-            @endif
+            <div class="row">
+                <div class="col-md-12" id="other_reason_referral">
+                </div>
+            </div><br>
 
             <div class="row with_file_attached hide">
                 <div class="col-md-12">

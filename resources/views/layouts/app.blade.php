@@ -187,6 +187,7 @@
 </html>
 
 @include('modal.server')
+@include('modal.editProfile')
 @include('modal.password')
 @include('modal.duty')
 @include('modal.login')

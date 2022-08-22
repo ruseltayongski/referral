@@ -88,7 +88,8 @@ class PatientCtrl extends Controller
                 );
                 $unique = implode($unique);
 
-                $match = array('unique_id'=>$unique);
+                $match = array('fname' => $req->fname,'lname'=>$req->lname,'dob'=>$req->dob);
+//                $match = array('unique_id'=>$unique);
                 $data = array(
                     'phic_status' => ($req->phic_status) ? $req->phic_status: '',
                     'phic_id' => ($req->phicID) ? $req->phicID: '',
@@ -99,7 +100,8 @@ class PatientCtrl extends Controller
                     'sex' => ($req->sex) ? $req->sex: '',
                     'muncity' => ($req->muncity_id) ? $req->muncity_id : '',
                     'province' => ($req->province_id) ? $req->province_id : '',
-                    'brgy' => ($req->barangay_id) ? $req->barangay_id: ''
+                    'brgy' => ($req->barangay_id) ? $req->barangay_id: '',
+                    'region' => "Region VII"
                 );
 
                 Patients::updateOrCreate($match,$data);
@@ -219,15 +221,37 @@ class PatientCtrl extends Controller
 
     public function updatePatient(Request $request){
         $data = Patients::find($request->patient_id);
+
         if($request->patient_update_button){
             $data_update = $request->all();
-            unset($data_update['_token']);
+            $old_fname = $request->old_fname;
+            $old_lname = $request->old_lname;
+            $old_dob = $request->old_dob;
+            unset($data_update['_token'], $data_update['old_fname'], $data_update['old_lname'], $data_update['old_dob']);
             unset($data_update['patient_update_button']);
             unset($data_update['patient_id']);
             $data->update($data_update);
             Session::put('patient_update_save',true);
             Session::put('patient_message','Successfully updated patient');
             $data = Patients::find($request->patient_id);
+
+            $pt = Profile::where('fname',$old_fname)
+                ->where('lname',$old_lname)
+                ->where('dob',$old_dob)->first();
+            if($pt) {
+                $pt->fname = $request->fname;
+                $pt->mname = $request->mname;
+                $pt->lname = $request->lname;
+                $pt->contact = $request->contact;
+                $pt->dob = $request->dob;
+                $pt->sex = $request->sex;
+                $pt->civil_status = $request->civil_status;
+                $pt->phicID = $request->phic_id;
+                $pt->muncity_id = $request->muncity;
+                $pt->barangay_id = $request->brgy;
+                $pt->save();
+            }
+
             return Redirect::back();
         }
         return view('doctor.patient_body',[

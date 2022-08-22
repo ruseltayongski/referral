@@ -610,3 +610,10 @@ Route::post('admin/appointment/approve','admin\ApptCtrl@approveAppointment');
 Route::match(['GET','POST'],'admin/user_feedback','admin\ApptCtrl@feedback');
 Route::post('admin/user_feedback/details','admin\ApptCtrl@feedbackDetails');
 Route::post('user_feedback/create','LoginCtrl@sendFeedback');
+
+// report for deactivated account
+Route::get('admin/report/deactivated','admin\ReportCtrl@deactivated');
+Route::post('admin/report/deactivated','admin\ReportCtrl@filterDeactivated');
+
+// dcotor edit profile
+Route::post('doctor/editProfile','doctor\UserCtrl@editProfile');

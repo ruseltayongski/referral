@@ -190,6 +190,7 @@
                     <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li>
                 @endif
                 <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
+                <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
                 <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
                 @if($user->level=='doctor' || $user->level=='midwife')
                     <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>

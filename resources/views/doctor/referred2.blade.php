@@ -305,11 +305,11 @@
                                         ?>
                                     </div>
                                 </div>
-                                <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track ) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+                                <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">4</div>
                                     <div class="step-name">Departed</div>
                                 </div>
-                                <div class="stepper-item @if( ($referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
+                                <div class="stepper-item @if( ($referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter {{ $referred_notarrived_track && !$referred_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">5</div>
                                     @if($referred_notarrived_track)
                                         <div class="step-name not_arrived">Not Arrived</div>
@@ -317,11 +317,11 @@
                                         <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
                                     @endif
                                 </div>
-                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
+                                <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">6</div>
                                     <div class="step-name">Admitted</div>
                                 </div>
-                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
+                                <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">7</div>
                                     <div class="step-name">Discharged</div>
                                 </div>
@@ -403,11 +403,11 @@
                                                     echo 'Accepted' ;
                                                 ?></div>
                                         </div>
-                                        <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
+                                        <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">4</div>
                                             <div class="step-name">Departed</div>
                                         </div>
-                                        <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
+                                        <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">5</div>
                                             @if($redirected_notarrived_track)
                                                 <div class="step-name not_arrived">Not Arrived</div>
@@ -415,11 +415,11 @@
                                                 <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
                                             @endif
                                         </div>
-                                        <div class="stepper-item @if($redirected_admitted_track || $redirected_discharged_track) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
+                                        <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">6</div>
                                             <div class="step-name">Admitted</div>
                                         </div>
-                                        <div class="stepper-item @if($redirected_discharged_track) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+                                        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                                             <div class="step-counter">7</div>
                                             <div class="step-name">Discharged</div>
                                         </div>
@@ -576,8 +576,8 @@
                                                                     else
                                                                         $cancel_doctor = 'Dr. '.$doctor->fname.' '.$doctor->mname.' '.$doctor->lname;
                                                                     ?>
-                                                                    {{ $cancel_doctor }}
-                                                            </span>.
+                                                                    {{ $cancel_doctor }}.
+                                                            </span>
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                             </td>
                                                         </tr>

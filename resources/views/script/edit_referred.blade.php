@@ -174,9 +174,13 @@
 
     $('.reason_referral').val("<?php echo $reason->id;?>");
     @if(isset($form->other_reason_referral))
+        var other_reason = '{{ $form->other_reason_referral }}';
         $('.reason_referral').val("-1");
+        $('#other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' required></textarea>");
+        $('#other_reason').val(other_reason);
     @else
-        $('.other_reason_referral').hide();
+        $('#other_reason_referral').hide();
+        $('#other_reason').val('');
     @endif
 
     function clearIcdNormal() {
@@ -200,8 +204,8 @@
     }
 
     function clearOtherReasonReferral() {
-        $("#other_reason").val("");
-        $('.other_reason_referral').hide();
+        $('#other_reason').val("");
+        $("#other_reason_referral").html("");
     }
 
     function addNotesDiagnosis() {
@@ -232,10 +236,11 @@
 
     $('.reason_referral').on('change', function() {
         var value = $(this).val();
-        if(value == '-1') {
+        if(value === '-1') {
+            $('#other_reason_referral').show();
+            $('#other_reason_referral').html(loading);
             setTimeout(function(){
-                $('.other_reason_referral').show();
-                $('.other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral' required></textarea>");
+                $('#other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' placeholder='Other reason for referral' required></textarea>");
             },500);
         }else{
             clearOtherReasonReferral();

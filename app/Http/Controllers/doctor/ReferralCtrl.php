@@ -257,6 +257,7 @@ class ReferralCtrl extends Controller
             ->where('patient_form.code', $track->code)->first();
 
         $form = self::normalFormData($id);
+
         return view("doctor.referral_body_normal",[
             "form" => $form['form'],
             "id" => $id,
@@ -1805,26 +1806,65 @@ class ReferralCtrl extends Controller
 
     public static function editForm(Request $req)
     {
+        $user = Session::get('auth');
         $id = $req->id;
+        $old_facility = (int) $req->old_facility;
 
         $tracking = Tracking::where('id', $id)->first();
         $track = $tracking->code;
 
-        $tracking->referred_to = $req->referred_to;
-        $tracking->department_id = $req->department_id;
-        $tracking->save();
+        if($old_facility != $req->referred_to) {
+//            Seen::where('tracking_id',$tracking->id)->delete();
 
-        $activity = Activity::where('code',$track)->first();
-        $activity->referred_to = $req->referred_to;
-        $activity->department_id = $req->department_id;
-        $activity->save();
+            $date = date('Y-m-d H:i:s');
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $old_facility,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and was transferred to another facility.",
+                'status' => "cancelled"
+            );
+            Activity::create($data2);
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and has been transferred to this facility.",
+                'status' => "transferred"
+            );
+            Activity::create($data2);
+
+            $new_data = array(
+                'date_referred' => $date,
+                'date_arrived' => '',
+                'date_seen' => '',
+                'action_md' => $user->id,
+                'department_id' => $req->department_id,
+                'referred_to' => $req->referred_to,
+                'referring_md' => $user->id,
+                'status' => 'transferred'
+            );
+            $tracking->update($new_data);
+        }
 
         $form_type = $req->form_type;
-        $user = Session::get('auth');
         $dob = date('y-m-d h-i-s', strtotime($req->baby_dob));
         $data = '';
 
         $data_update = $req->all();
+        unset($data_update['old_facility']);
 
         if($form_type === 'normal') {
             $data = PatientForm::where('code', $track)->first();
@@ -1834,16 +1874,16 @@ class ReferralCtrl extends Controller
 
             unset($data_update['notes_diag_cleared']);
 
-            $tracking->action_md = $req->referred_md;
-            $tracking->save();
-
-            $activity->action_md = $req->referred_md;
-            $activity->save();
+            if($old_facility != $req->referred_to)
+                $data->update(['time_referred' => date('Y-m-d H:i:s')]);
         }
         else if($form_type === 'pregnant') {
             $data = PregnantForm::where('code', $track)->first();
             $baby_id = $req->baby_id;
             $match = Patients::where('id', $baby_id)->first();
+
+            if($old_facility != $req->referred_to)
+                $data->update(['referred_date' => date('Y-m-d H:i:s')]);
 
             $baby = array(
                 "fname" => $req->baby_fname,
@@ -1872,7 +1912,6 @@ class ReferralCtrl extends Controller
                 $b->birth_date = $dob;
                 $b->save();
             }
-
 
             unset($data_update['baby_fname']);
             unset($data_update['baby_mname']);
@@ -1951,6 +1990,8 @@ class ReferralCtrl extends Controller
         unset($data_update['referral_status']);
         unset($data_update['form_type']);
 
+        $data_update['other_reason_referral'] = isset($req->other_reason_referral) ? $req->other_reason_referral : null;
+
         $data->update($data_update);
         Session::put('referral_update_save',true);
         Session::put('update_message','Successfully updated referral form!');
@@ -1985,7 +2026,9 @@ class ReferralCtrl extends Controller
             "status" => $latest_activity->status,
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
-            "count_reco" => $count_reco
+            "count_reco" => $count_reco,
+            "old_facility" => $old_facility,
+            "faci_changed" => ($old_facility == $latest_activity->referred_to) ? false : true
         ];
 
         broadcast(new SocketReferralUpdateForm($update));
@@ -2011,16 +2054,18 @@ class ReferralCtrl extends Controller
         $latest_activity = Activity::where("code",$track->code)->first();
         $count_seen = Seen::where('tracking_id',$track->id)->count();
         $count_reco = Feedback::where("code",$track->code)->count();
-        $count_activity = Activity::where("code",$track->code)
+        $count_activity = Activity::where("code",$req->code)
             ->where(function($query){
-                $query->where("status","redirected");
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred");
             })
             ->groupBy("code")
             ->count();
 
         $undo = [
             "patient_code" => $track->code,
-            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
             "activity_id" => $latest_activity->id,
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "referring_name" => Facility::find($user->facility_id)->name,

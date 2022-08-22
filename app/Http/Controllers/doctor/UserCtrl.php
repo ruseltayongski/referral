@@ -168,4 +168,17 @@ class UserCtrl extends Controller
         return Redirect::back();
     }
 
+    public function editProfile(Request $req) {
+        $data = $req->all();
+        unset($data['_token']);
+        unset($data['id']);
+
+        $user = User::where('id',$req->id)->first();
+        $user->update($data);
+
+        Session::put('auth', $user);
+
+        return Redirect::back();
+    }
+
 }

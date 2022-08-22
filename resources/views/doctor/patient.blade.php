@@ -559,6 +559,7 @@
         department_name = $('.select_department_normal option:selected').html();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
+
             type: 'POST',
             success: function(data){
                 console.log(data);
