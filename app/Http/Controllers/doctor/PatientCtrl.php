@@ -88,8 +88,9 @@ class PatientCtrl extends Controller
                 );
                 $unique = implode($unique);
 
-                $match = array('fname' => $req->fname,'lname'=>$req->lname,'dob'=>$req->dob);
-//                $match = array('unique_id'=>$unique);
+//                $match = array('fname' => $req->fname,'lname'=>$req->lname,'dob'=>$req->dob);
+
+                $match = array('unique_id'=>$unique);
                 $data = array(
                     'phic_status' => ($req->phic_status) ? $req->phic_status: '',
                     'phic_id' => ($req->phicID) ? $req->phicID: '',
