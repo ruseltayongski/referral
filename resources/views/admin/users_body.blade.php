@@ -20,7 +20,7 @@
         <input type="text" class="form-control" value="{{ $user->contact }}" name="contact" required>
     </div>
     <div class="form-group">
-        <label>Email Address <small class="text-muted"><em>(Optional):</em></small></label>
+        <label>Email Address <small class="text-muted"></small></label>
         <input type="text" class="form-control" name="email" value="{{ $user->email }}" required>
     </div>
     <hr />
@@ -45,6 +45,7 @@
             <option value="support" <?php if($user->level == "support") echo 'selected'; ?>>IT Support</option>
             <option value="opcen" <?php if($user->level == "opcen") echo 'selected'; ?>>OPCEN</option>
             <option value="bed_tracker" <?php if($user->level == "bed_tracker") echo 'selected'; ?>>BED TRACKER</option>
+            <option value="mayor" <?php if($user->level == "mayor") echo 'selected'; ?>>Mayor</option>
         </select>
     </div>
     <hr />

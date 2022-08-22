@@ -239,7 +239,12 @@ class PatientCtrl extends Controller
 
             $pt = Profile::where('fname',$old_fname)
                 ->where('lname',$old_lname)
-                ->where('dob',$old_dob)->first();
+                ->where('dob',$old_dob)
+                ->where('province_id',$request->province)
+                ->where('muncity_id',$request->muncity)
+                ->where('barangay_id',$request->brgy)
+                ->first();
+
             if($pt) {
                 $pt->fname = $request->fname;
                 $pt->mname = $request->mname;
