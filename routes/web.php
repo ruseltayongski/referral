@@ -319,6 +319,7 @@ Route::get('api/referral_list','ApiController@apiGetReferralList');
 Route::get('api/referral_track','ApiController@apiGetReferralTrack');
 Route::get("reports","admin\ReportCtrl@sottoReports");
 Route::get("api/individual","ApiController@individualList");
+Route::get("export/individual","ApiController@exportIndividualList");
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');

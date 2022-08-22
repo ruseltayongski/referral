@@ -392,6 +392,8 @@ class ApiController extends Controller
         }
 
         $data = \DB::connection('mysql')->select("call statistics_report_individual('$request->request_type','$request->facility_id','$date_start','$date_end','$request->status')");
+        Session::put("statistics_report_individual",$data);
+        Session::put("individual_status",$request->status);
         return $data;
 
         $data = Activity::select(
@@ -444,6 +446,21 @@ class ApiController extends Controller
         $data = $data->get();
 
         return $data;
+    }
+
+    public function exportIndividualList(){
+        $status = Session::get("individual_status");
+        $file_name = $status.".xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $data = Session::get("statistics_report_individual");
+        return view('admin.report.export.individual',[
+            "data" => $data,
+            "status" => $status
+        ]);
     }
 
     public function apiReport(Request $request,$date_start,$date_end){
