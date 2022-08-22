@@ -6,10 +6,19 @@
             <div style="background-color: white;padding: 10px;">
                 <form action="{{ asset('admin/report/tat/outgoing') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group">
+                    <div class="form-group" style="width:100%;">
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
+                        <select name="province" class="form-control" onchange="onChangeProvince($(this).val())">
+                            <option value="">Select All Province</option>
+                            @foreach(\App\Province::get() as $pro)
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
+                            @endforeach
+                        </select>
+                        <select name="facility" id="facility" class="tat_select2">
+
+                        </select>
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/tat/outgoing') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
@@ -127,6 +136,8 @@
 @section('js')
     @include('script.chart')
     <script>
+        $(".tat_select2").select2({ width: '20%' });
+
         $('#consolidate_date_range').daterangepicker({
             maxDate: new Date()
         });
@@ -165,9 +176,15 @@
                 });
             });
 
+            var title = "Turn Around Time - Outgoing";
+            @if($facility_select)
+                title += " ("+"<?php echo $facility_name; ?>"+")";
+            @endif
+
             var chart = new CanvasJS.Chart("chartContainer", {
                 title:{
-                    text: "Turn Around Time - Outgoing"
+                    text: title,
+                    fontSize: 30,
                 },
                 axisY: {
                     title: "Number of Referral",
@@ -233,6 +250,48 @@
                 });
             }
 
+        }
+
+        @if($province_select)
+        onChangeProvince("<?php echo $province_select; ?>");
+        @endif
+        function onChangeProvince($province_id) {
+            $('.loading').show();
+            if($province_id){
+                var url = "{{ url('location/select/facility/byprovince') }}";
+                $.ajax({
+                    url: url+'/'+$province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility").select2("val", "");
+                        $('#facility').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select All Facility'
+                            }));
+                        var facility_select = "<?php echo $facility_select; ?>";
+                        jQuery.each(data, function(i,val){
+                            $('#facility').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('#facility option[value="'+facility_select+'"]').attr("selected", "selected");
+                        $('.loading').hide();
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility").select2("val", "");
+                $('#facility').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
         }
     </script>
 @endsection

@@ -870,11 +870,13 @@
 
                 <div class="col-lg-6">
                     <div class="member d-flex align-items-start">
-                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/armendarez.j.jpg') }}" class="img-fluid" alt=""></div>
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/blanco_s.jpg') }}" class="img-fluid" alt=""></div>
                         <div class="member-info">
-                            <h4>Dr. Jera C. Armendarez</h4>
+                            <h4>Dr. Shelbay G. Blanco</h4>
                             <span>Medical Officer IV</span>
-                            <p>09178243162</p>
+                            <p>HEMS Cluster Head</p>
+                            <p>DRRM-H manager</p>
+                            <p>09451576004</p>
                             <div class="social">
                                 <a href=""><i class="ri-twitter-fill"></i></a>
                                 <a href=""><i class="ri-facebook-fill"></i></a>
@@ -934,6 +936,40 @@
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="member d-flex align-items-start">
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/Liporada, Patrick.jpg') }}" class="img-fluid" alt=""></div>
+                        <div class="member-info">
+                            <h4>Patrick Liporada</h4>
+                            <span>Senior Health Program Officer</span>
+                            <p>09231586707</p>
+                            <div class="social">
+                                <a href=""><i class="ri-twitter-fill"></i></a>
+                                <a href=""><i class="ri-facebook-fill"></i></a>
+                                <a href=""><i class="ri-instagram-fill"></i></a>
+                                <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="member d-flex align-items-start">
+                        <div class="pic"><img src="{{ asset('resources/medilab/assets/img/contact/theo.png') }}" class="img-fluid" alt=""></div>
+                        <div class="member-info">
+                            <h4>Theofanis P. Carpiso, Jr.</h4>
+                            <span>Nurse II</span>
+                            <p>09193460060</p>
+                            <div class="social">
+                                <a href=""><i class="ri-twitter-fill"></i></a>
+                                <a href=""><i class="ri-facebook-fill"></i></a>
+                                <a href=""><i class="ri-instagram-fill"></i></a>
+                                <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -1309,22 +1345,17 @@
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank">E-REFERRAL Manual</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Policy-Memo-On-Referral.docx') }}">E-Referral Policy Memo</a></li>
+                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/eReferral-Users-Manual-2nd-Edition_final.pdf') }}" target="_blank">E-REFERRAL Manual 2nd Edition</a></li>
+                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Users-Manual-2nd-Edition_final.pdf') }}" target="_blank">Users Manual 2nd Edition</a></li>
+                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/POLICY-2022-13_final.pdf') }}" target="_blank">E-Referral Policy Memo</a></li>
                         <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/E-Referral-Management.docx') }}">E-Referral Management</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Service-Request-Form.docx') }}">E-Referral Service Request</a></li>
-                        {{--<li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>--}}
                     </ul>
                 </div>
 
                 <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Services</h4>
+                    <h4>Useful Links</h4>
                     <ul>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Web Based</a></li>
-                        {{--<li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>--}}
+                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Service-Request-Form.docx') }}">E-Referral Service Request</a></li>
                     </ul>
                 </div>
 

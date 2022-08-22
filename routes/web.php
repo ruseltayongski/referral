@@ -274,6 +274,7 @@ Route::get('location/barangay/{muncity_id}','LocationCtrl@getBarangay');
 Route::get('location/barangay/{province_id}/{muncity_id}','LocationCtrl@getBarangay1');
 Route::get('location/muncity/{province_id}','LocationCtrl@getMuncity');
 Route::get('location/facility/{facility_id}','LocationCtrl@facilityAddress');
+Route::get('location/select/facility/byprovince/{province_id}','LocationCtrl@selectFacilityByProvince');
 Route::get('list/doctor/{facility_id}/{department_id}','ParamCtrl@getDoctorList');
 
 //Route::get('default','ParamCtrl@defaultTable');
@@ -318,6 +319,7 @@ Route::get('api/referral_list','ApiController@apiGetReferralList');
 Route::get('api/referral_track','ApiController@apiGetReferralTrack');
 Route::get("reports","admin\ReportCtrl@sottoReports");
 Route::get("api/individual","ApiController@individualList");
+Route::get("export/individual","ApiController@exportIndividualList");
 
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');

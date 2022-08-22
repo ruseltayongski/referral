@@ -9,6 +9,7 @@ use App\Province;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class LocationCtrl extends Controller
 {
@@ -120,5 +121,18 @@ class LocationCtrl extends Controller
             return $name->description;
         }
         return 'N/A';
+    }
+
+    public function selectFacilityByProvince($province_id) {
+        $user = Session::get('auth');
+        $facilities = Facility::select('id','name')
+            ->where('id','!=',$user->facility_id)
+            ->where('status',1)
+            ->where('referral_used','yes')
+            ->where('province',$province_id)
+            ->orderBy('name','asc')
+            ->get();
+
+        return $facilities;
     }
 }

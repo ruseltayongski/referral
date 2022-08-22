@@ -127,7 +127,10 @@ class ReferralCtrl extends Controller
             }
             elseif($option == 'accepted') {
                 $data = $data->where(function($q){
-                    $q->where('tracking.status','accepted');
+                    $q->where('tracking.status','accepted')
+                        ->orwhere('tracking.status','arrived')
+                        ->orwhere('tracking.status','admitted')
+                        ->orwhere('tracking.status','discharged');
                 });
             }
             elseif($option == 'seen_only') {
@@ -671,8 +674,6 @@ class ReferralCtrl extends Controller
                 });
             }
 
-            if($option_filter)
-                $data = $data->where('activity.status',$option_filter);
             if($facility_filter)
                 $data = $data->where('activity.referred_to',$facility_filter);
             if($department_filter)
@@ -687,15 +688,22 @@ class ReferralCtrl extends Controller
             $start_date = Carbon::parse($start)->startOfDay();
             $end_date = Carbon::parse($end)->endOfDay();
 
-            $data = $data->whereBetween('activity.created_at',[$start_date,$end_date])
-                ->where(function($q){
+            $data = $data->whereBetween('activity.created_at',[$start_date,$end_date]);
+
+            if($option_filter) {
+                $data = $data->where('activity.status',$option_filter);
+            }
+            else {
+                $data = $data->where(function($q){
                     $q->where('activity.status','referred')
                         ->orwhere('activity.status','redirected')
                         ->orwhere('activity.status','transferred');
-                })
-                ->orderBy('activity.id','desc')
-                ->groupBy("activity.code")
-                ->paginate(10);
+                });
+            }
+
+            $data = $data->orderBy('activity.id','desc')
+            ->groupBy("activity.code")
+            ->paginate(10);
         }
 
         return view('doctor.referred2',[
