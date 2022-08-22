@@ -234,7 +234,7 @@
                 });
             },
             notifyReferralUpdateFormFaciSame(msg) {
-                Lobibox.notify('info', {
+                Lobibox.notify('warning', {
                     delay: false,
                     closeOnClick: false,
                     title: 'Referral Form Updated!',
