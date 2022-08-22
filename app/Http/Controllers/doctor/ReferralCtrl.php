@@ -587,65 +587,6 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
 
         } else {
-            /*$data = Tracking::select(
-                'tracking.*',
-                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
-                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-                DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
-                'patients.sex',
-                'facility.name as facility_name',
-                'facility.id as facility_id',
-                'patients.id as patient_id',
-                'patients.contact',
-                'users.level as user_level'
-            )
-                ->join('patients','patients.id','=','tracking.patient_id')
-                ->join('facility','facility.id','=','tracking.referred_to')
-                ->leftJoin('users','users.id','=','tracking.referring_md')
-                ->where('referred_from',$user->facility_id)
-                ->where(function($q){
-                    $q->where('tracking.status','referred')
-                        ->orwhere('tracking.status','seen')
-                        ->orwhere('tracking.status','accepted')
-                        ->orwhere('tracking.status','arrived')
-                        ->orwhere('tracking.status','admitted')
-                        ->orwhere('tracking.status','transferred')
-                        ->orwhere('tracking.status','discharged')
-                        ->orwhere('tracking.status','cancelled')
-                        ->orwhere('tracking.status','archived')
-                        ->orwhere('tracking.status','rejected')
-                        ->orWhere('tracking.status','redirected');
-                });
-
-            if($search){
-                $data = $data->where(function($q) use ($search){
-                    $q->where('patients.fname','like',"%$search%")
-                        ->orwhere('patients.mname','like',"%$search%")
-                        ->orwhere('patients.lname','like',"%$search%")
-                        ->orwhere('tracking.code','like',"%$search%");
-                });
-            }
-
-            if($option_filter)
-                $data = $data->where('tracking.status',$option_filter);
-            if($facility_filter)
-                $data = $data->where('tracking.referred_to',$facility_filter);
-            if($department_filter)
-                $data = $data->where('tracking.department_id',$department_filter);
-
-            if($date) {
-                $range = explode('-',str_replace(' ', '', $date));
-                $start = $range[0];
-                $end = $range[1];
-            }
-
-            $start_date = Carbon::parse($start)->startOfDay();
-            $end_date = Carbon::parse($end)->endOfDay();
-
-            $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date])
-                ->orderBy('date_referred','desc')
-                ->paginate(10);*/
-
             $data = Activity::select(
                 'tracking.*',
                 DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -691,7 +632,41 @@ class ReferralCtrl extends Controller
             $data = $data->whereBetween('activity.created_at',[$start_date,$end_date]);
 
             if($option_filter) {
-                $data = $data->where('activity.status',$option_filter);
+                $option = $request->option_filter;
+                if($option == 'referred') {
+                    $data = $data->where(function($q){
+                        $q->where('tracking.status','referred')
+                            ->orWhere('tracking.status','redirected')
+                            ->orWhere('tracking.status','transferred')
+                            ->orwhere('tracking.status','seen');
+                    });
+                }
+                elseif($option == 'accepted') {
+                    $data = $data->where(function($q){
+                        $q->where('tracking.status','accepted')
+                            ->orwhere('tracking.status','arrived')
+                            ->orwhere('tracking.status','admitted')
+                            ->orwhere('tracking.status','discharged');
+                    });
+                }
+                elseif($option == 'seen_only') {
+                    $data = $data->join('seen',function($join) use ($user) {
+                        $join->on('seen.code','=','tracking.code');
+                        $join->on('seen.created_at','>=','tracking.created_at');
+                    })
+                        ->where(function($query) {
+                            $query->where('tracking.status','!=','accepted')
+                                ->where('tracking.status','!=','redirected')
+                                ->where('tracking.status','!=','rejected')
+                                ->where('tracking.status','!=','arrived')
+                                ->where('tracking.status','!=','admitted')
+                                ->where('tracking.status','!=','discharged')
+                                ->where('tracking.status','!=','transferred')
+                                ->where('tracking.status','!=','archived')
+                                ->where('tracking.status','!=','cancelled');
+                        })
+                        ->groupBy('tracking.code');
+                }
             }
             else {
                 $data = $data->where(function($q){
