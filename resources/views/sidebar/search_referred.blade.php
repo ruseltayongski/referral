@@ -42,12 +42,12 @@
                 <select name="option_filter" class="form-control" id="option">
                     <option value="">All Transaction</option>
                     <option @if($option_filter=='referred') selected @endif value="referred">Referred</option>
-                    <option @if($option_filter=='seen') selected @endif value="seen">Seen</option>
+                    <option @if($option_filter=='seen_only') selected @endif value="seen_only">Seen Only</option>
                     <option @if($option_filter=='accepted') selected @endif value="accepted">Accepted</option>
-                    <option @if($option_filter=='arrived') selected @endif value="arrived">Arrived</option>
+                    {{--<option @if($option_filter=='arrived') selected @endif value="arrived">Arrived</option>
                     <option @if($option_filter=='admitted') selected @endif value="admitted">Admitted</option>
                     <option @if($option_filter=='discharged') selected @endif value="discharged">Discharged</option>
-                    <option @if($option_filter=='cancelled') selected @endif value="cancelled">Cancelled</option>
+                    <option @if($option_filter=='cancelled') selected @endif value="cancelled">Cancelled</option>--}}
                 </select>
             </div>
             <div class="btn-group">
