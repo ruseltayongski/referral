@@ -449,9 +449,12 @@ class ReportCtrl extends Controller
 
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_select" => $request->province,
-            "facility_select" => $request->facility,
-            "facility_name" => Facility::find($request->facility)->name
+            "province_select_from" => $request->province,
+            "province_select_to" => $request->province,
+            "facility_select_from" => $request->facility,
+            "facility_select_to" => $request->facility,
+            "facility_name_from" => Facility::find($request->facility)->name,
+            "facility_name_to" => Facility::find($request->facility)->name
         ]);
     }
 

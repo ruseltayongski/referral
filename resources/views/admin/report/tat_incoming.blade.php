@@ -10,13 +10,24 @@
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
-                        <select name="province" class="form-control" onchange="onChangeProvince($(this).val())">
+                        From:
+                        <select name="province_from" class="form-control" onchange="onChangeProvinceFrom($(this).val())">
                             <option value="">Select All Province</option>
                             @foreach(\App\Province::get() as $pro)
                                 <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
                             @endforeach
                         </select>
-                        <select name="facility" id="facility" class="tat_select2">
+                        <select name="facility_from" id="facility_from" class="from_tat_select2">
+
+                        </select>
+                        To:
+                        <select name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
+                            <option value="">Select All Province</option>
+                            @foreach(\App\Province::get() as $pro)
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
+                            @endforeach
+                        </select>
+                        <select name="facility_to" id="facility_to" class="to_tat_select2">
 
                         </select>
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
@@ -136,7 +147,8 @@
 @section('js')
     @include('script.chart')
     <script>
-        $(".tat_select2").select2({ width: '20%' });
+        $(".from_tat_select2").select2({ width: '250px' });
+        $(".to_tat_select2").select2({ width: '250px' });
 
         $('#consolidate_date_range').daterangepicker({
             maxDate: new Date()
@@ -178,7 +190,7 @@
 
             var title = "Turn Around Time - Incoming";
             @if($facility_select)
-               title += " ("+"<?php echo $facility_name; ?>"+")";
+               title += " ("+"<?php echo $facility_name_to; ?>"+")";
             @endif
 
             var chart = new CanvasJS.Chart("chartContainer", {
@@ -252,15 +264,15 @@
 
         }
 
-        @if($province_select)
-        onChangeProvince("<?php echo $province_select; ?>");
+        @if($province_select_from)
+        onChangeProvinceFrom("<?php echo $province_select_from; ?>");
         @endif
-        function onChangeProvince($province_id) {
+        function onChangeProvinceFrom(province_id) {
             $('.loading').show();
-            if($province_id){
+            if(province_id){
                 var url = "{{ url('location/select/facility/byprovince') }}";
                 $.ajax({
-                    url: url+'/'+$province_id,
+                    url: url+'/'+province_id,
                     type: 'GET',
                     success: function(data){
                         $("#facility").select2("val", "");
@@ -287,6 +299,90 @@
                 $('.loading').hide();
                 $("#facility").select2("val", "");
                 $('#facility').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
+        }
+
+        @if($province_select_from)
+            onChangeProvinceFrom("<?php echo $province_select_from; ?>");
+        @endif
+        function onChangeProvinceFrom(province_id) {
+            $('.loading').show();
+            if(province_id){
+                var url = "{{ url('location/select/facility/byprovince') }}";
+                $.ajax({
+                    url: url+'/'+province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility_from").select2("val", "");
+                        $('#facility_from').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select All Facility'
+                            }));
+                        var facility_select = "<?php echo $facility_select; ?>";
+                        jQuery.each(data, function(i,val){
+                            $('#facility_from').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('#facility_from option[value="'+facility_select+'"]').attr("selected", "selected");
+                        $('.loading').hide();
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility_from").select2("val", "");
+                $('#facility_from').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
+        }
+
+        @if($province_select_to)
+            onChangeProvinceTo("<?php echo $province_select_to; ?>");
+        @endif
+        function onChangeProvinceTo(province_id) {
+            $('.loading').show();
+            if(province_id){
+                var url = "{{ url('location/select/facility/byprovince') }}";
+                $.ajax({
+                    url: url+'/'+province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility_to").select2("val", "");
+                        $('#facility_to').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select All Facility'
+                            }));
+                        var facility_select = "<?php echo $facility_select; ?>";
+                        jQuery.each(data, function(i,val){
+                            $('#facility_to').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('#facility_to option[value="'+facility_select+'"]').attr("selected", "selected");
+                        $('.loading').hide();
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility_to").select2("val", "");
+                $('#facility_to').empty()
                     .append($('<option>', {
                         value: '',
                         text : 'Select All Facility'
