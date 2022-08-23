@@ -14,7 +14,7 @@
                         <select name="province_from" class="form-control" onchange="onChangeProvinceFrom($(this).val())">
                             <option value="">Select All Province</option>
                             @foreach(\App\Province::get() as $pro)
-                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select_from)){if($pro->id == $province_select_from)echo 'selected';} ?>>{{ $pro->description }}</option>
                             @endforeach
                         </select>
                         <select name="facility_from" id="facility_from" class="from_tat_select2">
@@ -24,7 +24,7 @@
                         <select name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
                             <option value="">Select All Province</option>
                             @foreach(\App\Province::get() as $pro)
-                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select)echo 'selected';} ?>>{{ $pro->description }}</option>
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select_to)){if($pro->id == $province_select_to)echo 'selected';} ?>>{{ $pro->description }}</option>
                             @endforeach
                         </select>
                         <select name="facility_to" id="facility_to" class="to_tat_select2">
@@ -189,14 +189,17 @@
             });
 
             var title = "Turn Around Time - Incoming";
-            @if($facility_select)
-               title += " ("+"<?php echo $facility_name_to; ?>"+")";
+
+            @if($facility_select_from && $facility_select_to)
+                title += " ("+"<?php echo $facility_name_from; ?>"+" to "+"<?php echo $facility_name_to ?>"+")";
+            @elseif($facility_select_to)
+                title += " ("+"<?php echo $facility_name_to; ?>"+")";
             @endif
 
             var chart = new CanvasJS.Chart("chartContainer", {
                 title:{
                     text: title,
-                    fontSize: 30,
+                    fontSize: 20,
                 },
                 axisY: {
                     title: "Number of Referral",
@@ -323,7 +326,7 @@
                                 value: '',
                                 text : 'Select All Facility'
                             }));
-                        var facility_select = "<?php echo $facility_select; ?>";
+                        var facility_select = "<?php echo $facility_select_from; ?>";
                         jQuery.each(data, function(i,val){
                             $('#facility_from').append($('<option>', {
                                 value: val.id,
@@ -365,7 +368,7 @@
                                 value: '',
                                 text : 'Select All Facility'
                             }));
-                        var facility_select = "<?php echo $facility_select; ?>";
+                        var facility_select = "<?php echo $facility_select_to; ?>";
                         jQuery.each(data, function(i,val){
                             $('#facility_to').append($('<option>', {
                                 value: val.id,

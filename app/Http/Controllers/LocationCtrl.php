@@ -124,9 +124,7 @@ class LocationCtrl extends Controller
     }
 
     public function selectFacilityByProvince($province_id) {
-        $user = Session::get('auth');
         $facilities = Facility::select('id','name')
-            ->where('id','!=',$user->facility_id)
             ->where('status',1)
             ->where('referral_used','yes')
             ->where('province',$province_id)
