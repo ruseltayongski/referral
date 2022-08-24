@@ -20,6 +20,7 @@
                         <select name="facility_from" id="facility_from" class="from_tat_select2">
 
                         </select>
+                        @if($user->facility_id == 63)
                         To:
                         <select name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
                             <option value="">Select All Province</option>
@@ -30,6 +31,7 @@
                         <select name="facility_to" id="facility_to" class="to_tat_select2">
 
                         </select>
+                        @endif
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/tat/incoming') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
@@ -267,47 +269,49 @@
 
         }
 
-        @if($province_select_from)
-        onChangeProvinceFrom("<?php echo $province_select_from; ?>");
-        @endif
-        function onChangeProvinceFrom(province_id) {
-            $('.loading').show();
-            if(province_id){
-                var url = "{{ url('location/select/facility/byprovince') }}";
-                $.ajax({
-                    url: url+'/'+province_id,
-                    type: 'GET',
-                    success: function(data){
-                        $("#facility").select2("val", "");
-                        $('#facility').empty()
-                            .append($('<option>', {
-                                value: '',
-                                text : 'Select All Facility'
-                            }));
-                        var facility_select = "<?php echo $facility_select; ?>";
-                        jQuery.each(data, function(i,val){
-                            $('#facility').append($('<option>', {
-                                value: val.id,
-                                text : val.name
-                            }));
-                        });
-                        $('#facility option[value="'+facility_select+'"]').attr("selected", "selected");
-                        $('.loading').hide();
-                    },
-                    error: function(e){
-                        console.log(e)
-                    }
-                });
-            } else {
-                $('.loading').hide();
-                $("#facility").select2("val", "");
-                $('#facility').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Select All Facility'
-                    }));
+        @if($user->facility_id == 63)
+            @if($province_select_from)
+            onChangeProvinceFrom("<?php echo $province_select_from; ?>");
+            @endif
+            function onChangeProvinceFrom(province_id) {
+                $('.loading').show();
+                if(province_id){
+                    var url = "{{ url('location/select/facility/byprovince') }}";
+                    $.ajax({
+                        url: url+'/'+province_id,
+                        type: 'GET',
+                        success: function(data){
+                            $("#facility").select2("val", "");
+                            $('#facility').empty()
+                                .append($('<option>', {
+                                    value: '',
+                                    text : 'Select All Facility'
+                                }));
+                            var facility_select = "<?php echo $facility_select; ?>";
+                            jQuery.each(data, function(i,val){
+                                $('#facility').append($('<option>', {
+                                    value: val.id,
+                                    text : val.name
+                                }));
+                            });
+                            $('#facility option[value="'+facility_select+'"]').attr("selected", "selected");
+                            $('.loading').hide();
+                        },
+                        error: function(e){
+                            console.log(e)
+                        }
+                    });
+                } else {
+                    $('.loading').hide();
+                    $("#facility").select2("val", "");
+                    $('#facility').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Select All Facility'
+                        }));
+                }
             }
-        }
+        @endif
 
         @if($province_select_from)
             onChangeProvinceFrom("<?php echo $province_select_from; ?>");

@@ -1624,9 +1624,9 @@ section {
   margin-top: 50px;
 }
 
-@media (min-width: 500px) and (max-width: 1366px) {
+@media (min-width: 600px) and (max-width: 1024px) {
   #hero {
-    height: 120vh;
+    height: 130vh;
   }
 }
 
