@@ -41,7 +41,7 @@
         <div class="col-md-12">
             <div class="jim-content">
                 <div class="row" style="margin-top: 3%;">
-                    <div class="col-sm-2 col-xs-6">
+                    <div class="col-sm-2 col-xs-6" style="cursor: pointer;" onclick="referToSeenPeak()">
                         <div class="description-block border-right">
                             <h5 class="description-header refer_to_seen">{{ $refer_to_seen }}</h5>
                             <span class="description-text">Refer to Seen</span>
@@ -142,6 +142,34 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="statistics-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h3 class="modal-title statistics-title"></h3>
+                        </div>
+                        <div class="col-xs-6">
+                            <button type="button" class="close" style="float: right" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body statistics-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('js')
@@ -391,6 +419,62 @@
                         text : 'Select All Facility'
                     }));
             }
+        }
+
+        function timeDiffCalc(dateFuture, dateNow) {
+            let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
+
+            // calculate days
+            const days = Math.floor(diffInMilliSeconds / 86400);
+            diffInMilliSeconds -= days * 86400;
+            console.log('calculated days', days);
+
+            // calculate hours
+            const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+            diffInMilliSeconds -= hours * 3600;
+            console.log('calculated hours', hours);
+
+            // calculate minutes
+            const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+            diffInMilliSeconds -= minutes * 60;
+            console.log('minutes', minutes);
+
+            let difference = '';
+            if (days > 0) {
+                difference += (days === 1) ? `${days} day, ` : `${days} days, `;
+            }
+
+            difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
+
+            difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`;
+
+            return difference;
+        }
+
+        function referToSeenPeak() {
+            $("#statistics-modal").modal('show');
+            $(".statistics-body").html(loading);
+            setTimeout(function(){
+                $(".statistics-title").append('Refer to Seen');
+                $(".statistics-body").html(
+                    "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
+                    "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>TAT</th><th class='text-green'>Date Referred</th><th class='text-green'>First Seened Date</th></tr>\n" +
+                    "</table>"
+                );
+                jQuery.each(<?php echo json_encode($refer_to_seen_details); ?>, function(index, value) {
+                    var track_url = "<?php echo asset('doctor/referred?referredCode='); ?>"+value["code"];
+                    var tr = $('<tr />');
+                    tr.append("<a href='"+track_url+"' class=\"btn btn-xs btn-success\" target=\"_blank\">\n" +
+                        "<i class=\"fa fa-stethoscope\"></i> Track\n" +
+                        "</a>");
+                    tr.append( $('<td />', { text : value["code"] } ));
+                    tr.append( $('<td />', { text : timeDiffCalc(new Date(value["date_referred"]),new Date(value["date_seened"])) } ));
+                    tr.append( $('<td />', { text : value["date_referred_format"] } ));
+                    tr.append( $('<td />', { text : value["date_seened_format"] } ));
+                    $("#table").append(tr);
+                });
+
+            },500);
         }
     </script>
 @endsection

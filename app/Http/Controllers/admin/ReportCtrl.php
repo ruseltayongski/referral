@@ -234,6 +234,15 @@ class ReportCtrl extends Controller
 
                 if($refer_to_seen) {
                     $refer_seen_holder[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_overall[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_details[] = [
+                        "code" => $refer_to_seen->code,
+                        "minutes" => $this->getMinutes($refer->created_at,$refer_to_seen->created_at),
+                        "date_referred" => $refer->created_at,
+                        "date_seened" => $refer_to_seen->created_at,
+                        "date_referred_format" => date("M d, Y h:i A",strtotime($refer->created_at)),
+                        "date_seened_format" => date("M d, Y h:i A",strtotime($refer_to_seen->created_at))
+                    ];
 
                     $seen_to_accept = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
@@ -421,20 +430,27 @@ class ReportCtrl extends Controller
                 "referred" => count($referred),
                 "redirected" => count($redirected),
                 "transferred" => count($transferred),
+                "refer_to_seen" => round(collect($refer_seen_holder)->avg(),2),
                 "refer_to_accept" => round(collect($refer_accept_holder)->avg(),2),
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
+            $refer_seen_holder = [];
             $refer_accept_holder = [];
             $redirect_accept_holder = [];
             $transfer_accept_holder = [];
         }
 
+
+        $b = array_column($refer_seen_details,'minutes'); // which column needed to be sorted
+        array_multisort($b,SORT_DESC,$refer_seen_details); // sorts the array $a with respective of aray $b
+
         return view('admin.report.tat_incoming',[
             "data_points" => $data,
             "user" => $user,
 
-            "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_holder)->avg(),2)),
+            "refer_to_seen_details" => $refer_seen_details,
+            "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_overall)->avg(),2)),
             "seen_to_accept" => $this->formatTheTAT(round(collect($seen_accept_holder)->avg(),2)),
             "seen_to_reject" => $this->formatTheTAT(round(collect($seen_reject_holder)->avg(),2)),
             "accept_to_arrive" => $this->formatTheTAT(round(collect($accept_arrive_holder)->avg(),2)),

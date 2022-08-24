@@ -192,7 +192,7 @@
 
             @if($facility_select_from && $facility_select_to)
                 title += " ("+"<?php echo $facility_name_from; ?>"+" to "+"<?php echo $facility_name_to ?>"+")";
-            @elseif($facility_select_to)
+            @elseif($facility_select_from)
                 title += " ("+"<?php echo $facility_name_to; ?>"+")";
             @endif
 
