@@ -98,6 +98,8 @@ class LoginCtrl extends Controller
                     return redirect('nurse');
                 else if($login->level=='vaccine')
                     return redirect('vaccine');
+                else if($login->level=='mayor')
+                    return redirect('doctor');
                 else{
                     Session::forget('auth');
                     return Redirect::back()->with('error','You don\'t have access in this system.')->with('username',$req->username);

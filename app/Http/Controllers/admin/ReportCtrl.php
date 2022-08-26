@@ -197,9 +197,9 @@ class ReportCtrl extends Controller
 
             $referred = Activity::
                         select("activity.code","activity.created_at")
-                            ->where("activity.referred_to",$user->facility_id);
-            if($request->facility) {
-                $referred = $referred->where("activity.referred_from",$request->facility);
+                            ->where("activity.referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+            if($request->facility_from) {
+                $referred = $referred->where("activity.referred_from",$request->facility_from);
             }
             $referred = $referred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','referred')
@@ -207,9 +207,9 @@ class ReportCtrl extends Controller
 
             $redirected = Activity::
             select("activity.code","activity.created_at")
-                ->where("activity.referred_to",$user->facility_id);
-            if($request->facility) {
-                $redirected = $redirected->where("activity.referred_from",$request->facility);
+                ->where("activity.referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+            if($request->facility_from) {
+                $redirected = $redirected->where("activity.referred_from",$request->facility_from);
             }
             $redirected = $redirected
                 ->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
@@ -218,9 +218,9 @@ class ReportCtrl extends Controller
 
             $transferred = Activity::
             select("activity.code","activity.created_at")
-            ->where("activity.referred_to",$user->facility_id);
-            if($request->facility) {
-                $transferred = $transferred->where("activity.referred_from",$request->facility);
+            ->where("activity.referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+            if($request->facility_from) {
+                $transferred = $transferred->where("activity.referred_from",$request->facility_from);
             }
             $transferred = $transferred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
             ->where('activity.status','transferred')
@@ -229,17 +229,26 @@ class ReportCtrl extends Controller
             foreach($referred as $refer) {
                 $refer_to_seen = Seen::where("code",$refer->code)
                     ->where("created_at",">=",$refer->created_at)
-                    ->where("facility_id",$user->facility_id)
+                    ->where("facility_id",$request->facility_to ? $request->facility_to : $user->facility_id)
                     ->first();
 
                 if($refer_to_seen) {
                     $refer_seen_holder[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_overall[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_details[] = [
+                        "code" => $refer_to_seen->code,
+                        "minutes" => $this->getMinutes($refer->created_at,$refer_to_seen->created_at),
+                        "date_referred" => $refer->created_at,
+                        "date_seened" => $refer_to_seen->created_at,
+                        "date_referred_format" => date("M d, Y h:i A",strtotime($refer->created_at)),
+                        "date_seened_format" => date("M d, Y h:i A",strtotime($refer_to_seen->created_at))
+                    ];
 
                     $seen_to_accept = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id);
-                    if($request->facility) {
-                        $seen_to_accept = $seen_to_accept->where("activity.referred_from",$request->facility);
+                        ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                    if($request->facility_from) {
+                        $seen_to_accept = $seen_to_accept->where("activity.referred_from",$request->facility_from);
                     }
                     $seen_to_accept = $seen_to_accept->where("status","accepted")
                         ->first();
@@ -249,15 +258,16 @@ class ReportCtrl extends Controller
 
                         $accept_to_arrive = Activity::where("code",$seen_to_accept->code)
                             ->where("created_at",">=",$seen_to_accept->created_at)
-                            ->where("referred_from",$user->facility_id)
+                            ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                             ->where("status","arrived")
                             ->first();
+
                         if($accept_to_arrive) {
                             $accept_arrive_holder[] = $this->getMinutes($seen_to_accept->created_at,$accept_to_arrive->created_at); // accept to arrive
 
                             $arrive_to_admit = Activity::where("code",$accept_to_arrive->code)
                                 ->where("created_at",">=",$accept_to_arrive->created_at)
-                                ->where("referred_from",$user->facility_id)
+                                ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                 ->where("status","admitted")
                                 ->first();
 
@@ -266,7 +276,7 @@ class ReportCtrl extends Controller
 
                                 $admit_to_discharge = Activity::where("code",$arrive_to_admit->code)
                                     ->where("created_at",">=",$arrive_to_admit->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge)
@@ -275,7 +285,7 @@ class ReportCtrl extends Controller
                             else {
                                 $admit_to_discharge = Activity::where("code",$accept_to_arrive->code)
                                     ->where("created_at",">=",$accept_to_arrive->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge) {
@@ -287,9 +297,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id);
-                    if($request->facility) {
-                        $seen_to_reject = $seen_to_reject->where("referred_from",$request->facility);
+                        ->where("referred_to", $request->facility_to ? $request->facility_to : $user->facility_id);
+                    if($request->facility_from) {
+                        $seen_to_reject = $seen_to_reject->where("referred_from",$request->facility_from);
                     }
                     $seen_to_reject = $seen_to_reject->where("status","rejected")
                         ->first();
@@ -301,9 +311,9 @@ class ReportCtrl extends Controller
 
                 $refer_to_accept = Activity::where("code",$refer->code)
                     ->where("created_at",">=",$refer->created_at)
-                    ->where("referred_to",$user->facility_id);
-                if($request->facility) {
-                    $refer_to_accept = $refer_to_accept->where("referred_from",$request->facility);
+                    ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                if($request->facility_from) {
+                    $refer_to_accept = $refer_to_accept->where("referred_from",$request->facility_from);
                 }
                 $refer_to_accept = $refer_to_accept->where("status","accepted")
                     ->first();
@@ -316,7 +326,7 @@ class ReportCtrl extends Controller
             foreach($redirected as $redirect) {
                 $redirect_to_seen = Seen::where("code",$redirect->code)
                     ->where("created_at",">=",$redirect->created_at)
-                    ->where("facility_id",$user->facility_id)
+                    ->where("facility_id",$request->facility_to ? $request->facility_to : $user->facility_id)
                     ->first();
 
                 if($redirect_to_seen) {
@@ -324,9 +334,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_accept_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id);
-                    if($request->facility) {
-                        $seen_to_accept_redirect = $seen_to_accept_redirect->where("referred_from",$request->facility);
+                        ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                    if($request->facility_from) {
+                        $seen_to_accept_redirect = $seen_to_accept_redirect->where("referred_from",$request->facility_from);
                     }
                     $seen_to_accept_redirect = $seen_to_accept_redirect->where("status","accepted")
                         ->first();
@@ -336,7 +346,7 @@ class ReportCtrl extends Controller
 
                         $accept_to_arrive_redirect = Activity::where("code",$seen_to_accept_redirect->code)
                             ->where("created_at",">=",$seen_to_accept_redirect->created_at)
-                            ->where("referred_from",$user->facility_id)
+                            ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                             ->where("status","arrived")
                             ->first();
                         if($accept_to_arrive_redirect) {
@@ -344,7 +354,7 @@ class ReportCtrl extends Controller
 
                             $arrive_to_admit_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
                                 ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                ->where("referred_from",$user->facility_id)
+                                ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                 ->where("status","admitted")
                                 ->first();
 
@@ -353,7 +363,7 @@ class ReportCtrl extends Controller
 
                                 $admit_to_discharge_redirect = Activity::where("code",$arrive_to_admit_redirect->code)
                                     ->where("created_at",">=",$arrive_to_admit_redirect->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge_redirect)
@@ -362,7 +372,7 @@ class ReportCtrl extends Controller
                             else {
                                 $admit_to_discharge_redirect = Activity::where("code",$accept_to_arrive_redirect->code)
                                     ->where("created_at",">=",$accept_to_arrive_redirect->created_at)
-                                    ->where("referred_from",$user->facility_id)
+                                    ->where("referred_from",$request->facility_to ? $request->facility_to : $user->facility_id)
                                     ->where("status","discharged")
                                     ->first();
                                 if($admit_to_discharge_redirect) {
@@ -374,9 +384,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_to",$user->facility_id);
-                    if($request->facility) {
-                        $seen_to_reject_redirect = $seen_to_reject_redirect->where("referred_from",$request->facility);
+                        ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                    if($request->facility_from) {
+                        $seen_to_reject_redirect = $seen_to_reject_redirect->where("referred_from",$request->facility_from);
                     }
                     $seen_to_reject_redirect = $seen_to_reject_redirect->where("status","rejected")
                         ->first();
@@ -388,9 +398,9 @@ class ReportCtrl extends Controller
 
                 $redirect_to_accept = Activity::where("code",$redirect->code)
                     ->where("created_at",">=",$redirect->created_at)
-                    ->where("referred_to",$user->facility_id);
-                if($request->facility) {
-                    $redirect_to_accept = $redirect_to_accept->where("referred_from",$request->facility);
+                    ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                if($request->facility_from) {
+                    $redirect_to_accept = $redirect_to_accept->where("referred_from",$request->facility_from);
                 }
                 $redirect_to_accept = $redirect_to_accept->where("status","accepted")
                     ->first();
@@ -403,9 +413,9 @@ class ReportCtrl extends Controller
             foreach($transferred as $transfer) {
                 $transfer_to_accept = Activity::where("code",$transfer->code)
                     ->where("created_at",">=",$transfer->created_at)
-                    ->where("referred_to",$user->facility_id);
-                if($request->facility) {
-                    $transfer_to_accept = $transfer_to_accept->where("referred_from",$request->facility);
+                    ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
+                if($request->facility_from) {
+                    $transfer_to_accept = $transfer_to_accept->where("referred_from",$request->facility_from);
                 }
                 $transfer_to_accept = $transfer_to_accept->where("status","accepted")
                     ->first();
@@ -420,19 +430,27 @@ class ReportCtrl extends Controller
                 "referred" => count($referred),
                 "redirected" => count($redirected),
                 "transferred" => count($transferred),
+                "refer_to_seen" => round(collect($refer_seen_holder)->avg(),2),
                 "refer_to_accept" => round(collect($refer_accept_holder)->avg(),2),
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
+            $refer_seen_holder = [];
             $refer_accept_holder = [];
             $redirect_accept_holder = [];
             $transfer_accept_holder = [];
         }
 
+
+        $b = array_column($refer_seen_details,'minutes'); // which column needed to be sorted
+        array_multisort($b,SORT_DESC,$refer_seen_details); // sorts the array $a with respective of aray $b
+
         return view('admin.report.tat_incoming',[
             "data_points" => $data,
+            "user" => $user,
 
-            "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_holder)->avg(),2)),
+            "refer_to_seen_details" => $refer_seen_details,
+            "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_overall)->avg(),2)),
             "seen_to_accept" => $this->formatTheTAT(round(collect($seen_accept_holder)->avg(),2)),
             "seen_to_reject" => $this->formatTheTAT(round(collect($seen_reject_holder)->avg(),2)),
             "accept_to_arrive" => $this->formatTheTAT(round(collect($accept_arrive_holder)->avg(),2)),
@@ -449,9 +467,12 @@ class ReportCtrl extends Controller
 
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_select" => $request->province,
-            "facility_select" => $request->facility,
-            "facility_name" => Facility::find($request->facility)->name
+            "province_select_from" => $request->province_from,
+            "province_select_to" => $request->province_to,
+            "facility_select_from" => $request->facility_from,
+            "facility_select_to" => $request->facility_to,
+            "facility_name_from" => Facility::find($request->facility_from)->name,
+            "facility_name_to" => Facility::find($request->facility_to)->name
         ]);
     }
 
@@ -475,9 +496,9 @@ class ReportCtrl extends Controller
 
             $referred = Activity::
             select("activity.code","activity.created_at","activity.referred_to")
-                ->where("activity.referred_from",$user->facility_id); //done
-            if($request->facility) {
-                $referred = $referred->where("activity.referred_to",$request->facility);
+                ->where("activity.referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+            if($request->facility_to) {
+                $referred = $referred->where("activity.referred_to",$request->facility_to);
             }
             $referred = $referred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','referred')
@@ -485,9 +506,9 @@ class ReportCtrl extends Controller
 
             $redirected = Activity::
             select("activity.code","activity.created_at","activity.referred_to")
-                ->where("activity.referred_from",$user->facility_id); //done
-            if($request->facility) {
-                $redirected = $redirected->where("activity.referred_to",$request->facility);
+                ->where("activity.referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+            if($request->facility_to) {
+                $redirected = $redirected->where("activity.referred_to",$request->facility_to);
             }
             $redirected = $redirected->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','redirected')
@@ -495,9 +516,9 @@ class ReportCtrl extends Controller
 
             $transferred = Activity::
             select("activity.code","activity.created_at","activity.referred_to")
-                ->where("activity.referred_from",$user->facility_id); //done
-            if($request->facility) {
-                $transferred = $transferred->where("activity.referred_to",$request->facility);
+                ->where("activity.referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+            if($request->facility_to) {
+                $transferred = $transferred->where("activity.referred_to",$request->facility_to);
             }
             $transferred = $transferred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
             ->where('activity.status','transferred')
@@ -511,12 +532,21 @@ class ReportCtrl extends Controller
 
                 if($refer_to_seen) {
                     $refer_seen_holder[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_overall[] = $this->getMinutes($refer->created_at,$refer_to_seen->created_at); //refer to seen
+                    $refer_seen_details[] = [
+                        "code" => $refer_to_seen->code,
+                        "minutes" => $this->getMinutes($refer->created_at,$refer_to_seen->created_at),
+                        "date_referred" => $refer->created_at,
+                        "date_seened" => $refer_to_seen->created_at,
+                        "date_referred_format" => date("M d, Y h:i A",strtotime($refer->created_at)),
+                        "date_seened_format" => date("M d, Y h:i A",strtotime($refer_to_seen->created_at))
+                    ];
 
                     $seen_to_accept = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_from",$user->facility_id); //done
-                    if($request->facility) {
-                        $seen_to_accept = $seen_to_accept->where("referred_to",$request->facility);
+                        ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+                    if($request->facility_to) {
+                        $seen_to_accept = $seen_to_accept->where("referred_to",$request->facility_to);
                     }
                     $seen_to_accept = $seen_to_accept->where("status","accepted")
                         ->first();
@@ -570,9 +600,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject = Activity::where("code",$refer_to_seen->code)
                         ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_from",$user->facility_id); //done
-                    if($request->facility) {
-                        $seen_to_reject = $seen_to_reject->where("referred_to",$request->facility);
+                        ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+                    if($request->facility_to) {
+                        $seen_to_reject = $seen_to_reject->where("referred_to",$request->facility_to);
                     }
                     $seen_to_reject = $seen_to_reject->where("status","rejected")
                         ->first();
@@ -584,9 +614,9 @@ class ReportCtrl extends Controller
 
                 $refer_to_accept = Activity::where("code",$refer->code)
                     ->where("created_at",">=",$refer->created_at)
-                    ->where("referred_from",$user->facility_id); //done
-                if($request->facility) {
-                    $refer_to_accept = $refer_to_accept->where("referred_to",$request->facility);
+                    ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+                if($request->facility_to) {
+                    $refer_to_accept = $refer_to_accept->where("referred_to",$request->facility_to);
                 }
                 $refer_to_accept = $refer_to_accept->where("status","accepted")
                     ->first();
@@ -607,9 +637,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_accept_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_from",$user->facility_id); //done must change and last change
-                    if($request->facility) {
-                        $seen_to_accept_redirect = $seen_to_accept_redirect->where("referred_to",$request->facility);
+                        ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done must change and last change
+                    if($request->facility_to) {
+                        $seen_to_accept_redirect = $seen_to_accept_redirect->where("referred_to",$request->facility_to);
                     }
                     $seen_to_accept_redirect = $seen_to_accept_redirect->where("status","accepted")
                         ->first();
@@ -662,9 +692,9 @@ class ReportCtrl extends Controller
 
                     $seen_to_reject_redirect = Activity::where("code",$redirect_to_seen->code)
                         ->where("created_at",">=",$redirect_to_seen->created_at)
-                        ->where("referred_from",$user->facility_id); //done
-                    if($request->facility) {
-                        $seen_to_reject_redirect = $seen_to_reject_redirect->where("referred_to",$request->facility);
+                        ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+                    if($request->facility_to) {
+                        $seen_to_reject_redirect = $seen_to_reject_redirect->where("referred_to",$request->facility_to);
                     }
                     $seen_to_reject_redirect = $seen_to_reject_redirect->where("status","rejected")
                         ->first();
@@ -676,9 +706,9 @@ class ReportCtrl extends Controller
 
                 $redirect_to_accept = Activity::where("code",$redirect->code)
                     ->where("created_at",">=",$redirect->created_at)
-                    ->where("referred_from",$user->facility_id); //done
-                if($request->facility) {
-                    $redirect_to_accept = $redirect_to_accept->where("referred_to",$request->facility);
+                    ->where("referred_from",$request->facility_from ? $request->facility_from : $user->facility_id); //done
+                if($request->facility_to) {
+                    $redirect_to_accept = $redirect_to_accept->where("referred_to",$request->facility_to);
                 }
                 $redirect_to_accept = $redirect_to_accept->where("status","accepted")
                     ->first();
@@ -715,9 +745,14 @@ class ReportCtrl extends Controller
             $transfer_accept_holder = [];
         }
 
+        $b = array_column($refer_seen_details,'minutes'); // which column needed to be sorted
+        array_multisort($b,SORT_DESC,$refer_seen_details); // sorts the array $a with respective of aray $b
+
         return view('admin.report.tat_outgoing',[
             "data_points" => $data,
+            "user" => $user,
 
+            "refer_to_seen_details" => $refer_seen_details,
             "refer_to_seen" => $this->formatTheTAT(round(collect($refer_seen_holder)->avg(),2)),
             "seen_to_accept" => $this->formatTheTAT(round(collect($seen_accept_holder)->avg(),2)),
             "seen_to_reject" => $this->formatTheTAT(round(collect($seen_reject_holder)->avg(),2)),
@@ -735,9 +770,12 @@ class ReportCtrl extends Controller
 
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_select" => $request->province,
-            "facility_select" => $request->facility,
-            "facility_name" => Facility::find($request->facility)->name
+            "province_select_from" => $request->province_from,
+            "province_select_to" => $request->province_to,
+            "facility_select_from" => $request->facility_from,
+            "facility_select_to" => $request->facility_to,
+            "facility_name_from" => Facility::find($request->facility_from)->name,
+            "facility_name_to" => Facility::find($request->facility_to)->name
         ]);
     }
 
