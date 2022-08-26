@@ -11,6 +11,7 @@ if(!$end)
 
 $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
 $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
+
 ?>
 @extends('layouts.app')
 
@@ -35,10 +36,26 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                     <div class="form-group">
                         <input type="text" class="form-control form-control-sm" value="{{ $start.' - '.$end }}" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
                     </div>
-                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button><br><br>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <select class="form-control select select2" id="facility_filter" name="facility_filter">
+                                <option value="">Select facility...</option>
+                                @foreach($facilities as $faci)
+                                    <option value="{{ $faci->id }}">{{ $faci->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <button type="submit" class="btn btn-info btn-sm btn-flat"><i class="fa fa-filter"></i> Filter</button>
+                            <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                                <i class="fa fa-eye"></i> View All
+                            </button><br><br>
+                        </div>
+                    </div>
                 </form>
             </div>
-            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> </h3>
+            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> <br><br></h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -72,8 +89,8 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         </td>
                                         <td style="white-space: nowrap;">
                                             <span class="facility" title="{{ $row->name }}">
-                                            @if(strlen($row->name)>25)
-                                                    {{ substr($row->name,0,25) }}...
+                                            @if(strlen($row->name)>35)
+                                                    {{ substr($row->name,0,35) }}...
                                                 @else
                                                     {{ $row->name }}
                                                 @endif

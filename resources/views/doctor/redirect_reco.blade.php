@@ -1,5 +1,16 @@
 <?php
 $user = Session::get('auth');
+
+$start = \Illuminate\Support\Facades\Session::get('startRedirectRecoDate');
+$end = \Illuminate\Support\Facades\Session::get('endRedirectRecoDate');
+if(!$start)
+    $start = \Carbon\Carbon::now()->subWeeks(52)->startOfYear()->format('m/d/Y');
+
+if(!$end)
+    $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
+
+$start = \Carbon\Carbon::parse($start)->format('m/d/Y');
+$end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 ?>
 @extends('layouts.app')
 
@@ -22,12 +33,28 @@ $user = Session::get('auth');
                         <input type="text" class="form-control" placeholder="Code,Firstname,Lastname" value="{{ \Illuminate\Support\Facades\Session::get('keywordRedirectReco') }}" name="keyword">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control form-control-sm" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
+                        <input type="text" class="form-control form-control-sm" value="{{ $start.' - '.$end }}" id="daterange" max="{{ date('Y-m-d') }}" name="daterange">
                     </div>
-                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button><br><br>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <select class="form-control select select2" id="faci_filter" name="faci_filter">
+                                <option value="">Select facility...</option>
+                                @foreach($facilities as $faci)
+                                    <option value="{{ $faci->id }}">{{ $faci->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <button type="submit" class="btn btn-info btn-sm btn-flat"><i class="fa fa-filter"></i> Filter</button>
+                            <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                                <i class="fa fa-eye"></i> View All
+                            </button><br><br>
+                        </div>
+                    </div>
                 </form>
             </div>
-            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> </h3>
+            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> <br><br></h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -56,8 +83,8 @@ $user = Session::get('auth');
                                     <tr>
                                         <td style="white-space: nowrap;">
                                             <span class="facility" title="{{ $row->name }}">
-                                            @if(strlen($row->name)>25)
-                                                    {{ substr($row->name,0,25) }}...
+                                            @if(strlen($row->name)>35)
+                                                    {{ substr($row->name,0,35) }}...
                                                 @else
                                                     {{ $row->name }}
                                                 @endif
@@ -120,28 +147,14 @@ $user = Session::get('auth');
     @include('script.datetime')
     @include('script.accepted')
 
-    <script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>
-    <script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>
-    <?php
-    $start = \Illuminate\Support\Facades\Session::get('startRedirectRecoDate');
-    $end = \Illuminate\Support\Facades\Session::get('endRedirectRecoDate');
-    if(!$start)
-        $start = \Carbon\Carbon::yesterday()->format('m/d/Y');
-
-    if(!$end)
-        $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
-
-    $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
-    $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
-    ?>
+    {{--<script src="{{ url('resources/plugin/daterange/moment.min.js') }}"></script>--}}
+    {{--<script src="{{ url('resources/plugin/daterange/daterangepicker.js') }}"></script>--}}
     <script>
         $('#daterange').daterangepicker({
+            "singleDatePicker": false,
             "startDate": "{{ $start }}",
             "endDate": "{{ $end }}",
             "opens": "left"
-        }, function(start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-            console.log("{{ $start }}");
         });
     </script>
 @endsection

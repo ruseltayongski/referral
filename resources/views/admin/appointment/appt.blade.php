@@ -5,28 +5,28 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
 @extends('layouts.app')
 
-<style>
-    .bg_yellow_orange {
-        background-color: #ffc297b0;
-    }
-
-    .bg_light_blue {
-        background-color: #97d4df4f;
-    }
-
-    .bg_gray {
-        background-color: #b5bbc873;
-    }
-</style>
-
 @section('content')
+    <style>
+        .bg_new {
+            background-color: #ffcba4;
+        }
+
+        .bg_seen {
+            background-color: #fbf7f3;
+        }
+
+        .bg_resolved {
+            background-color: #ace1af;
+        }
+    </style>
+
     <div class="box box-primary">
         <div class="box-header with-border">
             <div class="pull-right">
                 <form action="{{ asset('admin/appointment') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
+                            <input type="text" class="form-control" name="appt_keyword" value="{{ Session::get('appt_keyword') }}" id="keyword" placeholder="Search...">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
@@ -37,46 +37,38 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                             <option value="">Select status...</option>
                             <option value="new"> New </option>
                             <option value="seen"> Seen </option>
-                            {{--<option value="approved"> Approved </option>--}}
+                            <option value="resolved"> Resolved </option>
                         </select>
-                        <input type="date" name="date_filter" id="date_filter" class="form-control">
-                        <button type="submit" value="view_all" name="view_all" class="btn btn-info btn-sm btn-flat">
+                        <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ Session::get('appt_date') }}">
+                        <button type="submit" class="btn btn-info btn-sm btn-flat">
                             <i class="fa fa-filter"></i> Filter
                         </button>
                     </div>
                 </form>
             </div>
-            <h2>APPOINTMENTS</h2>
-            <div class="form-inline">
-                <h5><b>Legend:</b>&nbsp;&nbsp;
-                    <span style="border: 1px solid black; background-color: #ffc297b0;">&emsp;&nbsp;</span> New &emsp;
-                    <span style="border: 1px solid black; background-color: #97d4df4f;">&emsp;&nbsp;</span> Seen &emsp;
-                    {{--<span style="border: 1px solid black; background-color: #b5bbc873;">&emsp;&nbsp;</span> Approved--}}
-                </h5>
-            </div>
+            <h3>APPOINTMENTS <small>({{ $count }})</small></h3>
+            {{--<div class="form-inline">--}}
+                {{--<h5><b>Legend:</b>&nbsp;&nbsp;--}}
+                    {{--<span style="border: 1px solid black; background-color: #ffcba4;">&emsp;&nbsp;</span> New &emsp;--}}
+                    {{--<span style="border: 1px solid black; background-color: #fbf7f3;">&emsp;&nbsp;</span> Seen &emsp;--}}
+                    {{--<span style="border: 1px solid black; background-color: #ace1af;">&emsp;&nbsp;</span> Resolved--}}
+                {{--</h5>--}}
+            {{--</div>--}}
         </div>
         <div class="box-body appointments">
             @if(count($data)>0)
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-striped table-hover">
                         <tr class="bg-success bg-navy-active">
                             <th class="text-center">Requester</th>
                             <th class="text-center">Email</th>
                             <th class="text-center">Contact</th>
                             <th class="text-center">Category</th>
                             <th class="text-center">Date Requested</th>
-                            <th class="text-center">Date of Appointment</th>
+                            <th class="text-center">Status</th>
                         </tr>
                         @foreach($data as $row)
-                            <?php
-                            if($row->status == 'new')
-                                $bg= 'bg_yellow_orange';
-                            else if($row->status == 'seen')
-                                $bg = 'bg_light_blue';
-//                            else if($row->status == 'approved')
-//                                $bg = 'bg_gray';
-                            ?>
-                            <tr class="{{ $bg }}" id="bgcolor{{$row->id}}" style="font-size: 13px">
+                            <tr style="font-size: 13px">
                                 <td style="white-space: nowrap;">
                                     <b>
                                         <a
@@ -93,9 +85,15 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                                 <td class="text-center"> {{ $row->category}} </td>
                                 <td class="text-center"> {{ date_format($row->created_at, 'F d, Y') }} </td>
                                 <td class="text-center">
-                                    <?php $date = new DateTime($row->preferred_date);
-                                    $date = date_format($date, 'F d, Y');?>
-                                    <b>{{ $date }}</b>
+                                    <?php
+                                    if($row->status == 'new')
+                                        $bg = 'badge bg-yellow';
+                                    else if($row->status == 'seen')
+                                        $bg = 'badge bg-light-blue';
+                                    else if($row->status == 'resolved')
+                                        $bg = 'badge bg-green';
+                                    ?>
+                                    <span class="{{ $bg }}" id="status{{ $row->id }}"> {{ strtoupper($row->status) }}</span>
                                 </td>
                             </tr>
                         @endforeach
@@ -123,7 +121,7 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                     <h4 class="modal-title"><b>APPOINTMENT REQUEST</b></h4>
                 </div>
                 <div class="modal-body appt_body">
-                    <form method="post" action="{{ asset('admin/appointment/approve') }}">
+                    <form method="post" action="{{ asset('admin/appointment/resolve') }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="id" id="modal_id">
                         <div class="row">
@@ -145,7 +143,7 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                             <div class="col-md-4 form-group mt-3">
                                 <b>Date:</b><br>
                                 <input type="date" style="background-color: white" name="date" id="modal_date" class="form-control" min="{{ $morrow }}" readonly>
-                                <small class="text-danger" id="warning_date">&emsp;Invalid Date!</small>
+                                {{--<small class="text-danger" id="warning_date">&emsp;Invalid Date!</small>--}}
                             </div>
                             <div class="col-md-4 form-group mt-3">
                                 <b>Category:</b><br>
@@ -155,12 +153,17 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
                         <div class="form-group mt-3">
                             <b>Message:</b><br>
-                            <textarea class="form-control" rows="5" style="resize: none; background-color: white" id="modal_message" readonly></textarea>
+                            <textarea class="form-control" rows="5" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <b>Remarks:</b><br>
+                            <textarea class="form-control" name="remarks" rows="3" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
                         </div>
 
                         <div class="form-group pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                            {{--<button type="submit" id="approve_btn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-check"></i> Approve</button>--}}
+                            <button type="submit" id="resolve_btn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-check"></i> Resolve</button>
                         </div>
                         <div class="clearfix"></div>
                     </form>
@@ -199,25 +202,31 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 $('#modal_date').val(data.preferred_date);
                 $('#modal_category').val(data.category);
                 $('#modal_message').val(data.message);
-
+                $('#modal_remarks').val(data.remarks);
                 $('#warning_date').hide();
 
-                if(data.status === 'seen') {
-                    $('#bgcolor'+id).attr('class','bg_light_blue');
+                if(data.status === 'resolved') {
+                    $('#resolve_btn').hide();
+                    $('#modal_remarks').attr('readonly', true);
+                } else if(data.status === 'seen') {
+                    $('#status'+id).attr('class','badge bg-light-blue');
+                    $('#status'+id).html('SEEN');
+                    $('#modal_remarks').attr('readonly', false);
+                    $('#resolve_btn').show();
                 }
             });
         }
 
-        $('#modal_date').on('change', function() {
-            var val = $(this).val();
-            if(val <= new Date().toISOString().slice(0, 10)) {
-                $('#warning_date').show();
-                $('#approve_btn').prop('disabled', true);
-            }
-            else {
-                $('#warning_date').hide();
-                $('#approve_btn').prop('disabled', false);
-            }
-        });
+//        $('#modal_date').on('change', function() {
+//            var val = $(this).val();
+//            if(val <= new Date().toISOString().slice(0, 10)) {
+//                $('#warning_date').show();
+//                $('#approve_btn').prop('disabled', true);
+//            }
+//            else {
+//                $('#warning_date').hide();
+//                $('#approve_btn').prop('disabled', false);
+//            }
+//        });
     </script>
 @endsection

@@ -1306,9 +1306,14 @@
                             <div class="col-md-6 form-group mt-3 mt-md-0">
                                 <input type="email" class="form-control" name="email" id="feedback_email" placeholder="Your Email" required>
                             </div>
-                        </div>
-                        <div class="form-group mt-3">
-                            <input type="text" class="form-control" name="subject" id="feedback_subject" placeholder="Subject" required>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                <input type="text" class="form-control" name="subject" id="feedback_subject" placeholder="Subject" required>
+                            </div>
+                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                <input type="tel" class="form-control" name="contact" id="feedback_contact" placeholder="Your Contact Number" required>
+                            </div>
                         </div>
                         <div class="form-group mt-3">
                             <textarea style="resize: none;" class="form-control" id="feedback_msg" name="message" rows="5" placeholder="Message" required></textarea>
@@ -1477,6 +1482,7 @@
                 $('#feedback_email').val('');
                 $('#feedback_subject').val('');
                 $('#feedback_msg').val('');
+                $('#feedback_contact').val('');
                 $('#feedback_btn').attr('disabled',false);
                 $('#feedback_btn').html('Send Feedback');
                 Lobibox.notify('success', {

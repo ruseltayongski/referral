@@ -255,8 +255,10 @@ class LoginCtrl extends Controller
         $data = new UserFeedback();
         $data->name = $req->name;
         $data->email = $req->email;
+        $data->contact = $req->contact;
         $data->subject = $req->subject;
         $data->message = $req->message;
+        $data->status = "new";
         $data->save();
 
         /* send email to user with the message that their feedback was received successfully */

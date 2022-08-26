@@ -1028,6 +1028,7 @@ class PatientCtrl extends Controller
         $keyword = Session::get('keywordRedirectReco');
         $start = Session::get('startRedirectRecoDate');
         $end = Session::get('endRedirectRecoDate');
+        $faci_filter = Session::get('faciRedirectReco');
 
         if(!$start){
             $start = Carbon::yesterday()->format('m/d/Y');
@@ -1049,6 +1050,17 @@ class PatientCtrl extends Controller
             ->where('tracking.referred_to',$user->facility_id)
             ->where('tracking.status','rejected');
 
+        $facilities = Tracking::select(
+            'facility.id',
+            'facility.name'
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->where('tracking.referred_to',$user->facility_id)
+            ->where('tracking.status','rejected')
+            ->groupBy('facility.name')
+            ->orderBy('facility.name','asc')
+            ->get();
+
         if($keyword){
             $data = $data->where(function($q) use ($keyword){
                 $q->where('patients.fname','like',"%$keyword%")
@@ -1056,6 +1068,10 @@ class PatientCtrl extends Controller
                     ->orwhere('patients.lname','like',"%$keyword%")
                     ->orwhere('tracking.code','like',"%$keyword%");
             });
+        }
+
+        if($faci_filter) {
+            $data = $data->where('tracking.referred_from', $faci_filter);
         }
 
         if($start && $end) {
@@ -1070,7 +1086,8 @@ class PatientCtrl extends Controller
 
         return view('doctor.redirect_reco',[
             'title' => 'Recommended to be Redirected Patients',
-            'data' => $data
+            'data' => $data,
+            'facilities' => $facilities
         ]);
     }
 
@@ -1082,9 +1099,17 @@ class PatientCtrl extends Controller
         $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
         $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
 
+        $keyword = $req->keyword;
+        $faci_filter = $req->faci_filter;
+        if($req->view_all) {
+            $keyword = '';
+            $faci_filter = '';
+        }
+
         Session::put('startRedirectRecoDate',$start);
         Session::put('endRedirectRecoDate',$end);
-        Session::put('keywordRedirectReco',$req->keyword);
+        Session::put('keywordRedirectReco',$keyword);
+        Session::put('faciRedirectReco',$faci_filter);
 
         return redirect('/doctor/redirect/reco');
     }
@@ -1217,6 +1242,7 @@ class PatientCtrl extends Controller
         $keyword = Session::get('keywordRedirected');
         $start = Session::get('startRedirectedDate');
         $end = Session::get('endRedirectedDate');
+        $faci_filter = Session::get('faciRedirected');
 
         $data = Tracking::select(
             'tracking.id',
@@ -1231,6 +1257,17 @@ class PatientCtrl extends Controller
             ->where('referred_to',$user->facility_id)
             ->where('tracking.status','redirected');
 
+        $facilities = Tracking::select(
+            'facility.id',
+            'facility.name'
+        )
+            ->join('facility','facility.id','=','tracking.referred_from')
+            ->where('referred_to',$user->facility_id)
+            ->where('tracking.status','redirected')
+            ->groupBy('facility.name')
+            ->orderBy('facility.name','asc')
+            ->get();
+
         if($keyword){
             $data = $data->where(function($q) use ($keyword){
                 $q->where('patients.fname','like',"%$keyword%")
@@ -1238,6 +1275,10 @@ class PatientCtrl extends Controller
                     ->orwhere('patients.lname','like',"%$keyword%")
                     ->orwhere('tracking.code','like',"%$keyword%");
             });
+        }
+
+        if($faci_filter) {
+            $data = $data->where('tracking.referred_from',$faci_filter);
         }
 
         if($start && $end){
@@ -1251,7 +1292,8 @@ class PatientCtrl extends Controller
 
         return view('doctor.redirected',[
             'title' => 'Redirected Patients',
-            'data' => $data
+            'data' => $data,
+            'facilities' => $facilities
         ]);
     }
 
@@ -1263,9 +1305,17 @@ class PatientCtrl extends Controller
         $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
         $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
 
+        $keyword = $req->keyword;
+        $faci_filter = $req->facility_filter;
+        if($req->view_all) {
+            $keyword = '';
+            $faci_filter = '';
+        }
+
         Session::put('startRedirectedDate',$start);
         Session::put('endRedirectedDate',$end);
-        Session::put('keywordRedirected',$req->keyword);
+        Session::put('keywordRedirected',$keyword);
+        Session::put('faciRedirected',$faci_filter);
 
         return redirect('/doctor/redirected');
     }
