@@ -57,7 +57,7 @@
         @if($user->level=='admin')
             <li><a href="{{ url('reports') }}"><i class="fa fa-caret-square-o-right"></i>Dashboard Report</a></li>
         @endif
-        <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
+            <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
         <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
         <li class="dropdown-submenu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-clock-o"></i>Turn Around Time</a>
@@ -67,9 +67,17 @@
             </ul>
         </li>
         @if($user->level=='admin')
-        <li>
-            <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>
-        </li>
+            <li>
+                <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>
+            </li>
+            {{--<li class="dropdown-submenu">--}}
+                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bar-chart"></i> Covid Report </a>--}}
+                {{--<ul class="dropdown-menu">--}}
+                    {{--@foreach(\App\Province::get() as $prov)--}}
+                        {{--<li><a href="{{ asset('admin/report/covid').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>--}}
+                    {{--@endforeach--}}
+                {{--</ul>--}}
+            {{--</li>--}}
         @endif
     </ul>
 </li>

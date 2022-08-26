@@ -992,4 +992,98 @@ class ReportCtrl extends Controller
         return self::deactivated();
     }
 
+    private function getTotalCases($province) {
+        $normal = PatientForm::where('fac.province', $province)
+            ->leftJoin('facility as fac','fac.id','=','patient_form.referred_to')
+            ->where(function($query) {
+                $query->whereNotNull('patient_form.refer_clinical_status')
+                    ->orWhereNotNull('patient_form.refer_sur_category')
+                    ->orWhereNotNull('patient_form.dis_sur_category');
+            })
+            ->count();
+        $pregnant = PregnantForm::where('fac.province', $province)
+            ->leftJoin('facility as fac','fac.id','=','pregnant_form.referred_to')
+            ->where(function($query) {
+                $query->whereNotNull('pregnant_form.refer_clinical_status')
+                    ->orWhereNotNull('pregnant_form.refer_sur_category')
+                    ->orWhereNotNull('pregnant_form.dis_sur_category');
+            })
+            ->count();
+        return $normal + $pregnant;
+    }
+
+    private function getCovidBg($cases) {
+        if($cases > 1000)
+            return 'bg-red-active';
+        else if($cases < 1000 && $cases >= 500)
+            return 'bg-yellow-active';
+        else
+            return 'bg-teal-active';
+    }
+
+    public function covidReport(Request $request, $province) {
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d').' 23:59:59';
+            $request->date_range = $date_start." - ".$date_end;
+        }
+
+        /* make another query
+         *    select(
+         */
+
+        $bohol_cases = self::getTotalCases(1);
+        $cebu_cases = self::getTotalCases(2);
+        $negros_cases = self::getTotalCases(3);
+        $siquijor_cases = self::getTotalCases(4);
+
+        return view("admin.report.covid_report", [
+            'title' => 'Covid Report',
+            'province' => $province,
+            'bohol_cases' => $bohol_cases,
+            'cebu_cases' => $cebu_cases,
+            'negros_cases' => $negros_cases,
+            'siquijor_cases' => $siquijor_cases,
+            'bohol_bg' => self::getCovidBg($bohol_cases),
+            'cebu_bg' => self::getCovidBg($cebu_cases),
+            'negros_bg' => self::getCovidBg($negros_cases),
+            'siquijor_bg' => self::getCovidBg($siquijor_cases)
+        ]);
+    }
+
+    public static function getNumberOfCases($id) {
+        $asymp1 = PatientForm::where('refer_clinical_status','asymptomatic')->where('referred_to',$id)->count();
+        $asymp2 = PregnantForm::where('refer_clinical_status','asymptomatic')->where('referred_to',$id)->count();
+        $asymp = $asymp1 + $asymp2;
+
+        $mild1 = PatientForm::where('refer_clinical_status','mild')->where('referred_to',$id)->count();
+        $mild2 = PregnantForm::where('refer_clinical_status','mild')->where('referred_to',$id)->count();
+        $mild = $mild1 + $mild2;
+
+        $moderate1 = PatientForm::where('refer_clinical_status','moderate')->where('referred_to',$id)->count();
+        $moderate2 = PregnantForm::where('refer_clinical_status','moderate')->where('referred_to',$id)->count();
+        $moderate = $moderate1 + $moderate2;
+
+        $severe1 = PatientForm::where('refer_clinical_status','severe')->where('referred_to',$id)->count();
+        $severe2 = PregnantForm::where('refer_clinical_status','severe')->where('referred_to',$id)->count();
+        $severe = $severe1 + $severe2;
+
+        $critical1 = PatientForm::where('refer_clinical_status','critical')->where('referred_to',$id)->count();
+        $critical2 = PregnantForm::where('refer_clinical_status','critical')->where('referred_to',$id)->count();
+        $critical = $critical1 + $critical2;
+
+        $total = $asymp + $mild + $moderate + $severe + $critical;
+
+        return array(
+            'asymp' => $asymp,
+            'mild' => $mild,
+            'moderate' => $moderate,
+            'severe' => $severe,
+            'critical' => $critical,
+            'empty' => ($total == 0) ? true : false
+        );
+    }
 }

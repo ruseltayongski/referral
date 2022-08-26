@@ -172,7 +172,8 @@
                                 'admin/statistics/incoming1','admin/statistics/incoming','admin/statistics/1','admin/statistics/2','admin/statistics/3','admin/statistics/4','admin/statistics/0',
 
                                 'vaccine','bed_admin','reports','monitoring', 'admin/report/tat/incoming', 'admin/report/tat/outgoing','admin/report/top/icd',
-                                'admin/report/top/reason_for_referral','bed/'.$user->facility_id
+                                'admin/report/top/reason_for_referral','bed/'.$user->facility_id,
+                                'admin/report/covid/1','admin/report/covid/2','admin/report/covid/3','admin/report/covid/4'
                                 ]))
                                 ? 'container-fluid'
                                 : 'container'
