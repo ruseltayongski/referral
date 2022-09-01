@@ -10,7 +10,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             Filter Results
-            <span class="pull-right badge">Result: {{ $data->total() }}</span>
+            <span class="pull-right badge" style="cursor: pointer" onclick="exportReferredExcel()">Result: {{ $data->total() }}</span>
         </h3>
     </div>
     <div class="panel-body">
@@ -62,3 +62,9 @@
 
     </div>
 </div>
+
+<script>
+    function exportReferredExcel() {
+        window.open("<?php echo asset('excel/export/referred'); ?>", '_blank');
+    }
+</script>
