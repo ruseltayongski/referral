@@ -607,16 +607,21 @@ Route::get('reco/seen1/{code}','FeedbackCtrl@recoSeen1');
 Route::post('appointment/create','LoginCtrl@createAppointment');
 Route::match(['GET','POST'],'admin/appointment','admin\ApptCtrl@appointment');
 Route::post('admin/appointment/details','admin\ApptCtrl@appointmentDetails');
-Route::post('admin/appointment/approve','admin\ApptCtrl@approveAppointment');
+Route::post('admin/appointment/resolve','admin\ApptCtrl@apptResolve');
 
 // feedback
 Route::match(['GET','POST'],'admin/user_feedback','admin\ApptCtrl@feedback');
-Route::post('admin/user_feedback/details','admin\ApptCtrl@feedbackDetails');
 Route::post('user_feedback/create','LoginCtrl@sendFeedback');
+Route::post('user_feedback/seen','admin\ApptCtrl@feedbackSeen');
+Route::post('user_feedback/details','admin\ApptCtrl@feedbackDetails');
+Route::post('user_feedback/resolve','admin\ApptCtrl@feedbackResolve');
 
 // report for deactivated account
 Route::get('admin/report/deactivated','admin\ReportCtrl@deactivated');
 Route::post('admin/report/deactivated','admin\ReportCtrl@filterDeactivated');
 
-// dcotor edit profile
+// doctor edit profile
 Route::post('doctor/editProfile','doctor\UserCtrl@editProfile');
+
+// covid report
+Route::match(['GET','POST'],'admin/report/covid/{province_id}','admin\ReportCtrl@covidReport');
