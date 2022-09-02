@@ -677,8 +677,12 @@ class ReferralCtrl extends Controller
             }
 
             $data = $data->orderBy('activity.id','desc')
-            ->groupBy("activity.code")
-            ->paginate(10);
+            ->groupBy("activity.code");
+
+            $referred_excel = $data->get();
+            Session::put("export_referred_excel",$referred_excel);
+
+            $data = $data->paginate(10);
         }
 
         return view('doctor.referred2',[
@@ -692,6 +696,20 @@ class ReferralCtrl extends Controller
             'facility_filter' => $facility_filter,
             'department_filter' => $department_filter,
             'user' => $user
+        ]);
+    }
+
+    public function exportReferredExcel() {
+        $export_referred_excel = Session::get("export_referred_excel");
+        $file_name = "export_referred_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+
+        return view('admin.excel.export_referred_excel',[
+            "data" => $export_referred_excel
         ]);
     }
 
