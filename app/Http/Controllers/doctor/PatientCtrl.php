@@ -1031,7 +1031,7 @@ class PatientCtrl extends Controller
         $faci_filter = Session::get('faciRedirectReco');
 
         if(!$start){
-            $start = Carbon::yesterday()->format('m/d/Y');
+            $start = Carbon::now()->startOfYear()->format('m/d/Y');
             $end = Carbon::now()->endOfYear()->format('m/d/Y');
         }
 
