@@ -285,4 +285,36 @@ class FacilityCtrl extends Controller
         return Redirect::back();
     }
 
+    public function exportAllFacilities() {
+        $file_name = "List of All Facilities.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $data = Facility::select(
+            'facility_code',
+            'name',
+            'address',
+            'prov.description as province',
+            'mun.description as muncity',
+            'bar.description as brgy',
+            'contact',
+            'email',
+            'chief_hospital',
+            'level',
+            'hospital_type',
+            'status',
+            'referral_used'
+        )
+            ->leftJoin("province as prov","prov.id","=","facility.province")
+            ->leftJoin("muncity as mun","mun.id","=","facility.muncity")
+            ->leftJoin("barangay as bar","bar.id","=","facility.brgy")
+            ->orderBy('name','asc')
+            ->get();
+        return view('admin.report.export.all_facility',[
+            "data" => $data
+        ]);
+    }
+
 }

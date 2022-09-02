@@ -1031,23 +1031,47 @@ class ReportCtrl extends Controller
     }
 
     private function getTotalCases($province) {
-        $normal = PatientForm::where('fac.province', $province)
-            ->leftJoin('facility as fac','fac.id','=','patient_form.referred_to')
+        $normal = PatientForm::select(
+            'faci.id as facility_id',
+            'faci.name as facility_name',
+            'patient_form.referred_to',
+            'patient_form.refer_clinical_status',
+            'patient_form.refer_sur_category',
+            'patient_form.dis_sur_category'
+        )
+            ->where('faci.province', $province)
+            ->leftJoin('facility as faci','faci.id','=','patient_form.referred_to')
             ->where(function($query) {
                 $query->whereNotNull('patient_form.refer_clinical_status')
                     ->orWhereNotNull('patient_form.refer_sur_category')
                     ->orWhereNotNull('patient_form.dis_sur_category');
             })
-            ->count();
-        $pregnant = PregnantForm::where('fac.province', $province)
-            ->leftJoin('facility as fac','fac.id','=','pregnant_form.referred_to')
+            ->orderBy('facility_name','asc')
+            ->get();
+        $pregnant = PregnantForm::select(
+            'faci.id as facility_id',
+            'faci.name as facility_name',
+            'pregnant_form.referred_to',
+            'pregnant_form.refer_clinical_status',
+            'pregnant_form.refer_sur_category',
+            'pregnant_form.dis_sur_category'
+        )
+            ->where('faci.province', $province)
+            ->leftJoin('facility as faci','faci.id','=','pregnant_form.referred_to')
             ->where(function($query) {
                 $query->whereNotNull('pregnant_form.refer_clinical_status')
                     ->orWhereNotNull('pregnant_form.refer_sur_category')
                     ->orWhereNotNull('pregnant_form.dis_sur_category');
             })
-            ->count();
-        return $normal + $pregnant;
+            ->orderBy('facility_name','asc')
+            ->get();
+
+        $total = count($normal) + count($pregnant);
+        return array(
+            'normal' => $normal,
+            'pregnant'=> $pregnant,
+            'total' => $total
+        );
     }
 
     private function getCovidBg($cases) {
@@ -1069,59 +1093,190 @@ class ReportCtrl extends Controller
             $request->date_range = $date_start." - ".$date_end;
         }
 
-        /* make another query
-         *    select(
-         */
+        Session::put('startDateCovidReport',$date_start);
+        Session::put('endDateCovidReport',$date_end);
 
         $bohol_cases = self::getTotalCases(1);
         $cebu_cases = self::getTotalCases(2);
         $negros_cases = self::getTotalCases(3);
         $siquijor_cases = self::getTotalCases(4);
 
+
+        if($province == 1) {
+            $data = $bohol_cases;
+        } else if($province == 2) {
+            $data = $cebu_cases;
+        } else if($province == 3) {
+            $data = $negros_cases;
+        } else {
+            $data = $siquijor_cases;
+        }
+
+        $normal = self::countCases($data['normal'])['data'];
+        $pregnant = self::countCases($data['pregnant'])['data'];
+
+        $final = array();
+        $asymp = $mild = $moderate = $severe = $critical = 0;
+        $refer_contact = $refer_suspect = $refer_probable = $refer_confirmed = 0;
+        $dis_contact = $dis_suspect = $dis_probable = $dis_confirmed = 0;
+        foreach($normal as $norm) {
+            for($i = 0; $i < count($pregnant); $i++) {
+                $preg = $pregnant[$i];
+                if($norm['id'] === $preg['id']) {
+                    $asymp = $norm['asymp'] + $preg['asymp'];
+                    $mild = $norm['mild'] + $preg['mild'];
+                    $moderate = $norm['moderate'] + $preg['moderate'];
+                    $severe = $norm['severe'] + $preg['severe'];
+                    $critical = $norm['critical'] + $preg['critical'];
+                    $refer_contact = $norm['refer_contact'] + $preg['refer_contact'];
+                    $refer_suspect = $norm['refer_suspect'] + $preg['refer_suspect'];
+                    $refer_probable = $norm['refer_probable'] + $preg['refer_probable'];
+                    $refer_confirmed = $norm['refer_confirmed'] + $preg['refer_confirmed'];
+                    $dis_contact = $norm['dis_contact'] + $preg['dis_contact'];
+                    $dis_suspect = $norm['dis_suspect'] + $preg['dis_suspect'];
+                    $dis_probable = $norm['dis_probable'] + $preg['dis_probable'];
+                    $dis_confirmed = $norm['dis_confirmed'] + $preg['dis_confirmed'];
+                    array_push($final, array(
+                        'id' => $norm['id'],
+                        'name' => $norm['name'],
+                        'asymp' => $asymp,
+                        'mild' => $mild,
+                        'moderate' => $moderate,
+                        'severe' => $severe,
+                        'critical' => $critical,
+                        'refer_contact' => $refer_contact,
+                        'refer_suspect' => $refer_suspect,
+                        'refer_probable' => $refer_probable,
+                        'refer_confirmed' => $refer_confirmed,
+                        'dis_contact' => $dis_contact,
+                        'dis_suspect' => $dis_suspect,
+                        'dis_probable' => $dis_probable,
+                        'dis_confirmed' => $dis_confirmed
+                    ));
+                    array_splice($normal,$i,1);
+                    array_splice($pregnant,$i,1);
+                    break;
+                }
+            }
+        }
+
+        if(count($normal) > 0) {
+            foreach($normal as $norm) {
+                array_push($final, $norm);
+            }
+        }
+        if(count($pregnant) > 0) {
+            foreach($pregnant as $preg) {
+                array_push($final, $preg);
+            }
+        }
+
         return view("admin.report.covid_report", [
             'title' => 'Covid Report',
             'province' => $province,
-            'bohol_cases' => $bohol_cases,
-            'cebu_cases' => $cebu_cases,
-            'negros_cases' => $negros_cases,
-            'siquijor_cases' => $siquijor_cases,
-            'bohol_bg' => self::getCovidBg($bohol_cases),
-            'cebu_bg' => self::getCovidBg($cebu_cases),
-            'negros_bg' => self::getCovidBg($negros_cases),
-            'siquijor_bg' => self::getCovidBg($siquijor_cases)
+            'data' => $final,
+            'count_bohol' => $bohol_cases['total'],
+            'count_cebu' => $cebu_cases['total'],
+            'count_negros' => $negros_cases['total'],
+            'count_siquijor' => $siquijor_cases['total'],
+            'bohol_bg' => self::getCovidBg($bohol_cases['total']),
+            'cebu_bg' => self::getCovidBg($cebu_cases['total']),
+            'negros_bg' => self::getCovidBg($negros_cases['total']),
+            'siquijor_bg' => self::getCovidBg($siquijor_cases['total'])
         ]);
     }
 
-    public static function getNumberOfCases($id) {
-        $asymp1 = PatientForm::where('refer_clinical_status','asymptomatic')->where('referred_to',$id)->count();
-        $asymp2 = PregnantForm::where('refer_clinical_status','asymptomatic')->where('referred_to',$id)->count();
-        $asymp = $asymp1 + $asymp2;
+    function countCases($data) {
+        $current = '';
+        $facilities = array();
+        $asymp = 0;
+        $mild = 0;
+        $moderate = 0;
+        $severe = 0;
+        $critical = 0;
+        $refer_contact = 0;
+        $refer_suspect = 0;
+        $refer_probable = 0;
+        $refer_confirmed = 0;
+        $dis_contact = 0;
+        $dis_suspect = 0;
+        $dis_probable = 0;
+        $dis_confirmed = 0;
 
-        $mild1 = PatientForm::where('refer_clinical_status','mild')->where('referred_to',$id)->count();
-        $mild2 = PregnantForm::where('refer_clinical_status','mild')->where('referred_to',$id)->count();
-        $mild = $mild1 + $mild2;
-
-        $moderate1 = PatientForm::where('refer_clinical_status','moderate')->where('referred_to',$id)->count();
-        $moderate2 = PregnantForm::where('refer_clinical_status','moderate')->where('referred_to',$id)->count();
-        $moderate = $moderate1 + $moderate2;
-
-        $severe1 = PatientForm::where('refer_clinical_status','severe')->where('referred_to',$id)->count();
-        $severe2 = PregnantForm::where('refer_clinical_status','severe')->where('referred_to',$id)->count();
-        $severe = $severe1 + $severe2;
-
-        $critical1 = PatientForm::where('refer_clinical_status','critical')->where('referred_to',$id)->count();
-        $critical2 = PregnantForm::where('refer_clinical_status','critical')->where('referred_to',$id)->count();
-        $critical = $critical1 + $critical2;
-
-        $total = $asymp + $mild + $moderate + $severe + $critical;
-
+        $push = false;
+        foreach($data as $row) {
+            if($row->facility_id === 230) {
+                return array('data'=>$row->facility_name);
+            }
+//            if($current != $row->facility_id) {
+//                $current = $row->facility_id;
+//                $push = true;
+//            }
+//            $clinic_stat = $row->refer_clinical_status;
+//            if($clinic_stat != 'NULL') {
+//                if ($clinic_stat === 'asymptomatic')
+//                    $asymp++;
+//                else if ($clinic_stat === 'mild')
+//                    $mild++;
+//                else if ($clinic_stat === 'moderate')
+//                    $moderate++;
+//                else if ($clinic_stat === 'severe')
+//                    $severe++;
+//                else if ($clinic_stat === 'critical')
+//                    $critical++;
+//            }
+//
+//            $refer_sur = $row->refer_sur_category;
+//            if($refer_sur != 'NULL') {
+//                if ($refer_sur === 'contact_pum')
+//                    $refer_contact++;
+//                else if ($refer_sur === 'suspect')
+//                    $refer_suspect++;
+//                else if ($refer_sur === 'probable')
+//                    $refer_probable++;
+//                else if ($refer_sur === 'confirmed')
+//                    $refer_confirmed++;
+//            }
+//
+//            $dis_sur = $row->dis_sur_category;
+//            if($dis_sur != 'NULL') {
+//                if ($dis_sur === 'contact_pum')
+//                    $dis_contact++;
+//                else if ($dis_sur === 'suspect')
+//                    $dis_suspect++;
+//                else if ($dis_sur === 'probable')
+//                    $dis_probable++;
+//                else if ($dis_sur === 'confirmed')
+//                    $dis_confirmed++;
+//            }
+//
+//            if($push) {
+//                $data2 = array(
+//                    'id' => $row->facility_id,
+//                    'name' => $row->facility_name,
+//                    'asymp' => $asymp,
+//                    'mild' => $mild,
+//                    'moderate' => $moderate,
+//                    'severe' => $severe,
+//                    'critical' => $critical,
+//                    'refer_contact' => $refer_contact,
+//                    'refer_suspect' => $refer_suspect,
+//                    'refer_probable' => $refer_probable,
+//                    'refer_confirmed' => $refer_confirmed,
+//                    'dis_contact' => $dis_contact,
+//                    'dis_suspect' => $dis_suspect,
+//                    'dis_probable' => $dis_probable,
+//                    'dis_confirmed' => $dis_confirmed
+//                );
+//                array_push($facilities,$data2);
+//                $asymp = $mild = $moderate = $severe = $critical = 0;
+//                $refer_contact = $refer_suspect = $refer_probable = $refer_confirmed = 0;
+//                $dis_contact = $dis_suspect = $dis_probable = $dis_confirmed = 0;
+//                $push = false;
+//            }
+        }
         return array(
-            'asymp' => $asymp,
-            'mild' => $mild,
-            'moderate' => $moderate,
-            'severe' => $severe,
-            'critical' => $critical,
-            'empty' => ($total == 0) ? true : false
+            'data' => $facilities
         );
     }
 }

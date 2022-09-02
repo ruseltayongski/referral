@@ -142,7 +142,7 @@
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle" style="display: table-row;">\n' +
                     '                                                            <td>'+arrived_date+'</td>\n' +
                     '                                                            <td>\n' +
-                    '                                                                <span class="txtPatient">'+patient_name+'</span>  has arrived at '+current_facility+
+                    '                                                                <span class="txtPatient">'+patient_name+'</span>  was arrived at '+current_facility+
                     '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
                     '                                                            </td>\n' +
                     '                                                        </tr>');

@@ -1,9 +1,17 @@
 <?php
 $user = Session::get('auth');
-$facilities = \App\Facility::select('id','name')
-    ->where('referral_used','yes')
-    ->where('province',$province)
-    ->orderBy('name','asc')->get();
+
+$start = \Illuminate\Support\Facades\Session::get('startDateCovidReport');
+$end = \Illuminate\Support\Facades\Session::get('endDateCovidReport');
+
+if(!$start)
+    $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
+
+if(!$end)
+    $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');
+
+$start = \Carbon\Carbon::parse($start)->format('m/d/Y');
+$end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 
 $province_name = \App\Province::select('description')->where('id',$province)->first()->description;
 ?>
@@ -16,11 +24,11 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
         }
 
         .refer {
-            background-color: #55deff;
+            background-color: lightskyblue;
         }
 
         .discharged {
-            background: #ffcd39;
+            background: lightgreen;
         }
     </style>
 
@@ -37,7 +45,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                         <form action="{{ asset('admin/report/covid').'/'.$province }}" method="POST" class="form-inline">
                             {{ csrf_field() }}
                             <div class="form-group-sm" style="margin-bottom: 10px;">
-                                <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)) }}" id="date_range">
+                                <input type="text" class="form-control" name="date_range" value="{{ $start.' - '.$end }}" id="date_range">
                                 <button type="submit" class="btn btn-success btn-sm btn-flat">
                                     <i class="fa fa-search"></i> Filter
                                 </button>
@@ -52,7 +60,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                             <div class="col-md-3">
                                 <div class="small-box {{ $bohol_bg }}">
                                     <div class="inner">
-                                        <h3 class="text-center">{{ $bohol_cases }}</h3>
+                                        <h3 class="text-center">{{ $count_bohol }}</h3>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-stats-bars"></i>
@@ -63,7 +71,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                             <div class="col-md-3">
                                 <div class="small-box {{ $cebu_bg }}">
                                     <div class="inner">
-                                        <h3 class="text-center">{{ $cebu_cases }}</h3>
+                                        <h3 class="text-center">{{ $count_cebu }}</h3>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-stats-bars"></i>
@@ -74,7 +82,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                             <div class="col-md-3">
                                 <div class="small-box {{ $negros_bg }}">
                                     <div class="inner">
-                                        <h3 class="text-center">{{ $negros_cases }}</h3>
+                                        <h3 class="text-center">{{ $count_negros }}</h3>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-stats-bars"></i>
@@ -85,7 +93,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                             <div class="col-md-3">
                                 <div class="small-box {{ $siquijor_bg }}">
                                     <div class="inner">
-                                        <h3 class="text-center">{{ $siquijor_cases }}</h3>
+                                        <h3 class="text-center">{{ $count_siquijor }}</h3>
                                     </div>
                                     <div class="icon">
                                         <i class="ion ion-stats-bars"></i>
@@ -100,11 +108,15 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
             <div class="row">
                 <div class="col-md-12">
                     <h5>&emsp;<b>Legend:</b>&nbsp;&nbsp;
-                        <span style="border: 1px solid black; background-color: #55deff;">&emsp;&nbsp;</span> During Referral &emsp;
-                        <span style="border: 1px solid black; background-color: #ffcd39;">&emsp;&nbsp;</span> Discharged
+                        <span style="border: 1px solid black; background-color: lightskyblue;">&emsp;&nbsp;</span> During Referral &emsp;
+                        <span style="border: 1px solid black; background-color: lightgreen;">&emsp;&nbsp;</span> Discharged
                     </h5>
                 </div>
             </div>
+
+            @foreach($facilities as $faci)
+                <span>{{ $faci }}</span><br>
+            @endforeach
 
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-bordered table-fixed-header">
@@ -119,7 +131,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                     <thead class="header bg-gray-light">
                         <tr>
                             <th></th>
-                            <th class="text-center" style="width: 50%"> <b>FACILITY NAME</b> </th>
+                            <th class="text-center"> <b>FACILITY NAME</b> </th>
                             <th class="text-center" colspan="1"> <small><i> Asymptomatic </i></small> </th>
                             <th class="text-center" colspan="1"> <small><i> Mild </i></small> </th>
                             <th class="text-center" colspan="1"> <small><i> Moderate </i></small> </th>
@@ -132,31 +144,26 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                         </tr>
                     </thead>
                     <?php
-                    $count = 1;
+                        $count = 1;
                     ?>
-                    @foreach($facilities as $faci)
-                        <?php
-                            $case = \App\Http\Controllers\admin\ReportCtrl::getNumberOfCases($faci->id);
-                        ?>
-                        @if(!$case->empty)
-                            <tr class="text-center">
-                                <td>{{ $count++ }}</td>
-                                <td style="overflow-wrap: break-word; width:50%;"> {{ $faci->name }}</td>
-                                <td class="refer"> {{ $case->asymp }} </td>
-                                <td class="refer"> {{ $case->mild }} </td>
-                                <td class="refer"> {{ $case->moderate }} </td>
-                                <td class="refer"> {{ $case->severe }} </td>
-                                <td class="refer"> {{ $case->critical }} </td>
-                                <td class="refer"> {{ $case->refer_contact }}  </td>
-                                <td class="discharged"> {{ $case->dis_contact }} </td>
-                                <td class="refer"> {{ $case->refer_suspect }} </td>
-                                <td class="discharged"> {{ $case->dis_suspect }} </td>
-                                <td class="refer"> {{ $case->refer_probable }} </td>
-                                <td class="discharged"> {{ $case->dis_probable }} </td>
-                                <td class="refer"> {{ $case->refer_confirmed }} </td>
-                                <td class="discharged"> {{ $case->dis_confirmed }} </td>
-                            </tr>
-                        @endif
+                    @foreach($data as $row)
+                        <tr>
+                            <td>{{ $count++ }}</td>
+                            <td> {{ $row['name'] }}</td>
+                            <td class="text-center refer"> {{ $row['asymp'] }} </td>
+                            <td class="text-center refer"> {{ $row['mild'] }} </td>
+                            <td class="text-center refer"> {{ $row['moderate'] }} </td>
+                            <td class="text-center refer"> {{ $row['severe'] }} </td>
+                            <td class="text-center refer"> {{ $row['critical'] }} </td>
+                            <td class="text-center refer"> {{ $row['refer_contact'] }}  </td>
+                            <td class="text-center discharged"> {{ $row['dis_contact'] }} </td>
+                            <td class="text-center refer"> {{ $row['refer_suspect'] }} </td>
+                            <td class="text-center discharged"> {{ $row['dis_suspect'] }} </td>
+                            <td class="text-center refer"> {{ $row['refer_probable'] }} </td>
+                            <td class="text-center discharged"> {{ $row['dis_probable'] }} </td>
+                            <td class="text-center refer"> {{ $row['refer_confirmed'] }} </td>
+                            <td class="text-center discharged"> {{ $row['dis_confirmed'] }} </td>
+                        </tr>
                     @endforeach
                 </table>
             </div>

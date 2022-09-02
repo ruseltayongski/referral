@@ -348,7 +348,6 @@ Route::post('feedback/comment_append','FeedbackCtrl@CommentAppend');
 Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');
 Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
-Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
 //GRAPH
@@ -625,3 +624,6 @@ Route::post('doctor/editProfile','doctor\UserCtrl@editProfile');
 
 // covid report
 Route::match(['GET','POST'],'admin/report/covid/{province_id}','admin\ReportCtrl@covidReport');
+
+// export facility list
+Route::get('admin/report/facility', 'admin\FacilityCtrl@exportAllFacilities');

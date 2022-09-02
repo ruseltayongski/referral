@@ -17,6 +17,9 @@
                         <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-lg btn-flat" onclick="FacilityBody('empty')">
                             <i class="fa fa-hospital-o"></i> Add Facility
                         </a>
+                        <a href="{{ asset('admin/report/facility') }}" class="btn btn-warning btn-lg btn-flat" target="_blank">
+                            <i class="fa fa-table"></i> Export
+                        </a>
                     </div>
                 </form>
             </div>
@@ -72,31 +75,40 @@
                                 <td><small>{{ $row->contact }}</small></td>
                                 <td><small>{{ $row->email }}</small></td>
                                 <td><small>{{ $row->chief_hospital }}</small></td>
-                                <td>
+                                <td class="text-center">
                                     <span class="badge bg-purple">{{ $row->level == 'primary_care_facility' ? 'Primary Care Facility' : $row->level }}</span>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <span class="
-                                        <?php
-                                    if($row->hospital_type == 'government'){
-                                        echo 'badge bg-green';
-                                    }
-                                    elseif($row->hospital_type == 'private'){
-                                        echo 'badge bg-blue';
-                                    }
-                                    elseif($row->hospital_type == 'RHU'){
-                                        echo 'badge bg-yellow';
-                                    }
-                                    elseif($row->hospital_type == 'CIU/TTMF'){
-                                        echo 'badge bg-purple';
-                                    }
-                                    elseif($row->hospital_type == 'birthing_home'){
-                                        echo 'badge bg-orange';
-                                    }
-                                    elseif($row->hospital_type == 'EOC'){
-                                        echo 'badge bg-black';
-                                    }
-                                    ?>">{{ $row->hospital_type == 'birthing_home' ? 'Birthing Home' : ucfirst($row->hospital_type) }}</span>
+                                    <?php
+                                        if($row->hospital_type == 'government'){
+                                            echo 'badge bg-green';
+                                        }
+                                        elseif($row->hospital_type == 'private'){
+                                            echo 'badge bg-blue';
+                                        }
+                                        elseif($row->hospital_type == 'RHU'){
+                                            echo 'badge bg-yellow';
+                                        }
+                                        elseif($row->hospital_type == 'CIU/TTMF'){
+                                            echo 'badge bg-purple';
+                                        }
+                                        elseif($row->hospital_type == 'birthing_home'){
+                                            echo 'badge bg-orange';
+                                        }
+                                        elseif($row->hospital_type == 'gov_birthing_home'){
+                                            echo 'badge bg-teal';
+                                        }
+                                        elseif($row->hospital_type == 'EOC'){
+                                            echo 'badge bg-black';
+                                        }
+                                    ?>">
+                                        @if($row->hospital_type == 'gov_birthing_home')
+                                            Government Birthing Home
+                                        @else
+                                            {{ $row->hospital_type == 'birthing_home' ? 'Birthing Home' : ucfirst($row->hospital_type) }}
+                                        @endif
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="{{ $row->status ? 'badge bg-blue' : 'badge bg-red' }}">{{ $row->status ? 'Active' : 'Inactive' }}</span>

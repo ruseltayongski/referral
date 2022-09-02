@@ -101,7 +101,7 @@ $counter = 1;
     <div class="modal fade" role="dialog" id="feedback_modal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="mdal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                     <h5 class="modal-title"><b>RESOLVE FEEDBACK</b></h5>
@@ -112,7 +112,7 @@ $counter = 1;
                         <input type="hidden" name="id" id="feedback_id">
                         <div class="form-group mt-3">
                             <b>Remarks:</b><br>
-                            <textarea class="form-control" name="remarks" rows="5" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
+                            <textarea class="form-control" name="remarks" rows="7" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
                         </div>
 
                         <div class="form-group pull-right">
