@@ -101,7 +101,7 @@ $counter = 1;
     <div class="modal fade" role="dialog" id="feedback_modal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="mdal-header">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                     <h5 class="modal-title"><b>RESOLVE FEEDBACK</b></h5>
