@@ -112,7 +112,7 @@ $counter = 1;
                         <input type="hidden" name="id" id="feedback_id">
                         <div class="form-group mt-3">
                             <b>Remarks:</b><br>
-                            <textarea class="form-control" name="remarks" rows="5" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
+                            <textarea class="form-control" name="remarks" rows="7" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
                         </div>
 
                         <div class="form-group pull-right">

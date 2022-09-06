@@ -84,7 +84,7 @@ $user = Session::get('auth');
                             @foreach($data as $row)
                                 <?php
                                 $type = ($row->type=='normal') ? 'normal-section':'pregnant-section';
-                                $type = ($row->status=='referred' || $row->status=='redirected') ? $type : 'read-section';
+                                $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred') ? $type : 'read-section';
                                 $icon = ($row->status=='referred' || $row->status=='redirected') ? 'fa-ambulance' : 'fa-eye';
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
@@ -144,6 +144,24 @@ $user = Session::get('auth');
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
+                                        </div>
+                                    @elseif($row->status == 'transferred')
+                                        <i class="fa fa-ambulance bg-blue-active"></i>
+                                        <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
+                                            <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">{{ $date }}</span></span>
+                                            <h3 class="timeline-header no-border">
+                                            <span>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                            </span>
+                                                <small class="status">
+                                                    [ {{ $row->sex }}, {{ $row->patient_age }} ]
+                                                </small>
+                                                was <span class="text-blue">{{ $row->status }}</span> to
+                                                <span class="text-danger">{{ $department }}</span>
+                                                by <span class="text-warning">{{ $row->referring_md }}</span> of
+                                                <span class="facility">{{ $row->facility_name }}</span>
+                                            </h3> <!-- time line for #referred #seen #redirected -->
+                                            @include('doctor.include.timeline_footer')
                                         </div>
                                     @else
                                         <i class="fa fa-user-plus bg-olive"></i>

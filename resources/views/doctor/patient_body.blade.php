@@ -143,6 +143,7 @@
     </div>
     <div class="form-group">
         <label>Municipality:</label>
+        <input type="hidden" name="province" value="{{ $data->province }}">
         <select class="form-control select2 select_muncity" name="muncity" required>
             @foreach(\App\Muncity::where("province_id",$data->province)->get() as $mun)
                 <option value="{{ $mun->id }}"

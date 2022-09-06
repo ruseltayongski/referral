@@ -199,7 +199,7 @@
 <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i></button>
 <footer class="footer">
     <div class="container">
-        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 6.2 </p>
+        <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 6.3 </p>
     </div>
 </footer>
 

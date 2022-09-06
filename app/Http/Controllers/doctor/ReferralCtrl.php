@@ -1814,10 +1814,9 @@ class ReferralCtrl extends Controller
         $tracking = Tracking::where('id', $id)->first();
         $track = $tracking->code;
 
+        $date = date('Y-m-d H:i:s');
         if($old_facility != $req->referred_to) {
 //            Seen::where('tracking_id',$tracking->id)->delete();
-
-            $date = date('Y-m-d H:i:s');
 
             $data2 = array(
                 'code' => $track,
@@ -1858,6 +1857,20 @@ class ReferralCtrl extends Controller
                 'status' => 'redirected'
             );
             $tracking->update($new_data);
+        } else {
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated.",
+                'status' => "form_updated"
+            );
+            Activity::create($data2);
         }
 
         $form_type = $req->form_type;
@@ -2008,6 +2021,7 @@ class ReferralCtrl extends Controller
             ->groupBy("code")
             ->count();
         $latest_activity = Activity::where("code",$track)->orderBy("id","desc")->first();
+        $tracking = Tracking::where('id', $id)->first();
 
         $update = [
             "patient_code" => $track,
@@ -2024,7 +2038,7 @@ class ReferralCtrl extends Controller
             "tracking_id" => $tracking->id,
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
-            "status" => $latest_activity->status,
+            "status" => $tracking->status,
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,

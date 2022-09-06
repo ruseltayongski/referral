@@ -625,3 +625,6 @@ Route::post('doctor/editProfile','doctor\UserCtrl@editProfile');
 
 // covid report
 Route::match(['GET','POST'],'admin/report/covid/{province_id}','admin\ReportCtrl@covidReport');
+
+// export facility list
+Route::get('admin/report/facility', 'admin\FacilityCtrl@exportAllFacilities');

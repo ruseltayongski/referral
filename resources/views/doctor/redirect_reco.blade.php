@@ -4,7 +4,7 @@ $user = Session::get('auth');
 $start = \Illuminate\Support\Facades\Session::get('startRedirectRecoDate');
 $end = \Illuminate\Support\Facades\Session::get('endRedirectRecoDate');
 if(!$start)
-    $start = \Carbon\Carbon::now()->subWeeks(52)->startOfYear()->format('m/d/Y');
+    $start = \Carbon\Carbon::now()->startOfYear()->format('m/d/Y');
 
 if(!$end)
     $end = \Carbon\Carbon::now()->endOfYear()->format('m/d/Y');

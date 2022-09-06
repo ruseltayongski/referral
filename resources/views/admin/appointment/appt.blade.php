@@ -153,12 +153,12 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
                         <div class="form-group mt-3">
                             <b>Message:</b><br>
-                            <textarea class="form-control" rows="5" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
+                            <textarea class="form-control" rows="7" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
                         </div>
 
                         <div class="form-group mt-3">
                             <b>Remarks:</b><br>
-                            <textarea class="form-control" name="remarks" rows="3" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
+                            <textarea class="form-control" name="remarks" rows="6" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
                         </div>
 
                         <div class="form-group pull-right">

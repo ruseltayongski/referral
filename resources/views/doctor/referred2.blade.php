@@ -588,6 +588,13 @@
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
                                                             </td>
                                                         </tr>
+                                                    @elseif($act->status=='form_updated')
+                                                            <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                                <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                                <td>
+                                                                    <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
+                                                                </td>
+                                                            </tr>
                                                     @endif
                                                     <?php $first = 1; ?>
                                                 @endforeach
