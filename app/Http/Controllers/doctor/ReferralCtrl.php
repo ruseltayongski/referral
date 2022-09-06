@@ -1828,8 +1828,8 @@ class ReferralCtrl extends Controller
                 'department_id' => $req->department_id,
                 'referring_md' => $user->id,
                 'action_md' => $user->id,
-                'remarks' => "Patient's referral form was updated and was transferred to another facility.",
-                'status' => "cancelled"
+                'remarks' => "Patient's referral form was updated and was redirected to another facility.",
+                'status' => "rejected"
             );
             Activity::create($data2);
 
@@ -1842,8 +1842,8 @@ class ReferralCtrl extends Controller
                 'department_id' => $req->department_id,
                 'referring_md' => $user->id,
                 'action_md' => $user->id,
-                'remarks' => "Patient's referral form was updated and has been transferred to this facility.",
-                'status' => "transferred"
+                'remarks' => "Patient's referral form was updated and has been redirected to this facility.",
+                'status' => "redirected"
             );
             Activity::create($data2);
 
@@ -1855,7 +1855,7 @@ class ReferralCtrl extends Controller
                 'department_id' => $req->department_id,
                 'referred_to' => $req->referred_to,
                 'referring_md' => $user->id,
-                'status' => 'transferred'
+                'status' => 'redirected'
             );
             $tracking->update($new_data);
         }
