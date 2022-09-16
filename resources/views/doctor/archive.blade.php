@@ -42,10 +42,11 @@ $user = Session::get('auth');
                                 <thead class="bg-gray">
                                 <tr>
                                     <th></th>
-                                    <th width="25%">Referring Facility</th>
-                                    <th width="25%">Patient Name/Code</th>
-                                    <th width="25%">Date Archived</th>
-                                    <th width="25%">Reason</th>
+                                    <th>Referring Facility</th>
+                                    <th>Patient Name/Code</th>
+                                    <th>Date Archived</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -96,6 +97,9 @@ $user = Session::get('auth');
                                         <td>{{ \App\Http\Controllers\doctor\PatientCtrl::getDischargeDate($current->status,$row->code) }}</td>
                                         <td>
                                             {!! nl2br(\App\Http\Controllers\doctor\PatientCtrl::getCancellationReason($current->status,$row->code)) !!}
+                                        </td>
+                                        <td>
+                                            {{ $current->status == 'archived' ? "Didn't Arrived" : 'Not Accepted' }}
                                         </td>
                                     </tr>
                                 @endforeach

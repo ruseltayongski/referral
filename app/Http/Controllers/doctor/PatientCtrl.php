@@ -1194,7 +1194,8 @@ class PatientCtrl extends Controller
             ->where('referred_to',$user->facility_id)
             ->where(function($q){
                 $q->where('tracking.status','referred')
-                    ->orwhere('tracking.status','seen');
+                    ->orwhere('tracking.status','seen')
+                    ->orWhere('tracking.status','archived');
             })
             ->where(DB::raw("TIMESTAMPDIFF(MINUTE,tracking.date_referred,now())"),">",4320);
 
