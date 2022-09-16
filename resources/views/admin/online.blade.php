@@ -45,7 +45,7 @@ if(!$dateReportOnline)
                             <select name="level" class="form-control">
                                 <option value="">Select User Level</option>
                                 @foreach($user_level as $row)
-                                    <option value="{{ $row->level }}" <?php if(isset($level_select)){if($row->level == $level_select) echo 'selected';} ?>>
+                                    <option value="{{ $row->level }}" <?php if(isset($user_level_select)){if($row->level == $user_level_select) echo 'selected';} ?>>
                                         @if($row->level == 'bed_tracker')
                                             Bed Tracker
                                         @elseif($row->level == 'eoc_city')
