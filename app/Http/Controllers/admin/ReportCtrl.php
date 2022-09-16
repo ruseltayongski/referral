@@ -68,23 +68,6 @@ class ReportCtrl extends Controller
         return self::online();
     }
 
-    public function online1() //12/23/2019 created
-    {
-        $date = Session::get('dateReportOnline');
-        if(!$date)
-            $date = date('Y-m-d');
-
-        $start = date('Y-m-d',strtotime($date)).' 00:00:00';
-        $end = date('Y-m-d',strtotime($date)).' 23:59:59';
-
-        $data = \DB::connection('mysql')->select("call AttendanceFunc('$start','$end')");
-
-        return view('admin.online',[
-            'title' => 'Online Users',
-            'data' => $data
-        ]);
-    }
-
     public function filterOnline1(Request $req)
     {
         Session::put('dateReportOnline',$req->date);
@@ -779,6 +762,36 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function online1(Request $request) //12/23/2019 created
+    {
+        $date = Session::get('dateReportOnline');
+        if(!$date)
+            $date = date('Y-m-d');
+
+        $start = date('Y-m-d',strtotime($date)).' 00:00:00';
+        $end = date('Y-m-d',strtotime($date)).' 23:59:59';
+
+        $province_select = $request->province;
+        $facility_select = $request->facility;
+        $user_level_select = $request->level;
+
+        $data = \DB::connection('mysql')->select("call AttendanceFunc('$start','$end','$province_select','$facility_select','$user_level_select')");
+
+        $user_level = User::select("level")->groupBy("level")->get();
+        $province = Province::get();
+
+        return view('admin.online',[
+            'title' => 'Online Users',
+            'data' => $data,
+            'user_level' => $user_level,
+            'province' => $province,
+            'province_select' => $province_select,
+            'facility_select' => $facility_select,
+            'facility_select_name' => Facility::find($facility_select)->name,
+            'user_level_select' => $user_level_select
+        ]);
+    }
+
     public function onlineFacility(Request $request) {
         if($request->isMethod('post') && isset($request->day_date)){
             $day_date = date('Y-m-d',strtotime($request->day_date));
@@ -787,24 +800,15 @@ class ReportCtrl extends Controller
         }
 
         $province_select = $request->province;
-        $facility_select = $request->facility;
-        $level_select = $request->level;
-
-        $data = \DB::connection('mysql')->select("call online_facility('$day_date','$province_select','$facility_select','$level_select')");
-
-        $user_level = User::select("level")->groupBy("level")->get();
+        $data = \DB::connection('mysql')->select("call online_facility('$day_date','$province_select')");
         $province = Province::get();
 
         return view('admin.report.online_facility',[
             'title' => 'ONLINE FACILITY',
-            "data" => $data,
+            'data' => $data,
             'day_date' => $day_date,
-            'user_level' => $user_level,
             'province' => $province,
             'province_select' => $province_select,
-            'facility_select' => $facility_select,
-            'facility_select_name' => Facility::find($facility_select)->name,
-            'level_select' => $level_select
         ]);
     }
 
