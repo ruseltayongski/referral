@@ -349,6 +349,7 @@ Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');
 Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
+Route::get('excel/export/archived','doctor\ReferralCtrl@exportArchivedExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
 //GRAPH
@@ -404,7 +405,7 @@ Route::post('api/refer/patient','ApiController@apiReferPatient');
 //
 
 //online facility
-Route::match(['GET','POST'],"online/facility","admin\ReportCtrl@onlineFacility");
+Route::get("online/facility","admin\ReportCtrl@onlineFacility");
 
 //offline facility
 Route::match(['GET','POST'],"offline/facility/{province_id}","admin\ReportCtrl@offlineFacility");

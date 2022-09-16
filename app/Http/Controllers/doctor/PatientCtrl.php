@@ -1213,6 +1213,8 @@ class PatientCtrl extends Controller
             $end = Carbon::parse($end)->endOfDay();
             $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
         }
+
+        Session::put("export_archived_excel",$data->get());
         $data = $data->orderBy('date_referred','desc')
                      ->paginate(15);
 

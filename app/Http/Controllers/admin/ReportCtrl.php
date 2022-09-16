@@ -779,19 +779,32 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onlineFacility(Request $request){
+    public function onlineFacility(Request $request) {
         if($request->isMethod('post') && isset($request->day_date)){
             $day_date = date('Y-m-d',strtotime($request->day_date));
         } else {
             $day_date = date('Y-m-d');
         }
-        $stored_name = "online_facility('$day_date')";
-        $data = \DB::connection('mysql')->select("call $stored_name");
+
+        $province_select = $request->province;
+        $facility_select = $request->facility;
+        $level_select = $request->level;
+
+        $data = \DB::connection('mysql')->select("call online_facility('$day_date','$province_select','$facility_select','$level_select')");
+
+        $user_level = User::select("level")->groupBy("level")->get();
+        $province = Province::get();
 
         return view('admin.report.online_facility',[
             'title' => 'ONLINE FACILITY',
             "data" => $data,
-            'day_date' => $day_date
+            'day_date' => $day_date,
+            'user_level' => $user_level,
+            'province' => $province,
+            'province_select' => $province_select,
+            'facility_select' => $facility_select,
+            'facility_select_name' => Facility::find($facility_select)->name,
+            'level_select' => $level_select
         ]);
     }
 

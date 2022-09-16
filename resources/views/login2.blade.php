@@ -1361,6 +1361,7 @@
                     <h4>Useful Links</h4>
                     <ul>
                         <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/Service-Request-Form.docx') }}">E-Referral Service Request</a></li>
+                        <li><i class="bx bx-chevron-right"></i> <a href="{{ asset('public/manual/NDCA-CVeHRS-healthcare-facility.doc') }}">NDCA CVeHRS Healthcare Facility</a></li>
                     </ul>
                 </div>
 

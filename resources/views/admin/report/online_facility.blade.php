@@ -35,24 +35,49 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        label {
-            padding: 0px !important;
-        }
-    </style>
     <div class="row col-md-12">
         <div class="box box-success">
+            <h3 style="margin-left: 10px;">{{ $title }}</h3>
             <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ asset('online/facility') }}" method="POST" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-sm">
-                            <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
-                            <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                        </div>
-                    </form>
-                </div>
-                <h3>{{ $title }}</h3>
+                <form action="{{ asset('online/facility') }}" method="GET" class="form-inline">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <select name="province" class="form-control" onchange="onChangeProvince($(this).val())">
+                            <option value="">Select All Province</option>
+                            @foreach($province as $pro)
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select) echo 'selected';} ?>>{{ $pro->description }}</option>
+                            @endforeach
+                        </select>
+                        <select name="facility" id="facility" class="facility">
+                            @if($facility_select)
+                                <option value="{{ $facility_select }}">{{ $facility_select_name }}</option>
+                            @else
+                                <option value="">Select Facility</option>
+                            @endif
+                        </select>
+                        <select name="level" class="form-control">
+                            <option value="">Select User Level</option>
+                            @foreach($user_level as $row)
+                                <option value="{{ $row->level }}" <?php if(isset($level_select)){if($row->level == $level_select) echo 'selected';} ?>>
+                                    @if($row->level == 'bed_tracker')
+                                        Bed Tracker
+                                    @elseif($row->level == 'eoc_city')
+                                        EOC City
+                                    @elseif($row->level == 'medical_dispatcher')
+                                        Medical Dispatcher
+                                    @elseif($row->level == 'mcc')
+                                        MCC
+                                    @else
+                                        {{ ucfirst($row->level) }}
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                        <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
+                        <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        <button type="button" class="btn-sm btn-warning btn-flat" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                    </div>
+                </form>
             </div>
             <div class="box-body">
                 @if(count($data) > 0)
@@ -108,10 +133,50 @@
 
 @section('js')
     <script>
+        $(".facility").select2({ width: '250px' });
         //Date range picker
         $('#onboard_picker').daterangepicker({
             "singleDatePicker": true
         });
+
+        function onChangeProvince(province_id) {
+            $('.loading').show();
+            if(province_id){
+                var url = "{{ url('location/select/facility/byprovince') }}";
+                $.ajax({
+                    url: url+'/'+province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility").select2("val", "");
+                        $('#facility').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Select All Facility'
+                            }));
+                        var facility_select = "<?php echo $facility_select; ?>";
+                        jQuery.each(data, function(i,val){
+                            $('#facility').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('#facility option[value="'+facility_select+'"]').attr("selected", "selected");
+                        $('.loading').hide();
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility").select2("val", "");
+                $('#facility').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
+        }
     </script>
 @endsection
 

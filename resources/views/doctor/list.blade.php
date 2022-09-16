@@ -21,61 +21,40 @@ $user = Session::get('auth');
                 <table class="table table-striped">
                     <tbody>
                         <tr>
-                            <td class="text-left" width="180px;">TOTAL ONLINE</td>
-                            <td ><span class="badge bg-orange doctor_online">0</span></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left" width="100px;">DOH SERVER</td>
-                            <td ><span class="badge bg-green doh_server">0</span></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left" width="100px;">CLOUD SERVER</td>
-                            <td ><span class="badge bg-blue cloud_server">0</span></td>
+                            <td class="text-left" width="100px;">ONLINE USERS</td>
+                            <td ><span class="badge bg-blue online-user">0</span></td>
                         </tr>
                         <tr>
                             <td class="text-left" width="100px;">OFF DUTY BUT ONLINE</td>
                             <td >
-                                <span class="badge bg-green doh_server_off_duty">0</span>
-                                <span class="badge bg-blue cloud_server_off_duty">0</span>
+                                <span class="badge bg-green online-off-duty">0</span>
                             </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="180px;">TOTAL ONLINE</td>
+                            <td ><span class="badge bg-orange total-online">0</span></td>
                         </tr>
                     </tbody>
                 </table>
                 <?php
-                    $doctor_online_count = 0;
-                    $doh_server = 0;
-                    $cloud_server = 0;
-                    $doh_server_off_duty = 0;
-                    $cloud_server_off_duty = 0;
+                    $online_off_duty = 0;
+                    $online_user = 0;
+                    $total_online = 0;
                 ?>
                 @if(count($data)>0)
                     @foreach($data as $row)
                         <?php
-                            if($row->type == 'cloud') {
-                                if($row->status=='login_off'){
-                                    $status = '<em>OFF DUTY</em>';
-                                    $color = 'yellow';
-                                    $cloud_server_off_duty++;
-                                }
-                                else {
-                                    $color = 'blue';
-                                    $status = 'ON DUTY';
-                                    $cloud_server++;
-                                }
+                            if($row->status=='login_off'){
+                                $status = '<em>OFF DUTY</em>';
+                                $color = 'yellow';
+                                $online_off_duty++;
                             }
                             else {
-                                if($row->status=='login_off'){
-                                    $status = '<em>OFF DUTY</em>';
-                                    $color = 'yellow';
-                                    $doh_server_off_duty++;
-                                }
-                                else {
-                                    $color = 'green';
-                                    $status = 'ON DUTY';
-                                    $doh_server++;
-                                }
+                                $color = 'blue';
+                                $status = 'ON DUTY';
+                                $online_user++;
                             }
-                            $doctor_online_count++;
+                            $total_online++;
                         ?>
                         <div class="col-md-4">
                             <!-- Widget: user widget style 1 -->
@@ -121,11 +100,9 @@ $user = Session::get('auth');
 @endsection
 @section('js')
     <script>
-        $(".doctor_online").text("<?php echo $doctor_online_count; ?>");
-        $(".doh_server").text("<?php echo $doh_server; ?>");
-        $(".cloud_server").text("<?php echo $cloud_server; ?>");
-        $(".doh_server_off_duty").text("<?php echo $doh_server_off_duty; ?>");
-        $(".cloud_server_off_duty").text("<?php echo $cloud_server_off_duty; ?>");
+        $(".online-user").text("<?php echo $online_user; ?>");
+        $(".online-off-duty").text("<?php echo $online_off_duty; ?>");
+        $(".total-online").text("<?php echo $total_online; ?>");
 
         $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
     </script>

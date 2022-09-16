@@ -713,6 +713,19 @@ class ReferralCtrl extends Controller
         ]);
     }
 
+    public function exportArchivedExcel() {
+        $export_archived_excel = Session::get("export_archived_excel");
+        $file_name = "export_archived_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_archived_excel',[
+            "data" => $export_archived_excel
+        ]);
+    }
+
     public function trackReferral(Request $request)
     {
         $code = $request->referredCode;
