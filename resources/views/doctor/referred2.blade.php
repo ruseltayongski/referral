@@ -729,11 +729,18 @@
         <?php Session::put("departed",false); ?>
         @endif
         @if(Session::get('already_departed'))
-        Lobibox.alert("error",
+            Lobibox.alert("error",
             {
                 msg: "This referral was already departed"
             });
         <?php Session::put("already_departed",false); ?>
+        @endif
+        @if(Session::get('ignore_edit'))
+                Lobibox.alert("error",
+            {
+                msg: "Updating form was ignored because this referral was rejected from receiving facility."
+            });
+        <?php Session::put("ignore_edit",false); ?>
         @endif
 
         $('body').on('click','.btn-transfer',function() {

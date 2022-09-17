@@ -1825,6 +1825,12 @@ class ReferralCtrl extends Controller
         $old_facility = (int) $req->old_facility;
 
         $tracking = Tracking::where('id', $id)->first();
+
+        if($tracking->status == 'rejected') {
+            Session::put('ignore_edit',true);
+            return redirect()->back();
+        }
+
         $track = $tracking->code;
 
         $date = date('Y-m-d H:i:s');
