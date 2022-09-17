@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Activity;
+use App\Department;
 use App\Facility;
 use App\Http\Controllers\ApiController;
 use App\Icd;
@@ -184,6 +185,9 @@ class ReportCtrl extends Controller
             if($request->facility_from) {
                 $referred = $referred->where("activity.referred_from",$request->facility_from);
             }
+            if($request->department_to) {
+                $referred = $referred->where("activity.department_id",$request->department_to);
+            }
             $referred = $referred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
                 ->where('activity.status','referred')
                 ->get();
@@ -193,6 +197,9 @@ class ReportCtrl extends Controller
                 ->where("activity.referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
             if($request->facility_from) {
                 $redirected = $redirected->where("activity.referred_from",$request->facility_from);
+            }
+            if($request->department_to) {
+                $redirected = $redirected->where("activity.department_id",$request->department_to);
             }
             $redirected = $redirected
                 ->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
@@ -204,6 +211,9 @@ class ReportCtrl extends Controller
             ->where("activity.referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
             if($request->facility_from) {
                 $transferred = $transferred->where("activity.referred_from",$request->facility_from);
+            }
+            if($request->department_to) {
+                $transferred = $transferred->where("activity.department_id",$request->department_to);
             }
             $transferred = $transferred->whereBetween("activity.created_at",[$per_day." 00:00:00",$per_day." 23:59:59"])
             ->where('activity.status','transferred')
@@ -232,6 +242,9 @@ class ReportCtrl extends Controller
                         ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
                     if($request->facility_from) {
                         $seen_to_accept = $seen_to_accept->where("activity.referred_from",$request->facility_from);
+                    }
+                    if($request->department_to) {
+                        $seen_to_accept = $seen_to_accept->where("activity.department_id",$request->department_to);
                     }
                     $seen_to_accept = $seen_to_accept->where("status","accepted")
                         ->first();
@@ -278,13 +291,20 @@ class ReportCtrl extends Controller
                         }
                     }
 
-                    $seen_to_reject = Activity::where("code",$refer_to_seen->code)
-                        ->where("created_at",">=",$refer_to_seen->created_at)
-                        ->where("referred_to", $request->facility_to ? $request->facility_to : $user->facility_id);
+                    $seen_to_reject = Activity::
+                        select("act.created_at")
+                        ->from("activity as act")
+                        ->where("act.code",$refer_to_seen->code)
+                        ->where("act.created_at",">=",$refer_to_seen->created_at)
+                        ->where("act.referred_to", $request->facility_to ? $request->facility_to : $user->facility_id);
                     if($request->facility_from) {
-                        $seen_to_reject = $seen_to_reject->where("referred_from",$request->facility_from);
+                        $seen_to_reject = $seen_to_reject->where("act.referred_from",$request->facility_from);
                     }
-                    $seen_to_reject = $seen_to_reject->where("status","rejected")
+                    if($request->department_to) {
+                        $seen_to_reject = $seen_to_reject->join("users as user","user.id","=","act.action_md")->where("user.department_id",$request->department_to);
+                    }
+                    $seen_to_reject = $seen_to_reject->where("act.status","rejected")
+                        ->orderBy("act.created_at","asc")
                         ->first();
 
                     if($seen_to_reject) {
@@ -297,6 +317,9 @@ class ReportCtrl extends Controller
                     ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
                 if($request->facility_from) {
                     $refer_to_accept = $refer_to_accept->where("referred_from",$request->facility_from);
+                }
+                if($request->department_to) {
+                    $refer_to_accept = $refer_to_accept->where("department_id",$request->department_to);
                 }
                 $refer_to_accept = $refer_to_accept->where("status","accepted")
                     ->first();
@@ -320,6 +343,9 @@ class ReportCtrl extends Controller
                         ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
                     if($request->facility_from) {
                         $seen_to_accept_redirect = $seen_to_accept_redirect->where("referred_from",$request->facility_from);
+                    }
+                    if($request->department_to) {
+                        $seen_to_accept_redirect = $seen_to_accept_redirect->where("department_id",$request->department_to);
                     }
                     $seen_to_accept_redirect = $seen_to_accept_redirect->where("status","accepted")
                         ->first();
@@ -371,6 +397,9 @@ class ReportCtrl extends Controller
                     if($request->facility_from) {
                         $seen_to_reject_redirect = $seen_to_reject_redirect->where("referred_from",$request->facility_from);
                     }
+                    if($request->department_to) {
+                        $seen_to_reject_redirect = $seen_to_reject_redirect->where("department_id",$request->department_to);
+                    }
                     $seen_to_reject_redirect = $seen_to_reject_redirect->where("status","rejected")
                         ->first();
                     if($seen_to_reject_redirect) {
@@ -384,6 +413,9 @@ class ReportCtrl extends Controller
                     ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
                 if($request->facility_from) {
                     $redirect_to_accept = $redirect_to_accept->where("referred_from",$request->facility_from);
+                }
+                if($request->department_to) {
+                    $redirect_to_accept = $redirect_to_accept->where("department_id",$request->department_to);
                 }
                 $redirect_to_accept = $redirect_to_accept->where("status","accepted")
                     ->first();
@@ -399,6 +431,9 @@ class ReportCtrl extends Controller
                     ->where("referred_to",$request->facility_to ? $request->facility_to : $user->facility_id);
                 if($request->facility_from) {
                     $transfer_to_accept = $transfer_to_accept->where("referred_from",$request->facility_from);
+                }
+                if($request->department_to) {
+                    $transfer_to_accept = $transfer_to_accept->where("department_id",$request->department_to);
                 }
                 $transfer_to_accept = $transfer_to_accept->where("status","accepted")
                     ->first();
@@ -455,7 +490,9 @@ class ReportCtrl extends Controller
             "facility_select_from" => $request->facility_from,
             "facility_select_to" => $request->facility_to,
             "facility_name_from" => Facility::find($request->facility_from)->name,
-            "facility_name_to" => Facility::find($request->facility_to)->name
+            "facility_name_to" => Facility::find($request->facility_to)->name,
+            "department_select_to" => $request->department_to,
+            "department_name_to" => Department::find($request->department_to)->description
         ]);
     }
 

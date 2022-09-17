@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div style="background-color: white;padding: 10px;">
-                <form action="{{ asset('admin/report/tat/incoming') }}" method="GET" class="form-inline">
+                <form action="{{ asset('admin/report/tat') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group" style="width: 100%">
                         <span style="font-size: 12pt;"><i>as of </i></span>
@@ -27,8 +27,13 @@
                                 <option value="{{ $pro->id }}" <?php if(isset($province_select_to)){if($pro->id == $province_select_to)echo 'selected';} ?>>{{ $pro->description }}</option>
                             @endforeach
                         </select>
-                        <select name="facility_to" id="facility_to" class="to_tat_select2">
+                        <select name="facility_to" id="facility_to" class="to_tat_select2" onchange="onChangeFacilityTo($(this).val())">
 
+                        </select>
+                        <select name="department_to" id="department_to" class="form-control">
+                            @if(!$department_select_to)
+                                <option value="">Please select department to</option>
+                            @endif
                         </select>
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/tat/incoming') }}'"><i class="fa fa-search"></i> View All</button>
@@ -376,6 +381,40 @@
                         value: '',
                         text : 'Select All Facility'
                     }));
+            }
+        }
+
+        @if($facility_select_to)
+            onChangeFacilityTo("<?php echo $facility_select_to; ?>");
+        @endif
+        function onChangeFacilityTo(facility_id) {
+            var id = facility_id;
+            var url = "{{ url('location/facility/') }}";
+            if (id) {
+                var department_select_to = "<?php echo $department_select_to; ?>";
+                $.ajax({
+                    url: url+'/'+id,
+                    type: 'GET',
+                    success: function(data) {
+                        console.log(data);
+                        $('#department_to').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Please select department to'
+                            }));
+                        jQuery.each(data.departments, function(i,val){
+                            $('#department_to').append($('<option>', {
+                                value: val.id,
+                                text : val.description
+                            }));
+                        });
+                        if(department_select_to)
+                            $("#department_to").val(department_select_to);
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
             }
         }
 

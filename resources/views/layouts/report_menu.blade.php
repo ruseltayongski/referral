@@ -59,14 +59,15 @@
             <li><a href="{{ url('reports') }}"><i class="fa fa-caret-square-o-right"></i>Dashboard Report</a></li>
         @endif
             <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
-        <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
-        <li class="dropdown-submenu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-clock-o"></i>Turn Around Time</a>
-            <ul class="dropdown-menu">
-                <li><a href="{{ url('admin/report/tat/incoming') }}"> Incoming</a></li>
-                <li><a href="{{ url('admin/report/tat/outgoing') }}"> Outgoing</a></li>
-            </ul>
-        </li>
+            <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
+            <li><a href="{{ url('admin/report/tat') }}"><i class="fa fa-clock-o"></i>Turn Around Time</a></li>
+            {{--<li class="dropdown-submenu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-clock-o"></i>Turn Around Time</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url('admin/report/tat/incoming') }}"> Incoming</a></li>
+                    <li><a href="{{ url('admin/report/tat/outgoing') }}"> Outgoing</a></li>
+                </ul>
+            </li>--}}
         @if($user->level=='admin')
             <li>
                 <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>

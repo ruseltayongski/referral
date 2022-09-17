@@ -109,9 +109,9 @@ Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonFor
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
 Route::match(['GET','POST'],'admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
 Route::get('admin/no_action/{facility_id}/{date_start}/{date_end}/{type}','admin\PatientCtrl@NoAction');
-Route::get('admin/report/tat/incoming','admin\ReportCtrl@turnAroundTimeIncoming'); //tat
-Route::get('admin/report/tat/outgoing','admin\ReportCtrl@turnAroundTimeOutgoing'); //tat
-
+/*Route::get('admin/report/tat/incoming','admin\ReportCtrl@turnAroundTimeIncoming');
+Route::get('admin/report/tat/outgoing','admin\ReportCtrl@turnAroundTimeOutgoing');*/
+Route::get('admin/report/tat','admin\ReportCtrl@turnAroundTimeIncoming');
 
 Route::get('admin/daily/users','admin\DailyCtrl@users');
 Route::post('admin/daily/users','admin\DailyCtrl@usersFilter');
