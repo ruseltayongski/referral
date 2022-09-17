@@ -221,7 +221,7 @@
                 });
             });
 
-            var title = "Turn Around Time - Incoming";
+            var title = "Turn Around Time";
 
             @if($facility_select_from && $facility_select_to)
                 title += " ("+"<?php echo $facility_name_from; ?>"+" to "+"<?php echo $facility_name_to ?>"+")";
