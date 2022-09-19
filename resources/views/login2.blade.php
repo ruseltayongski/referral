@@ -374,7 +374,10 @@
         <div class="container">
             <div class="section-title">
                 <h2>Make an Appointment</h2>
-                <p>Connect with our DOH CV CHD Team to set up a training request schedule or to address any of your issues and concerns.</p>
+                <p>
+                    Connect with our DOH CV CHD Team to set up a <b><u>training request schedule</u></b>
+                    or to address any <b><u>system issues and concerns</u></b> you may have.
+                </p>
             </div>
             <form method="post" action="{{ asset('appointment/create') }}" class="appt_form">
                 {{ csrf_field() }}
@@ -391,21 +394,23 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 form-group mt-3">
+                        <small>Preferred Date of Training:</small>
                         <?php $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d');?>
-                        <input type="date" name="date" id="pointment_date" class="form-control" min="{{ $morrow }}" required>
+                        <input type="date" name="date" id="pointment_date" class="form-control" min="{{ $morrow }}">
                         <small class="text-danger" id="warning_date">&emsp;Invalid Date!</small>
                     </div>
-                    <div class="col-md-4 form-group mt-3">
+                    <div class="col-md-6 form-group mt-3">
+                        <small>Category:</small>
                         <select name="category" id="pointment_category" class="form-select" required>
-                            <option value="">Select Category...</option>
-                            <option value="Technical">Technical</option>
-                            <option value="Non-Technical">Non-technical</option>
+                            <option value="">Select...</option>
+                            <option value="Training Request">Training Request</option>
+                            <option value="System Issues/Concerns">System Issues/Concerns</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group mt-3">
-                    <textarea class="form-control" style="resize: none;" name="message" id="pointment_msg" rows="5" placeholder="Message" required></textarea>
+                    <textarea class="form-control" style="resize: none;" name="message" id="pointment_msg" rows="7" placeholder="Message" required></textarea>
                     <small class="text-danger" id="warning_pointment">
                         *Note: Please check if the entered information is correct before clicking submit button!</small><br>
                 </div><br>
@@ -1437,6 +1442,15 @@
            $('#warning_date').hide();
            $('#btn_appt').prop('disabled', false);
        }
+    });
+
+    $('#pointment_category').on('change', function (e) {
+        var val = $(this).val();
+        if(val === 'Training Request') {
+            $('#pointment_date').attr('required', true);
+        } else {
+            $('#pointment_date').attr('required', false);
+        }
     });
 
     $('.appt_form').on('submit', function(e) {

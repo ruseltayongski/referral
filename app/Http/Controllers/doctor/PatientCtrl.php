@@ -420,6 +420,7 @@ class PatientCtrl extends Controller
 
         //start websocket
         $patient = Patients::find($patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$code;
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -435,7 +436,8 @@ class PatientCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $code,
             "status" => "referred",
-            "count_reco" => 0
+            "count_reco" => 0,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new NewReferral($new_referral));
         //end websocket
@@ -1081,7 +1083,7 @@ class PatientCtrl extends Controller
                 ->whereBetween('tracking.updated_at', [$start, $end]);
         }
 
-        $data = $data->orderBy('tracking.updated_at','asc')
+        $data = $data->orderBy('tracking.updated_at','desc')
             ->paginate(15);
 
         return view('doctor.redirect_reco',[

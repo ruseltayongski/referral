@@ -307,7 +307,7 @@ $facilities = \App\Facility::select('id','name')
                 <div class="col-md-12">
                     <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
                     <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
+                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
                     <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
                 </div>
             </div><br>
@@ -402,7 +402,7 @@ $facilities = \App\Facility::select('id','name')
 
             <div class="row">
                 <div class="col-md-12">
-                    <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                    <small class="text-success"><b>NAME OF DOCTOR (REFERRED HOSPITAL):</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
                     <select name="referred_md" class="form-control edit_action_md" style="width: 100%;">
                         <option value="">Any</option>
                     </select>

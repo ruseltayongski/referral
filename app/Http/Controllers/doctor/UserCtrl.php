@@ -38,6 +38,7 @@ class UserCtrl extends Controller
         $end = Carbon::now()->endOfDay();
 
         $data = Login::select(
+            'login.login as login',
             'users.id as id',
             'users.fname as fname',
             'users.lname as lname',
@@ -47,7 +48,6 @@ class UserCtrl extends Controller
             'facility.name as facility',
             'facility.abbr as abbr',
             'department.description as department',
-            'login.login as login',
             'login.status as status',
             'login.type as type'
         );
@@ -62,15 +62,28 @@ class UserCtrl extends Controller
                 ->leftJoin('department','department.id','=','users.department_id')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
-                ->orderBy('login.id','desc')
+                ->orderBy('facility.name','asc')
                 ->get();
 
+        $final = array();
+        $temp = array();
+        $current = $data[0]->facility;
+        for($i = 0; $i < count($data); $i++) {
+            $row = $data[$i];
+            array_push($temp, $row);
+            if($current !== $data[$i+1]->facility) {
+                rsort($temp);
+                array_push($final, $temp);
+                $temp = array();
+                $current = $data[$i+1]->facility;
+            }
+        }
 
         $hospitals = \DB::connection('mysql')->select("call online_facility_view('$start','$end')");
 
         return view('doctor.list',[
             'title' => 'Online Users',
-            'data' => $data,
+            'data' => $final,
             'hospitals' => $hospitals
         ]);
     }

@@ -172,7 +172,7 @@ class LoginCtrl extends Controller
         $data->name = $req->name;
         $data->email = $req->email;
         $data->contact = $req->contact;
-        $data->preferred_date = $req->date;
+        $data->preferred_date = (isset($req->date)) ? $req->date : '';
         $data->category = $req->category;
         $data->message = $req->message;
         $data->status = 'new';

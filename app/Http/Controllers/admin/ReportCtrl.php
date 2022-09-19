@@ -1111,17 +1111,18 @@ class ReportCtrl extends Controller
         } else {
             $data = $siquijor_cases;
         }
-
-        $normal = self::countCases($data['normal'])['data'];
-        $pregnant = self::countCases($data['pregnant'])['data'];
+        $normal = self::countCases($data['normal']);
+        $pregnant = self::countCases($data['pregnant']);
 
         $final = array();
         $asymp = $mild = $moderate = $severe = $critical = 0;
         $refer_contact = $refer_suspect = $refer_probable = $refer_confirmed = 0;
         $dis_contact = $dis_suspect = $dis_probable = $dis_confirmed = 0;
-        foreach($normal as $norm) {
-            for($i = 0; $i < count($pregnant); $i++) {
-                $preg = $pregnant[$i];
+
+        for($i = 0; $i < count($normal); $i++) {
+            $norm = $normal[$i];
+            for($j = 0; $j < count($pregnant); $j++) {
+                $preg = $pregnant[$j];
                 if($norm['id'] === $preg['id']) {
                     $asymp = $norm['asymp'] + $preg['asymp'];
                     $mild = $norm['mild'] + $preg['mild'];
@@ -1136,7 +1137,9 @@ class ReportCtrl extends Controller
                     $dis_suspect = $norm['dis_suspect'] + $preg['dis_suspect'];
                     $dis_probable = $norm['dis_probable'] + $preg['dis_probable'];
                     $dis_confirmed = $norm['dis_confirmed'] + $preg['dis_confirmed'];
+                    $total = $norm['total'] + $preg['total'];
                     array_push($final, array(
+                        'total' => $total,
                         'id' => $norm['id'],
                         'name' => $norm['name'],
                         'asymp' => $asymp,
@@ -1153,23 +1156,28 @@ class ReportCtrl extends Controller
                         'dis_probable' => $dis_probable,
                         'dis_confirmed' => $dis_confirmed
                     ));
-                    array_splice($normal,$i,1);
-                    array_splice($pregnant,$i,1);
-                    break;
+                    $normal[$i] = null;
+                    $pregnant[$j] = null;
                 }
             }
         }
 
         if(count($normal) > 0) {
             foreach($normal as $norm) {
-                array_push($final, $norm);
+                if($norm !== NULL) {
+                    array_push($final, $norm);
+                }
             }
         }
         if(count($pregnant) > 0) {
             foreach($pregnant as $preg) {
-                array_push($final, $preg);
+                if($preg !== NULL) {
+                    array_push($final, $preg);
+                }
             }
         }
+
+        rsort($final);
 
         return view("admin.report.covid_report", [
             'title' => 'Covid Report',
@@ -1187,7 +1195,6 @@ class ReportCtrl extends Controller
     }
 
     function countCases($data) {
-        $current = '';
         $facilities = array();
         $asymp = 0;
         $mild = 0;
@@ -1202,81 +1209,79 @@ class ReportCtrl extends Controller
         $dis_suspect = 0;
         $dis_probable = 0;
         $dis_confirmed = 0;
+        $total = 0;
 
-        $push = false;
-        foreach($data as $row) {
-            if($row->facility_id === 230) {
-                return array('data'=>$row->facility_name);
+        for($i = 0; $i < count($data); $i++) {
+            $row = $data[$i];
+
+            $clinic_stat = $row->refer_clinical_status;
+            if($clinic_stat != 'NULL') {
+                if ($clinic_stat === 'asymptomatic')
+                    $asymp++;
+                else if ($clinic_stat === 'mild')
+                    $mild++;
+                else if ($clinic_stat === 'moderate')
+                    $moderate++;
+                else if ($clinic_stat === 'severe')
+                    $severe++;
+                else if ($clinic_stat === 'critical')
+                    $critical++;
             }
-//            if($current != $row->facility_id) {
-//                $current = $row->facility_id;
-//                $push = true;
-//            }
-//            $clinic_stat = $row->refer_clinical_status;
-//            if($clinic_stat != 'NULL') {
-//                if ($clinic_stat === 'asymptomatic')
-//                    $asymp++;
-//                else if ($clinic_stat === 'mild')
-//                    $mild++;
-//                else if ($clinic_stat === 'moderate')
-//                    $moderate++;
-//                else if ($clinic_stat === 'severe')
-//                    $severe++;
-//                else if ($clinic_stat === 'critical')
-//                    $critical++;
-//            }
-//
-//            $refer_sur = $row->refer_sur_category;
-//            if($refer_sur != 'NULL') {
-//                if ($refer_sur === 'contact_pum')
-//                    $refer_contact++;
-//                else if ($refer_sur === 'suspect')
-//                    $refer_suspect++;
-//                else if ($refer_sur === 'probable')
-//                    $refer_probable++;
-//                else if ($refer_sur === 'confirmed')
-//                    $refer_confirmed++;
-//            }
-//
-//            $dis_sur = $row->dis_sur_category;
-//            if($dis_sur != 'NULL') {
-//                if ($dis_sur === 'contact_pum')
-//                    $dis_contact++;
-//                else if ($dis_sur === 'suspect')
-//                    $dis_suspect++;
-//                else if ($dis_sur === 'probable')
-//                    $dis_probable++;
-//                else if ($dis_sur === 'confirmed')
-//                    $dis_confirmed++;
-//            }
-//
-//            if($push) {
-//                $data2 = array(
-//                    'id' => $row->facility_id,
-//                    'name' => $row->facility_name,
-//                    'asymp' => $asymp,
-//                    'mild' => $mild,
-//                    'moderate' => $moderate,
-//                    'severe' => $severe,
-//                    'critical' => $critical,
-//                    'refer_contact' => $refer_contact,
-//                    'refer_suspect' => $refer_suspect,
-//                    'refer_probable' => $refer_probable,
-//                    'refer_confirmed' => $refer_confirmed,
-//                    'dis_contact' => $dis_contact,
-//                    'dis_suspect' => $dis_suspect,
-//                    'dis_probable' => $dis_probable,
-//                    'dis_confirmed' => $dis_confirmed
-//                );
-//                array_push($facilities,$data2);
-//                $asymp = $mild = $moderate = $severe = $critical = 0;
-//                $refer_contact = $refer_suspect = $refer_probable = $refer_confirmed = 0;
-//                $dis_contact = $dis_suspect = $dis_probable = $dis_confirmed = 0;
-//                $push = false;
-//            }
+
+            $refer_sur = $row->refer_sur_category;
+            if($refer_sur != 'NULL') {
+                if ($refer_sur === 'contact_pum')
+                    $refer_contact++;
+                else if ($refer_sur === 'suspect')
+                    $refer_suspect++;
+                else if ($refer_sur === 'probable')
+                    $refer_probable++;
+                else if ($refer_sur === 'confirmed')
+                    $refer_confirmed++;
+            }
+
+            $dis_sur = $row->dis_sur_category;
+            if($dis_sur != 'NULL') {
+                if ($dis_sur === 'contact_pum')
+                    $dis_contact++;
+                else if ($dis_sur === 'suspect')
+                    $dis_suspect++;
+                else if ($dis_sur === 'probable')
+                    $dis_probable++;
+                else if ($dis_sur === 'confirmed')
+                    $dis_confirmed++;
+            }
+
+            if($clinic_stat != 'NULL' || $refer_sur != "NULL" || $dis_sur != "NULL") {
+                $total++;
+            }
+
+            if($row->facility_id !== $data[$i+1]->facility_id) {
+                $data2 = array(
+                    'total' => $total,
+                    'id' => $row->facility_id,
+                    'name' => $row->facility_name,
+                    'asymp' => $asymp,
+                    'mild' => $mild,
+                    'moderate' => $moderate,
+                    'severe' => $severe,
+                    'critical' => $critical,
+                    'refer_contact' => $refer_contact,
+                    'refer_suspect' => $refer_suspect,
+                    'refer_probable' => $refer_probable,
+                    'refer_confirmed' => $refer_confirmed,
+                    'dis_contact' => $dis_contact,
+                    'dis_suspect' => $dis_suspect,
+                    'dis_probable' => $dis_probable,
+                    'dis_confirmed' => $dis_confirmed
+                );
+                array_push($facilities,$data2);
+                $asymp = $mild = $moderate = $severe = $critical = 0;
+                $refer_contact = $refer_suspect = $refer_probable = $refer_confirmed = 0;
+                $dis_contact = $dis_suspect = $dis_probable = $dis_confirmed = 0;
+                $total = 0;
+            }
         }
-        return array(
-            'data' => $facilities
-        );
+        return $facilities;
     }
 }

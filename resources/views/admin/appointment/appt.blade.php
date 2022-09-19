@@ -141,7 +141,7 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
                         <div class="row">
                             <div class="col-md-4 form-group mt-3">
-                                <b>Date:</b><br>
+                                <b>Preferred Date of Training:</b><br>
                                 <input type="date" style="background-color: white" name="date" id="modal_date" class="form-control" min="{{ $morrow }}" readonly>
                                 {{--<small class="text-danger" id="warning_date">&emsp;Invalid Date!</small>--}}
                             </div>
@@ -153,12 +153,12 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
 
                         <div class="form-group mt-3">
                             <b>Message:</b><br>
-                            <textarea class="form-control" rows="7" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
+                            <textarea class="form-control" rows="8" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
                         </div>
 
                         <div class="form-group mt-3">
                             <b>Remarks:</b><br>
-                            <textarea class="form-control" name="remarks" rows="6" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
+                            <textarea class="form-control" name="remarks" rows="8" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
                         </div>
 
                         <div class="form-group pull-right">
@@ -199,7 +199,11 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 $('#modal_name').val(data.name);
                 $('#modal_email').val(data.email);
                 $('#modal_contact').val(data.contact);
-                $('#modal_date').val(data.preferred_date);
+                if(data.preferred_date != '0000-00-00') {
+                    $('#modal_date').val(data.preferred_date);
+                }else {
+                    $('#modal_date').val('');
+                }
                 $('#modal_category').val(data.category);
                 $('#modal_message').val(data.message);
                 $('#modal_remarks').val(data.remarks);
@@ -216,17 +220,5 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 }
             });
         }
-
-//        $('#modal_date').on('change', function() {
-//            var val = $(this).val();
-//            if(val <= new Date().toISOString().slice(0, 10)) {
-//                $('#warning_date').show();
-//                $('#approve_btn').prop('disabled', true);
-//            }
-//            else {
-//                $('#warning_date').hide();
-//                $('#approve_btn').prop('disabled', false);
-//            }
-//        });
     </script>
 @endsection

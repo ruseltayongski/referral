@@ -849,6 +849,7 @@ class ReferralCtrl extends Controller
             ->orderBy("id","desc")
             ->first();
         $patient = Patients::find($act->patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $referral_rejected = [
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname), //
             "rejected_by" => ucfirst($user->fname).' '.ucfirst($user->lname), //
@@ -857,7 +858,8 @@ class ReferralCtrl extends Controller
             "patient_code" => $activity->code, //
             "date_rejected" => date('M d, Y h:i A',strtotime($activity->created_at)), //
             "remarks" => $activity->remarks, //
-            "activity_id" => $latest_referred_or_redirected->id
+            "activity_id" => $latest_referred_or_redirected->id,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralRejected($referral_rejected));
         //end websocket
@@ -904,6 +906,7 @@ class ReferralCtrl extends Controller
             ->orderBy("id","desc")
             ->first();
         $patient = Patients::find($latest_activity->patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$latest_activity->code;
         $referral_accepted = [
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
             "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -913,7 +916,8 @@ class ReferralCtrl extends Controller
             "tracking_id" => $track_id,
             "activity_id" => $latest_activity->id,
             "date_accepted" => date('M d, Y h:i A',strtotime($activity->date_referred)),
-            "remarks" => $activity->remarks
+            "remarks" => $activity->remarks,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralAccepted($referral_accepted));
         //end websocket
@@ -959,6 +963,7 @@ class ReferralCtrl extends Controller
         $count_caller = Activity::where("code",$track->code)->where("status","=","calling")->count();
         //start websocket
         $patient = Patients::find($track->patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $referral_call = [
             "patient_code" => $track->code,
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
@@ -968,7 +973,8 @@ class ReferralCtrl extends Controller
             "caller_date" => date('M d, Y h:i A',strtotime($activity->created_at)),
             "called_to" => $activity->referred_from,
             "called_to_facility" => $called_to_facility,
-            "count_caller" => $count_caller
+            "count_caller" => $count_caller,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralCall($referral_call));
     }
@@ -1005,6 +1011,7 @@ class ReferralCtrl extends Controller
         })
         ->orderBy("id","desc")
         ->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $new_arrive = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "current_facility" => Facility::find($user->facility_id)->name,
@@ -1012,7 +1019,8 @@ class ReferralCtrl extends Controller
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
-            "remarks" => $req->remarks
+            "remarks" => $req->remarks,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralArrived($new_arrive));
@@ -1050,6 +1058,7 @@ class ReferralCtrl extends Controller
         })
             ->orderBy("id","desc")
             ->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $new_notarrived = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "current_facility" => Facility::find($user->facility_id)->name,
@@ -1057,7 +1066,8 @@ class ReferralCtrl extends Controller
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
-            "remarks" => $req->remarks
+            "remarks" => $req->remarks,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralNotArrived($new_notarrived));
@@ -1095,13 +1105,15 @@ class ReferralCtrl extends Controller
         })
             ->orderBy("id","desc")
             ->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $new_admitted = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "current_facility" => Facility::find($user->facility_id)->name,
             "arrived_date" => date('M d, Y h:i A',strtotime($date)),
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
-            "referred_from" => $latest_activity->referred_from
+            "referred_from" => $latest_activity->referred_from,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralAdmitted($new_admitted));
@@ -1160,6 +1172,8 @@ class ReferralCtrl extends Controller
         })
             ->orderBy("id","desc")
             ->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
+
         $new_discharged = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "current_facility" => Facility::find($user->facility_id)->name,
@@ -1167,7 +1181,8 @@ class ReferralCtrl extends Controller
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
-            "remarks" => $req->remarks
+            "remarks" => $req->remarks,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralDischarged($new_discharged));
@@ -1222,6 +1237,7 @@ class ReferralCtrl extends Controller
 
         $count_seen = Seen::where('tracking_id',$track->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
+        $redirect_track = asset("doctor/referred?referredCode=").$req->code;
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -1239,7 +1255,8 @@ class ReferralCtrl extends Controller
             "status" => "transferred",
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
-            "count_reco" => $count_reco
+            "count_reco" => $count_reco,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new NewReferral($new_referral));
         //end websocket
@@ -1320,6 +1337,7 @@ class ReferralCtrl extends Controller
         $tracking = Tracking::where("code",$req->code)->first();
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
+        $redirect_track = asset("doctor/referred?referredCode=").$req->code;
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -1337,7 +1355,8 @@ class ReferralCtrl extends Controller
             "status" => "redirected",
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
-            "count_reco" => $count_reco
+            "count_reco" => $count_reco,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
         return Redirect::back();
@@ -1402,6 +1421,7 @@ class ReferralCtrl extends Controller
         ->orderBy("id","desc")
         ->first();
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $redirect_track = asset("doctor/referred?referredCode=").$code;
         $seen_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "seen_by" => ucfirst($user->fname).' '.ucfirst($user->lname),//
@@ -1413,7 +1433,8 @@ class ReferralCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $code,
             "activity_id" => $latest_activity->id,
-            "count_seen" => $count_seen
+            "count_seen" => $count_seen,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralSeen($seen_referral));
         //end websocket
@@ -1500,6 +1521,7 @@ class ReferralCtrl extends Controller
         $patient = Patients::find($track->patient_id);
         $latest_activity = Activity::where("code",$track->code)->orderBy("id","desc")->first();
         $count_reco = Feedback::where("code",$track->code)->count();
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
 
         $cancel = [
             "patient_code" => $track->code,
@@ -1510,7 +1532,8 @@ class ReferralCtrl extends Controller
             "cancelled_date" => date('M d, Y h:i A',strtotime($date)),
             "remarks" => $req->reason,
             "referred_to" => $latest_activity->referred_to,
-            "count_reco" => $count_reco
+            "count_reco" => $count_reco,
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralCancelled($cancel));
         return redirect()->back();
@@ -1556,6 +1579,7 @@ class ReferralCtrl extends Controller
         $departed_by = ucwords(mb_strtolower($user->fname))." ".ucwords(mb_strtolower($user->lname));
         $departed_by_facility = Facility::find($user->facility_id)->name;
         $patient = Patients::find($track->patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $departed = [
             "patient_code" => $track->code,
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
@@ -1564,6 +1588,7 @@ class ReferralCtrl extends Controller
             "referred_to" => $track->referred_to,
             "mode_transportation" => $activity->remarks == 5 ? $other_transportation : ModeTransportation::find($activity->remarks)->transportation,
             "departed_date" => date('M d, Y h:i A',strtotime($activity->created_at)),
+            "redirect_track" => $redirect_track
         ];
         broadcast(new SocketReferralDeparted($departed));
         return redirect()->back();
@@ -1814,80 +1839,31 @@ class ReferralCtrl extends Controller
         $tracking = Tracking::where('id', $id)->first();
         $track = $tracking->code;
 
+        $updated = '';
         $date = date('Y-m-d H:i:s');
-        if($old_facility != $req->referred_to) {
-//            Seen::where('tracking_id',$tracking->id)->delete();
-
-            $data2 = array(
-                'code' => $track,
-                'patient_id' => $tracking->patient_id,
-                'date_referred' => $date,
-                'referred_from' => $tracking->referred_from,
-                'referred_to' => $old_facility,
-                'department_id' => $req->department_id,
-                'referring_md' => $user->id,
-                'action_md' => $user->id,
-                'remarks' => "Patient's referral form was updated and was transferred to another facility.",
-                'status' => "cancelled"
-            );
-            Activity::create($data2);
-
-            $data2 = array(
-                'code' => $track,
-                'patient_id' => $tracking->patient_id,
-                'date_referred' => $date,
-                'referred_from' => $tracking->referred_from,
-                'referred_to' => $req->referred_to,
-                'department_id' => $req->department_id,
-                'referring_md' => $user->id,
-                'action_md' => $user->id,
-                'remarks' => "Patient's referral form was updated and has been transferred to this facility.",
-                'status' => "transferred"
-            );
-            Activity::create($data2);
-
-            $new_data = array(
-                'date_referred' => $date,
-                'date_arrived' => '',
-                'date_seen' => '',
-                'action_md' => $user->id,
-                'department_id' => $req->department_id,
-                'referred_to' => $req->referred_to,
-                'referring_md' => $user->id,
-                'status' => 'transferred'
-            );
-            $tracking->update($new_data);
-        } else {
-            $data2 = array(
-                'code' => $track,
-                'patient_id' => $tracking->patient_id,
-                'date_referred' => $date,
-                'referred_from' => $tracking->referred_from,
-                'referred_to' => $req->referred_to,
-                'department_id' => $req->department_id,
-                'referring_md' => $user->id,
-                'action_md' => $user->id,
-                'remarks' => "Patient's referral form was updated.",
-                'status' => "form_updated"
-            );
-            Activity::create($data2);
-        }
 
         $form_type = $req->form_type;
-        $dob = date('y-m-d h-i-s', strtotime($req->baby_dob));
+        $dob = date('Y-m-d h:i:s', strtotime($req->baby_dob));
         $data = '';
 
         $data_update = $req->all();
-        unset($data_update['old_facility']);
+
+        /* FACILITY AND DEPARTMENT */
+        if($old_facility != $req->referred_to)
+            $updated .= "Referred facility, Department";
 
         if($form_type === 'normal') {
             $data = PatientForm::where('code', $track)->first();
 
-            if($req->notes_diag_cleared == "true")
-                $data->update(['diagnosis' => NULL]);
+            /* DIAGNOSIS NOTES */
+            if(($data->diagnosis !== $req->diagnosis) || $req->notes_diag_cleared)
+                $updated .= ", Diagnosis Notes";
 
+            if($req->notes_diag_cleared)
+                $data->update(['diagnosis' => NULL]);
             unset($data_update['notes_diag_cleared']);
 
+            /* TIME OF REFERRAL WILL CHANGE IF FACILITY IS UPDATED/CHANGED */
             if($old_facility != $req->referred_to)
                 $data->update(['time_referred' => date('Y-m-d H:i:s')]);
         }
@@ -1905,19 +1881,23 @@ class ReferralCtrl extends Controller
                 "lname" => $req->baby_lname,
                 "dob" => $dob
             );
-            if(isset($match))
+            if(isset($match)) {
                 $match->update($baby);
-            else
+            } else {
                 $baby_id = PatientCtrl::storeBabyAsPatient($baby,$req->mother_id);
+            }
 
             $match = Baby::where("baby_id", $baby_id)->first();
 
             if(isset($match)) {
+                if((isset($match->weight) && $match->weight != $req->baby_weight) || (isset($match->gestational_age) && $match->gestational_age != $req->baby_gestational_age) || (isset($match->birth_date) && $match->birth_date != $dob))
+                    $updated .= ", Baby's Information";
                 $match->weight = ($req->baby_weight) ? $req->baby_weight : '';
                 $match->gestational_age = ($req->baby_gestational_age) ? $req->baby_gestational_age : '';
                 $match->birth_date = $dob;
                 $match->save();
             } else {
+                $updated .= ", Baby's Information";
                 $b = new Baby();
                 $b->baby_id = $baby_id;
                 $b->mother_id = $req->mother_id;
@@ -1941,24 +1921,87 @@ class ReferralCtrl extends Controller
 
             unset($data_update['notes_diag_cleared']);
 
-            $data_update['patient_baby_id'] = $baby_id;
+            $woman_before_given_time = date('Y-m-d h:i:s', strtotime($req->woman_before_given_time));
+            $woman_transport_given_time = date('Y-m-d h:i:s', strtotime($req->woman_transport_given_time));
+            $baby_last_feed = date('Y-m-d h:i:s', strtotime($req->baby_last_feed));
+            $baby_before_given_time = date('Y-m-d h:i:s', strtotime($req->baby_before_given_time));
+            $baby_transport_given_time = date('Y-m-d h:i:s', strtotime($req->baby_transport_given_time));
+            $baby_reason = ($req->baby_reason == null) ? 'None' : $req->baby_reason;
+            $baby_information_given = ($req->baby_information_given == null) ? '' : $req->baby_information_given;
 
-            $data_update['woman_before_given_time'] = ($req->woman_before_given_time) ? date('y-m-d h-i-s', strtotime($req->woman_before_given_time)) : '';
-            $data_update['woman_transport_given_time'] = ($req->woman_transport_given_time) ? date('y-m-d h-i-s', strtotime($req->woman_transport_given_time)) : '';
-            $data_update['baby_last_feed'] = ($req->baby_last_feed) ? date('y-m-d h-i-s', strtotime($req->baby_last_feed)) : '';
-            $data_update['baby_before_given_time'] = ($req->baby_before_given_time) ? date('y-m-d h-i-s', strtotime($req->baby_before_given_time)) : '';
-            $data_update['baby_transport_given_time'] = ($req->baby_transport_given_time) ? date('y-m-d h-i-s', strtotime($req->baby_transport_given_time)) : '';
+            if(isset($data->woman_reaso) && $data->woman_reason != $req->woman_reason)
+                $updated .= ", Mother's main reason for referral";
+            if(isset($data->woman_major_findings) && $data->woman_major_findings != $req->woman_major_findings)
+                $updated .= ", Mother's major findings";
+            if(isset($data->woman_before_treatment) && $data->woman_before_treatment != $req->woman_before_treatment)
+                $updated .= ", Mother's treatment given before referral";
+            if($data->woman_before_given_time != '0000-00-00 00:00:00' && $data->woman_before_given_time != $woman_before_given_time)
+                $updated .= ", Mother's treament time before referral";
+            if(isset($data->woman_during_transport) && $data->woman_during_transport != $req->woman_during_transport)
+                $updated .= ", Mother's treatment given during transport";
+            if($data->woman_transport_given_time != '0000-00-00 00:00:00' && $data->woman_transport_given_time != $woman_transport_given_time)
+                $updated .= ", Mother's treatment time during transport";
+            if(($data->notes_diagnoses != $req->notes_diagnoses) || $req->notes_diag_cleared)
+                $updated .= ", Diagnosis Notes";
+            if(isset($data->baby_reason) && $data->baby_reason != $baby_reason)
+                $updated .= ", Baby's main reason for referral";
+            if(isset($data->baby_major_findings) && $data->baby_major_findings != $req->baby_major_findings)
+                $updated .= ", Baby's major findings";
+            if($data->baby_last_feed != '0000-00-00 00:00:00' && $data->baby_last_feed != $baby_last_feed)
+                $updated .= ", Baby's last feeding time";
+            if(isset($data->baby_before_treatment) && $data->baby_before_treatment != $req->baby_before_treatment)
+                $updated .= ", Baby's treatment given before referral";
+            if($data->baby_before_given_time != '0000-00-00 00:00:00' && $data->baby_before_given_time != $baby_before_given_time)
+                $updated .= ", Baby's treatment time before referral";
+            if(isset($data->baby_during_transport) && $data->baby_during_transport != $req->baby_during_transport)
+                $updated .= ", Baby's treatment given during transport";
+            if($data->baby_transport_given_time != '0000-00-00 00:00:00' && $data->baby_transport_given_time != $baby_transport_given_time)
+                $updated .= ", Baby's treatment time during transport";
+            if((isset($data->woman_information_given) && $data->woman_information_given != $req->woman_information_given) || (isset($data->baby_information_given) && $data->baby_information_given !== $baby_information_given))
+                $updated .= ", Information given about the reason of referral";
+
+            $data_update['patient_baby_id'] = $baby_id;
+            $data_update['woman_before_given_time'] = ($req->woman_before_given_time) ? $woman_before_given_time : '';
+            $data_update['woman_transport_given_time'] = ($req->woman_transport_given_time) ? $woman_transport_given_time : '';
+            $data_update['baby_last_feed'] = ($req->baby_last_feed) ? $baby_last_feed : '';
+            $data_update['baby_before_given_time'] = ($req->baby_before_given_time) ? $baby_before_given_time : '';
+            $data_update['baby_transport_given_time'] = ($req->baby_transport_given_time) ? $baby_transport_given_time : '';
         }
+
+        /* COVID NUMBER, CLINICAL STATUS AND SURVEILLANCE CATEGORY */
+        if($data->covid_number !== $req->covid_number)
+            $updated .= ", Covid Number";
+
+        if($data->refer_clinical_status !== $req->refer_clinical_status)
+            $updated .= ", Covid Clinical Status";
+
+        if($data->refer_sur_category !== $req->refer_sur_category)
+            $updated .= ", Covid Surveillance Category";
+
+        /* CASE SUMMARY AND SUMMARY OF RECO */
+        if($data->case_summary !== $req->case_summary)
+            $updated .= ", Case summary";
+
+        if($data->reco_summary !== $req->reco_summary)
+            $updated .= ", Summary of ReCo";
+
+
+        /* DIAGNOSIS THAT IS NOT AN ICD CODE */
+        if(($data->other_diagnoses !== $req->other_diagnoses) || $req->other_diag_cleared)
+            $updated .= ", Diagnosis";
 
         if($req->other_diag_cleared == "true") {
             $data->update(['other_diagnoses' => NULL]);
         }
         unset($data_update['other_diag_cleared']);
 
+
+        /* ICD DIAGNOSIS */
         if($req->icd_cleared === 'true')
             Icd::where('code', $track)->delete();
         unset($data_update['icd_cleared']);
 
+        $updated_icd = false;
         foreach($req->icd_ids as $i) {
             $value = Icd::where('code', $track)->where('icd_id', $i)->first();
             if(!isset($value)) {
@@ -1966,18 +2009,23 @@ class ReferralCtrl extends Controller
                 $icd->code = $track;
                 $icd->icd_id = $i;
                 $icd->save();
+                $updated_icd = true;
             }
         }
         unset($data_update['icd_ids']);
+        if($updated_icd) {
+            $updated .= ", ICD-10 Diagnosis";
+        }
 
+        /* FILE ATTACHMENT */
         if($req->file_cleared == "true") {
             $data->update([
                 'file_path' => ""
             ]);
         }
-        unset($data_update['file_cleared']);
 
         $file_paths = $data->file_path;
+        $old_file = $file_paths;
         if($_FILES["file_upload"]["name"]) {
             ApiController::fileUpload($req);
             for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
@@ -1995,16 +2043,91 @@ class ReferralCtrl extends Controller
             'file_path' => $file_paths
         ]);
 
-        echo $data->file_path;
+        if($req->file_cleared == "true" || $old_file != $data->file_path) {
+            $updated .= ", File Attachment";
+        }
+        unset($data_update['file_cleared']);
+
+//        echo $data->file_path . "<br>";
 
         unset($data_update['file_upload']);
         unset($data_update['username']);
-
         unset($data_update['id']);
         unset($data_update['referral_status']);
         unset($data_update['form_type']);
 
+
+        /* REASON FOR REFERRAL */
+        $reason_referral = (int) $req->reason_referral;
+        if(($data->reason_referral !== $reason_referral) || ($data->other_reason_referral !== $req->other_reason_referral))
+            $updated .= ", Reason for Referral";
         $data_update['other_reason_referral'] = isset($req->other_reason_referral) ? $req->other_reason_referral : null;
+
+        if($updated[0] === ',')
+            $updated = substr($updated, 2, strlen($updated));
+
+        $updated_remarks = "";
+        if($updated !== "") {
+            $updated_remarks .= "Updated fields: " . $updated;
+        }
+        if($old_facility != $req->referred_to) {
+//            Seen::where('tracking_id',$tracking->id)->delete();
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $old_facility,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and was redirected to another facility. ".$updated_remarks,
+                'status' => "rejected"
+            );
+            Activity::create($data2);
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and has been redirected to this facility. ".$updated_remarks,
+                'status' => "redirected"
+            );
+            Activity::create($data2);
+
+            $new_data = array(
+                'date_referred' => $date,
+                'date_arrived' => '',
+                'date_seen' => '',
+                'action_md' => $user->id,
+                'department_id' => $req->department_id,
+                'referred_to' => $req->referred_to,
+                'referring_md' => $user->id,
+                'status' => 'redirected'
+            );
+            $tracking->update($new_data);
+        } else {
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => $updated_remarks,
+                'status' => "form_updated"
+            );
+            Activity::create($data2);
+        }
+        unset($data_update['old_facility']);
 
         $data->update($data_update);
         Session::put('referral_update_save',true);
@@ -2022,6 +2145,7 @@ class ReferralCtrl extends Controller
             ->count();
         $latest_activity = Activity::where("code",$track)->orderBy("id","desc")->first();
         $tracking = Tracking::where('id', $id)->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track;
 
         $update = [
             "patient_code" => $track,
@@ -2043,7 +2167,8 @@ class ReferralCtrl extends Controller
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "old_facility" => $old_facility,
-            "faci_changed" => ($old_facility == $latest_activity->referred_to) ? false : true
+            "faci_changed" => ($old_facility == $latest_activity->referred_to) ? false : true,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralUpdateForm($update));
@@ -2066,7 +2191,7 @@ class ReferralCtrl extends Controller
         Activity::where("code",$track->code)->orderBy("id","desc")->first()->delete();
 
         $patient = Patients::find($track->patient_id);
-        $latest_activity = Activity::where("code",$track->code)->first();
+        $latest_activity = Activity::where("code",$track->code)->orderBy("id","desc")->first();
         $count_seen = Seen::where('tracking_id',$track->id)->count();
         $count_reco = Feedback::where("code",$track->code)->count();
         $count_activity = Activity::where("code",$req->code)
@@ -2077,13 +2202,19 @@ class ReferralCtrl extends Controller
             })
             ->groupBy("code")
             ->count();
+        if($latest_activity->status === 'rejected') {
+            $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->action_md)->first();
+        } else {
+            $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->referring_md)->first();
+        }
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
 
         $undo = [
             "patient_code" => $track->code,
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
             "activity_id" => $latest_activity->id,
-            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
-            "referring_name" => Facility::find($user->facility_id)->name,
+            "referring_md" => ucfirst($md->fname).' '.ucfirst($md->lname),
+            "referring_name" => Facility::find($md->facility_id)->name,
             "referred_name" => Facility::find($latest_activity->referred_to)->name,
             "referred_to" => $latest_activity->referred_to,
             "referred_department" => Department::where('id',$track->department_id)->first()->description,
@@ -2096,7 +2227,8 @@ class ReferralCtrl extends Controller
             "status" => $latest_activity->status,
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
-            "count_reco" => $count_reco
+            "count_reco" => $count_reco,
+            "redirect_track" => $redirect_track
         ];
 
         broadcast(new SocketReferralUndoCancel($undo));

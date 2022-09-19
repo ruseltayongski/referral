@@ -484,6 +484,9 @@
                                                                         $referred_md = 'Dr. '.$act->referring_md;
                                                                     ?>
                                                                     <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                                                    @if($act->remarks)
+                                                                            <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                                    @endif
                                                                 @else
                                                                     <strong>Walk-In Patient:</strong> <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>
                                                                 @endif
@@ -593,6 +596,7 @@
                                                                 <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                                 <td>
                                                                     <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
+                                                                    <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                                                 </td>
                                                             </tr>
                                                     @endif

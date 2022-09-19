@@ -190,10 +190,12 @@
         $('input[name="icd_ids[]"]').empty();
     }
 
-    function clearOtherDiagnosis() {
+    function clearOtherDiagnosis(btn) {
         $("#other_diagnosis").val("");
         $(".other_diag").hide();
-        $('.other_diag_cleared').val("true");
+        if(btn) {
+            $('.other_diag_cleared').val("true");
+        }
     }
 
     function clearNotesDiagnosis() {
@@ -261,7 +263,7 @@
                 console.log(icd_description);
                 $("#icd_selected").append('=> '+icd_description+' '+'<br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');
             }
-            clearOtherDiagnosis();
+            clearOtherDiagnosis(false);
         });
     }
 

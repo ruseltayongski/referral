@@ -24,11 +24,15 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
         }
 
         .refer {
-            background-color: lightskyblue;
+            background-color: #87cefabd;
         }
 
         .discharged {
             background: lightgreen;
+        }
+
+        .clinic_stat {
+            background: #f6edc9;
         }
     </style>
 
@@ -108,8 +112,16 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
             <div class="row">
                 <div class="col-md-12">
                     <h5>&emsp;<b>Legend:</b>&nbsp;&nbsp;
-                        <span style="border: 1px solid black; background-color: lightskyblue;">&emsp;&nbsp;</span> During Referral &emsp;
-                        <span style="border: 1px solid black; background-color: lightgreen;">&emsp;&nbsp;</span> Discharged
+                        <span>
+                            (Clinical Status)
+                            <span style="border: 1px solid black; background-color: #f6edc9;">&emsp;&nbsp;</span> &emsp;&emsp;&emsp;
+                        </span>
+                        <span>
+                            (Surveillance Category)
+                            During Referral: <span style="border: 1px solid black; background-color: #87cefabd;">&emsp;&nbsp;</span>  &emsp;
+                            Discharged: <span style="border: 1px solid black; background-color: lightgreen;">&emsp;&nbsp;</span>
+                        </span>
+
                     </h5>
                 </div>
             </div>
@@ -119,7 +131,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
             @endforeach
 
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-bordered table-fixed-header">
+                <table class="table table-bordered table-striped table-hover table-fixed-header" style="border: ">
                     <thead class="header">
                         <tr class="bg-navy-active text-center">
                             <th></th>
@@ -150,11 +162,11 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                         <tr>
                             <td>{{ $count++ }}</td>
                             <td> {{ $row['name'] }}</td>
-                            <td class="text-center refer"> {{ $row['asymp'] }} </td>
-                            <td class="text-center refer"> {{ $row['mild'] }} </td>
-                            <td class="text-center refer"> {{ $row['moderate'] }} </td>
-                            <td class="text-center refer"> {{ $row['severe'] }} </td>
-                            <td class="text-center refer"> {{ $row['critical'] }} </td>
+                            <td class="text-center clinic_stat"> {{ $row['asymp'] }} </td>
+                            <td class="text-center clinic_stat"> {{ $row['mild'] }} </td>
+                            <td class="text-center clinic_stat"> {{ $row['moderate'] }} </td>
+                            <td class="text-center clinic_stat"> {{ $row['severe'] }} </td>
+                            <td class="text-center clinic_stat"> {{ $row['critical'] }} </td>
                             <td class="text-center refer"> {{ $row['refer_contact'] }}  </td>
                             <td class="text-center discharged"> {{ $row['dis_contact'] }} </td>
                             <td class="text-center refer"> {{ $row['refer_suspect'] }} </td>

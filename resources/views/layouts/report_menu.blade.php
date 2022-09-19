@@ -71,14 +71,15 @@
             <li>
                 <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>
             </li>
-            {{--<li class="dropdown-submenu">--}}
-                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bar-chart"></i> Covid Report </a>--}}
-                {{--<ul class="dropdown-menu">--}}
-                    {{--@foreach(\App\Province::get() as $prov)--}}
-                        {{--<li><a href="{{ asset('admin/report/covid').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>--}}
-                    {{--@endforeach--}}
-                {{--</ul>--}}
-            {{--</li>--}}
         @endif
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bar-chart"></i> Covid Report </a>
+            <ul class="dropdown-menu">
+                @foreach(\App\Province::get() as $prov)
+                    <li><a href="{{ asset('admin/report/covid').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
+                @endforeach
+            </ul>
+        </li>
+
     </ul>
 </li>
