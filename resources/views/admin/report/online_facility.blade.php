@@ -35,24 +35,24 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        label {
-            padding: 0px !important;
-        }
-    </style>
     <div class="row col-md-12">
         <div class="box box-success">
+            <h3 style="margin-left: 10px;">{{ $title }}</h3>
             <div class="box-header with-border">
-                <div class="pull-right">
-                    <form action="{{ asset('online/facility') }}" method="POST" class="form-inline">
-                        {{ csrf_field() }}
-                        <div class="form-group-sm">
-                            <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
-                            <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                        </div>
-                    </form>
-                </div>
-                <h3>{{ $title }}</h3>
+                <form action="{{ asset('online/facility') }}" method="GET" class="form-inline">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <select name="province" class="form-control" onchange="onChangeProvince($(this).val())">
+                            <option value="">Select All Province</option>
+                            @foreach($province as $pro)
+                                <option value="{{ $pro->id }}" <?php if(isset($province_select)){if($pro->id == $province_select) echo 'selected';} ?>>{{ $pro->description }}</option>
+                            @endforeach
+                        </select>
+                        <input type="text" class="form-control" name="day_date" value="{{ date('m/d/Y',strtotime($day_date)) }}" placeholder="Filter your date here..." id="onboard_picker">
+                        <button type="submit" class="btn-sm btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        <button type="button" class="btn-sm btn-warning btn-flat" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                    </div>
+                </form>
             </div>
             <div class="box-body">
                 @if(count($data) > 0)

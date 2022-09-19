@@ -27,7 +27,7 @@ $user = Session::get('auth');
                     <button type="submit" class="btn btn-md btn-success" style="padding: 8px 15px;"><i class="fa fa-search"></i></button>
                 </form>
             </div>
-            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: {{ number_format($data->total()) }}</small> </h3>
+            <h3 class="page-header">{{ $title }} <small class="text-danger">TOTAL: <span class="badge" style="cursor: pointer" onclick="exportArchivedExcel()">{{ number_format($data->total()) }}</span></small> </h3>
             <div class="row">
                 <div class="col-md-12">
                     <!-- The time line -->
@@ -42,10 +42,11 @@ $user = Session::get('auth');
                                 <thead class="bg-gray">
                                 <tr>
                                     <th></th>
-                                    <th width="25%">Referring Facility</th>
-                                    <th width="25%">Patient Name/Code</th>
-                                    <th width="25%">Date Archived</th>
-                                    <th width="25%">Reason</th>
+                                    <th>Referring Facility</th>
+                                    <th>Patient Name/Code</th>
+                                    <th>Date Archived</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +98,9 @@ $user = Session::get('auth');
                                         <td>
                                             {!! nl2br(\App\Http\Controllers\doctor\PatientCtrl::getCancellationReason($current->status,$row->code)) !!}
                                         </td>
+                                        <td>
+                                            {{ $current->status == 'archived' ? "Didn't Arrived" : 'Not Accepted' }}
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -122,7 +126,6 @@ $user = Session::get('auth');
 @endsection
 @include('script.firebase')
 @section('js')
-
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
@@ -154,6 +157,10 @@ $user = Session::get('auth');
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
             console.log("{{ $start }}");
         });
+
+        function exportArchivedExcel() {
+            window.open("<?php echo asset('excel/export/archived'); ?>", '_blank');
+        }
     </script>
 @endsection
 

@@ -1196,7 +1196,8 @@ class PatientCtrl extends Controller
             ->where('referred_to',$user->facility_id)
             ->where(function($q){
                 $q->where('tracking.status','referred')
-                    ->orwhere('tracking.status','seen');
+                    ->orwhere('tracking.status','seen')
+                    ->orWhere('tracking.status','archived');
             })
             ->where(DB::raw("TIMESTAMPDIFF(MINUTE,tracking.date_referred,now())"),">",4320);
 
@@ -1214,6 +1215,8 @@ class PatientCtrl extends Controller
             $end = Carbon::parse($end)->endOfDay();
             $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
         }
+
+        Session::put("export_archived_excel",$data->get());
         $data = $data->orderBy('date_referred','desc')
                      ->paginate(15);
 

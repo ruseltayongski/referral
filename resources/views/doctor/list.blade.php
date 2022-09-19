@@ -21,32 +21,25 @@ $user = Session::get('auth');
                 <table class="table table-striped">
                     <tbody>
                         <tr>
-                            <td class="text-left" width="180px;">TOTAL ONLINE</td>
-                            <td ><span class="badge bg-orange doctor_online">0</span></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left" width="100px;">DOH SERVER</td>
-                            <td ><span class="badge bg-green doh_server">0</span></td>
-                        </tr>
-                        <tr>
-                            <td class="text-left" width="100px;">CLOUD SERVER</td>
-                            <td ><span class="badge bg-blue cloud_server">0</span></td>
+                            <td class="text-left" width="100px;">ONLINE USERS</td>
+                            <td ><span class="badge bg-blue online-user">0</span></td>
                         </tr>
                         <tr>
                             <td class="text-left" width="100px;">OFF DUTY BUT ONLINE</td>
                             <td >
-                                <span class="badge bg-green doh_server_off_duty">0</span>
-                                <span class="badge bg-blue cloud_server_off_duty">0</span>
+                                <span class="badge bg-green online-off-duty">0</span>
                             </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="180px;">TOTAL ONLINE</td>
+                            <td ><span class="badge bg-orange total-online">0</span></td>
                         </tr>
                     </tbody>
                 </table>
                 <?php
-                    $doctor_online_count = 0;
-                    $doh_server = 0;
-                    $cloud_server = 0;
-                    $doh_server_off_duty = 0;
-                    $cloud_server_off_duty = 0;
+                    $online_off_duty = 0;
+                    $online_user = 0;
+                    $total_online = 0;
                 ?>
                 @if(count($data)>0)
                     @foreach($data as $faci)
@@ -56,53 +49,48 @@ $user = Session::get('auth');
                             </div>
                             @for($i = 0; $i < count($faci); $i++)
                                 <?php $row = $faci[$i];
-                                if($row->type == 'cloud') {
                                     if($row->status=='login_off'){
                                         $status = '<em>OFF DUTY</em>';
                                         $color = 'yellow';
-                                        $cloud_server_off_duty++;
+                                        $online_off_duty++;
                                     }
                                     else {
                                         $color = 'blue';
                                         $status = 'ON DUTY';
-                                        $cloud_server++;
+                                        $online_user++;
                                     }
-                                }
-                                else {
-                                    if($row->status=='login_off'){
-                                        $status = '<em>OFF DUTY</em>';
-                                        $color = 'yellow';
-                                        $doh_server_off_duty++;
-                                    }
-                                    else {
-                                        $color = 'green';
-                                        $status = 'ON DUTY';
-                                        $doh_server++;
-                                    }
-                                }
-                                $doctor_online_count++;
+                                    $total_online++;
                                 ?>
-                                <div class="col-md-4">
-                                    <!-- Widget: user widget style 1 -->
-                                    <div class="box box-widget widget-user-2">
-                                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                                        <div class="widget-user-header bg-{{ $color }}-active">
-                                            <small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</small><br>
-                                            &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
-                                        </div>
-                                        <div class="box-footer no-padding">
-                                            <ul class="nav nav-stacked">
-                                                <li><a href="#">{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
-                                                <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
-                                                <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
-                                            </ul>
+                                {{--<div class="col-md-4">--}}
+                                    {{--<!-- Widget: user widget style 1 -->--}}
+                                    {{--<div class="box box-widget widget-user-2">--}}
+                                        {{--<!-- Add the bg color to the header using any of the bg-* classes -->--}}
+                                        {{--<div class="widget-user-header bg-{{ $color }}-active">--}}
+                                            {{--<small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname.". ".$row->lname) !!}</small><br>--}}
+                                            {{--&nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>--}}
+                                        {{--</div>--}}
+                                        {{--@if( ($doctor_online_count % 3) == 0 )--}}
+                                            {{--<div class="clearfix"></div>--}}
+                                        {{--@endif--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                    <div class="col-md-4">
+                                        <!-- Widget: user widget style 1 -->
+                                        <div class="box box-widget widget-user-2">
+                                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                                            <div class="widget-user-header bg-{{ $color }}-active">
+                                                <small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</small><br>
+                                                &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
+                                            </div>
+                                            <div class="box-footer no-padding">
+                                                <ul class="nav nav-stacked">
+                                                    <li><a href="#">{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
+                                                    <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
+                                                    <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                <!-- /.widget-user -->
-                                </div>
-                                @if( ($doctor_online_count % 3) == 0 )
-                                    <div class="clearfix"></div>
-                                @endif
                             @endfor
                             <div class="clearfix"></div>
                             <?php $doctor_online_count = 0;?>
@@ -130,11 +118,9 @@ $user = Session::get('auth');
 @endsection
 @section('js')
     <script>
-        $(".doctor_online").text("<?php echo $doctor_online_count; ?>");
-        $(".doh_server").text("<?php echo $doh_server; ?>");
-        $(".cloud_server").text("<?php echo $cloud_server; ?>");
-        $(".doh_server_off_duty").text("<?php echo $doh_server_off_duty; ?>");
-        $(".cloud_server_off_duty").text("<?php echo $cloud_server_off_duty; ?>");
+        $(".online-user").text("<?php echo $online_user; ?>");
+        $(".online-off-duty").text("<?php echo $online_off_duty; ?>");
+        $(".total-online").text("<?php echo $total_online; ?>");
 
         $(".hospital_online").text("<?php echo Session::get('hospital_online_count'); ?>");
     </script>

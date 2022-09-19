@@ -92,7 +92,7 @@ Route::post('admin/login','admin\UserCtrl@assignLogin');
 Route::get('admin/account/return','ParamCtrl@returnToAdmin');
 
 Route::get('admin/report/online','admin\ReportCtrl@online1');
-Route::post('admin/report/online','admin\ReportCtrl@filterOnline1');
+//Route::post('admin/report/online','admin\ReportCtrl@filterOnline1');
 
 Route::get('admin/report/referral','admin\ReportCtrl@referral');
 Route::post('admin/report/referral','admin\ReportCtrl@filterReferral');
@@ -109,9 +109,9 @@ Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonFor
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
 Route::match(['GET','POST'],'admin/report/consolidated/incomingv2','admin\PatientCtrl@consolidatedIncomingv2');
 Route::get('admin/no_action/{facility_id}/{date_start}/{date_end}/{type}','admin\PatientCtrl@NoAction');
-Route::get('admin/report/tat/incoming','admin\ReportCtrl@turnAroundTimeIncoming'); //tat
-Route::get('admin/report/tat/outgoing','admin\ReportCtrl@turnAroundTimeOutgoing'); //tat
-
+/*Route::get('admin/report/tat/incoming','admin\ReportCtrl@turnAroundTimeIncoming');
+Route::get('admin/report/tat/outgoing','admin\ReportCtrl@turnAroundTimeOutgoing');*/
+Route::get('admin/report/tat','admin\ReportCtrl@turnAroundTimeIncoming');
 
 Route::get('admin/daily/users','admin\DailyCtrl@users');
 Route::post('admin/daily/users','admin\DailyCtrl@usersFilter');
@@ -349,6 +349,7 @@ Route::get('excel/incoming','ExcelCtrl@ExportExcelIncoming');
 Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
+Route::get('excel/export/archived','doctor\ReferralCtrl@exportArchivedExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
 //GRAPH
@@ -404,7 +405,7 @@ Route::post('api/refer/patient','ApiController@apiReferPatient');
 //
 
 //online facility
-Route::match(['GET','POST'],"online/facility","admin\ReportCtrl@onlineFacility");
+Route::get("online/facility","admin\ReportCtrl@onlineFacility");
 
 //offline facility
 Route::match(['GET','POST'],"offline/facility/{province_id}","admin\ReportCtrl@offlineFacility");
