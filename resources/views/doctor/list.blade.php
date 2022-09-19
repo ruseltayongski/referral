@@ -40,6 +40,7 @@ $user = Session::get('auth');
                     $online_off_duty = 0;
                     $online_user = 0;
                     $total_online = 0;
+                    $doctor_online_count = 0;
                 ?>
                 @if(count($data)>0)
                     @foreach($data as $faci)
@@ -84,11 +85,15 @@ $user = Session::get('auth');
                                             </div>
                                             <div class="box-footer no-padding">
                                                 <ul class="nav nav-stacked">
-                                                    <li><a href="#">{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
+                                                    <li><a href="#" style="word-wrap: break-word">{{ $row->contact }}, {{ $row->contact }}, {{ $row->contact }}{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
                                                     <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
                                                     <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
                                                 </ul>
                                             </div>
+                                            <?php $doctor_online_count++?>
+                                            @if( ($doctor_online_count % 3) == 0 )
+                                            <div class="clearfix"></div>
+                                            @endif
                                         </div>
                                     </div>
                             @endfor

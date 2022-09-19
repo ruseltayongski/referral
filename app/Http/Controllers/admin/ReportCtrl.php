@@ -1084,7 +1084,7 @@ class ReportCtrl extends Controller
         return self::deactivated();
     }
 
-    private function getTotalCases($province) {
+    private function getTotalCases($province, $start, $end) {
         $normal = PatientForm::select(
             'faci.id as facility_id',
             'faci.name as facility_name',
@@ -1100,6 +1100,7 @@ class ReportCtrl extends Controller
                     ->orWhereNotNull('patient_form.refer_sur_category')
                     ->orWhereNotNull('patient_form.dis_sur_category');
             })
+            ->whereBetween('patient_form.time_referred',[$start,$end])
             ->orderBy('facility_name','asc')
             ->get();
         $pregnant = PregnantForm::select(
@@ -1117,6 +1118,7 @@ class ReportCtrl extends Controller
                     ->orWhereNotNull('pregnant_form.refer_sur_category')
                     ->orWhereNotNull('pregnant_form.dis_sur_category');
             })
+            ->whereBetween('pregnant_form.referred_date',[$start,$end])
             ->orderBy('facility_name','asc')
             ->get();
 
@@ -1150,10 +1152,10 @@ class ReportCtrl extends Controller
         Session::put('startDateCovidReport',$date_start);
         Session::put('endDateCovidReport',$date_end);
 
-        $bohol_cases = self::getTotalCases(1);
-        $cebu_cases = self::getTotalCases(2);
-        $negros_cases = self::getTotalCases(3);
-        $siquijor_cases = self::getTotalCases(4);
+        $bohol_cases = self::getTotalCases(1, $date_start, $date_end);
+        $cebu_cases = self::getTotalCases(2, $date_start, $date_end);
+        $negros_cases = self::getTotalCases(3, $date_start, $date_end);
+        $siquijor_cases = self::getTotalCases(4, $date_start, $date_end);
 
 
         if($province == 1) {
