@@ -75,27 +75,34 @@ $user = Session::get('auth');
                                         {{--@endif--}}
                                     {{--</div>--}}
                                 {{--</div>--}}
-                                    <div class="col-md-4">
-                                        <!-- Widget: user widget style 1 -->
-                                        <div class="box box-widget widget-user-2">
-                                            <!-- Add the bg color to the header using any of the bg-* classes -->
-                                            <div class="widget-user-header bg-{{ $color }}-active">
-                                                <small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</small><br>
-                                                &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
-                                            </div>
-                                            <div class="box-footer no-padding">
-                                                <ul class="nav nav-stacked">
-                                                    <li><a href="#" style="word-wrap: break-word">{{ $row->contact }}, {{ $row->contact }}, {{ $row->contact }}{{ $row->contact }} <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
-                                                    <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
-                                                    <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
-                                                </ul>
-                                            </div>
-                                            <?php $doctor_online_count++?>
-                                            @if( ($doctor_online_count % 3) == 0 )
-                                            <div class="clearfix"></div>
-                                            @endif
+                                <div class="col-md-4">
+                                    <!-- Widget: user widget style 1 -->
+                                    <div class="box box-widget widget-user-2">
+                                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                                        <div class="widget-user-header bg-{{ $color }}-active">
+                                            <small>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</small><br>
+                                            &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
                                         </div>
+                                        <div class="box-footer no-padding">
+                                            <ul class="nav nav-stacked">
+                                                <?php
+                                                    $contact = $explode = explode(",",$row->contact);
+                                                ?>
+                                                <li><a href="#" style="word-wrap: break-word">
+                                                        @foreach($contact as $con)
+                                                            {{ $con }}
+                                                        @endforeach
+                                                    <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
+                                                <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
+                                                <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <?php $doctor_online_count++;?>
+                                        @if( ($doctor_online_count % 3) == 0 )
+                                            <div class="clearfix"></div><br><br>
+                                        @endif
                                     </div>
+                                </div>
                             @endfor
                             <div class="clearfix"></div>
                             <?php $doctor_online_count = 0;?>
