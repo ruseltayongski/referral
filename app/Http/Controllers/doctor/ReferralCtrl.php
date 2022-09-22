@@ -2231,6 +2231,7 @@ class ReferralCtrl extends Controller
             $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->referring_md)->first();
         }
         $redirect_track = asset("doctor/referred?referredCode=").$track->code;
+        $track = Tracking::find($id);
 
         $undo = [
             "patient_code" => $track->code,
@@ -2247,7 +2248,7 @@ class ReferralCtrl extends Controller
             "tracking_id" => $track->id,
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
-            "status" => $latest_activity->status,
+            "status" => $track->status,
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
