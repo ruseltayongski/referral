@@ -379,7 +379,7 @@
                     or to address any <b><u>system issues and concerns</u></b> you may have.
                 </p>
             </div>
-            <form method="post" action="{{ asset('appointment/create') }}" class="appt_form">
+            <form method="post" action="" class="appt_form">
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -1302,7 +1302,7 @@
                 </div>
 
                 <div class="col-lg-8 mt-5 mt-lg-0">
-                    <form action="{{ asset('user_feedback/create') }}" method="post" class="feedback_form">
+                    <form action="" method="post" class="feedback_form">
                         {{ csrf_field() }}
                         <div class="row">
                             <div class="col-md-6 form-group">
