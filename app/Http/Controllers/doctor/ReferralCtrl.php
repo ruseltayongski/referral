@@ -2201,7 +2201,11 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($id);
-        $activity = Activity::where("code",$track->code)->orderBy("id","desc")->skip(1)->first();
+        $activity = Activity::where("code",$track->code)
+            ->where("status",'!=','cancelled')
+            ->where("status",'!=','form_updated')
+            ->orderBy("id","desc")
+            ->first();
 
         Tracking::where('id',$id)
             ->update([
