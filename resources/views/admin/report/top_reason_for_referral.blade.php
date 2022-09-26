@@ -45,11 +45,42 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                             ?>
                             <tr>
                                 <td>{{ $top->reason }}</td>
-                                <td>{{ $top->count }}</td>
+                                <td>
+                                    <label for="" onclick="topReasonData($(this),'{{ $date_start }}','{{ $date_end }}','{{ $top->id }}')">{{ $top->count }}</label>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="top-reason-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <h3 class="modal-title top-reason-title"></h3>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="close" style="float: right" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body top-reason-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ asset('excel/export/top_reason_referral') }}" class="btn btn-danger" target="_blank">
+                        <i class="fa fa-file-excel-o"></i> Export Excel
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -79,6 +110,42 @@ $error = \Illuminate\Support\Facades\Input::get('error');
             };
             $("#top_reason_for_referral").CanvasJSChart(options);
 
+        }
+
+        function topReasonData(data, date_start, date_end, reason_referral_id) {
+            $(".top-reason-title").html('');
+            $("#top-reason-modal").modal('show');
+            $(".top-reason-body").html(loading);
+            $("label").css("background-color","");
+            data.css("background-color","yellow");
+            var url = "<?php echo asset('admin/report/top/filter_top_reason_referral'); ?>"+"?date_start="+date_start+"&date_end="+date_end+"&reason_referral_id="+reason_referral_id;
+            var title_flag = true;
+            $.get(url,function(result) {
+                setTimeout(function() {
+                    $(".top-reason-body").html(
+                        "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Reason for Referral</th></tr>\n" +
+                        "</table>"
+                    );
+                    jQuery.each(result, function(index, value) {
+                        if(title_flag) {
+                            $(".top-reason-title").html(value["reason"]+' <span class="badge bg-yellow data_count">'+result.length+'</span>');
+                            title_flag = false;
+                        }
+                        var track_url = "<?php echo asset('doctor/referred?referredCode='); ?>"+value["code"];
+                        var tr = $('<tr />');
+                        tr.append("<a href='"+track_url+"' class=\"btn btn-xs btn-success\" target=\"_blank\">\n" +
+                            "<i class=\"fa fa-stethoscope\"></i> Track\n" +
+                            "</a>");
+                        tr.append( $('<td />', { text : value["code"] } ));
+                        tr.append( $('<td />', { text : value["patient_name"] } ));
+                        tr.append( $('<td />', { text : value["province"]+", "+value["muncity"]+", "+value["barangay"] } ));
+                        tr.append( $('<td />', { text : value["age"] } ));
+                        tr.append( $('<td />', { text : value["reason"] } ));
+                        $("#table").append(tr);
+                    });
+                },500);
+            });
         }
     </script>
 @endsection

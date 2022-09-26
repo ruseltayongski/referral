@@ -1106,6 +1106,69 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function filterTopReasonReferral(Request $request) {
+        $pregnant_form = PregnantForm::
+        select("reason_referral","code","patient_woman_id as patient_id")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->where("reason_referral",$request->reason_referral_id);
+
+        if($request->province_id) {
+            $pregnant_form = $pregnant_form->leftJoin("facility","facility.id","=","pregnant_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+        $pregnant_form = $pregnant_form->whereBetween("pregnant_form.created_at",[$request->date_start,$request->date_end]);
+
+        $union = PatientForm::
+        select("reason_referral","code","patient_id")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->where("reason_referral",$request->reason_referral_id);
+
+        if($request->province_id) {
+            $union = $union->leftJoin("facility","facility.id","=","patient_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+
+        $union = $union->whereBetween("patient_form.created_at",[$request->date_start,$request->date_end])
+            ->unionAll($pregnant_form);
+
+        $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
+            ->mergeBindings($union->getQuery())
+            ->leftJoin("reason_referral","reason_referral.id","=","sub.reason_referral")
+            ->leftJoin("patients as pat","pat.id","=","patient_id")
+            ->leftJoin("province as pro","pro.id","=","pat.province")
+            ->leftJoin("muncity as mun","mun.id","=","pat.muncity")
+            ->leftJoin("barangay as bar","bar.id","=","pat.brgy")
+            ->select(
+                "reason_referral.id",
+                        "reason_referral.reason",
+                        "code",
+                        DB::raw('CONCAT(pat.fname," ",pat.mname,". ",pat.lname) as patient_name'),
+                        DB::raw(ParamCtrl::getAge("pat.dob")." as age"),
+                        "pro.description as province",
+                        "mun.description as muncity",
+                        "bar.description as barangay"
+            )
+            ->get();
+
+        Session::put("export_reason_referral_excel",$reason_for_referral);
+        return $reason_for_referral;
+    }
+
+    public function exportReasonForReferralExcel() {
+        $export_top_icd_excel = Session::get("export_reason_referral_excel");
+        $file_name = "export_reason_referral_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_reason_referral',[
+            "data" => $export_top_icd_excel
+        ]);
+    }
+
     public function deactivated() {
         $date = Session::get('dateReportDeact');
 
