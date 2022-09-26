@@ -3,6 +3,44 @@
     span{
         cursor: pointer;
     }
+
+    .tooltip1 {
+        position: relative;
+        display: inline-block;
+        /*border-bottom: 1px dotted black;*/
+        cursor: help;
+    }
+
+    .tooltip1 .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #00a65a;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        margin-left: -60px;
+        font-weight: normal;
+    }
+
+    .tooltip1 .tooltiptext::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -40px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #00a65a transparent;
+    }
+
+    .tooltip1:hover .tooltiptext {
+        visibility: visible;
+    }
 </style>
 @section('content')
     <div class="row col-md-12">
@@ -83,13 +121,41 @@
                             <tr>
                                 <th></th>
                                 <th>Facility Name</th>
-                                <th>Referred</th>
-                                <th>Redirected</th>
-                                <th>Transferred</th>
-                                <th>Accepted</th>
-                                <th>Recommend to Redirect</th>
-                                <th>Seen Only</th>
-                                <th>Not Seen</th>
+                                <th>
+                                    <div class="tooltip1">Referred
+                                        <span class="tooltiptext">referral submitted</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Redirected
+                                        <span class="tooltiptext">Declined and Redirected by Referring</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Transferred
+                                        <span class="tooltiptext">referral inititally accepted by the first receiving facility; receiving facility transferred care to another institution</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Accepted
+                                        <span class="tooltiptext">receiving facility accepts the referral</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Recommend to Redirect
+                                        <span class="tooltiptext">referral declined by the first receiving facility, no further action done by referring facility</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Seen Only
+                                        <span class="tooltiptext">referral seen but no further action done by receiving facility</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="tooltip1">Not Seen
+                                        <span class="tooltiptext">referral submitted but receiving facility did not touch the referral</span>
+                                    </div>
+                                </th>
                                 <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
@@ -191,6 +257,7 @@
                                     </td>
                                     -->
                                 </tr>
+                                <!--
                                 <tr>
                                     <td colspan="2">
 
@@ -202,6 +269,7 @@
                                         <center style="font-size: 20pt;">{{ $right_sum }}</center>
                                     </td>
                                 </tr>
+                                -->
                             @endforeach
                         </table>
                     </div>
@@ -264,7 +332,16 @@
         function statisticsData(data,request_type,facility_id,status,date_range){
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
-            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics ");
+            if(status === 'denied') {
+                status = 'Recommend to Redirect';
+            }
+            else if(status === 'not_seen') {
+                status = 'Not Seen';
+            }
+            else if(status === 'seen_only') {
+                status = 'Seen Only';
+            }
+            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+status+" ");
             $("#statistics-modal").modal('show');
             $(".statistics-body").html(loading);
             $("span").css("background-color","");
@@ -276,7 +353,7 @@
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');
                     $(".statistics-body").html(
                         "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
-                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th><th class='text-green'>Status</th></tr>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th></tr>\n" +
                         "</table>"
                     );
                     jQuery.each(result, function(index, value) {
@@ -291,7 +368,6 @@
                         tr.append( $('<td />', { text : value["age"] } ));
                         tr.append( $('<td />', { text : value["referring_facility"] } ));
                         tr.append( $('<td />', { text : value["referred_facility"] } ));
-                        tr.append( $('<td />', { text : status } ));
                         $("#table").append(tr);
                     });
 
