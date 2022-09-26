@@ -6,6 +6,7 @@ use App\Activity;
 use App\Department;
 use App\Facility;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ParamCtrl;
 use App\Icd;
 use App\Icd10;
 use App\Login;
@@ -1011,7 +1012,48 @@ class ReportCtrl extends Controller
             "icd" => $icd,
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_id" => $request->province_id
+            "province_id" => $request->province_id,
+        ]);
+    }
+
+    public function icdFilter(Request $request) {
+        $icd = Icd::
+                select(
+                    "icd.code",
+                    "icd.id as icd_id",
+                    DB::raw('CONCAT(pat.fname," ",pat.mname,". ",pat.lname) as patient_name'),
+                    DB::raw(ParamCtrl::getAge("pat.dob")." as age"),
+                    "pro.description as province",
+                    "mun.description as muncity",
+                    "bar.description as barangay",
+                    "icd10.code as icd_code",
+                    "icd10.description as icd_description"
+                )
+                ->leftJoin("tracking as track","track.code","=","icd.code")
+                ->leftJoin("patients as pat","pat.id","=","track.patient_id")
+                ->leftJoin("province as pro","pro.id","=","pat.province")
+                ->leftJoin("muncity as mun","mun.id","=","pat.muncity")
+                ->leftJoin("barangay as bar","bar.id","=","pat.brgy")
+                ->leftJoin("icd10","icd10.id","=","icd.icd_id")
+                ->where("icd.icd_id",$request->icd_id)
+                ->whereBetween("icd.created_at",[$request->date_start,$request->date_end])
+                ->get();
+
+        Session::put("export_top_icd_excel",$icd);
+
+        return $icd;
+    }
+
+    public function exportTopIcdExcel() {
+        $export_top_icd_excel = Session::get("export_top_icd_excel");
+        $file_name = "export_top_icd_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_top_icd',[
+            "data" => $export_top_icd_excel
         ]);
     }
 

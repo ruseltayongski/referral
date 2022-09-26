@@ -119,6 +119,11 @@
                         <table class="table table-hover table-bordered table-fixed-header">
                             <thead class='header'>
                             <tr>
+                                <td colspan="2"></td>
+                                <th colspan="4" class="bg-info" style="text-align: center;border-right: 3px solid darkgray;">Referral Breakdown</th>
+                                <th colspan="5" class="bg-success" style="text-align: center;">Status Breakdown</th>
+                            </tr>
+                            <tr>
                                 <th></th>
                                 <th>Facility Name</th>
                                 <th>
@@ -136,7 +141,7 @@
                                         <span class="tooltiptext">referral inititally accepted by the first receiving facility; receiving facility transferred care to another institution</span>
                                     </div>
                                 </th>
-                                <th class="text-orange" style="border-right: 3px solid darkgray">Total Number of Patients</th>
+                                <th style="border-right: 3px solid darkgray;text-align: center;font-size: 20pt;">Total</th>
                                 <th>
                                     <div class="tooltip1">Accepted
                                         <span class="tooltiptext">receiving facility accepts the referral</span>
@@ -157,7 +162,7 @@
                                         <span class="tooltiptext">referral submitted but receiving facility did not touch the referral</span>
                                     </div>
                                 </th>
-                                <th class="text-orange">Total Number of Patients</th>
+                                <th style="text-align: center;font-size: 20pt;">Total</th>
                                 <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
@@ -224,7 +229,7 @@
                                         </span><br><br>
                                     </td>
                                     <td style="border-right: 3px solid darkgray">
-                                        <label class="text-orange" style="font-size: 15pt;">
+                                        <label style="font-size: 20pt;">
                                             {{ $right_sum }}
                                         </label>
                                     </td>
@@ -250,7 +255,7 @@
                                         <br><br>
                                     </td>
                                     <td>
-                                        <label class="text-orange" style="font-size: 15pt;">
+                                        <label style="font-size: 20pt;">
                                             {{ $left_sum }}
                                         </label>
                                     </td>

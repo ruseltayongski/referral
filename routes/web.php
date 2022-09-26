@@ -102,6 +102,7 @@ Route::post('admin/report/patient/incoming','admin\PatientCtrl@incomingDateRange
 Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
 Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
+Route::get('admin/report/top/icd_filter','admin\ReportCtrl@icdFilter');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
 
@@ -350,6 +351,7 @@ Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
 Route::get('excel/export/archived','doctor\ReferralCtrl@exportArchivedExcel');
+Route::get('excel/export/top_icd','admin\ReportCtrl@exportTopIcdExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
 //GRAPH

@@ -91,6 +91,11 @@
             font-size: 12pt;
             color: #e08e0b;;
         }
+        @media screen and (min-width: 1920px) {
+            #container-nav {
+                width: 1500px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,7 +161,7 @@
                 @endif
             </div>
         </div>
-        <div class="container">
+        <div class="container" id="container-nav">
             @include('layouts.navbar')
         </div>
     </nav>
