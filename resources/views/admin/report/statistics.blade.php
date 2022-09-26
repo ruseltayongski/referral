@@ -136,6 +136,7 @@
                                         <span class="tooltiptext">referral inititally accepted by the first receiving facility; receiving facility transferred care to another institution</span>
                                     </div>
                                 </th>
+                                <th class="text-orange" style="border-right: 3px solid darkgray">Total Number of Patients</th>
                                 <th>
                                     <div class="tooltip1">Accepted
                                         <span class="tooltiptext">receiving facility accepts the referral</span>
@@ -156,6 +157,7 @@
                                         <span class="tooltiptext">referral submitted but receiving facility did not touch the referral</span>
                                     </div>
                                 </th>
+                                <th class="text-orange">Total Number of Patients</th>
                                 <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
@@ -166,7 +168,7 @@
                             @if($province)
                             <tr>
                                 <td></td>
-                                <td colspan="5">
+                                <td colspan="5" style="border-right: 3px solid darkgray">
                                     <strong class="text-green">{{ $data[0]['province'] }} Province</strong>
                                 </td>
                             </tr>
@@ -221,6 +223,11 @@
                                             {{ $row['data']['transferred'] }}
                                         </span><br><br>
                                     </td>
+                                    <td style="border-right: 3px solid darkgray">
+                                        <label class="text-orange" style="font-size: 15pt;">
+                                            {{ $right_sum }}
+                                        </label>
+                                    </td>
                                     <td width="10%">
                                         <?php
                                             $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
@@ -241,6 +248,11 @@
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','not_seen','{{ $date_range }}')">{{ $row['data']['not_seen'] }}</span>
                                         <br><br>
+                                    </td>
+                                    <td>
+                                        <label class="text-orange" style="font-size: 15pt;">
+                                            {{ $left_sum }}
+                                        </label>
                                     </td>
                                     <!--
                                     <td width="10%">

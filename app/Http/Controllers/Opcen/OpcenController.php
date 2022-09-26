@@ -103,8 +103,11 @@ class OpcenController extends Controller
         $client = OpcenClient::where(function($q) use ($search){
                 $q->where('reference_number','like',"%$search%")
                     ->orWhere('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
+            });
+        if($request->call_reason) {
+            $client = $client->where("reason_calling",$request->call_reason);
+        }
+        $client = $client->whereBetween("time_started",[$date_start,$date_end])
             ->orderBy("time_started","desc");
         $client_call = $client->get();
         Session::put("client_call",$client_call);
@@ -113,31 +116,42 @@ class OpcenController extends Controller
         $call_total = OpcenClient::where(function($q) use ($search){
             $q->where('reference_number','like',"%$search%")
                 ->orWhere('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
+            });
+        if($request->call_reason) {
+            $call_total = $call_total->where("reason_calling",$request->call_reason);
+        }
+        $call_total = $call_total->whereBetween("time_started",[$date_start,$date_end])
             ->count();
 
         $call_new = OpcenClient::where("call_classification","new_call")->where(function($q) use ($search){
             $q->where('reference_number','like',"%$search%")
                 ->orWhere('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
-            ->count();
+            });
+        if($request->call_reason) {
+            $call_new = $call_new->where("reason_calling",$request->call_reason);
+        }
+        $call_new = $call_new->whereBetween("time_started",[$date_start,$date_end])
+        ->count();
 
         $call_repeat = OpcenClient::where("call_classification","repeat_call")->where(function($q) use ($search){
             $q->where('reference_number','like',"%$search%")
                 ->orWhere('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
+            });
+        if($request->call_reason) {
+            $call_repeat = $call_repeat->where("reason_calling",$request->call_reason);
+        }
+        $call_repeat = $call_repeat->whereBetween("time_started",[$date_start,$date_end])
             ->count();
 
         $no_classification = OpcenClient::whereNull("call_classification")->where(function($q) use ($search){
             $q->where('reference_number','like',"%$search%")
                 ->orWhere('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
+            });
+        if($request->call_reason) {
+            $no_classification = $no_classification->where("reason_calling",$request->call_reason);
+        }
+        $no_classification = $no_classification->whereBetween("time_started",[$date_start,$date_end])
             ->count();
-
 
         $call_inquiry = OpcenClient::where("reason_calling","inquiry")
             ->where(function($q) use ($search){
@@ -212,7 +226,8 @@ class OpcenController extends Controller
             "no_reason_for_calling" => $no_reason_for_calling,
             "call_complete" => $call_complete,
             "call_incomplete" => $call_incomplete,
-            "no_transaction" => $no_transaction
+            "no_transaction" => $no_transaction,
+            "call_reason" => $request->call_reason
         ]);
     }
 
@@ -407,8 +422,11 @@ class OpcenController extends Controller
         $search = $request->search;
         $client = ItCall::where(function($q) use ($search){
                 $q->where('name','like',"%$search%");
-            })
-            ->whereBetween("time_started",[$date_start,$date_end])
+            });
+        if($request->call_reason) {
+            $client = $client->where("reason_calling",$request->call_reason);
+        }
+        $client = $client->whereBetween("time_started",[$date_start,$date_end])
             ->orderBy("time_started","desc");
 
         $client_call = $client->get();
@@ -426,7 +444,8 @@ class OpcenController extends Controller
             "search" =>$search,
             'date_range_start' => $date_start,
             'date_range_end' => $date_end,
-            "call_total" => $call_total
+            "call_total" => $call_total,
+            "call_reason" => $request->call_reason
         ]);
     }
 
