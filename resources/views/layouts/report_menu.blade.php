@@ -26,6 +26,7 @@
         <li class="dropdown-submenu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-calendar-check-o"></i>Onboard Facility</a>
             <ul class="dropdown-menu">
+                <li><a href="{{ asset('onboard/facility/0') }}">All Province</a></li>
                 @foreach(\App\Province::get() as $prov)
                     <li><a href="{{ asset('onboard/facility').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
                 @endforeach

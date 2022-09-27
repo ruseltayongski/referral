@@ -10,12 +10,12 @@
 <input type="hidden" id="reco_count_val" value="{{ $reco_count }}">
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
     <ul class="nav navbar-nav">
-        @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor')
+        @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo')
             <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    @if($user->level != 'mayor')
+                    @if($user->level != 'mayor' && $user->level != 'dmo')
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     @endif
                     <li class="divider"></li>

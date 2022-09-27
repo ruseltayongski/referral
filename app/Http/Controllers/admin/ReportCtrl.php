@@ -899,7 +899,7 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onboardFacility(Request $request,$province_id){
+    public function onboardFacility(Request $request,$province_id) {
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -910,6 +910,7 @@ class ReportCtrl extends Controller
 
         $data = \DB::connection('mysql')->select("call onboard_facility('$province_id','$date_start','$date_end')");
 
+        //return view($province_id ? 'admin.report.onboard_facility' : 'admin.report.onboard_facility_all',[
         return view('admin.report.onboard_facility',[
             'title' => 'ONBOARD FACILITY',
             'data' => $data,
