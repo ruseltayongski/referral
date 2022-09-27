@@ -174,7 +174,7 @@
                                 'onboard/facility/0','onboard/facility/1','onboard/facility/2','onboard/facility/3','onboard/facility/4',
                                 'offline/facility/1','offline/facility/2','offline/facility/3','offline/facility/4',
                                 'vaccine/facility/cebu','vaccine/facility/mandaue','vaccine/facility/lapu','weekly/report/1','weekly/report/2','weekly/report/3','weekly/report/4',
-                                'admin/statistics/incoming1','admin/statistics/incoming','admin/statistics/1','admin/statistics/2','admin/statistics/3','admin/statistics/4','admin/statistics/0',
+                                'admin/statistics',
 
                                 'vaccine','bed_admin','reports','monitoring', 'admin/report/tat' ,'admin/report/tat/incoming', 'admin/report/tat/outgoing','admin/report/top/icd',
                                 'admin/report/top/reason_for_referral','bed/'.$user->facility_id,

@@ -113,7 +113,7 @@
 
             </section>
             <div class="box-header with-border" style="margin-top: -200px;">
-                <form action="{{ asset('admin/statistics').'/'.$province }}" method="GET" class="form-inline">
+                <form action="{{ asset('admin/statistics') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group-lg">
                         <select name="request_type" class="form-control" id="" required>
@@ -121,10 +121,16 @@
                             <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
                             <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
+                        <select name="province_id" class="form-control">
+                            <option value="">Please select province</option>
+                            @foreach($province_list as $row)
+                                <option value="{{ $row->id }}" <?php if($row->id == $province_id) echo 'selected'; ?>>{{ $row->description }}</option>
+                            @endforeach
+                        </select>
                         <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
                         <select name="hospital_type" class="form-control">
-                            <option value="">Select hospital type</option>
+                            <option value="{{ $row->hospital_type }}">Select hospital type</option>
                             @foreach($hospital_type_list as $row)
                                 <option value="{{ $row->hospital_type }}" <?php if($row->hospital_type == $hospital_type) echo 'selected'; ?>>
                                     @if($row->hospital_type == 'doh_hospital')
@@ -144,6 +150,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn-lg btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        <button type="button" class="btn-lg btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics').'/'.$province }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
                 </form>
             </div>
