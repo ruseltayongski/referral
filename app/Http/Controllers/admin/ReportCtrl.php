@@ -927,7 +927,7 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function statisticsReport(Request $request,$province){
+    public function statisticsReport(Request $request,$province) {
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -939,13 +939,17 @@ class ReportCtrl extends Controller
         $apiCtrl = new ApiController();
         $request->province = $province;
         $data = $apiCtrl->api($request);
+
+        $hospital_type_list = Facility::select("hospital_type")->whereNotNull("hospital_type")->groupBy("hospital_type")->get();
+
         return view('admin.report.statistics',[
-            'title' => 'STATISTICS REPORT INCOMING',
-            "data" => $data,
+            'data' => $data,
             'date_range_start' => $date_start,
             'date_range_end' => $date_end,
             'request_type' => $request->request_type,
-            'province' => $province
+            'hospital_type' => $request->hospital_type,
+            'province' => $province,
+            'hospital_type_list' => $hospital_type_list
         ]);
     }
 
