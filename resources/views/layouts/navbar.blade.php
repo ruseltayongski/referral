@@ -34,6 +34,7 @@
             <!--
                 <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
              -->
+            @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -47,6 +48,7 @@
                     -->
                 </ul>
             </li>
+            @endif
             @include('layouts.report_menu')
         @elseif($user->level=='support')
             <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
