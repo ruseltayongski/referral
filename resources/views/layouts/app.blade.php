@@ -91,11 +91,13 @@
             font-size: 12pt;
             color: #e08e0b;;
         }
+        @if($user->level == 'admin')
         @media screen and (min-width: 1920px) {
             #container-nav {
                 width: 1500px !important;
             }
         }
+        @endif
     </style>
 </head>
 <body>
