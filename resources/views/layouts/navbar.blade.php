@@ -12,12 +12,11 @@
     <ul class="nav navbar-nav">
         @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo')
             <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    @if($user->level != 'mayor' && $user->level != 'dmo')
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
-                    @endif
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
                     <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-users"></i> Discharged Patients</a></li>
@@ -31,6 +30,7 @@
                     <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
                 </ul>
             </li>
+            @endif
             <!--
                 <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
              -->

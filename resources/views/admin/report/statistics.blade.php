@@ -1,3 +1,4 @@
+<?php $user = Session::get('auth'); ?>
 @extends('layouts.app')
 <style>
     span{
@@ -390,7 +391,10 @@
             $('.table-fixed-header').fixedHeader();
         });
 
-        function statisticsData(data,request_type,facility_id,status,date_range){
+        var user_level = "<?php echo $user->level; ?>";
+        function statisticsData(data,request_type,facility_id,status,date_range) {
+            if(user_level === "mayor" || user_level === "dmo") return;
+
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
             if(status === 'denied') {
