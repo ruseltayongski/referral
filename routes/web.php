@@ -102,8 +102,9 @@ Route::post('admin/report/patient/incoming','admin\PatientCtrl@incomingDateRange
 Route::get('admin/report/patient/outgoing','admin\PatientCtrl@outgoing');
 Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getAddress');
 Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
+Route::get('admin/report/top/icd_filter','admin\ReportCtrl@icdFilter');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
-Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
+Route::get('admin/report/top/filter_top_reason_referral','admin\ReportCtrl@filterTopReasonReferral');
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
@@ -122,7 +123,7 @@ Route::get('admin/daily/referral/incoming/','admin\DailyCtrl@incoming');
 Route::get('admin/daily/referral/outgoing','admin\DailyCtrl@outgoing');
 Route::post('admin/daily/referral','admin\DailyCtrl@referralFilter');
 Route::get('admin/daily/referral/export','admin\ExportCtrl@dailyReferral');
-Route::match(['GET','POST'],'admin/statistics/{province_id}','admin\ReportCtrl@statisticsReport');
+Route::get('admin/statistics','admin\ReportCtrl@statisticsReport');
 Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
@@ -350,6 +351,8 @@ Route::get('excel/outgoing','ExcelCtrl@ExportExcelOutgoing');
 Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
 Route::get('excel/export/archived','doctor\ReferralCtrl@exportArchivedExcel');
+Route::get('excel/export/top_icd','admin\ReportCtrl@exportTopIcdExcel');
+Route::get('excel/export/top_reason_referral','admin\ReportCtrl@exportReasonForReferralExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
 //GRAPH

@@ -46,6 +46,7 @@
             <option value="opcen" <?php if($user->level == "opcen") echo 'selected'; ?>>OPCEN</option>
             <option value="bed_tracker" <?php if($user->level == "bed_tracker") echo 'selected'; ?>>BED TRACKER</option>
             <option value="mayor" <?php if($user->level == "mayor") echo 'selected'; ?>>Mayor</option>
+            <option value="dmo" <?php if($user->level == "dmo") echo 'selected'; ?>>DMO</option>
         </select>
     </div>
     <hr />

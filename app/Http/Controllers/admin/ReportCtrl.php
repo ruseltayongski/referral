@@ -901,7 +901,7 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function onboardFacility(Request $request,$province_id){
+    public function onboardFacility(Request $request,$province_id) {
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -912,6 +912,7 @@ class ReportCtrl extends Controller
 
         $data = \DB::connection('mysql')->select("call onboard_facility('$province_id','$date_start','$date_end')");
 
+        //return view($province_id ? 'admin.report.onboard_facility' : 'admin.report.onboard_facility_all',[
         return view('admin.report.onboard_facility',[
             'title' => 'ONBOARD FACILITY',
             'data' => $data,
@@ -928,7 +929,7 @@ class ReportCtrl extends Controller
         ]);
     }
 
-    public function statisticsReport(Request $request,$province){
+    public function statisticsReport(Request $request) {
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -938,15 +939,20 @@ class ReportCtrl extends Controller
             $request->date_range = $date_start." - ".$date_end;
         }
         $apiCtrl = new ApiController();
-        $request->province = $province;
         $data = $apiCtrl->api($request);
+
+        $hospital_type_list = Facility::select("hospital_type")->whereNotNull("hospital_type")->groupBy("hospital_type")->get();
+        $province_list = Province::get();
+
         return view('admin.report.statistics',[
-            'title' => 'STATISTICS REPORT INCOMING',
-            "data" => $data,
+            'data' => $data,
             'date_range_start' => $date_start,
             'date_range_end' => $date_end,
             'request_type' => $request->request_type,
-            'province' => $province
+            'hospital_type' => $request->hospital_type,
+            'province_id' => $request->province_id,
+            'hospital_type_list' => $hospital_type_list,
+            'province_list' => $province_list
         ]);
     }
 
@@ -1014,7 +1020,48 @@ class ReportCtrl extends Controller
             "icd" => $icd,
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_id" => $request->province_id
+            "province_id" => $request->province_id,
+        ]);
+    }
+
+    public function icdFilter(Request $request) {
+        $icd = Icd::
+                select(
+                    "icd.code",
+                    "icd.id as icd_id",
+                    DB::raw('CONCAT(pat.fname," ",pat.mname,". ",pat.lname) as patient_name'),
+                    DB::raw(ParamCtrl::getAge("pat.dob")." as age"),
+                    "pro.description as province",
+                    "mun.description as muncity",
+                    "bar.description as barangay",
+                    "icd10.code as icd_code",
+                    "icd10.description as icd_description"
+                )
+                ->leftJoin("tracking as track","track.code","=","icd.code")
+                ->leftJoin("patients as pat","pat.id","=","track.patient_id")
+                ->leftJoin("province as pro","pro.id","=","pat.province")
+                ->leftJoin("muncity as mun","mun.id","=","pat.muncity")
+                ->leftJoin("barangay as bar","bar.id","=","pat.brgy")
+                ->leftJoin("icd10","icd10.id","=","icd.icd_id")
+                ->where("icd.icd_id",$request->icd_id)
+                ->whereBetween("icd.created_at",[$request->date_start,$request->date_end])
+                ->get();
+
+        Session::put("export_top_icd_excel",$icd);
+
+        return $icd;
+    }
+
+    public function exportTopIcdExcel() {
+        $export_top_icd_excel = Session::get("export_top_icd_excel");
+        $file_name = "export_top_icd_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_top_icd',[
+            "data" => $export_top_icd_excel
         ]);
     }
 
@@ -1064,6 +1111,69 @@ class ReportCtrl extends Controller
             "date_start" => $date_start,
             "date_end" => $date_end,
             "province_id" => $request->province_id
+        ]);
+    }
+
+    public function filterTopReasonReferral(Request $request) {
+        $pregnant_form = PregnantForm::
+        select("reason_referral","code","patient_woman_id as patient_id")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->where("reason_referral",$request->reason_referral_id);
+
+        if($request->province_id) {
+            $pregnant_form = $pregnant_form->leftJoin("facility","facility.id","=","pregnant_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+        $pregnant_form = $pregnant_form->whereBetween("pregnant_form.created_at",[$request->date_start,$request->date_end]);
+
+        $union = PatientForm::
+        select("reason_referral","code","patient_id")
+            ->whereNotNull("reason_referral")
+            ->where("reason_referral","!=","-1")
+            ->where("reason_referral",$request->reason_referral_id);
+
+        if($request->province_id) {
+            $union = $union->leftJoin("facility","facility.id","=","patient_form.referred_to")
+                ->where("facility.province",$request->province_id);
+        }
+
+        $union = $union->whereBetween("patient_form.created_at",[$request->date_start,$request->date_end])
+            ->unionAll($pregnant_form);
+
+        $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
+            ->mergeBindings($union->getQuery())
+            ->leftJoin("reason_referral","reason_referral.id","=","sub.reason_referral")
+            ->leftJoin("patients as pat","pat.id","=","patient_id")
+            ->leftJoin("province as pro","pro.id","=","pat.province")
+            ->leftJoin("muncity as mun","mun.id","=","pat.muncity")
+            ->leftJoin("barangay as bar","bar.id","=","pat.brgy")
+            ->select(
+                "reason_referral.id",
+                        "reason_referral.reason",
+                        "code",
+                        DB::raw('CONCAT(pat.fname," ",pat.mname,". ",pat.lname) as patient_name'),
+                        DB::raw(ParamCtrl::getAge("pat.dob")." as age"),
+                        "pro.description as province",
+                        "mun.description as muncity",
+                        "bar.description as barangay"
+            )
+            ->get();
+
+        Session::put("export_reason_referral_excel",$reason_for_referral);
+        return $reason_for_referral;
+    }
+
+    public function exportReasonForReferralExcel() {
+        $export_top_icd_excel = Session::get("export_reason_referral_excel");
+        $file_name = "export_reason_referral_excel.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_reason_referral',[
+            "data" => $export_top_icd_excel
         ]);
     }
 

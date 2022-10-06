@@ -7,10 +7,17 @@
             <div class="box-header">
                 <form action="{{ asset('it/client') }}" method="GET">
                     {{ csrf_field() }}
-                    <div class="input-group input-group-md" style="width: 70%">
-                        <input type="text" class="form-control" style="width: 100%" placeholder="Search name..." name="search" value="{{ $search }}">
+                    <div class="input-group" style="display: flex;">
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Search name..." name="search" value="{{ $search }}">
+                        <select name="call_reason" class="form-control" style="width: 200px;">
+                            <option value="">Select reason for calling</option>
+                            <option value="offline" <?php if($call_reason == 'offline') echo 'selected'; ?>>Offline</option>
+                            <option value="support" <?php if($call_reason == 'support') echo 'selected'; ?>>Support</option>
+                            <option value="walkin" <?php if($call_reason == 'walkin') echo 'selected'; ?>>Walkin</option>
+                            <option value="issue" <?php if($call_reason == 'issue') echo 'selected'; ?>>Issue</option>
+                        </select>
                         <span class="input-group-btn">
-                            <input type="text" class="form-control" style="width: 50%" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
+                            <input type="text" class="form-control" style="width: 200px" id="date_range" placeholder="Enter date range.." name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}">
                             <button type="submit" class="btn btn-success"><i class="fa fa-filter"></i> Filter</button>
                             <a href="{{ asset('export/it/call') }}" type="button" class="btn btn-danger"><i class="fa fa-file-excel-o"></i> Export Excel</a>
                             <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
@@ -31,6 +38,7 @@
                                 <th>Time Started</th>
                                 <th>Time Ended</th>
                                 <th>Time Duration</th>
+                                <th>Reason for Calling</th>
                                 <th>Option</th>
                             </tr>
                             </thead>
@@ -92,6 +100,9 @@
                                             <small class="text-yellow">
                                                 ({{ ucfirst($row->reason_calling) }})
                                             </small>
+                                        </td>
+                                        <td>
+                                            <label class="text-green">{{ $row->reason_calling }}</label>
                                         </td>
                                         <td width="10%"><button type="button" class="btn btn-sm btn-info" onclick="repeatCall('<?php echo $row->id; ?>','repeat_call')"><i class="fa fa-phone-square"></i> Repeat Call</button></td>
                                     </tr>

@@ -1,3 +1,4 @@
+<?php $user = Session::get('auth'); ?>
 @extends('layouts.app')
 
 @section('content')
@@ -487,10 +488,13 @@
             return difference;
         }
 
+        var user_level = "<?php echo $user->level; ?>";
         function referToSeenPeak() {
+            if(user_level === "mayor" || user_level === "dmo") return;
             $("#statistics-modal").modal('show');
             $(".statistics-body").html(loading);
-            setTimeout(function(){
+            setTimeout(function() {
+                $(".statistics-title").append('');
                 $(".statistics-title").append('Refer to Seen');
                 $(".statistics-body").html(
                     "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +

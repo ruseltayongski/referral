@@ -216,7 +216,7 @@
                                 <?php
                                     $transaction = \App\Activity::where("referred_from",$row->facility_id)->orWhere("referred_to",$row->facility_id)->orderBy("id","desc")->first();
 
-                                    if($row->status == 'onboard'){
+                                    if($row->status == 'onboard') {
                                         $facility_onboard[$row->province_id]++;
                                         $hospital_type[$row->province_id][$row->hospital_type]++;
                                         if($transaction){
@@ -286,8 +286,8 @@
                             @endforeach
                             @foreach($data as $row)
                                 <?php
-                                $count++;
-                                $transaction = \App\Activity::where("referred_from",$row->facility_id)->orWhere("referred_to",$row->facility_id)->orderBy("id","desc")->first();
+                                    $count++;
+                                    $transaction = \App\Activity::where("referred_from",$row->facility_id)->orWhere("referred_to",$row->facility_id)->orderBy("id","desc")->first();
                                 ?>
                                 @if(!isset($province[$row->province]))
                                     <?php $province[$row->province] = true; ?>
@@ -377,7 +377,7 @@
                                                     <div class="progress sm">
                                                         <div class="progress-bar progress-bar-striped doh_hospital_progress{{ $row->province_id }}" ></div>
                                                     </div>
-                                                </div> 
+                                                </div>
                                                 @endif
 
                                                 @if($hospital_type[$row->province_id]['CIU/TTMF'] != 0)
@@ -388,7 +388,7 @@
                                                     <div class="progress sm">
                                                         <div class="progress-bar progress-bar-striped ciu_progress{{ $row->province_id }}" ></div>
                                                     </div>
-                                                </div> 
+                                                </div>
                                                 @endif
 
                                                 @if($hospital_type[$row->province_id]['EOC'] != 0)
@@ -399,7 +399,7 @@
                                                     <div class="progress sm">
                                                         <div class="progress-bar progress-bar-striped eoc_progress{{ $row->province_id }}" ></div>
                                                     </div>
-                                                </div> 
+                                                </div>
                                                 @endif
 
                                             </div>
