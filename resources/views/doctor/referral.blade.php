@@ -99,6 +99,7 @@ $user = Session::get('auth');
                                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                                 $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
+                                $queue = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first();
                                 ?>
                                 <li id="referral_incoming{{ $row->code }}">
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
@@ -116,6 +117,9 @@ $user = Session::get('auth');
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>
+                                                @if(count($queue) > 0)
+                                                    <h5 class="text-red pull-right">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
+                                                @endif
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                             @include('doctor.include.timeline_footer')
                                         </div>
@@ -127,7 +131,7 @@ $user = Session::get('auth');
                                                 <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
                                                 </span>
-                                                RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
+                                                was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                             </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>

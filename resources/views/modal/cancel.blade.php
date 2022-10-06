@@ -31,7 +31,7 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h5>UNDO CANCEL</h5>
+                <h5><b>UNDO CANCEL</b></h5>
                 <hr />
                 <form action="{{ asset('doctor/referral/undo_cancel') }}" method="POST" id="undoCancelForm">
                     {{ csrf_field() }}

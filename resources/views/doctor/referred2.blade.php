@@ -214,9 +214,15 @@
                                 $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
                                 $position_count = 0;
                                 $referred_track = \App\Activity::where("code",$row->code)->where("status","referred")->first();
+                                $queue_referred = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
                                 $referred_seen_track = \App\Seen::where("code",$referred_track->code)
                                     ->where("facility_id",$referred_track->referred_to)
                                     ->where("created_at",">=",$referred_track->created_at)
+                                    ->exists();
+                                $referred_queued_track = \App\Activity::where("code",$referred_track->code)
+                                    ->where("referred_to",$referred_track->referred_to)
+                                    ->where("created_at",">=",$referred_track->created_at)
+                                    ->where("status","queued")
                                     ->exists();
                                 $referred_accepted_track = \App\Activity::where("code",$referred_track->code)
                                     ->where("referred_to",$referred_track->referred_to)
@@ -266,6 +272,7 @@
                                             ->get();
 
                                 //reset the variable in redirected if redirected not exist
+                                $redirected_queued_track = 0;
                                 $redirected_accepted_track = 0;
                                 $redirected_rejected_track = 0;
                                 $redirected_cancelled_track = 0;
@@ -285,23 +292,27 @@
                                     <div class="step-counter">2</div>
                                     <div class="step-name">Seen</div>
                                 </div>
-                                <div class="stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+                                <div class="text-center stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter
                                         <?php
-                                        if($referred_rejected_track)
-                                            echo "bg-red";
-                                        elseif($referred_cancelled_track)
+                                        if($referred_cancelled_track)
                                             echo "bg-yellow";
+                                        elseif($referred_rejected_track)
+                                            echo "bg-red";
+                                        elseif($referred_queued_track && !$referred_accepted_track)
+                                            echo "bg-orange";
                                         ?>
-                                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}">3</div>
-                                    <div class="step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
+                                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">3</span></div>
+                                    <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                                         <?php
                                         if($referred_rejected_track)
                                             echo 'Declined';
                                         elseif($referred_cancelled_track)
                                             echo 'Cancelled';
+                                        elseif($referred_queued_track && !$referred_accepted_track)
+                                            echo 'Queued at <br> <b>'. $queue_referred.'</b>';
                                         else
-                                            echo 'Accepted' ;
+                                            echo 'Accepted'
                                         ?>
                                     </div>
                                 </div>
@@ -329,10 +340,16 @@
                             @if(count($redirected_track) > 0)
                                 @foreach($redirected_track as $redirect_track)
                                     <?php
+                                        $queue_redirected = \App\Activity::where('code',$redirect_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
                                         $position_count++;
                                         $redirected_seen_track = \App\Seen::where("code",$redirect_track->code)
                                             ->where("facility_id",$redirect_track->referred_to)
                                             ->where("created_at",">=",$redirect_track->created_at)
+                                            ->exists();
+                                        $redirected_queued_track = \App\Activity::where("code",$redirect_track->code)
+                                            ->where("referred_to",$redirect_track->referred_to)
+                                            ->where("created_at",">=",$redirect_track->created_at)
+                                            ->where("status","queued")
                                             ->exists();
                                         $redirected_accepted_track = \App\Activity::where("code",$redirect_track->code)
                                             ->where("referred_to",$redirect_track->referred_to)
@@ -392,15 +409,19 @@
                                                         echo "bg-red";
                                                     elseif($redirected_cancelled_track)
                                                         echo "bg-yellow";
+                                                    elseif($redirected_queued_track && !$redirected_accepted_track)
+                                                        echo "bg-orange";
                                                 ?>
                                                 " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">3</div>
-                                            <div class="step-name" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
+                                            <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
                                                 if($redirected_rejected_track)
                                                     echo 'Declined';
                                                 elseif($redirected_cancelled_track)
                                                     echo 'Cancelled';
+                                                elseif($redirected_queued_track && !$redirected_accepted_track)
+                                                    echo "Queued at <br><b>".$queue_redirected."</b>";
                                                 else
-                                                    echo 'Accepted' ;
+                                                    echo "Accepted"
                                                 ?></div>
                                         </div>
                                         <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
@@ -592,13 +613,21 @@
                                                             </td>
                                                         </tr>
                                                     @elseif($act->status=='form_updated')
-                                                            <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                                <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                                <td>
-                                                                    <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
-                                                                    <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                                </td>
-                                                            </tr>
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
+                                                                <span class="remarks">Remarks: {{ $act->remarks }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($act->status=='queued')
+                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
+                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                                            <td>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> was queued by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
+                                                                <span class="remarks">Remarks: Queued at <b>{{ $act->remarks }}</b></span>
+                                                            </td>
+                                                        </tr>
                                                     @endif
                                                     <?php $first = 1; ?>
                                                 @endforeach
@@ -742,9 +771,16 @@
         @if(Session::get('ignore_edit'))
                 Lobibox.alert("error",
             {
-                msg: "Updating form was ignored because this referral was rejected from receiving facility."
+                msg: "Updating form was ignored because this referral was rejected by receiving facility."
             });
         <?php Session::put("ignore_edit",false); ?>
+        @endif
+        @if(Session::get('already_accepted'))
+        Lobibox.alert("error",
+            {
+                msg: "Updating form was ignored because this referral was already accepted by receiving facility."
+            });
+        <?php Session::put("already_accepted",false); ?>
         @endif
 
         $('body').on('click','.btn-transfer',function() {

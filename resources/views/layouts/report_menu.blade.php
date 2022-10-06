@@ -45,7 +45,15 @@
                 @foreach(\App\Province::get() as $prov)
                     <li><a href="{{ asset('admin/statistics').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
                 @endforeach
-                <li><a href="{{ asset('admin/statistics').'/0' }}">All Province</a></li>
+                <li><a href="{{ asset('admin/statistics').'/0' }}">All Provinces</a></li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar-check-o"></i> Walkin Report </a>
+            <ul class="dropdown-menu">
+                @foreach(\App\Province::get() as $prov)
+                    <li><a href="{{ asset('report/walkin').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
+                @endforeach
             </ul>
         </li>
         <!--

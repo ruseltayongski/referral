@@ -624,8 +624,14 @@ Route::post('admin/report/deactivated','admin\ReportCtrl@filterDeactivated');
 // doctor edit profile
 Route::post('doctor/editProfile','doctor\UserCtrl@editProfile');
 
-// covid report
+// report (covid, walkin)
 Route::match(['GET','POST'],'admin/report/covid/{province_id}','admin\ReportCtrl@covidReport');
+Route::match(['GET','POST'],'report/walkin/{province_id}','admin\ReportCtrl@walkinReport');
+Route::get('report/walkin/info/{facility_id}/{status}/{date_range}','admin\ReportCtrl@walkinIndividual');
+Route::get('report/exportwalkin','admin\ReportCtrl@exportWalkinReport');
 
 // export facility list
 Route::get('admin/report/facility', 'admin\FacilityCtrl@exportAllFacilities');
+
+// queue
+Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');

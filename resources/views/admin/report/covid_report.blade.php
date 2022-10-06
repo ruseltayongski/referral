@@ -139,9 +139,7 @@ $province_name = \App\Province::select('description')->where('id',$province)->fi
                             <th class="text-center" colspan="5">CLINICAL STATUS</th>
                             <th class="text-center" colspan="8">SURVEILLANCE CATEGORY</th>
                         </tr>
-                    </thead>
-                    <thead class="header bg-gray-light">
-                        <tr>
+                        <tr class="bg-gray-light">
                             <th></th>
                             <th class="text-center"> <b>FACILITY NAME</b> </th>
                             <th class="text-center" colspan="1"> <small><i> Asymptomatic </i></small> </th>

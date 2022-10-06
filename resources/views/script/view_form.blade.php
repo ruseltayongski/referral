@@ -174,6 +174,23 @@
         $('#undo_cancel_id').val(form_id);
     });
 
+    $('body').on('click','.queuebtn',function(e) {
+        $('#queue_id').val($(this).data('id'));
+    });
+
+    $('body').on('submit', '#updateQueue',function (e) {
+        e.preventDefault();
+        $('.loading').show();
+        $(this).ajaxSubmit({
+            url: "{{ url('doctor/referral/queuePatient/') }}",
+            type: 'POST',
+            success: function (data) {
+                console.log(data);
+                window.location.reload(false);
+            }
+        });
+    });
+
     function getDateReferred()
     {
         var date = new Date();

@@ -70,3 +70,7 @@ Broadcast::channel('referral_undo_cancel', function ($referral_undo_cancel) {
 Broadcast::channel('referral_update_form', function ($referral_update_form) {
     return $referral_update_form;
 });
+
+Broadcast::channel('referral_queue_patient', function ($referral_queue_patient) {
+    return $referral_queue_patient;
+});

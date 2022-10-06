@@ -6,11 +6,14 @@ use App\Activity;
 use App\Department;
 use App\Facility;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ParamCtrl;
 use App\Icd;
 use App\Icd10;
 use App\Login;
 use App\PatientForm;
+use App\Patients;
 use App\PregnantForm;
+use App\Profile;
 use App\Province;
 use App\Seen;
 use App\Tracking;
@@ -1339,5 +1342,170 @@ class ReportCtrl extends Controller
             }
         }
         return $facilities;
+    }
+
+    public function walkinReport(Request $req,$province) {
+        if(isset($req->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d') . ' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d') . ' 23:59:59';
+            $req->date_range = $date_start." - ".$date_end;
+        }
+
+        $tracking = Tracking::select(
+            'faci.name as faci_name',
+            'faci.id as faci_id',
+            'faci.hospital_type',
+            'tracking.code',
+            'tracking.walkin',
+            'act.status'
+        )
+            ->leftJoin('activity as act','act.code','=','tracking.code')
+            ->leftJoin('facility as faci','faci.id','=','act.referred_to')
+            ->where('tracking.walkin','yes')
+            ->where('faci.province',$province)
+            ->where('tracking.status','!=','cancelled')
+            ->whereBetween('tracking.date_referred',[$date_start,$date_end])
+            ->orderBy('faci_name','asc')
+            ->groupBy('act.code')
+            ->get();
+
+        $final = array();
+        $walkin = 0;
+        $transferred = 0;
+        $walkin_total = 0;
+        $transferred_total = 0;
+
+        /* count walkin */
+        for($i = 0; $i < count($tracking); $i++) {
+            $row = $tracking[$i];
+
+            $act = Activity::where('code',$row->code)->where('status','transferred')->first();
+
+            if(!$act)
+                $walkin++;
+            else if($act && ($act->referred_from == $row->faci_id))
+                $transferred++;
+
+            if($row->faci_id !== $tracking[$i+1]->faci_id) {
+                array_push($final, [
+                    'walkin' => $walkin,
+                    'transferred' => $transferred,
+                    'faci_id' => $row->faci_id,
+                    'faci_name' => $row->faci_name,
+                    'hospital_type' => $row->hospital_type
+                ]);
+                $walkin_total += $walkin;
+                $transferred_total += $transferred;
+                $walkin = 0;
+                $transferred = 0;
+            }
+        }
+
+        rsort($final);
+
+        return view('admin.report.walkin_report',[
+            'title' => 'WALKIN REPORT',
+            "data" => $final,
+            'date_range_start' => $date_start,
+            'date_range_end' => $date_end,
+            'province' => $province,
+            'province_name' => Province::select('description as name')->where('id',$province)->first()->name,
+            'walkin_total' => $walkin_total,
+            'transferred_total' => $transferred_total
+        ]);
+    }
+
+    public function walkinIndividual($facility_id, $status, $date_range){
+        $date_range = str_replace('|','/',$date_range);
+        $date_start = date('Y-m-d',strtotime(explode(' - ',$date_range)[0])).' 00:00:00';
+        $date_end = date('Y-m-d',strtotime(explode(' - ',$date_range)[1])).' 23:59:59';
+
+        $data = Tracking::select(
+            'tracking.status',
+            'tracking.code',
+            'tracking.type',
+            'act.referred_from',
+            'act.referred_to'
+        )
+            ->leftJoin('activity as act','act.code','=','tracking.code')
+            ->where('tracking.walkin','yes')
+            ->where('tracking.status','!=','cancelled')
+            ->whereBetween('tracking.date_referred',[$date_start,$date_end]);
+
+        if($status === 'transferred')
+            $data = $data->where('act.referred_from',$facility_id)
+                ->where('act.status','transferred');
+        else
+            $data = $data->where('tracking.status','!=','transferred') /*activity is not checked yet whether naa bay transfer or not*/
+                ->where('act.referred_to',$facility_id);
+
+        $data = $data->groupBy('act.code')->get();
+
+        $final = array();
+        foreach($data as $row) {
+            $stat = Activity::where('code',$row->code)->where('status','transferred')->first();
+            $get_pt = false;
+            if(($status == 'walkin' && !isset($stat)) || ($status == 'transferred' && isset($stat)))
+                $get_pt = true;
+
+            if($get_pt) { /*add pt to final*/
+                $pt = Patients::select(
+                    'patients.fname', 'patients.mname', 'patients.lname',
+                    'patients.dob',
+                    'brgy.description as brgy',
+                    'muncity.description as muncity',
+                    'prov.description as prov'
+                )
+                    ->leftJoin('barangay as brgy','brgy.id','=','patients.brgy')
+                    ->leftJoin('muncity','muncity.id','=','patients.muncity')
+                    ->leftJoin('province as prov','prov.id','=','patients.province');
+
+                if($row->type == 'normal')
+                    $pt = $pt->leftJoin('patient_form as pt_form','pt_form.patient_id','=','patients.id');
+                else
+                    $pt = $pt->leftJoin('pregnant_form as pt_form','pt_form.patient_woman_id','=','patients.id');
+
+                $pt = $pt->where('pt_form.code', $row->code)->first();
+
+                array_push($final,[
+                    'code' => $row->code,
+                    'name' => ucfirst($pt->fname)." ".ucfirst($pt->mname)." ".ucfirst($pt->lname),
+                    'address' => $pt->brgy.", ".$pt->muncity.", ".$pt->prov,
+                    'age' => ParamCtrl::getAge($pt->dob),
+                    'referring_facility' => Facility::where('id',$row->referred_from)->first()->name,
+                    'referred_facility' => Facility::where('id',$row->referred_to)->first()->name,
+                    'status' => $row->status
+                ]);
+            }
+        }
+
+        Session::put('walkin_report_data',$final);
+        if($status == 'walkin') {
+            Session::put('walkin_report_title','Walk-in Report');
+            Session::put('walkin_status','walkin');
+        } else {
+            Session::put('walkin_report_title','(Walk-in) Transferred Report');
+            Session::put('walkin_status','transferred');
+        }
+        return $final;
+    }
+
+    public function exportWalkinReport() {
+        $data = Session::get('walkin_report_data');
+        $title = Session::get('walkin_report_title');
+
+        $file_name = $title.".xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        return view('admin.report.export.walkin',[
+            'data' => $data,
+            'title' => $title,
+            'status' => Session::get('walkin_status')
+        ]);
     }
 }

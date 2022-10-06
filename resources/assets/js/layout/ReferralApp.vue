@@ -81,6 +81,8 @@
             },
             notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#rejected_progress"+patient_code+activity_id).removeClass("bg-orange");
+                $("#rejected_name"+patient_code+activity_id).html("Accepted");
                 $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' +
                     '                                                            <td>'+date_accepted+'</td>\n' +
@@ -293,6 +295,32 @@
                 });
             },
 
+            notifyReferralQueueUpdated(patient_code, activity_id, remarks, date_queued, patient_name, queued_by, queued_by_facility, redirect_track, first_queue) {
+                $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#rejected_progress"+patient_code+activity_id).addClass("bg-orange");
+                $("#rejected_name"+patient_code+activity_id).html("Queued at <br>" + "<b>" + remarks + "</b>");
+                $("#prepend_from_websocket"+patient_code).prepend('' +
+                    '<tr>\n' +
+                    '    <td>'+date_queued+'</td>\n' +
+                    '    <td>\n' +
+                    '       <span class="txtPatient">'+patient_name+'</span>`s queueing number was updated by Dr. <span class="txtDoctor">'+queued_by+'</span> of <span class="txtHospital">'+queued_by_facility+'</span>.\n' +
+                    '       <span class="remarks">Status: First queued at '+first_queue+'. Latest queue update is at <b><u>'+remarks+'</u></b></span>\n' +
+                    '       <br>\n' +
+                    '   </td>\n' +
+                    '</tr>');
+                let msg = patient_name+" was queued at " + remarks +" by Dr. "+queued_by+' of '+queued_by_facility+ '<br>'+ date_queued + '<br><br>\n' +
+                    '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+                    '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
+                    '       </a>';
+                Lobibox.notify('warning', {
+                    delay: false,
+                    title: 'Queued!',
+                    closeOnClick: false,
+                    msg: msg,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -497,6 +525,8 @@
             Echo.join('referral_undo_cancel')
                 .listen('SocketReferralUndoCancel', (event) => {
                     if(event.payload.referred_to === this.user.facility_id) {
+                        console.log('undo cancel');
+                        console.log(event.payload);
                         let status = event.payload.status;
                         if(status === 'referred' || status === 'redirected' || status === 'accepted') {
                             let type = event.payload.form_type;
@@ -510,24 +540,43 @@
                                 '           <strong class="text-bold">    '+
                                 '           <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
                                 '           </strong>'+
-                                '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="badge bg-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
-                                '        <div class="timeline-footer">\n' +
-                                '           <div class="form-group">' +
-                                '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' +
-                                '                   data-toggle="modal"\n' +
-                                '                   data-code="'+event.payload.patient_code+'"\n' +
-                                '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
-                                '                   data-referral_status="referred"\n' +
-                                '                   data-type="'+referral_type+'"\n' +
-                                '                   data-id="'+event.payload.tracking_id+'"\n' +
-                                '                   data-referred_from="'+event.payload.referred_from+'"\n' +
-                                '                   data-patient_name="'+event.payload.patient_name+'"\n' +
-                                '                   data-backdrop="static">\n' +
-                                '                <i class="fa fa-folder"></i> View Form\n' +
-                                '               </a>' +
+                                '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was ' ;
+                            if(status === 'accepted') {
+                                content +=
+                                    '<span class="badge bg-blue">'+event.payload.status+'</span> by <span class="text-warning">Dr. '+event.payload.referred_md+'</span> of <span class="facility">'+event.payload.referred_name+'</span></h3>\n' +
+                                    '        <div class="timeline-footer">\n' +
+                                    '           <div class="form-group">' ;
+                            }else{
+                                content +=
+                                    '<span class="badge bg-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                                    '        <div class="timeline-footer">\n' +
+                                    '           <div class="form-group">' ;
+                            }
+
+                            if(status !== 'accepted') {
+                                content +=
+                                    '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' +
+                                    '                   data-toggle="modal"\n' +
+                                    '                   data-code="'+event.payload.patient_code+'"\n' +
+                                    '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
+                                    '                   data-referral_status="referred"\n' +
+                                    '                   data-type="'+referral_type+'"\n' +
+                                    '                   data-id="'+event.payload.tracking_id+'"\n' +
+                                    '                   data-referred_from="'+event.payload.referred_from+'"\n' +
+                                    '                   data-patient_name="'+event.payload.patient_name+'"\n' +
+                                    '                   data-backdrop="static">\n' +
+                                    '                <i class="fa fa-folder"></i> View Form\n' +
+                                    '               </a>' ;
+                                if(event.payload.cur_queue !== '') {
+                                    content += '<h5 class="text-red pull-right">Queued at <b>'+event.payload.cur_queue+'&emsp;</b></h5>';
+                                }
+                            }
+                            content +=
                                 this.buttonSeen(event.payload.count_seen, event.payload.tracking_id) +
                                 this.buttonActivity(event.payload.count_activity, event.payload.tracking_id) +
-                                this.buttonReco(event.payload.patient_code, event.payload.count_reco) +
+                                this.buttonReco(event.payload.patient_code, event.payload.count_reco) ;
+
+                            content +=
                                 '             </div>\n' +
                                 '        </div>\n' +
                                 '    </div>\n';
@@ -689,6 +738,12 @@
                         }
                     }
                 });
+            Echo.join('referral_queue_patient')
+                .listen('SocketReferralQueuePatient', (event) => {
+                    if(event.payload.referred_from === this.user.facility_id) {
+                        this.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
+                    }
+            });
         }
     }
 </script>

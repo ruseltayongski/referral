@@ -15,6 +15,7 @@ use App\Events\SocketReferralCancelled;
 use App\Events\SocketReferralDeparted;
 use App\Events\SocketReferralDischarged;
 use App\Events\SocketReferralNotArrived;
+use App\Events\SocketReferralQueuePatient;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Events\SocketReferralUndoCancel;
@@ -1338,6 +1339,8 @@ class ReferralCtrl extends Controller
             'status' => 'redirected'
         ]);
 
+        Activity::where('code',$track->code)->where('status','queued')->delete();
+
         $patient = Patients::find($track->patient_id);
         $count_activity = Activity::where("code",$req->code)
             ->where(function($query){
@@ -2089,6 +2092,13 @@ class ReferralCtrl extends Controller
         if($updated !== "") {
             $updated_remarks .= "Updated fields: " . $updated;
         }
+
+        $latest_activity = Activity::select('status')->where('code',$tracking->code)->orderBy('id','desc')->first()->status;
+        if($latest_activity == 'accepted') {
+            Session::put('already_accepted',true);
+            return redirect()->back();
+        }
+
         if($old_facility != $req->referred_to) {
 //            Seen::where('tracking_id',$tracking->id)->delete();
 
@@ -2204,6 +2214,9 @@ class ReferralCtrl extends Controller
         $activity = Activity::where("code",$track->code)
             ->where("status",'!=','cancelled')
             ->where("status",'!=','form_updated')
+            ->where("status",'!=','queued')
+            ->where("status",'!=','calling')
+            ->where("status",'!=','travel')
             ->orderBy("id","desc")
             ->first();
 
@@ -2225,13 +2238,21 @@ class ReferralCtrl extends Controller
             })
             ->groupBy("code")
             ->count();
-        if($latest_activity->status === 'rejected') {
+        if($latest_activity->status == 'rejected')
             $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->action_md)->first();
-        } else {
+        else if($latest_activity->status == 'queued' || $latest_activity->status == 'accepted' || $latest_activity->status == 'calling') {
+            $tmp = Activity::where('code',$track->code)->where('status','referred')->orwhere('status','redirected')->orderBy('id','desc')->first();
+            $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$tmp->referring_md)->first();
+        }  else
             $md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->referring_md)->first();
-        }
+
+        $referred_md = User::select('fname', 'lname', 'mname', 'facility_id')->where('id',$latest_activity->action_md)->first();
         $redirect_track = asset("doctor/referred?referredCode=").$track->code;
         $track = Tracking::find($id);
+
+        $queue_stat = Activity::where('code',$track->code)->where('status','queued')->orderBy('id','desc')->first();
+        if(isset($queue_stat))
+            $cur_queue = $queue_stat->remarks;
 
         $undo = [
             "patient_code" => $track->code,
@@ -2239,6 +2260,7 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_activity->id,
             "referring_md" => ucfirst($md->fname).' '.ucfirst($md->lname),
             "referring_name" => Facility::find($md->facility_id)->name,
+            "referred_md" => ucfirst($referred_md->fname).' '.ucfirst($referred_md->lname),
             "referred_name" => Facility::find($latest_activity->referred_to)->name,
             "referred_to" => $latest_activity->referred_to,
             "referred_department" => Department::where('id',$track->department_id)->first()->description,
@@ -2252,11 +2274,56 @@ class ReferralCtrl extends Controller
             "count_activity" => $count_activity,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "cur_queue" => isset($cur_queue) ? $cur_queue : ''
         ];
 
         broadcast(new SocketReferralUndoCancel($undo));
 
         return redirect()->back();
+    }
+
+    public function queuePatient(Request $req) {
+        $user = Session::get('auth');
+        $track = Tracking::find($req->tracking_id);
+        $act = Activity::where('code',$track->code)
+            ->orderBy('id','desc')
+            ->first();
+        $data = array(
+            'code' => $track->code,
+            'patient_id' => $track->patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'referred_from' => $act->referred_from,
+            'referred_to' => $act->referred_to,
+            'action_md' => $user->id,
+            'remarks' => $req->queue_number,
+            'status' => "queued"
+        );
+        $activity = Activity::create($data);
+        $patient = Patients::find($track->patient_id);
+        $redirect_track = asset("doctor/referred?referredCode=").$track->code;
+        $latest_act = Activity::where("code",$track->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred");
+        })
+            ->orderBy("id","desc")
+            ->first();
+        $first_queue = Activity::where('code',$track->code)->where('status','queued')->first()->remarks;
+
+        $queue = [
+            "patient_code" => $track->code,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
+            "queued_by" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "queued_by_facility" => Facility::find($user->facility_id)->name,
+            "referred_from" => $activity->referred_from,
+            "date_queued" => date('M d, Y h:i A',strtotime($activity->created_at)),
+            "remarks" => $activity->remarks,
+            "redirect_track" => $redirect_track,
+            "activity_id" => $latest_act->id,
+            "first_queue" => $first_queue
+        ];
+
+        broadcast(new SocketReferralQueuePatient($queue));
     }
 }
