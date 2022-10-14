@@ -164,7 +164,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn-lg btn-info btn-flat" onclick="clearRequiredFields()"><i class="fa fa-search"></i> Filter</button>
-                        <button type="button" class="btn-lg btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics').'/'.$province }}'"><i class="fa fa-search"></i> View All</button>
+                        <button type="button" class="btn-lg btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
                 </form>
             </div>
@@ -364,10 +364,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-8">
                             <h3 class="modal-title statistics-title"></h3>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             <button type="button" class="close" style="float: right" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -412,16 +412,17 @@
 
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
+            var statistics_title = "";
             if(status === 'denied') {
-                status = 'Recommend to Redirect';
+                statistics_title = 'Recommend to Redirect';
             }
             else if(status === 'not_seen') {
-                status = 'Not Seen';
+                statistics_title = 'Not Seen';
             }
             else if(status === 'seen_only') {
-                status = 'Seen Only';
+                statistics_title = 'Seen Only';
             }
-            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+status+" ");
+            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+statistics_title+" ");
             $("#statistics-modal").modal('show');
             $(".statistics-body").html(loading);
             $("span").css("background-color","");
