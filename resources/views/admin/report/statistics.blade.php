@@ -4,14 +4,12 @@
     span{
         cursor: pointer;
     }
-
     .tooltip1 {
         position: relative;
         display: inline-block;
         /*border-bottom: 1px dotted black;*/
         cursor: help;
     }
-
     .tooltip1 .tooltiptext {
         visibility: hidden;
         width: 200px;
@@ -27,7 +25,6 @@
         margin-left: -60px;
         font-weight: normal;
     }
-
     .tooltip1 .tooltiptext::after {
         content: "";
         position: absolute;
@@ -38,9 +35,19 @@
         border-style: solid;
         border-color: transparent transparent #00a65a transparent;
     }
-
     .tooltip1:hover .tooltiptext {
         visibility: visible;
+    }
+    .select2-selection--single {
+        height: 45px !important;
+        border-radius: 8px !important;
+    }
+    .select2-selection__rendered {
+        padding-top: 5px;
+        font-size: 18px;
+    }
+    .select2-selection__arrow {
+        margin-top: 5px;
     }
 </style>
 @section('content')
@@ -122,11 +129,17 @@
                             <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
                             <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
-                        <select name="province_id" class="form-control">
+                        <select name="province_id" class="form-control province" onchange="filterSidebar($(this),'muncity')">
                             <option value="">Please select province</option>
                             @foreach($province_list as $row)
                                 <option value="{{ $row->id }}" <?php if($row->id == $province_id) echo 'selected'; ?>>{{ $row->description }}</option>
                             @endforeach
+                        </select>
+                        <select name="muncity_id" class="statistics_select2 muncity" onchange="filterSidebar($(this),'barangay')">
+                            <option value="">Please select muncity</option>
+                        </select>
+                        <select name="barangay_id" class="statistics_select2 barangay">
+                            <option value="">Please select barangay</option>
                         </select>
                         <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
@@ -150,7 +163,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <button type="submit" class="btn-lg btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                        <button type="submit" class="btn-lg btn-info btn-flat" onclick="clearRequiredFields()"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn-lg btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics').'/'.$province }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
                 </form>
@@ -379,7 +392,9 @@
 @endsection
 
 @section('js')
+    @include('script.filterMuncity')
     <script>
+        $(".statistics_select2").select2({ width: '250px' });
         $("#statistics_referred").html("{{ $statistics_referred }}");
         $("#statistics_redirected").html("{{ $statistics_redirected }}");
         $("#statistics_transferred").html("{{ $statistics_transferred }}");
@@ -439,6 +454,25 @@
                 },500);
             });
         }
+
+        function clearRequiredFields() {
+            $('.muncity').attr('required',false);
+            $('.barangay').attr('required',false);
+        }
+
+        var province_id = null;
+        var muncity_id = null;
+        var barangay_id = null;
+        @if($muncity_id)
+            province_id = {{ $province_id }};
+            muncity_id = "{{ $muncity_id }}";
+            filterSidebar(province_id,'muncity',muncity_id);
+        @endif
+        @if($muncity_id && $barangay_id)
+            muncity_id = "{{ $muncity_id }}";
+            barangay_id = "{{ $barangay_id }}";
+            filterSidebar(muncity_id,'barangay',null,barangay_id);
+        @endif
     </script>
 @endsection
 

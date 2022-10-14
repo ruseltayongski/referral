@@ -951,6 +951,8 @@ class ReportCtrl extends Controller
             'request_type' => $request->request_type,
             'hospital_type' => $request->hospital_type,
             'province_id' => $request->province_id,
+            'muncity_id' => $request->muncity_id,
+            'barangay_id' => $request->barangay_id,
             'hospital_type_list' => $hospital_type_list,
             'province_list' => $province_list
         ]);
