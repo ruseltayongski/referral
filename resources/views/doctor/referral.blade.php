@@ -70,7 +70,6 @@ $user = Session::get('auth');
 
         .badge1 {
             margin: 0;
-            padding: 0;
             color: white;
             padding: 5px 5px;
             font-size: 7px;
@@ -147,18 +146,13 @@ $user = Session::get('auth');
                                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                                 //$redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
-                                $position = \App\Activity::where('code',$row->code)->where(function($query) {
-                                    $query->where("status","redirected")
-                                        ->orWhere("status","transferred");
-                                    })->count();
-                                $position_bracket = ['','1st','2nd','3rd','45h','5th','6th','7th','8th','9th'];
+                                $position_bracket = ['','1st','2nd','3rd','45h','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
                                 $queue = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first();
                                 ?>
                                 <li id="referral_incoming{{ $row->code }}">
-                                    @if($position > 1)
-                                        <?php $position++; ?>
+                                    @if($row->position > 0)
                                         <div class="badge-overlay">
-                                            <span class="top-right badge1 red">{{ $position_bracket[$position] }} Position</span>
+                                            <span class="top-right badge1 red">{{ $position_bracket[$row->position+1] }} Position</span>
                                         </div>
                                     @endif
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
