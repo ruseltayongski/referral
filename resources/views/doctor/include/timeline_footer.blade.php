@@ -40,7 +40,7 @@
                 </a>
             </div>
         @endif
-        @if($redirected > 0)
+        {{--@if($redirected > 0)
             <div class="form-group">
                 <a href="#" data-toggle="modal"
                    data-id="{{ $row->id }}"
@@ -50,7 +50,7 @@
                     @endif
                 </a>
             </div>
-        @endif
+        @endif--}}
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
                 data-code="{{ $row->code }}"
