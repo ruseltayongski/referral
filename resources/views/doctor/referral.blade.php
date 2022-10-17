@@ -147,15 +147,19 @@ $user = Session::get('auth');
                                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                                 //$redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
-                                $position = \App\Activity::where('code',$row->code)->groupBy('referred_to')->count();
-                                $position_bracket = ['','1st','2nd','3rd','45h','5th','6th'.'7th','8th','9th'];
+                                $position = \App\Activity::where('code',$row->code)->where(function($query) {
+                                    $query->where("status","redirected")
+                                        ->orWhere("status","transferred");
+                                    })->count();
+                                $position_bracket = ['','1st','2nd','3rd','45h','5th','6th','7th','8th','9th'];
                                 $queue = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first();
                                 ?>
                                 <li id="referral_incoming{{ $row->code }}">
                                     @if($position > 1)
-                                    <div class="badge-overlay">
-                                        <span class="top-right badge1 red">{{ $position_bracket[$position] }} Position</span>
-                                    </div>
+                                        <?php $position++; ?>
+                                        <div class="badge-overlay">
+                                            <span class="top-right badge1 red">{{ $position_bracket[$position] }} Position</span>
+                                        </div>
                                     @endif
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
