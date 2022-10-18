@@ -151,8 +151,8 @@ $user = Session::get('auth');
                                 ?>
                                 <li id="referral_incoming{{ $row->code }}">
                                     @if($row->position > 0)
-                                        <div class="badge-overlay">
-                                            <span class="top-right badge1 red">{{ $position_bracket[$row->position+1] }} Position</span>
+                                        <div class='badge-overlay'>
+                                            <span class='top-right badge1 red'>{{ $position_bracket[$row->position+1] }} Position</span>
                                         </div>
                                     @endif
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')

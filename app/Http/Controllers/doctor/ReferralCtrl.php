@@ -1251,15 +1251,6 @@ class ReferralCtrl extends Controller
 
         //websocket
         $patient = Patients::find($track->patient_id);
-        $count_activity = Activity::where("code",$req->code)
-            ->where(function($query){
-                $query->where("status","referred")
-                    ->orWhere("status","redirected")
-                    ->orWhere("status","transferred");
-            })
-            ->groupBy("code")
-            ->count();
-
         $count_seen = Seen::where('tracking_id',$track->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$req->code;
@@ -1278,7 +1269,6 @@ class ReferralCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
             "status" => "transferred",
-            "count_activity" => $count_activity,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track
@@ -1353,18 +1343,16 @@ class ReferralCtrl extends Controller
         Activity::where('code',$track->code)->where('status','queued')->delete();
 
         $patient = Patients::find($track->patient_id);
-        $count_activity = Activity::where("code",$req->code)
-            ->where(function($query){
-                $query->where("status","referred")
-                    ->orWhere("status","redirected")
-                    ->orWhere("status","transferred");
-            })
-            ->groupBy("code")
-            ->count();
         $tracking = Tracking::where("code",$req->code)->first();
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$req->code;
+        $position = Activity::where("code",$req->code)
+            ->where(function($query) {
+                $query->where("status","redirected")
+                    ->orWhere("status","transferred");
+            })
+            ->count();
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -1380,10 +1368,10 @@ class ReferralCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
             "status" => "redirected",
-            "count_activity" => $count_activity,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "position" => $position
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
         return Redirect::back();
