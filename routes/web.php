@@ -352,6 +352,7 @@ Route::get('excel/all','ExcelCtrl@ExportExcelAll');
 Route::get('excel/export/referred','doctor\ReferralCtrl@exportReferredExcel');
 Route::get('excel/export/archived','doctor\ReferralCtrl@exportArchivedExcel');
 Route::get('excel/export/top_icd','admin\ReportCtrl@exportTopIcdExcel');
+Route::get('excel/export/top_icd/all','admin\ReportCtrl@exportTopIcdAllExcel');
 Route::get('excel/export/top_reason_referral','admin\ReportCtrl@exportReasonForReferralExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
 
