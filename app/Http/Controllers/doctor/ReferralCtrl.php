@@ -1517,16 +1517,37 @@ class ReferralCtrl extends Controller
         })
             ->orderBy("id","desc")
             ->first();
-        $data = array(
-            'code' => $activity->code,
-            'patient_id' => $activity->patient_id,
-            'date_referred' => $date,
-            'referred_from' => $activity->referred_from,
-            'referred_to' => $activity->referred_to,
-            'action_md' => $user->id,
-            'remarks' => $req->reason,
-            'status' => 'cancelled'
-        );
+
+        $already_rejected = Activity::where('code',$track->code)->orderBy('id','desc')->first();
+        if($already_rejected->status === 'rejected') {
+            Session::put('rejected_by_admin',true);
+            return redirect()->back();
+        }
+
+        if(isset($req->admin)) {
+            $data = array(
+                'code' => $activity->code,
+                'patient_id' => $activity->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $activity->referred_from,
+                'referred_to' => $activity->referred_to,
+                'action_md' => $activity->referring_md,
+                'remarks' => "(Cancelled by 711 Admin) - " . $req->reason,
+                'status' => 'cancelled'
+            );
+        } else {
+            $data = array(
+                'code' => $activity->code,
+                'patient_id' => $activity->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $activity->referred_from,
+                'referred_to' => $activity->referred_to,
+                'action_md' => $user->id,
+                'remarks' => $req->reason,
+                'status' => 'cancelled'
+            );
+        }
+
         Activity::create($data);
 
         Tracking::where('id',$id)
@@ -1538,18 +1559,22 @@ class ReferralCtrl extends Controller
         $latest_activity = Activity::where("code",$track->code)->orderBy("id","desc")->first();
         $count_reco = Feedback::where("code",$track->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$track->code;
+        $activity_id = Activity::where("code",$track->code)->where("status","referred")->first()->id;
 
+        $md = User::where('id',$latest_activity->action_md)->first();
         $cancel = [
             "patient_code" => $track->code,
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
-            "activity_id" => $latest_activity->id,
-            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
-            "referring_name" => Facility::find($user->facility_id)->name,
+            "activity_id" => $activity_id,
+            "referring_md" => ucfirst($md->fname).' '.ucfirst($md->lname),
+            "referring_name" => Facility::find($md->facility_id)->name,
             "cancelled_date" => date('M d, Y h:i A',strtotime($date)),
-            "remarks" => $req->reason,
+            "remarks" => $latest_activity->remarks,
+            "referred_from" => $latest_activity->referred_from,
             "referred_to" => $latest_activity->referred_to,
             "count_reco" => $count_reco,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "admin" => (isset($req->admin)) ? 'yes' : 'no'
         ];
         broadcast(new SocketReferralCancelled($cancel));
         return redirect()->back();

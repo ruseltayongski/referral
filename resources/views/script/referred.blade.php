@@ -360,6 +360,9 @@
 <script>
     $('body').on('click','.btn-cancel',function(){
         var id = $(this).data('id');
+        var user = $(this).data('user');
+        if(user === 'admin')
+            $('#cancelAdmin').val(user);
         var url = "{{ url('doctor/referred/cancel') }}/"+id;
         $("#cancelReferralForm").attr('action',url);
     });

@@ -1,3 +1,7 @@
+<?php
+$user = Session::get('auth');
+?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -624,7 +628,7 @@
                                                         <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                                             <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                                             <td>
-                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> was queued by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
+                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was queued by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
                                                                 <span class="remarks">Remarks: Queued at <b>{{ $act->remarks }}</b></span>
                                                             </td>
                                                         </tr>
@@ -713,9 +717,16 @@
                                     @endif
                                 </a>
                             @endif
-                            @if(!$checkForCancellation && !isset($_GET['referredCode']))
-                                <a href="#cancelModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
+                            @if(!$checkForCancellation)
+                                @if(!isset($_GET['referredCode']))
+                                    <a href="#cancelModal" data-toggle="modal"
+                                       data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
+                                @else
+                                    @if($user->level === 'admin')
+                                        <a href="#cancelModal" data-toggle="modal"
+                                           data-id="{{ $row->id }}" data-user="admin" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
+                                    @endif
+                               @endif
                             @endif
                         </div>
                     </div>
@@ -781,6 +792,13 @@
                 msg: "Updating form was ignored because this referral was already accepted by receiving facility."
             });
         <?php Session::put("already_accepted",false); ?>
+        @endif
+        @if(Session::get('rejected_by_admin'))
+        Lobibox.alert("error",
+            {
+                msg: "This referral was already cancelled by 711 Admin."
+            });
+        <?php Session::put("rejected_by_admin",false); ?>
         @endif
 
         $('body').on('click','.btn-transfer',function() {

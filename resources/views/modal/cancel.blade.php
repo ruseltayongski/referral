@@ -7,6 +7,7 @@
                     <hr />
                     <form method="post" action="" id="cancelReferralForm">
                         {{ csrf_field() }}
+                        <input type="hidden" name="admin" value="" id="cancelAdmin">
                         <div class="form-group">
                             <textarea required class="form-control" name="reason" style="resize: none;" rows="6" placeholder="Reason for Cancellation"></textarea>
                         </div>

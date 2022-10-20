@@ -263,6 +263,33 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
+
+            notifyReferralCancelledAdmin(patient_code, activity_id, patient_name, referring_md, referring_name, cancelled_date, redirect_track, remarks) {
+                $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#rejected_progress"+patient_code+activity_id).addClass("bg-yellow");
+                $("#rejected_name"+patient_code+activity_id).html("Cancelled");
+                $("#prepend_from_websocket"+patient_code).prepend('' +
+                    '<tr>\n' +
+                    '    <td>'+cancelled_date+'</td>\n' +
+                    '    <td>\n' +
+                    '       <span class="txtPatient">'+patient_name+'</span>`s referral was cancelled by Dr. <span class="txtDoctor">'+referring_md+'</span> of <span class="txtHospital">'+referring_name+'</span>.\n' +
+                    '       <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '       <br>\n' +
+                    '   </td>\n' +
+                    '</tr>');
+                let msg = patient_name+"'s referral was cancelled by 711 Admin <br>" + cancelled_date + '<br><br>\n' +
+                    '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+                    '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
+                    '       </a>';
+                Lobibox.notify('error', {
+                    delay: false,
+                    title: 'Cancelled',
+                    closeOnClick: false,
+                    msg: msg,
+                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                });
+            },
+
             notifyReferralUndoCancel(patient_code, activity_id, msg, status) {
                 let stat = "success";
                 if(status === "rejected") {
@@ -499,8 +526,6 @@
             Echo.join('referral_cancelled')
                 .listen('SocketReferralCancelled', (event) => {
                     if(event.payload.referred_to === this.user.facility_id) {
-                        console.log("redirect_track: ");
-                        console.log(event.payload.redirect_track);
                         $('#closeReferralForm'+event.payload.patient_code).click();
                         let content =
                             '    <i class="fa fa-ban bg-red"></i>\n' +
@@ -520,6 +545,10 @@
 
                         $('#referral_incoming'+event.payload.patient_code).html(content);
                         this.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track)
+                    }
+                    if(event.payload.referred_from === this.user.facility_id && event.payload.admin === 'yes') {
+                        console.log("admin cancellation!!");
+                        this.notifyReferralCancelledAdmin(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track, event.payload.remarks);
                     }
                 });
             Echo.join('referral_undo_cancel')
