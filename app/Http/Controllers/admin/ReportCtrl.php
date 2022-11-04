@@ -994,7 +994,8 @@ class ReportCtrl extends Controller
     }
 
     public function topIcd(Request $request) {
-        $facility_id = Session::get('auth')->facility_id;
+        $user = Session::get('auth');
+        $facility_id = $user->facility_id;
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -1015,7 +1016,11 @@ class ReportCtrl extends Controller
                         $join1->orWhere("activity.status","=","redirected");
                         $join1->orWhere("activity.status","=","transferred");
                     });
-                })->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
+                });
+
+        if($user->level != 'admin'){
+            $icd = $icd->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
+        }
 
         if($request->province_id) {
            $icd = $icd->leftJoin("facility","facility.id","=","activity.referred_to")
