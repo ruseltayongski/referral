@@ -352,6 +352,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
             },500);
         });
     }
+
+    var push_notification_diagnosis_ccmc = "";
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $('#clear_icd, #icd_selected').show();
@@ -366,6 +368,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
             }
             clearOtherDiagnosis();
         });
+
+        push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
         console.log(values);
     }
     function othersDiagnosis(){

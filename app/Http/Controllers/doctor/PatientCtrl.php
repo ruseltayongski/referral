@@ -32,6 +32,9 @@ use App\Http\Controllers\ApiController;
 
 class PatientCtrl extends Controller
 {
+
+    public $referred_patient_data;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -505,6 +508,7 @@ class PatientCtrl extends Controller
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
             );
+
             $form = PatientForm::create($data);
 
             $file_paths = "";
@@ -522,14 +526,28 @@ class PatientCtrl extends Controller
                 }
             }
             $form->file_path = $file_paths;
-
             $form->save();
+
             foreach($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $form->code;
                 $icd->icd_id = $i;
                 $icd->save();
             }
+
+            /*if($req->referred_facility == 23) {
+                $patient = Patients::find($patient_id);
+                $this->referred_patient_data = array(
+                    "age" => ParamCtrl::getAge($patient->dob),
+                    "chiefComplaint" => $req->case_summary,
+                    "department" => Department::find($req->referred_department)->description,
+                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "sex" => $patient->sex,
+                    "referring_hospital" => Facility::find($user->facility_id)->name,
+                    "referred_to" => $req->referred_facility,
+                    "date_referred" => $form->created_at
+                );
+            }//push notification for cebu south medical center*/
 
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
         }
@@ -608,15 +626,6 @@ class PatientCtrl extends Controller
                 }
             }
             $form->file_path = $file_paths;
-
-//            if($_FILES["file_upload"]["name"]) {
-//                $req->username = $user->username;
-//                $file = $_FILES['file_upload']['name'];
-//
-//                ApiController::fileUpload($req);
-//                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
-//            }
-
             $form->save();
 
             foreach($req->icd_ids as $i) {
@@ -626,10 +635,24 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
+            /*if($req->referred_facility == 23) { //diagnosis for ccmc for push notification
+                $patient = Patients::find($patient_id);
+                $this->referred_patient_data = array(
+                    "age" => ParamCtrl::getAge($patient->dob),
+                    "chiefComplaint" => $req->woman_major_findings,
+                    "department" => Department::find($req->referred_department)->description,
+                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "sex" => $patient->sex,
+                    "referring_hospital" => Facility::find($user->facility_id)->name,
+                    "referred_to" => $req->referred_facility,
+                    "date_referred" => $form->created_at
+                );
+            }//push notification for cebu south medical center*/
+
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
-        Session::put("refer_patient",true);
+        /*return $this->referred_patient_data;*/
     }
 
     function referPatientWalkin(Request $req,$type)

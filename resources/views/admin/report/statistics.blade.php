@@ -426,7 +426,7 @@
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');
                     $(".statistics-body").html(
                         "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
-                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th></tr>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Referring Doctor</th><th class='text-green'>Reason for Referral</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th><th class='text-green'>Referred Date</th></tr>\n" +
                         "</table>"
                     );
                     jQuery.each(result, function(index, value) {
@@ -437,10 +437,13 @@
                             "</a>");
                         tr.append( $('<td />', { text : value["code"] } ));
                         tr.append( $('<td />', { text : value["patient_name"] } ));
+                        tr.append( $('<td />', { text : value["referring_doctor"] } ));
+                        tr.append( $('<td />', { text : value["reason_for_referral"] } ));
                         tr.append( $('<td />', { text : value["province"]+", "+value["muncity"]+", "+value["barangay"] } ));
                         tr.append( $('<td />', { text : value["age"] } ));
                         tr.append( $('<td />', { text : value["referring_facility"] } ));
                         tr.append( $('<td />', { text : value["referred_facility"] } ));
+                        tr.append( $('<td />', { text : value["referred_date"] } ));
                         $("#table").append(tr);
                     });
 

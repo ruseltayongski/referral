@@ -45,6 +45,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Matrix\Exception;
 
 class ReferralCtrl extends Controller
 {
@@ -1277,37 +1278,6 @@ class ReferralCtrl extends Controller
         //end websocket
 
         return Redirect::back();
-
-        /*$patient = Patients::select(
-            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-            'patients.sex'
-        )
-            ->where('id',$track->patient_id)
-            ->first();
-        $user_md = User::find($user->id);
-
-
-        $form_type = '#normalFormModal';
-        if($track->type=='pregnant'){
-            $form_type = '#pregnantFormModal';
-        }*/
-
-        /*$hosp = Facility::find($user->facility_id)->name;
-        $hospTo = Facility::find($req->facility)->name;
-
-        $msg = "$track->code transferred to $hospTo from $hosp.";
-        DeviceTokenCtrl::send('Transferred',$msg,$track->referred_from);*/
-
-        /*return array(
-            'date' => date('M d, Y h:i A',strtotime($date)),
-            'age' => $patient->age,
-            'sex' => $patient->sex,
-            'action_md' => "$user_md->fname $user_md->mname $user_md->lname",
-            'form_type' => $form_type,
-            'track_id' => $track->id,
-            'activity_id' => $activity->id,
-            'referred_facility' => $track->referred_to
-        );*/
     }
 
     public function redirect(Request $req)
@@ -1374,40 +1344,25 @@ class ReferralCtrl extends Controller
             "position" => $position
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+
+        /*if($req->referred_facility != 23) {
+            try {
+                ApiController::pushNotificationCCMC(array(
+                    "age" => ParamCtrl::getAge($patient->dob),
+                    "chiefComplaint" => $req->facility,
+                    "department" => Department::find($req->department)->description,
+                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "sex" => $patient->sex,
+                    "referring_hospital" => Facility::find($user->facility_id)->name,
+                    "referred_to" => $req->referred_facility,
+                    "date_referred" => $date
+                ));
+            } catch (Exception $e) {
+                return Redirect::back();
+            }
+        }//push notification for cebu south medical center*/
+
         return Redirect::back();
-
-        /*$patient = Patients::select(
-            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
-            'patients.sex',
-            DB::raw('CONCAT(fname," ",mname," ",lname) as patient_name')
-        )
-            ->where('id',$track->patient_id)
-            ->first();
-
-        $form_type = '#normalFormModal';
-        if($track->type=='pregnant')
-            $form_type = '#pregnantFormModal';
-
-        if($user->level == 'doctor')
-            $referring_md = "Dr. ".$user->fname.' '.$user->lname;
-        else
-            $referring_md = $user->fname.' '.$user->lname;
-
-        return array (
-            'code' => $track->code,
-            'date' => date('M d, Y h:i A',strtotime($date)),
-            'patient_name' => $patient->patient_name,
-            'age' => $patient->age,
-            'sex' => $patient->sex,
-            'form_type' => $form_type,
-            'track_id' => $track->id,
-            'activity_id' => $activity->id,
-            'referred_from' => $user->facility_id,
-            'referring_md' => $referring_md,
-            'referring_facility' => Facility::find($user->facility_id)->name,
-            'department_id' => $req->department,
-            'department_name' => Department::find($req->department)->description
-        );*/
     }
 
     public function seenBy($track_id,$code)
