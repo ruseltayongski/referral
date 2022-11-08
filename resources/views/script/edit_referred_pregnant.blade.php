@@ -10,8 +10,8 @@
         }
     });
 
-    $('#edit_save_btn').on('submit', function() {
-        $(this).prop('disabled', true);
+    $('.edit_normal_form').on('submit', function() {
+        $("#edit_save_btn").attr('disabled', true);
     });
 
     $('.edit_facility_pregnant').val("<?php echo $form['pregnant']->referred_facility_id;?>");
