@@ -543,7 +543,6 @@
         e.preventDefault();
         $('.loading').show();
         $('.btn-submit').attr('disabled',true);
-
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
@@ -552,7 +551,6 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
                 $('#normalFormModal').modal('toggle');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {

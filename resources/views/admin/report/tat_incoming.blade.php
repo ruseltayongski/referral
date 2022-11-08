@@ -355,19 +355,18 @@
                     type: 'GET',
                     success: function(data){
                         $("#facility_from").select2("val", "");
+                        var facility_select_text = "<?php echo \App\Facility::find($facility_select_from)->name; ?>";
                         $('#facility_from').empty()
                             .append($('<option>', {
                                 value: '',
-                                text : 'Select All Facility'
+                                text : facility_select_text
                             }));
-                        var facility_select = "<?php echo $facility_select_from; ?>";
                         jQuery.each(data, function(i,val){
                             $('#facility_from').append($('<option>', {
                                 value: val.id,
                                 text : val.name
                             }));
                         });
-                        $('#facility_from option[value="'+facility_select+'"]').attr("selected", "selected");
                         $('.loading').hide();
                     },
                     error: function(e){
@@ -378,6 +377,47 @@
                 $('.loading').hide();
                 $("#facility_from").select2("val", "");
                 $('#facility_from').empty()
+                    .append($('<option>', {
+                        value: '',
+                        text : 'Select All Facility'
+                    }));
+            }
+        }
+
+        @if($province_select_to)
+            onChangeProvinceTo("<?php echo $province_select_to; ?>");
+        @endif
+        function onChangeProvinceTo(province_id) {
+            $('.loading').show();
+            if(province_id){
+                var url = "{{ url('location/select/facility/byprovince') }}";
+                $.ajax({
+                    url: url+'/'+province_id,
+                    type: 'GET',
+                    success: function(data){
+                        $("#facility_to").select2("val", "");
+                        var facility_select_text = "<?php echo \App\Facility::find($facility_select_to)->name; ?>";
+                        $('#facility_to').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : facility_select_text
+                            }));
+                        jQuery.each(data, function(i,val) {
+                            $('#facility_to').append($('<option>', {
+                                value: val.id,
+                                text : val.name
+                            }));
+                        });
+                        $('.loading').hide();
+                    },
+                    error: function(e){
+                        console.log(e)
+                    }
+                });
+            } else {
+                $('.loading').hide();
+                $("#facility_to").select2("val", "");
+                $('#facility_to').empty()
                     .append($('<option>', {
                         value: '',
                         text : 'Select All Facility'
@@ -397,7 +437,6 @@
                     url: url+'/'+id,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data);
                         $('#department_to').empty()
                             .append($('<option>', {
                                 value: '',
@@ -416,48 +455,6 @@
                         console.log(e)
                     }
                 });
-            }
-        }
-
-        @if($province_select_to)
-            onChangeProvinceTo("<?php echo $province_select_to; ?>");
-        @endif
-        function onChangeProvinceTo(province_id) {
-            $('.loading').show();
-            if(province_id){
-                var url = "{{ url('location/select/facility/byprovince') }}";
-                $.ajax({
-                    url: url+'/'+province_id,
-                    type: 'GET',
-                    success: function(data){
-                        $("#facility_to").select2("val", "");
-                        $('#facility_to').empty()
-                            .append($('<option>', {
-                                value: '',
-                                text : 'Select All Facility'
-                            }));
-                        var facility_select = "<?php echo $facility_select_to; ?>";
-                        jQuery.each(data, function(i,val){
-                            $('#facility_to').append($('<option>', {
-                                value: val.id,
-                                text : val.name
-                            }));
-                        });
-                        $('#facility_to option[value="'+facility_select+'"]').attr("selected", "selected");
-                        $('.loading').hide();
-                    },
-                    error: function(e){
-                        console.log(e)
-                    }
-                });
-            } else {
-                $('.loading').hide();
-                $("#facility_to").select2("val", "");
-                $('#facility_to').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Select All Facility'
-                    }));
             }
         }
 
