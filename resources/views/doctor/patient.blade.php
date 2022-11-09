@@ -534,7 +534,7 @@
             diagnosis: diagnosis,
             patient: patient,
             sex: sex,
-            hospital_referrer : referring_hospital,
+            referring_hospital : referring_hospital,
             date_referred : moment(date_referred).format("YYYY-MM-DD hh:mm:ss")
         });
     }

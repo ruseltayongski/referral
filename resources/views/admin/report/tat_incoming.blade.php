@@ -355,17 +355,22 @@
                     type: 'GET',
                     success: function(data){
                         $("#facility_from").select2("val", "");
+                        var facility_select_id = "<?php echo $facility_select_from; ?>";
                         var facility_select_text = "<?php echo \App\Facility::find($facility_select_from)->name; ?>";
+                        console.log(facility_select_text)
                         $('#facility_from').empty()
                             .append($('<option>', {
-                                value: '',
+                                value: facility_select_id,
                                 text : facility_select_text
                             }));
+                        $("#facility_from").next().children().children().children().eq(0).attr("title",facility_select_text).append(facility_select_text);
                         jQuery.each(data, function(i,val){
-                            $('#facility_from').append($('<option>', {
-                                value: val.id,
-                                text : val.name
-                            }));
+                            if(facility_select_id != val.id) {
+                                $('#facility_from').append($('<option>', {
+                                    value: val.id,
+                                    text : val.name
+                                }));
+                            }
                         });
                         $('.loading').hide();
                     },
@@ -375,12 +380,7 @@
                 });
             } else {
                 $('.loading').hide();
-                $("#facility_from").select2("val", "");
-                $('#facility_from').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Select All Facility'
-                    }));
+                $("#facility_from").next().children().children().children().eq(0).attr("title","").empty();
             }
         }
 
@@ -396,17 +396,22 @@
                     type: 'GET',
                     success: function(data){
                         $("#facility_to").select2("val", "");
+                        var facility_select_id = "<?php echo $facility_select_to; ?>";
                         var facility_select_text = "<?php echo \App\Facility::find($facility_select_to)->name; ?>";
+                        console.log(facility_select_text);
                         $('#facility_to').empty()
                             .append($('<option>', {
-                                value: '',
+                                value: facility_select_id,
                                 text : facility_select_text
                             }));
-                        jQuery.each(data, function(i,val) {
-                            $('#facility_to').append($('<option>', {
-                                value: val.id,
-                                text : val.name
-                            }));
+                        $("#facility_to").next().children().children().children().eq(0).attr("title",facility_select_text).append(facility_select_text);
+                        jQuery.each(data, function(i,val){
+                            if(facility_select_id != val.id) {
+                                $('#facility_to').append($('<option>', {
+                                    value: val.id,
+                                    text: val.name
+                                }));
+                            }
                         });
                         $('.loading').hide();
                     },
