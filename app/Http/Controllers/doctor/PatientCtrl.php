@@ -32,6 +32,9 @@ use App\Http\Controllers\ApiController;
 
 class PatientCtrl extends Controller
 {
+
+    public $referred_patient_data;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -225,6 +228,14 @@ class PatientCtrl extends Controller
         $data = Patients::find($request->patient_id);
 
         if($request->patient_update_button){
+            if($request->region != 'Region VII') {
+                $request->merge([
+                    'province' => null,
+                    'muncity' => null,
+                    'brgy' => null
+                ]);
+            }
+
             $data_update = $request->all();
             $old_fname = $request->old_fname;
             $old_lname = $request->old_lname;
@@ -232,37 +243,54 @@ class PatientCtrl extends Controller
             unset($data_update['_token'], $data_update['old_fname'], $data_update['old_lname'], $data_update['old_dob']);
             unset($data_update['patient_update_button']);
             unset($data_update['patient_id']);
+
             $data->update($data_update);
+
             Session::put('patient_update_save',true);
             Session::put('patient_message','Successfully updated patient');
-            $data = Patients::find($request->patient_id);
 
-            $pt = Profile::where('fname',$old_fname)
-                ->where('lname',$old_lname)
-                ->where('dob',$old_dob)
-                ->where('province_id',$request->province)
-                ->where('muncity_id',$request->muncity)
-                ->where('barangay_id',$request->brgy)
-                ->first();
+            if($data->region == 'Region VII') { //tsekap update
+                $pt = Profile::where('fname',$old_fname)
+                    ->where('lname',$old_lname)
+                    ->where('dob',$old_dob)
+                    ->where('province_id',$request->province)
+                    ->where('muncity_id',$request->muncity)
+                    ->where('barangay_id',$request->brgy)
+                    ->first();
 
-            if($pt) {
-                $pt->fname = $request->fname;
-                $pt->mname = $request->mname;
-                $pt->lname = $request->lname;
-                $pt->contact = $request->contact;
-                $pt->dob = $request->dob;
-                $pt->sex = $request->sex;
-                $pt->civil_status = $request->civil_status;
-                $pt->phicID = $request->phic_id;
-                $pt->muncity_id = $request->muncity;
-                $pt->barangay_id = $request->brgy;
-                $pt->save();
+                if($pt) {
+                    $pt->fname = $request->fname;
+                    $pt->mname = $request->mname;
+                    $pt->lname = $request->lname;
+                    $pt->contact = $request->contact;
+                    $pt->dob = $request->dob;
+                    $pt->sex = $request->sex;
+                    $pt->civil_status = $request->civil_status;
+                    $pt->phicID = $request->phic_id;
+                    $pt->muncity_id = $request->muncity;
+                    $pt->barangay_id = $request->brgy;
+                    $pt->save();
+                }
             }
 
+            $search_patient = array(
+                'keyword' => $data->fname.' '.$data->lname,
+                'region' => $data->region,
+                'province' => $data->province,
+                'muncity' => $data->muncity,
+                'brgy' => $data->brgy,
+                'province_others' => $data->province_others,
+                'muncity_others' => $data->muncity_others,
+                'brgy_others' => $data->brgy_others
+            );
+            Session::put('profileSearch',$search_patient); //seach patient so it still display in table
             return Redirect::back();
         }
+
+        $province = Province::get();
         return view('doctor.patient_body',[
-            "data" => $data
+            "data" => $data,
+            "province" => $province
         ]);
     }
 
@@ -480,6 +508,7 @@ class PatientCtrl extends Controller
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
             );
+
             $form = PatientForm::create($data);
 
             $file_paths = "";
@@ -497,14 +526,28 @@ class PatientCtrl extends Controller
                 }
             }
             $form->file_path = $file_paths;
-
             $form->save();
+
             foreach($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $form->code;
                 $icd->icd_id = $i;
                 $icd->save();
             }
+
+            /*if($req->referred_facility == 23) {
+                $patient = Patients::find($patient_id);
+                $this->referred_patient_data = array(
+                    "age" => ParamCtrl::getAge($patient->dob),
+                    "chiefComplaint" => $req->case_summary,
+                    "department" => Department::find($req->referred_department)->description,
+                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "sex" => $patient->sex,
+                    "referring_hospital" => Facility::find($user->facility_id)->name,
+                    "referred_to" => $req->referred_facility,
+                    "date_referred" => $form->created_at
+                );
+            }//push notification for cebu south medical center*/
 
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
         }
@@ -583,15 +626,6 @@ class PatientCtrl extends Controller
                 }
             }
             $form->file_path = $file_paths;
-
-//            if($_FILES["file_upload"]["name"]) {
-//                $req->username = $user->username;
-//                $file = $_FILES['file_upload']['name'];
-//
-//                ApiController::fileUpload($req);
-//                $form->file_path = ApiController::fileUploadUrl().$req->username."/".$file;
-//            }
-
             $form->save();
 
             foreach($req->icd_ids as $i) {
@@ -601,10 +635,24 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
+            /*if($req->referred_facility == 23) { //diagnosis for ccmc for push notification
+                $patient = Patients::find($patient_id);
+                $this->referred_patient_data = array(
+                    "age" => ParamCtrl::getAge($patient->dob),
+                    "chiefComplaint" => $req->woman_major_findings,
+                    "department" => Department::find($req->referred_department)->description,
+                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "sex" => $patient->sex,
+                    "referring_hospital" => Facility::find($user->facility_id)->name,
+                    "referred_to" => $req->referred_facility,
+                    "date_referred" => $form->created_at
+                );
+            }//push notification for cebu south medical center*/
+
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
-        Session::put("refer_patient",true);
+        /*return $this->referred_patient_data;*/
     }
 
     function referPatientWalkin(Request $req,$type)

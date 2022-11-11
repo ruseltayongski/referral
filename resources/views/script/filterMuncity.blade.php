@@ -63,7 +63,7 @@
             });
 
             $(".muncity_holder").html("<select class=\"form-control muncity select2\" name=\"muncity\" onchange=\"filterSidebar($(this),'barangay')\" required>\n" +
-                "\n" +
+                "                                        <option value=\"\">Please Select Municipality</option>\n" +
                 "                                    </select>");
 
             $(".barangay_holder").html("<select class=\"form-control barangay select2\" name=\"brgy\" required>\n" +

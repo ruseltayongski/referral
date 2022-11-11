@@ -314,6 +314,7 @@
 @section('js')
 @include('script.filterMuncity')
 {{--@include('script.firebase')--}}
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 @include('script.datetime')
 <script>
     function promptWalkinPregnant(counter) {
@@ -357,60 +358,6 @@
             }
         });
     }
-
-    //custom autocomplete (category selection)
-    /*jQuery(function($) {
-        $.widget("custom.catcomplete", $.ui.autocomplete, {
-            _create: function () {
-                this._super();
-                this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
-            },
-            _renderMenu: function (ul, items) {
-                var that = this, currentCategory = "";
-                $.each(items, function (index, item) {
-                    that._renderItemData(ul, item);
-                    return index < 500;
-                });
-            }
-        });
-
-
-
-        var icd_code = '';
-        $("#diagnosis").catcomplete({
-            delay: 0,
-            source: icd10,
-            select: function (e, ui) {
-                keyword = ui.item.value;
-                icd_code = ui.item.icd_code;
-                $("#icd_code").val(icd_code);
-                console.log(ui.item);
-            }
-        });
-        $("#diagnosis_walkin").catcomplete({
-            delay: 0,
-            source: icd10,
-            select: function (e, ui) {
-                keyword = ui.item.value;
-                icd_code = ui.item.icd_code;
-                $("#icd_code_walkin").val(icd_code);
-                console.log(ui.item);
-            }
-        });
-
-    });
-
-    function Icd10Checker(data){
-        if(data.val() != icd_code){
-            $("#icd_code").val("");
-        }
-    }
-
-    function Icd10Checker_walkin(data){
-        if(data.val() != icd_code){
-            $("#icd_code_walkin").val("");
-        }
-    }*/
 
     function setClinicalFormTile(type) {
         if(type == "pregnant")
@@ -549,26 +496,81 @@
         });
     });
 
+    function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred) {
+        /*console.log({
+            age: age,
+            chiefComplaint: chiefComplaint,
+            department: department,
+            diagnosis: diagnosis,
+            patient: patient,
+            sex: sex,
+            referring_hospital : referring_hospital,
+            date_referred : moment(date_referred).format("YYYY-MM-DD hh:mm:ss")
+        });
+        return;*/
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
+            authDomain: "notifier-5e4e8.firebaseapp.com",
+            databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
+            projectId: "notifier-5e4e8",
+            storageBucket: "notifier-5e4e8.appspot.com",
+            messagingSenderId: "359294836752",
+            appId: "1:359294836752:web:87c854779366d0f11d2a95",
+            measurementId: "G-HEYDWWHLKV"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        //initialize firebase
+        var dbRef = firebase.database();
+        //create table
+        var requestRef = dbRef.ref('23');
+
+        requestRef.push({
+            age: age,
+            chiefComplaint: chiefComplaint,
+            department: department,
+            diagnosis: diagnosis,
+            patient: patient,
+            sex: sex,
+            referring_hospital : referring_hospital,
+            date_referred : moment(date_referred).format("YYYY-MM-DD hh:mm:ss")
+        });
+    }
+
     $('.normal_form').on('submit',function(e){
         e.preventDefault();
         $('.loading').show();
         $('.btn-submit').attr('disabled',true);
-
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
-
             type: 'POST',
             success: function(data){
-                console.log(data);
-                window.location.reload(false);
-                //sendNormalData(data);
+                $('.loading').hide();
+                $('#normalFormModal').modal('toggle');
+                $('.btn-submit').attr('disabled',false);
+                Lobibox.notify('success', {
+                    title: "Success",
+                    msg: "Successfully Referred Patient!"
+                });
+                /*if(data.referred_to == 23) {
+                    var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
+                } //push notification for CCMD*/
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
-                $('#serverModal').modal();
+                $('.loading').hide();
+                $('#pregnantModal').modal('toggle');
+                $('#normalFormModal').modal('toggle');
+                $('.btn-submit').attr('disabled',false);
+                Lobibox.notify('error', {
+                    title: "Error",
+                    msg: "Status: " + textStatus+" Error: " + errorThrown
+                });
             }
         });
     });
@@ -607,12 +609,28 @@
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data){
-                window.location.reload(false);
-                console.log(data);
-                //sendNormalData(data);
+                $('.loading').hide();
+                $('#pregnantModal').modal('toggle');
+                $('#pregnantFormModal').modal('toggle');
+                $('.btn-submit').attr('disabled',false);
+                Lobibox.notify('success', {
+                    title: "Success",
+                    msg: "Successfully Referred Patient!"
+                });
+                /*if(data.referred_to == 23) {
+                    var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
+                } //push notification for CCMD*/
             },
-            error: function(){
-                $('#serverModal').modal();
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                $('.loading').hide();
+                $('#pregnantModal').modal('toggle');
+                $('#pregnantFormModal').modal('toggle');
+                $('.btn-submit').attr('disabled',false);
+                Lobibox.notify('error', {
+                    title: "Error",
+                    msg: "Status: " + textStatus+" Error: " + errorThrown
+                });
             }
         });
 
@@ -724,18 +742,6 @@
         Session::put("patient_message",false)
     ?>
     @endif
-
-
-    @if(Session::get('refer_patient'))
-        Lobibox.notify('success', {
-            title: "Success",
-            msg: "Successfully Referred Patient!"
-        });
-        <?php
-        Session::put("refer_patient",false);
-        ?>
-    @endif
-
 </script>
 @endsection
 

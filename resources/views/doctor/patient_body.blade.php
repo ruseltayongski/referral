@@ -142,33 +142,81 @@
         </select>
     </div>
     <div class="form-group">
-        <label>Municipality:</label>
-        <input type="hidden" name="province" value="{{ $data->province }}">
-        <select class="form-control select2 select_muncity" name="muncity" required>
-            @foreach(\App\Muncity::where("province_id",$data->province)->get() as $mun)
-                <option value="{{ $mun->id }}"
-                <?php
-                    if(isset($data->muncity)){
-                        if($data->muncity == $mun->id){
-                            echo 'selected';
-                        }
-                    }
-                    ?>
-                >{{ $mun->description }}</option>
-            @endforeach
+        <label>Region:</label>
+        <select class="form-control region" name="region" onchange="othersRegion($(this),'{{ $province }}');" required>
+            <option value="Region VII" @if($data->region == 'Region VII') selected @endif>Region VII</option>
+            <option value="NCR" @if($data->region == 'NCR') selected @endif>NCR</option>
+            <option value="CAR" @if($data->region == 'CAR') selected @endif>CAR</option>
+            <option value="Region I" @if($data->region == 'Region I') selected @endif>Region I</option>
+            <option value="Region II" @if($data->region == 'Region II') selected @endif>Region II</option>
+            <option value="Region III" @if($data->region == 'Region III') selected @endif>Region III</option>
+            <option value="Region IV-A" @if($data->region == 'Region IV-A') selected @endif>Region IV-A</option>
+            <option value="Mimaropa" @if($data->region == 'Mimaropa') selected @endif>Mimaropa</option>
+            <option value="Region V" @if($data->region == 'Region V') selected @endif>Region V</option>
+            <option value="Region VI" @if($data->region == 'Region VI') selected @endif>Region VI</option>
+            <option value="Region VIII" @if($data->region == 'Region VIII') selected @endif>Region VIII</option>
+            <option value="Region IX" @if($data->region == 'Region IX') selected @endif>Region IX</option>
+            <option value="Region X" @if($data->region == 'Region X') selected @endif>Region X</option>
+            <option value="Region XI" @if($data->region == 'Region XI') selected @endif>Region XI</option>
+            <option value="Region XII" @if($data->region == 'Region XII') selected @endif>Region XII</option>
+            <option value="Region XIII" @if($data->region == 'Region XIII') selected @endif>Region XIII</option>
+            <option value="BARMM" @if($data->region == 'BARMM') selected @endif>BARMM</option>
         </select>
     </div>
     <div class="form-group">
-        <label>Barangay:</label>
-        <select class="form-control select2 select_barangay" name="brgy" required>
-            @if(isset($data->brgy))
-                @foreach(\App\Barangay::where("province_id",$data->province)->where("muncity_id",$data->muncity)->get() as $row)
-                    <option value="{{ $row->id }}" <?php if($data->brgy == $row->id)echo 'selected'; ?> >{{ $row->description }}</option>
-                @endforeach
+        <label>Province:</label>
+        <div class="province_holder">
+            @if($data->region == 'Region VII')
+                <select class="form-control province" name="province" onchange="filterSidebar($(this),'muncity')" required>
+                    <option value="">Select Province</option>
+                    @foreach($province as $prov)
+                        <option value="{{ $prov->id }}" @if($prov->id == $data->province) selected @endif>{{ $prov->description }}</option>
+                    @endforeach
+                </select>
             @else
-                <option value="">Select Barangay</option>
+                <input type='text' class='form-control' name='province_others' value="{{ $data->province_others }}" required>
             @endif
-        </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Municipality:</label>
+        <div class="muncity_holder">
+            @if($data->region == 'Region VII')
+                <select class="form-control select2 select_muncity muncity" name="muncity" required>
+                    @foreach(\App\Muncity::where("province_id",$data->province)->get() as $mun)
+                        <option value="{{ $mun->id }}"
+                        <?php
+                            if(isset($data->muncity)){
+                                if($data->muncity == $mun->id){
+                                    echo 'selected';
+                                }
+                            }
+                            ?>
+                        >{{ $mun->description }}</option>
+                    @endforeach
+                </select>
+            @else
+                <input type='text' class='form-control' name='muncity_others' value="{{ $data->muncity_others }}" required>
+            @endif
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Barangay:</label>
+        <div class="barangay_holder">
+            @if($data->region == 'Region VII')
+                <select class="form-control select2 select_barangay barangay" name="brgy" required>
+                    @if(isset($data->brgy))
+                        @foreach(\App\Barangay::where("province_id",$data->province)->where("muncity_id",$data->muncity)->get() as $row)
+                            <option value="{{ $row->id }}" <?php if($data->brgy == $row->id)echo 'selected'; ?> >{{ $row->description }}</option>
+                        @endforeach
+                    @else
+                        <option value="">Select Barangay</option>
+                    @endif
+                </select>
+            @else
+                <input type='text' class='form-control' name='brgy_others' value="{{ $data->brgy_others }}" required>
+            @endif
+        </div>
     </div>
     <hr />
     <div class="modal-footer">
@@ -176,36 +224,7 @@
         <button type="submit" value="true" name="patient_update_button" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
     </div>
 </form>
+@include('script.filterMuncity')
 
-<script>
-    $(".select2").select2({ width: '100%' });
-
-    $('.select_muncity').on('change',function(){
-        var province_id = "<?php echo $user->province; ?>";
-        var muncity_id = $(this).val();
-        var url = "{{ url('location/barangay/') }}";
-        $.ajax({
-            url: url+'/'+province_id+'/'+muncity_id,
-            type: 'GET',
-            success: function(data){
-                $('.select_barangay').empty()
-                    .append($('<option>', {
-                        value: '',
-                        text : 'Select Barangay'
-                    }));
-                jQuery.each(data, function(i,val){
-                    $('.select_barangay').append($('<option>', {
-                        value: val.id,
-                        text : val.description
-                    }));
-                });
-            },
-            error: function(){
-                $('#serverModal').modal();
-            }
-        });
-
-    });
-</script>
 
 

@@ -1187,5 +1187,40 @@ class ApiController extends Controller
         ]);
     }
 
+    public static function pushNotificationCCMC($push) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://fcm.googleapis.com/fcm/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+                "to": "/topics/referrals",
+                "data": {
+                    "hospital_referrer": "'.$push['referring_hospital'].'",
+                    "patient": "'.$push['patient'].'",
+                    "age": "'.$push['age'].'",
+                    "department": "'.$push['department'].'",
+                    "diagonsis": "'.$push['diagonsis'].'",
+                    "chief_complaint": "'.$push['chief_complaint'].'",
+                    "sex": "'.$push['sex'].'",
+                    "date_referred": "'.$push['date_referred'].'"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: key=AAAAU6ekIBA:APA91bEtfmASYObVAvEasSdtyaBqz6e0yi9gJrZ0J9fSxdYpDCdf6JWeN-Kbs7O-sEwEGoGxIn6cIw52RLi-Z2iRH2XfmHf2KH3xDdPWV4Of5C_GxJlq1rstQoNVCFzs_K_W3INFD0ks',
+                'Content-Type: application/json'
+            ),
+        ));
+
+        curl_exec($curl);
+        curl_close($curl);
+    }
+
 
 }

@@ -16,7 +16,7 @@
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
                             <br>
-                            <h5 class="description-header">{{ incoming_statistics.incoming }}</h5>
+                            <h5 class="description-header">{{ incoming_total }}</h5>
                             <span class="description-text">Incoming</span>
                         </div>
                         <!-- /.description-block -->
@@ -40,7 +40,7 @@
                         <div class="description-block border-right">
                             <br>
                             <h5 class="description-header">
-                                {{ seen_only }}
+                                {{ incoming_statistics.seen_only }}
                             </h5>
                             <span class="description-text">Seen Only</span>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="description-block">
                             <br>
                             <h5 class="description-header">
-                                {{ no_action }}
+                                {{ incoming_statistics.not_seen }}
                             </h5>
                             <span class="description-text">No Action</span>
                         </div>
@@ -79,6 +79,7 @@
             <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -88,9 +89,11 @@
         data() {
             return {
                 incoming_statistics : Object,
+                incoming_total : 0,
+                left_sum : 0,
+                right_sum : 0,
                 accept_percent : 0,
-                seen_only : 0,
-                no_action : 0
+                seen_only : 0
             }
         },
         created(){
@@ -173,11 +176,22 @@
                 axios.get('doctor/option/per/activity').then(response => {
                     //for statistics
                     this.incoming_statistics = response.data
-                    this.accept_percent = (this.incoming_statistics.accepted / this.incoming_statistics.incoming) * 100
+
+                    this.left_sum += this.incoming_statistics.referred + this.incoming_statistics.redirected + this.incoming_statistics.transferred
+                    this.right_sum += this.incoming_statistics.accepted + this.incoming_statistics.denied + this.incoming_statistics.seen_only + this.incoming_statistics.not_seen
+                    if(this.left_sum > this.right_sum) {
+                        this.incoming_statistics.seen_only += this.left_sum - this.right_sum
+                        this.right_sum += this.left_sum - this.right_sum
+                    }
+                    else if(this.left_sum < this.right_sum) {
+                        this.incoming_statistics.referred += this.right_sum - this.left_sum
+                        this.left_sum += this.right_sum - this.left_sum;
+                    }
+                    this.incoming_total += this.right_sum;
+
+                    this.accept_percent = this.incoming_statistics.accepted / (this.incoming_statistics.referred + this.incoming_statistics.redirected + this.incoming_statistics.transferred ) * 100
                     this.accept_percent = this.accept_percent.toFixed(2)
                     this.seen_only = this.incoming_statistics.seen_total - this.incoming_statistics.seen_accepted_redirected
-                    this.no_action = this.incoming_statistics.incoming - (this.incoming_statistics.accepted + this.incoming_statistics.redirected + this.seen_only)
-                    this.no_action = this.no_action > 0 ? this.no_action : 0
                     //
                     let options_activity = {
                         title: {
@@ -197,14 +211,14 @@
                             indexLabel: "{label} ({y})",
                             yValueFormatString:"#,##0.#"%"",
                             dataPoints: [
-                                { label: "Referred", y: response.data.referred },
-                                { label: "Accepted", y: response.data.accepted },
-                                { label: "Redirected", y: response.data.redirected },
-                                { label: "Called", y: response.data.calling },
-                                { label: "Arrived", y: response.data.arrived },
-                                { label: "Transferred", y: response.data.transferred },
-                                { label: "Admitted", y: response.data.accepted },
-                                { label: "Discharge", y: response.data.discharged }
+                                { label: "Referred", y: this.incoming_statistics.referred },
+                                { label: "Accepted", y: this.incoming_statistics.accepted },
+                                { label: "Redirected", y: this.incoming_statistics.redirected },
+                                { label: "Called", y: this.incoming_statistics.calling },
+                                { label: "Arrived", y: this.incoming_statistics.arrived },
+                                { label: "Transferred", y: this.incoming_statistics.transferred },
+                                { label: "Admitted", y: this.incoming_statistics.accepted },
+                                { label: "Discharge", y: this.incoming_statistics.discharged }
                             ]
                         }]
                     };

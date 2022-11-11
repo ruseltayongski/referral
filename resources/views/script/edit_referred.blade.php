@@ -10,8 +10,8 @@
         }
     });
 
-    $('#edit_save_btn').on('submit', function(e) {
-        $(this).prop('disabled', true);
+    $('.edit_normal_form').on('submit', function(e) {
+        $("#edit_save_btn").attr('disabled', true);
     });
 
     setDepartment();

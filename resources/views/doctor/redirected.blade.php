@@ -134,7 +134,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
     </div>
     @include('modal.accept_reject')
 @endsection
-@include('script.firebase')
+{{--@include('script.firebase')--}}
 @section('js')
     @include('script.referred')
     <script>

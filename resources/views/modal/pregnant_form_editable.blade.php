@@ -460,6 +460,7 @@
         });
     }
 
+    var push_notification_diagnosis_ccmc_pregnant = "";
     function getAllCheckBoxPregnant() {
         $('#icd-modal-pregnant').modal('toggle');
         $("#clear_icd_pregnant").show();
@@ -475,6 +476,7 @@
             clearOtherDiagnosisPregnant();
         });
         console.log(values);
+        push_notification_diagnosis_ccmc_pregnant = values.join(","); //diagnosis for CCMD for their push notification
     }
 
     function othersDiagnosisPregnant(){
