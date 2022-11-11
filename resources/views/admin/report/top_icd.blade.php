@@ -13,6 +13,10 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         <span class="text-green" style="font-size: 17pt;">Top 10 ICD-10 Diagnosis </span>
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
+                        <select name="request_type" class="form-control" style="width: 200px;">
+                            <option name="request_type" value="incoming" @if(empty($request_type) || $request_type == 'incoming') selected @endif>Incoming</option>
+                            <option name="request_type" value="outgoing" @if($request_type == 'outgoing') selected @endif>Outgoing</option>
+                        </select>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
                         <select name="province_id" id="" class="form-control">
                             <option value="">Select Province</option>
@@ -22,6 +26,9 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         </select>
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/top/icd') }}'"><i class="fa fa-search"></i> View All</button>
+                        <a href="{{ asset('excel/export/top_icd/all') }}" class="btn btn-danger" target="_blank">
+                            <i class="fa fa-file-excel-o"></i> Export Excel
+                        </a>
                     </div>
                 </form><br>
                 <div class="box-body table-responsive no-padding">

@@ -114,8 +114,11 @@ class FacilityCtrl extends Controller
 
         Session::put('keyword',$keyword);
 
-        $data = Province::where('description',"like","%$keyword%")
-            ->orderBy("description","asc")
+        $data = Province::
+            select("province.id","province.description","province.province_code","region.description as region")
+            ->leftJoin("region","region.id","=","province.region_id")
+            ->where('province.description',"like","%$keyword%")
+            ->orderBy("province.description","asc")
             ->paginate(20);
 
         return view('admin.province.province',[

@@ -4,14 +4,12 @@
     span{
         cursor: pointer;
     }
-
     .tooltip1 {
         position: relative;
         display: inline-block;
         /*border-bottom: 1px dotted black;*/
         cursor: help;
     }
-
     .tooltip1 .tooltiptext {
         visibility: hidden;
         width: 200px;
@@ -27,7 +25,6 @@
         margin-left: -60px;
         font-weight: normal;
     }
-
     .tooltip1 .tooltiptext::after {
         content: "";
         position: absolute;
@@ -38,7 +35,6 @@
         border-style: solid;
         border-color: transparent transparent #00a65a transparent;
     }
-
     .tooltip1:hover .tooltiptext {
         visibility: visible;
     }
@@ -116,17 +112,26 @@
             <div class="box-header with-border" style="margin-top: -200px;">
                 <form action="{{ asset('admin/statistics') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group-lg">
+                    <div class="form-group">
                         <select name="request_type" class="form-control" id="" required>
                             <option value="">Select request type</option>
                             <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
                             <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
-                        <select name="province_id" class="form-control">
+                        <select name="province_id" class="form-control province" onchange="filterSidebar($(this),'muncity'), filterFacility($(this))">
                             <option value="">Please select province</option>
                             @foreach($province_list as $row)
                                 <option value="{{ $row->id }}" <?php if($row->id == $province_id) echo 'selected'; ?>>{{ $row->description }}</option>
                             @endforeach
+                        </select>
+                        <select name="facility_id" class="statistics_select2 facility" onchange="filterSidebar($(this),'barangay')">
+                            <option value="">Please select facility</option>
+                        </select>
+                        <select name="muncity_id" class="statistics_select2 muncity" onchange="filterSidebar($(this),'barangay')">
+                            <option value="">Please select municipality</option>
+                        </select>
+                        <select name="barangay_id" class="statistics_select2 barangay">
+                            <option value="">Please select barangay</option>
                         </select>
                         <?php $date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
@@ -150,8 +155,8 @@
                                 </option>
                             @endforeach
                         </select>
-                        <button type="submit" class="btn-lg btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                        <button type="button" class="btn-lg btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics').'/'.$province }}'"><i class="fa fa-search"></i> View All</button>
+                        <button type="submit" class="btn btn-info btn-flat" onclick="clearRequiredFields()"><i class="fa fa-search"></i> Filter</button>
+                        <button type="button" class="btn btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>
                 </form>
             </div>
@@ -336,7 +341,7 @@
                     </div>
                 @else
                     <div class="alert alert-warning">
-                        <span class="text-warning" style="font-size: 20pt;">
+                        <span class="text-warning">
                             <i class="fa fa-warning"></i> Please select a request type in filter
                         </span>
                     </div>
@@ -351,10 +356,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-8">
                             <h3 class="modal-title statistics-title"></h3>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-4">
                             <button type="button" class="close" style="float: right" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -379,7 +384,9 @@
 @endsection
 
 @section('js')
+    @include('script.filterMuncity')
     <script>
+        $(".statistics_select2").select2({ width: '250px' });
         $("#statistics_referred").html("{{ $statistics_referred }}");
         $("#statistics_redirected").html("{{ $statistics_redirected }}");
         $("#statistics_transferred").html("{{ $statistics_transferred }}");
@@ -397,16 +404,17 @@
 
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
+            var statistics_title = "";
             if(status === 'denied') {
-                status = 'Recommend to Redirect';
+                statistics_title = 'Recommend to Redirect';
             }
             else if(status === 'not_seen') {
-                status = 'Not Seen';
+                statistics_title = 'Not Seen';
             }
             else if(status === 'seen_only') {
-                status = 'Seen Only';
+                statistics_title = 'Seen Only';
             }
-            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+status+" ");
+            $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+statistics_title+" ");
             $("#statistics-modal").modal('show');
             $(".statistics-body").html(loading);
             $("span").css("background-color","");
@@ -439,6 +447,69 @@
                 },500);
             });
         }
+
+        function clearRequiredFields() {
+            $('.muncity').attr('required',false);
+            $('.barangay').attr('required',false);
+        }
+
+        var province_id = null;
+        var muncity_id = null;
+        var barangay_id = null;
+        @if($muncity_id)
+            province_id = {{ $province_id }};
+            muncity_id = "{{ $muncity_id }}";
+            filterSidebar(province_id,'muncity',muncity_id);
+        @endif
+        @if($muncity_id && $barangay_id)
+            muncity_id = "{{ $muncity_id }}";
+            barangay_id = "{{ $barangay_id }}";
+            filterSidebar(muncity_id,'barangay',null,barangay_id);
+        @endif
+        @if($facility_id)
+            filterFacility('',"{{ $province_id }}","{{ $facility_id }}");
+        @endif
+
+        function getFacility(province_id) {
+            $('.loading').show();
+            var url = "{{ asset('vaccine/onchange/facility') }}"+"/"+province_id;
+            var tmp = "";
+            $.ajax({
+                url: url,
+                type: 'get',
+                async: false,
+                success : function(data){
+                    tmp = data;
+                    setTimeout(function(){
+                        $('.loading').hide();
+                    },500);
+                }
+            });
+            return tmp;
+        }
+
+        function filterFacility(data, province_id = null, facility_id = null) {
+            try {
+                province_id = data.val();
+            } catch(e) {
+
+            }
+
+            $('.facility').empty();
+            var $newOption = $("<option selected='selected'></option>").val("").text('Please Select Facility');
+            $('.facility').append($newOption).trigger('change');
+
+            var result = getFacility(province_id);
+            jQuery.each(result, function(i,val) {
+                $('.facility').append($('<option>', {
+                    value: val.id,
+                    text : val.name
+                }));
+            });
+
+            $('.facility').val(facility_id);
+        }
+
     </script>
 @endsection
 

@@ -105,7 +105,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td>{{ $row->date_accepted }}</td>
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
-                                            @if( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff < 72)
+                                            @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
                                                         title="Patient Arrived"
 
@@ -117,7 +117,8 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                                         data-code="{{ $row->code}}">
                                                     <i class="fa fa-wheelchair"></i>
                                                 </button>
-                                            @elseif( ($status=='ACCEPTED' || $status == 'TRAVEL') && $diff >= 72)
+                                            @endif
+                                            @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-danger btn-action"
                                                         title="Patient Didn't Arrive"
 

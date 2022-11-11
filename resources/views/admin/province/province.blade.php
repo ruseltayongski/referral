@@ -29,6 +29,7 @@
                         <tr class="bg-black">
                             <th>Province Name</th>
                             <th>Province Code</th>
+                            <th>Region</th>
                         </tr>
                         @foreach($data as $row)
                             <tr>
@@ -45,6 +46,9 @@
                                 </td>
                                 <td>
                                     <b class="text-green">{{ $row->province_code }}</b>
+                                </td>
+                                <td>
+                                    <b class="text-green">{{ $row->region }}</b>
                                 </td>
                             </tr>
                         @endforeach

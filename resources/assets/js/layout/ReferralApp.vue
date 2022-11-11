@@ -104,7 +104,9 @@
             },
             notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
-                $("#rejected_progress"+patient_code+activity_id).addClass("bg-red");
+                let rejected_process_element = $("#rejected_progress"+patient_code+activity_id);
+                rejected_process_element.removeClass("bg-orange");
+                rejected_process_element.addClass("bg-red");
                 $("#rejected_name"+patient_code+activity_id).html("Declined");
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
@@ -353,12 +355,6 @@
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
                     '          </a>' : '';
             },
-            buttonActivity(count_activity, tracking_id) {
-                return count_activity > 0 ? '<a href="#" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-danger btn-xs btn-caller" style="margin-left:3px;"><i class="fa fa-chevron-circle-right"></i> Redirected\n' +
-                    '                                            <small class="badge bg-red-active">'+count_activity+'</small>\n' +
-                    '                                    </a>'
-                    : '';
-            },
             buttonReco(code,count_reco) {
                 return '<button class="btn btn-xs btn-info btn-feedback margin-left" data-toggle="modal" data-target="#feedbackModal" data-code="'+code+'" onclick="viewReco($(this))" style="margin-left:3px;">\n' +
                     '            <i class="fa fa-comments"></i>\n' +
@@ -392,18 +388,27 @@
                         if($("#referral_page_check").val()) {
                             console.log("append the refer patient");
                             $('.count_referral').html(this.increment_referral);
+                            let position = event.payload.position;
+                            let position_bracket = ['','1st','2nd','3rd', '4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
+                            let position_content = '';
+                            if(position > 0) {
+                                position_content = "<div class='badge-overlay'>\n" +
+                                    "                                            <span class='top-right badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" +
+                                    "                                        </div>";
+                            }
                             let type = event.payload.form_type;
                             type = type=='normal' ? 'normal-section':'pregnant-section';
                             let referral_type = (type=='normal-section') ? 'normal':'pregnant';
                             let content = '<li id="referral_incoming'+event.payload.patient_code+'">' +
+                                position_content +
                                 '    <i class="fa fa-ambulance bg-blue-active"></i>\n' +
                                 '    <div class="timeline-item '+type+'" id="item-'+event.payload.tracking_id+'">\n' +
                                 '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span>\n' +
                                 '        <h3 class="timeline-header no-border">' +
-                                '           <strong class="text-bold">    '+
-                                '           <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
-                                '           </strong>'+
-                                '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="badge bg-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                                '           <span>' +
+                                '               <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
+                                '           </span>'+
+                                '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="text-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
                                 '        <div class="timeline-footer">\n';
 
                             /*if(my_department_id==data.department_id) {*/
@@ -421,7 +426,6 @@
                                 '                <i class="fa fa-folder"></i> View Form\n' +
                                 '               </a>' +
                                                 this.buttonSeen(event.payload.count_seen, event.payload.tracking_id)+
-                                                this.buttonActivity(event.payload.count_activity, event.payload.tracking_id)+
                                                 this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
                                 '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>'+
                                 '             </div>';
@@ -602,7 +606,6 @@
                             }
                             content +=
                                 this.buttonSeen(event.payload.count_seen, event.payload.tracking_id) +
-                                this.buttonActivity(event.payload.count_activity, event.payload.tracking_id) +
                                 this.buttonReco(event.payload.patient_code, event.payload.count_reco) ;
 
                             content +=
@@ -629,7 +632,6 @@
                                 '          was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. ' + event.payload.referring_md +'</span>\n' +
                                 '       </h3>\n' +
                                         this.buttonSeen(event.payload.count_seen, event.payload.tracking_id) +
-                                        this.buttonActivity(event.payload.count_activity, event.payload.tracking_id) +
                                         this.buttonReco(event.payload.patient_code, event.payload.count_reco) +
                                 '   </div>';
                             $('#referral_incoming'+event.payload.patient_code).html(content);
@@ -702,7 +704,6 @@
                                     '                <i class="fa fa-folder"></i> View Form\n' +
                                     '               </a>' +
                                     this.buttonSeen(event.payload.count_seen, event.payload.tracking_id)+
-                                    this.buttonActivity(event.payload.count_activity, event.payload.tracking_id)+
                                     this.buttonReco(event.payload.patient_code, event.payload.count_reco)+
                                     '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>'+
                                     '             </div>';
@@ -746,7 +747,6 @@
                                 '                <i class="fa fa-folder"></i> View Form\n' +
                                 '               </a>' +
                                 this.buttonSeen(event.payload.count_seen, event.payload.tracking_id) +
-                                this.buttonActivity(event.payload.count_activity, event.payload.tracking_id) +
                                 this.buttonReco(event.payload.patient_code, event.payload.count_reco) +
                                 '               <h5 class="text-red blink_new_referral pull-right">FORM HAS BEEN UPDATED!</h5>' +
                                 '             </div>\n' +

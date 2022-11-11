@@ -6,6 +6,71 @@
                 ->get();
     $dept = \App\Department::get();
 ?>
+<style>
+    /* The container */
+    .container1 {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 12px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default radio button */
+    .container1 input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container1:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container1 input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .container1 input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container1 .checkmark:after {
+        top: 9px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+    }
+</style>
 <div class="panel panel-jim">
     <div class="panel-heading">
         <h3 class="panel-title">
@@ -49,6 +114,28 @@
                     <option @if($option_filter=='discharged') selected @endif value="discharged">Discharged</option>
                     <option @if($option_filter=='cancelled') selected @endif value="cancelled">Cancelled</option>--}}
                 </select>
+            </div>
+            <div class="form-group">
+                <label class="container1">2nd position
+                    <input type="radio" value="1" name="more_position" @if($more_position == 1) checked @endif>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container1">3rd position
+                    <input type="radio" value="2" name="more_position" @if($more_position == 2) checked @endif>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container1">4th position
+                    <input type="radio" value="3" name="more_position" @if($more_position == 3) checked @endif>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container1">5th position
+                    <input type="radio" value="4" name="more_position" @if($more_position == 4) checked @endif>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container1">More than 5th position
+                    <input type="radio" value="5" name="more_position" @if($more_position == 5) checked @endif>
+                    <span class="checkmark"></span>
+                </label>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-flat btn-warning" onclick="clearFieldsSidebar()">

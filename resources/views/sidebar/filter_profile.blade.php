@@ -32,7 +32,7 @@
             <small><i>Province</i></small>
             <div class="form-group province_holder">
                 <select class="form-control province" name="province" onchange="filterSidebar($(this),'muncity')" required>
-                    <option value="">Select Province</option>
+                    <option value="">Please select province</option>
                     @foreach($province as $prov)
                         <option value="{{ $prov->id }}">{{ $prov->description }}</option>
                     @endforeach
@@ -41,13 +41,13 @@
             <small><i>Municipality</i></small>
             <div class="form-group muncity_holder">
                 <select class="muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
-                    <option value="">Select Muncity</option>
+                    <option value="">Please select municipality</option>
                 </select>
             </div>
             <small><i>Barangay</i></small>
             <div class="form-group barangay_holder">
                 <select class="barangay select2" name="brgy" required>
-                    <option value="">Select Barangay</option>
+                    <option value="">Please select barangay</option>
                 </select>
             </div>
             <div class="form-group">

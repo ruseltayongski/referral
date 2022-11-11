@@ -951,6 +951,9 @@ class ReportCtrl extends Controller
             'request_type' => $request->request_type,
             'hospital_type' => $request->hospital_type,
             'province_id' => $request->province_id,
+            'facility_id' => $request->facility_id,
+            'muncity_id' => $request->muncity_id,
+            'barangay_id' => $request->barangay_id,
             'hospital_type_list' => $hospital_type_list,
             'province_list' => $province_list
         ]);
@@ -991,6 +994,7 @@ class ReportCtrl extends Controller
     }
 
     public function topIcd(Request $request) {
+        $facility_id = Session::get('auth')->facility_id;
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -1004,10 +1008,18 @@ class ReportCtrl extends Controller
                 ->leftJoin("icd10","icd10.id","=","icd.icd_id");
 
 
+        $icd = $icd->leftJoin("activity",function($join) {
+                    $join->on("activity.code","=","icd.code");
+                    $join->on(function($join1) {
+                        $join1->where("activity.status","=","referred");
+                        $join1->orWhere("activity.status","=","redirected");
+                        $join1->orWhere("activity.status","=","transferred");
+                    });
+                })->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
+
         if($request->province_id) {
-            $icd = $icd->leftJoin("tracking","tracking.code","=","icd.code")
-                    ->leftJoin("facility","facility.id","=","tracking.referred_to")
-                    ->where("facility.province",$request->province_id);
+           $icd = $icd->leftJoin("facility","facility.id","=","activity.referred_to")
+               ->where("facility.province",$request->province_id);
         }
 
         $icd =  $icd->whereBetween("icd.created_at",[$date_start,$date_end])
@@ -1016,11 +1028,27 @@ class ReportCtrl extends Controller
                 ->limit(10)
                 ->get();
 
+        Session::put("export_top_icd_excel_all",$icd);
+
         return view("admin.report.top_icd",[
             "icd" => $icd,
             "date_start" => $date_start,
             "date_end" => $date_end,
             "province_id" => $request->province_id,
+            "request_type" => $request->request_type
+        ]);
+    }
+
+    public function exportTopIcdAllExcel() {
+        $export_top_icd_excel_all = Session::get("export_top_icd_excel_all");
+        $file_name = "export_top_icd_excel_all.xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_top_icd_all',[
+            "data" => $export_top_icd_excel_all
         ]);
     }
 

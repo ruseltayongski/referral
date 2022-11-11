@@ -48,6 +48,53 @@ $user = Session::get('auth');
                 visibility: visible;
             }
         }
+
+        .time {
+            margin-top: 30px;
+        }
+
+        .badge-overlay {
+            position: absolute;
+            left: 0%;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 100;
+            -webkit-transition: width 1s ease, height 1s ease;
+            -moz-transition: width 1s ease, height 1s ease;
+            -o-transition: width 1s ease, height 1s ease;
+            transition: width 0.4s ease, height 0.4s ease
+        }
+
+        .badge1 {
+            margin: 0;
+            color: white;
+            padding: 5px 5px;
+            font-size: 7px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            line-height: normal;
+            text-transform: uppercase;
+            background: #ff405f;
+        }
+
+        .badge1.red {
+            background: #ff405f;
+        }
+
+        .top-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            -ms-transform: translateX(30%) translateY(0%) rotate(45deg);
+            -webkit-transform: translateX(30%) translateY(0%) rotate(45deg);
+            transform: translateX(30%) translateY(0%) rotate(45deg);
+            -ms-transform-origin: top left;
+            -webkit-transform-origin: top left;
+            transform-origin: top left;
+        }
     </style>
 
     <div class="row">
@@ -98,10 +145,16 @@ $user = Session::get('auth');
                                 }
                                 $seen = \App\Seen::where('tracking_id',$row->id)->count();
                                 $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
-                                $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
+                                //$redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
+                                $position_bracket = ['','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
                                 $queue = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first();
                                 ?>
                                 <li id="referral_incoming{{ $row->code }}">
+                                    @if($row->position > 0)
+                                        <div class='badge-overlay'>
+                                            <span class='top-right badge1 red'>{{ $position_bracket[$row->position+1] }} Position</span>
+                                        </div>
+                                    @endif
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">

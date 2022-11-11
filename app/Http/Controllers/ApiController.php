@@ -465,9 +465,9 @@ class ApiController extends Controller
 
     public function apiReport(Request $request,$date_start,$date_end){
         if($request->request_type == "incoming")
-            return \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province_id','$request->hospital_type')");
+            return \DB::connection('mysql')->select("call statistics_report_incoming('$date_start','$date_end','$request->province_id','$request->facility_id','$request->muncity_id','$request->barangay_id','$request->hospital_type')");
 
-        return \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province_id','$request->hospital_type')");
+        return \DB::connection('mysql')->select("call statistics_report_outgoing('$date_start','$date_end','$request->province_id','$request->facility_id','$request->muncity_id','$request->barangay_id','$request->hospital_type')");
     }
 
     public function apiBedAvailability(Request $request){

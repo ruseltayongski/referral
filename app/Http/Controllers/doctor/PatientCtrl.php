@@ -416,8 +416,6 @@ class PatientCtrl extends Controller
             Activity::create($activity);
         }
 
-        $tracking_id = $tracking->id;
-
         //start websocket
         $patient = Patients::find($patient_id);
         $redirect_track = asset("doctor/referred?referredCode=").$code;
@@ -437,7 +435,8 @@ class PatientCtrl extends Controller
             "patient_code" => $code,
             "status" => "referred",
             "count_reco" => 0,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "position" => 0 //default for first referred
         ];
         broadcast(new NewReferral($new_referral));
         //end websocket

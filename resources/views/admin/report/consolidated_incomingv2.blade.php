@@ -6,16 +6,15 @@
 @section('content')
     <form action="{{ asset('admin/report/consolidated/incomingv2') }}" method="POST">
         {{ csrf_field() }}
-        <div class="row" style="margin-top: -0.5%;margin-bottom: 1%">
+        <div class="row">
             <div class="col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="date_range" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-info btn-flat">Filter</button>
+                    <input type="text" class="form-control" name="date_range" style="width:250px;" value="{{ date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)) }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                    <button type="submit" class="btn btn-info btn-flat">Filter</button>
+                    {{--<div class="input-group-btn">
                         <a href="{{ asset('excel/incoming') }}" type="button" name="from_the_start" class="btn btn-warning btn-flat"><i class="fa fa-file-excel-o"></i> Incoming (Excel)</a>
                         <a href="{{ asset('excel/outgoing') }}" type="button" name="from_the_start" class="btn btn-success btn-flat"><i class="fa fa-file-excel-o"></i> Outgoing (Excel)</a>
-                    <!--<a href="{{ asset('excel/all') }}" type="button" name="from_the_start" class="btn btn-primary btn-flat"><i class="fa fa-file-excel-o"></i> All (Excel)</a> -->
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>
@@ -33,8 +32,6 @@
         $transport_ref_incoming = [];
         $department_ref_incoming = [];
         $issue_ref_incoming = [];
-        $turnaround_time_accept_incoming = [];
-        $turnaround_time_arrived_incoming = [];
 
         $total_outgoing1 = [];
         $accepted_outgoing1 = [];
@@ -46,18 +43,16 @@
         $transport_ref_outgoing1 = [];
         $department_ref_outgoing1 = [];
         $issue_ref_outgoing1 = [];
-        $turnaround_time_accept_outgoing1 = [];
-        $turnaround_time_arrived_outgoing1 = [];
     ?>
     @if(count($data) > 0)
     @foreach($data as $row)
-    <div class="box box-success">
+    <div class="box box-success" style="margin-top: 15px;">
         <h3>{{ $title }}</h3>
         <div class="box-body no-padding">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#incoming{{ $row->id }}" data-toggle="tab">Incoming</a></li>
-                    <li ><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>
+                    {{--<li ><a href="#outgoing{{ $row->id }}" data-toggle="tab">Outgoing</a></li>--}}
                     <li class="pull-right"><strong><div class="text-info">{{ date('F',strtotime($date_range_start))." (".date('Y',strtotime($date_range_start)).") ".' to '.date('F',strtotime($date_range_end))." (".date('Y',strtotime($date_range_end)).")" }}</div></strong></li>
                 </ul>
                 <div class="tab-content">
@@ -135,39 +130,14 @@
                                     <strong><i class="fa fa-random margin-r-5"></i> Transaction</strong>
                                     <p >
                                         <?php
-                                            if($user->facility_id == $row->id){
-                                                $viewed_only_href = asset('admin/no_action').'/'.$facility_id.'/'.$date_start.'/'.$date_end.'/referred_to';
-                                                $viewed_only_target = "_target";
-                                            } else {
-                                                $viewed_only_href = '#';
-                                                $viewed_only_target = "";
-                                            }
-
-                                            echo '<span class="label label-warning">Incoming <span class="badge bg-red" >'.$incoming.'</span></span>';
-                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span>';
-                                            echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Not Accepted <small>(click to view form)</small><span class="badge bg-red" >'.$no_respond.'</span></span></a><br><br><br>';
+                                            echo '<span class="label label-warning" style="margin-right:10px;">Incoming <span class="badge bg-red">'.$incoming.'</span></span>';
+                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted.'</span></span><br><br>';
                                         ?>
                                     </p>
 
-                                    <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
-                                    <p>
-                                        <?php
-                                            $turnaround_time_accept_incoming[$facility_id] = "UNDER DEVELOPMENT";
-                                            $turnaround_time_arrived_incoming[$facility_id] = "UNDER DEVELOPMENT";
-                                        ?>
-                                        @if($accepted)
-                                            <?php $turnaround_time_accept_incoming[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> UNDER DEVELOPMENT</span>'; ?></span>
-                                        @endif
-                                        @if($accepted)
-                                            <?php $turnaround_time_arrived_incoming[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Arrival <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> UNDER DEVELOPMENT</span>'; ?></span>
-                                        @endif
-                                    </p><br><br><br>
-
                                     <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
                                     <p>
-                                        <span class="label label-success">Horizontal <?php echo '<span class="badge bg-red">'.$incoming_horizontal.'</span>'; ?></span>
+                                        <span class="label label-success" style="margin-right:10px;">Horizontal <?php echo '<span class="badge bg-red">'.$incoming_horizontal.'</span>'; ?></span>
                                         <span class="label label-success">Vertical <?php echo '<span class="badge bg-red">'.$incoming_vertical.'</span>'; ?></span>
                                     </p>
 
@@ -178,10 +148,10 @@
                                     <ul class="nav nav-tabs">
                                         <li class="active"><a href="#common_sources{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: green"></i> Referring Facility</a></li>
                                         <li><a href="#common_referring{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: blue"></i> Referring Doctors <small>(Top 10)</small></a></li>
-                                        <li><a href="#diagnosis_reason{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses & Reasons <small>(Top 10)</small></a></li>
+                                        {{--<li><a href="#diagnosis_reason{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: yellowgreen"></i> Diagnoses & Reasons <small>(Top 10)</small></a></li>
                                         <li><a href="#transportation{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: red"></i> Common Transportation</a></li>
                                         <li><a href="#department{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: lightskyblue"></i> Department</a></li>
-                                        <li><a href="#issue{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: orange"></i> Remarks</a></li>
+                                        <li><a href="#issue{{ $row->id }}" data-toggle="tab"><i class="fa fa-ambulance" style="color: orange"></i> Remarks</a></li>--}}
                                     </ul>
                                     <div class="tab-content">
                                         <div class="active tab-pane" id="common_sources{{ $row->id }}">
@@ -363,31 +333,13 @@
                                                 $viewed_only_href = '#';
                                                 $viewed_only_target = "";
                                             }
-                                            echo '<span class="label label-warning">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
-                                            echo '<span class="label label-warning">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
+                                            echo '<span class="label label-warning" style="margin-right: 10px;">Outgoing <span class="badge bg-red" >'.$outgoing.'</span></span>';
+                                            echo '<span class="label label-warning" style="margin-right: 10px;">Accepted <span class="badge bg-red" >'.$accepted_outgoing.'</span></span>';
                                             echo '<a href="'.$viewed_only_href.'" target="'.$viewed_only_target.'"><span class="label label-warning">Not Accepted <small>(click to view form)</small><span class="badge bg-red" >'.$outgoing_no_respond.'</span></span></a>';
                                             echo '<span class="label label-warning">Redirected <span class="badge bg-red" >'.$redirected_outgoing.'</span></span>';
                                             echo '<span class="label label-warning">Archived <span class="badge bg-red" >Under Development</span></span><br><br><br><br><br>';
                                         ?>
                                     </p>
-                                    <strong><i class="fa fa-clock-o margin-r-5"></i> Turnaround time</strong>
-                                    <p>
-                                        <span class="label label-primary">Viewed Only Acceptance<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        <span class="label label-primary">Viewed Only Redirection<?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        <?php
-                                            $turnaround_time_accept_outgoing1[$facility_id] = $outgoing;
-                                            $turnaround_time_arrived_outgoing1[$facility_id] = $outgoing;
-                                        ?>
-                                        @if($outgoing)
-                                            <?php $turnaround_time_accept_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">Acceptance <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        @endif
-                                        <span class="label label-primary">Redirection <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        @if($outgoing)
-                                            <?php $turnaround_time_arrived_outgoing1[$facility_id] .= ' mins'; ?>
-                                            <span class="label label-primary">To Transport <?php echo '<span class="badge bg-red"><i class="fa fa-clock-o"></i> '.' Under Development</span>'; ?></span>
-                                        @endif
-                                    </p><br><br><br><br><br><br><br><br>
 
                                     <strong><i class="fa fa-book margin-r-5"></i> Hospital Level</strong>
                                     <p>
@@ -527,8 +479,6 @@
         Session::put('transport_ref_incoming',$transport_ref_incoming);
         Session::put('department_ref_incoming',$department_ref_incoming);
         Session::put('issue_ref_incoming',$issue_ref_incoming);
-        Session::put('turnaround_time_accept_incoming',$turnaround_time_accept_incoming);
-        Session::put('turnaround_time_arrived_incoming',$turnaround_time_arrived_incoming);
         //OUTGOING
         Session::put('total_outgoing1',$total_outgoing1);
         Session::put('accepted_outgoing1',$accepted_outgoing1);
@@ -540,8 +490,6 @@
         Session::put('transport_ref_outgoing1',$transport_ref_outgoing1);
         Session::put('department_ref_outgoing1',$department_ref_outgoing1);
         Session::put('issue_ref_outgoing1',$issue_ref_outgoing1);
-        Session::put('turnaround_time_accept_outgoing1',$turnaround_time_accept_outgoing1);
-        Session::put('turnaround_time_arrived_outgoing1',$turnaround_time_arrived_outgoing1);
     ?>
 
 @endsection
