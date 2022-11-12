@@ -551,6 +551,7 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
+                $('#pregnantModal').modal('toggle');
                 $('#normalFormModal').modal('toggle');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {

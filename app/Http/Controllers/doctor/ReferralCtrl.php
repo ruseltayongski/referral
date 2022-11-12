@@ -198,6 +198,7 @@ class ReferralCtrl extends Controller
             ->where(function($q){
                 $q->where('status','referred')
                     ->orwhere('status','seen')
+                    ->orWhere('status','redirected')
                     ->orWhere('status','transferred');
             })
             ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
