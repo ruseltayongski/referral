@@ -551,8 +551,8 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#normalFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#normalFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
@@ -565,8 +565,8 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#normalFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#normalFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('error', {
                     title: "Error",
@@ -611,8 +611,8 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#pregnantFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#pregnantFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
@@ -625,8 +625,8 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#pregnantFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#pregnantFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('error', {
                     title: "Error",
