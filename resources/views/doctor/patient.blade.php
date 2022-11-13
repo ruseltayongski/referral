@@ -314,7 +314,7 @@
 @section('js')
 @include('script.filterMuncity')
 {{--@include('script.firebase')--}}
-<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
+{{--<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>--}}
 @include('script.datetime')
 <script>
     function promptWalkinPregnant(counter) {
