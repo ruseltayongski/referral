@@ -355,10 +355,9 @@
     });
 </script>
 
-
 {{--CANCEL REFERRAL--}}
 <script>
-    $('body').on('click','.btn-cancel',function(){
+    $('body').on('click','.btn-cancel',function() {
         var id = $(this).data('id');
         var user = $(this).data('user');
         if(user === 'admin')
@@ -366,18 +365,10 @@
         var url = "{{ url('doctor/referred/cancel') }}/"+id;
         $("#cancelReferralForm").attr('action',url);
     });
+    $('#cancelReferralForm').on('submit', function(e) {
+        $("#btn-cancel-submit").attr('disabled', true);
+    });
+    $('#undoCancelForm').on('submit', function(e) {
+        $("#btn-undocancel-submit").attr('disabled', true);
+    });
 </script>
-{{--<div class="list-group">--}}
-{{--<a href="#" class="list-group-item clearfix">--}}
-{{--<span class="title-info">Dr. Jimmy</span>--}}
-{{--<br />--}}
-{{--<small class="text-primary">--}}
-{{--Seen: May 15, 2018 03:15 PM--}}
-{{--</small>--}}
-{{--<br />--}}
-{{--<small class="text-success">--}}
-{{--Contact: 0916-207-2427--}}
-{{--</small>--}}
-{{--</a>--}}
-
-{{--</div>--}}

@@ -314,7 +314,7 @@
 @section('js')
 @include('script.filterMuncity')
 {{--@include('script.firebase')--}}
-<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
+{{--<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>--}}
 @include('script.datetime')
 <script>
     function promptWalkinPregnant(counter) {
@@ -551,7 +551,8 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
-                $('#normalFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#normalFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
@@ -564,8 +565,8 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#normalFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#normalFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('error', {
                     title: "Error",
@@ -610,8 +611,8 @@
             type: 'POST',
             success: function(data){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#pregnantFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#pregnantFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
@@ -624,8 +625,8 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 $('.loading').hide();
-                $('#pregnantModal').modal('toggle');
-                $('#pregnantFormModal').modal('toggle');
+                $('#pregnantModal').modal('hide');
+                $('#pregnantFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('error', {
                     title: "Error",

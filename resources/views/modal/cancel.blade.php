@@ -15,7 +15,7 @@
                             <button type="button" data-dismiss="modal" class="btn btn-default btn-sm">
                                 <i class="fa fa-times"></i> Close
                             </button>
-                            <button type="submit" class="btn btn-success btn-sm">
+                            <button type="submit" class="btn btn-success btn-sm" id="btn-cancel-submit">
                                 <i class="fa fa-check"></i> Submit
                             </button>
                         </div>
@@ -43,7 +43,7 @@
                     <div class="form-footer undo_cancel_body" style="text-align: center">
                         <input type="hidden" id="undo_cancel_id" name="undo_cancel_id" value="">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Yes</button>
+                        <button type="submit" class="btn btn-success btn-flat" id="btn-undocancel-submit"><i class="fa fa-check"></i> Yes</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
