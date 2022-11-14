@@ -1427,6 +1427,7 @@
 <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
 
 <script>
+    console.log('path: ' + window.location.origin);
     $('#warning_date').hide();
     $('.btn-submit').on('click',function() {
         console.log("asdasdasd");

@@ -47,7 +47,7 @@
                     <li><a href="{{ asset('report/walkin').'/'.$prov->id }}">{{ $prov->description }} Province</a></li>
                 @endforeach
             </ul>
-        </li>sample
+        </li>
         <!--
             <li><a href="{{ url('admin/er_ob') }}"><i class="fa fa-certificate"></i>Statistics Report ER OB</a></li>
         -->
