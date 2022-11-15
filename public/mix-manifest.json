@@ -3,5 +3,6 @@
     "/js/app_layout.js": "/js/app_layout.js",
     "/js/app_reco.js": "/js/app_reco.js",
     "/js/app_doctor.js": "/js/app_doctor.js",
+    "/js/app_login.js": "/js/app_login.js",
     "/css/app.css": "/css/app.css"
 }

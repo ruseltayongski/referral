@@ -19,4 +19,5 @@ mix.js('resources/assets/js/app.js', 'public/js').vue()
     .js('resources/assets/js/app_layout.js', 'public/js').vue()
     .js('resources/assets/js/app_reco.js', 'public/js').vue()
     .js('resources/assets/js/app_doctor.js', 'public/js').vue()
+    .js('resources/assets/js/app_login.js', 'public/js').vue()
     .sass('resources/assets/sass/app.scss', 'public/css');

@@ -262,7 +262,7 @@ Route::get('duty/{option}','UserCtrl@duty');
 Route::get('login','LoginCtrl@index');
 Route::get('login2','LoginCtrl@index2');
 Route::get('login/update/token/{token}','LoginCtrl@updateToken');
-Route::post('login','LoginCtrl@validateLogin');
+Route::post('login','LoginCtrl@validateLogin2');
 Route::post('reset/password','LoginCtrl@resetPassword');
 Route::get('maintenance',function(){
     return view('error',['title' => 'Maintenance']);
