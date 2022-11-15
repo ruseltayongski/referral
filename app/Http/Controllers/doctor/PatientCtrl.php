@@ -652,6 +652,7 @@ class PatientCtrl extends Controller
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
+        Session::put("refer_patient",true);
         /*return $this->referred_patient_data;*/
     }
 

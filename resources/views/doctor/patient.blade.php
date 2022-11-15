@@ -550,14 +550,15 @@
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data) {
-                $('.loading').hide();
+                $(location).attr('href', "{{ asset('doctor/referred') }}");
+                /*$('.loading').hide();
                 $('#pregnantModal').modal('hide');
                 $('#normalFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
                     msg: "Successfully Referred Patient!"
-                });
+                });*/
                 /*if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
                     sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
@@ -613,14 +614,15 @@
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data){
-                $('.loading').hide();
+                $(location).attr('href', "{{ asset('doctor/referred') }}");
+                /*$('.loading').hide();
                 $('#pregnantModal').modal('hide');
                 $('#pregnantFormModal').modal('hide');
                 $('.btn-submit').attr('disabled',false);
                 Lobibox.notify('success', {
                     title: "Success",
                     msg: "Successfully Referred Patient!"
-                });
+                });*/
                 /*if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
                     sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
