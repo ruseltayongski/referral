@@ -549,7 +549,7 @@
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
-            success: function(data){
+            success: function(data) {
                 $('.loading').hide();
                 $('#pregnantModal').modal('hide');
                 $('#normalFormModal').modal('hide');
@@ -564,6 +564,9 @@
                 } //push notification for CCMD*/
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
                 $('.loading').hide();
                 $('#pregnantModal').modal('hide');
                 $('#normalFormModal').modal('hide');
@@ -655,6 +658,9 @@
                 },500);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
                 console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
                 $('#serverModal').modal();
             }
