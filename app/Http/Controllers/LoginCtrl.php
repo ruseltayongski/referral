@@ -23,7 +23,7 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login2');
+        return view('login3');
     }
 
     public function index2()
@@ -32,7 +32,100 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login2');
+        return view('login3');
+    }
+
+    public function validateLogin2(Request $req)
+    {
+        $login = User::where('username',$req->username)
+            ->first();
+        if($login)
+        {
+            if(Hash::check($req->password,$login->password))
+            {
+                Session::put('auth',$login);
+                $last_login = date('Y-m-d H:i:s');
+                User::where('id',$login->id)
+                    ->update([
+                        'last_login' => $last_login,
+                        'login_status' => 'login'
+                    ]);
+                $checkLastLogin = self::checkLastLogin($login->id);
+
+                $l = new Login();
+                $l->userId = $login->id;
+                $l->login = $last_login;
+                $l->logout = date("Y-m-d H:i:s",strtotime("0000-00-00 00:00:00"));
+                $l->status = 'login';
+                $l->type = $req->login_type;
+                $l->login_link = $req->login_link;
+                $l->save();
+
+                if($checkLastLogin > 0 ){
+                    Login::where('id',$checkLastLogin)
+                        ->update([
+                            'logout' => $last_login
+                        ]);
+                }
+
+                if($login->status=='inactive'){
+                    Session::forget('auth');
+                    return [
+                        "error_notif" => true,
+                        "error_msg" => "Your account was deactivated by the administrator, please call 711 DOH health line."
+                    ];
+                }
+                elseif($login->level=='doctor')
+                    return url('doctor');
+                else if($login->level=='chief')
+                    return url('chief');
+                else if($login->level=='support')
+                    return url('support');
+                else if($login->level=='mcc')
+                    return url('mcc');
+                else if($login->level=='admin')
+                    return url('admin');
+                else if($login->level=='eoc_region')
+                    return url('eoc_region');
+                else if($login->level=='eoc_city')
+                    return url('eoc_city');
+                else if($login->level=='opcen')
+                    return url('opcen');
+                else if($login->level=='bed_tracker')
+                    return url('bed_tracker');
+                else if($login->level=='midwife')
+                    return url('midwife');
+                else if($login->level=='medical_dispatcher')
+                    return url('medical_dispatcher');
+                else if($login->level=='nurse')
+                    return url('nurse');
+                else if($login->level=='vaccine')
+                    return url('vaccine');
+                else if($login->level=='mayor')
+                    return url('doctor');
+                else if($login->level=='dmo')
+                    return url('doctor');
+                else{
+                    Session::forget('auth');
+                    return [
+                        "error_notif" => true,
+                        "error_msg" => "You don't have access in this system."
+                    ];
+                }
+            }
+            else{
+                return [
+                    "error_notif" => true,
+                    "error_msg" => "These credentials do not match our records."
+                ];
+            }
+        }
+        else{
+            return [
+                "error_notif" => true,
+                "error_msg" => "These credentials do not match our records."
+            ];
+        }
     }
 
     public function validateLogin(Request $req)
