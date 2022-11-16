@@ -174,9 +174,10 @@
 
     $('.reason_referral').val("<?php echo $reason->id;?>");
     @if(isset($form->other_reason_referral))
+        var other_reason = "{{ $form->other_reason_referral }}";
         $('.reason_referral').val("-1");
         $('#other_reason_referral').html("<textarea class='form-control' id='other_reason' name='other_reason_referral' style='resize: none;width: 100%;' rows='3' required></textarea>");
-        $('#other_reason').val($.parseHTML("{{ $form->other_reason_referral }}"));
+        $('#other_reason').val(`${other_reason}`);
     @else
         $('#other_reason_referral').hide();
         $('#other_reason').val('');
