@@ -314,7 +314,7 @@
 @section('js')
 @include('script.filterMuncity')
 {{--@include('script.firebase')--}}
-{{--<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>--}}
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 @include('script.datetime')
 <script>
     function promptWalkinPregnant(counter) {
@@ -497,17 +497,6 @@
     });
 
     function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred) {
-        /*console.log({
-            age: age,
-            chiefComplaint: chiefComplaint,
-            department: department,
-            diagnosis: diagnosis,
-            patient: patient,
-            sex: sex,
-            referring_hospital : referring_hospital,
-            date_referred : moment(date_referred).format("YYYY-MM-DD hh:mm:ss")
-        });
-        return;*/
         // Your web app's Firebase configuration
         var firebaseConfig = {
             apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
@@ -550,19 +539,23 @@
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data) {
-                $(location).attr('href', "{{ asset('doctor/referred') }}");
-                /*$('.loading').hide();
-                $('#pregnantModal').modal('hide');
-                $('#normalFormModal').modal('hide');
-                $('.btn-submit').attr('disabled',false);
-                Lobibox.notify('success', {
-                    title: "Success",
-                    msg: "Successfully Referred Patient!"
-                });*/
-                /*if(data.referred_to == 23) {
+                console.log(data);
+                console.log(data.chiefComplaint);
+                if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
                     sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
-                } //push notification for CCMD*/
+                    $('.loading').hide();
+                    $('#pregnantModal').modal('hide');
+                    $('#normalFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled',false);
+                    Lobibox.notify('success', {
+                        title: "Success",
+                        msg: "Successfully Referred Patient!"
+                    });
+                } //push notification for CCMD
+                else {
+                    $(location).attr('href', "{{ asset('doctor/referred') }}");
+                }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest);
@@ -614,19 +607,20 @@
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data){
-                $(location).attr('href', "{{ asset('doctor/referred') }}");
-                /*$('.loading').hide();
-                $('#pregnantModal').modal('hide');
-                $('#pregnantFormModal').modal('hide');
-                $('.btn-submit').attr('disabled',false);
-                Lobibox.notify('success', {
-                    title: "Success",
-                    msg: "Successfully Referred Patient!"
-                });*/
-                /*if(data.referred_to == 23) {
+                if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
                     sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
-                } //push notification for CCMD*/
+                    $('.loading').hide();
+                    $('#pregnantModal').modal('hide');
+                    $('#pregnantFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled',false);
+                    Lobibox.notify('success', {
+                        title: "Success",
+                        msg: "Successfully Referred Patient!"
+                    });
+                } else {
+                    $(location).attr('href', "{{ asset('doctor/referred') }}");
+                }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 $('.loading').hide();
