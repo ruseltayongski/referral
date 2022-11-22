@@ -539,7 +539,7 @@
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data) {
-                console.log(data);
+                /*console.log(data);
                 console.log(data.chiefComplaint);
                 if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
@@ -555,7 +555,8 @@
                 } //push notification for CCMD
                 else {
                     $(location).attr('href', "{{ asset('doctor/referred') }}");
-                }
+                }*/
+                $(location).attr('href', "{{ asset('doctor/referred') }}");
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest);
@@ -607,7 +608,7 @@
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data){
-                if(data.referred_to == 23) {
+                /*if(data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
                     sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
                     $('.loading').hide();
@@ -620,7 +621,8 @@
                     });
                 } else {
                     $(location).attr('href', "{{ asset('doctor/referred') }}");
-                }
+                }*/
+                $(location).attr('href', "{{ asset('doctor/referred') }}");
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 $('.loading').hide();
