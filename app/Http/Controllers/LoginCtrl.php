@@ -32,7 +32,7 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login3');
+        return view('login2');
     }
 
     public function validateLogin2(Request $req)
