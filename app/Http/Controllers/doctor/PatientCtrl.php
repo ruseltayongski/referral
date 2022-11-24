@@ -535,7 +535,7 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
-            /*if($req->referred_facility == 23) {
+            if($req->referred_facility == 790 && $user->id == 1687) {
                 $patient = Patients::find($patient_id);
                 $this->referred_patient_data = array(
                     "age" => (int)ParamCtrl::getAge($patient->dob),
@@ -546,10 +546,10 @@ class PatientCtrl extends Controller
                     "referring_hospital" => Facility::find($user->facility_id)->name,
                     "referred_to" => $req->referred_facility,
                     "date_referred" => $form->created_at,
-                    "diagnosis" => "test"
+                    "userid" => $user->id
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
-            }*///push notification for cebu south medical center
+            }//push notification for cebu south medical center
 
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
         }
@@ -637,7 +637,7 @@ class PatientCtrl extends Controller
                 $icd->save();
             }
 
-            /*if($req->referred_facility == 23) { //diagnosis for ccmc for push notification
+            if($req->referred_facility == 790 && $user->id == 1687) { //diagnosis for ccmc for push notification
                 $patient = Patients::find($patient_id);
                 $this->referred_patient_data = array(
                     "age" => ParamCtrl::getAge($patient->dob),
@@ -647,15 +647,16 @@ class PatientCtrl extends Controller
                     "sex" => $patient->sex,
                     "referring_hospital" => Facility::find($user->facility_id)->name,
                     "referred_to" => $req->referred_facility,
-                    "date_referred" => $form->created_at
+                    "date_referred" => $form->created_at,
+                    "userid" => $user->id
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
-            }*///push notification for cebu south medical center
+            }//push notification for cebu south medical center
 
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
-        if($req->referred_facility == 23) {
+        if($req->referred_facility == 790) {
             return $this->referred_patient_data;
         } else {
             Session::put("refer_patient",true);
