@@ -466,7 +466,7 @@ class PatientCtrl extends Controller
             "redirect_track" => $redirect_track,
             "position" => 0 //default for first referred
         ];
-        broadcast(new NewReferral($new_referral));
+        @broadcast(new NewReferral($new_referral));
         //end websocket
     }
 
