@@ -536,7 +536,7 @@ class PatientCtrl extends Controller
             }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
-            if($req->referred_facility == 790 && $req->referred_facility == 23) {
+            if($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
                 $this->referred_patient_data = array(
                     "age" => (int)ParamCtrl::getAge($patient->dob),
@@ -639,7 +639,7 @@ class PatientCtrl extends Controller
             }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
-            if($req->referred_facility == 790 && $req->referred_facility == 23) {
+            if($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
                 $this->referred_patient_data = array(
                     "age" => ParamCtrl::getAge($patient->dob),
@@ -659,7 +659,7 @@ class PatientCtrl extends Controller
         }
 
         //if($req->referred_facility == 790) {
-        if($req->referred_facility == 790 && $req->referred_facility == 23) {
+        if($req->referred_facility == 790 || $req->referred_facility == 23) {
             return $this->referred_patient_data;
         } else {
             Session::put("refer_patient",true);
