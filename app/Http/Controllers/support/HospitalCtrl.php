@@ -20,6 +20,10 @@ class HospitalCtrl extends Controller
     {
         $user = Session::get('auth');
         $muncity = Muncity::where('province_id',$user->province)
+                    ->where(function($query){
+                        $query->where("vaccine_used","!=","yes")
+                            ->orWhereNull("vaccine_used");
+                    })
                     ->orderBy('description','asc')->get();
         $info = Facility::find($user->facility_id);
         return view('support.hospital',[
