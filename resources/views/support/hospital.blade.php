@@ -53,12 +53,8 @@ $status = session('status');
                         <tr class="has-group">
                             <td>Municipality/City :</td>
                             <td>
-                                <select class="form-control muncity filter_muncity" name="muncity" required>
-                                    <option value="">Select Municipal/City...</option>
-                                    @foreach($muncity as $m)
-                                        <option value="{{ $m->id }}">{{ $m->description }}</option>
-                                    @endforeach
-                                    <option value="others">Others</option>
+                                <select class="muncity_select2 muncity filter_muncity" name="muncity" onchange="changeMuncity($(this))" required>
+
                                 </select>
                             </td>
                         </tr>
@@ -66,8 +62,8 @@ $status = session('status');
                         <tr class="has-group barangay_holder">
                             <td>Barangay :</td>
                             <td>
-                                <select class="form-control barangay" name="brgy">
-                                    <option value="">Select Barangay...</option>
+                                <select class="barangay barangay_select2" name="brgy">
+
                                 </select>
                             </td>
                         </tr>
@@ -109,29 +105,56 @@ $status = session('status');
     <div class="col-md-3">
         @include('support.sidebar.quick')
     </div>
+    <input type="hidden" value="{{ $muncity }}" id="municipality_list">
 @endsection
 @section('js')
     @include('script.filterMuncity')
     <script>
-        muncity_id = "{{ $info->muncity }}";
-        var brgy_id = "{{ $info->brgy }}";
-        if(muncity_id){
-            $('.muncity').val(muncity_id);
-            var brgy = getBarangay();
-            $('.barangay').empty()
-                .append($('<option>', {
-                    value: '',
-                    text : 'Select Barangay...'
-                }));
-            jQuery.each(brgy, function(i,val){
-                $('.barangay').append($('<option>', {
+        $(".barangay_select2").select2({ width: '100%' });
+        $(".muncity_select2").select2({ width: '100%' });
+
+        var muncity_id = "{{ $info->muncity }}";
+
+        municipalitySelect();
+        function municipalitySelect() {
+            var muncity_title = "{{ \App\Muncity::find($info->muncity)->description }}";
+            var muncity = JSON.parse($("#municipality_list").val());
+            $('.muncity').empty();
+            jQuery.each(muncity, function(i,val){
+                $('.muncity').append($('<option>', {
                     value: val.id,
                     text : val.description
                 }));
-
             });
-            $('.barangay').val(brgy_id);
+            $('.muncity').val(muncity_id);
+            $(".muncity_select2").next().children().children().children().eq(0).attr("title",muncity_title).append(muncity_title);
         }
+
+        function changeMuncity(data) {
+            muncity_id = data.val();
+            $(".barangay_select2").next().children().children().children().eq(0).attr("title","").html("");
+            barangaySelect();
+        }
+
+        barangaySelect();
+        function barangaySelect() {
+            var brgy_id = "{{ $info->brgy }}";
+            if(muncity_id) {
+                var brgy = getFilter("barangay",muncity_id);
+                $('.barangay').empty();
+                jQuery.each(brgy, function(i,val){
+                    $('.barangay').append($('<option>', {
+                        value: val.id,
+                        text : val.description
+                    }));
+
+                });
+                $('.barangay').val(brgy_id);
+                var barangay_title = "{{ \App\Barangay::find($info->brgy)->description }}";
+                $(".barangay_select2").next().children().children().children().eq(0).attr("title",barangay_title).append(barangay_title);
+            }
+        }
+
         $('#hospitalForm').on('submit',function(){
             $('.loading').show();
         });

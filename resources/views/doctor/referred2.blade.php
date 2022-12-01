@@ -805,6 +805,14 @@ $user = Session::get('auth');
         <?php Session::put("rejected_by_admin",false); ?>
         @endif
 
+        @if(Session::get('refer_patient'))
+        Lobibox.alert("success",
+            {
+                msg: "Successfully referred the patient!"
+            });
+        <?php Session::put("refer_patient",false); ?>
+        @endif
+
         $('body').on('click','.btn-transfer',function() {
             $(".transportation_body").html(''); //clear data
             var id = $(this).data('id');
