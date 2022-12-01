@@ -23,7 +23,7 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login2');
+        return view('login3');
     }
 
     public function index2()
@@ -32,7 +32,7 @@ class LoginCtrl extends Controller
             return redirect($login->level);
         }
 
-        return view('login2');
+        return view('login3');
     }
 
     public function validateLogin2(Request $req)
