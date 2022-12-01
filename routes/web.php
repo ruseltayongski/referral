@@ -105,6 +105,8 @@ Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
 Route::get('admin/report/top/icd_filter','admin\ReportCtrl@icdFilter');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
 Route::get('admin/report/top/filter_top_reason_referral','admin\ReportCtrl@filterTopReasonReferral');
+Route::get('admin/report/agebracket','admin\ReportCtrl@ageBracket');
+Route::post('admin/report/agebracket/filter','admin\ReportCtrl@ageBracketFilter2');
 
 //consolidated
 Route::get('admin/report/consolidated/incoming','admin\PatientCtrl@consolidatedIncoming');
@@ -355,6 +357,7 @@ Route::get('excel/export/top_icd','admin\ReportCtrl@exportTopIcdExcel');
 Route::get('excel/export/top_icd/all','admin\ReportCtrl@exportTopIcdAllExcel');
 Route::get('excel/export/top_reason_referral','admin\ReportCtrl@exportReasonForReferralExcel');
 Route::match(['GET','POST'],'excel/import','ExcelCtrl@importExcel');
+Route::get('excel/export/age_bracket','admin\ReportCtrl@exportAgeBracket');
 
 //GRAPH
 Route::get("admin/report/graph/incoming","admin\ReportCtrl@graph");
@@ -639,3 +642,6 @@ Route::get('admin/report/facility', 'admin\FacilityCtrl@exportAllFacilities');
 
 // queue
 Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
+
+// duplicate referrals
+Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');

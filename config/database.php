@@ -46,7 +46,7 @@ return [
             'port' => '3306',
             'database' => 'doh_referral', //doh_referral dummy_referral
             'username' => 'root',
-            'password' => '',
+            'password' => 'adm1n',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -61,7 +61,7 @@ return [
             'port' => '3306',
             'database' => 'tsekap_main',
             'username' => 'root',
-            'password' => '',
+            'password' => 'adm1n',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

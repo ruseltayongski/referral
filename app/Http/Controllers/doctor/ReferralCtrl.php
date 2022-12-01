@@ -709,7 +709,8 @@ class ReferralCtrl extends Controller
             'facility_filter' => $facility_filter,
             'department_filter' => $department_filter,
             'user' => $user,
-            'more_position' => $request->more_position
+            'more_position' => $request->more_position,
+            'duplicate' => $request->duplicate
         ]);
     }
 
@@ -2264,6 +2265,9 @@ class ReferralCtrl extends Controller
     }
 
     public function queuePatient(Request $req) {
+        /* NOTE:
+         *  Updates patient's activity status to queued and triggers websocket to reflect changes
+         * */
         $user = Session::get('auth');
         $track = Tracking::find($req->tracking_id);
         $act = Activity::where('code',$track->code)
@@ -2305,5 +2309,101 @@ class ReferralCtrl extends Controller
         ];
 
         broadcast(new SocketReferralQueuePatient($queue));
+    }
+
+    public function duplicates(Request $req) {
+        /* NOTE:
+         *   Returns a list of "possible" duplicate referrals.
+         */
+        $user = Session::get('auth');
+        $referral_type = $req->referral_type;
+        $search = $req->search;
+        if(isset($req->view_all))
+            $search = "";
+
+        if(isset($req->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::yesterday()->startOfDay()->format('Y-m-d') . ' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d') . ' 23:59:59';
+            $req->date_range = $date_start." - ".$date_end;
+        }
+
+        $list = Tracking::select(
+            'tracking.code',
+            'tracking.patient_id',
+            'tracking.date_referred',
+            'tracking.referred_from',
+            'tracking.referred_to',
+            'facility.name as referred_facility',
+            'tracking.type',
+            'tracking.status',
+            'patients.fname',
+            'patients.mname',
+            'patients.lname'
+        )
+            ->where('tracking.referred_from',$user->facility_id)
+            ->where('tracking.walkin','no')
+            ->where('tracking.status','!=','cancelled')
+            ->where('tracking.status','!=','discharged')
+            ->leftJoin('patients','patients.id','=','tracking.patient_id')
+            ->leftJoin('facility','facility.id','=','tracking.referred_to');
+
+        if(isset($search) && $search != '') {
+            $list = $list->where(function($query) use ($search) {
+                $query->where('patients.fname','like','%'.$search.'%')
+                    ->orWhere('patients.mname','like','%'.$search.'%')
+                    ->orWhere('patients.lname','like','%'.$search.'%');
+            });
+        }
+
+        $list = $list->whereBetween('tracking.date_referred',[$date_start,$date_end])
+            ->orderBy('tracking.patient_id','asc')
+            ->get();
+
+        $current = "";
+        $data = array();
+        $count = 1;
+        /* NOTE:
+         *  Matching keys for duplicate referrals are:
+         *      -> First name
+         *      -> Middle Name
+         *      -> Last Name
+         *      -> Facility (Referred From & Referred To)
+         *  Check if it is cancelled or not
+         */
+        for($i = 0; $i < count($list); $i++) {
+            $pt = $list[$i];
+            $next = $list[$i+1];
+            if($current == "")
+                $current = $pt;
+
+            $timestamp = strtotime($pt->date_referred);
+            $date = date('M d, Y',$timestamp);
+            $time = date('h:i a',$timestamp);
+            $pt['date'] = $date;
+            $pt['time'] = $time;
+
+            if(($current->lname == $next->lname) && ($current->fname == $next->fname) && ($current->mname == $next->mname) && ($current->referred_from == $next->referred_from) && ($current->referred_to == $next->referred_to)) {
+                array_push($data, $pt);
+                $count++;
+            } else {
+                if ($count > 1)
+                    array_push($data, $pt);
+                $current = $next;
+                $count = 1;
+            }
+        }
+
+        return view('doctor.duplicated',[
+            'title' => 'Duplicate Referrals',
+            'data' => $data,
+            'start' => $date_start,
+            'end' => $date_end,
+            'referral_type' => $referral_type,
+            'user' => $user,
+            'search' => $search
+        ]);
     }
 }

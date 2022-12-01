@@ -1651,4 +1651,190 @@ class ReportCtrl extends Controller
             'status' => Session::get('walkin_status')
         ]);
     }
+
+    public function ageBracketFilter2(Request $req) {
+        return self::ageBracketFilter($req->desc, $req->date_start, $req->date_end, $req->sex, $req->type, $req->getInfo);
+    }
+
+    public function ageBracketFilter($desc, $date_start, $date_end, $sex, $type, $getInfo) {
+        $user = Session::get('auth');
+        $faci_id = $user->facility_id;
+        $description = "";
+        $data = Tracking::select(
+            'tracking.code',
+            DB::raw('CONCAT(patients.fname," ",patients.mname,". ",patients.lname) as patient_name'),
+            'patients.dob',
+            'tracking.code',
+            "pro.description as province",
+            "mun.description as muncity",
+            "bar.description as barangay",
+            'tracking.date_referred',
+            'tracking.referred_from',
+            'tracking.referred_to',
+            'tracking.status',
+            'tracking.type',
+            'facility.name as facility_referred',
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age")
+        )
+            ->whereBetween('tracking.date_referred',[$date_start, $date_end])
+            ->leftJoin('patients','patients.id','=','tracking.patient_id')
+            ->leftJoin("province as pro","pro.id","=","patients.province")
+            ->leftJoin("muncity as mun","mun.id","=","patients.muncity")
+            ->leftJoin("barangay as bar","bar.id","=","patients.brgy")
+            ->orderBy('tracking.date_referred', 'desc');
+
+        if($type == "incoming")
+            $data = $data->where('tracking.referred_to',$faci_id)->leftJoin('facility','facility.id','=','tracking.referred_from');
+        else if($type == 'outgoing')
+            $data = $data->where('tracking.referred_from',$faci_id)->leftJoin('facility','facility.id','=','tracking.referred_to');
+
+        if($desc == 'infant') {
+            $description = "Infant/Toddler (0-5 years of age)";
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '5');
+        }
+        else if($desc == 'teen') {
+            $description = "Teens (6-17 years of age)";
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '17')
+                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '6');
+        }
+        else if($desc == 'adult') {
+            $description = "Adult (18-59 years of age)";
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '59')
+                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '18');
+        }
+        else if($desc == 'senior') {
+            $description = "Senior (60 years old and above)";
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '60');
+        }
+
+        if($sex == 'Male' || $sex == 'Female') {
+            $data = $data->where('patients.sex',$sex);
+            $description .= " [".$sex."]";
+        }
+
+        Session::put('agebracket_data', $data->get());
+        Session::put('age_category',$description);
+        Session::put('agebracket_type',$type);
+
+        if($getInfo) {
+            $data = $data->paginate(50);
+            $data = self::getDiagnosis($data);
+
+            return view("admin.report.agebracket.agebracket_modal",[
+                'data'=> $data,
+                'description' => $description,
+                'desc' => $desc,
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+                'sex' => $sex,
+                'type' => $type
+            ]);
+        }else {
+            $data = $data->get();
+        }
+        return $data;
+    }
+
+    public function getDiagnosis($data) {
+        foreach($data as $row) {
+            $timestamp = strtotime($row->date_referred);
+            $row->date_referred = date('M d, Y',$timestamp);
+
+            $icd = Icd::select('icd10.code', 'icd10.description')
+                ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+                ->where('icd.code',$row->code)->get();
+            $diagnosis = "";
+            if(count($icd) > 0) {
+                foreach($icd as $i) {
+                    $diagnosis = $i->description . "\n";
+                }
+            } else {
+                if($row->type == 'normal') {
+                    $diag = PatientForm::select('diagnosis','other_diagnoses')->where('code', $row->code)->first();
+                    $diagnosis = ($diag->other_diagnoses == null) ? $diag->diagnosis : $diag->other_diagnoses;
+                }
+                else if($row->type == 'pregnant') {
+                    $diag = PregnantForm::select('notes_diagnoses','other_diagnoses')->where('code', $row->code)->first();
+                    $diagnosis = ($diag->other_diagnoses == null) ? $diag->notes_diagnoses : $diag->other_diagnoses;
+                }
+            }
+            $row->diagnosis = $diagnosis == null ? "" : $diagnosis;
+        }
+        return $data;
+    }
+
+    public function ageBracket(Request $req) {
+        /* NOTE:
+         *  Filter by age bracket along with their diagnosis and sex.
+         *      -> Infant/Toddler (0-5)
+         *      -> Teens (6-17)
+         *      -> Adult (18-59)
+         *      -> Senior (60 - Above)
+         */
+        if($req->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$req->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d') . ' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+        }
+
+        if($req->request_type == '' || !isset($req->request_type)) {
+            $req->request_type = 'incoming';
+        }
+
+        $data = array(
+            [
+                'description' => "Infant/Toddler (0-5 years old)",
+                'type' => "infant",
+                'male' => self::ageBracketFilter('infant',$date_start, $date_end, 'Male', $req->request_type, false),
+                'female' => self::ageBracketFilter('infant',$date_start, $date_end, 'Female', $req->request_type, false),
+            ],
+            [
+                'description' => "Teen (6-17 years old)",
+                'type' => 'teen',
+                'male' => self::ageBracketFilter('teen',$date_start, $date_end, 'Male', $req->request_type, false),
+                'female' => self::ageBracketFilter('teen',$date_start, $date_end, 'Female', $req->request_type, false)
+            ],
+            [
+                'description' => "Adult (18-59 years old)",
+                'type' => 'adult',
+                'male' => self::ageBracketFilter('adult',$date_start, $date_end, 'Male', $req->request_type, false),
+                'female' => self::ageBracketFilter('adult',$date_start, $date_end, 'Female', $req->request_type, false)
+            ],
+            [
+                'description' => "Senior (60 years old and Above)",
+                'type' => 'senior',
+                'male' => self::ageBracketFilter('senior',$date_start, $date_end, 'Male', $req->request_type, false),
+                'female' => self::ageBracketFilter('senior',$date_start, $date_end, 'Female', $req->request_type, false)
+            ]
+        );
+
+        return view("admin.report.agebracket.age_bracket",[
+            "title" => 'Report by Age Bracket',
+            "data" => $data,
+            "date_start" => $date_start,
+            "date_end" => $date_end,
+            "request_type" => $req->request_type
+        ]);
+    }
+
+    public function exportAgeBracket(){
+        $data = Session::get("agebracket_data");
+        $data = self::getDiagnosis($data);
+        $description = Session::get('age_category');
+        $type = Session::get('agebracket_type');
+        $file_name = "export_age_bracket".$description.".xls";
+
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.excel.export_age_bracket',[
+            "data" => $data,
+            "description" => $description,
+            "type" => $type
+        ]);
+    }
 }

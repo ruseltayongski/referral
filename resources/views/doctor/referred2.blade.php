@@ -709,22 +709,26 @@ $user = Session::get('auth');
                                 </button>
                             @endif
                             @if($redirected > 0)
-                                <a href="#" data-toggle="modal"
-                                   data-id="{{ $row->id }}"
-                                   class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
+                                {{--<a href="#" data-toggle="modal"--}}
+                                   {{--data-id="{{ $row->id }}"--}}
+                                   {{--class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected--}}
                                     @if($redirected>0)
-                                        <small class="badge bg-red-active">{{ $redirected }}</small>
+                                        {{--<small class="badge bg-red-active">{{ $redirected }}</small>--}}
                                     @endif
-                                </a>
+                                {{--</a>--}}
                             @endif
                             @if(!$checkForCancellation)
                                 @if(!isset($_GET['referredCode']))
                                     <a href="#cancelModal" data-toggle="modal"
                                        data-id="{{ $row->id }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                                 @else
-                                    @if($user->level === 'admin')
+                                    @if($user->level === 'admin' || ($user->level === "doctor" && $duplicate == true))
+                                        <?php
+                                            if($user->level === 'admin')
+                                                $admin = 'admin';
+                                        ?>
                                         <a href="#cancelModal" data-toggle="modal"
-                                           data-id="{{ $row->id }}" data-user="admin" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
+                                           data-id="{{ $row->id }}" data-user="{{ $admin }}" class="btn btn-xs btn-default btn-cancel"><i class="fa fa-times"></i> Cancel</a>
                                     @endif
                                @endif
                             @endif

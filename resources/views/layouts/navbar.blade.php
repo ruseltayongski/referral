@@ -39,8 +39,9 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
-                    <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i> Referred Patients</a></li>
+                    <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i>&nbsp; Referred Patients</a></li>
                     <li class="divider"></li>
+                    <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li>
                     <!--
                     <li><a href="{{ url('maintenance') }}"><i class="fa fa-hospital-o"></i> Emergency Walk-In</a></li>
                     <li><a href="{{ url('doctor/report/incoming') }}"><i class="fa fa-sign-in"></i> Incoming Referral Report</a></li>
@@ -109,6 +110,8 @@
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li>
                 </ul>
             </li>
             <li class="dropdown">

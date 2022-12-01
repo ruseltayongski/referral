@@ -68,6 +68,7 @@
                     <li><a href="{{ url('admin/report/tat/outgoing') }}"> Outgoing</a></li>
                 </ul>
             </li>--}}
+            <li><a href="{{ url('admin/report/agebracket') }}"><i class="fa fa-child"></i>Report by Age Bracket</a></li>
         @if($user->level=='admin')
             <li>
                 <a href="{{ url('admin/report/deactivated') }}"><i class="fa fa-user-times"></i>Deactivated Users</a>
