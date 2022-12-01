@@ -496,7 +496,7 @@
         });
     });
 
-    function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred) {
+    function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
         // Your web app's Firebase configuration
         var firebaseConfig = {
             apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
@@ -524,7 +524,8 @@
             patient: patient,
             sex: sex,
             referring_hospital : referring_hospital,
-            date_referred : moment(date_referred).format("YYYY-MM-DD hh:mm:ss")
+            date_referred : moment(date_referred).format("YYYY-MM-DD HH:mm:ss"),
+            patient_code : patient_code
         });
     }
 
@@ -544,7 +545,7 @@
                 //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                 if(data.referred_to == 790 || data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
-                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
+                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
                     $('#normalFormModal').modal('hide');
@@ -612,7 +613,7 @@
                 //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                 if(data.referred_to == 790 || data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
-                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred);
+                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
                     $('#pregnantFormModal').modal('hide');

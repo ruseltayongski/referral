@@ -539,16 +539,18 @@ class PatientCtrl extends Controller
             //if($req->referred_facility == 790 && $user->id == 1687) {
             if($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
+                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
                 $this->referred_patient_data = array(
                     "age" => (int)ParamCtrl::getAge($patient->dob),
                     "chiefComplaint" => $req->case_summary,
                     "department" => Department::find($req->referred_department)->description,
-                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "patient" => $patient_name,
                     "sex" => $patient->sex,
                     "referring_hospital" => Facility::find($user->facility_id)->name,
                     "referred_to" => $req->referred_facility,
                     "date_referred" => $form->created_at,
-                    "userid" => $user->id
+                    "userid" => $user->id,
+                    "patient_code" => $form->code
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
             }//push notification for cebu south medical center
@@ -642,16 +644,18 @@ class PatientCtrl extends Controller
             //if($req->referred_facility == 790 && $user->id == 1687) {
             if($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
+                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
                 $this->referred_patient_data = array(
                     "age" => ParamCtrl::getAge($patient->dob),
                     "chiefComplaint" => $req->woman_major_findings,
                     "department" => Department::find($req->referred_department)->description,
-                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                    "patient" => $patient_name,
                     "sex" => $patient->sex,
                     "referring_hospital" => Facility::find($user->facility_id)->name,
                     "referred_to" => $req->referred_facility,
                     "date_referred" => $form->created_at,
-                    "userid" => $user->id
+                    "userid" => $user->id,
+                    "patient_code" => $form->code
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
             }//push notification for cebu south medical center
@@ -659,7 +663,6 @@ class PatientCtrl extends Controller
             self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
         }
 
-        //if($req->referred_facility == 790) {
         if($req->referred_facility == 790 || $req->referred_facility == 23) {
             return $this->referred_patient_data;
         } else {
