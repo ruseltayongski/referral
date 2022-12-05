@@ -49,6 +49,7 @@
 <script src="{{ asset('public/js/app_login.js?version=').date('YmdHis') }}" defer></script>
 
 <div id="app_login">
+    <input type="hidden" value="{{ asset('/') }}" id="login_root_url">
     <login-app></login-app>
 </div>
 

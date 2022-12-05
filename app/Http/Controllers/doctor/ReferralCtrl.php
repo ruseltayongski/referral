@@ -844,7 +844,7 @@ class ReferralCtrl extends Controller
 
         if($track->status=='accepted' || $track->status=='rejected') {
             Session::put('incoming_denied',true);
-            return false;
+            return;
         } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
@@ -897,9 +897,9 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
-        if($track->status=='accepted' || $track->status=='rejected') {
+        if($track->status=='accepted' || $track->status=='rejected' || $track->status=='redirected') {
             Session::put('incoming_denied',true);
-            return false;
+            return;
         } // trap if already accepted or rejected
 
         Tracking::where('id',$track_id)
@@ -2136,9 +2136,15 @@ class ReferralCtrl extends Controller
                 'status' => "form_updated"
             );
             Activity::create($data2);
+
+            $new_data = array(
+                'department_id' => $req->department_id,
+            );
+            $tracking->update($new_data);
         }
         unset($data_update['old_facility']);
 
+        $data_update["department_id"] = $req->department_id;
         $data->update($data_update);
         Session::put('referral_update_save',true);
         Session::put('update_message','Successfully updated referral form!');

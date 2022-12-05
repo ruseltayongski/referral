@@ -1041,10 +1041,11 @@
     import Feedback from './UserFeedback.vue'
     import { loadScript } from "vue-plugin-load-script";
 
-    let path = window.location.origin;
+    let path = $("#login_root_url").val();
+    /*let path = window.location.origin;
     if(path === 'https://site.test' || path === 'http://site.test') {
         path += '/referral';
-    }
+    }*/
 
     export default  {
         name: 'LoginApp',

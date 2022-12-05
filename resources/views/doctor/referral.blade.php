@@ -308,7 +308,7 @@ $user = Session::get('auth');
         @if(Session::get('incoming_denied'))
         Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
             {
-                msg: "This referral was already accepted or rejected"
+                msg: "This referral was already accepted,rejected or redirected"
             });
         <?php Session::put("incoming_denied",false); ?>
         @endif
