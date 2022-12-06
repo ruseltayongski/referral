@@ -842,7 +842,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
 
-        if($track->status=='accepted' || $track->status=='rejected') {
+        if($track->status=='accepted' || $track->status=='rejected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
             Session::put('incoming_denied',true);
             return;
         } // trap if already accepted or rejected
@@ -897,7 +897,7 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
-        if($track->status=='accepted' || $track->status=='rejected' || $track->status=='redirected') {
+        if($track->status=='accepted' || $track->status=='rejected' || $track->status=='redirected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
             Session::put('incoming_denied',true);
             return;
         } // trap if already accepted or rejected
