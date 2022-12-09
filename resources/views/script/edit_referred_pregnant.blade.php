@@ -1,4 +1,4 @@
-<input type="hidden" id="edit_referred_other_reason_pregnant" value="{{ {{ $form['pregnant']->other_reason_referral }} }}">
+<input type="hidden" id="edit_referred_other_reason_pregnant" value="{{ $form['pregnant']->other_reason_referral }}">
 <script>
     $('#diag_prompt').hide();
 
