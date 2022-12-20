@@ -170,7 +170,7 @@ Route::get('doctor/monthly/report','doctor\HomeCtrl@doctorMonthlyReport');
 Route::get('doctor/option/per/department','doctor\HomeCtrl@optionPerDepartment');
 Route::get('doctor/option/per/activity','doctor\HomeCtrl@optionPerActivity');
 Route::get('doctor/option/last/transaction','doctor\HomeCtrl@optionLastTransaction');
-Route::get('doctor/dashboard/getTransactions/{type}','doctor\Homectrl@getTransactions');
+Route::get('doctor/dashboard/getTransactions/{type}','doctor\HomeCtrl@getTransactions');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
