@@ -142,7 +142,7 @@
                 $('#dashboard_modal').modal('show');
                 $('#dashboard_modal_body').html(loading);
                 axios.get('doctor/dashboard/getTransactions/'+type).then(response => {
-                        console.log(response.data);
+                    console.log("hoy work na ba");
                         $('.dashboard_modal_body').html(response.data);
                     })
             },
