@@ -170,6 +170,7 @@ Route::get('doctor/monthly/report','doctor\HomeCtrl@doctorMonthlyReport');
 Route::get('doctor/option/per/department','doctor\HomeCtrl@optionPerDepartment');
 Route::get('doctor/option/per/activity','doctor\HomeCtrl@optionPerActivity');
 Route::get('doctor/option/last/transaction','doctor\HomeCtrl@optionLastTransaction');
+Route::get('doctor/dashboard/getTransactions/{type}','doctor\Homectrl@getTransactions');
 
 Route::get('doctor/referral','doctor\ReferralCtrl@index');
 
@@ -269,6 +270,7 @@ Route::post('reset/password','LoginCtrl@resetPassword');
 Route::get('maintenance',function(){
     return view('error',['title' => 'Maintenance']);
 });
+Route::get('login/countUsers','LoginCtrl@countUsers');
 
 /*Param */
 Route::get('chart','HomeCtrl@chart');

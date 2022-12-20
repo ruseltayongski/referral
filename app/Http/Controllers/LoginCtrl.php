@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\Facility;
 use App\Login;
 use App\User;
 use App\UserFeedback;
@@ -72,7 +73,7 @@ class LoginCtrl extends Controller
                     Session::forget('auth');
                     return [
                         "error_notif" => true,
-                        "error_msg" => "Your account was deactivated by the administrator, please call 711 DOH health line."
+                        "error_msg" => "Your account was deactivated by the administrator, please call 711 DOH Health Line."
                     ];
                 }
                 elseif($login->level=='doctor')
@@ -432,5 +433,23 @@ class LoginCtrl extends Controller
         } catch (Exception $e) {
             return "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
+    }
+
+    public function countUsers(){
+        $doctor = User::where('level','doctor')->where('status','active')->count();
+        $government = Facility::where('referral_used','yes')
+            ->where(function($query){
+                $query->where('hospital_type','doh_hospital')
+                    ->orWhere('hospital_type','government');
+            })->count();
+        $private = Facility::where('referral_used','yes')->where('hospital_type','private')->count();
+        $rhu = Facility::where('referral_used','yes')->where('hospital_type','RHU')->count();
+
+        return [
+            'doctor' => $doctor,
+            'government' => $government,
+            'private' => $private,
+            'rhu' => $rhu
+        ];
     }
 }

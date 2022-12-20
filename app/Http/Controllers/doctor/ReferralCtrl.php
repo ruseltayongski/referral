@@ -1821,7 +1821,7 @@ class ReferralCtrl extends Controller
                 "file_path" => $path,
                 "file_name" => $file_name,
                 "referral_status" => $referral_status,
-                "form_type" => "$form_type",
+                "form_type" => $form_type,
                 "username" => Session::get('auth')->username
             ]);
         }

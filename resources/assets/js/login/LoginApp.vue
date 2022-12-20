@@ -155,7 +155,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="count-box">
                             <i class="fas fa-user-md"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="3928" data-purecounter-duration="1" class="purecounter"></span>
+                            <span data-purecounter-start="0" :data-purecounter-end="count_doctor" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Doctors</p>
                         </div>
                     </div>
@@ -163,7 +163,7 @@
                     <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
                         <div class="count-box">
                             <i class="far fa-hospital"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="79" data-purecounter-duration="1" class="purecounter"></span>
+                            <span data-purecounter-start="0" :data-purecounter-end="count_gov_hosp" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Government Hospital</p>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                     <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
                         <div class="count-box">
                             <i class="fas fa-flask"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="54" data-purecounter-duration="1" class="purecounter"></span>
+                            <span data-purecounter-start="0" :data-purecounter-end="count_private_hosp" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Private Hospital</p>
                         </div>
                     </div>
@@ -179,7 +179,7 @@
                     <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
                         <div class="count-box">
                             <i class="fas fa-award"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="177" data-purecounter-duration="1" class="purecounter"></span>
+                            <span data-purecounter-start="0" :data-purecounter-end="count_rhu" data-purecounter-duration="1" class="purecounter"></span>
                             <p>RHU</p>
                         </div>
                     </div>
@@ -1053,48 +1053,54 @@
             'appointment': Appointment,
             'feedback': Feedback
         },
-        data: () => ({
-            doh_logo: path+"/resources/img/doh.png",
-            call_center: path+"/resources/medilab/assets/img/contact/call_center.jpg",
-            rtayong: path+"/resources/medilab/assets/img/contact/tayong_rusel.JPG",
-            ccatubig: path+"/resources/medilab/assets/img/contact/catubig.png",
-            fmaningo: path+"/resources/medilab/assets/img/contact/maningo_fmj.jpg",
-            ggorosin: path+"/resources/medilab/assets/img/contact/gorosin.g.jpg",
-            rsugabo: path+"/resources/medilab/assets/img/contact/reyan.jpg",
-            rsumalinog: path+"/resources/medilab/assets/img/contact/sumalinog.r.jpg",
-            hdivina: path+"/resources/medilab/assets/img/contact/divina_h.jpg",
-            jdingal: path+"/resources/medilab/assets/img/contact/jaypee_pic.png",
-            rsanchez: path+"/resources/medilab/assets/img/contact/remwel_pic.png",
-            manora: path+"/resources/medilab/assets/img/contact/anora2.jpg",
-            sblanco: path+"/resources/medilab/assets/img/contact/blanco_s.jpg",
-            nomus: path+"/resources/medilab/assets/img/contact/omus.n.jpg",
-            jraagas: path+"/resources/medilab/assets/img/contact/raagas_j.jpg",
-            aermac: path+"/resources/medilab/assets/img/contact/ermac_a.jpg",
-            pliporada: path+"/resources/medilab/assets/img/contact/Liporada, Patrick.jpg",
-            tcarpiso: path+"/resources/medilab/assets/img/contact/theo.png",
-            testimony_tagbilaran: path+"/resources/medilab/assets/img/testimonials/tagbilaran.jpg",
-            testimony_gmph: path+"/resources/medilab/assets/img/testimonials/gmph.jpg",
-            testimony_gallares: path+'/resources/medilab/assets/img/testimonials/gallares.jpg',
-            department1: path+'/resources/medilab/assets/img/departments-1.jpg',
-            department2: path+'/resources/medilab/assets/img/departments-2.jpg',
-            department3: path+'/resources/medilab/assets/img/departments-3.jpg',
-            department4: path+'/resources/medilab/assets/img/departments-4.jpg',
-            department5: path+'/resources/medilab/assets/img/departments-5.jpg',
-            gallery1: path+'/resources/medilab/assets/img/training/gallery1.jpg',
-            gallery2: path+'/resources/medilab/assets/img/training/gallery2.jpg',
-            gallery3: path+'/resources/medilab/assets/img/training/gallery3.jpg',
-            gallery4: path+'/resources/medilab/assets/img/training/gallery4.jpg',
-            launch1: path+'/resources/medilab/assets/img/training/launch1.jpg',
-            launch2: path+'/resources/medilab/assets/img/training/launch2.jpg',
-            launch3: path+'/resources/medilab/assets/img/training/launch3.jpg',
-            launch4: path+'/resources/medilab/assets/img/training/launch4.jpg',
-            eref_manual: path+'/public/manual/eReferral-Users-Manual-2nd-Edition_final.pdf',
-            user_manual: path+'/public/manual/Users-Manual-2nd-Edition_final.pdf',
-            policy_memo: path+'/public/manual/POLICY-2022-13_final.pdf',
-            eref_management: path+'/public/manual/E-Referral-Management.docx',
-            request_form: path+'/public/manual/Service-Request-Form.docx',
-            ndca: path+'/public/manual/NDCA-CVeHRS-healthcare-facility.doc'
-        }),
+        data() {
+            return {
+                doh_logo: path + "/resources/img/doh.png",
+                call_center: path + "/resources/medilab/assets/img/contact/call_center.jpg",
+                rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
+                ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
+                fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.jpg",
+                ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
+                rsugabo: path + "/resources/medilab/assets/img/contact/reyan.jpg",
+                rsumalinog: path + "/resources/medilab/assets/img/contact/sumalinog.r.jpg",
+                hdivina: path + "/resources/medilab/assets/img/contact/divina_h.jpg",
+                jdingal: path + "/resources/medilab/assets/img/contact/jaypee_pic.png",
+                rsanchez: path + "/resources/medilab/assets/img/contact/remwel_pic.png",
+                manora: path + "/resources/medilab/assets/img/contact/anora2.jpg",
+                sblanco: path + "/resources/medilab/assets/img/contact/blanco_s.jpg",
+                nomus: path + "/resources/medilab/assets/img/contact/omus.n.jpg",
+                jraagas: path + "/resources/medilab/assets/img/contact/raagas_j.jpg",
+                aermac: path + "/resources/medilab/assets/img/contact/ermac_a.jpg",
+                pliporada: path + "/resources/medilab/assets/img/contact/Liporada, Patrick.jpg",
+                tcarpiso: path + "/resources/medilab/assets/img/contact/theo.png",
+                testimony_tagbilaran: path + "/resources/medilab/assets/img/testimonials/tagbilaran.jpg",
+                testimony_gmph: path + "/resources/medilab/assets/img/testimonials/gmph.jpg",
+                testimony_gallares: path + '/resources/medilab/assets/img/testimonials/gallares.jpg',
+                department1: path + '/resources/medilab/assets/img/departments-1.jpg',
+                department2: path + '/resources/medilab/assets/img/departments-2.jpg',
+                department3: path + '/resources/medilab/assets/img/departments-3.jpg',
+                department4: path + '/resources/medilab/assets/img/departments-4.jpg',
+                department5: path + '/resources/medilab/assets/img/departments-5.jpg',
+                gallery1: path + '/resources/medilab/assets/img/training/gallery1.jpg',
+                gallery2: path + '/resources/medilab/assets/img/training/gallery2.jpg',
+                gallery3: path + '/resources/medilab/assets/img/training/gallery3.jpg',
+                gallery4: path + '/resources/medilab/assets/img/training/gallery4.jpg',
+                launch1: path + '/resources/medilab/assets/img/training/launch1.jpg',
+                launch2: path + '/resources/medilab/assets/img/training/launch2.jpg',
+                launch3: path + '/resources/medilab/assets/img/training/launch3.jpg',
+                launch4: path + '/resources/medilab/assets/img/training/launch4.jpg',
+                eref_manual: path + '/public/manual/eReferral-Users-Manual-2nd-Edition_final.pdf',
+                user_manual: path + '/public/manual/Users-Manual-2nd-Edition_final.pdf',
+                policy_memo: path + '/public/manual/POLICY-2022-13_final.pdf',
+                eref_management: path + '/public/manual/E-Referral-Management.docx',
+                request_form: path + '/public/manual/Service-Request-Form.docx',
+                ndca: path + '/public/manual/NDCA-CVeHRS-healthcare-facility.doc',
+                count_doctor: 0,
+                count_gov_hosp: 0,
+                count_private_hosp: 0,
+                count_rhu: 0
+            }
+        },
         mounted() {
             (async () => {
                 await loadScript(path+"/resources/medilab/assets/vendor/glightbox/js/glightbox.min.js")
@@ -1133,6 +1139,19 @@
                         console.log("not loaded (main.js)");
                     });
             })();
+        },
+        created() {
+            this.count();
+        },
+        methods: {
+            count() {
+                axios.get('login/countUsers').then(response => {
+                    this.count_doctor = response.data.doctor;
+                    this.count_gov_hosp = response.data.government;
+                    this.count_private_hosp = response.data.private;
+                    this.count_rhu = response.data.rhu;
+                })
+            }
         }
     }
 </script>

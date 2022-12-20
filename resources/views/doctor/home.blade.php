@@ -16,7 +16,7 @@
                 @if($error)
                     <div class="alert alert-danger">
                         <span class="text-danger">
-                            <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                            <i class="fa fa-times"></i> Error switching account! Please try again.
                         </span>
                     </div>
                 @endif

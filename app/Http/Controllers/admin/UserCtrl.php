@@ -114,7 +114,7 @@ class UserCtrl extends Controller
             'lname' => $req->lname,
             'level' => $req->level,
             'facility_id' => $req->facility_id,
-            'status' => 'active',
+            'status' => $req->status,
             'contact' => $req->contact,
             'email' => $req->email,
             'designation' => $req->designation,
@@ -122,7 +122,7 @@ class UserCtrl extends Controller
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
             'province' => $facility->province,
-            'created_by' => $user->id
+            'created_by' => $user->id,
         );
         if($req->user_id == "no_id"){
             Session::put("manage_user","Successfully added new account");

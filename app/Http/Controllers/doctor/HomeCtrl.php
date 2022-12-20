@@ -11,6 +11,7 @@ use App\Patients;
 use App\Tracking;
 use App\User;
 use Carbon\Carbon;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -186,6 +187,126 @@ class HomeCtrl extends Controller
         $facility = Facility::whereNotNull("latitude")->get();
         return view('map',[
             "facility" => $facility
+        ]);
+    }
+
+    public function getTransactions($type) {
+        $user = Session::get("auth");
+//        $user = User::where('id','1016')->first();
+        $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+        $date_end = Carbon::now()->endOfYear()->format('Y-m-d').' 23:59:59';
+        $desc = "";
+        $data = Activity::select(
+            'tracking.code',
+            DB::raw('CONCAT(patients.fname," ",patients.mname,". ",patients.lname) as patient_name'),
+            'pro.description as province',
+            'mun.description as muncity',
+            'bar.description as barangay',
+            'tracking.date_referred',
+            'tracking.type',
+            'facility.name as referring_facility'
+        )
+            ->leftJoin('tracking','tracking.code','=','activity.code')
+            ->leftJoin('patients','patients.id','=','activity.patient_id')
+            ->leftJoin("province as pro","pro.id","=","patients.province")
+            ->leftJoin("muncity as mun","mun.id","=","patients.muncity")
+            ->leftJoin("barangay as bar","bar.id","=","patients.brgy")
+            ->leftJoin('facility','facility.id','=','activity.referred_from')
+            ->whereBetween('activity.created_at',[$date_start, $date_end])
+            ->where('activity.referred_to',$user->facility_id)
+            ->orderBy('tracking.date_referred','desc');
+
+        if($type == 'incoming_total') {
+            $desc = "Total Incoming";
+            $data = $data->where(function($query) {
+                $query->where('activity.status', 'referred')
+                    ->orWhere('activity.status', 'redirected')
+                    ->orWhere('activity.status', 'transferred');
+                })
+                ->where('tracking.walkin','no')
+                ->groupBy('activity.code');
+        }
+        else if($type == 'accepted') {
+            $desc = "Accepted Patients";
+            $data = $data->where('activity.status','accepted')
+                    ->where('tracking.walkin','no');
+        }
+        else if($type == 'seen_only') {
+            $desc = "Seen Only";
+//            $data = $data->where(function($query) {
+//                    $query->where('activity.status','referred')
+//                        ->orWhere('activity.status','redirected')
+//                        ->orWhere('activity.status','transferred');
+//                })
+//                ->leftJoin('seen', function($join) {
+//                    $join->on('seen.code','=','activity.code')
+//                        ->on('seen.created_at','>=','activity.created_at')
+//                        ->on('seen.facility_id','=','activity.referred_to');
+//                })
+//                ->where('seen.code','!=',null)
+//                ->leftJoin('activity as act2', function($join) {
+//                    $join->on('act2.code','=','activity.code')
+//                        ->on('act2.referred_from','=','activity.referred_from')
+//                        ->on('act2.referred_to','=','activity.referred_to');
+//                })
+//                ->where(function($query) {
+//                    $query->where('act2.status','!=','accepted')
+//                        ->orWhere('act2.status','!=','admitted')
+//                        ->orWhere('act2.status','!=','archived')
+//                        ->orWhere('act2.status','!=','arrived')
+//                        ->orWhere('act2.status','!=','calling')
+//                        ->orWhere('act2.status','!=','called')
+//                        ->orWhere('act2.status','!=','cancelled')
+//                        ->orWhere('act2.status','!=','discharged')
+//                        ->orWhere('act2.status','!=','form_updated')
+//                        ->orWhere('act2.status','!=','queued')
+//                        ->orWhere('act2.status','!=','rejected')
+//                        ->orWhere('act2.status','!=','travel');
+//                })
+////                ->whereNotExists(function($query) {
+////                    $query->select(DB::raw(1))
+////                        ->from('activity as act2')
+////                        ->where('act2.status','=','accepted')
+////                        ->where('act2.referred_from','=','activity.referred_from')
+////                        ->where('act2.date_referred','>=','activity.created_at');
+////                })
+////                ->whereNotExists(function($query) {
+////                    $query->select(DB::raw(1))
+////                        ->from('activity as act3')
+////                        ->where('act3.code','=','activity.code')
+////                        ->where('act3.status','=','rejected')
+////                        ->where('act3.referred_from','='.'activity.referred_from')
+////                        ->where('act3.referred_to','=','activity.referred_to')
+////                        ->where('act3.id','>','activity.id')
+////                        ->where('act3.created_at','>=','activity.created_at');
+////                })
+//                ->groupBy('activity.code');
+        }
+        else if($type == 'not_seen') {
+            $desc = "No Action";
+            $data = $data->leftJoin('seen', function($join) {
+                    $join->on('seen.code','=','activity.code')
+                        ->on('seen.created_at','>=','activity.created_at')
+                        ->on('seen.facility_id','=','activity.referred_to');
+                })
+                ->where('seen.code',null)
+                ->where(function($query) {
+                    $query->where('activity.status', 'referred')
+                        ->orWhere('activity.status', 'redirected')
+                        ->orWhere('activity.status', 'transferred');
+                })
+                ->where('tracking.walkin','no');
+        }
+
+        Session::put('dashboard_data',$data->get());
+        $data = $data->paginate(50);
+
+        return view('modal.dashboard_modal',[
+            'data' => $data,
+            'desc' => $desc,
+            'type' => $type,
+            'date_start' => $date_start,
+            'date_end' => $date_end
         ]);
     }
 }

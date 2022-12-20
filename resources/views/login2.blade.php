@@ -230,7 +230,7 @@
                     <h3 style="font-weight: bold" class="text-success">WHAT'S NEW?</h3>
                     <div class="">
                 <span style="font-size:1.1em;">
-                    <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 6.6</strong><br>
+                    <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 6.7</strong><br>
                 </span>
                     </div>
                     <div class="icon-box">

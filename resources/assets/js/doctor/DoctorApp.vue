@@ -4,7 +4,7 @@
             <div class="jim-content">
                 <div class="alert alert-danger" v-if="error">
                     <span class="text-danger">
-                        <i class="fa fa-times"></i> Error swtiching account! Please try again.
+                        <i class="fa fa-times"></i> Error switching account! Please try again.
                     </span>
                 </div>
                 <h3 class="page-header">Monthly Activity</h3>
@@ -16,7 +16,10 @@
                     <div class="col-sm-3 col-xs-6">
                         <div class="description-block border-right">
                             <br>
-                            <h5 class="description-header">{{ incoming_total }}</h5>
+                            <h5 class="description-header">
+                                <!--<a href="#dashboard_modal" @click="showIncomingModal('incoming_total')">{{ incoming_total }}</a>-->
+                                {{ incoming_total }}
+                            </h5>
                             <span class="description-text">Incoming</span>
                         </div>
                         <!-- /.description-block -->
@@ -30,7 +33,9 @@
                             <span class="description-percentage text-red" v-else>
                                 <i class="fa fa-thumbs-o-down"></i> <b>({{ accept_percent+"%" }})</b>
                             </span>
-                            <h5 class="description-header">{{ incoming_statistics.accepted }}</h5>
+                            <h5 class="description-header">
+                                <a href="#dashboard_modal" @click="showIncomingModal('accepted')">{{ incoming_statistics.accepted }}</a>
+                            </h5>
                             <span class="description-text">Accepted</span>
                         </div>
                         <!-- /.description-block -->
@@ -40,6 +45,7 @@
                         <div class="description-block border-right">
                             <br>
                             <h5 class="description-header">
+                                <!--<a href="#dashboard_modal" @click="showIncomingModal('seen_only')">{{ incoming_statistics.seen_only }}</a>-->
                                 {{ incoming_statistics.seen_only }}
                             </h5>
                             <span class="description-text">Seen Only</span>
@@ -51,7 +57,7 @@
                         <div class="description-block">
                             <br>
                             <h5 class="description-header">
-                                {{ incoming_statistics.not_seen }}
+                                <a href="#dashboard_modal" @click="showIncomingModal('not_seen')">{{ incoming_statistics.not_seen }}</a>
                             </h5>
                             <span class="description-text">No Action</span>
                         </div>
@@ -80,6 +86,31 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" role="dialog" data-backdrop="static" id="dashboard_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <h3 class="dashboard-modal-title"></h3>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="close closeModalBtn" style="float: right" @click="closeModal" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body dashboard_modal_body text-center" style="padding-top: 1px; padding-bottom: 1px;">
+                    <img :src="loading">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary closeModalBtn" @click="closeModal" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -89,11 +120,13 @@
         data() {
             return {
                 incoming_statistics : Object,
-                incoming_total : 0,
+                incoming_total : '',
                 left_sum : 0,
                 right_sum : 0,
                 accept_percent : 0,
-                seen_only : 0
+                seen_only : 0,
+                data : "",
+                loading : $('#loadingGif').val()
             }
         },
         created(){
@@ -104,6 +137,19 @@
             this.optionLastTransaction()
         },
         methods : {
+            showIncomingModal(type) {
+                console.log(type);
+                $('#dashboard_modal').modal('show');
+                $('#dashboard_modal_body').html(loading);
+                axios.get('doctor/dashboard/getTransactions/'+type).then(response => {
+                        console.log(response.data);
+                        $('.dashboard_modal_body').html(response.data);
+                    })
+            },
+            closeModal() {
+                $('.dashboard_modal_body').html(loading);
+                $('.dashboard-modal-title').html('');
+            },
             proceedForm() {
                 if(this.user.level !== "support") {
                     Lobibox.confirm({
@@ -180,10 +226,12 @@
                     this.left_sum += this.incoming_statistics.referred + this.incoming_statistics.redirected + this.incoming_statistics.transferred
                     this.right_sum += this.incoming_statistics.accepted + this.incoming_statistics.denied + this.incoming_statistics.seen_only + this.incoming_statistics.not_seen
                     if(this.left_sum > this.right_sum) {
+                        console.log("first")
                         this.incoming_statistics.seen_only += this.left_sum - this.right_sum
                         this.right_sum += this.left_sum - this.right_sum
                     }
                     else if(this.left_sum < this.right_sum) {
+                        console.log('second')
                         this.incoming_statistics.referred += this.right_sum - this.left_sum
                         this.left_sum += this.right_sum - this.left_sum;
                     }

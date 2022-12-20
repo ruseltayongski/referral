@@ -49,6 +49,14 @@
             <option value="dmo" <?php if($user->level == "dmo") echo 'selected'; ?>>DMO</option>
         </select>
     </div>
+    <div class="form-group">
+        <label>Status</label>
+        <select class="form-control" name="status" required>
+            <option value="">Select...</option>
+            <option value="active" <?php if($user->status == "active") echo 'selected';?>>Active</option>
+            <option value="inactive" <?php if($user->status == "inactive") echo 'selected';?>>Inactive</option>
+        </select>
+    </div>
     <hr />
     <div class="form-group">
         <label>Username</label>
