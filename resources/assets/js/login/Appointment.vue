@@ -4,8 +4,8 @@
             <div class="section-title">
                 <h2>Make an Appointment</h2>
                 <p>
-                    Connect with our DOH CV CHD Team to set up a <b><u>training request schedule</u></b>
-                    or to address any <b><u>system issues and concerns</u></b> you may have.
+                    Connect with our DOH CV CHD Team to set up a <b><u style="font-size: 17pt;">Training Request Schedule</u></b>
+                    or to address any <b><u style="font-size: 17pt;">System Issues and Concerns</u></b> you may have.
                 </p>
             </div>
             <div class="row">
