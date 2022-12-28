@@ -309,10 +309,10 @@ $user = Session::get('auth');
                                     " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">3</span></div>
                                     <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                                         <?php
-                                        if($referred_rejected_track)
-                                            echo 'Declined';
-                                        elseif($referred_cancelled_track)
+                                        if($referred_cancelled_track)
                                             echo 'Cancelled';
+                                        elseif($referred_rejected_track)
+                                            echo 'Declined';
                                         elseif($referred_queued_track && !$referred_accepted_track)
                                             echo 'Queued at <br> <b>'. $queue_referred.'</b>';
                                         else
@@ -800,7 +800,7 @@ $user = Session::get('auth');
         @if(Session::get('rejected_by_admin'))
         Lobibox.alert("error",
             {
-                msg: "This referral was already cancelled by 711 Admin."
+                msg: "This referral was already cancelled"
             });
         <?php Session::put("rejected_by_admin",false); ?>
         @endif
