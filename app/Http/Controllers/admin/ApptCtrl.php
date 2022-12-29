@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Appointment;
+use App\AppointmentStatus;
 use App\Feedback;
 use App\UserFeedback;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Ratchet\App;
 
 class ApptCtrl extends Controller
 {
@@ -67,22 +69,82 @@ class ApptCtrl extends Controller
     }
 
     public function appointmentDetails(Request $req) {
+        $user = Session::get('auth');
         $data = Appointment::where('id', $req->id)->first();
         if($data->status == 'new') {
             $data->status = 'seen';
             $data->save();
+
+            $status = new AppointmentStatus();
+            $status->appt_id = $req->id;
+            $status->encoded_by = $user->id;
+            $status->status = 'seen';
+            $status->save();
         }
-        return $data;
+
+        $remarks = AppointmentStatus::select(
+                'appointment_status.remarks',
+                'appointment_status.status',
+                'users.fname',
+                'users.mname',
+                'users.lname',
+                'appointment_status.created_at'
+            )
+            ->where('appointment_status.appt_id',$req->id)
+            ->where(function($query) {
+                $query->where('appointment_status.status','ongoing')
+                    ->orWhere('appointment_status.status','resolved');
+            })
+            ->leftJoin('users','users.id','=','appointment_status.encoded_by')
+            ->get();
+
+        return view('admin.appointment.appt_modal', [
+            'data' => $data,
+            'remarks' => $remarks
+        ]);
+    }
+
+    public function addOngoing(Request $req) {
+        $user = Session::get('auth');
+        $data = new AppointmentStatus();
+        $data->appt_id = $req->appt_id;
+        $data->encoded_by = $user->id;
+        $data->remarks = $req->remarks;
+        $data->status = "ongoing";
+        $data->save();
+
+        $appt = Appointment::where('id',$req->appt_id)->first();
+        if($appt->status === 'seen') {
+            $appt->status = 'ongoing';
+            $appt->save();
+        }
+
+        return [
+            'data' => $data,
+            'user' => $user
+        ];
     }
 
     public function apptResolve(Request $req) {
-        $data = Appointment::where('id', $req->id)->first();
-        $data->remarks = $req->remarks;
+        $data = Appointment::where('id', $req->appt_id)->first();
         $data->status = 'resolved';
         $data->save();
+
+        $user = Session::get('auth');
+        $status = new AppointmentStatus();
+        $status->appt_id = $req->appt_id;
+        $status->encoded_by = $user->id;
+        $status->remarks = $req->remarks;
+        $status->status = "resolved";
+        $status->save();
+
         Session::put('appt_msg','Successfully resolved appointment!');
         Session::put('appt_notif',true);
-        return Redirect::back();
+
+        return [
+            'data' => $status,
+            'user' => $user
+        ];
     }
 
     public function feedback(Request $req){

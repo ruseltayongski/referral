@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\AppointmentStatus;
 use App\Facility;
 use App\Login;
 use App\User;
@@ -265,7 +266,8 @@ class LoginCtrl extends Controller
 
     public function createAppointment(Request $req) {
         $data = new Appointment();
-        $data->name = $req->name;
+        $data->name = $req->faci_name;
+        $data->requester = $req->requester;
         $data->email = $req->email;
         $data->contact = $req->contact;
         $data->preferred_date = (isset($req->date)) ? $req->date : '';
@@ -273,6 +275,11 @@ class LoginCtrl extends Controller
         $data->message = $req->message;
         $data->status = 'new';
         $data->save();
+
+        $status = new AppointmentStatus();
+        $status->appt_id = $data->id;
+        $status->status = 'new';
+        $status->save();
 
         /* send email to user with the message that their appointment was created successfully */
         $email_doh = $_ENV['EMAIL_ADDRESS'];

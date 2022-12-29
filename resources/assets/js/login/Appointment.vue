@@ -4,27 +4,32 @@
             <div class="section-title">
                 <h2>Make an Appointment</h2>
                 <p>
-                    Connect with our DOH CV CHD Team to set up a <b><u>training request schedule</u></b>
-                    or to address any <b><u>system issues and concerns</u></b> you may have.
+                    Connect with our DOH CV CHD Team to set up a <b><u>TRAINING REQUEST SCHEDULE</u></b>
+                    or to address any <b><u>SYSTEM ISSUES AND CONCERNS</u></b> you may have.
                 </p>
             </div>
             <div class="row">
                 <div class="col-md-4 form-group">
-                    <input v-model="appt.name" type="text" name="name" class="form-control" id="pointment_name" placeholder="Your Name/Facility Name" required>
+                    <input v-model="appt.faci_name" type="text" name="name" class="form-control" id="pointment_faci" placeholder="Facility Name" required>
                 </div>
-                <div class="col-md-4 form-group mt-3 mt-md-0">
-                    <input v-model="appt.email" type="email" class="form-control" name="email" id="pointment_email" placeholder="Your Email" required>
+                <div class="col-md-4 form-group">
+                    <input v-model="appt.requester" type="text" name="name" class="form-control" id="pointment_requester" placeholder="Name of Requester" required>
                 </div>
-                <div class="col-md-4 form-group mt-3 mt-md-0">
-                    <input v-model="appt.contact" type="tel" class="form-control" name="contact" id="pointment_phone" placeholder="Your Contact Number" required>
+                <div class="col-md-4 form-group">
+                    <input v-model="appt.email" type="email" class="form-control" name="email" id="pointment_email" placeholder="Email" required>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-4 form-group mt-3">
-                    <small>Preferred Date of Training:</small>
+                    <small>Contact Number: </small>
+                    <input v-model="appt.contact" type="tel" class="form-control" name="contact" id="pointment_phone" placeholder="Contact Number" required>
+                </div>
+                <div class="col-md-4 form-group mt-3">
+                    <small>Preferred Date of Training (If Training Request):</small>
                     <input type="date" v-model="appt.date" name="date" id="pointment_date" class="form-control" :min="tomorrow">
                 </div>
-                <div class="col-md-6 form-group mt-3">
+                <div class="col-md-4 form-group mt-3">
                     <small>Category:</small>
                     <select v-model="appt.category" name="category" id="pointment_category" class="form-select" required>
                         <option value="">Select...</option>
@@ -56,7 +61,8 @@
         name: "Appointment",
             data: () => ({
             appt: {
-                name: "",
+                faci_name: "",
+                requester: "",
                 email: "",
                 contact: "",
                 date: "",
@@ -75,14 +81,15 @@
         },
         methods: {
             createAppointment() {
-                if(this.appt.name === "" || this.appt.email === "" || this.appt.contact === "" || this.appt.message === "" || this.appt.category === "") {
+                if(this.appt.faci_name === "" || this.appt.requester === "" || this.appt.email === "" || this.appt.contact === "" || this.appt.message === "" || this.appt.category === "") {
                     this.warning = "Please fill in the required details!"
                 } else {
                     this.warning = ""
                     $('#btn_appt').attr('disabled',true);
                     $('#btn_appt').html('<i class="fa fa-spinner fa-spin"></i> Sending...');
                     axios.post('appointment/create', {
-                        name: this.appt.name,
+                        faci_name: this.appt.faci_name,
+                        requester: this.appt.requester,
                         email: this.appt.email,
                         contact: this.appt.contact,
                         date: this.appt.date,
@@ -90,7 +97,8 @@
                         message: this.appt.message
                     })
                         .then(response => {
-                            $('#pointment_name').val('');
+                            $('#pointment_faci').val('');
+                            $('#pointment_requester').val('');
                             $('#pointment_email').val('');
                             $('#pointment_phone').val('');
                             $('#pointment_category').val('');

@@ -125,6 +125,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('admin/users') }}" ><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
+                    {{--<li><a href="{{ url('admin/doctor/assignment') }}" ><i class="fa fa-user-md"></i>&nbsp; Doctor's Facility Assignment</a></li>--}}
                     <li><a href="{{ url('admin/facility') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
                     <li><a href="{{ url('admin/province') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
                     <li class="dropdown-submenu">
@@ -135,7 +136,7 @@
                             @endforeach
                         </ul>
                     </li>
-                    <li><a href="{{ url('admin/reason-referral') }}" ><i class="fa fa-wrench"></i> Reason for Referral</a></li>
+                    <li><a href="{{ url('admin/reason-referral') }}"><i class="fa fa-wrench"></i> Reason for Referral</a></li>
                     <li><a href="{{ url('admin/icd') }}"><i class="fa fa-file-text-o"></i> ICD-10</a></li>
                     <li><a href="{{ url('admin/appointment') }}"><i class="fa fa-pencil-square-o"></i> Appointments </a></li>
                     <li><a href="{{ url('admin/user_feedback') }}"><i class="fa fa-comments-o"></i> User Feedbacks </a></li>

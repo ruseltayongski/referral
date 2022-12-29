@@ -1475,7 +1475,7 @@ class ReferralCtrl extends Controller
             ->first();
 
         $already_rejected = Activity::where('code',$track->code)->orderBy('id','desc')->first();
-        if($already_rejected->status === 'rejected') {
+        if($already_rejected->status === 'cancelled') {
             Session::put('rejected_by_admin',true);
             return redirect()->back();
         }
