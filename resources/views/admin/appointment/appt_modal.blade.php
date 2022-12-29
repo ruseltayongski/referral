@@ -59,25 +59,35 @@ $count = 1;
                         <th class="text-center">Date</th>
                     </tr>
                     </thead>
-                    @foreach($remarks as $rem)
-                        <?php
-                        if($rem->status == 'ongoing')
-                            $bg = 'badge bg-red';
-                        else if($rem->status == 'resolved')
-                            $bg = 'badge bg-green';
-                        ?>
+                    @if(count($remarks) > 0)
+                        @foreach($remarks as $rem)
+                            <?php
+                            if($rem->status == 'ongoing')
+                                $bg = 'badge bg-red';
+                            else if($rem->status == 'resolved')
+                                $bg = 'badge bg-green';
+                            ?>
+                            <tr>
+                                <td>{{ $count++ }}</td>
+                                <td>{{ $rem->fname }} {{ $rem->lname }}</td>
+                                <td>{{ $rem->remarks }}</td>
+                                <td class="{{ $bg }}">{{ ucfirst($rem->status) }}</td>
+                                <?php
+                                $date = $rem->created_at;
+                                $date = $date->format('Y-m-d h:i:s');
+                                ?>
+                                <td>{{ $date }}</td>
+                            </tr>
+                        @endforeach
+                    @else
                         <tr>
                             <td>{{ $count++ }}</td>
-                            <td>{{ $rem->fname }} {{ $rem->lname }}</td>
-                            <td>{{ $rem->remarks }}</td>
-                            <td class="{{ $bg }}">{{ ucfirst($rem->status) }}</td>
-                            <?php
-                            $date = $rem->created_at;
-                            $date = $date->format('Y-m-d h:i:s');
-                            ?>
-                            <td>{{ $date }}</td>
+                            <td></td>
+                            <td>{{ $data->remarks }}</td>
+                            <td class="{{ $bg }}">{{ ucfirst($data->status) }}</td>
+                            <td>{{ $data->updated_at }}</td>
                         </tr>
-                    @endforeach
+                    @endif
                 </table>
             </div>
         </div>

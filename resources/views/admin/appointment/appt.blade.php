@@ -127,8 +127,6 @@ $morrow = $morrow->format('Y-m-d');
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-@include('admin.appointment.appt_modal')
-
 @endsection
 @section('js')
     <script>
