@@ -233,6 +233,11 @@ class HomeCtrl extends Controller
         }
         else if($type == 'seen_only') {
             $desc = "Seen Only";
+            /*
+             * TODO:
+             *      try ->whereNull(DB::raw())
+             * */
+
 //            $data = $data->where(function($query) {
 //                    $query->where('activity.status','referred')
 //                        ->orWhere('activity.status','redirected')

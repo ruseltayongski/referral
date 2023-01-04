@@ -800,7 +800,7 @@ $user = Session::get('auth');
         @if(Session::get('rejected_by_admin'))
         Lobibox.alert("error",
             {
-                msg: "This referral was already cancelled"
+                msg: "This referral was already cancelled."
             });
         <?php Session::put("rejected_by_admin",false); ?>
         @endif

@@ -64,6 +64,9 @@ Route::post('admin/facility/add','admin\FacilityCtrl@FacilityAdd');
 Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
 Route::post('admin/facility/delete','admin\FacilityCtrl@FacilityDelete');
 
+Route::get('admin/doctor/assignment','admin\UserCtrl@faciAssign');
+Route::post('admin/doctor/assignment/info','admin\UserCtrl@getUserInfo');
+
 //PROVINCE
 Route::match(['GET','POST'],'admin/province','admin\FacilityCtrl@provinceView');
 Route::post('admin/province/add','admin\FacilityCtrl@ProvinceAdd');
@@ -617,6 +620,7 @@ Route::get('reco/seen1/{code}','FeedbackCtrl@recoSeen1');
 Route::post('appointment/create','LoginCtrl@createAppointment');
 Route::match(['GET','POST'],'admin/appointment','admin\ApptCtrl@appointment');
 Route::post('admin/appointment/details','admin\ApptCtrl@appointmentDetails');
+Route::post('admin/appointment/addOngoing','admin\ApptCtrl@addOngoing');
 Route::post('admin/appointment/resolve','admin\ApptCtrl@apptResolve');
 
 // feedback

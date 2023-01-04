@@ -1,6 +1,7 @@
 <?php
 $counter = 1;
-$morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
+$morrow = new DateTime('tomorrow');
+$morrow = $morrow->format('Y-m-d');
 ?>
 
 @extends('layouts.app')
@@ -47,19 +48,13 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 </form>
             </div>
             <h3>APPOINTMENTS <small>({{ $count }})</small></h3>
-            {{--<div class="form-inline">--}}
-                {{--<h5><b>Legend:</b>&nbsp;&nbsp;--}}
-                    {{--<span style="border: 1px solid black; background-color: #ffcba4;">&emsp;&nbsp;</span> New &emsp;--}}
-                    {{--<span style="border: 1px solid black; background-color: #fbf7f3;">&emsp;&nbsp;</span> Seen &emsp;--}}
-                    {{--<span style="border: 1px solid black; background-color: #ace1af;">&emsp;&nbsp;</span> Resolved--}}
-                {{--</h5>--}}
-            {{--</div>--}}
         </div>
         <div class="box-body appointments">
             @if(count($data)>0)
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover table-fixed-header">
                         <tr class="bg-success bg-navy-active">
+                            <th class="text-center">Facility Name</th>
                             <th class="text-center">Requester</th>
                             <th class="text-center">Email</th>
                             <th class="text-center">Contact</th>
@@ -80,16 +75,19 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                                         </a>
                                     </b>
                                 </td>
+                                <td> {{ $row->requester }}</td>
                                 <td> {{ $row->email }} </td>
                                 <td class="text-center"> {{ $row->contact }} </td>
                                 <td class="text-center"> {{ $row->category}} </td>
-                                <td class="text-center"> {{ date_format($row->created_at, 'F d, Y') }} </td>
+                                <td class="text-center"> {{ date_format($row->created_at, 'F d, Y, h:i a') }} </td>
                                 <td class="text-center">
                                     <?php
                                     if($row->status == 'new')
                                         $bg = 'badge bg-yellow';
                                     else if($row->status == 'seen')
                                         $bg = 'badge bg-light-blue';
+                                    else if($row->status == 'ongoing')
+                                        $bg = 'badge bg-red';
                                     else if($row->status == 'resolved')
                                         $bg = 'badge bg-green';
                                     ?>
@@ -121,53 +119,10 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                     <h4 class="modal-title"><b>APPOINTMENT REQUEST</b></h4>
                 </div>
                 <div class="modal-body appt_body">
-                    <form method="post" action="{{ asset('admin/appointment/resolve') }}">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="id" id="modal_id">
-                        <div class="row">
-                            <div class="col-md-4 form-group">
-                                <b>Name:</b><br>
-                                <input type="text" class="form-control" id="modal_name" style="background-color: white" readonly>
-                            </div>
-                            <div class="col-md-4 form-group mt-3 mt-md-0">
-                                <b>Email:</b><br>
-                                <input type="text" class="form-control" id="modal_email" style="background-color: white" readonly>
-                            </div>
-                            <div class="col-md-4 form-group mt-3 mt-md-0">
-                                <b>Contact Number:</b><br>
-                                <input type="text" class="form-control" id="modal_contact" style="background-color: white" readonly>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 form-group mt-3">
-                                <b>Preferred Date of Training:</b><br>
-                                <input type="date" style="background-color: white" name="date" id="modal_date" class="form-control" min="{{ $morrow }}" readonly>
-                                {{--<small class="text-danger" id="warning_date">&emsp;Invalid Date!</small>--}}
-                            </div>
-                            <div class="col-md-4 form-group mt-3">
-                                <b>Category:</b><br>
-                                <input type="text" class="form-control" id="modal_category" style="background-color: white" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3">
-                            <b>Message:</b><br>
-                            <textarea class="form-control" rows="8" style="resize: none; background-color: white;" id="modal_message" readonly></textarea>
-                        </div>
-
-                        <div class="form-group mt-3">
-                            <b>Remarks:</b><br>
-                            <textarea class="form-control" name="remarks" rows="8" style="resize: none; background-color: white;" id="modal_remarks" required> </textarea>
-                        </div>
-
-                        <div class="form-group pull-right">
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                            <button type="submit" id="resolve_btn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-check"></i> Resolve</button>
-                        </div>
-                        <div class="clearfix"></div>
-                    </form>
-                </div><!-- /.modal-content -->
+                </div><!-- /.modal-body -->
+                <div class="modal-footer">
+                    <button class="btn btn-default btn-sm btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
+                </div>
             </div>
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -194,30 +149,8 @@ $morrow = new DateTime('tomorrow'); $morrow = $morrow->format('Y-m-d')
                 "_token" : "<?php echo csrf_token()?>"
             };
             var url = "<?php echo asset('admin/appointment/details') ?>";
-            $.post(url,json,function(data){
-                $('#modal_id').val(data.id);
-                $('#modal_name').val(data.name);
-                $('#modal_email').val(data.email);
-                $('#modal_contact').val(data.contact);
-                if(data.preferred_date != '0000-00-00') {
-                    $('#modal_date').val(data.preferred_date);
-                }else {
-                    $('#modal_date').val('');
-                }
-                $('#modal_category').val(data.category);
-                $('#modal_message').val(data.message);
-                $('#modal_remarks').val(data.remarks);
-                $('#warning_date').hide();
-
-                if(data.status === 'resolved') {
-                    $('#resolve_btn').hide();
-                    $('#modal_remarks').attr('readonly', true);
-                } else if(data.status === 'seen') {
-                    $('#status'+id).attr('class','badge bg-light-blue');
-                    $('#status'+id).html('SEEN');
-                    $('#modal_remarks').attr('readonly', false);
-                    $('#resolve_btn').show();
-                }
+            $.post(url,json,function(response){
+                $('.appt_body').html(response);
             });
         }
     </script>
