@@ -813,6 +813,14 @@ $user = Session::get('auth');
         <?php Session::put("refer_patient",false); ?>
         @endif
 
+        @if(Session::get('redirected_failed'))
+            Lobibox.alert("error",
+                {
+                    msg: "Failed to redirect the patient, please try again!"
+                });
+            <?php Session::put("redirected_failed",false); ?>
+        @endif
+
         $('body').on('click','.btn-transfer',function() {
             $(".transportation_body").html(''); //clear data
             var id = $(this).data('id');
