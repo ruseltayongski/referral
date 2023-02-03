@@ -375,6 +375,7 @@
             console.log("VUE JS VERSION 3")
             Echo.join('chat')
                 .here(users => {
+                    console.log(users)
                     let websocket_element = $(".websocket_status")
                     websocket_element.html("CONNECTED")
                     websocket_element.addClass("text-green")
@@ -444,6 +445,7 @@
 
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
+                    console.log(event)
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
                         if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
