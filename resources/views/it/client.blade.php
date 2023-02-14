@@ -192,7 +192,7 @@
                     $("#call_classification").val($call_classification);
 
                     var d = new Date();
-                    $("#time_started").val(d.toLocaleString());
+                    $("#time_started").val(moment().format("YYYY-MM-DD HH:mm:ss"));
                     $("#time_started_text").html(d.toLocaleString());
                 },500);
             });
@@ -281,7 +281,7 @@
 
             if(valid){
                 var d = new Date();
-                $("#time_ended").val(d.toLocaleString());
+                $("#time_ended").val(moment().format("YYYY-MM-DD HH:mm:ss"));
                 $("#time_ended_text").html(d.toLocaleString());
 
                 $($element).prop('disabled', true);
