@@ -372,10 +372,10 @@
             }
         },
         created() {
-            console.log("VUE JS VERSION 3")
+            console.log("VUE.JS 3.2.31")
             Echo.join('chat')
                 .here(users => {
-                    console.log(users)
+                    //console.log(users)
                     let websocket_element = $(".websocket_status")
                     websocket_element.html("CONNECTED")
                     websocket_element.addClass("text-green")
