@@ -265,8 +265,7 @@ Route::post('/doctor/report/outgoing','doctor\ReportCtrl@filterOutgoing');
 Route::get('duty/{option}','UserCtrl@duty');
 /*Hospital Pages*/
 
-Route::get('login','LoginCtrl@index');
-Route::get('login2','LoginCtrl@index2');
+Route::get('login','LoginCtrl@index3');
 Route::get('login/update/token/{token}','LoginCtrl@updateToken');
 Route::post('login','LoginCtrl@validateLogin2');
 Route::post('reset/password','LoginCtrl@resetPassword');

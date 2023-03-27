@@ -100,7 +100,7 @@
                 this.scrolldownFeedback(this.select_rec.code)
             },
             select_rec : function (new_val, old_val) {
-
+                console.log("hahaha")
             }
         },
         created() {

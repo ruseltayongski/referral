@@ -42,13 +42,21 @@
         props : ["user"],
         created() {
             this.fetchMessages()
-            this.track_url = $("#broadcasting_url").val()+"/doctor/referred?referredCode=190604-004-194729"
+            //this.track_url = $("#broadcasting_url").val()+"/doctor/referred?referredCode=190604-004-194729"
         },
         methods: {
             async fetchMessages() {
                 await axios.get('reco/fetch').then(response => {
-                    this.reco = response.data
-                    this.reco_handler = response.data
+                    const dataMap = response.data.map((item) => {
+                        const message = item.message.replace(/<\/?[^>]+(>|$)/g, "")
+                        return {
+                            ...item,
+                            patient_name: item.patient_name.length >= 25 ? item.patient_name.substring(0,25)+".." : item.patient_name,
+                            message: message.substring(0,27)+'..'
+                        }
+                    })
+                    this.reco = dataMap
+                    this.reco_handler = dataMap
                 });
             },
             async selectRec(payload) {
