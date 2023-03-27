@@ -1,5 +1,5 @@
 <template>
-    <ul>
+    <ul v-if="reco.length > 0">
         <li v-for="rec in reco" :key="rec.reco_id" @click="selectReco(rec)" :class="{ 'selected': rec.code == selected }">
             <img :src="logo" class="doh_logo" alt="">
             <div>
@@ -11,6 +11,9 @@
             </div>
         </li>
     </ul>
+    <div class="text-center" v-else>
+        <img :src="loadingPath">
+    </div>
 </template>
 
 <script>
@@ -20,7 +23,8 @@
             return {
                 selected : String,
                 logo : String,
-                messagesInfo: []
+                messagesInfo: [],
+                loadingPath: $("#broadcasting_url").val()+'/resources/img/processing.gif'
             }
         },
         props: ["reco","user"],
