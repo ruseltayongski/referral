@@ -30,7 +30,7 @@
         },
         methods: {
             selectReco(rec) {
-                try{
+                try {
                     this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
                     this.selected = rec.code
                     this.$emit('selectrec', rec)

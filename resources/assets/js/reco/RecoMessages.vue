@@ -6,7 +6,10 @@
         </div>
         <div class="box-body">
             <div class="direct-chat-messages" style="height: 520px;" :id="'vuefeedback'+select_rec.code">
-                <div v-for="message in messages" :key="message.id" class="direct-chat-msg" v-bind:class="message.position">
+                <div v-if="loadingFlag" class="text-center">
+                    <img :src="loadingPath" alt="">
+                </div>
+                <div v-for="message in messages" :key="message.id" class="direct-chat-msg" v-bind:class="message.position" v-else>
                     <div class="direct-chat-info clearfix">
                         <span class="direct-chat-name text-primary" v-bind:class="{ 'pull-right' : message.position == 'right','pull-left' : message.position == 'left' }">{{ message.facility_name }}</span><br>
                         <span class="direct-chat-name" v-bind:class="{ 'pull-right' : message.position == 'right','pull-left' : message.position == 'left' }">{{ message.sender_name }}</span>
@@ -37,17 +40,13 @@
                 logo : String,
                 sender_name : "",
                 socket_message: "",
-                new_message : Object
+                new_message : Object,
+                loadingPath: $("#broadcasting_url").val()+'/resources/img/loading.gif',
+                loadingFlag: false
             }
         },
         props : ["messages","select_rec","track_url","user"],
         methods: {
-            scrolldownFeedback(code) {
-                let objDiv = document.getElementById("vuefeedback"+code);
-                setTimeout(function () {
-                    objDiv.scrollTop = objDiv.scrollHeight;
-                },500);
-            },
             sendFeedback() {
                 if(this.select_rec.code) {
                     tinyMCE.triggerSave();
@@ -77,8 +76,7 @@
                             code: this.select_rec.code,
                             message: str
                         }
-                        axios.post('doctor/feedback', this.socket_message).then(response => {
-                        });
+                        axios.post('doctor/feedback', this.socket_message).then(response => {});
                     }
                     else {
                         Lobibox.alert("error",
@@ -93,17 +91,26 @@
                         msg: "You must select a ReCo"
                     });
                 }
+            },
+            scrolldownFeedback(code) {
+                this.loadingFlag = false
+                let objDiv = document.getElementById("vuefeedback"+code);
+                setTimeout(function () {
+                    objDiv.scrollTop = objDiv.scrollHeight
+                },500);
             }
         },
         watch: {
             messages: function() {
+                this.loadingFlag = false
                 this.scrolldownFeedback(this.select_rec.code)
             },
-            select_rec : function (new_val, old_val) {
-                console.log("hahaha")
+            select_rec: function (new_val, old_val) {
+                this.loadingFlag = true
             }
         },
         created() {
+            //console.log(this.loadingPath)
             this.logo = $("#doh_logo").val()
             Echo.join('reco')
                 .listen('SocketReco', (event) => {

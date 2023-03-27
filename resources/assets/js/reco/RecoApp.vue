@@ -52,7 +52,7 @@
                         return {
                             ...item,
                             patient_name: item.patient_name.length >= 25 ? item.patient_name.substring(0,25)+".." : item.patient_name,
-                            message: message.substring(0,27)+'..'
+                            message: message.substring(0,24)+'..'
                         }
                     })
                     this.reco = dataMap
