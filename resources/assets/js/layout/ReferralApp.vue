@@ -372,7 +372,7 @@
             }
         },
         created() {
-            console.log("VUE.JS 3.2.31")
+            console.log("VUE.JS 3.2.31!!!")
             Echo.join('chat')
                 .here(users => {
                     //console.log(users)
@@ -445,7 +445,6 @@
 
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    console.log(event)
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
                         if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {

@@ -45,13 +45,13 @@
             this.track_url = $("#broadcasting_url").val()+"/doctor/referred?referredCode=190604-004-194729"
         },
         methods: {
-            fetchMessages() {
-                axios.get('reco/fetch').then(response => {
+            async fetchMessages() {
+                await axios.get('reco/fetch').then(response => {
                     this.reco = response.data
                     this.reco_handler = response.data
                 });
             },
-            selectRec(payload) {
+            async selectRec(payload) {
                 this.select_rec = payload
 
                 this.reco_seen_new = {
@@ -63,7 +63,7 @@
                 this.recoSeen(this.reco_seen_new)
 
                 this.track_url = $("#broadcasting_url").val()+"/doctor/referred?referredCode="+payload.code
-                axios.get('reco/select/'+payload.code).then(response => {
+                await axios.get('reco/select/'+payload.code).then(response => {
                     this.messages = response.data
                 });
             },
