@@ -52,7 +52,7 @@
                         return {
                             ...item,
                             patient_name: item.patient_name.length >= 25 ? item.patient_name.substring(0,25)+".." : item.patient_name,
-                            message: message.substring(0,20)+'..'
+                            message: message.length >= 20 ? message.substring(0,20)+'..' : message
                         }
                     })
                     this.reco = dataMap
@@ -87,6 +87,7 @@
                     this.reco = this.reco_handler
             },
             newRecoNotification(message) {
+                console.log("listen2")
                 Lobibox.notify('success', {
                     delay: false,
                     closeOnClick: false,
@@ -107,9 +108,28 @@
                     });
                 }
                 else if(filter.length) {
-                    this.reco.map((item) => item.code === payload.code ? (item.message = payload.message,item.reco_seen = null,item.userid_sender = payload.userid_sender) : item ) //para ma update reco list
+                    console.log(payload)
+                    this.reco = this.reco.map((item) =>
+                        {
+                            const handlerMessage = payload.message.replace(/<\/?[^>]+(>|$)/g, "")
+                            if(item.code === payload.code) {
+                                return {
+                                    ...item,
+                                    message: handlerMessage.length >= 20 ? handlerMessage.substring(0,20)+'..' : handlerMessage,
+                                    reco_seen: null,
+                                    userid_sender: payload.userid_sender
+                                }
+                            }
+                            else {
+                                return {
+                                    ...item
+                                }
+                            }
+                        }
+                    ) //para ma update reco list
+                    console.log(this.reco)
                     this.orderRecoList(payload.code)
-                    if(this.user.id !== payload.userid_sender) {
+                    if(this.user.id !== payload.userid_sender && !payload.alreadyNotifyReco) {
                         this.newRecoNotification(payload.message)
                     }
                 }

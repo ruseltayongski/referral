@@ -94,6 +94,26 @@
         console.log("feedback_sendsd");
         if(str) {
             tinyMCE.activeEditor.setContent('');
+            const senderImager = "{{ asset("/resources/img/sender.png") }}";
+            const senderMessage = str;
+            const senderCurrentTime = moment().format('D MMM LT');
+            const senderFacility = "{{ \App\Facility::find($user->facility_id)->name }}";
+            const senderName = "{{ $user->fname.' '.$user->lname }}";
+            const recoAppend = '<div class="direct-chat-msg right">\n' +
+                '    <div class="direct-chat-info clearfix">\n' +
+                '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
+                '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
+                '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
+                '    </div>\n' +
+                '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
+                '    <div class="direct-chat-text">\n' +
+                '        '+senderMessage+
+                '    </div>\n' +
+                '</div>';
+            $(".reco-body"+code).append(recoAppend);
+            var objDiv = document.getElementById(code);
+            objDiv.scrollTop = objDiv.scrollHeight;
+            $("#message").val('').attr('placeholder','Type Message...');
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
                 type: 'post',
@@ -102,18 +122,13 @@
                     message: str,
                     code : code
                 },
-                success: function(data) {
-                    $(".reco-body"+code).append(data);
-                    var objDiv = document.getElementById(code);
-                    objDiv.scrollTop = objDiv.scrollHeight;
-                    $("#message").val('').attr('placeholder','Type Message...');
-                }
+                success: function(data) {}
             });
         }
         else {
             Lobibox.alert("error",
             {
-                msg: "ReCo message was emptysss!"
+                msg: "ReCo message was empty!"
             });
         }
     });

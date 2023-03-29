@@ -127,6 +127,7 @@
                         }
                         this.messages.push(this.new_message)
                         this.scrolldownFeedback(this.select_rec.code)
+                        console.log("listen1")
                         Lobibox.notify('success', {
                             delay: false,
                             closeOnClick: false,
@@ -136,6 +137,7 @@
                         });
                     }
 
+                    event.payload.alreadyNotifyReco = true
                     this.$emit('listenreco', event.payload);
                 });
         }
