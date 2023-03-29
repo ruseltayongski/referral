@@ -38,6 +38,12 @@
     .tooltip1:hover .tooltiptext {
         visibility: visible;
     }
+
+    @media (min-width: 992px){
+        .modal-lg {
+            width: 1100px !important;
+        }
+    }
 </style>
 @section('content')
     <div class="row col-md-12">
@@ -169,6 +175,7 @@
                                 <td colspan="2"></td>
                                 <th colspan="4" class="bg-info" style="text-align: center;border-right: 3px solid darkgray;">Referral Breakdown</th>
                                 <th colspan="5" class="bg-success" style="text-align: center;">Status Breakdown</th>
+                                <th class="bg-warning"></th>
                             </tr>
                             <tr>
                                 <th></th>
@@ -210,6 +217,7 @@
                                     </div>
                                 </th>
                                 <th style="text-align: center;font-size: 20pt;">Total</th>
+                                <th style="text-align: center;font-size: 15pt;" class="bg-warning">Cancelled</th>
                                 <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
@@ -307,6 +315,10 @@
                                         <label style="font-size: 20pt;">
                                             {{ $left_sum }}
                                         </label>
+                                    </td>
+                                    <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['cancelled'] }}</span>
+                                        <br><br>
                                     </td>
                                     <!--
                                     <td width="10%">
@@ -411,7 +423,7 @@
             else if(status === 'not_seen') {
                 statistics_title = 'Not Seen';
             }
-            else if(status === 'seen_only') {
+            else if (status === 'seen_only') {
                 statistics_title = 'Seen Only';
             }
             $(".statistics-title").html(request_type.charAt(0).toUpperCase() + request_type.slice(1)+" Statistics - "+statistics_title+" ");
@@ -424,11 +436,15 @@
             $.get(url,function(result){
                 setTimeout(function(){
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');
-                    $(".statistics-body").html(
-                        "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
-                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Referring Doctor</th><th class='text-green'>Reason for Referral</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th><th class='text-green'>Referred Date</th></tr>\n" +
-                        "</table>"
-                    );
+                    var statisticsBody = "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
+                                            "<tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>Patient Name</th><th class='text-green'>Referring Doctor</th><th class='text-green'>Reason for Referral</th><th class='text-green'>Address</th><th class='text-green'>Age</th><th class='text-green'>Referring Facility</th><th class='text-green'>Referred Facility</th><th class='text-green'>Referred Date</th>";
+                    if (['denied', 'cancelled'].includes(status)) {
+                        statisticsBody += "<th class='text-green'>Remarks</th>";
+                    }
+                    statisticsBody += "</tr>\n" +
+                                            "</table>";
+                    $(".statistics-body").html(statisticsBody);
+
                     jQuery.each(result, function(index, value) {
                         var track_url = "<?php echo asset('doctor/referred?referredCode='); ?>"+value["code"];
                         var tr = $('<tr />');
@@ -444,6 +460,8 @@
                         tr.append( $('<td />', { text : value["referring_facility"] } ));
                         tr.append( $('<td />', { text : value["referred_facility"] } ));
                         tr.append( $('<td />', { text : value["referred_date"] } ));
+                        if(['denied', 'cancelled'].includes(status))
+                            tr.append( $('<td />', { text : value["remarks"] } ));
                         $("#table").append(tr);
                     });
 

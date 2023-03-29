@@ -1,60 +1,48 @@
 <template>
-    <ul>
+    <ul v-if="reco.length > 0">
         <li v-for="rec in reco" :key="rec.reco_id" @click="selectReco(rec)" :class="{ 'selected': rec.code == selected }">
             <img :src="logo" class="doh_logo" alt="">
             <div>
-                <h2 v-if="rec.patient_name.length >= 25">
-                    <span :class="{ 'unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }">{{ rec.patient_name.substring(0,25)+".." }}</span>
-                </h2>
-                <h2 v-else>
+                <h2>
                     <span :class="{ 'unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }">{{ rec.patient_name }}</span>
                 </h2>
-                <h3 v-if="rec.message.length >= 27">
-                    <span class="status green"></span>&nbsp;
-                    <span :class="{ 'text-blue unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }" >{{ rec.message.substring(0,27)+'..' }}</span>
-                </h3>
-                <h3 v-else>
-                    <span class="status green"></span>&nbsp;
-                    <span :class="{ 'text-blue unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }">{{ rec.message }}</span>
-                </h3>
+                <span class="status green"></span>&nbsp;
+                <span :class="{ 'text-blue unread-reco': !rec.reco_seen && rec.userid_sender !== user.id }">{{ rec.message }}</span>
             </div>
         </li>
     </ul>
+    <div class="text-center" v-else>
+        <img :src="loadingPath">
+    </div>
 </template>
+
 <script>
     export default {
         name : "RecoList",
         data() {
             return {
                 selected : String,
-                logo : String
+                logo : String,
+                messagesInfo: [],
+                loadingPath: $("#broadcasting_url").val()+'/resources/img/processing.gif'
             }
         },
         props: ["reco","user"],
-        watch : {
-
-        },
-        created() {
+        mounted() {
             this.logo = $("#doh_logo").val()
+            console.log(this.messagesInfo)
         },
         methods: {
             selectReco(rec) {
-                this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
-
-                this.selected = rec.code
-                this.$emit('selectrec', rec);
-            }
-        },
-        computed: {
-            strippedContent() {
-                let regex = /(<([^>]+)>)/ig;
-                return this.reco.content.rendered.replace(regex, "");
-            },
-            rtT: function () {
-                return function (salut) {
-                    let regex = /(<([^>]+)>)/ig;
-                    return salut.replace(regex, "")
-                };
+                try {
+                    this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
+                    this.selected = rec.code
+                    this.$emit('selectrec', rec)
+                } catch(error){
+                    console.error(error)
+                    alert("Something went wrong! will restart this page")
+                    window.location.reload()
+                }
             }
         }
     }

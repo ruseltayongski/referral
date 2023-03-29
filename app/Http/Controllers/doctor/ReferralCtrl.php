@@ -1288,6 +1288,12 @@ class ReferralCtrl extends Controller
         $date = date('Y-m-d H:i:s');
 
         $track = Tracking::where("code",$req->code)->first();
+
+        if(!$track) {
+            Session::put('redirected_failed',true);
+            return Redirect::back();
+        }
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,

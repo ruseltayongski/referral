@@ -12,6 +12,9 @@
         <th class='text-green'>Referring Facility</th>
         <th class='text-green'>Referred Facility</th>
         <th class='text-green'>Referred Date</th>
+        @if(in_array($status, ['rejected', 'cancelled']))
+            <th class='text-green'>Remarks</th>
+        @endif
         <th class='text-green'>Status</th>
     </tr>
     <tbody>
@@ -35,6 +38,9 @@
             <td>{{ $row->referring_facility }}</td>
             <td>{{ $row->referred_facility }}</td>
             <td>{{ $row->referred_date }}</td>
+            @if(in_array($status, ['rejected', 'cancelled']))
+                <td>{{ $row->remarks }}</td>
+            @endif
             <td>{{ $status }}</td>
         </tr>
     @endforeach

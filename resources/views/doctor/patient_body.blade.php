@@ -51,7 +51,7 @@
     </div>
     <div class="form-group">
         <label>Middle Name:</label>
-        <input type="text" class="form-control" value="@if(isset($data->mname)){{ $data->mname }}@endif" name="mname">
+        <input type="text" class="form-control" value="@if(isset($data->mname)){{ $data->mname }}@endif" name="mname" required>
     </div>
     <div class="form-group">
         <label>Last Name:</label>
