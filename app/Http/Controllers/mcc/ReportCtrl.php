@@ -38,7 +38,7 @@ class ReportCtrl extends Controller
                     'department.id'
                 )
                 ->leftJoin('department','department.id','=','users.department_id')
-                ->where('users.facility_id',$user->facility_id)
+                ->where('users.facility_id',$user->facility_id) //TODO: possible changes for multiple facility log-in
                 ->where('users.level','doctor')
                 ->groupBy('users.department_id')
                 ->get();
@@ -147,7 +147,7 @@ class ReportCtrl extends Controller
         }
 
         $users = User::where("users.level",'doctor')
-                    ->where('users.facility_id',$u->facility_id);
+                    ->where('users.facility_id',$u->facility_id); //TODO: possible changes for multiple facility log-in
 
         if($department_id){
             $users = $users->where('users.department_id',$department_id);

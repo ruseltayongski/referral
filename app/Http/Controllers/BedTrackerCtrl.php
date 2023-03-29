@@ -36,7 +36,7 @@ class BedTrackerCtrl extends Controller
             $group_by_department = User::
             select(DB::raw("count(users.id) as y"),DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"))
                 ->leftJoin("department","department.id","=","users.department_id")
-                ->where("users.facility_id",$user->facility_id)
+                ->where("users.facility_id",$user->facility_id) //TODO: possible changes for multiple facility log-in
                 ->where("users.level","doctor")
                 ->groupBy("users.department_id")
                 ->get();

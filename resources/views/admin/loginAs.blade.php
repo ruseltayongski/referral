@@ -4,6 +4,12 @@ $facilities = \App\Facility::select('id','name')
     ->where('id','!=','63')
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+$multi_faci = \App\FacilityAssign::select('faci.id', 'faci.name')
+    ->leftJoin('facility as faci', 'faci.id', '=', 'facility_assignment.facility_id')
+    ->where('facility_assignment.user_id', $user->id)
+    ->where('facility_assignment.status', 'Active')
+    ->orderBy('faci.name','asc')
+    ->get();
 ?>
 @extends('layouts.app')
 
@@ -27,7 +33,8 @@ $facilities = \App\Facility::select('id','name')
     <div class="col-md-9">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3>{{ $title }}</h3>
+                <?php $title = isset($title) ? $title : "Login As";?>
+                <h3>{{ $title. $user->user_id }}</h3>
             </div>
             <div class="box-body">
                 <form method="POST" class="form-horizontal form-submit" id="hospitalForm" action="{{ asset('admin/login') }}">
@@ -38,9 +45,15 @@ $facilities = \App\Facility::select('id','name')
                             <td>
                                 <select class="form-control select2" name="facility_id" required>
                                     <option value="">Select Facility...</option>
-                                    @foreach($facilities as $f)
-                                    <option value="{{ $f->id }}">{{ $f->name }}</option>
-                                    @endforeach
+                                    @if(count($multi_faci) > 1 && $user->level == 'doctor')
+                                        @foreach($multi_faci as $f)
+                                            <option value="{{ $f->id }}">{{ $f->name }}</option>
+                                        @endforeach
+                                    @else
+                                        @foreach($facilities as $f)
+                                            <option value="{{ $f->id }}">{{ $f->name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </td>
                         </tr>
@@ -49,10 +62,14 @@ $facilities = \App\Facility::select('id','name')
                             <td>User Level :</td>
                             <td>
                                 <select class="form-control" name="level" required>
-                                    <option value="">Select Level...</option>
-                                    <option value="support">IT Support</option>
-                                    <option value="doctor">Doctor</option>
-                                    <option value="mcc">Medical Center Chief</option>
+                                    @if($user->level == 'admin')
+                                        <option value="">Select Level...</option>
+                                        <option value="support">IT Support</option>
+                                        <option value="doctor">Doctor</option>
+                                        <option value="mcc">Medical Center Chief</option>
+                                    @else
+                                        <option value="doctor" selected>Doctor</option>
+                                    @endif
                                 </select>
                             </td>
                         </tr>
@@ -69,9 +86,11 @@ $facilities = \App\Facility::select('id','name')
             </div>
         </div>
     </div>
+    @if($user->level == 'admin')
     <div class="col-md-3">
         @include('admin.sidebar.quick')
     </div>
+    @endif
 @endsection
 @section('js')
 

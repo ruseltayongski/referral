@@ -58,7 +58,7 @@ class UserCtrl extends Controller
         });
 
         $data = $data->join('users','users.id','=','login.userId')
-                ->join('facility','facility.id','=','users.facility_id')
+                ->join('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
                 ->leftJoin('department','department.id','=','users.department_id')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')

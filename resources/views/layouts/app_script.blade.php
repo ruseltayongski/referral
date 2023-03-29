@@ -122,6 +122,7 @@
                 url: url+'/'+id,
                 type: 'GET',
                 success: function(data){
+                    console.log(data);
                     $('.facility_address').html(data.address);
 
                     $('.select_department').empty()

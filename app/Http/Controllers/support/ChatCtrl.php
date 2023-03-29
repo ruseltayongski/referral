@@ -49,7 +49,7 @@ class ChatCtrl extends Controller
             'feedback.created_at as date'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('code','it-group-chat')
             ->latest('feedback.id')
             ->take(7)
@@ -75,7 +75,7 @@ class ChatCtrl extends Controller
             'feedback.created_at as date'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('code','it-group-chat')
             ->where('feedback.id','<',$id)
             ->latest('feedback.id')
@@ -106,7 +106,7 @@ class ChatCtrl extends Controller
             'feedback.created_at as date'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('feedback.id',$id)
             ->first();
 

@@ -56,7 +56,7 @@ class UserCtrl extends Controller
                                         DB::raw("coalesce(department.id,'no_id') as department_id")
                                     )
                                     ->leftJoin("department","department.id","=","users.department_id")
-                                    ->where("users.facility_id",$user->facility_id)
+                                    ->where("users.facility_id",$user->facility_id) //TODO: possible changes for multiple facility log-in
                                     ->where(function($q) use($search){
                                         $q->where("users.level","doctor")
                                         ->orWhere("users.level","midwife");

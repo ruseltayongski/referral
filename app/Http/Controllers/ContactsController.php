@@ -37,7 +37,7 @@ class ContactsController extends Controller
                     "facility.name as facility",
                     "users.contact"
                 )
-                ->leftJoin("facility","facility.id","=","users.facility_id")
+                ->leftJoin("facility","facility.id","=","users.facility_id") //TODO: possible changes for multiple facility log-in
                 ->where('users.id', '!=', Session::get('auth')->id)
                 ->where('users.level','=','opcen')
                 ->orderBy('users.fname','desc')
@@ -54,7 +54,7 @@ class ContactsController extends Controller
                     "facility.name as facility",
                     "users.contact"
                 )
-                ->leftJoin("facility","facility.id","=","users.facility_id")
+                ->leftJoin("facility","facility.id","=","users.facility_id") //TODO: possible changes for multiple facility log-in
                 ->where('users.id', '!=', Session::get('auth')->id)
                 ->where(function($q){
                     $q->where('users.level','=','doctor');
@@ -128,7 +128,7 @@ class ContactsController extends Controller
             "facility.name as facility",
             "users.contact"
         )
-            ->leftJoin("facility","facility.id","=","users.facility_id")
+            ->leftJoin("facility","facility.id","=","users.facility_id") //TODO: possible changes for multiple facility log-in
             ->where('users.id', '=', $user->id)
             ->first();
 

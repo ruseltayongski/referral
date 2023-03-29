@@ -55,7 +55,7 @@ class ReportCtrl extends Controller
                 ->where('login.logout','0000-00-00 00:00:00')
                 ->where('users.level','!=','admin')
                 ->where('users.username','!=','rtayong_doctor')
-                ->orderBy('users.facility_id','asc')
+                ->orderBy('users.facility_id','asc') //TODO: possible changes for multiple facility log-in
                 ->orderBy('login.id','desc')
                 ->orderBy('users.lname','asc')
                 ->paginate(20);
@@ -1217,7 +1217,7 @@ class ReportCtrl extends Controller
             $date = Carbon::now()->startOfMonth();
         }
 
-        $data = User::where("status", "inactive")->where("updated_at","like",'%'.$date.'%')->orderBy('facility_id')->get();
+        $data = User::where("status", "inactive")->where("updated_at","like",'%'.$date.'%')->orderBy('facility_id')->get(); //TODO: possible changes for multiple facility log-in
 
         return view("admin.report.deactivated", [
             'title' => 'Deactivated Users',
@@ -1658,6 +1658,8 @@ class ReportCtrl extends Controller
 
     public function ageBracketFilter($desc, $date_start, $date_end, $sex, $type, $getInfo) {
         $user = Session::get('auth');
+        $filter_facility = Session::get('agebracket_facility');
+        $filter_province = Session::get('agebracket_province');
         $faci_id = $user->facility_id;
         $description = "";
         $data = Tracking::select(
@@ -1683,10 +1685,19 @@ class ReportCtrl extends Controller
             ->leftJoin("barangay as bar","bar.id","=","patients.brgy")
             ->orderBy('tracking.date_referred', 'desc');
 
-        if($type == "incoming")
+
+        if($type == "incoming") {
             $data = $data->where('tracking.referred_to',$faci_id)->leftJoin('facility','facility.id','=','tracking.referred_from');
-        else if($type == 'outgoing')
+            if(isset($filter_facility))
+                $data = $data->where('tracking.referred_from',$filter_facility);
+        } else if($type == 'outgoing') {
             $data = $data->where('tracking.referred_from',$faci_id)->leftJoin('facility','facility.id','=','tracking.referred_to');
+            if(isset($filter_facility))
+                $data = $data->where('tracking.referred_to',$filter_facility);
+        }
+
+        if(isset($filter_province))
+            $data = $data->where('facility.province',$filter_province);
 
         if($desc == 'infant') {
             $description = "Infant/Toddler (0-5 years of age)";
@@ -1783,6 +1794,9 @@ class ReportCtrl extends Controller
             $req->request_type = 'incoming';
         }
 
+        Session::put('agebracket_facility', $req->facility);
+        Session::put('agebracket_province', $req->province);
+
         $data = array(
             [
                 'description' => "Infant/Toddler (0-5 years old)",
@@ -1815,7 +1829,9 @@ class ReportCtrl extends Controller
             "data" => $data,
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "request_type" => $req->request_type
+            "request_type" => $req->request_type,
+            "facility" => $req->facility,
+            "province" => $req->province
         ]);
     }
 

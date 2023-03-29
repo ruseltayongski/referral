@@ -1421,7 +1421,7 @@ class ReferralCtrl extends Controller
             'facility.name as facility_name'
         )
             ->leftJoin('users','users.id','=','seen.user_md')
-            ->leftJoin('facility', 'facility.id','=','users.facility_id')
+            ->leftJoin('facility', 'facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('seen.tracking_id',$track_id)
             ->orderBy('seen.created_at','desc')
             ->get();
@@ -1604,7 +1604,7 @@ class ReferralCtrl extends Controller
             'feedback.code'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('code',$code)
             ->orderBy("id","asc")
             ->get();
@@ -1629,7 +1629,7 @@ class ReferralCtrl extends Controller
             'feedback.created_at as date'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('code',$code)
             ->where('feedback.id','<',$id)
             ->latest('feedback.id')
@@ -1661,7 +1661,7 @@ class ReferralCtrl extends Controller
             'feedback.created_at as date'
         )
             ->leftJoin('users','users.id','=','feedback.sender')
-            ->leftJoin('facility','facility.id','=','users.facility_id')
+            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
             ->where('feedback.id',$id)
             ->first();
 

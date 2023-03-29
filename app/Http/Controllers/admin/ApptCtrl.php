@@ -24,21 +24,17 @@ class ApptCtrl extends Controller
     public function appointment(Request $req) {
         if($req->view_all) {
             $keyword = '';
+            $status = '';
             Session::put('appt_keyword','');
             Session::put('appt_date','');
         } else {
+            $status = $req->status_filter;
             $keyword = $req->appt_keyword;
             if(!$keyword || $keyword == '') {
                 $keyword = Session::get('appt_keyword');
             }
             $date = $req->date_filter;
-            if(!$date) {
-                $date = Session::get('appt_date');
-            }
         }
-
-        Session::put('appt_keyword', $keyword);
-        Session::put('appt_date',$date);
 
         $data = Appointment::orderBy('id', 'desc');
 
@@ -46,7 +42,7 @@ class ApptCtrl extends Controller
             $data = $data->where('name', 'like', '%'.$keyword.'%');
         }
 
-        $status = $req->status_filter;
+        Session::put('appt_status', $status);
         if($status && $status != '') {
             $data = $data->where('status', $status);
         }
@@ -59,12 +55,19 @@ class ApptCtrl extends Controller
         }
         $count = $data->count();
 
+        Session::put('appt_keyword', $keyword);
+        Session::put('appt_date', $date);
+        Session::put('appt_data', $data->get());
+
         $data = $data->paginate(30);
 
         return view('admin.appointment.appt',[
             'title' => 'Appointment',
             'data' => $data,
-            'count' => $count
+            'keyword' => $keyword,
+            'count' => $count,
+            'date' => $date,
+            'status' => $status
         ]);
     }
 
@@ -145,6 +148,27 @@ class ApptCtrl extends Controller
             'data' => $status,
             'user' => $user
         ];
+    }
+
+    public function exportAppointment() {
+        $date = Session::get('appt_date');
+        $data = Session::get('appt_data');
+        $status = Session::get('appt_status');
+
+        $file_name = "Appointments";
+        if(isset($date))
+            $file_name .= " for ".$date;
+        $file_name .= ".xls";
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$file_name");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        return view('admin.appointment.export_appt',[
+            "data" => $data,
+            "status" => $status,
+            "date" => $date
+        ]);
     }
 
     public function feedback(Request $req){

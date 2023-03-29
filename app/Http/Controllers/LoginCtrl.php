@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\AppointmentStatus;
 use App\Facility;
+use App\FacilityAssign;
 use App\Login;
 use App\User;
 use App\UserFeedback;
@@ -69,6 +70,12 @@ class LoginCtrl extends Controller
                             'logout' => $last_login
                         ]);
                 }
+
+                $multiple = FacilityAssign::where('user_id',$login->id)->where('status','Active')->count();
+                if($multiple > 1)
+                    Session::put('multiple_login', true);
+                else
+                    Session::put('multiple_login', false);
 
                 if($login->status=='inactive'){
                     Session::forget('auth');

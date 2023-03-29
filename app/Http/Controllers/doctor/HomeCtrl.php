@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use App\Activity;
 use App\Department;
 use App\Facility;
+use App\Http\Controllers\admin\UserCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Login;
 use App\Patients;
@@ -34,7 +35,7 @@ class HomeCtrl extends Controller
         $end = Carbon::now()->endOfDay();
 
         $user = Session::get("auth");
-        $group_by_department = $user->level == 'admin' ?
+        $group_by_department = $user->level == 'admin' ?  //TODO: possible changes for multiple facility log-in
             Login::
             select(DB::raw("count(users.id) as y"),DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"))
                 ->leftJoin("users","users.id","=","login.userId")
@@ -131,7 +132,7 @@ class HomeCtrl extends Controller
         $start = Carbon::now()->startOfDay();
         $end = Carbon::now()->endOfDay();
 
-        $group_by_department = $user->level == 'admin' ?
+        $group_by_department = $user->level == 'admin' ? //TODO: possible changes for multiple facility log-in
             Login::
             select(DB::raw("count(users.id) as y"),DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"))
                 ->leftJoin("users","users.id","=","login.userId")
@@ -312,6 +313,15 @@ class HomeCtrl extends Controller
             'type' => $type,
             'date_start' => $date_start,
             'date_end' => $date_end
+        ]);
+    }
+
+    public function selectAccount(){
+        $user = Session::get("auth");
+        $affiliated = UserCtrl::getUserFacilities($user->id);
+        return view('doctor.select_account', [
+            'user' => $user,
+            'affiliated' => $affiliated
         ]);
     }
 }

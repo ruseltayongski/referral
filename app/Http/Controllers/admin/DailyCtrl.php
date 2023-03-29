@@ -63,7 +63,7 @@ class DailyCtrl extends Controller
         $start = Carbon::parse($date)->startOfDay();
         $end = Carbon::parse($date)->endOfDay();
 
-        $data = Login::join('users','users.id','=','login.userId')
+        $data = Login::join('users','users.id','=','login.userId') //TODO: possible changes for multiple facility log-in
             ->where('users.facility_id',$id)
             ->whereBetween('login.login',[$start,$end])
             ->groupBy('login.userId')
@@ -74,7 +74,7 @@ class DailyCtrl extends Controller
     }
 
     static function countTotal($id,$level){
-        return User::where('facility_id',$id)
+        return User::where('facility_id',$id) //TODO: possible changes for multiple facility log-in
             ->where('level',$level)
             ->count();
     }

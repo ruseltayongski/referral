@@ -29,6 +29,9 @@ foreach($data as $row) {
     else if($type == 'senior')
         $senior_data = $data2;
 }
+
+$facilities = \App\Facility::where('status', 1)->where('referral_used','yes')->orderBy('name','asc')->get();
+$provinces = \App\Province::all();
 ?>
 @extends('layouts.app')
 
@@ -83,19 +86,37 @@ foreach($data as $row) {
             <div class="col-md-12">
                 <form action="{{ asset('admin/report/agebracket') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group">
-                        <span class="text-green" style="font-size: 17pt;">Report by Age Bracket </span>&ensp;&ensp;&ensp;&ensp;
+                    <span class="text-green" style="font-size: 17pt;">Report by Age Bracket </span>&ensp;&ensp;&ensp;&ensp;
+                    <div class="row">
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
-                        <select name="request_type" id="request_type" class="form-control" style="width: 200px;">
-                            <option name="request_type" value="incoming" @if(empty($request_type) || $request_type == 'incoming') selected @endif>Incoming</option>
-                            <option name="request_type" value="outgoing" @if($request_type == 'outgoing') selected @endif>Outgoing</option>
-                        </select>
-                        <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="date_range">
-                        <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
-                        <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/agebracket') }}'"><i class="fa fa-eye"></i> View All</button>
-                        {{--<a href="{{ asset('excel/export/age_bracket/overall') }}" class="btn btn-danger" target="_blank">--}}
+                        <div class="col-md-3">
+                            <select name="facility" class="select2" style="width:100%;">
+                                <option value="">Select facility...</option>
+                                @foreach($facilities as $faci)
+                                    <option value="{{ $faci->id }}" @if($facility == $faci->id) selected @endif>{{ $faci->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <select name="province" class="form-control">
+                                <option value="">Select province...</option>
+                                @foreach($provinces as $pro)
+                                    <option value="{{ $pro->id }}" @if($province == $pro->id) selected @endif>{{ $pro->description }}</option>
+                                @endforeach
+                            </select>
+                            <select name="request_type" id="request_type" class="form-control" style="width: 200px;">
+                                <option value="incoming" @if(empty($request_type) || $request_type == 'incoming') selected @endif>Incoming</option>
+                                <option value="outgoing" @if($request_type == 'outgoing') selected @endif>Outgoing</option>
+                            </select>
+                            <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="date_range">
+
+                            <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
+                            <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/agebracket') }}'"><i class="fa fa-eye"></i> View All</button>
+                            {{--<a href="{{ asset('excel/export/age_bracket/overall') }}" class="btn btn-danger" target="_blank">--}}
                             {{--<i class="fa fa-file-excel-o"></i> Export Excel--}}
-                        {{--</a>--}}
+                            {{--</a>--}}
+                        </div>
+
                     </div>
                 </form><br>
                 <div class="row" id="overall_col">

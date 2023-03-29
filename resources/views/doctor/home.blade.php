@@ -1,6 +1,7 @@
 <?php
     $error = \Illuminate\Support\Facades\Input::get('error');
     $user = Session::get('auth');
+$multi_faci = \App\FacilityAssign::where('user_id', $user->user_id)->where('status', 'Active')->get();
 ?>
 @extends('layouts.app')
 

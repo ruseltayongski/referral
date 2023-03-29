@@ -53,7 +53,7 @@ $faci_count = 0;
                                        onclick="openModal('<?php echo $row['user_id'];?>', '<?php echo $row['username'];?>')"
                                        data-toggle="modal"
                                        class="title-info update_info">
-                                        {{ $row['lname'] }}, {{ $row['fname'] }} {{ $row['mname'] }}
+                                        {{ $row['lname'] }}, {{ $row['fname'] }}, {{ $row['mname'] }}
                                     </a>
                                 </td>
                                 <td>
@@ -74,14 +74,16 @@ $faci_count = 0;
                                     @endforeach
                                 </td>
                                 <td>
-                                    @foreach($row['facilities'] as $faci)
-                                        @if($faci['last_login']!='0000-00-00 00:00:00')
-                                            {{ date('M d, Y h:i A',strtotime($faci->last_login)) }}
-                                        @else
-                                            Never Login
-                                        @endif
-                                        <div class="clearfix"><br><br></div>
-                                    @endforeach
+                                    <?php
+                                    foreach($row['facilities'] as $faci) {
+                                        if($faci->last_login != "0000-00-00 00:00:00")
+                                            echo date('M d, Y h:i A',strtotime($faci->last_login));
+                                        else
+                                            echo "Never Login";
+
+                                        echo '<div class="clearfix"><br><br></div>';
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                             <?php
@@ -104,12 +106,12 @@ $faci_count = 0;
     </div>
 </div>
 
-<div class="modal fade" role="dialog" id="doctor_modal">
+<div class="modal fade" role="dialog" id="doctor_modal" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
-        <form method="POST" id="assignDoctor">
+        <form method="POST" action="{{ asset('admin/doctor/assignment/update') }}">
             {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="">
-            <input type="hidden" name="username" value="">
+            <input type="hidden" name="user_id" id="user_id" value="">
+            <input type="hidden" name="username" id="username" value="">
             <div class="modal-content">
                 <div class="modal-body"></div>
             </div>
@@ -121,6 +123,8 @@ $faci_count = 0;
 @section('js')
     <script>
         function openModal(user_id, username) {
+            $('.modal-body').html('.');
+            $('.modal-body').html(loading);
             var url = "<?php echo e(url('admin/doctor/assignment/info')); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token(); ?>",
@@ -128,7 +132,8 @@ $faci_count = 0;
                 "username" : username
             };
             $.post(url,json, function(result){
-                console.log(result);
+                $('#user_id').val(user_id);
+                $('#username').val(username);
                 $('.modal-body').html(result);
             });
         }

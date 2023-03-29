@@ -77,7 +77,7 @@ class LocationCtrl extends Controller
         $data['departments'] = User::select('department.id','department.description')
                 ->leftJoin('department','department.id','=','users.department_id')
                 ->where('users.department_id','!=',0)
-                ->where('users.facility_id',$facility_id)
+                ->where('users.facility_id',$facility_id) //TODO: possible changes for multiple facility log-in
                 ->groupBy('users.department_id')
                 ->get();
 
@@ -89,7 +89,7 @@ class LocationCtrl extends Controller
         $departments = User::select('department.id','department.description')
             ->leftJoin('department','department.id','=','users.department_id')
             ->where('department.id','!=',null)
-            ->where('users.facility_id',$facility_id)
+            ->where('users.facility_id',$facility_id) //TODO: possible changes for multiple facility log-in
             ->groupBy('users.department_id')
             ->get();
 

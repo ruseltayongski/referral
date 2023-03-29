@@ -1,3 +1,7 @@
+<?php
+$user = Session::get('auth');
+$multi_faci = Session::get('multiple_login');
+?>
 <div class="navbar-header">
     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -10,7 +14,7 @@
 <input type="hidden" id="reco_count_val" value="{{ $reco_count }}">
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
     <ul class="nav navbar-nav">
-        @if($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo')
+        @if(!$multi_faci && ($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo'))
             <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
@@ -125,7 +129,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('admin/users') }}" ><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
-                    {{--<li><a href="{{ url('admin/doctor/assignment') }}" ><i class="fa fa-user-md"></i>&nbsp; Doctor's Facility Assignment</a></li>--}}
+                    <li><a href="{{ url('admin/doctor/assignment') }}" ><i class="fa fa-user-md"></i>&nbsp; Doctor's Facility Assignment</a></li>
                     <li><a href="{{ url('admin/facility') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
                     <li><a href="{{ url('admin/province') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
                     <li class="dropdown-submenu">
@@ -179,7 +183,7 @@
         @if($user->level == 'admin')
             <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
         @endif
-        @if($user->level != 'vaccine')
+        @if(!$multi_faci && $user->level != 'vaccine')
             {{--<li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual </a></li>--}}
             <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li>
             @if($user->level == 'admin')
@@ -190,7 +194,9 @@
             {{--<li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>--}}
             <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
         @endif
+        @if(!$multi_faci)
         <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
+        @endif
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
             <ul class="dropdown-menu">

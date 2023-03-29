@@ -170,7 +170,7 @@ class FeedbackCtrl extends Controller
         $userid = $user->id;
         $facility_id = $user->facility_id;
         $chat_image = asset("resources/img");
-        $data = Activity::select(
+        $data = Activity::select( //TODO: possible changes for multiple facility log-in
             'feedback.id',
             'feedback.message',
             \DB::raw("DATE_FORMAT(feedback.created_at, '%d %b %l:%i %p') as send_date"),

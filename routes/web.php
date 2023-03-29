@@ -5,6 +5,7 @@ if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Artisan;
+use App\FacilityAssign;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/', 'HomeCtrl@index');
 
 Route::get('logout', function() {
+    $user = Session::get('auth');
     if(isset($user)){
         \App\User::where('id',$user->id)
             ->update([
@@ -37,6 +39,13 @@ Route::get('logout', function() {
                 'status' => 'login_off',
                 'logout' => $logout
             ]);
+
+        $multiple_faci_id = Session::get('multiple_faci_id');
+        $faci = FacilityAssign::where('user_id', $user->id)->where('facility_id', $multiple_faci_id)->first();
+        if(count($faci) > 0) {
+            $faci->login_status = "logout";
+            $faci->save();
+        }
 
         Session::flush();
         Session::forget('auth');
@@ -64,8 +73,11 @@ Route::post('admin/facility/add','admin\FacilityCtrl@FacilityAdd');
 Route::post('admin/facility/body','admin\FacilityCtrl@FacilityBody');
 Route::post('admin/facility/delete','admin\FacilityCtrl@FacilityDelete');
 
+// MULTIPLE FACILITY ASSIGNMENT
 Route::get('admin/doctor/assignment','admin\UserCtrl@faciAssign');
 Route::post('admin/doctor/assignment/info','admin\UserCtrl@getUserInfo');
+Route::post('admin/doctor/assignment/update','admin\UserCtrl@updateAssignment');
+Route::get('account/select','doctor\HomeCtrl@selectAccount');
 
 //PROVINCE
 Route::match(['GET','POST'],'admin/province','admin\FacilityCtrl@provinceView');
@@ -622,6 +634,7 @@ Route::match(['GET','POST'],'admin/appointment','admin\ApptCtrl@appointment');
 Route::post('admin/appointment/details','admin\ApptCtrl@appointmentDetails');
 Route::post('admin/appointment/addOngoing','admin\ApptCtrl@addOngoing');
 Route::post('admin/appointment/resolve','admin\ApptCtrl@apptResolve');
+Route::get('admin/appointment/export','admin\ApptCtrl@exportAppointment');
 
 // feedback
 Route::match(['GET','POST'],'admin/user_feedback','admin\ApptCtrl@feedback');

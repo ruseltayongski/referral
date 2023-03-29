@@ -101,6 +101,7 @@
     </style>
 </head>
 <body>
+<?php $multiple_login = Session::get('multiple_login'); ?>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default fixed-top">
         <div class="header" style="background-color:#2F4054;padding:8px;">
@@ -123,7 +124,10 @@
                             $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
 
                     ?>
-                    <span class="text-orange">Welcome , </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }} {{ $dept_desc }}</span>
+                    <span class="text-orange">
+                        Welcome, </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }}
+                        @if(!$multiple_login) {{ $dept_desc }} @endif
+                    </span>
                 </div>
             </div>
             <div class="col-md-3">
@@ -140,7 +144,7 @@
             </div>
             <div class="col-md-3">
                 <div style="padding: 2px;">
-                    @if($user->level != 'vaccine')
+                    @if($user->level != 'vaccine' && !$multiple_login)
                         <span style="color: white">{{ \App\Facility::find($user->facility_id)->name }}</span>
                     @endif
                 </div>

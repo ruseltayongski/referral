@@ -27,20 +27,25 @@ $morrow = $morrow->format('Y-m-d');
                 <form action="{{ asset('admin/appointment') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group" style="margin-bottom: 10px;">
-                            <input type="text" class="form-control" name="appt_keyword" value="{{ Session::get('appt_keyword') }}" id="keyword" placeholder="Search...">
+                        <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
                         <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
                             <i class="fa fa-eye"></i> View All
-                        </button><br><br>
+                        </button>
+                        <a href="{{ asset('admin/appointment/export') }}" class="btn btn-danger btn-sm btn-flat" target="_blank">
+                            <i class="fa fa-file-excel-o"></i> Export
+                        </a>
+                        <br><br>
                         <select class="form-control select" id="status_filter" name="status_filter">
                             <option value="">Select status...</option>
-                            <option value="new"> New </option>
-                            <option value="seen"> Seen </option>
-                            <option value="resolved"> Resolved </option>
+                            <option value="new" @if($status == "new") selected @endif> New </option>
+                            <option value="seen" @if($status == 'seen') selected @endif> Seen </option>
+                            <option value="ongoing" @if($status == 'ongoing') selected @endif> Ongoing </option>
+                            <option value="resolved" @if($status == 'resolved') selected @endif> Resolved </option>
                         </select>
-                        <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ Session::get('appt_date') }}">
+                        <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ $date }}">
                         <button type="submit" class="btn btn-info btn-sm btn-flat">
                             <i class="fa fa-filter"></i> Filter
                         </button>
@@ -48,6 +53,7 @@ $morrow = $morrow->format('Y-m-d');
                 </form>
             </div>
             <h3>APPOINTMENTS <small>({{ $count }})</small></h3>
+
         </div>
         <div class="box-body appointments">
             @if(count($data)>0)
