@@ -38,7 +38,7 @@ class BedTrackerCtrl extends Controller
                 ->leftJoin("department","department.id","=","users.department_id")
                 ->where("users.facility_id",$user->facility_id) //TODO: possible changes for multiple facility log-in
                 ->where("users.level","doctor")
-                ->groupBy("users.department_id")
+                ->groupBy("department.id")
                 ->get();
         }
 

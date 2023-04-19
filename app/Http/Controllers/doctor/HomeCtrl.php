@@ -131,6 +131,7 @@ class HomeCtrl extends Controller
         $user = Session::get("auth");
         $start = Carbon::now()->startOfDay();
         $end = Carbon::now()->endOfDay();
+        $faci_id = $user->facility_id;
 
         $group_by_department = $user->level == 'admin' ? //TODO: possible changes for multiple facility log-in
             Login::
@@ -147,9 +148,15 @@ class HomeCtrl extends Controller
             select(DB::raw("count(users.id) as y"),DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"))
                 ->leftJoin("users","users.id","=","login.userId")
                 ->leftJoin("department","department.id","=","users.department_id")
+                ->leftJoin("facility_assignment as fa",'fa.department_id','=','department.id')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
-                ->where("users.facility_id",$user->facility_id)
+                ->where(function($q) use ($faci_id) {
+                    $q->where('users.facility_id',$faci_id)
+                        ->orWhere('fa.facility_id',$faci_id)
+                        ;
+                })
+//                ->where("users.facility_id",$user->facility_id)
                 ->where("users.level","doctor")
                 ->groupBy("users.department_id")
                 ->get()

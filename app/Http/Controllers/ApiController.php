@@ -584,7 +584,7 @@ class ApiController extends Controller
 
         $login = User::
         select('users.*','facility.name as hospital','department.description as department')
-            ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
+            ->leftJoin('facility','facility.id','=','users.facility_id') //(UNUSED??) TODO: possible changes for multiple facility log-in
             ->leftJoin('department','department.id','=','users.department_id')
             ->where('username','=',$user)
             ->first();

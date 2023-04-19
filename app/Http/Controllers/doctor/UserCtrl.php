@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\doctor;
 
+use App\FacilityAssign;
 use App\Http\Controllers\ParamCtrl;
 use App\Login;
 use App\User;
@@ -58,7 +59,7 @@ class UserCtrl extends Controller
         });
 
         $data = $data->join('users','users.id','=','login.userId')
-                ->join('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
+                ->join('facility','facility.id','=','users.facility_id') // (DONE) TODO: possible changes for multiple facility log-in
                 ->leftJoin('department','department.id','=','users.department_id')
                 ->whereBetween('login.login',[$start,$end])
                 ->where('login.logout','0000-00-00 00:00:00')
@@ -70,6 +71,24 @@ class UserCtrl extends Controller
         $current = $data[0]->facility;
         for($i = 0; $i < count($data); $i++) {
             $row = $data[$i];
+            $multi_table = FacilityAssign::select(
+                'facility.name as facility',
+                'facility.abbr as abbr',
+                'facility_assignment.contact',
+                'department.description as department'
+                )
+                ->leftJoin('facility','facility.id','=','facility_assignment.facility_id')
+                ->leftJoin('department','department.id','=','facility_assignment.department_id')
+                ->where('facility_assignment.user_id',$row['id'])
+                ->where('facility_assignment.login_status','login')
+                ->orderBy('facility_assignment.id','desc')
+                ->first();
+            if(count($multi_table) > 0) {
+                $row['facility'] = $multi_table->facility;
+                $row['abbr'] = $multi_table->abbr;
+                $row['department'] = $multi_table->department;
+                $row['contact'] = $multi_table->contact;
+            }
             array_push($temp, $row);
             if($current !== $data[$i+1]->facility) {
                 rsort($temp);
