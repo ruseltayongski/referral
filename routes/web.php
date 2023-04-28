@@ -663,3 +663,5 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 
 // duplicate referrals
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
+
+Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
