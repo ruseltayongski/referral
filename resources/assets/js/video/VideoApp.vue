@@ -13,7 +13,17 @@
                 declineUrl: $("#broadcasting_url").val()+"/resources/img/video/decline.png",
                 videoCallUrl: $("#broadcasting_url").val()+"/resources/img/video/videocall.png",
                 micUrl: $("#broadcasting_url").val()+"/resources/img/video/mic.png",
-                dohLogoUrl: $("#broadcasting_url").val()+"/resources/img/video/doh-logo.png"
+                dohLogoUrl: $("#broadcasting_url").val()+"/resources/img/video/doh-logo.png",
+                options: {
+                    // Pass your App ID here.
+                    appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
+                    // Set the channel name.
+                    channel: '',
+                    // Pass your temp token here.
+                    token: null,
+                    // Set the user ID.
+                    uid: 0,
+                }
             }
         },
         props : ["user"],
@@ -25,17 +35,17 @@
         methods: {
             async startBasicCall()
             {
-                let options =
+                /*let options =
                     {
                         // Pass your App ID here.
                         appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
                         // Set the channel name.
-                        channel: 'test',
+                        channel: 'rusel',
                         // Pass your temp token here.
                         token: null,
                         // Set the user ID.
                         uid: 0,
-                    };
+                    };*/
 
                 let channelParameters =
                     {
@@ -58,9 +68,9 @@
                 // Dynamically create a container in the form of a DIV element to play the local video track.
                 const localPlayerContainer = document.createElement('div');
                 // Specify the ID of the DIV container. You can use the uid of the local user.
-                localPlayerContainer.id = options.uid;
+                localPlayerContainer.id = this.options.uid;
                 // Set the textContent property of the local video container to the local user id.
-                /*localPlayerContainer.textContent = "Local user " + options.uid;
+                /*localPlayerContainer.textContent = "Local user " + this.options.uid;
                 // Set the local video container size.
                 localPlayerContainer.style.width = "640px";
                 localPlayerContainer.style.height = "480px";
@@ -78,7 +88,7 @@
                     // Subscribe and play the remote video in the container If the remote user publishes a video track.
                     if (mediaType == "video")
                     {
-                        console.log("caloyyyyy")
+                        console.log("remote")
                         // Retrieve the remote video track.
                         channelParameters.remoteVideoTrack = user.videoTrack;
                         // Retrieve the remote audio track.
@@ -110,14 +120,15 @@
                         console.log(user.uid+ "has left the channel");
                     });
                 });
+                let self =  this
                 window.onload = function ()
                 {
                     // Listen to the Join button click event.
                     document.getElementById("join").onclick = async function ()
                     {
-                        console.log("rusellllll")
+                        console.log("local")
                         // Join a channel.
-                        await agoraEngine.join(options.appId, options.channel, options.token, options.uid);
+                        await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
                         // Create a local audio track from the audio sampled by a microphone.
                         channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
                         // Create a local video track from the video captured by a camera.
@@ -227,7 +238,7 @@
         </div>
 
         <div class="myDiv3">
-            <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription">
+            <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription" v-model="options.channel">
         </div>
         <button class="submit-button" onclick="alert('Hello, world!')">SUBMIT</button>
     </div>
