@@ -35,6 +35,7 @@
 </style>
 
 @include('include.header_form')
+
 <table class="table table-striped form-label referral-table">
     <tr>
         <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }}</span></td>
@@ -187,7 +188,9 @@
     </tr>
 </table>
 <hr />
+
 <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
+
 <div class="form-fotter pull-right">
     @if($form->department_id === 5 && $user->id == $form->md_referring_id)
         <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine();"><i class="fa fa-camera"></i> Telemedicine</button>
@@ -199,6 +202,9 @@
         <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
     @endif
     @if($referral_status == 'referred' || $referral_status == 'redirected')
+        @if($form->department_id === 5)
+            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $id }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+        @endif
         <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
         <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
         <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
@@ -207,6 +213,7 @@
     <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form{{ $_GET['referredCode'] }}</a>
 </div>
 <div class="clearfix"></div>
+
 
 <script>
     function getParameterByName(name) {
@@ -221,10 +228,6 @@
     if(getParameterByName('referredCode')) {
         $("#telemedicine").addClass('hide');
         $(".edit_form_btn").addClass('hide');
-    }
-    function openTelemedicine() {
-        //window.open("{{ asset('doctor/telemedicine') }}", "mywindow", "status=1,toolbar=1");
-        window.open("{{ asset('doctor/telemedicine') }}", "_blank", "fullscreen=yes");
     }
 </script>
 

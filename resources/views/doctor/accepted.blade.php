@@ -106,7 +106,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
                                             @if($row->department_id === 5 && $row->action_md === $user->id)
-                                            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine();"><i class="fa fa-camera"></i></button>
+                                            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}');"><i class="fa fa-camera"></i></button>
                                             @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
@@ -253,8 +253,8 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
             "opens" : "left"
         });
 
-        function openTelemedicine(code) {
-            window.open("{{ asset('doctor/telemedicine') }}", "_blank", "fullscreen=yes");
+        function openTelemedicine(tracking_id, code) {
+            window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
         }
     </script>
 @endsection
