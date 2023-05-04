@@ -105,6 +105,9 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td>{{ $row->date_accepted }}</td>
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
+                                            @if($row->department_id === 5 && $row->action_md === $user->id)
+                                            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine();"><i class="fa fa-camera"></i></button>
+                                            @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
                                                         title="Patient Arrived"
@@ -192,6 +195,10 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                         <table class="table table-striped">
                             <caption>LEGENDS:</caption>
                             <tr>
+                                <td class="text-right" width="60px"><button class="btn-sm bg-success btn-flat"><i class="fa fa-camera"></i></button></td>
+                                <td>Telemedicine</td>
+                            </tr>
+                            <tr>
                                 <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
                                 <td>Patient Arrived</td>
                             </tr>
@@ -245,6 +252,10 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
         $('#daterange').daterangepicker({
             "opens" : "left"
         });
+
+        function openTelemedicine(code) {
+            window.open("{{ asset('doctor/telemedicine') }}", "_blank", "fullscreen=yes");
+        }
     </script>
 @endsection
 
