@@ -38,6 +38,7 @@ $user = Session::get('auth');
 </style>
 
 @include('include.header_form')
+
 <table class="table table-striped form-label referral-table">
     <tr>
         <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }}</span></td>
@@ -190,7 +191,9 @@ $user = Session::get('auth');
     </tr>
 </table>
 <hr />
+
 <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
+
 <div class="form-fotter pull-right">
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
         <button class="btn-sm btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
@@ -200,7 +203,7 @@ $user = Session::get('auth');
     @endif
     @if($referral_status == 'referred' || $referral_status == 'redirected')
         @if($form->department_id === 5)
-            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine();"><i class="fa fa-camera"></i> Telemedicine</button>
+            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $id }}');"><i class="fa fa-camera"></i> Telemedicine</button>
         @endif
         <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
         <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
@@ -211,10 +214,10 @@ $user = Session::get('auth');
 </div>
 <div class="clearfix"></div>
 
+
 <script>
-    function openTelemedicine() {
-        //window.open("{{ asset('doctor/telemedicine') }}", "mywindow", "status=1,toolbar=1");
-        window.open("{{ asset('doctor/telemedicine') }}", "_blank", "fullscreen=yes");
+    function openTelemedicine(tracking_id) {
+        window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id, "_blank", "fullscreen=yes");
     }
 </script>
 
