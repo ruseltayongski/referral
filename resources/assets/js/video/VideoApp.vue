@@ -1,6 +1,6 @@
 
 <script>
-    import axios from 'axios';
+    import axios from 'axios';np
 
     import AgoraRTC from "agora-rtc-sdk-ng"
     export default {
@@ -27,8 +27,25 @@
                     // Set the user ID.
                     uid: 0,
                 },
-                form: {}
-            }
+
+                form: {},
+
+
+
+                numberOfColumns: 3,
+                cellsToMerge: 2,
+
+            };
+        },
+
+        computed: {
+            spanValue() {
+                return this.numberOfColumns - this.cellsToMerge + 1;
+            },
+
+            formattedText() {
+                return this.form.case_summary.replace(/\n/g, '<br>')
+            },
         },
 
         mounted() {
@@ -37,12 +54,13 @@
                 .then((res) => {
                     const response = res.data;
                     this.form = response.form
-                    console.log(response.form)
+                    console.log(response)
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+
         props : ["user"],
         created() {
             console.log(this.user)
@@ -177,6 +195,7 @@
                     }
                 }
             },
+
             removeVideoDiv(elementId)
             {
                 console.log("Removing "+ elementId+"Div");
@@ -186,6 +205,7 @@
                     Div.remove();
                 }
             },
+
             getUrlVars()
             {
                 var vars = [], hash;
@@ -199,10 +219,9 @@
                 return vars;
             }
         }
-
     }
-
 </script>
+
 
 <template>
 
@@ -234,115 +253,75 @@
                 <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
             </div>
 
-            <!--div-- class="myDiv6">
-                <div class="box"><p>Name of Referring Facility: <span style="color: #E18E0B;"> {{ form.referring_name }} </span></p></div>
-                <div class="box"><p>Facility Contact #: <span style="color: #E18E0B;"> {{ form.referring_contact }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.referring_address }} </span></p></div>
-                <div class="box"><p>Referred to: <span style="color: #E18E0B;"> {{ form.referred_name }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.referred_address }} </span></p></div>
-                <div class="box"><p>Date/Time Referred (ReCo): <span style="color: #E18E0B;"> {{ form.time_referred }} </span></p></div>
-                <div class="box"><p>Name of Patient: <span style="color: #E18E0B;"> {{ form.patient_name }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.patient_address }} </span></p></div>
-                <div class="box"><p>Philhealth status: <span style="color: #E18E0B;"> {{ form.phic_status }} </span></p></div>
-                <div class="box"><p>Covid Number: <span style="color: #E18E0B;"> {{ form.covid_number }} </span></p></div>
-                <div class="box"><p>Clinical Status: <span style="color: #E18E0B;"> {{ form.refer_clinical_status }} </span></p></div>
-                <div class="box"><p>Surviellance Category: <span style="color: #E18E0B;"> {{  }} </span></p></div>
+            <table class="myTable">
+                <tr>
+                    <td colspan="6">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
+                </tr>
+                <tr>
+                    <td colspan="6">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
+                </tr>
+                <tr>
+                    <td colspan="6">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
+                </tr>
+                <tr>
+                    <td :colspan="spanValue">Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
+                    <td :colspan="spanValue">Department: <span class="forDetails"> {{ form.department }} </span></td>
+                </tr>
+                <tr>
+                    <td>Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
+                </tr>
+                <tr>
+                    <td>Date/Time Referred (ReCo): <span class="forDetails"> {{ form.time_referred }} </span></td>
+                    <td>Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
+                </tr>
+                <tr>
+                    <td>Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
+                    <td>Age: <span class="forDetails"> {{  }} </span></td>
+                    <td>Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
+                </tr>
+                <tr>
+                    <td>Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
+                    <td>Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
+                </tr>
+                <tr>
+                    <td>Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
+                    <td>Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
+                </tr>
+                <tr>
+                    <td>Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
+                </tr>
+                <tr>
+                    <td>Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
+                </tr>
+                <tr>
+                    <td>Surviellance Category: <span class="forDetails"> {{  }} </span></td>
+                </tr>
 
-                <div class="deptbox"><p>Department: <span style="color: #E18E0B;"> {{ form.department }} </span></p></div>
-                <div class="transbox"><p>Date/Time Transferred: <span style="color: #E18E0B;"> {{ form.time_transferred}} </span></p></div>
-                <div class="agebox"><p>Age: <span style="color: #E18E0B;"></span></p></div>
-                <div class="sexbox"><p>Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></p></div>
-                <div class="statusbox"><p>Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></p></div>
-                <div class="philbox"><p>Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-
-                <div class="divbox1"><p>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style="color: #E18E0B; line-height: 2;"> {{ form.case_summary }} </span></p>
-                    <div class="divbox2"><p>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style="color: #E18E0B; line-height: 2;"> {{ form.reco_summary }} </span></p></div>
-                    <div class="boxDiv">
-                        <div class="divbox3"><p>Other Diagnoses: <span style="color: #E18E0B;"> {{ form.other_diagnoses }} </span></p></div>
-                        <div class="divbox3"><p>Reason for referral: <span style="color: #E18E0B;"> {{ form.other_reason_referral }} </span></p></div>
-                        <div class="divbox3"><p>File Attachment: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-                        <div class="divbox3"><p>Name of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.md_referring }} </span></p></div>
-                        <div class="divbox3"><p>Contact # of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.referring_md_contact }} </span></p></div>
-                        <div class="divbox3"><p>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-                    </div>
-                </div>
-
-            </div-->
-
-            <div class="myDiv6">
-                <table>
-                    <tr>
-                        <td>Name of Referring Facility: <span style="color: #E18E0B;"> {{ form.referring_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Facility Contact #: <span style="color: #E18E0B;"> {{ form.referring_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referring_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Referred to: <span style="color: #E18E0B;"> {{ form.referred_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referred_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Date/Time Referred (ReCo): <span style="color: #E18E0B;"> {{ form.time_referred }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Patient: <span style="color: #E18E0B;"> {{ form.patient_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.patient_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Philhealth status: <span style="color: #E18E0B;"> {{ form.phic_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Covid Number: <span style="color: #E18E0B;"> {{ form.covid_number }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Clinical Status: <span style="color: #E18E0B;"> {{ form.refer_clinical_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Surviellance Category: <span style="color: #E18E0B;"> {{  }} </span></td>
-                    </tr>
-
-                    <tr>
-                        <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style="color: #E18E0B;"> {{ form.case_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style="color: #E18E0B;"> {{ form.reco_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>ICD-10 Code and Description: <span style="color: #E18E0B;"> {{ form.other_diagnoses }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Reason for referral: <span style="color: #E18E0B;"> {{ form.other_reason_referral }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>File Attachment: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.md_referring }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Contact # of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.referring_md_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-
-
-                    <!--div class="deptbox"><td style="background-color: white;">Department: <span style="color: #E18E0B;">{{ form.department }}</span></td></div-->
-                    <div class="transbox"><td style="background-color: white;">Date/Time Transferred: <span style="color: #E18E0B;">{{ form.time_transferred}}</span></td></div>
-                    <div class="agebox"><td style="background-color: #f2f2f2;">Age: <span style="color: #E18E0B;"></span></td></div>
-                    <div class="sexbox"><td style="background-color: #f2f2f2;">Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></td></div>
-                    <div class="statusbox"><td style="background-color: white;">Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></td></div>
-                    <div class="philbox"><td style="background-color: #f2f2f2;">Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td></div>
-                </table>
-            </div>
-
+                <tr>
+                    <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="forDetails"> {{ form.case_summary }} </span></td>
+                </tr>
+                <tr>
+                    <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span class="forDetails"> {{ form.reco_summary }} </span></td>
+                </tr>
+                <tr>
+                    <td>ICD-10 Code and Description: <span class="forDetails"> {{ form.other_diagnoses }} </span></td>
+                </tr>
+                <tr>
+                    <td>Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
+                </tr>
+                <tr>
+                    <td>File Attachment: <span class="forDetails"> {{ form.phic_id }} </span></td>
+                </tr>
+                <tr>
+                    <td>Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
+                </tr>
+                <tr>
+                    <td>Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
+                </tr>
+                <tr>
+                    <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span class="forDetails"> {{ form.phic_id }} </span></td>
+                </tr>
+            </table>
 
         </div>
 
@@ -361,14 +340,13 @@
     <br>
     <div id="message"></div>
 
-
 </template>
 
 <style>
 
     .container {
-        /*position: relative;
-        margin: 0 auto;*/
+        /*position: relative;*/
+        /*margin: 0 auto;*/
         width: 1900px;
         border: 5px outset green;
         height: 950px;
@@ -395,11 +373,7 @@
     }
     .image2 {
         position: absolute;
-        /*top: .5px;
-        left: .5px;*/
         z-index: 2;
-        /*transform: rotate(360deg);*/
-        /*border: 4px outset	green;*/
         border-radius: 23px;
         width: 270px;
         height: 260px;
@@ -410,19 +384,6 @@
         top: 750px;
         left: 657px;
         z-index: 2;
-        /*background-color: red;
-        border: none;
-        color: white;
-        padding: 1.2rem 1.4rem;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 100%;
-        transition: background-color 0.3s ease-in-out;*/
-
         border: none;
         background-color: transparent;
         cursor: pointer;
@@ -434,10 +395,6 @@
         width: 40%;
         height: auto;
     }
-
-    /*.decline-button:hover {
-          transform: scale(1.1);
-    }*/
 
     .video-button {
         position: absolute;
@@ -456,10 +413,6 @@
         height: auto;
     }
 
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
-
     .mic-button {
         position: absolute;
         top: 750px;
@@ -476,10 +429,6 @@
         width: 40%;
         height: auto;
     }
-
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
 
     /*Main Video Call*/
     .myDiv {
@@ -569,7 +518,7 @@
     }
 
     /*Patients Details*/
-    .myDiv6 {
+    .myTable {
         position: absolute;
         top: 125px;
         left: 10px;
@@ -590,143 +539,26 @@
         overflow-x: hidden;
     }
 
+    .forDetails {
+        color: #E18E0B;
+    }
+
     tr:nth-child(odd) {
         background-color: #f2f2f2;
         border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
+        /*height: 30px;
+        width:  640px;*/
+        height: auto;
+        width:  auto;
     }
 
     tr:nth-child(even) {
         background-color: white;
         border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-
-
-
-    .box:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .box:nth-child(even) {
-        background-color: white;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .divbox1 {
-        background-color: #f2f2f2;
-        position: absolute;
-        top: 383px;
-        border: 1px outset red;
-        /*height: 50px;*/
+        /*height: 30px;
+        width:  640px;*/
         height: auto;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
-
-    }
-
-    .divbox2 {
-        background-color: white;
-        position: absolute;
-        top: 434px;
-        border: 1px outset transparent;
-        height: 50px;
-        width:  640px;
-        text-align: left;
-        line-height: 0;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    .boxDiv {
-        /*background-color: white;*/
-        position: absolute;
-        top: 485px;
-        border: 1px outset transparent;
-        height: 166px;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
-
-        display: flex; /* Optional: use flexbox to align items */
-        flex-direction: column;
-        justify-content: top; /* Optional: distribute items evenly */
-    }
-
-    .divbox3:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset orchid;
-        height: 30px;
-        width:  640px;
-    }
-
-    .deptbox {
-        position: absolute;
-        top: 96px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-
-
-    }
-
-    .transbox {
-        position: absolute;
-        top: 160px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-    }
-
-    .agebox {
-        position: absolute;
-        top: 192px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  131px;
-    }
-
-    .sexbox {
-        position: absolute;
-        top: 192px;
-        left: 522px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  118px;
-    }
-
-    .statusbox {
-        position: absolute;
-        top: 224px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  250px;
-    }
-
-    .philbox {
-        position: absolute;
-        top: 256px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
+        width:  auto;
     }
 
     /*.textbox-container {
@@ -792,22 +624,4 @@
     #telemedicine:hover {
         background-color: lightgreen;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>
