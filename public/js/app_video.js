@@ -19724,7 +19724,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // Pass your App ID here.
         appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
         // Set the channel name.
-        channel: '',
+        channel: this.getUrlVars()["code"],
         // Pass your temp token here.
         token: null,
         // Set the user ID.
@@ -19753,11 +19753,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     startBasicCall: function startBasicCall() {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var channelParameters, agoraEngine, remotePlayerContainer, localPlayerContainer, self;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 /*let options =
                     {
@@ -19866,53 +19866,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 self = _this2;
 
                 window.onload = function () {
-                  // Listen to the Join button click event.
-                  document.getElementById("join").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+                  self.joinVideo(agoraEngine, channelParameters, localPlayerContainer, self); // Listen to the Join button click event.
+
+                  /*document.getElementById("join").onclick = async function ()
+                  {
+                      console.log("local")
+                      // Join a channel.
+                      await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
+                      // Create a local audio track from the audio sampled by a microphone.
+                      channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+                      // Create a local video track from the video captured by a camera.
+                      channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+                      // Append the local video container to the page body.
+                      document.body.append(localPlayerContainer);
+                      $(".divImage2").html(localPlayerContainer)
+                      $(localPlayerContainer).addClass("image2")
+                      // Publish the local audio and video tracks in the channel.
+                      await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
+                      // Play the local video track.
+                      channelParameters.localVideoTrack.play(localPlayerContainer);
+                      console.log("publish success!");
+                  }*/
+                  // Listen to the Leave button click event.
+
+                  document.getElementById('leave').onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
                     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
                       while (1) {
                         switch (_context2.prev = _context2.next) {
-                          case 0:
-                            console.log("local"); // Join a channel.
-
-                            _context2.next = 3;
-                            return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-
-                          case 3:
-                            _context2.next = 5;
-                            return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createMicrophoneAudioTrack();
-
-                          case 5:
-                            channelParameters.localAudioTrack = _context2.sent;
-                            _context2.next = 8;
-                            return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createCameraVideoTrack();
-
-                          case 8:
-                            channelParameters.localVideoTrack = _context2.sent;
-                            // Append the local video container to the page body.
-                            document.body.append(localPlayerContainer);
-                            $(".divImage2").html(localPlayerContainer);
-                            $(localPlayerContainer).addClass("image2"); // Publish the local audio and video tracks in the channel.
-
-                            _context2.next = 14;
-                            return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-
-                          case 14:
-                            // Play the local video track.
-                            channelParameters.localVideoTrack.play(localPlayerContainer);
-                            console.log("publish success!");
-
-                          case 16:
-                          case "end":
-                            return _context2.stop();
-                        }
-                      }
-                    }, _callee2);
-                  })); // Listen to the Leave button click event.
-
-                  document.getElementById('leave').onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-                      while (1) {
-                        switch (_context3.prev = _context3.next) {
                           case 0:
                             // Destroy the local audio and video tracks.
                             channelParameters.localAudioTrack.close();
@@ -19921,7 +19901,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                             this.removeVideoDiv(remotePlayerContainer.id);
                             this.removeVideoDiv(localPlayerContainer.id); // Leave the channel
 
-                            _context3.next = 6;
+                            _context2.next = 6;
                             return agoraEngine.leave();
 
                           case 6:
@@ -19931,19 +19911,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                           case 8:
                           case "end":
-                            return _context3.stop();
+                            return _context2.stop();
                         }
                       }
-                    }, _callee3, this);
+                    }, _callee2, this);
                   }));
                 };
 
               case 8:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4);
+        }, _callee3);
       }))();
     },
     removeVideoDiv: function removeVideoDiv(elementId) {
@@ -19966,6 +19946,49 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return vars;
+    },
+    joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                console.log("local"); // Join a channel.
+
+                _context4.next = 3;
+                return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
+
+              case 3:
+                _context4.next = 5;
+                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createMicrophoneAudioTrack();
+
+              case 5:
+                channelParameters.localAudioTrack = _context4.sent;
+                _context4.next = 8;
+                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createCameraVideoTrack();
+
+              case 8:
+                channelParameters.localVideoTrack = _context4.sent;
+                // Append the local video container to the page body.
+                document.body.append(localPlayerContainer);
+                $(".divImage2").html(localPlayerContainer);
+                $(localPlayerContainer).addClass("image2"); // Publish the local audio and video tracks in the channel.
+
+                _context4.next = 14;
+                return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
+
+              case 14:
+                // Play the local video track.
+                channelParameters.localVideoTrack.play(localPlayerContainer);
+                console.log("publish success!");
+
+              case 16:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     }
   }
 });
@@ -20150,7 +20173,7 @@ var _hoisted_42 = {
 
 var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "agebox"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("HSFGSDFDSFDSF"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   style: {
     "background-color": "#f2f2f2"
   }
@@ -20248,7 +20271,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "doh-logo"
   }, null, 8
   /* PROPS */
-  , _hoisted_14), _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("div-- class=\"myDiv6\">\r\n                <div class=\"box\"><p>Name of Referring Facility: <span style=\"color: #E18E0B;\"> {{ form.referring_name }} </span></p></div>\r\n                <div class=\"box\"><p>Facility Contact #: <span style=\"color: #E18E0B;\"> {{ form.referring_contact }} </span></p></div>\r\n                <div class=\"box\"><p>Address: <span style=\"color: #E18E0B;\"> {{ form.referring_address }} </span></p></div>\r\n                <div class=\"box\"><p>Referred to: <span style=\"color: #E18E0B;\"> {{ form.referred_name }} </span></p></div>\r\n                <div class=\"box\"><p>Address: <span style=\"color: #E18E0B;\"> {{ form.referred_address }} </span></p></div>\r\n                <div class=\"box\"><p>Date/Time Referred (ReCo): <span style=\"color: #E18E0B;\"> {{ form.time_referred }} </span></p></div>\r\n                <div class=\"box\"><p>Name of Patient: <span style=\"color: #E18E0B;\"> {{ form.patient_name }} </span></p></div>\r\n                <div class=\"box\"><p>Address: <span style=\"color: #E18E0B;\"> {{ form.patient_address }} </span></p></div>\r\n                <div class=\"box\"><p>Philhealth status: <span style=\"color: #E18E0B;\"> {{ form.phic_status }} </span></p></div>\r\n                <div class=\"box\"><p>Covid Number: <span style=\"color: #E18E0B;\"> {{ form.covid_number }} </span></p></div>\r\n                <div class=\"box\"><p>Clinical Status: <span style=\"color: #E18E0B;\"> {{ form.refer_clinical_status }} </span></p></div>\r\n                <div class=\"box\"><p>Surviellance Category: <span style=\"color: #E18E0B;\"> {{  }} </span></p></div>\r\n\r\n                <div class=\"deptbox\"><p>Department: <span style=\"color: #E18E0B;\"> {{ form.department }} </span></p></div>\r\n                <div class=\"transbox\"><p>Date/Time Transferred: <span style=\"color: #E18E0B;\"> {{ form.time_transferred}} </span></p></div>\r\n                <div class=\"agebox\"><p>Age: <span style=\"color: #E18E0B;\"></span></p></div>\r\n                <div class=\"sexbox\"><p>Sex: <span style=\"color: #E18E0B;\"> {{ form.patient_sex }} </span></p></div>\r\n                <div class=\"statusbox\"><p>Status: <span style=\"color: #E18E0B;\"> {{ form.patient_status }} </span></p></div>\r\n                <div class=\"philbox\"><p>Philhealth #: <span style=\"color: #E18E0B;\"> {{ form.phic_id }} </span></p></div>\r\n\r\n                <div class=\"divbox1\"><p>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style=\"color: #E18E0B; line-height: 2;\"> {{ form.case_summary }} </span></p>\r\n                    <div class=\"divbox2\"><p>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style=\"color: #E18E0B; line-height: 2;\"> {{ form.reco_summary }} </span></p></div>\r\n                    <div class=\"boxDiv\">\r\n                        <div class=\"divbox3\"><p>Other Diagnoses: <span style=\"color: #E18E0B;\"> {{ form.other_diagnoses }} </span></p></div>\r\n                        <div class=\"divbox3\"><p>Reason for referral: <span style=\"color: #E18E0B;\"> {{ form.other_reason_referral }} </span></p></div>\r\n                        <div class=\"divbox3\"><p>File Attachment: <span style=\"color: #E18E0B;\"> {{ form.phic_id }} </span></p></div>\r\n                        <div class=\"divbox3\"><p>Name of Referring MD/HCW: <span style=\"color: #E18E0B;\"> {{ form.md_referring }} </span></p></div>\r\n                        <div class=\"divbox3\"><p>Contact # of Referring MD/HCW: <span style=\"color: #E18E0B;\"> {{ form.referring_md_contact }} </span></p></div>\r\n                        <div class=\"divbox3\"><p>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style=\"color: #E18E0B;\"> {{ form.phic_id }} </span></p></div>\r\n                    </div>\r\n                </div>\r\n\r\n            </div"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
+  , _hoisted_14), _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
   /* TEXT */
@@ -20288,7 +20311,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("div class=\"deptbox\"><td style=\"background-color: white;\">Department: <span style=\"color: #E18E0B;\">{{ form.department }}</span></td></div"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
   /* TEXT */
   )])]), _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Sex: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1
   /* TEXT */
@@ -24202,11 +24225,6 @@ function compileToFunction(template, options) {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/nonce */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nc = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

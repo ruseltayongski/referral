@@ -21,7 +21,7 @@
                     // Pass your App ID here.
                     appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
                     // Set the channel name.
-                    channel: '',
+                    channel: this.getUrlVars()["code"],
                     // Pass your temp token here.
                     token: null,
                     // Set the user ID.
@@ -140,8 +140,9 @@
                 let self =  this
                 window.onload = function ()
                 {
+                    self.joinVideo(agoraEngine,channelParameters,localPlayerContainer,self)
                     // Listen to the Join button click event.
-                    document.getElementById("join").onclick = async function ()
+                    /*document.getElementById("join").onclick = async function ()
                     {
                         console.log("local")
                         // Join a channel.
@@ -159,7 +160,7 @@
                         // Play the local video track.
                         channelParameters.localVideoTrack.play(localPlayerContainer);
                         console.log("publish success!");
-                    }
+                    }*/
                     // Listen to the Leave button click event.
                     document.getElementById('leave').onclick = async function ()
                     {
@@ -197,6 +198,24 @@
                     vars[hash[0]] = hash[1];
                 }
                 return vars;
+            },
+            async joinVideo(agoraEngine,channelParameters,localPlayerContainer,self) {
+                console.log("local")
+                // Join a channel.
+                await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
+                // Create a local audio track from the audio sampled by a microphone.
+                channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+                // Create a local video track from the video captured by a camera.
+                channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+                // Append the local video container to the page body.
+                document.body.append(localPlayerContainer);
+                $(".divImage2").html(localPlayerContainer)
+                $(localPlayerContainer).addClass("image2")
+                // Publish the local audio and video tracks in the channel.
+                await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
+                // Play the local video track.
+                channelParameters.localVideoTrack.play(localPlayerContainer);
+                console.log("publish success!");
             }
         }
 
@@ -233,41 +252,6 @@
             <div class="myDiv5">
                 <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
             </div>
-
-            <!--div-- class="myDiv6">
-                <div class="box"><p>Name of Referring Facility: <span style="color: #E18E0B;"> {{ form.referring_name }} </span></p></div>
-                <div class="box"><p>Facility Contact #: <span style="color: #E18E0B;"> {{ form.referring_contact }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.referring_address }} </span></p></div>
-                <div class="box"><p>Referred to: <span style="color: #E18E0B;"> {{ form.referred_name }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.referred_address }} </span></p></div>
-                <div class="box"><p>Date/Time Referred (ReCo): <span style="color: #E18E0B;"> {{ form.time_referred }} </span></p></div>
-                <div class="box"><p>Name of Patient: <span style="color: #E18E0B;"> {{ form.patient_name }} </span></p></div>
-                <div class="box"><p>Address: <span style="color: #E18E0B;"> {{ form.patient_address }} </span></p></div>
-                <div class="box"><p>Philhealth status: <span style="color: #E18E0B;"> {{ form.phic_status }} </span></p></div>
-                <div class="box"><p>Covid Number: <span style="color: #E18E0B;"> {{ form.covid_number }} </span></p></div>
-                <div class="box"><p>Clinical Status: <span style="color: #E18E0B;"> {{ form.refer_clinical_status }} </span></p></div>
-                <div class="box"><p>Surviellance Category: <span style="color: #E18E0B;"> {{  }} </span></p></div>
-
-                <div class="deptbox"><p>Department: <span style="color: #E18E0B;"> {{ form.department }} </span></p></div>
-                <div class="transbox"><p>Date/Time Transferred: <span style="color: #E18E0B;"> {{ form.time_transferred}} </span></p></div>
-                <div class="agebox"><p>Age: <span style="color: #E18E0B;"></span></p></div>
-                <div class="sexbox"><p>Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></p></div>
-                <div class="statusbox"><p>Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></p></div>
-                <div class="philbox"><p>Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-
-                <div class="divbox1"><p>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style="color: #E18E0B; line-height: 2;"> {{ form.case_summary }} </span></p>
-                    <div class="divbox2"><p>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style="color: #E18E0B; line-height: 2;"> {{ form.reco_summary }} </span></p></div>
-                    <div class="boxDiv">
-                        <div class="divbox3"><p>Other Diagnoses: <span style="color: #E18E0B;"> {{ form.other_diagnoses }} </span></p></div>
-                        <div class="divbox3"><p>Reason for referral: <span style="color: #E18E0B;"> {{ form.other_reason_referral }} </span></p></div>
-                        <div class="divbox3"><p>File Attachment: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-                        <div class="divbox3"><p>Name of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.md_referring }} </span></p></div>
-                        <div class="divbox3"><p>Contact # of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.referring_md_contact }} </span></p></div>
-                        <div class="divbox3"><p>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></p></div>
-                    </div>
-                </div>
-
-            </div-->
 
             <div class="myDiv6">
                 <table>
@@ -333,10 +317,8 @@
                         <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
                     </tr>
 
-
-                    <!--div class="deptbox"><td style="background-color: white;">Department: <span style="color: #E18E0B;">{{ form.department }}</span></td></div-->
                     <div class="transbox"><td style="background-color: white;">Date/Time Transferred: <span style="color: #E18E0B;">{{ form.time_transferred}}</span></td></div>
-                    <div class="agebox"><td style="background-color: #f2f2f2;">Age: <span style="color: #E18E0B;"></span></td></div>
+                    <div class="agebox">HSFGSDFDSFDSF<td style="background-color: #f2f2f2;">Age: <span style="color: #E18E0B;"></span></td></div>
                     <div class="sexbox"><td style="background-color: #f2f2f2;">Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></td></div>
                     <div class="statusbox"><td style="background-color: white;">Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></td></div>
                     <div class="philbox"><td style="background-color: #f2f2f2;">Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td></div>

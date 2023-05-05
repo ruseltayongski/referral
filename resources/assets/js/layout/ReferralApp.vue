@@ -1,4 +1,6 @@
-<template></template>
+<template>
+    <audio ref="audioVideo" :src="audioVideoUrl" loop></audio>
+</template>
 <script>
     export default {
         name : "ReferralApp",
@@ -10,7 +12,7 @@
             return {
                 increment_referral: Number,
                 reco_count : $("#reco_count_val").val(),
-                audioElement : ""
+                audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
             }
         },
         methods: {
@@ -19,6 +21,14 @@
                 setTimeout(function(){
                     audioElement.pause();
                 },10000);
+            },
+            async playVideoCallAudio() {
+                await this.$refs.audioVideo.play();
+                let self = this;
+                setTimeout(function() {
+                    console.log("pause");
+                    self.$refs.audioVideo.pause();
+                },20000);
             },
             notifyReco(code, feedback_count, redirect_track) {
                 let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
@@ -323,7 +333,6 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-
             notifyReferralQueueUpdated(patient_code, activity_id, remarks, date_queued, patient_name, queued_by, queued_by_facility, redirect_track, first_queue) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#rejected_progress"+patient_code+activity_id).addClass("bg-orange");
@@ -349,7 +358,6 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-
             buttonSeen(count_seen, tracking_id) {
                 return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
@@ -369,6 +377,19 @@
                 return '<br><a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+patient_code+'" class="btn btn-xs btn-warning" target="_blank">\n' +
                     '                                                <i class="fa fa-stethoscope"></i> Track\n' +
                     '                                            </a>';
+            },
+            callADoctor(tracking_id,code) {
+                this.playVideoCallAudio();
+                let self = this;
+                Lobibox.confirm({
+                    msg: "Do you want to accept a call?",
+                    callback: function ($this, type, ev) {
+                        if (type === 'yes') {
+                            window.open($("#broadcasting_url").val()+"/doctor/telemedicine?id="+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
+                        }
+                        self.$refs.audioVideo.pause();
+                    }
+                });
             }
         },
         created() {
@@ -523,8 +544,16 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
-                        this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
+                    console.log(event)
+                    if(event.payload.status === 'telemedicine') {
+                        if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
+                            console.log("join haha")
+                            this.callADoctor(event.payload.tracking_id,event.payload.code);
+                        }
+                    } else {
+                        if(event.payload.referred_from === this.user.facility_id) {
+                            this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
+                        }
                     }
                 });
 
