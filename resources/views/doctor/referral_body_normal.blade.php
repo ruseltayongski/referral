@@ -1,7 +1,4 @@
-<?php
-$user = Session::get('auth');
-?>
-
+<?php $user = Session::get('auth'); ?>
 <style>
     .mobile-view {
         display: none;
@@ -26,9 +23,19 @@ $user = Session::get('auth');
             visibility: visible;
         }
     }
+
+    #telemedicine {
+        border-color:#00a65a;
+        border: none;
+        padding: 7px;
+    }
+    #telemedicine:hover {
+        background-color: lightgreen;
+    }
 </style>
 
 @include('include.header_form')
+
 <table class="table table-striped form-label referral-table">
     <tr>
         <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }}</span></td>
@@ -181,21 +188,59 @@ $user = Session::get('auth');
     </tr>
 </table>
 <hr />
-<button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
+
+<button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
+
 <div class="form-fotter pull-right">
+    @if($form->department_id === 5 && $user->id == $form->md_referring_id)
+        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+    @endif
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
-        <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
+        <button class="btn-sm btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
     @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
-    <button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+        <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
     @endif
     @if($referral_status == 'referred' || $referral_status == 'redirected')
-    <button class="btn btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
-    <button class="btn btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
-    <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
-    <button class="btn btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
+        <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
+        <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
+        <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
+        <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
     @endif
-    <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
+    <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form{{ $_GET['referredCode'] }}</a>
 </div>
 <div class="clearfix"></div>
+
+
+<script>
+    function getParameterByName(name) {
+        url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    if(getParameterByName('referredCode')) {
+        $("#telemedicine").addClass('hide');
+        $(".edit_form_btn").addClass('hide');
+    }
+
+    function openTelemedicine(tracking_id, code, action_md, referring_md) {
+        var url = "<?php echo asset('api/video/call'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "tracking_id" : tracking_id,
+            "code" : code,
+            "action_md" : action_md,
+            "referring_md" : referring_md,
+            "trigger_by" : "{{ $user->id }}"
+        };
+        $.post(url,json,function(){
+            console.log("join to call");
+        });
+        window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
+    }
+</script>
 
