@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\AppointmentStatus;
+use App\Events\AdminNotifs;
+use App\Events\NewAppointment;
+use App\Events\NewFeedback;
 use App\Facility;
 use App\FacilityAssign;
 use App\Login;
@@ -297,6 +300,14 @@ class LoginCtrl extends Controller
         $status->status = 'new';
         $status->save();
 
+        broadcast(new AdminNotifs([
+            "appt_id" => $data->id,
+            "appt_faci" => $data->name,
+            "appt_requester" => $data->requester,
+            "date_requested" => date_format($data->created_at, 'M d, Y h:i a'),
+            "notif_type" => "new appointment"
+        ]));
+
         /* send email to user with the message that their appointment was created successfully */
         $email_doh = $_ENV['EMAIL_ADDRESS'];
         $email_password = $_ENV['EMAIL_PASSWORD'];
@@ -381,6 +392,12 @@ class LoginCtrl extends Controller
         $data->message = $req->message;
         $data->status = "new";
         $data->save();
+
+        broadcast(new AdminNotifs([
+            "feedback_id" => $data->id,
+            "date_submitted" => date_format($data->created_at, 'M d, Y h:i a'),
+            "notif_type" => "new feedback"
+        ]));
 
         /* send email to user with the message that their feedback was received successfully */
         $email_doh = $_ENV['EMAIL_ADDRESS'];

@@ -32,6 +32,7 @@ $counter = 1;
                             <th class="text-center"> Contact </th>
                             <th class="text-center"> &emsp;Subject&emsp;</th>
                             <th class="text-center"> Feedback </th>
+                            <th class="text-center"> Date Submitted </th>
                             <th class="text-center"> Status </th>
                             <th class="text-center" colspan="2"> Action </th>
                         </tr>
@@ -41,6 +42,7 @@ $counter = 1;
                                 <td> {{ $row->contact }} <br> {{ $row->email }} </td>
                                 <td class="text-center"> {{ $row->subject }} </td>
                                 <td> {{ $row->message }} </td>
+                                <td> {{ date_format($row->created_at, 'F d, Y, h:i a') }}</td>
                                 <td class="text-center">
                                     <?php
                                         if($row->status == 'new')

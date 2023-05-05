@@ -1676,7 +1676,7 @@ class ReportCtrl extends Controller
             'tracking.status',
             'tracking.type',
             'facility.name as facility_referred',
-            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age")
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred) as age")
         )
             ->whereBetween('tracking.date_referred',[$date_start, $date_end])
             ->leftJoin('patients','patients.id','=','tracking.patient_id')
@@ -1701,21 +1701,21 @@ class ReportCtrl extends Controller
 
         if($desc == 'infant') {
             $description = "Infant/Toddler (0-5 years of age)";
-            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '5');
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'<=', '5');
         }
         else if($desc == 'teen') {
             $description = "Teens (6-17 years of age)";
-            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '17')
-                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '6');
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'<=', '17')
+                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'>=', '6');
         }
         else if($desc == 'adult') {
             $description = "Adult (18-59 years of age)";
-            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'<=', '59')
-                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '18');
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'<=', '59')
+                ->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'>=', '18');
         }
         else if($desc == 'senior') {
             $description = "Senior (60 years old and above)";
-            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE())"),'>=', '60');
+            $data = $data->where(DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, tracking.date_referred)"),'>=', '60');
         }
 
         if($sex == 'Male' || $sex == 'Female') {

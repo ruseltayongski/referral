@@ -19,6 +19,7 @@ use App\Events\SocketReferralQueuePatient;
 use App\Events\SocketReferralRejected;
 use App\Events\SocketReferralSeen;
 use App\Events\SocketReferralUndoCancel;
+use App\Events\SocketReferralUpdate;
 use App\Events\SocketReferralUpdateForm;
 use App\Facility;
 use App\Feedback;
@@ -330,7 +331,8 @@ class ReferralCtrl extends Controller
             'users.contact as referring_md_contact',
             'department.description as department',
             'department.id as department_id',
-            DB::raw("DATE_FORMAT(act.date_referred,'%M %e, %Y %r') as date_referred")
+            DB::raw("DATE_FORMAT(act.date_referred,'%M %e, %Y %r') as date_referred"),
+            DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
         )
             ->join('patients','patients.id','=','patient_form.patient_id')
             ->join('tracking','tracking.form_id','=','patient_form.id')
@@ -357,6 +359,7 @@ class ReferralCtrl extends Controller
             })
             ->orderBy('act.date_referred','desc')
             ->first();
+        Session::put('date_referral', $form['date_referral']);
         $age =  ParamCtrl::getAge($form['dob']);
         $ageType = "y";
         if($age == 0){
@@ -459,8 +462,9 @@ class ReferralCtrl extends Controller
             'pregnant_form.refer_sur_category',
             'pregnant_form.dis_clinical_status',
             'pregnant_form.dis_sur_category',
-            'patients.id as mother_id'
-
+            'patients.id as mother_id',
+            'patients.dob',
+            DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
         )
             ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
             ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
@@ -516,6 +520,9 @@ class ReferralCtrl extends Controller
                 $baby['baby_dob'] = $dob_->baby_dob;
             }
         }
+
+        Session::put('date_referral', $form['date_referral']);
+        $form['woman_age'] = ParamCtrl::getAge($form['dob']);
 
         return array(
             'pregnant' => $form,
@@ -1536,9 +1543,10 @@ class ReferralCtrl extends Controller
             "referred_to" => $latest_activity->referred_to,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
-            "admin" => (isset($req->admin)) ? 'yes' : 'no'
+            "admin" => (isset($req->admin)) ? 'yes' : 'no',
+            "notif_type" => "cancel referral"
         ];
-        broadcast(new SocketReferralCancelled($cancel));
+        broadcast(new SocketReferralUpdate($cancel));
         return redirect()->back();
     }
 
@@ -2190,10 +2198,11 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "old_facility" => $old_facility,
             "faci_changed" => ($old_facility == $latest_activity->referred_to) ? false : true,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "notif_type" => "update form"
         ];
 
-        broadcast(new SocketReferralUpdateForm($update));
+        broadcast(new SocketReferralUpdate($update));
         return redirect()->back();
     }
 
@@ -2268,10 +2277,11 @@ class ReferralCtrl extends Controller
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
-            "cur_queue" => isset($cur_queue) ? $cur_queue : ''
+            "cur_queue" => isset($cur_queue) ? $cur_queue : '',
+            "notif_type" => "undo cancel"
         ];
 
-        broadcast(new SocketReferralUndoCancel($undo));
+        broadcast(new SocketReferralUpdate($undo));
 
         return redirect()->back();
     }
@@ -2317,10 +2327,11 @@ class ReferralCtrl extends Controller
             "remarks" => $activity->remarks,
             "redirect_track" => $redirect_track,
             "activity_id" => $latest_act->id,
-            "first_queue" => $first_queue
+            "first_queue" => $first_queue,
+            "notif_type" => "queue patient"
         ];
 
-        broadcast(new SocketReferralQueuePatient($queue));
+        broadcast(new SocketReferralUpdate($queue));
     }
 
     public function duplicates(Request $req) {

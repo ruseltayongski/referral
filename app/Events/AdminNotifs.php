@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SocketReferralCancelled implements ShouldBroadcast
+class AdminNotifs implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -30,6 +30,6 @@ class SocketReferralCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('referral_cancelled');
+        return new PresenceChannel('admin_notifs');
     }
 }
