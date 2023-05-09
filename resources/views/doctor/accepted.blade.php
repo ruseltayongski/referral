@@ -238,7 +238,6 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 @endsection
 {{--@include('script.firebase')--}}
 @section('js')
-
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
@@ -253,7 +252,19 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
             "opens" : "left"
         });
 
-        function openTelemedicine(tracking_id, code) {
+        function openTelemedicine(tracking_id, code, action_md, referring_md) {
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "action_md" : action_md,
+                "referring_md" : referring_md,
+                "trigger_by" : "{{ $user->id }}"
+            };
+            $.post(url,json,function(){
+                console.log("join to call");
+            });
             window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
         }
     </script>

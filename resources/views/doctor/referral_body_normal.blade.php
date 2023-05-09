@@ -193,7 +193,7 @@
 
 <div class="form-fotter pull-right">
     @if($form->department_id === 5 && $user->id == $form->md_referring_id)
-        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine();"><i class="fa fa-camera"></i> Telemedicine</button>
+        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
     @endif
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
         <button class="btn-sm btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
@@ -225,6 +225,22 @@
     if(getParameterByName('referredCode')) {
         $("#telemedicine").addClass('hide');
         $(".edit_form_btn").addClass('hide');
+    }
+
+    function openTelemedicine(tracking_id, code, action_md, referring_md) {
+        var url = "<?php echo asset('api/video/call'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "tracking_id" : tracking_id,
+            "code" : code,
+            "action_md" : action_md,
+            "referring_md" : referring_md,
+            "trigger_by" : "{{ $user->id }}"
+        };
+        $.post(url,json,function(){
+            console.log("join to call");
+        });
+        window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
     }
 </script>
 
