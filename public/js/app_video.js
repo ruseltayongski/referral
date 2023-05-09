@@ -19753,7 +19753,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     axios__WEBPACK_IMPORTED_MODULE_1___default().get("".concat(this.baseUrl, "/doctor/referral/video/normal/form/").concat(this.tracking_id)).then(function (res) {
       var response = res.data;
       _this.form = response.form;
-      console.log(response.form);
+      console.log(response);
     })["catch"](function (error) {
       console.log(error);
     });
@@ -19980,119 +19980,109 @@ var _hoisted_11 = ["src"];
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"myDiv4\"><p>Republic of the Philippines</p><p>DEPARTMENT OF HEALTH</p><p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p><p>Official Website: <span style=\"color:blue;\">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p></div><div class=\"myDiv5\"><p><span style=\"color:#4CAF50;\"><b>CLINICAL REFERRAL FORM</b></span></p></div>", 2);
 
 var _hoisted_14 = {
-  "class": "myDiv6"
+  "class": "myTable"
 };
 var _hoisted_15 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  colspan: "6"
 };
 var _hoisted_16 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_17 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  colspan: "6"
 };
 var _hoisted_18 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_19 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  colspan: "6"
 };
 var _hoisted_20 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_21 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_22 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_23 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_24 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_25 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_26 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
-
-var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
+var _hoisted_27 = {
+  "class": "forDetails"
+};
 var _hoisted_28 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
-
-var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
+var _hoisted_29 = {
+  "class": "forDetails"
+};
 var _hoisted_30 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_31 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_32 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_33 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_34 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
 var _hoisted_35 = {
-  style: {
-    "color": "#E18E0B"
-  }
+  "class": "forDetails"
 };
-var _hoisted_36 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 var _hoisted_37 = {
+  "class": "forDetails"
+};
+
+var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_39 = {
+  "class": "forDetails"
+};
+var _hoisted_40 = {
+  "class": "forDetails"
+};
+var _hoisted_41 = {
+  "class": "forDetails"
+};
+var _hoisted_42 = {
+  "class": "forDetails"
+};
+var _hoisted_43 = {
+  "class": "forDetails"
+};
+var _hoisted_44 = {
+  "class": "forDetails"
+};
+var _hoisted_45 = {
+  "class": "forDetails"
+};
+var _hoisted_46 = {
+  "class": "myDiv6"
+};
+var _hoisted_47 = {
   "class": "myDiv3"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -20149,53 +20139,65 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: "Button Image"
   }, null, 8
   /* PROPS */
-  , _hoisted_9)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  , _hoisted_9)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image 3",
-    "class": "doh-logo"
+    "class": "dohLogo"
   }, null, 8
   /* PROPS */
-  , _hoisted_11), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
+  , _hoisted_11), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Department: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred:"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Age: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Sex: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachment: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
   /* TEXT */
-  )])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
+  /* TEXT */
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
+  /* TEXT */
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachment: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  /* TEXT */
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
+  /* TEXT */
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
+  /* TEXT */
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  /* TEXT */
+  )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     id: "myTextbox",
     name: "myTextbox",
@@ -20210,8 +20212,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[4] || (_cache[4] = function () {
       return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
     })
-  }, "SUBMIT")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h2 class=\"left-align\">Get started with Voice Calling</h2>\r\n    <div class=\"row\">\r\n        <div>\r\n            <button type=\"button\" id=\"join\">Join</button>\r\n            <button type=\"button\" id=\"leave\">Leave</button>\r\n        </div>\r\n    </div>\r\n    <br>\r\n    <div id=\"message\"></div>")], 2112
-  /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+  }, "SUBMIT")])], 64
+  /* STABLE_FRAGMENT */
   );
 }
 
@@ -22195,7 +22197,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container {\r\n        width: 100%;\r\n        height: 100%;\r\n        border: 5px outset green;\n}\n.image1 {\r\n        position: relative;\r\n        top: 1px;\r\n        left: 1px;\r\n        z-index: 1;\r\n        height: 948px;\r\n        width: 1200px;\n}\n.divImage2 {\r\n        position: absolute;\r\n        top: 670px;\r\n        left: 915px;\r\n        z-index: 1;\r\n        border: 4px outset\tgreen;\r\n        border-radius: 25px;\r\n        width: 270px;\r\n        height: 260px;\n}\n.image2 {\r\n        position: absolute;\r\n        /*top: .5px;\r\n        left: .5px;*/\r\n        z-index: 1;\r\n        /*transform: rotate(360deg);*/\r\n        /*border: 4px outset\tgreen;*/\r\n        border-radius: 23px;\r\n        width: 270px;\r\n        height: 260px;\n}\r\n\r\n    /*Main Video Call*/\n.myDiv {\r\n        z-index: 3;\r\n        /*position: absolute;*/\r\n        top: 13px;\r\n        left: 13px;\r\n        border: 1px outset transparent;\r\n        height: 948px;\r\n        width:  1200px;\n}\n.decline-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 657px;\r\n        z-index: 1;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.decline-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.video-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 577px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.mic-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 500px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width:auto;\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.mic-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: 58px;\n}\r\n\r\n    /*FORM*/\n.myDiv2 {\r\n        position: absolute;\r\n        top: 25px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 807px;\r\n        width:  660px;\n}\r\n\r\n    /*Prescription Form*/\n.myDiv3 {\r\n        position: absolute;\r\n        top: 840px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 70px;\r\n        width:  660px;\n}\r\n\r\n    /*SUBMIT BUTTON*/\n.submit-button {\r\n        position: absolute;\r\n        top: 915px;\r\n        left: 1230px;\r\n        z-index: 2;\r\n        background-color: #4CAF50;\r\n        border: none;\r\n        color: white;\r\n        padding: 10px 20px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        margin: 4px 2px;\r\n        cursor: pointer;\r\n        border-radius: 5px;\r\n        width:  660px;\r\n        font-weight: bold;\n}\n.doh-logo {\r\n        position: relative;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\r\n\r\n    /*Heading Form*/\n.myDiv4 {\r\n        position: absolute;\r\n        top: 0px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 90px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\r\n\r\n    /*Clinical Referral Form*/\n.myDiv5 {\r\n        position: absolute;\r\n        top: 82px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 23px;\r\n        font-family: Calibri;\n}\r\n\r\n    /*Patients Details*/\n.myDiv6 {\r\n        position: absolute;\r\n        top: 125px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 679px;\r\n        width:  640px;\r\n        text-align: left;\r\n        /*line-height: .0;*/\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        /*justify-content: top; /* Optional: distribute items evenly */\r\n\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.divbox1 {\r\n        background-color: #f2f2f2;\r\n        position: absolute;\r\n        top: 383px;\r\n        border: 1px outset red;\r\n        /*height: 50px;*/\r\n        height: auto;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.divbox2 {\r\n        background-color: white;\r\n        position: absolute;\r\n        top: 434px;\r\n        border: 1px outset transparent;\r\n        height: 50px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: 0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.boxDiv {\r\n        /*background-color: white;*/\r\n        position: absolute;\r\n        top: 485px;\r\n        border: 1px outset transparent;\r\n        height: 166px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        justify-content: top; /* Optional: distribute items evenly */\n}\n.divbox3:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset orchid;\r\n        height: 30px;\r\n        width:  640px;\n}\n.deptbox {\r\n        position: absolute;\r\n        top: 96px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.transbox {\r\n        position: absolute;\r\n        top: 160px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.agebox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  131px;\n}\n.sexbox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 522px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  118px;\n}\n.statusbox {\r\n        position: absolute;\r\n        top: 224px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  250px;\n}\n.philbox {\r\n        position: absolute;\r\n        top: 256px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\ninput[type=\"text\"] {\r\n        position: absolute;\r\n        padding: 5px;\r\n        font-size: 14px;\r\n        border: 1px solid transparent;\r\n        border-radius: 0px;\r\n        box-sizing: border-box;\r\n        background-color: transparent;\r\n        font-weight: bold;\r\n        font-family: Calibri;\r\n\r\n        top: 0px;\r\n        left: 0px;\r\n        height: 69px;\r\n        width:  659px;\n}\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.container {\r\n        width: 100%;\r\n        height: 100%;\r\n        border: 5px outset green;\n}\n.image1 {\r\n        position: relative;\r\n        top: 1px;\r\n        left: 1px;\r\n        z-index: 1;\r\n        height: 948px;\r\n        width: 1200px;\n}\n.dohLogo {\r\n        position: relative;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\r\n        border: 1px outset transparent;\n}\r\n\r\n    /*Form Header*/\n.myDiv4 {\r\n        position: absolute;\r\n        top: 0;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 90px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 14px;\n}\r\n\r\n    /*Clinical Referral*/\n.myDiv5 {\r\n        position: absolute;\r\n        top: 82px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 23px;\r\n        font-family: Calibri;\n}\n.divImage2 {\r\n        position: absolute;\r\n        top: 670px;\r\n        left: 915px;\r\n        z-index: 1;\r\n        border: 4px outset\tgreen;\r\n        border-radius: 25px;\r\n        width: 270px;\r\n        height: 260px;\n}\n.image2 {\r\n        position: absolute;\r\n        /*top: .5px;\r\n        left: .5px;*/\r\n        z-index: 1;\r\n        /*transform: rotate(360deg);*/\r\n        /*border: 4px outset\tgreen;*/\r\n        border-radius: 23px;\r\n        width: 270px;\r\n        height: 260px;\n}\r\n\r\n    /*Main Video Call*/\n.myDiv {\r\n        z-index: 3;\r\n        /*position: absolute;*/\r\n        top: 13px;\r\n        left: 13px;\r\n        border: 1px outset transparent;\r\n        height: 948px;\r\n        width:  1200px;\n}\n.decline-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 657px;\r\n        z-index: 1;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.decline-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.video-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 577px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.mic-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 500px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width:auto;\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.mic-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: 58px;\n}\r\n\r\n    /*FORM*/\n.myDiv2 {\r\n        position: absolute;\r\n        top: 25px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 807px;\r\n        width:  660px;\n}\r\n\r\n    /*Prescription Form*/\n.myDiv3 {\r\n        position: absolute;\r\n        border: 2px outset black;\r\n        height: 70px;\r\n        width:  660px;\r\n        top: 842px;\r\n        left: 0;\n}\n.myDiv6 {\r\n        position: absolute;\r\n        top: 0;\r\n        left: 1230px;\r\n        border: 2px outset transparent;\r\n        height: 964px;\r\n        width:  660px;\n}\r\n\r\n    /*SUBMIT BUTTON*/\n.submit-button {\r\n        position: absolute;\r\n        top: 919px;\r\n        left: 0;\r\n        z-index: 1;\r\n        background-color: #4CAF50;\r\n        border: none;\r\n        color: white;\r\n        padding: 10px 20px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n\r\n        cursor: pointer;\r\n        border-radius: 5px;\r\n        width:  660px;\r\n        font-weight: bold;\n}\r\n\r\n    /*Patients Details*/\n.myTable {\r\n        position: absolute;\r\n        top: 125px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 679px;\r\n        width:  640px;\r\n        text-align: left;\r\n        /*line-height: .0;*/\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        /*justify-content: top; /* Optional: distribute items evenly */\r\n\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        /*height: 30px;\r\n        width:  640px;*/\r\n        height: auto;\r\n        width:  auto;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.divbox1 {\r\n        background-color: #f2f2f2;\r\n        position: absolute;\r\n        top: 383px;\r\n        border: 1px outset red;\r\n        /*height: 50px;*/\r\n        height: auto;\r\n        width:  auto;\n}\ninput[type=\"text\"] {\r\n        position: absolute;\r\n        padding: 5px;\r\n        font-size: 14px;\r\n        border: 1px solid transparent;\r\n        border-radius: 0px;\r\n        box-sizing: border-box;\r\n        background-color: transparent;\r\n        font-weight: bold;\r\n        font-family: Calibri;\r\n\r\n        top: 0px;\r\n        left: 0px;\r\n        height: 69px;\r\n        width:  659px;\n}\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

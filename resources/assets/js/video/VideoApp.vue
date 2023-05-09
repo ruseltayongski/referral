@@ -43,19 +43,19 @@
                 }
             }
         },
-
         mounted() {
             axios
                 .get(`${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`)
                 .then((res) => {
                     const response = res.data;
                     this.form = response.form
-                    console.log(response.form)
+                    console.log(response)
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+
         props : ["user"],
         created() {
             console.log(this.user)
@@ -130,6 +130,7 @@
                     self.joinVideo(agoraEngine,self.channelParameters,localPlayerContainer,self)
                 }
             },
+
             getUrlVars()
             {
                 var vars = [], hash;
@@ -174,7 +175,6 @@
                 this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
             }
         }
-
     }
 </script>
 <template>
@@ -190,101 +190,98 @@
             <button class="video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" ><img :src="videoCallUrl" alt="Button Image"></button>
             <button class="decline-button" @click="leaveChannel" type="button"><img :src="declineUrl" alt="Button Image"></button>
         </div>
-        <div class="myDiv2">
-            <img :src="dohLogoUrl" alt="Image 3" class="doh-logo">
-            <div class="myDiv4">
-                <p>Republic of the Philippines</p>
-                <p>DEPARTMENT OF HEALTH</p>
-                <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-                <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-                <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
-                <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
-            </div>
+    </div>
 
-            <div class="myDiv5">
-                <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
-            </div>
-
-            <div class="myDiv6">
-                <table>
-                    <tr>
-                        <td>Name of Referring Facility: <span style="color: #E18E0B;"> {{ form.referring_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Facility Contact #: <span style="color: #E18E0B;"> {{ form.referring_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referring_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Referred to: <span style="color: #E18E0B;"> {{ form.referred_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referred_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Date/Time Referred (ReCo): <span style="color: #E18E0B;"> {{ form.time_referred }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Patient: <span style="color: #E18E0B;"> {{ form.patient_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.patient_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Philhealth status: <span style="color: #E18E0B;"> {{ form.phic_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Covid Number: <span style="color: #E18E0B;"> {{ form.covid_number }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Clinical Status: <span style="color: #E18E0B;"> {{ form.refer_clinical_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Surviellance Category: <span style="color: #E18E0B;"> {{  }} </span></td>
-                    </tr>
-
-                    <tr>
-                        <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style="color: #E18E0B;"> {{ form.case_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style="color: #E18E0B;"> {{ form.reco_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>ICD-10 Code and Description: <span style="color: #E18E0B;"> {{ form.other_diagnoses }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Reason for referral: <span style="color: #E18E0B;"> {{ form.other_reason_referral }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>File Attachment: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.md_referring }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Contact # of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.referring_md_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-                </table>
-            </div>
+    <div class="myDiv2">
+        <img :src="dohLogoUrl" alt="Image 3" class="dohLogo">
+        <div class="myDiv4">
+            <p>Republic of the Philippines</p>
+            <p>DEPARTMENT OF HEALTH</p>
+            <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+            <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+            <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
+            <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
         </div>
+
+        <div class="myDiv5">
+            <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
+        </div>
+        <table class="myTable">
+            <tr>
+                <td colspan="6">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
+            </tr>
+            <tr>
+                <td colspan="6">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
+            </tr>
+            <tr>
+                <td colspan="6">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
+            </tr>
+            <tr>
+                <td >Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
+                <td >Department: <span class="forDetails"> {{ form.department }} </span></td>
+            </tr>
+            <tr>
+                <td>Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
+            </tr>
+            <tr>
+                <td>Date/Time Referred (ReCo): <span class="forDetails"> {{ form.time_referred }} </span></td>
+                <td>Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
+            </tr>
+            <tr>
+                <td>Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
+                <td>Age: <span class="forDetails"> {{  }} </span></td>
+                <td>Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
+            </tr>
+            <tr>
+                <td>Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
+                <td>Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
+            </tr>
+            <tr>
+                <td>Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
+                <td>Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
+            </tr>
+            <tr>
+                <td>Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
+            </tr>
+            <tr>
+                <td>Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
+            </tr>
+            <tr>
+                <td>Surviellance Category: <span class="forDetails"> {{  }} </span></td>
+            </tr>
+
+            <tr>
+                <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="forDetails"> {{ form.case_summary }} </span></td>
+            </tr>
+            <tr>
+                <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span class="forDetails"> {{ form.reco_summary }} </span></td>
+            </tr>
+            <tr>
+                <td>ICD-10 Code and Description: <span class="forDetails"> {{ form.other_diagnoses }} </span></td>
+            </tr>
+            <tr>
+                <td>Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
+            </tr>
+            <tr>
+                <td>File Attachment: <span class="forDetails"> {{ form.phic_id }} </span></td>
+            </tr>
+            <tr>
+                <td>Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
+            </tr>
+            <tr>
+                <td>Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
+            </tr>
+            <tr>
+                <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span class="forDetails"> {{ form.phic_id }} </span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="myDiv6">
         <div class="myDiv3">
             <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription" v-model="options.channel">
         </div>
         <button class="submit-button" @click="leaveChannel">SUBMIT</button>
     </div>
-   <!-- <h2 class="left-align">Get started with Voice Calling</h2>
-    <div class="row">
-        <div>
-            <button type="button" id="join">Join</button>
-            <button type="button" id="leave">Leave</button>
-        </div>
-    </div>
-    <br>
-    <div id="message"></div>-->
 </template>
 
 <style>
@@ -303,6 +300,43 @@
         width: 1200px;
     }
 
+    .dohLogo {
+        position: relative;
+        top: 10px;
+        left: 10px;
+        z-index: 2;
+        height: 72px;
+        width: 76px;
+        border: 1px outset transparent;
+    }
+
+    /*Form Header*/
+    .myDiv4 {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        border: 1px outset transparent;
+        height: 90px;
+        width:  640px;
+        text-align: center;
+        line-height: .0;
+        font-size: 14px;
+    }
+
+    /*Clinical Referral*/
+    .myDiv5 {
+        position: absolute;
+        top: 82px;
+        left: 10px;
+        border: 1px outset transparent;
+        height: 30px;
+        width:  640px;
+        text-align: center;
+        line-height: .0;
+        font-size: 23px;
+        font-family: Calibri;
+    }
+
     .divImage2 {
         position: absolute;
         top: 670px;
@@ -313,6 +347,7 @@
         width: 270px;
         height: 260px;
     }
+
     .image2 {
         position: absolute;
         /*top: .5px;
@@ -452,19 +487,28 @@
     /*Prescription Form*/
     .myDiv3 {
         position: absolute;
-        top: 840px;
-        left: 1230px;
         border: 2px outset black;
         height: 70px;
+        width:  660px;
+        top: 842px;
+        left: 0;
+    }
+
+    .myDiv6 {
+        position: absolute;
+        top: 0;
+        left: 1230px;
+        border: 2px outset transparent;
+        height: 964px;
         width:  660px;
     }
 
     /*SUBMIT BUTTON*/
     .submit-button {
         position: absolute;
-        top: 915px;
-        left: 1230px;
-        z-index: 2;
+        top: 919px;
+        left: 0;
+        z-index: 1;
         background-color: #4CAF50;
         border: none;
         color: white;
@@ -473,51 +517,15 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
-        margin: 4px 2px;
+
         cursor: pointer;
         border-radius: 5px;
         width:  660px;
         font-weight: bold;
     }
 
-    .doh-logo {
-        position: relative;
-        top: 10px;
-        left: 10px;
-        z-index: 2;
-        height: 72px;
-        width: 76px;
-    }
-
-    /*Heading Form*/
-    .myDiv4 {
-        position: absolute;
-        top: 0px;
-        left: 10px;
-        border: 1px outset transparent;
-        height: 90px;
-        width:  640px;
-        text-align: center;
-        line-height: .0;
-        font-size: 13px;
-    }
-
-    /*Clinical Referral Form*/
-    .myDiv5 {
-        position: absolute;
-        top: 82px;
-        left: 10px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-        text-align: center;
-        line-height: .0;
-        font-size: 23px;
-        font-family: Calibri;
-    }
-
     /*Patients Details*/
-    .myDiv6 {
+    .myTable {
         position: absolute;
         top: 125px;
         left: 10px;
@@ -537,11 +545,17 @@
         overflow-x: hidden;
     }
 
+    .forDetails {
+        color: #E18E0B;
+    }
+
     tr:nth-child(odd) {
         background-color: #f2f2f2;
         border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
+        /*height: 30px;
+        width:  640px;*/
+        height: auto;
+        width:  auto;
     }
 
     tr:nth-child(even) {
@@ -572,105 +586,7 @@
         border: 1px outset red;
         /*height: 50px;*/
         height: auto;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
-
-    }
-
-    .divbox2 {
-        background-color: white;
-        position: absolute;
-        top: 434px;
-        border: 1px outset transparent;
-        height: 50px;
-        width:  640px;
-        text-align: left;
-        line-height: 0;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    .boxDiv {
-        /*background-color: white;*/
-        position: absolute;
-        top: 485px;
-        border: 1px outset transparent;
-        height: 166px;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
-
-        display: flex; /* Optional: use flexbox to align items */
-        flex-direction: column;
-        justify-content: top; /* Optional: distribute items evenly */
-    }
-
-    .divbox3:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset orchid;
-        height: 30px;
-        width:  640px;
-    }
-
-    .deptbox {
-        position: absolute;
-        top: 96px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-
-
-    }
-
-    .transbox {
-        position: absolute;
-        top: 160px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-    }
-
-    .agebox {
-        position: absolute;
-        top: 192px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  131px;
-    }
-
-    .sexbox {
-        position: absolute;
-        top: 192px;
-        left: 522px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  118px;
-    }
-
-    .statusbox {
-        position: absolute;
-        top: 224px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  250px;
-    }
-
-    .philbox {
-        position: absolute;
-        top: 256px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
+        width:  auto;
     }
 
     input[type="text"] {
@@ -713,6 +629,8 @@
             display: block;
             visibility: visible;
         }
+
+
     }
 
     #telemedicine {
@@ -720,6 +638,7 @@
         border: none;
         padding: 7px;
     }
+
     #telemedicine:hover {
         background-color: lightgreen;
     }
