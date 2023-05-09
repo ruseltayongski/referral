@@ -1,4 +1,3 @@
-
 <script>
     import axios from 'axios';
 
@@ -27,7 +26,21 @@
                     // Set the user ID.
                     uid: 0,
                 },
-                form: {}
+                form: {},
+                videoStreaming: true,
+                audioStreaming: true,
+                channelParameters: {
+                    // A variable to hold a local audio track.
+                    localAudioTrack: null,
+                    // A variable to hold a local video track.
+                    localVideoTrack: null,
+                    // A variable to hold a remote audio track.
+                    remoteAudioTrack: null,
+                    // A variable to hold a remote video track.
+                    remoteVideoTrack: null,
+                    // A variable to hold the remote user id.s
+                    remoteUid: null
+                }
             }
         },
 
@@ -52,32 +65,6 @@
         methods: {
             async startBasicCall()
             {
-                /*let options =
-                    {
-                        // Pass your App ID here.
-                        appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
-                        // Set the channel name.
-                        channel: 'rusel',
-                        // Pass your temp token here.
-                        token: null,
-                        // Set the user ID.
-                        uid: 0,
-                    };*/
-
-                let channelParameters =
-                    {
-                        // A variable to hold a local audio track.
-                        localAudioTrack: null,
-                        // A variable to hold a local video track.
-                        localVideoTrack: null,
-                        // A variable to hold a remote audio track.
-                        remoteAudioTrack: null,
-                        // A variable to hold a remote video track.
-                        remoteVideoTrack: null,
-                        // A variable to hold the remote user id.s
-                        remoteUid: null,
-                    };
-
                 // Create an instance of the Agora Engine
                 const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
                 // Dynamically create a container in the form of a DIV element to play the remote video track.
@@ -97,6 +84,7 @@
                 remotePlayerContainer.style.height = "480px";
                 remotePlayerContainer.style.padding = "15px 5px 5px 5px";*/
                 // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
+                let self =  this
                 agoraEngine.on("user-published", async (user, mediaType) =>
                 {
                     // Subscribe to the remote user when the SDK triggers the "user-published" event.
@@ -107,29 +95,29 @@
                     {
                         console.log("remote")
                         // Retrieve the remote video track.
-                        channelParameters.remoteVideoTrack = user.videoTrack;
+                        self.channelParameters.remoteVideoTrack = user.videoTrack;
                         // Retrieve the remote audio track.
-                        channelParameters.remoteAudioTrack = user.audioTrack;
+                        self.channelParameters.remoteAudioTrack = user.audioTrack;
                         // Save the remote user id for reuse.
-                        channelParameters.remoteUid = user.uid.toString();
+                        self.channelParameters.remoteUid = user.uid.toString();
                         // Specify the ID of the DIV container. You can use the uid of the remote user.
                         remotePlayerContainer.id = user.uid.toString();
-                        channelParameters.remoteUid = user.uid.toString();
+                        self.channelParameters.remoteUid = user.uid.toString();
                         /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                         // Append the remote container to the page body.
                         document.body.append(remotePlayerContainer);
                         $(".divImage1").html(remotePlayerContainer)
                         $(remotePlayerContainer).addClass("image1")
                         // Play the remote video track.
-                        channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+                        self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                     }
                     // Subscribe and play the remote audio track If the remote user publishes the audio track only.
                     if (mediaType == "audio")
                     {
                         // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-                        channelParameters.remoteAudioTrack = user.audioTrack;
+                        self.channelParameters.remoteAudioTrack = user.audioTrack;
                         // Play the remote audio track. No need to pass any DOM element.
-                        channelParameters.remoteAudioTrack.play();
+                        self.channelParameters.remoteAudioTrack.play();
                     }
                     // Listen for the "user-unpublished" event.
                     agoraEngine.on("user-unpublished", user =>
@@ -137,54 +125,9 @@
                         console.log(user.uid+ "has left the channel");
                     });
                 });
-                let self =  this
                 window.onload = function ()
                 {
-                    self.joinVideo(agoraEngine,channelParameters,localPlayerContainer,self)
-                    // Listen to the Join button click event.
-                    /*document.getElementById("join").onclick = async function ()
-                    {
-                        console.log("local")
-                        // Join a channel.
-                        await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-                        // Create a local audio track from the audio sampled by a microphone.
-                        channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                        // Create a local video track from the video captured by a camera.
-                        channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-                        // Append the local video container to the page body.
-                        document.body.append(localPlayerContainer);
-                        $(".divImage2").html(localPlayerContainer)
-                        $(localPlayerContainer).addClass("image2")
-                        // Publish the local audio and video tracks in the channel.
-                        await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-                        // Play the local video track.
-                        channelParameters.localVideoTrack.play(localPlayerContainer);
-                        console.log("publish success!");
-                    }*/
-                    // Listen to the Leave button click event.
-                    document.getElementById('leave').onclick = async function ()
-                    {
-                        // Destroy the local audio and video tracks.
-                        channelParameters.localAudioTrack.close();
-                        channelParameters.localVideoTrack.close();
-                        // Remove the containers you created for the local video and remote video.
-                        this.removeVideoDiv(remotePlayerContainer.id);
-                        this.removeVideoDiv(localPlayerContainer.id);
-                        // Leave the channel
-                        await agoraEngine.leave();
-                        console.log("You left the channel");
-                        // Refresh the page for reuse
-                        window.location.reload();
-                    }
-                }
-            },
-            removeVideoDiv(elementId)
-            {
-                console.log("Removing "+ elementId+"Div");
-                let Div = document.getElementById(elementId);
-                if (Div)
-                {
-                    Div.remove();
+                    self.joinVideo(agoraEngine,self.channelParameters,localPlayerContainer,self)
                 }
             },
             getUrlVars()
@@ -216,15 +159,25 @@
                 // Play the local video track.
                 channelParameters.localVideoTrack.play(localPlayerContainer);
                 console.log("publish success!");
+            },
+            leaveChannel() {
+                if(confirm("Are you sure you want to leave this channel?")) {
+                    window.top.close();
+                }
+            },
+            videoStreamingOnAndOff() {
+                this.videoStreaming = this.videoStreaming ? false : true
+                this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+            },
+            audioStreamingOnAnddOff() {
+                this.audioStreaming = this.audioStreaming ? false : true
+                this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
             }
         }
 
     }
-
 </script>
-
 <template>
-
     <div class="container">
         <div class="myDiv">
             <div class="divImage1">
@@ -233,11 +186,10 @@
             <div class="divImage2">
                 <img :src="doctorUrl1" class="image2" alt="Image 2">
             </div>
-            <button class="decline-button" onclick="alert('Hello, world!')"><img :src="declineUrl" alt="Button Image"></button>
-            <button class="video-button" type="button" ><img :src="videoCallUrl" alt="Button Image"></button>
-            <button class="mic-button" type="button" ><img :src="micUrl" alt="Button Image"></button>
+            <button class="mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><img :src="micUrl" alt="Button Image"></button>
+            <button class="video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" ><img :src="videoCallUrl" alt="Button Image"></button>
+            <button class="decline-button" @click="leaveChannel" type="button"><img :src="declineUrl" alt="Button Image"></button>
         </div>
-
         <div class="myDiv2">
             <img :src="dohLogoUrl" alt="Image 3" class="doh-logo">
             <div class="myDiv4">
@@ -316,24 +268,15 @@
                     <tr>
                         <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
                     </tr>
-
-                    <div class="transbox"><td style="background-color: white;">Date/Time Transferred: <span style="color: #E18E0B;">{{ form.time_transferred}}</span></td></div>
-                    <div class="agebox">HSFGSDFDSFDSF<td style="background-color: #f2f2f2;">Age: <span style="color: #E18E0B;"></span></td></div>
-                    <div class="sexbox"><td style="background-color: #f2f2f2;">Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></td></div>
-                    <div class="statusbox"><td style="background-color: white;">Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></td></div>
-                    <div class="philbox"><td style="background-color: #f2f2f2;">Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td></div>
                 </table>
             </div>
-
-
         </div>
-
         <div class="myDiv3">
             <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription" v-model="options.channel">
         </div>
-        <button class="submit-button" onclick="alert('Hello, world!')">SUBMIT</button>
+        <button class="submit-button" @click="leaveChannel">SUBMIT</button>
     </div>
-    <h2 class="left-align">Get started with Voice Calling</h2>
+   <!-- <h2 class="left-align">Get started with Voice Calling</h2>
     <div class="row">
         <div>
             <button type="button" id="join">Join</button>
@@ -341,25 +284,20 @@
         </div>
     </div>
     <br>
-    <div id="message"></div>
-
-
+    <div id="message"></div>-->
 </template>
 
 <style>
-
     .container {
-        /*position: relative;
-        margin: 0 auto;*/
-        width: 1900px;
+        width: 100%;
+        height: 100%;
         border: 5px outset green;
-        height: 950px;
     }
 
     .image1 {
         position: relative;
-        top: 1;
-        left: 1;
+        top: 1px;
+        left: 1px;
         z-index: 1;
         height: 948px;
         width: 1200px;
@@ -379,7 +317,7 @@
         position: absolute;
         /*top: .5px;
         left: .5px;*/
-        z-index: 2;
+        z-index: 1;
         /*transform: rotate(360deg);*/
         /*border: 4px outset	green;*/
         border-radius: 23px;
@@ -387,61 +325,78 @@
         height: 260px;
     }
 
+    /*Main Video Call*/
+    .myDiv {
+        z-index: 3;
+        /*position: absolute;*/
+        top: 13px;
+        left: 13px;
+        border: 1px outset transparent;
+        height: 948px;
+        width:  1200px;
+    }
+
     .decline-button {
         position: absolute;
         top: 750px;
         left: 657px;
-        z-index: 2;
-        /*background-color: red;
-        border: none;
-        color: white;
-        padding: 1.2rem 1.4rem;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 100%;
-        transition: background-color 0.3s ease-in-out;*/
-
+        z-index: 1;
         border: none;
         background-color: transparent;
         cursor: pointer;
         transition: transform 0.3s ease-in-out;
+        width: auto;
+    }
+    .decline-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
     }
 
     .decline-button img {
         display: block;
-        width: 40%;
+        width: 60px;
         height: auto;
     }
-
-    /*.decline-button:hover {
-          transform: scale(1.1);
-    }*/
 
     .video-button {
         position: absolute;
         top: 750px;
-        left: 580px;
+        left: 577px;
         z-index: 2;
         border: none;
         background-color: transparent;
         cursor: pointer;
         transition: transform 0.3s ease-in-out;
+        width: auto;
+    }
+    .video-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
+    }
+
+    .video-button-slash:before, .video-button-slash:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        height: 2px;
+        background-color: #FF0000; /* set the color of the lines */
+    }
+
+    .video-button-slash:before {
+        transform: rotate(-45deg);
+        padding: 2px;
+    }
+
+    .video-button-slash:after {
+        transform: rotate(-45deg);
     }
 
     .video-button img {
         display: block;
-        width: 40%;
+        width: 60px;
         height: auto;
     }
-
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
-
     .mic-button {
         position: absolute;
         top: 750px;
@@ -451,26 +406,37 @@
         background-color: transparent;
         cursor: pointer;
         transition: transform 0.3s ease-in-out;
+        width:auto;
+    }
+
+    .mic-button-slash:before, .mic-button-slash:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        height: 2px;
+        background-color: #FF0000; /* set the color of the lines */
+    }
+
+    .mic-button-slash:before {
+        transform: rotate(-45deg);
+        padding: 2px;
+    }
+
+    .mic-button-slash:after {
+        transform: rotate(-45deg);
+    }
+
+    .mic-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
     }
 
     .mic-button img {
         display: block;
-        width: 40%;
-        height: auto;
-    }
-
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
-
-    /*Main Video Call*/
-    .myDiv {
-        position: absolute;
-        top: 13px;
-        left: 13px;
-        border: 1px outset transparent;
-        height: 948px;
-        width:  1200px;
+        width: 60px;
+        height: 58px;
     }
 
     /*FORM*/
@@ -563,7 +529,6 @@
         font-weight: bold;
         font-size: 14px;
         font-family: Calibri;
-
         display: flex; /* Optional: use flexbox to align items */
         flex-direction: column;
         /*justify-content: top; /* Optional: distribute items evenly */
@@ -585,9 +550,6 @@
         height: 30px;
         width:  640px;
     }
-
-
-
 
     .box:nth-child(odd) {
         background-color: #f2f2f2;
@@ -711,19 +673,6 @@
         width:  320px;
     }
 
-    /*.textbox-container {
-        position: absolute;
-          background-color: red;
-          border: 1px solid red;
-          padding: 10px;
-          border-radius: 1px;
-
-          top: 1px;
-        left: 160px;
-          height: 30px;
-        width:  250px;
-    }*/
-
     input[type="text"] {
         position: absolute;
         padding: 5px;
@@ -774,22 +723,4 @@
     #telemedicine:hover {
         background-color: lightgreen;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>

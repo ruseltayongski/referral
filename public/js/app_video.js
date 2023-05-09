@@ -19730,7 +19730,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // Set the user ID.
         uid: 0
       },
-      form: {}
+      form: {},
+      videoStreaming: true,
+      audioStreaming: true,
+      channelParameters: {
+        // A variable to hold a local audio track.
+        localAudioTrack: null,
+        // A variable to hold a local video track.
+        localVideoTrack: null,
+        // A variable to hold a remote audio track.
+        remoteAudioTrack: null,
+        // A variable to hold a remote video track.
+        remoteVideoTrack: null,
+        // A variable to hold the remote user id.s
+        remoteUid: null
+      }
     };
   },
   mounted: function mounted() {
@@ -19753,36 +19767,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     startBasicCall: function startBasicCall() {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var channelParameters, agoraEngine, remotePlayerContainer, localPlayerContainer, self;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var agoraEngine, remotePlayerContainer, localPlayerContainer, self;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                /*let options =
-                    {
-                        // Pass your App ID here.
-                        appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
-                        // Set the channel name.
-                        channel: 'rusel',
-                        // Pass your temp token here.
-                        token: null,
-                        // Set the user ID.
-                        uid: 0,
-                    };*/
-                channelParameters = {
-                  // A variable to hold a local audio track.
-                  localAudioTrack: null,
-                  // A variable to hold a local video track.
-                  localVideoTrack: null,
-                  // A variable to hold a remote audio track.
-                  remoteAudioTrack: null,
-                  // A variable to hold a remote video track.
-                  remoteVideoTrack: null,
-                  // A variable to hold the remote user id.s
-                  remoteUid: null
-                }; // Create an instance of the Agora Engine
-
+                // Create an instance of the Agora Engine
                 agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createClient({
                   mode: "rtc",
                   codec: "vp8"
@@ -19805,6 +19796,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 remotePlayerContainer.style.padding = "15px 5px 5px 5px";*/
                 // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
 
+                self = _this2;
                 agoraEngine.on("user-published", /*#__PURE__*/function () {
                   var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(user, mediaType) {
                     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -19820,14 +19812,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                             if (mediaType == "video") {
                               console.log("remote"); // Retrieve the remote video track.
 
-                              channelParameters.remoteVideoTrack = user.videoTrack; // Retrieve the remote audio track.
+                              self.channelParameters.remoteVideoTrack = user.videoTrack; // Retrieve the remote audio track.
 
-                              channelParameters.remoteAudioTrack = user.audioTrack; // Save the remote user id for reuse.
+                              self.channelParameters.remoteAudioTrack = user.audioTrack; // Save the remote user id for reuse.
 
-                              channelParameters.remoteUid = user.uid.toString(); // Specify the ID of the DIV container. You can use the uid of the remote user.
+                              self.channelParameters.remoteUid = user.uid.toString(); // Specify the ID of the DIV container. You can use the uid of the remote user.
 
                               remotePlayerContainer.id = user.uid.toString();
-                              channelParameters.remoteUid = user.uid.toString();
+                              self.channelParameters.remoteUid = user.uid.toString();
                               /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                               // Append the remote container to the page body.
 
@@ -19835,15 +19827,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                               $(".divImage1").html(remotePlayerContainer);
                               $(remotePlayerContainer).addClass("image1"); // Play the remote video track.
 
-                              channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+                              self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                             } // Subscribe and play the remote audio track If the remote user publishes the audio track only.
 
 
                             if (mediaType == "audio") {
                               // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-                              channelParameters.remoteAudioTrack = user.audioTrack; // Play the remote audio track. No need to pass any DOM element.
+                              self.channelParameters.remoteAudioTrack = user.audioTrack; // Play the remote audio track. No need to pass any DOM element.
 
-                              channelParameters.remoteAudioTrack.play();
+                              self.channelParameters.remoteAudioTrack.play();
                             } // Listen for the "user-unpublished" event.
 
 
@@ -19863,76 +19855,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     return _ref.apply(this, arguments);
                   };
                 }());
-                self = _this2;
 
                 window.onload = function () {
-                  self.joinVideo(agoraEngine, channelParameters, localPlayerContainer, self); // Listen to the Join button click event.
-
-                  /*document.getElementById("join").onclick = async function ()
-                  {
-                      console.log("local")
-                      // Join a channel.
-                      await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-                      // Create a local audio track from the audio sampled by a microphone.
-                      channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                      // Create a local video track from the video captured by a camera.
-                      channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-                      // Append the local video container to the page body.
-                      document.body.append(localPlayerContainer);
-                      $(".divImage2").html(localPlayerContainer)
-                      $(localPlayerContainer).addClass("image2")
-                      // Publish the local audio and video tracks in the channel.
-                      await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-                      // Play the local video track.
-                      channelParameters.localVideoTrack.play(localPlayerContainer);
-                      console.log("publish success!");
-                  }*/
-                  // Listen to the Leave button click event.
-
-                  document.getElementById('leave').onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-                      while (1) {
-                        switch (_context2.prev = _context2.next) {
-                          case 0:
-                            // Destroy the local audio and video tracks.
-                            channelParameters.localAudioTrack.close();
-                            channelParameters.localVideoTrack.close(); // Remove the containers you created for the local video and remote video.
-
-                            this.removeVideoDiv(remotePlayerContainer.id);
-                            this.removeVideoDiv(localPlayerContainer.id); // Leave the channel
-
-                            _context2.next = 6;
-                            return agoraEngine.leave();
-
-                          case 6:
-                            console.log("You left the channel"); // Refresh the page for reuse
-
-                            window.location.reload();
-
-                          case 8:
-                          case "end":
-                            return _context2.stop();
-                        }
-                      }
-                    }, _callee2, this);
-                  }));
+                  self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
                 };
 
-              case 8:
+              case 7:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3);
+        }, _callee2);
       }))();
-    },
-    removeVideoDiv: function removeVideoDiv(elementId) {
-      console.log("Removing " + elementId + "Div");
-      var Div = document.getElementById(elementId);
-
-      if (Div) {
-        Div.remove();
-      }
     },
     getUrlVars: function getUrlVars() {
       var vars = [],
@@ -19948,33 +19882,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 console.log("local"); // Join a channel.
 
-                _context4.next = 3;
+                _context3.next = 3;
                 return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
 
               case 3:
-                _context4.next = 5;
+                _context3.next = 5;
                 return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createMicrophoneAudioTrack();
 
               case 5:
-                channelParameters.localAudioTrack = _context4.sent;
-                _context4.next = 8;
+                channelParameters.localAudioTrack = _context3.sent;
+                _context3.next = 8;
                 return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createCameraVideoTrack();
 
               case 8:
-                channelParameters.localVideoTrack = _context4.sent;
+                channelParameters.localVideoTrack = _context3.sent;
                 // Append the local video container to the page body.
                 document.body.append(localPlayerContainer);
                 $(".divImage2").html(localPlayerContainer);
                 $(localPlayerContainer).addClass("image2"); // Publish the local audio and video tracks in the channel.
 
-                _context4.next = 14;
+                _context3.next = 14;
                 return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
 
               case 14:
@@ -19984,11 +19918,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 16:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4);
+        }, _callee3);
       }))();
+    },
+    leaveChannel: function leaveChannel() {
+      if (confirm("Are you sure you want to leave this channel?")) {
+        window.top.close();
+      }
+    },
+    videoStreamingOnAndOff: function videoStreamingOnAndOff() {
+      this.videoStreaming = this.videoStreaming ? false : true;
+      this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+    },
+    audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
+      this.audioStreaming = this.audioStreaming ? false : true;
+      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     }
   }
 });
@@ -20022,30 +19969,33 @@ var _hoisted_5 = {
   "class": "divImage2"
 };
 var _hoisted_6 = ["src"];
-var _hoisted_7 = {
-  "class": "decline-button",
-  onclick: "alert('Hello, world!')"
-};
+var _hoisted_7 = ["src"];
 var _hoisted_8 = ["src"];
-var _hoisted_9 = {
-  "class": "video-button",
-  type: "button"
-};
-var _hoisted_10 = ["src"];
-var _hoisted_11 = {
-  "class": "mic-button",
-  type: "button"
-};
-var _hoisted_12 = ["src"];
-var _hoisted_13 = {
+var _hoisted_9 = ["src"];
+var _hoisted_10 = {
   "class": "myDiv2"
 };
-var _hoisted_14 = ["src"];
+var _hoisted_11 = ["src"];
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"myDiv4\"><p>Republic of the Philippines</p><p>DEPARTMENT OF HEALTH</p><p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p><p>Official Website: <span style=\"color:blue;\">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p></div><div class=\"myDiv5\"><p><span style=\"color:#4CAF50;\"><b>CLINICAL REFERRAL FORM</b></span></p></div>", 2);
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"myDiv4\"><p>Republic of the Philippines</p><p>DEPARTMENT OF HEALTH</p><p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p><p>Official Website: <span style=\"color:blue;\">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p></div><div class=\"myDiv5\"><p><span style=\"color:#4CAF50;\"><b>CLINICAL REFERRAL FORM</b></span></p></div>", 2);
 
-var _hoisted_17 = {
+var _hoisted_14 = {
   "class": "myDiv6"
+};
+var _hoisted_15 = {
+  style: {
+    "color": "#E18E0B"
+  }
+};
+var _hoisted_16 = {
+  style: {
+    "color": "#E18E0B"
+  }
+};
+var _hoisted_17 = {
+  style: {
+    "color": "#E18E0B"
+  }
 };
 var _hoisted_18 = {
   style: {
@@ -20092,36 +20042,36 @@ var _hoisted_26 = {
     "color": "#E18E0B"
   }
 };
-var _hoisted_27 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
+
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 var _hoisted_28 = {
   style: {
     "color": "#E18E0B"
   }
 };
-var _hoisted_29 = {
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_30 = {
   style: {
     "color": "#E18E0B"
   }
 };
-
-var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
 var _hoisted_31 = {
   style: {
     "color": "#E18E0B"
   }
 };
-
-var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
+var _hoisted_32 = {
+  style: {
+    "color": "#E18E0B"
+  }
+};
 var _hoisted_33 = {
   style: {
     "color": "#E18E0B"
@@ -20143,100 +20093,8 @@ var _hoisted_36 = {
   }
 };
 var _hoisted_37 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_38 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_39 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_40 = {
-  "class": "transbox"
-};
-var _hoisted_41 = {
-  style: {
-    "background-color": "white"
-  }
-};
-var _hoisted_42 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-
-var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "agebox"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("HSFGSDFDSFDSF"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  style: {
-    "background-color": "#f2f2f2"
-  }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Age: "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  style: {
-    "color": "#E18E0B"
-  }
-})])], -1
-/* HOISTED */
-);
-
-var _hoisted_44 = {
-  "class": "sexbox"
-};
-var _hoisted_45 = {
-  style: {
-    "background-color": "#f2f2f2"
-  }
-};
-var _hoisted_46 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_47 = {
-  "class": "statusbox"
-};
-var _hoisted_48 = {
-  style: {
-    "background-color": "white"
-  }
-};
-var _hoisted_49 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_50 = {
-  "class": "philbox"
-};
-var _hoisted_51 = {
-  style: {
-    "background-color": "#f2f2f2"
-  }
-};
-var _hoisted_52 = {
-  style: {
-    "color": "#E18E0B"
-  }
-};
-var _hoisted_53 = {
   "class": "myDiv3"
 };
-
-var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "submit-button",
-  onclick: "alert('Hello, world!')"
-}, "SUBMIT", -1
-/* HOISTED */
-);
-
-var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<h2 class=\"left-align\">Get started with Voice Calling</h2><div class=\"row\"><div><button type=\"button\" id=\"join\">Join</button><button type=\"button\" id=\"leave\">Leave</button></div></div><br><div id=\"message\"></div>", 4);
-
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
@@ -20250,87 +20108,110 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: "Image 2"
   }, null, 8
   /* PROPS */
-  , _hoisted_6)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: $data.declineUrl,
-    alt: "Button Image"
-  }, null, 8
-  /* PROPS */
-  , _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: $data.videoCallUrl,
-    alt: "Button Image"
-  }, null, 8
-  /* PROPS */
-  , _hoisted_10)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  , _hoisted_6)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["mic-button", {
+      'mic-button-slash': !$data.audioStreaming
+    }]),
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.audioStreamingOnAnddOff && $options.audioStreamingOnAnddOff.apply($options, arguments);
+    }),
+    type: "button"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.micUrl,
     alt: "Button Image"
   }, null, 8
   /* PROPS */
-  , _hoisted_12)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  , _hoisted_7)], 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["video-button", {
+      'video-button-slash': !$data.videoStreaming
+    }]),
+    onClick: _cache[1] || (_cache[1] = function () {
+      return $options.videoStreamingOnAndOff && $options.videoStreamingOnAndOff.apply($options, arguments);
+    }),
+    type: "button"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: $data.videoCallUrl,
+    alt: "Button Image"
+  }, null, 8
+  /* PROPS */
+  , _hoisted_8)], 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "decline-button",
+    onClick: _cache[2] || (_cache[2] = function () {
+      return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
+    }),
+    type: "button"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: $data.declineUrl,
+    alt: "Button Image"
+  }, null, 8
+  /* PROPS */
+  , _hoisted_9)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image 3",
     "class": "doh-logo"
   }, null, 8
   /* PROPS */
-  , _hoisted_14), _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
+  , _hoisted_11), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachment: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachment: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
-  /* TEXT */
-  )])]), _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Sex: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1
-  /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1
-  /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
-  /* TEXT */
-  )])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  )])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     id: "myTextbox",
     name: "myTextbox",
     placeholder: "Input Prescription",
-    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.options.channel = $event;
     })
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.options.channel]])]), _hoisted_54]), _hoisted_55], 64
-  /* STABLE_FRAGMENT */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.options.channel]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "submit-button",
+    onClick: _cache[4] || (_cache[4] = function () {
+      return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
+    })
+  }, "SUBMIT")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h2 class=\"left-align\">Get started with Voice Calling</h2>\r\n    <div class=\"row\">\r\n        <div>\r\n            <button type=\"button\" id=\"join\">Join</button>\r\n            <button type=\"button\" id=\"leave\">Leave</button>\r\n        </div>\r\n    </div>\r\n    <br>\r\n    <div id=\"message\"></div>")], 2112
+  /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
   );
 }
 
@@ -22314,7 +22195,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container {\r\n        /*position: relative;\r\n        margin: 0 auto;*/\r\n        width: 1900px;\r\n        border: 5px outset green;\r\n        height: 950px;\n}\n.image1 {\r\n        position: relative;\r\n        top: 1;\r\n        left: 1;\r\n        z-index: 1;\r\n        height: 948px;\r\n        width: 1200px;\n}\n.divImage2 {\r\n        position: absolute;\r\n        top: 670px;\r\n        left: 915px;\r\n        z-index: 1;\r\n        border: 4px outset\tgreen;\r\n        border-radius: 25px;\r\n        width: 270px;\r\n        height: 260px;\n}\n.image2 {\r\n        position: absolute;\r\n        /*top: .5px;\r\n        left: .5px;*/\r\n        z-index: 2;\r\n        /*transform: rotate(360deg);*/\r\n        /*border: 4px outset\tgreen;*/\r\n        border-radius: 23px;\r\n        width: 270px;\r\n        height: 260px;\n}\n.decline-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 657px;\r\n        z-index: 2;\r\n        /*background-color: red;\r\n        border: none;\r\n        color: white;\r\n        padding: 1.2rem 1.4rem;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        margin: 4px 2px;\r\n        cursor: pointer;\r\n        border-radius: 100%;\r\n        transition: background-color 0.3s ease-in-out;*/\r\n\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\n}\n.decline-button img {\r\n        display: block;\r\n        width: 40%;\r\n        height: auto;\n}\r\n\r\n    /*.decline-button:hover {\r\n          transform: scale(1.1);\r\n    }*/\n.video-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 580px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\n}\n.video-button img {\r\n        display: block;\r\n        width: 40%;\r\n        height: auto;\n}\r\n\r\n    /*.video-button:hover {\r\n          transform: scale(1.1);\r\n    }*/\n.mic-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 500px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\n}\n.mic-button img {\r\n        display: block;\r\n        width: 40%;\r\n        height: auto;\n}\r\n\r\n    /*.video-button:hover {\r\n          transform: scale(1.1);\r\n    }*/\r\n\r\n    /*Main Video Call*/\n.myDiv {\r\n        position: absolute;\r\n        top: 13px;\r\n        left: 13px;\r\n        border: 1px outset transparent;\r\n        height: 948px;\r\n        width:  1200px;\n}\r\n\r\n    /*FORM*/\n.myDiv2 {\r\n        position: absolute;\r\n        top: 25px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 807px;\r\n        width:  660px;\n}\r\n\r\n    /*Prescription Form*/\n.myDiv3 {\r\n        position: absolute;\r\n        top: 840px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 70px;\r\n        width:  660px;\n}\r\n\r\n    /*SUBMIT BUTTON*/\n.submit-button {\r\n        position: absolute;\r\n        top: 915px;\r\n        left: 1230px;\r\n        z-index: 2;\r\n        background-color: #4CAF50;\r\n        border: none;\r\n        color: white;\r\n        padding: 10px 20px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        margin: 4px 2px;\r\n        cursor: pointer;\r\n        border-radius: 5px;\r\n        width:  660px;\r\n        font-weight: bold;\n}\n.doh-logo {\r\n        position: relative;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\r\n\r\n    /*Heading Form*/\n.myDiv4 {\r\n        position: absolute;\r\n        top: 0px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 90px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\r\n\r\n    /*Clinical Referral Form*/\n.myDiv5 {\r\n        position: absolute;\r\n        top: 82px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 23px;\r\n        font-family: Calibri;\n}\r\n\r\n    /*Patients Details*/\n.myDiv6 {\r\n        position: absolute;\r\n        top: 125px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 679px;\r\n        width:  640px;\r\n        text-align: left;\r\n        /*line-height: .0;*/\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        /*justify-content: top; /* Optional: distribute items evenly */\r\n\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.divbox1 {\r\n        background-color: #f2f2f2;\r\n        position: absolute;\r\n        top: 383px;\r\n        border: 1px outset red;\r\n        /*height: 50px;*/\r\n        height: auto;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.divbox2 {\r\n        background-color: white;\r\n        position: absolute;\r\n        top: 434px;\r\n        border: 1px outset transparent;\r\n        height: 50px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: 0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.boxDiv {\r\n        /*background-color: white;*/\r\n        position: absolute;\r\n        top: 485px;\r\n        border: 1px outset transparent;\r\n        height: 166px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        justify-content: top; /* Optional: distribute items evenly */\n}\n.divbox3:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset orchid;\r\n        height: 30px;\r\n        width:  640px;\n}\n.deptbox {\r\n        position: absolute;\r\n        top: 96px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.transbox {\r\n        position: absolute;\r\n        top: 160px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.agebox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  131px;\n}\n.sexbox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 522px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  118px;\n}\n.statusbox {\r\n        position: absolute;\r\n        top: 224px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  250px;\n}\n.philbox {\r\n        position: absolute;\r\n        top: 256px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\r\n\r\n    /*.textbox-container {\r\n        position: absolute;\r\n          background-color: red;\r\n          border: 1px solid red;\r\n          padding: 10px;\r\n          border-radius: 1px;\r\n\r\n          top: 1px;\r\n        left: 160px;\r\n          height: 30px;\r\n        width:  250px;\r\n    }*/\ninput[type=\"text\"] {\r\n        position: absolute;\r\n        padding: 5px;\r\n        font-size: 14px;\r\n        border: 1px solid transparent;\r\n        border-radius: 0px;\r\n        box-sizing: border-box;\r\n        background-color: transparent;\r\n        font-weight: bold;\r\n        font-family: Calibri;\r\n\r\n        top: 0px;\r\n        left: 0px;\r\n        height: 69px;\r\n        width:  659px;\n}\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.container {\r\n        width: 100%;\r\n        height: 100%;\r\n        border: 5px outset green;\n}\n.image1 {\r\n        position: relative;\r\n        top: 1px;\r\n        left: 1px;\r\n        z-index: 1;\r\n        height: 948px;\r\n        width: 1200px;\n}\n.divImage2 {\r\n        position: absolute;\r\n        top: 670px;\r\n        left: 915px;\r\n        z-index: 1;\r\n        border: 4px outset\tgreen;\r\n        border-radius: 25px;\r\n        width: 270px;\r\n        height: 260px;\n}\n.image2 {\r\n        position: absolute;\r\n        /*top: .5px;\r\n        left: .5px;*/\r\n        z-index: 1;\r\n        /*transform: rotate(360deg);*/\r\n        /*border: 4px outset\tgreen;*/\r\n        border-radius: 23px;\r\n        width: 270px;\r\n        height: 260px;\n}\r\n\r\n    /*Main Video Call*/\n.myDiv {\r\n        z-index: 3;\r\n        /*position: absolute;*/\r\n        top: 13px;\r\n        left: 13px;\r\n        border: 1px outset transparent;\r\n        height: 948px;\r\n        width:  1200px;\n}\n.decline-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 657px;\r\n        z-index: 1;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.decline-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.video-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 577px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width: auto;\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: auto;\n}\n.mic-button {\r\n        position: absolute;\r\n        top: 750px;\r\n        left: 500px;\r\n        z-index: 2;\r\n        border: none;\r\n        background-color: transparent;\r\n        cursor: pointer;\r\n        transition: transform 0.3s ease-in-out;\r\n        width:auto;\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\n}\n.mic-button img {\r\n        display: block;\r\n        width: 60px;\r\n        height: 58px;\n}\r\n\r\n    /*FORM*/\n.myDiv2 {\r\n        position: absolute;\r\n        top: 25px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 807px;\r\n        width:  660px;\n}\r\n\r\n    /*Prescription Form*/\n.myDiv3 {\r\n        position: absolute;\r\n        top: 840px;\r\n        left: 1230px;\r\n        border: 2px outset black;\r\n        height: 70px;\r\n        width:  660px;\n}\r\n\r\n    /*SUBMIT BUTTON*/\n.submit-button {\r\n        position: absolute;\r\n        top: 915px;\r\n        left: 1230px;\r\n        z-index: 2;\r\n        background-color: #4CAF50;\r\n        border: none;\r\n        color: white;\r\n        padding: 10px 20px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        margin: 4px 2px;\r\n        cursor: pointer;\r\n        border-radius: 5px;\r\n        width:  660px;\r\n        font-weight: bold;\n}\n.doh-logo {\r\n        position: relative;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\r\n\r\n    /*Heading Form*/\n.myDiv4 {\r\n        position: absolute;\r\n        top: 0px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 90px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\r\n\r\n    /*Clinical Referral Form*/\n.myDiv5 {\r\n        position: absolute;\r\n        top: 82px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 23px;\r\n        font-family: Calibri;\n}\r\n\r\n    /*Patients Details*/\n.myDiv6 {\r\n        position: absolute;\r\n        top: 125px;\r\n        left: 10px;\r\n        border: 1px outset transparent;\r\n        height: 679px;\r\n        width:  640px;\r\n        text-align: left;\r\n        /*line-height: .0;*/\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        /*justify-content: top; /* Optional: distribute items evenly */\r\n\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.box:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  640px;\n}\n.divbox1 {\r\n        background-color: #f2f2f2;\r\n        position: absolute;\r\n        top: 383px;\r\n        border: 1px outset red;\r\n        /*height: 50px;*/\r\n        height: auto;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.divbox2 {\r\n        background-color: white;\r\n        position: absolute;\r\n        top: 434px;\r\n        border: 1px outset transparent;\r\n        height: 50px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: 0;\r\n        font-weight: bold;\r\n        font-size: 14px;\n}\n.boxDiv {\r\n        /*background-color: white;*/\r\n        position: absolute;\r\n        top: 485px;\r\n        border: 1px outset transparent;\r\n        height: 166px;\r\n        width:  640px;\r\n        text-align: left;\r\n        line-height: .0;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n\r\n        display: flex; /* Optional: use flexbox to align items */\r\n        flex-direction: column;\r\n        justify-content: top; /* Optional: distribute items evenly */\n}\n.divbox3:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset orchid;\r\n        height: 30px;\r\n        width:  640px;\n}\n.deptbox {\r\n        position: absolute;\r\n        top: 96px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.transbox {\r\n        position: absolute;\r\n        top: 160px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\n.agebox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  131px;\n}\n.sexbox {\r\n        position: absolute;\r\n        top: 192px;\r\n        left: 522px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  118px;\n}\n.statusbox {\r\n        position: absolute;\r\n        top: 224px;\r\n        left: 390px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  250px;\n}\n.philbox {\r\n        position: absolute;\r\n        top: 256px;\r\n        left: 320px;\r\n        border: 1px outset transparent;\r\n        height: 30px;\r\n        width:  320px;\n}\ninput[type=\"text\"] {\r\n        position: absolute;\r\n        padding: 5px;\r\n        font-size: 14px;\r\n        border: 1px solid transparent;\r\n        border-radius: 0px;\r\n        box-sizing: border-box;\r\n        background-color: transparent;\r\n        font-weight: bold;\r\n        font-family: Calibri;\r\n\r\n        top: 0px;\r\n        left: 0px;\r\n        height: 69px;\r\n        width:  659px;\n}\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

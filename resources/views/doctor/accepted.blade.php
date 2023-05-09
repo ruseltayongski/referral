@@ -106,7 +106,8 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
                                             @if($row->department_id === 5 && $row->action_md === $user->id)
-                                            <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}');"><i class="fa fa-camera"></i></button>
+                                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}','{{ $row->action_md }}','{{ $row->referring_md }}');"><i class="fa fa-camera"></i></button>
+                                                <a href="{{ url('doctor/print/prescription').'/'.$row->id }}" target="_blank" type="button" style="border: 1px solid black;color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i></a>
                                             @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
@@ -197,6 +198,10 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                             <tr>
                                 <td class="text-right" width="60px"><button class="btn-sm bg-success btn-flat"><i class="fa fa-camera"></i></button></td>
                                 <td>Telemedicine</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn-sm bg-warning btn-flat"><i class="fa fa-file-zip-o"></i></button></td>
+                                <td>Prescription</td>
                             </tr>
                             <tr>
                                 <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
