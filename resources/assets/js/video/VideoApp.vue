@@ -9,7 +9,7 @@
         data() {
             return {
                 baseUrl: $("#broadcasting_url").val(),
-                doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor.jpg",
+                doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor4.jpg",
                 doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor1.png",
                 declineUrl: $("#broadcasting_url").val()+"/resources/img/video/decline.png",
                 videoCallUrl: $("#broadcasting_url").val()+"/resources/img/video/videocall.png",
@@ -27,6 +27,11 @@
                     uid: 0,
                 },
                 form: {},
+                patient_age: "",
+                file_path: [],
+                file_name: [],
+
+
                 videoStreaming: true,
                 audioStreaming: true,
                 channelParameters: {
@@ -49,6 +54,23 @@
                 .then((res) => {
                     const response = res.data;
                     this.form = response.form
+                    if(response.ageType === "y")
+                        this.patient_age = response.age + " Years Old"
+                    else if(response.ageType === "m")
+                        this.patient_age =  response.age + " Months Old"
+
+                    if(count(response.file_path) > 1)
+                        this.file_path = "File Attachments:" + response.file_path
+                    else
+                        this.file_path = "File Attachment:" + response.file_path
+
+                    /*for(i = 0; i < count(response.file_path); i++)
+                        this.file_path = response.file_path*/
+
+                    /*if(i + 1 != count(response.file_path))*/
+                            /*,&nbsp*/
+
+
                     console.log(response)
                 })
                 .catch((error) => {
@@ -62,6 +84,7 @@
             this.startBasicCall();
             // Remove the video stream from the container.
         },
+
         methods: {
             async startBasicCall()
             {
@@ -106,8 +129,9 @@
                         /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                         // Append the remote container to the page body.
                         document.body.append(remotePlayerContainer);
-                        $(".divImage1").html(remotePlayerContainer)
-                        $(remotePlayerContainer).addClass("image1")
+                        /*$(".divImage1").html(remotePlayerContainer)*/
+                        $(".mainPic").html(remotePlayerContainer)
+                        $(remotePlayerContainer).addClass("img-fluid")
                         // Play the remote video track.
                         self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                     }
@@ -153,8 +177,9 @@
                 channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
                 // Append the local video container to the page body.
                 document.body.append(localPlayerContainer);
-                $(".divImage2").html(localPlayerContainer)
-                $(localPlayerContainer).addClass("image2")
+                /*$(".divImage2").html(localPlayerContainer)*/
+                $(".mainPic").html(localPlayerContainer)
+                $(localPlayerContainer).addClass("img2")
                 // Publish the local audio and video tracks in the channel.
                 await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
                 // Play the local video track.
@@ -174,276 +199,283 @@
                 this.audioStreaming = this.audioStreaming ? false : true
                 this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
             }
-        }
+        },
+
+
     }
 </script>
+
 <template>
-    <div class="container">
-        <div class="myDiv">
-            <div class="divImage1">
-                <img :src="doctorUrl" alt="Image 1" class="image1">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-8">
+                <div class="mainPic">
+                    <div>
+                        <img :src="doctorUrl" class="img-fluid position-relative" alt="Image1">
+                        <img :src="doctorUrl1" class="img2 position-absolute" alt="Image2">
+                        <div class="iconCall position-absolute">
+                            <button class="btn btn-success btn-lg bi-mic-fill mx-2 mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button" onclick="alert('Mic')"></button>
+                            <button class="btn btn-success btn-lg bi-camera-video-fill mx-2 video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" onclick="alert('Video Call')"></button>
+                            <button class="btn btn-danger  btn-lg bi-telephone-x-fill mx-2 decline-button" @click="leaveChannel" type="button"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="divImage2">
-                <img :src="doctorUrl1" class="image2" alt="Image 2">
+
+            <div class="col-md-4">
+                <div class="telemedForm">
+                    <div class="row-fluid">
+                        <div>
+                            <img :src="dohLogoUrl" alt="Image3" class="dohLogo">
+                        </div>
+                        <div class="formHeader">
+                            <p>Republic of the Philippines</p>
+                            <p>DEPARTMENT OF HEALTH</p>
+                            <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+                            <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+                            <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
+                            <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
+                        </div>
+                        <div class="clinical">
+                            <span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span>
+                        </div>
+
+                        <div class="tableForm">
+                            <table class="table table-striped formTable">
+                                <tr>
+                                    <td colspan="12">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
+                                    <td colspan="6">Department: <span class="forDetails"> {{ form.department }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Date/Time Referred (ReCo): <span class="dateReferred"> {{ form.time_referred }} </span></td>
+                                    <td colspan="6">Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
+                                    <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
+                                    <td colspan="4">Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
+                                    <td colspan="6">Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
+                                    <td colspan="6">Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><br><br><span class="caseforDetails"> {{ form.case_summary }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><br><br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">ICD-10 Code and Description: <span class="forDetails"> {{ form.other_diagnoses }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">File Attachments:
+                                        <a :href="file_path" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ file_name }}</a>
+
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><br><br><span class="mdHcw"> {{ form.md_referred }} </span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row prescription">
+                    <div class="col">
+                        <textarea class="form-control textArea" id="FormControlTextarea" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-success btn-md btn-block" type="button" onclick="alert('Successfuly Submit')">Submit</button>
+                </div>
             </div>
-            <button class="mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><img :src="micUrl" alt="Button Image"></button>
-            <button class="video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" ><img :src="videoCallUrl" alt="Button Image"></button>
-            <button class="decline-button" @click="leaveChannel" type="button"><img :src="declineUrl" alt="Button Image"></button>
         </div>
-    </div>
-
-    <div class="myDiv2">
-        <img :src="dohLogoUrl" alt="Image 3" class="dohLogo">
-        <div class="myDiv4">
-            <p>Republic of the Philippines</p>
-            <p>DEPARTMENT OF HEALTH</p>
-            <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-            <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-            <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
-            <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
-        </div>
-
-        <div class="myDiv5">
-            <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
-        </div>
-        <table class="myTable">
-            <tr>
-                <td colspan="6">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
-            </tr>
-            <tr>
-                <td colspan="6">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
-            </tr>
-            <tr>
-                <td colspan="6">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
-            </tr>
-            <tr>
-                <td >Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
-                <td >Department: <span class="forDetails"> {{ form.department }} </span></td>
-            </tr>
-            <tr>
-                <td>Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
-            </tr>
-            <tr>
-                <td>Date/Time Referred (ReCo): <span class="forDetails"> {{ form.time_referred }} </span></td>
-                <td>Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
-            </tr>
-            <tr>
-                <td>Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
-                <td>Age: <span class="forDetails"> {{  }} </span></td>
-                <td>Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
-            </tr>
-            <tr>
-                <td>Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
-                <td>Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
-            </tr>
-            <tr>
-                <td>Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
-                <td>Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
-            </tr>
-            <tr>
-                <td>Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
-            </tr>
-            <tr>
-                <td>Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
-            </tr>
-            <tr>
-                <td>Surviellance Category: <span class="forDetails"> {{  }} </span></td>
-            </tr>
-
-            <tr>
-                <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="forDetails"> {{ form.case_summary }} </span></td>
-            </tr>
-            <tr>
-                <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span class="forDetails"> {{ form.reco_summary }} </span></td>
-            </tr>
-            <tr>
-                <td>ICD-10 Code and Description: <span class="forDetails"> {{ form.other_diagnoses }} </span></td>
-            </tr>
-            <tr>
-                <td>Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
-            </tr>
-            <tr>
-                <td>File Attachment: <span class="forDetails"> {{ form.phic_id }} </span></td>
-            </tr>
-            <tr>
-                <td>Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
-            </tr>
-            <tr>
-                <td>Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
-            </tr>
-            <tr>
-                <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span class="forDetails"> {{ form.phic_id }} </span></td>
-            </tr>
-        </table>
-    </div>
-    <div class="myDiv6">
-        <div class="myDiv3">
-            <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription" v-model="options.channel">
-        </div>
-        <button class="submit-button" @click="leaveChannel">SUBMIT</button>
     </div>
 </template>
 
 <style>
-    .container {
-        width: 100%;
-        height: 100%;
-        border: 5px outset green;
-    }
 
-    .image1 {
+    .container-fluid {
+        /*position: relative;*/
+        border: 4px outset green;
+        height: auto;
+    }
+    .mainPic {
         position: relative;
-        top: 1px;
-        left: 1px;
-        z-index: 1;
-        height: 948px;
-        width: 1200px;
+        border: 2px outset transparent;
+        /*height: 100%;*/
     }
+    /*Main Image*/
+    .img-fluid {
+        /*position: relative;*/
+        border: 3px outset transparent;
+        height: 100%;
 
+    }
+    .iconCall {
+        /*position: absolute;*/
+        border: 1px outset transparent;
+        width: 242px;
+        bottom: 120px;
+        left: 520px;
+    }
+    .mic-button {
+        border-radius: 50%;
+        border: 0;
+
+        /*font-size: 13px;
+        padding: 5px 10px;*/
+    }
+    .video-button {
+        border-radius: 50%;
+        border: 0;
+    }
+    .decline-button {
+        border-radius: 50%;
+        border: 0;
+        /*height: 10%;
+        width: 30%;*/
+    }
+    .img2 {
+        /*position: absolute;*/
+        right: 20px;
+        bottom: 20px;
+        border: 2px outset green;
+        border-radius: 15%;
+    }
+    .telemedForm {
+        border: 2px outset black;
+        margin-top: 5px;
+        height: 750px;
+    }
     .dohLogo {
         position: relative;
+        border: 1px outset transparent;
         top: 10px;
         left: 10px;
         z-index: 2;
         height: 72px;
         width: 76px;
-        border: 1px outset transparent;
     }
-
-    /*Form Header*/
-    .myDiv4 {
+    .formHeader {
         position: absolute;
-        top: 0;
-        left: 10px;
+        top: 15px;
+        left: 105px;
         border: 1px outset transparent;
-        height: 90px;
-        width:  640px;
         text-align: center;
         line-height: .0;
-        font-size: 14px;
+        font-size: 13px;
     }
-
-    /*Clinical Referral*/
-    .myDiv5 {
-        position: absolute;
-        top: 82px;
-        left: 10px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
+    .clinical {
+        position: relative;
         text-align: center;
-        line-height: .0;
-        font-size: 23px;
+        margin-top: 25px;
+        border: 1px outset transparent;
+        font-size: 20px;
         font-family: Calibri;
     }
-
-    .divImage2 {
-        position: absolute;
-        top: 670px;
-        left: 915px;
-        z-index: 1;
-        border: 4px outset	green;
-        border-radius: 25px;
-        width: 270px;
-        height: 260px;
-    }
-
-    .image2 {
-        position: absolute;
-        /*top: .5px;
-        left: .5px;*/
-        z-index: 1;
-        /*transform: rotate(360deg);*/
-        /*border: 4px outset	green;*/
-        border-radius: 23px;
-        width: 270px;
-        height: 260px;
-    }
-
-    /*Main Video Call*/
-    .myDiv {
-        z-index: 3;
-        /*position: absolute;*/
-        top: 13px;
-        left: 13px;
+    .tableForm {
+        position: relative;
         border: 1px outset transparent;
-        height: 948px;
-        width:  1200px;
-    }
-
-    .decline-button {
-        position: absolute;
-        top: 750px;
-        left: 657px;
-        z-index: 1;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
+        height: 618px;
         width: auto;
+        text-align: left;
+        line-height: .2;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: Calibri;
+
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
-    .decline-button:hover {
+    .prescription {
+        position: relative;
+        border: 2px outset transparent;
+        margin-top: 5px;
+        font-family: Calibri;
+    }
+    .textArea {
+        border: 1px outset black;
+    }
+    .btn {
+        position: relative;
+        margin-top: 5px;
+        /*margin-bottom: 5px;*/
+    }
+    .forDetails {
+        color: #E18E0B;
+    }
+    .caseforDetails {
+        color: #E18E0B;
+        line-height: 1.2;
+    }
+    .dateReferred {
+        color: #E18E0B;
+        /*font-size: 14px;*/
+    }
+    .recoSummary {
+        color: #E18E0B;
+        line-height: 1.2;
+    }
+    .mdHcw {
+        color: #E18E0B;
+        line-height: 1.2;
+    }
+    tr:nth-child(odd) {
+        background-color: #f2f2f2;
+        border: 1px outset transparent;
+    }
+    tr:nth-child(even) {
+        background-color: white;
+        border: 1px outset transparent;
+    }
+
+    .mic-button:hover {
         background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
-
-    .decline-button img {
-        display: block;
-        width: 60px;
-        height: auto;
-    }
-
-    .video-button {
-        position: absolute;
-        top: 750px;
-        left: 577px;
-        z-index: 2;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
-        width: auto;
-    }
-    .video-button:hover {
-        background-color: rgba(2, 133, 221, 0.911);
-    }
-
-    .video-button-slash:before, .video-button-slash:after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        height: 2px;
-        background-color: #FF0000; /* set the color of the lines */
-    }
-
-    .video-button-slash:before {
-        transform: rotate(-45deg);
-        padding: 2px;
-    }
-
-    .video-button-slash:after {
-        transform: rotate(-45deg);
-    }
-
-    .video-button img {
-        display: block;
-        width: 60px;
-        height: auto;
-    }
-    .mic-button {
-        position: absolute;
-        top: 750px;
-        left: 500px;
-        z-index: 2;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
-        width:auto;
-    }
-
     .mic-button-slash:before, .mic-button-slash:after {
         content: "";
         position: absolute;
@@ -454,164 +486,44 @@
         height: 2px;
         background-color: #FF0000; /* set the color of the lines */
     }
-
     .mic-button-slash:before {
         transform: rotate(-45deg);
         padding: 2px;
     }
-
     .mic-button-slash:after {
         transform: rotate(-45deg);
     }
-
-    .mic-button:hover {
+    .video-button:hover {
         background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
-
-    .mic-button img {
-        display: block;
-        width: 60px;
-        height: 58px;
-    }
-
-    /*FORM*/
-    .myDiv2 {
+    .video-button-slash:before, .video-button-slash:after {
+        content: "";
         position: absolute;
-        top: 25px;
-        left: 1230px;
-        border: 2px outset black;
-        height: 807px;
-        width:  660px;
-    }
-
-    /*Prescription Form*/
-    .myDiv3 {
-        position: absolute;
-        border: 2px outset black;
-        height: 70px;
-        width:  660px;
-        top: 842px;
+        top: 50%;
         left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        height: 2px;
+        background-color: #FF0000; /* set the color of the lines */
     }
-
-    .myDiv6 {
-        position: absolute;
-        top: 0;
-        left: 1230px;
-        border: 2px outset transparent;
-        height: 964px;
-        width:  660px;
+    .video-button-slash:before {
+        transform: rotate(-45deg);
+        padding: 2px;
     }
-
-    /*SUBMIT BUTTON*/
-    .submit-button {
-        position: absolute;
-        top: 919px;
-        left: 0;
-        z-index: 1;
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-
-        cursor: pointer;
-        border-radius: 5px;
-        width:  660px;
-        font-weight: bold;
+    .video-button-slash:after {
+        transform: rotate(-45deg);
     }
-
-    /*Patients Details*/
-    .myTable {
-        position: absolute;
-        top: 125px;
-        left: 10px;
-        border: 1px outset transparent;
-        height: 679px;
-        width:  640px;
-        text-align: left;
-        /*line-height: .0;*/
-        font-weight: bold;
-        font-size: 14px;
-        font-family: Calibri;
-        display: flex; /* Optional: use flexbox to align items */
-        flex-direction: column;
-        /*justify-content: top; /* Optional: distribute items evenly */
-
-        overflow-y: auto;
-        overflow-x: hidden;
+    .decline-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
-
-    .forDetails {
-        color: #E18E0B;
-    }
-
-    tr:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset transparent;
-        /*height: 30px;
-        width:  640px;*/
-        height: auto;
-        width:  auto;
-    }
-
-    tr:nth-child(even) {
-        background-color: white;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .box:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .box:nth-child(even) {
-        background-color: white;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .divbox1 {
-        background-color: #f2f2f2;
-        position: absolute;
-        top: 383px;
-        border: 1px outset red;
-        /*height: 50px;*/
-        height: auto;
-        width:  auto;
-    }
-
-    input[type="text"] {
-        position: absolute;
-        padding: 5px;
-        font-size: 14px;
-        border: 1px solid transparent;
-        border-radius: 0px;
-        box-sizing: border-box;
-        background-color: transparent;
-        font-weight: bold;
-        font-family: Calibri;
-
-        top: 0px;
-        left: 0px;
-        height: 69px;
-        width:  659px;
-    }
-
+    /*------------------------------------------------------------------------------------*/
 
     .mobile-view {
         display: none;
         visibility: hidden;
     }
-
     @media only screen and (max-width: 720px) {
         .file-upload {
             background-color: #ffffff;
@@ -629,17 +541,94 @@
             display: block;
             visibility: visible;
         }
-
-
     }
-
     #telemedicine {
         border-color:#00a65a;
         border: none;
         padding: 7px;
     }
-
     #telemedicine:hover {
         background-color: lightgreen;
     }
+
+
+
+    @media (min-width: 375px) and (max-width: 667px){
+        .container-fluid {
+            border: 1px outset green;
+        }
+
+        /*Main Image*/
+        .img-fluid {
+            position: relative;
+            border: 1px outset transparent;
+            height: 630px;
+            width: auto;
+        }
+
+        .img2 {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            border: 1px outset green;
+            border-radius: 15%;
+            height: 150px;
+        }
+
+        /*.iconCall {
+            top: 80px;
+            left: 5px;
+        }*/
+
+       /* .mic-button {
+            position: absolute;
+            top: 180px;
+            left: 5px;
+            font-size: 13px;
+            padding: 5px 10px;
+        }
+        .video-button {
+            font-size: 13px;
+            padding: 5px 10px;
+        }
+        .decline-button {
+            font-size: 13px;
+            padding: 5px 10px;
+        }*/
+
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+
+        .formHeader {
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+
+        .tableForm {
+            font-size: 10px;
+        }
+    }
+    
+
 </style>
