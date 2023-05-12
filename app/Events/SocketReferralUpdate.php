@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SocketReferralUpdateForm implements ShouldBroadcast
+class SocketReferralUpdate implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -30,6 +30,6 @@ class SocketReferralUpdateForm implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('referral_update_form');
+        return new PresenceChannel('referral_update');
     }
 }

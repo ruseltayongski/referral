@@ -445,22 +445,22 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 mt-4 mt-lg-0">
-                        <div class="member d-flex align-items-start">
-                            <div class="pic"><img :src="rsugabo" class="img-fluid" alt="" style="width: 170px;"></div>
-                            <div class="member-info">
-                                <h4>Reyan M. Sugabo</h4>
-                                <span>Computer Maintenance Technologist II</span>
-                                <p>09359504269</p>
-                                <div class="social">
-                                    <a href=""><i class="ri-twitter-fill"></i></a>
-                                    <a href=""><i class="ri-facebook-fill"></i></a>
-                                    <a href=""><i class="ri-instagram-fill"></i></a>
-                                    <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="col-lg-6 mt-4 mt-lg-0">-->
+                        <!--<div class="member d-flex align-items-start">-->
+                            <!--<div class="pic"><img :src="rsugabo" class="img-fluid" alt="" style="width: 170px;"></div>-->
+                            <!--<div class="member-info">-->
+                                <!--<h4>Reyan M. Sugabo</h4>-->
+                                <!--<span>Computer Maintenance Technologist II</span>-->
+                                <!--<p>09359504269</p>-->
+                                <!--<div class="social">-->
+                                    <!--<a href=""><i class="ri-twitter-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-facebook-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-instagram-fill"></i></a>-->
+                                    <!--<a href=""> <i class="ri-linkedin-box-fill"></i> </a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </section><!-- End System Down -->
@@ -520,22 +520,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="member d-flex align-items-start">
-                            <div class="pic"><img :src="jdingal" style="width: 160px;" class="img-fluid" alt=""></div>
-                            <div class="member-info">
-                                <h4>Jaypee Dingal</h4>
-                                <span>Data Encoder I</span>
-                                <p>09267313376</p>
-                                <div class="social">
-                                    <a href=""><i class="ri-twitter-fill"></i></a>
-                                    <a href=""><i class="ri-facebook-fill"></i></a>
-                                    <a href=""><i class="ri-instagram-fill"></i></a>
-                                    <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="col-lg-6">-->
+                        <!--<div class="member d-flex align-items-start">-->
+                            <!--<div class="pic"><img :src="jdingal" style="width: 160px;" class="img-fluid" alt=""></div>-->
+                            <!--<div class="member-info">-->
+                                <!--<h4>Jaypee Dingal</h4>-->
+                                <!--<span>Data Encoder I</span>-->
+                                <!--<p>09267313376</p>-->
+                                <!--<div class="social">-->
+                                    <!--<a href=""><i class="ri-twitter-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-facebook-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-instagram-fill"></i></a>-->
+                                    <!--<a href=""> <i class="ri-linkedin-box-fill"></i> </a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <div class="col-lg-6 mt-4 mt-lg-0">
                         <div class="member d-flex align-items-start">
@@ -554,22 +554,22 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 mt-4">
-                        <div class="member d-flex align-items-start">
-                            <div class="pic"><img :src="manora" class="img-fluid" alt=""></div>
-                            <div class="member-info">
-                                <h4>Mechelle Añora</h4>
-                                <span>Data Encoder I</span>
-                                <p>09912043267</p>
-                                <div class="social">
-                                    <a href=""><i class="ri-twitter-fill"></i></a>
-                                    <a href=""><i class="ri-facebook-fill"></i></a>
-                                    <a href=""><i class="ri-instagram-fill"></i></a>
-                                    <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="col-lg-6 mt-4">-->
+                        <!--<div class="member d-flex align-items-start">-->
+                            <!--<div class="pic"><img :src="manora" class="img-fluid" alt=""></div>-->
+                            <!--<div class="member-info">-->
+                                <!--<h4>Mechelle Añora</h4>-->
+                                <!--<span>Data Encoder I</span>-->
+                                <!--<p>09912043267</p>-->
+                                <!--<div class="social">-->
+                                    <!--<a href=""><i class="ri-twitter-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-facebook-fill"></i></a>-->
+                                    <!--<a href=""><i class="ri-instagram-fill"></i></a>-->
+                                    <!--<a href=""> <i class="ri-linkedin-box-fill"></i> </a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </section><!-- End Register Account/Forgot Password -->

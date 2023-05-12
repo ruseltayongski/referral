@@ -6,7 +6,9 @@ use App\Activity;
 use App\Baby;
 use App\Barangay;
 use App\Department;
+use App\Events\AdminNotifs;
 use App\Events\NewReferral;
+use App\Events\NewWalkin;
 use App\Facility;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
@@ -687,6 +689,8 @@ class PatientCtrl extends Controller
             'unique_id' => $unique_id
         );
 
+        $patient_code = "";
+
         if($type==='normal')
         {
             Patients::where('id',$patient_id)
@@ -714,6 +718,7 @@ class PatientCtrl extends Controller
                 'other_diagnoses' => $req->other_diagnoses,
             );
             $form = PatientForm::updateOrCreate($match,$data);
+            $patient_code = $form->code;
 
             foreach($req->icd_ids as $i) {
                 $icd = new Icd();
@@ -786,6 +791,7 @@ class PatientCtrl extends Controller
                 'other_diagnoses' => $req->other_diagnosis,
             );
             $form = PregnantForm::updateOrCreate($match,$data);
+            $patient_code = $form->code;
 
             foreach($req->icd_ids as $i) {
                 $icd = new Icd();
@@ -802,6 +808,16 @@ class PatientCtrl extends Controller
                 $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
             }
         }
+
+        $pt_walkin = Patients::select('fname', 'lname')->where('id',$patient_id)->first();
+        $referred_to = Facility::where('id', $form->referred_to)->first()->name;
+        broadcast(new AdminNotifs([
+            "patient_code" => $patient_code,
+            "patient_name" => $pt_walkin->fname." ".$pt_walkin->lname,
+            "referred_to" => $referred_to,
+            "date_referred" => date_format($form->updated_at, 'M d, Y h:i a'),
+            "notif_type" => "new walkin"
+        ]));
 
         return array(
             'id' => $tracking_id,
