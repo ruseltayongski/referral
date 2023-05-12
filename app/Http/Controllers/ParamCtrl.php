@@ -23,9 +23,20 @@ class ParamCtrl extends Controller
         //explode the date to get month, day and year
         $birthDate = explode("/", $birthDate);
         //get age from date or birthdate
-        $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
-            ? ((date("Y") - $birthDate[2]) - 1)
-            : (date("Y") - $birthDate[2]));
+        $date_referral = Session::get('date_referral');
+        if(isset($date_referral)) {
+            $date_referral = explode('/', $date_referral);
+            $bday = mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]);
+            $refer = mktime(0, 0, 0, $date_referral[0], $date_referral[1], $date_referral[2]);
+            $age = (date("md", $bday)) > date("md", $refer)
+                ? ((date("Y", $refer) - (date("Y", $bday)) - 1))
+                : (date("Y", $refer) - $birthDate[2]);
+            Session::put('date_referral', null);
+        } else {
+            $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+                ? ((date("Y") - $birthDate[2]) - 1)
+                : (date("Y") - $birthDate[2]));
+        }
         return $age;
     }
 

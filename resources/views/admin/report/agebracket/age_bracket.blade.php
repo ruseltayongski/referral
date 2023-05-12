@@ -112,11 +112,7 @@ $provinces = \App\Province::all();
 
                             <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                             <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/agebracket') }}'"><i class="fa fa-eye"></i> View All</button>
-                            {{--<a href="{{ asset('excel/export/age_bracket/overall') }}" class="btn btn-danger" target="_blank">--}}
-                            {{--<i class="fa fa-file-excel-o"></i> Export Excel--}}
-                            {{--</a>--}}
                         </div>
-
                     </div>
                 </form><br>
                 <div class="row" id="overall_col">
