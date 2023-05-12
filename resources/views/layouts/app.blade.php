@@ -163,7 +163,7 @@
                 @elseif($user->level == 'vaccine')
                     <img src="{{ asset('resources/img/updated_vaccine_logo.png') }}" class="img-responsive" />
                 @else
-                    <img src="{{ asset('resources/img/referral_banner.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/banner_referral2023v1.png') }}" class="img-responsive" />
                 @endif
             </div>
         </div>

@@ -105,6 +105,10 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td>{{ $row->date_accepted }}</td>
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
+                                            @if($row->department_id === 5 && $row->action_md === $user->id)
+                                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}','{{ $row->action_md }}','{{ $row->referring_md }}');"><i class="fa fa-camera"></i></button>
+                                                <a href="{{ url('doctor/print/prescription').'/'.$row->id }}" target="_blank" type="button" style="border: 1px solid black;color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i></a>
+                                            @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
                                                         title="Patient Arrived"
@@ -192,6 +196,14 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                         <table class="table table-striped">
                             <caption>LEGENDS:</caption>
                             <tr>
+                                <td class="text-right" width="60px"><button class="btn-sm bg-success btn-flat"><i class="fa fa-camera"></i></button></td>
+                                <td>Telemedicine</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" width="60px"><button class="btn-sm bg-warning btn-flat"><i class="fa fa-file-zip-o"></i></button></td>
+                                <td>Prescription</td>
+                            </tr>
+                            <tr>
                                 <td class="text-right" width="60px"><button class="btn btn-sm btn-primary"><i class="fa fa-wheelchair"></i></button></td>
                                 <td>Patient Arrived</td>
                             </tr>
@@ -231,7 +243,6 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
 @endsection
 {{--@include('script.firebase')--}}
 @section('js')
-
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
@@ -245,6 +256,22 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
         $('#daterange').daterangepicker({
             "opens" : "left"
         });
+
+        function openTelemedicine(tracking_id, code, action_md, referring_md) {
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "action_md" : action_md,
+                "referring_md" : referring_md,
+                "trigger_by" : "{{ $user->id }}"
+            };
+            $.post(url,json,function(){
+                console.log("join to call");
+            });
+            window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
+        }
     </script>
 @endsection
 

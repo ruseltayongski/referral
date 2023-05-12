@@ -8,6 +8,8 @@ use App\Barangay;
 use App\BedTracker;
 use App\Department;
 use App\Events\NewReferral;
+use App\Events\SocketReferralCall;
+use App\Events\SocketReferralDischarged;
 use App\Facility;
 use App\Feedback;
 use App\Icd;
@@ -34,7 +36,6 @@ use App\Events\SocketReco;
 
 class ApiController extends Controller
 {
-
     public function testSocketReferred() {
         $user = User::find(25);
         $patient = Patients::find(5);
@@ -56,6 +57,18 @@ class ApiController extends Controller
             "count_reco" => 0
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+    }
+
+    public function callADoctor(Request $request) {
+        $call = [
+            "tracking_id" => $request->tracking_id,
+            "code" => $request->code,
+            "action_md" => (int)$request->action_md,
+            "referring_md" => (int)$request->referring_md,
+            "trigger_by" => (int)$request->trigger_by,
+            "status" => "telemedicine"
+        ];
+        broadcast(new SocketReferralDischarged($call));
     }
 
     public function testSocketRedirected(Request $request) {

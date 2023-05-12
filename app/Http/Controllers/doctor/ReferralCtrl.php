@@ -289,6 +289,8 @@ class ReferralCtrl extends Controller
     public static function normalFormData($id) {
         $form = PatientForm::select(
             DB::raw("'$id' as tracking_id"),
+            'tracking.action_md',
+            'tracking.referring_md',
             'patient_form.code as code',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             'patients.dob as dob',
@@ -1217,11 +1219,11 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
             "remarks" => $req->remarks,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            "status" => "discharged"
         ];
 
         broadcast(new SocketReferralDischarged($new_discharged));
-
     }
 
     public function transfer(Request $req) {

@@ -206,6 +206,7 @@ Route::post('doctor/referral/redirect','doctor\ReferralCtrl@redirect');//if pati
 
 
 Route::get('doctor/referral/data/normal/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@normalForm');
+Route::get('doctor/referral/video/normal/form/{id}','doctor\ReferralCtrl@normalFormData');
 Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
@@ -259,7 +260,7 @@ Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfil
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
-
+Route::get('doctor/print/prescription/{track_id}','doctor\PrintCtrl@printPrescription');
 
 Route::get('doctor/list','doctor\UserCtrl@index');
 Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
@@ -333,6 +334,7 @@ Route::get('resetPassword/{username}',function($username){
 
 //API
 Route::get('api','ApiController@api');
+Route::post('api/video/call','ApiController@callADoctor');
 Route::get('api/get_report','ApiController@apiGetReport');
 Route::get('api/referral_list','ApiController@apiGetReferralList');
 Route::get('api/referral_track','ApiController@apiGetReferralTrack');
@@ -663,3 +665,5 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 
 // duplicate referrals
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
+
+Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
