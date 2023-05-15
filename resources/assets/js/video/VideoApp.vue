@@ -340,14 +340,14 @@
     .mainPic {
         position: relative;
         border: 2px outset transparent;
-        height: 100%;
+        height: 970px;
     }
     .remotePlayerLayer {
-        height: 913px;
+        height: 963px;
         width: 1240px;
     }
     .remotePlayerDiv {
-        height: 913px;
+        height: 965px;
         width: 100%;
         position: absolute;
         border: 2px outset transparent;
@@ -376,7 +376,7 @@
         /*position: relative;*/
         border: 3px outset transparent;
         width: 100%;
-        height: 910px;
+        height: 963px;
     }
     .img2 {
         border-radius: 30px;
@@ -405,13 +405,10 @@
         /*height: 10%;
         width: 30%;*/
     }
-
-
-
     .telemedForm {
         border: 2px outset black;
         margin-top: 5px;
-        height: 750px;
+        height: 797px;
     }
     .dohLogo {
         position: relative;
@@ -442,7 +439,7 @@
     .tableForm {
         position: relative;
         border: 1px outset transparent;
-        height: 618px;
+        height: 664px;
         width: auto;
         text-align: left;
         line-height: .2;
