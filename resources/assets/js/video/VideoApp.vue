@@ -598,39 +598,6 @@
             border: 1px outset green;
         }
 
-        /*Main Image*/
-
-
-        .img2 {
-            /*position: absolute;
-            right: 15px;
-            bottom: 15px;
-            border: 1px outset green;
-            border-radius: 15%;
-            height: 150px;*/
-        }
-
-        /*.iconCall {
-            top: 80px;
-            left: 5px;
-        }*/
-
-       /* .mic-button {
-            position: absolute;
-            top: 180px;
-            left: 5px;
-            font-size: 13px;
-            padding: 5px 10px;
-        }
-        .video-button {
-            font-size: 13px;
-            padding: 5px 10px;
-        }
-        .decline-button {
-            font-size: 13px;
-            padding: 5px 10px;
-        }*/
-
         .dohLogo {
             position: relative;
             border: 1px outset transparent;
