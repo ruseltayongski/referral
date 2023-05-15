@@ -205,22 +205,22 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8" style="padding: 0;">
                 <div class="mainPic">
                     <div class="remotePlayerDiv">
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
-                    <div class="localPlayerDiv">
-                        <img :src="doctorUrl1" class="img2" alt="Image2">
-                    </div>
                     <div class="iconCall position-absolute">
-                        <button class="btn btn-success btn-lg bi-mic-fill mx-2 mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button" onclick="alert('Mic')"></button>
-                        <button class="btn btn-success btn-lg bi-camera-video-fill mx-2 video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" onclick="alert('Video Call')"></button>
-                        <button class="btn btn-danger  btn-lg bi-telephone-x-fill mx-2 decline-button" @click="leaveChannel" type="button"></button>
+                        <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
+                        <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
+                        <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                    </div>
+                    <div class="localPlayerDiv">
+                        <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2">
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="padding: 0;">
                 <div class="telemedForm">
                     <div class="row-fluid">
                         <div>
@@ -297,9 +297,6 @@
                                 <tr>
                                     <td colspan="12">File Attachments:
                                         <a :href="file_path" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ file_name }}</a>
-
-
-
                                     </td>
                                 </tr>
                                 <tr>
@@ -315,13 +312,11 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row prescription">
                     <div class="col">
                         <textarea class="form-control textArea" id="FormControlTextarea" rows="4"></textarea>
                     </div>
                 </div>
-
                 <div>
                     <button class="btn btn-success btn-md btn-block" type="button" onclick="alert('Successfuly Submit')">Submit</button>
                 </div>
@@ -331,25 +326,25 @@
 </template>
 
 <style>
-
     .container-fluid {
-        /*position: relative;*/
         border: 4px outset green;
         height: auto;
     }
+
     .mainPic {
         position: relative;
         border: 2px outset transparent;
-        height: 970px;
-    }
-    .remotePlayerLayer {
-        height: 963px;
-        width: 1240px;
-    }
-    .remotePlayerDiv {
-        height: 965px;
+        height: 100%;
         width: 100%;
-        position: absolute;
+    }
+
+    .remotePlayerLayer {
+        height: 960px;
+    }
+
+    .remotePlayerDiv {
+        height: 960px;
+        width: 100%;
         border: 2px outset transparent;
     }
 
@@ -368,12 +363,9 @@
         bottom: 20px;
         border: 2px outset green;
         border-radius: 32px;
-
     }
 
-    /*Main Image*/
     .img-fluid {
-        /*position: relative;*/
         border: 3px outset transparent;
         width: 100%;
         height: 963px;
@@ -382,30 +374,23 @@
         border-radius: 30px;
     }
     .iconCall {
-        /*position: absolute;*/
         border: 1px outset transparent;
-        width: 242px;
-        bottom: 120px;
-        left: 520px;
+        width: 100%;
+        bottom: 220px;
+        text-align: center;
     }
     .mic-button {
         border-radius: 50%;
-        border: 0;
-
-        /*font-size: 13px;
-        padding: 5px 10px;*/
     }
     .video-button {
         border-radius: 50%;
-        border: 0;
     }
     .decline-button {
         border-radius: 50%;
         border: 0;
-        /*height: 10%;
-        width: 30%;*/
     }
     .telemedForm {
+        position: relative;
         border: 2px outset black;
         margin-top: 5px;
         height: 797px;
@@ -464,7 +449,6 @@
     .btn {
         position: relative;
         margin-top: 5px;
-        /*margin-bottom: 5px;*/
     }
     .forDetails {
         color: #E18E0B;
@@ -475,7 +459,6 @@
     }
     .dateReferred {
         color: #E18E0B;
-        /*font-size: 14px;*/
     }
     .recoSummary {
         color: #E18E0B;
@@ -573,6 +556,41 @@
         background-color: lightgreen;
     }
 
+    @media (max-width: 390px) {
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            border: 1px outset transparent;
+            height: 100%;
+            width: auto;
+        }
+        .remotePlayerLayer {
+            height: 860px;
+        }
+
+        .remotePlayerDiv {
+            height: 860px;
+            width: 100%;
+            border: 2px outset transparent;
+        }
+    }
+
+    @media (max-width: 394px) {
+        .localPlayerLayer{
+            height: 170px;
+            width: 130px;
+        }
+        .img-fluid {
+            position: relative;
+            border: 1px outset transparent;
+            height: 100%;
+            width: auto;
+        }
+    }
+
 
 
     @media (min-width: 375px) and (max-width: 667px){
@@ -581,12 +599,7 @@
         }
 
         /*Main Image*/
-        .img-fluid {
-            position: relative;
-            border: 1px outset transparent;
-            height: 630px;
-            width: auto;
-        }
+
 
         .img2 {
             /*position: absolute;
