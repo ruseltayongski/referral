@@ -82,7 +82,6 @@
         created() {
             console.log(this.user)
             this.startBasicCall();
-            // Remove the video stream from the container.
         },
 
         methods: {
@@ -130,8 +129,8 @@
                         // Append the remote container to the page body.
                         document.body.append(remotePlayerContainer);
                         /*$(".divImage1").html(remotePlayerContainer)*/
-                        $(".mainPic").html(remotePlayerContainer)
-                        $(remotePlayerContainer).addClass("img-fluid")
+                        $(".remotePlayerDiv").html(remotePlayerContainer)
+                        $(remotePlayerContainer).addClass("remotePlayerLayer");
                         // Play the remote video track.
                         self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                     }
@@ -178,8 +177,8 @@
                 // Append the local video container to the page body.
                 document.body.append(localPlayerContainer);
                 /*$(".divImage2").html(localPlayerContainer)*/
-                $(".mainPic").html(localPlayerContainer)
-                $(localPlayerContainer).addClass("img2")
+                $(".localPlayerDiv").html(localPlayerContainer)
+                $(localPlayerContainer).addClass("localPlayerLayer")
                 // Publish the local audio and video tracks in the channel.
                 await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
                 // Play the local video track.
@@ -208,21 +207,21 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-
             <div class="col-md-8">
                 <div class="mainPic">
-                    <div>
-                        <img :src="doctorUrl" class="img-fluid position-relative" alt="Image1">
-                        <img :src="doctorUrl1" class="img2 position-absolute" alt="Image2">
-                        <div class="iconCall position-absolute">
-                            <button class="btn btn-success btn-lg bi-mic-fill mx-2 mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button" onclick="alert('Mic')"></button>
-                            <button class="btn btn-success btn-lg bi-camera-video-fill mx-2 video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" onclick="alert('Video Call')"></button>
-                            <button class="btn btn-danger  btn-lg bi-telephone-x-fill mx-2 decline-button" @click="leaveChannel" type="button"></button>
-                        </div>
+                    <div class="remotePlayerDiv">
+                        <img :src="doctorUrl" class="img-fluid" alt="Image1">
+                    </div>
+                    <div class="localPlayerDiv">
+                        <img :src="doctorUrl1" class="img2" alt="Image2">
+                    </div>
+                    <div class="iconCall position-absolute">
+                        <button class="btn btn-success btn-lg bi-mic-fill mx-2 mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button" onclick="alert('Mic')"></button>
+                        <button class="btn btn-success btn-lg bi-camera-video-fill mx-2 video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button" onclick="alert('Video Call')"></button>
+                        <button class="btn btn-danger  btn-lg bi-telephone-x-fill mx-2 decline-button" @click="leaveChannel" type="button"></button>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
                 <div class="telemedForm">
                     <div class="row-fluid">
@@ -343,13 +342,22 @@
     .mainPic {
         position: relative;
         border: 2px outset transparent;
-        /*height: 100%;*/
+        height: 100%;
+    }
+    .remotePlayerLayer {
+        height: 700px;
+        width: 500px;
+    }
+    .remotePlayerDiv {
+        height: 700px;
+        width: 500px;
+        position: absolute;
     }
     /*Main Image*/
     .img-fluid {
         /*position: relative;*/
         border: 3px outset transparent;
-        height: 100%;
+        /*height: 100%;*/
 
     }
     .iconCall {
@@ -376,12 +384,20 @@
         /*height: 10%;
         width: 30%;*/
     }
-    .img2 {
-        /*position: absolute;*/
+    .localPlayerLayer {
+        height: 300px;
+        width: 100px;
+        border-radius: 30px
+    }
+    .localPlayerDiv {
         right: 20px;
         bottom: 20px;
         border: 2px outset green;
         border-radius: 15%;
+        position: absolute;
+    }
+    .img2 {
+        border-radius: 30px;
     }
     .telemedForm {
         border: 2px outset black;
