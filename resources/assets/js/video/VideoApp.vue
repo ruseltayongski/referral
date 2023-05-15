@@ -195,6 +195,9 @@
             audioStreamingOnAnddOff() {
                 this.audioStreaming = this.audioStreaming ? false : true
                 this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+            },
+            formatTextWithLineBreaks(text) {
+                return text
             }
         },
 
@@ -283,7 +286,7 @@
                                     <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><br><br><span class="caseforDetails"> {{ form.case_summary }} </span></td>
+                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><br><br><span class="caseforDetails">{{ form.case_summary }}</span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><br><br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
@@ -456,6 +459,7 @@
     .caseforDetails {
         color: #E18E0B;
         line-height: 1.2;
+        white-space: pre-line;
     }
     .dateReferred {
         color: #E18E0B;
@@ -463,6 +467,7 @@
     .recoSummary {
         color: #E18E0B;
         line-height: 1.2;
+        white-space: pre-wrap;
     }
     .mdHcw {
         color: #E18E0B;
