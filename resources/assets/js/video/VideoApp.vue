@@ -128,7 +128,6 @@
                         /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                         // Append the remote container to the page body.
                         document.body.append(remotePlayerContainer);
-                        /*$(".divImage1").html(remotePlayerContainer)*/
                         $(".remotePlayerDiv").html(remotePlayerContainer)
                         $(remotePlayerContainer).addClass("remotePlayerLayer");
                         // Play the remote video track.
@@ -176,7 +175,6 @@
                 channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
                 // Append the local video container to the page body.
                 document.body.append(localPlayerContainer);
-                /*$(".divImage2").html(localPlayerContainer)*/
                 $(".localPlayerDiv").html(localPlayerContainer)
                 $(localPlayerContainer).addClass("localPlayerLayer")
                 // Publish the local audio and video tracks in the channel.
@@ -345,20 +343,43 @@
         height: 100%;
     }
     .remotePlayerLayer {
-        height: 700px;
-        width: 500px;
+        height: 913px;
+        width: 1240px;
     }
     .remotePlayerDiv {
-        height: 700px;
-        width: 500px;
+        height: 913px;
+        width: 100%;
         position: absolute;
+        border: 2px outset transparent;
     }
+
+    .localPlayerLayer {
+        height: 300px;
+        width: 250px;
+    }
+
+    .localPlayerLayer div{
+        border-radius: 30px;
+    }
+
+    .localPlayerDiv {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        border: 2px outset green;
+        border-radius: 32px;
+
+    }
+
     /*Main Image*/
     .img-fluid {
         /*position: relative;*/
         border: 3px outset transparent;
-        /*height: 100%;*/
-
+        width: 100%;
+        height: 910px;
+    }
+    .img2 {
+        border-radius: 30px;
     }
     .iconCall {
         /*position: absolute;*/
@@ -384,21 +405,9 @@
         /*height: 10%;
         width: 30%;*/
     }
-    .localPlayerLayer {
-        height: 300px;
-        width: 100px;
-        border-radius: 30px
-    }
-    .localPlayerDiv {
-        right: 20px;
-        bottom: 20px;
-        border: 2px outset green;
-        border-radius: 15%;
-        position: absolute;
-    }
-    .img2 {
-        border-radius: 30px;
-    }
+
+
+
     .telemedForm {
         border: 2px outset black;
         margin-top: 5px;
@@ -583,12 +592,12 @@
         }
 
         .img2 {
-            position: absolute;
+            /*position: absolute;
             right: 15px;
             bottom: 15px;
             border: 1px outset green;
             border-radius: 15%;
-            height: 150px;
+            height: 150px;*/
         }
 
         /*.iconCall {
