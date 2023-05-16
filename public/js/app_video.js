@@ -20158,85 +20158,66 @@ var _hoisted_61 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_62 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_64 = {
+var _hoisted_62 = {
   "class": "caseforDetails"
 };
-var _hoisted_65 = {
+var _hoisted_63 = {
   colspan: "12"
 };
 
-var _hoisted_66 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
+
+var _hoisted_65 = {
+  "class": "recoSummary"
+};
+var _hoisted_66 = {
+  colspan: "12"
+};
 
 var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_68 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
+var _hoisted_68 = {
+  "class": "forDetails"
+};
 var _hoisted_69 = {
-  "class": "recoSummary"
+  colspan: "12"
 };
 var _hoisted_70 = {
-  colspan: "12"
+  "class": "forDetails"
 };
 var _hoisted_71 = {
-  "class": "forDetails"
-};
-var _hoisted_72 = {
   colspan: "12"
 };
+var _hoisted_72 = ["href"];
 var _hoisted_73 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_74 = {
+  "class": "forDetails"
+};
+var _hoisted_75 = {
   colspan: "12"
 };
-var _hoisted_75 = ["href"];
 var _hoisted_76 = {
-  colspan: "12"
+  "class": "forDetails"
 };
 var _hoisted_77 = {
-  "class": "forDetails"
-};
-var _hoisted_78 = {
   colspan: "12"
 };
+
+var _hoisted_78 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 var _hoisted_79 = {
-  "class": "forDetails"
-};
-var _hoisted_80 = {
-  colspan: "12"
-};
-
-var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_82 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_83 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_84 = {
   "class": "mdHcw"
 };
 
-var _hoisted_85 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "row prescription"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "col"
@@ -20248,7 +20229,7 @@ var _hoisted_85 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_86 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "btn btn-success btn-md btn-block",
   type: "button",
   onclick: "alert('Successfuly Submit')"
@@ -20338,15 +20319,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_61, _hoisted_62, _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_62, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), _hoisted_66, _hoisted_67, _hoisted_68, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_63, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):"), _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_68, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_69, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_74, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachments: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachments: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     href: $data.file_path,
     id: "file_download",
     "class": "reason",
@@ -20357,13 +20338,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     download: ""
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name), 9
   /* TEXT, PROPS */
-  , _hoisted_75)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_76, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_77, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
+  , _hoisted_72)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_74, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_78, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_75, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_76, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_80, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), _hoisted_81, _hoisted_82, _hoisted_83, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_84, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_77, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), _hoisted_78, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1
   /* TEXT */
-  )])])])])])]), _hoisted_85, _hoisted_86])])]);
+  )])])])])])]), _hoisted_80, _hoisted_81])])]);
 }
 
 /***/ }),
@@ -22346,7 +22327,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container-fluid {\r\n        border: 4px outset green;\r\n        height: auto;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 960px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        border: 2px outset transparent;\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 30px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        bottom: 20px;\r\n        border: 2px outset green;\r\n        border-radius: 32px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\r\n        height: 963px;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        height: 797px;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 25px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        height: 664px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: .2;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\r\n    /*------------------------------------------------------------------------------------*/\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\n@media (max-width: 390px) {\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            height: 100%;\r\n            width: auto;\n}\n.remotePlayerLayer {\r\n            height: 860px;\n}\n.remotePlayerDiv {\r\n            height: 860px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\n}\n}\n@media (max-width: 394px) {\n.localPlayerLayer{\r\n            height: 170px;\r\n            width: 130px;\n}\n.img-fluid {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            height: 100%;\r\n            width: auto;\n}\n}\n@media (min-width: 375px) and (max-width: 667px){\n.container-fluid {\r\n            border: 1px outset green;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 15px;\r\n            left: 25px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.tableForm {\r\n            font-size: 10px;\n}\n}\r\n    \r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.container-fluid {\r\n        border: 4px outset green;\r\n        height: auto;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 960px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        border: 2px outset transparent;\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 30px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        bottom: 20px;\r\n        border: 2px outset green;\r\n        border-radius: 32px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\r\n        height: 963px;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        height: 797px;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 25px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        height: 664px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: 1;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\r\n    /*------------------------------------------------------------------------------------*/\n.mobile-view {\r\n        display: none;\r\n        visibility: hidden;\n}\n@media only screen and (max-width: 720px) {\n.file-upload {\r\n            background-color: #ffffff;\r\n            width: 300px;\r\n            margin: 0 auto;\r\n            padding: 20px;\n}\n.web-view {\r\n            display: none;\r\n            visibility: hidden;\n}\n.mobile-view {\r\n            display: block;\r\n            visibility: visible;\n}\n}\n#telemedicine {\r\n        border-color:#00a65a;\r\n        border: none;\r\n        padding: 7px;\n}\n#telemedicine:hover {\r\n        background-color: lightgreen;\n}\n@media (max-width: 390px) {\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            height: 100%;\r\n            width: auto;\n}\n.remotePlayerLayer {\r\n            height: 860px;\n}\n.remotePlayerDiv {\r\n            height: 860px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\n}\n}\n@media (max-width: 394px) {\n.localPlayerLayer{\r\n            height: 170px;\r\n            width: 130px;\n}\n.img-fluid {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            height: 100%;\r\n            width: auto;\n}\n}\n@media (min-width: 375px) and (max-width: 667px){\n.container-fluid {\r\n            border: 1px outset green;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 15px;\r\n            left: 25px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.tableForm {\r\n            font-size: 10px;\n}\n}\r\n    \r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -24257,6 +24238,11 @@ function compileToFunction(template, options) {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/nonce */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nc = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

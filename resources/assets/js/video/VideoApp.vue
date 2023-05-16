@@ -286,13 +286,13 @@
                                     <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><br><br><span class="caseforDetails">{{ form.case_summary }}</span></td>
+                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="caseforDetails">{{ form.case_summary }}</span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><br><br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
+                                    <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):<br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">ICD-10 Code and Description: <span class="forDetails"> {{ form.other_diagnoses }}</span></td>
+                                    <td colspan="12">ICD-10 Code and Description: <br><span class="forDetails"> {{ form.other_diagnoses }}</span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="12">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
@@ -309,7 +309,7 @@
                                     <td colspan="12">Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><br><br><span class="mdHcw"> {{ form.md_referred }} </span></td>
+                                    <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><span class="mdHcw"> {{ form.md_referred }} </span></td>
                                 </tr>
                             </table>
                         </div>
@@ -430,7 +430,7 @@
         height: 664px;
         width: auto;
         text-align: left;
-        line-height: .2;
+        line-height: 1;
         font-weight: bold;
         font-size: 14px;
         font-family: Calibri;
