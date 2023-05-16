@@ -10,7 +10,7 @@
             return {
                 baseUrl: $("#broadcasting_url").val(),
                 doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor5.png",
-                doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor1.png",
+                doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor6.png",
                 declineUrl: $("#broadcasting_url").val()+"/resources/img/video/decline.png",
                 videoCallUrl: $("#broadcasting_url").val()+"/resources/img/video/videocall.png",
                 micUrl: $("#broadcasting_url").val()+"/resources/img/video/mic.png",
@@ -45,7 +45,8 @@
                     remoteVideoTrack: null,
                     // A variable to hold the remote user id.s
                     remoteUid: null
-                }
+                },
+                showDiv: true,
             }
         },
         mounted() {
@@ -76,8 +77,14 @@
                 .catch((error) => {
                     console.log(error);
                 });
-        },
 
+            this.hideDivAfterTimeout();
+            window.addEventListener('click', this.showDivAgain);
+        },
+        beforeUnmount() {
+            this.clearTimeout();
+            window.removeEventListener('click', this.showDivAgain);
+        },
         props : ["user"],
         created() {
             console.log(this.user)
@@ -129,6 +136,7 @@
                         // Append the remote container to the page body.
                         document.body.append(remotePlayerContainer);
                         $(".remotePlayerDiv").html(remotePlayerContainer)
+                        $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
                         $(remotePlayerContainer).addClass("remotePlayerLayer");
                         // Play the remote video track.
                         self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
@@ -198,10 +206,23 @@
             },
             formatTextWithLineBreaks(text) {
                 return text
+            },
+
+            hideDivAfterTimeout() {
+                setTimeout(() => {
+                    this.showDiv = false;
+                }, 5000);
+            },
+            showDivAgain() {
+                this.showDiv = true;
+                this.hideDivAfterTimeout();
+            },
+            clearTimeout() {
+                // Clear the timeout if the component is about to be unmounted
+                // to prevent memory leaks
+                clearTimeout(this.timeoutId);
             }
         },
-
-
     }
 </script>
 
@@ -213,7 +234,7 @@
                     <div class="remotePlayerDiv">
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
-                    <div class="iconCall position-absolute">
+                    <div class="iconCall position-absolute" v-if="showDiv">
                         <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                         <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                         <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
@@ -333,41 +354,34 @@
         border: 4px outset green;
         height: auto;
     }
-
     .mainPic {
         position: relative;
         border: 2px outset transparent;
         height: 100%;
         width: 100%;
     }
-
     .remotePlayerLayer {
         height: 960px;
     }
-
     .remotePlayerDiv {
         height: 960px;
         width: 100%;
         border: 2px outset transparent;
     }
-
     .localPlayerLayer {
         height: 300px;
         width: 250px;
     }
-
     .localPlayerLayer div{
-        border-radius: 30px;
+        border-radius: 10px;
     }
-
     .localPlayerDiv {
         position: absolute;
         right: 20px;
         bottom: 20px;
         border: 2px outset green;
-        border-radius: 32px;
+        border-radius: 11px;
     }
-
     .img-fluid {
         border: 3px outset transparent;
         width: 100%;
@@ -375,11 +389,18 @@
     .img2 {
         border-radius: 30px;
     }
+
     .iconCall {
         border: 1px outset transparent;
         width: 100%;
         bottom: 220px;
         text-align: center;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .iconCall.hidden {
+        display: none;
+        opacity: 0;
     }
     .mic-button {
         border-radius: 50%;
@@ -531,11 +552,14 @@
     /*------------------------------------------------------------------------------------*/
     /*X-Small devices (portrait phones, less than 576px)*/
     @media (max-width: 575.98px) {
+        .col-lg-8 {
+            background-color: black;
+        }
         .iconCall {
             bottom: 20px;
         }
         .container-fluid {
-            border: 1px outset green;
+           border: 1px outset green;
         }
         .dohLogo {
             position: relative;
@@ -579,16 +603,15 @@
         }
         .img-fluid {
             position: relative;
-            border: 1px outset transparent;
-            height: 100%;
-            width: auto;
+            /*border: 1px outset transparent;*/
+            height: 32vh;
+            width: 100%;
         }
         .remotePlayerLayer {
-            height: 860px;
+            height: 660px;
         }
-
         .remotePlayerDiv {
-            height: 860px;
+            height: 660px;
             width: 100%;
             border: 2px outset transparent;
             display: flex;
@@ -597,14 +620,11 @@
             /*background-color:red;*/
         }
         .img2 {
-            height: 150px;
+            height: 120px;
             width: 110px;
         }
         .remotePlayerLayer div video {
             object-fit: contain !important;
-        }
-        .img-fluid {
-            height: 40vh;
         }
     }
     /*Small devices (landscape phones, less than 768px)*/
@@ -636,6 +656,7 @@
             height: 600px;
         }
         .img-fluid {
+            /*background-color: blue;*/
             height: 40vh;
         }
     }
