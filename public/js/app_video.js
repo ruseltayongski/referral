@@ -19713,7 +19713,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       baseUrl: $("#broadcasting_url").val(),
-      doctorUrl: $("#broadcasting_url").val() + "/resources/img/video/Doctor4.jpg",
+      doctorUrl: $("#broadcasting_url").val() + "/resources/img/video/Doctor5.png",
       doctorUrl1: $("#broadcasting_url").val() + "/resources/img/video/Doctor1.png",
       declineUrl: $("#broadcasting_url").val() + "/resources/img/video/decline.png",
       videoCallUrl: $("#broadcasting_url").val() + "/resources/img/video/videocall.png",
