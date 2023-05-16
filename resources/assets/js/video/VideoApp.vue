@@ -208,7 +208,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8" style="padding: 0;">
+            <div class="col-lg-8" style="padding: 0;">
                 <div class="mainPic">
                     <div class="remotePlayerDiv">
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
@@ -223,7 +223,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" style="padding: 0;">
+            <div class="col-lg-4" style="padding: 0;">
                 <div class="telemedForm">
                     <div class="row-fluid">
                         <div>
@@ -529,80 +529,14 @@
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
     /*------------------------------------------------------------------------------------*/
-
-    .mobile-view {
-        display: none;
-        visibility: hidden;
-    }
-    @media only screen and (max-width: 720px) {
-        .file-upload {
-            background-color: #ffffff;
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
+    /*X-Small devices (portrait phones, less than 576px)*/
+    @media (max-width: 575.98px) {
+        .iconCall {
+            bottom: 20px;
         }
-
-        .web-view {
-            display: none;
-            visibility: hidden;
-        }
-
-        .mobile-view {
-            display: block;
-            visibility: visible;
-        }
-    }
-    #telemedicine {
-        border-color:#00a65a;
-        border: none;
-        padding: 7px;
-    }
-    #telemedicine:hover {
-        background-color: lightgreen;
-    }
-
-    @media (max-width: 390px) {
-        .localPlayerLayer{
-            height: 150px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            border: 1px outset transparent;
-            height: 100%;
-            width: auto;
-        }
-        .remotePlayerLayer {
-            height: 860px;
-        }
-
-        .remotePlayerDiv {
-            height: 860px;
-            width: 100%;
-            border: 2px outset transparent;
-        }
-    }
-
-    @media (max-width: 394px) {
-        .localPlayerLayer{
-            height: 170px;
-            width: 130px;
-        }
-        .img-fluid {
-            position: relative;
-            border: 1px outset transparent;
-            height: 100%;
-            width: auto;
-        }
-    }
-
-
-
-    @media (min-width: 375px) and (max-width: 667px){
         .container-fluid {
             border: 1px outset green;
         }
-
         .dohLogo {
             position: relative;
             border: 1px outset transparent;
@@ -635,7 +569,62 @@
         .tableForm {
             font-size: 10px;
         }
-    }
-    
+        .localPlayerDiv {
+            top: 20px;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            border: 1px outset transparent;
+            height: 100%;
+            width: auto;
+        }
+        .remotePlayerLayer {
+            height: 860px;
+        }
 
+        .remotePlayerDiv {
+            height: 860px;
+            width: 100%;
+            border: 2px outset transparent;
+            background-color:red;
+        }
+        .img2 {
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*Small devices (landscape phones, less than 768px)*/
+    @media (max-width: 767.98px) {
+
+    }
+    /*Medium devices (tablets, less than 992px)*/
+    @media (max-width: 991.98px) {
+
+    }
+    /*Large devices (desktops, less than 1200px)*/
+    @media (max-width: 1199.98px) {
+
+    }
+    /*X-Large devices (large desktops, less than 1400px)*/
+    @media (max-width: 1399.98px) {
+
+    }
+
+    @media (max-width: 321px) {
+        .remotePlayerDiv {
+            height: 600px;
+            background-color:blue;
+        }
+        .remotePlayerLayer {
+            height: 600px;
+        }
+    }
 </style>
