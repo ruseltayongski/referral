@@ -19693,7 +19693,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       increment_referral: Number,
       reco_count: $("#reco_count_val").val(),
-      audioVideoUrl: $("#broadcasting_url").val() + "/public/facebook.mp3"
+      audioVideoUrl: $("#broadcasting_url").val() + "/public/facebook.mp3",
+      tracking_id: Number,
+      referral_code: String
     };
   },
   methods: {
@@ -19719,8 +19721,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 self = _this;
                 setTimeout(function () {
                   console.log("pause");
+                  $("#video-call-confirmation").modal('toggle');
                   self.$refs.audioVideo.pause();
-                }, 20000);
+                }, 60000);
 
               case 4:
               case "end":
@@ -19980,24 +19983,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return '<br><a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + patient_code + '" class="btn btn-xs btn-warning" target="_blank">\n' + '                                                <i class="fa fa-stethoscope"></i> Track\n' + '                                            </a>';
     },
     callADoctor: function callADoctor(tracking_id, code) {
+      this.tracking_id = tracking_id;
+      this.referral_code = code;
       this.playVideoCallAudio();
-      var self = this;
-      Lobibox.confirm({
-        msg: "Do you want to accept a call?",
-        callback: function callback($this, type, ev) {
-          if (type === 'yes') {
-            window.open($("#broadcasting_url").val() + "/doctor/telemedicine?id=" + tracking_id + "&code=" + code, "_blank", "fullscreen=yes");
-          }
-
-          self.$refs.audioVideo.pause();
-        }
+      $(document).ready(function () {
+        console.log("ready!");
+        $("#video-call-confirmation").modal('toggle');
       });
+      /*this.playVideoCallAudio();
+      let self = this;
+      Lobibox.confirm({
+          msg: "Do you want to accept a call?",
+          callback: function ($this, type, ev) {
+              if (type === 'yes') {
+                  window.open($("#broadcasting_url").val()+"/doctor/telemedicine?id="+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
+              }
+              self.$refs.audioVideo.pause();
+          }
+      });*/
+    },
+    acceptCall: function acceptCall() {
+      this.$refs.audioVideo.pause();
+      window.open($("#broadcasting_url").val() + "/doctor/telemedicine?id=" + this.tracking_id + "&code=" + this.referral_code, "_blank", "fullscreen=yes");
+    },
+    cancelCall: function cancelCall() {
+      this.$refs.audioVideo.pause();
     }
   },
   created: function created() {
     var _this2 = this;
 
-    console.log("VUE.JS 3.2.31!!!");
+    /*$(document).ready(function() {
+        console.log( "ready!" );
+        $("#video-call-confirmation").modal('show');
+    });*/
+    console.log("VUE.JS 3.2.3");
     Echo.join('chat').here(function (users) {
       //console.log(users)
       var websocket_element = $(".websocket_status");
@@ -20258,14 +20278,72 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = ["src"];
+var _hoisted_2 = {
+  "class": "modal fade",
+  role: "dialog",
+  id: "video-call-confirmation"
+};
+var _hoisted_3 = {
+  "class": "modal-dialog modal-sm",
+  role: "document"
+};
+var _hoisted_4 = {
+  "class": "modal-content"
+};
+
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "modal-body text-center"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "text-danger text-bold",
+  style: {
+    "font-size": "1.3em",
+    "padding": "3px"
+  }
+}, "Do you wish to accept the call?")], -1
+/* HOISTED */
+);
+
+var _hoisted_6 = {
+  "class": "modal-footer"
+};
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fa fa-times"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "fa fa-trash"
+}, null, -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("audio", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "audioVideo",
     src: $data.audioVideoUrl,
     loop: ""
   }, null, 8
   /* PROPS */
-  , _hoisted_1);
+  , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-default btn-sm",
+    "data-dismiss": "modal",
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.cancelCall && $options.cancelCall.apply($options, arguments);
+    })
+  }, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" No")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-danger btn-sm",
+    "data-toggle": "modal",
+    "data-dismiss": "modal",
+    onClick: _cache[1] || (_cache[1] = function () {
+      return $options.acceptCall && $options.acceptCall.apply($options, arguments);
+    })
+  }, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Yes")])])])])])], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),
