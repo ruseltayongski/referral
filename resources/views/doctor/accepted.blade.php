@@ -268,7 +268,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                 "trigger_by" : "{{ $user->id }}"
             };
             $.post(url,json,function(){
-                console.log("join to call");
+
             });
             window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
         }

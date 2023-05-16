@@ -59,10 +59,10 @@
                     else if(response.ageType === "m")
                         this.patient_age =  response.age + " Months Old"
 
-                    if(count(response.file_path) > 1)
+                    /*if(count(response.file_path) > 1)
                         this.file_path = "File Attachments:" + response.file_path
                     else
-                        this.file_path = "File Attachment:" + response.file_path
+                        this.file_path = "File Attachment:" + response.file_path*/
 
                     /*for(i = 0; i < count(response.file_path); i++)
                         this.file_path = response.file_path*/
@@ -208,7 +208,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8" style="padding: 0;">
+            <div class="col-lg-8">
                 <div class="mainPic">
                     <div class="remotePlayerDiv">
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
@@ -223,7 +223,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4" style="padding: 0;">
+            <div class="col-lg-4">
                 <div class="telemedForm">
                     <div class="row-fluid">
                         <div>
@@ -371,7 +371,6 @@
     .img-fluid {
         border: 3px outset transparent;
         width: 100%;
-        height: 963px;
     }
     .img2 {
         border-radius: 30px;
@@ -397,6 +396,7 @@
         border: 2px outset black;
         margin-top: 5px;
         height: 797px;
+        padding: 0;
     }
     .dohLogo {
         position: relative;
@@ -591,7 +591,10 @@
             height: 860px;
             width: 100%;
             border: 2px outset transparent;
-            background-color:red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /*background-color:red;*/
         }
         .img2 {
             height: 150px;
@@ -599,6 +602,9 @@
         }
         .remotePlayerLayer div video {
             object-fit: contain !important;
+        }
+        .img-fluid {
+            height: 40vh;
         }
     }
     /*Small devices (landscape phones, less than 768px)*/
@@ -620,11 +626,17 @@
 
     @media (max-width: 321px) {
         .remotePlayerDiv {
-            height: 600px;
-            background-color:blue;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80vh; /* Adjust the height as needed */
+            /*background-color:blue;*/
         }
         .remotePlayerLayer {
             height: 600px;
+        }
+        .img-fluid {
+            height: 40vh;
         }
     }
 </style>
