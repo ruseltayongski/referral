@@ -19714,6 +19714,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {},
   data: function data() {
     return {
+      ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
       baseUrl: $("#broadcasting_url").val(),
       doctorUrl: $("#broadcasting_url").val() + "/resources/img/video/Doctor5.png",
       doctorUrl1: $("#broadcasting_url").val() + "/resources/img/video/Doctor6.png",
@@ -19750,7 +19751,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // A variable to hold the remote user id.s
         remoteUid: null
       },
-      showDiv: false
+      showDiv: false,
+      prescription: "",
+      disabledPrescription: false
     };
   },
   mounted: function mounted() {
@@ -19780,12 +19783,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     window.addEventListener('click', this.showDivAgain);
   },
   beforeUnmount: function beforeUnmount() {
-    this.clearTimeout();
+    //this.clearTimeout();
     window.removeEventListener('click', this.showDivAgain);
   },
   props: ["user"],
   created: function created() {
-    console.log(this.user);
+    var self = this;
+    $(document).ready(function () {
+      console.log("ready!");
+      self.ringingPhoneFunc();
+    });
     this.startBasicCall();
   },
   methods: {
@@ -19848,6 +19855,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                               /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                               // Append the remote container to the page body.
 
+                              self.$refs.ringingPhone.pause();
                               document.body.append(remotePlayerContainer);
                               $(".remotePlayerDiv").html(remotePlayerContainer);
                               $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
@@ -19969,7 +19977,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       setTimeout(function () {
         $(".iconCall").removeClass("fade-in");
         _this3.showDiv = false;
-      }, 6000);
+      }, 10000);
     },
     showDivAgain: function showDivAgain() {
       this.showDiv = true;
@@ -19989,7 +19997,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // Clear the timeout if the component is about to be unmounted
       // to prevent memory leaks
       clearTimeout(this.timeoutId);
-    })
+    }),
+    ringingPhoneFunc: function ringingPhoneFunc() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var self;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return _this4.$refs.ringingPhone.play();
+
+              case 2:
+                self = _this4;
+                setTimeout(function () {
+                  console.log("pause");
+                  self.$refs.ringingPhone.pause();
+                }, 60000);
+
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    submitPrescription: function submitPrescription() {
+      if (this.prescription) {
+        this.disabledPrescription = true;
+        Lobibox.alert("success", {
+          msg: "Successfully submitted prescription!"
+        });
+      }
+    }
   }
 });
 
@@ -20008,37 +20051,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = {
+var _hoisted_1 = ["src"];
+var _hoisted_2 = {
   "class": "container-fluid"
 };
-var _hoisted_2 = {
+var _hoisted_3 = {
   "class": "row"
 };
-var _hoisted_3 = {
+var _hoisted_4 = {
   "class": "col-lg-8"
 };
-var _hoisted_4 = {
+var _hoisted_5 = {
   "class": "mainPic"
 };
-var _hoisted_5 = {
+var _hoisted_6 = {
   "class": "remotePlayerDiv"
 };
-var _hoisted_6 = ["src"];
-var _hoisted_7 = {
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  id: "calling"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Calling...")], -1
+/* HOISTED */
+);
+
+var _hoisted_8 = ["src"];
+var _hoisted_9 = {
   key: 0,
   "class": "iconCall position-absolute fade-in"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "bi-mic-fill"
-}, null, -1
-/* HOISTED */
-);
-
-var _hoisted_9 = [_hoisted_8];
-
 var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "bi-camera-video-fill"
+  "class": "bi-mic-fill"
 }, null, -1
 /* HOISTED */
 );
@@ -20046,40 +20089,42 @@ var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_11 = [_hoisted_10];
 
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "bi-telephone-x-fill"
+  "class": "bi-camera-video-fill"
 }, null, -1
 /* HOISTED */
 );
 
 var _hoisted_13 = [_hoisted_12];
-var _hoisted_14 = {
+
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "bi-telephone-x-fill"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_15 = [_hoisted_14];
+var _hoisted_16 = {
   "class": "localPlayerDiv"
 };
-var _hoisted_15 = ["src"];
-var _hoisted_16 = {
+var _hoisted_17 = ["src"];
+var _hoisted_18 = {
   "class": "col-lg-4"
 };
-var _hoisted_17 = {
+var _hoisted_19 = {
   "class": "telemedForm"
 };
-var _hoisted_18 = {
+var _hoisted_20 = {
   "class": "row-fluid"
 };
-var _hoisted_19 = ["src"];
+var _hoisted_21 = ["src"];
 
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\"><p>Republic of the Philippines</p><p>DEPARTMENT OF HEALTH</p><p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p><p>Official Website: <span style=\"color:blue;\">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p></div><div class=\"clinical\"><span style=\"color:#4CAF50;\"><b>CLINICAL REFERRAL FORM</b></span></div>", 2);
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\"><p>Republic of the Philippines</p><p>DEPARTMENT OF HEALTH</p><p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p><p>Official Website: <span style=\"color:blue;\">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p></div><div class=\"clinical\"><span style=\"color:#4CAF50;\"><b>CLINICAL REFERRAL FORM</b></span></div>", 2);
 
-var _hoisted_22 = {
+var _hoisted_24 = {
   "class": "tableForm"
 };
-var _hoisted_23 = {
-  "class": "table table-striped formTable"
-};
-var _hoisted_24 = {
-  colspan: "12"
-};
 var _hoisted_25 = {
-  "class": "forDetails"
+  "class": "table table-striped formTable"
 };
 var _hoisted_26 = {
   colspan: "12"
@@ -20094,7 +20139,7 @@ var _hoisted_29 = {
   "class": "forDetails"
 };
 var _hoisted_30 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_31 = {
   "class": "forDetails"
@@ -20106,25 +20151,25 @@ var _hoisted_33 = {
   "class": "forDetails"
 };
 var _hoisted_34 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_35 = {
   "class": "forDetails"
 };
 var _hoisted_36 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_37 = {
-  "class": "dateReferred"
+  "class": "forDetails"
 };
 var _hoisted_38 = {
   colspan: "6"
 };
 var _hoisted_39 = {
-  "class": "forDetails"
+  "class": "dateReferred"
 };
 var _hoisted_40 = {
-  colspan: "4"
+  colspan: "6"
 };
 var _hoisted_41 = {
   "class": "forDetails"
@@ -20142,7 +20187,7 @@ var _hoisted_45 = {
   "class": "forDetails"
 };
 var _hoisted_46 = {
-  colspan: "6"
+  colspan: "4"
 };
 var _hoisted_47 = {
   "class": "forDetails"
@@ -20166,7 +20211,7 @@ var _hoisted_53 = {
   "class": "forDetails"
 };
 var _hoisted_54 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_55 = {
   "class": "forDetails"
@@ -20186,52 +20231,52 @@ var _hoisted_59 = {
 var _hoisted_60 = {
   colspan: "12"
 };
-
-var _hoisted_61 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_62 = {
-  "class": "caseforDetails"
-};
-var _hoisted_63 = {
-  colspan: "12"
-};
-
-var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_65 = {
-  "class": "recoSummary"
-};
-var _hoisted_66 = {
-  colspan: "12"
-};
-
-var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
-var _hoisted_68 = {
+var _hoisted_61 = {
   "class": "forDetails"
 };
-var _hoisted_69 = {
+var _hoisted_62 = {
   colspan: "12"
 };
+
+var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_64 = {
+  "class": "caseforDetails"
+};
+var _hoisted_65 = {
+  colspan: "12"
+};
+
+var _hoisted_66 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_67 = {
+  "class": "recoSummary"
+};
+var _hoisted_68 = {
+  colspan: "12"
+};
+
+var _hoisted_69 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 var _hoisted_70 = {
   "class": "forDetails"
 };
 var _hoisted_71 = {
   colspan: "12"
 };
-var _hoisted_72 = ["href"];
+var _hoisted_72 = {
+  "class": "forDetails"
+};
 var _hoisted_73 = {
   colspan: "12"
 };
-var _hoisted_74 = {
-  "class": "forDetails"
-};
+var _hoisted_74 = ["href"];
 var _hoisted_75 = {
   colspan: "12"
 };
@@ -20241,47 +20286,52 @@ var _hoisted_76 = {
 var _hoisted_77 = {
   colspan: "12"
 };
-
-var _hoisted_78 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
-
+var _hoisted_78 = {
+  "class": "forDetails"
+};
 var _hoisted_79 = {
-  "class": "mdHcw"
+  colspan: "12"
 };
 
-var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "row prescription"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "col"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
-  "class": "form-control textArea",
-  id: "FormControlTextarea",
-  rows: "4"
-})])], -1
+var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_81 = {
+  "class": "mdHcw"
+};
+var _hoisted_82 = {
+  "class": "row prescription"
+};
+var _hoisted_83 = {
+  "class": "col"
+};
+var _hoisted_84 = ["disabled"];
+var _hoisted_85 = {
+  key: 0,
   "class": "btn btn-success btn-md btn-block",
   type: "button",
-  onclick: "alert('Successfuly Submit')"
-}, "Submit")], -1
-/* HOISTED */
-);
-
+  disabled: ""
+};
+var _hoisted_86 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+    ref: "ringingPhone",
+    src: $data.ringingPhoneUrl,
+    loop: ""
+  }, null, 8
+  /* PROPS */
+  , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
     "class": "img-fluid",
     alt: "Image1"
   }, null, 8
   /* PROPS */
-  , _hoisted_6)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+  , _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
     name: "fade"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      return [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg mic-button", {
           'mic-button-slash': !$data.audioStreaming
         }]),
@@ -20289,7 +20339,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.audioStreamingOnAnddOff && $options.audioStreamingOnAnddOff.apply($options, arguments);
         }),
         type: "button"
-      }, _hoisted_9, 2
+      }, _hoisted_11, 2
       /* CLASS */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg video-button", {
@@ -20299,7 +20349,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.videoStreamingOnAndOff && $options.videoStreamingOnAndOff.apply($options, arguments);
         }),
         type: "button"
-      }, _hoisted_11, 2
+      }, _hoisted_13, 2
       /* CLASS */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-lg decline-button",
@@ -20307,69 +20357,69 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
         }),
         type: "button"
-      }, _hoisted_13)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      }, _hoisted_15)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1
     /* STABLE */
 
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
     alt: "Image2"
   }, null, 8
   /* PROPS */
-  , _hoisted_15)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  , _hoisted_17)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image3",
     "class": "dohLogo"
   }, null, 8
   /* PROPS */
-  , _hoisted_19)]), _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
+  , _hoisted_21)]), _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring Facility: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Facility Contact #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Referred to: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Department: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Department: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Referred (ReCo): "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred:"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Date/Time Transferred:"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Patient: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Age: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Age: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Sex: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Sex: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Address: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Philhealth #: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Covid Number: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Clinical Status: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Surviellance Category: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_62, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_63, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):"), _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):"), _hoisted_66, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_68, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("ICD-10 Code and Description: "), _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_69, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Reason for referral: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_72, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachments: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Attachments: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     href: $data.file_path,
     id: "file_download",
     "class": "reason",
@@ -20380,13 +20430,35 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     download: ""
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name), 9
   /* TEXT, PROPS */
-  , _hoisted_72)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_74, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
+  , _hoisted_74)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_75, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_76, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_75, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_76, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_77, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Contact # of Referring MD/HCW: "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_78, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_77, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), _hoisted_78, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_79, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), _hoisted_80, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_81, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1
   /* TEXT */
-  )])])])])])]), _hoisted_80, _hoisted_81])])]);
+  )])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_82, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_83, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+    "class": "form-control textArea",
+    id: "FormControlTextarea",
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+      return $data.prescription = $event;
+    }),
+    rows: "4",
+    disabled: $data.disabledPrescription
+  }, null, 8
+  /* PROPS */
+  , _hoisted_84), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.prescription]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.disabledPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_85, "Successfully Submit Prescription!")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
+    "class": "btn btn-success btn-md btn-block",
+    type: "button",
+    onClick: _cache[4] || (_cache[4] = function ($event) {
+      return $options.submitPrescription();
+    }),
+    disabled: $data.disabledPrescription
+  }, "Submit", 8
+  /* PROPS */
+  , _hoisted_86))])])])])], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),
@@ -22369,7 +22441,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter,\r\n    .fade-leave-to {\r\n        -webkit-animation: fadeOut 2s;\r\n                animation: fadeOut 2s;\n}\n.fade-in {\r\n        -webkit-animation: fadeIn 2s;\r\n                animation: fadeIn 2s;\n}\n@-webkit-keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@-webkit-keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n.container-fluid {\r\n        border: 4px outset green;\r\n        /*height: auto;*/\r\n        height: 978px;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 966px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        /*border: 2px outset transparent;*/\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 10px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        /*bottom: 20px;*/\r\n        bottom: 10px;\r\n        border: 2px outset green;\r\n        border-radius: 11px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\r\n        opacity: 1;\r\n        transition: opacity 0.5s ease-in-out;\n}\n.iconCall.hidden {\r\n        display: none;\r\n        opacity: 0;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        /*height: 797px;*/\r\n        height: 790px;\r\n        padding: 0;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 28px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        /*height: 664px;*/\r\n        height: 655px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: 1.2;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\r\n\r\n    /*@media (max-width: 321px) {\r\n        .remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh;\r\n            background-color:blue;\r\n        }\r\n        .remotePlayerLayer {\r\n            height: 600px;\r\n        }\r\n        .img-fluid {\r\n            !*background-color: blue;*!\r\n            height: 40vh;\r\n        }\r\n    }*/\r\n\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 375px) and (max-width: 375px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n           border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 11px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 38vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 660px;*/\r\n            height: 614px;\n}\n.remotePlayerDiv {\r\n            height: 662px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            /*height: 154px;\r\n            width: 114px;*/\r\n            /*height: 154px;\r\n            width: 114px;*/\r\n\r\n            height: 18vh;\r\n            width: 100%;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 414px) and (max-width: 414px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 11px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 52px;\r\n            width: 56px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 30px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 45px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.img2 {\r\n           /* height: 120px;\r\n            width: 110px;*/\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 843px;\n}\n.remotePlayerDiv {\r\n            /*!*height: 660px;*!*/\r\n            height: 891px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 390px) and (max-width: 390px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 16px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 614px;*/\r\n            height: 791px;\n}\n.remotePlayerDiv {\r\n            height: 840px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 393px) and (max-width: 393px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 16px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            height: 799px;\n}\n.remotePlayerDiv {\r\n            height: 847px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 360px) and (max-width: 360px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 3px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 34vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            height: 688px;\n}\n.remotePlayerDiv {\r\n            height: 736px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            height: 18vh;\r\n            width: 100%;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 412px) and (max-width: 412px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 11px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 52px;\r\n            width: 56px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 30px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 45px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 32vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 863px;\n}\n.remotePlayerDiv {\r\n            height: 911px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 820px) and (max-width: 820px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n       /* .telemedForm {\r\n            height: 766px;\r\n        }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 635px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 120px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 20px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 1128px;\n}\n.remotePlayerDiv {\r\n            height: 1176px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 768px) and (max-width: 768px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n        /* .telemedForm {\r\n             height: 766px;\r\n         }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 635px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 18px;\r\n            left: 90px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 20px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 972px;\n}\n.remotePlayerDiv {\r\n            height: 1020px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 912px) and (max-width: 912px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n        /* .telemedForm {\r\n             height: 766px;\r\n         }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 642px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 15px;\r\n            left: 155px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 13px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 1316px;\n}\n.remotePlayerDiv {\r\n            height: 1364px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    /*------------------------------------------------------------------------------------*/\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (max-width: 575.98px) {\n}\r\n    /*Small devices (landscape phones, less than 768px)*/\n@media (max-width: 767.98px) {\n}\r\n    /*Medium devices (tablets, less than 992px)*/\n@media (max-width: 991.98px) {\n}\r\n    /*Large devices (desktops, less than 1200px)*/\n@media (max-width: 1199.98px) {\n}\r\n    /*X-Large devices (large desktops, less than 1400px)*/\n@media (max-width: 1399.98px) {\n}\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter,\r\n    .fade-leave-to {\r\n        -webkit-animation: fadeOut 2s;\r\n                animation: fadeOut 2s;\n}\n.fade-in {\r\n        -webkit-animation: fadeIn 2s;\r\n                animation: fadeIn 2s;\n}\n@-webkit-keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@-webkit-keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n.container-fluid {\r\n        border: 4px outset green;\r\n        /*height: auto;*/\r\n        height: 978px;\n}\n#calling {\r\n        display: flex;\r\n        position: absolute;\r\n        text-align: center;\r\n        align-items: center;\r\n        justify-content: center;\r\n        width: 100%;\r\n        height: 100%;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 966px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        /*border: 2px outset transparent;*/\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 10px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        /*bottom: 20px;*/\r\n        bottom: 10px;\r\n        border: 2px outset green;\r\n        border-radius: 11px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\r\n        opacity: 1;\r\n        transition: opacity 0.5s ease-in-out;\n}\n.iconCall.hidden {\r\n        display: none;\r\n        opacity: 0;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        /*height: 797px;*/\r\n        height: 790px;\r\n        padding: 0;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 28px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        /*height: 664px;*/\r\n        height: 655px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: 1.2;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\r\n\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 375px) and (max-width: 375px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n           border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 11px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 38vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 660px;*/\r\n            height: 614px;\n}\n.remotePlayerDiv {\r\n            height: 662px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            /*height: 154px;\r\n            width: 114px;*/\r\n            /*height: 154px;\r\n            width: 114px;*/\r\n\r\n            height: 18vh;\r\n            width: 100%;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 414px) and (max-width: 414px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 11px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 52px;\r\n            width: 56px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 30px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 45px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.img2 {\r\n           /* height: 120px;\r\n            width: 110px;*/\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 843px;\n}\n.remotePlayerDiv {\r\n            /*!*height: 660px;*!*/\r\n            height: 891px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 390px) and (max-width: 390px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 16px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 614px;*/\r\n            height: 791px;\n}\n.remotePlayerDiv {\r\n            height: 840px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 393px) and (max-width: 393px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 16px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            height: 799px;\n}\n.remotePlayerDiv {\r\n            height: 847px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 360px) and (max-width: 360px) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 3px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 34vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            height: 688px;\n}\n.remotePlayerDiv {\r\n            height: 736px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            height: 18vh;\r\n            width: 100%;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 412px) and (max-width: 412px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 11px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 52px;\r\n            width: 56px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 30px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 45px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 32vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 863px;\n}\n.remotePlayerDiv {\r\n            height: 911px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 820px) and (max-width: 820px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n       /* .telemedForm {\r\n            height: 766px;\r\n        }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 635px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 120px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 20px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 1128px;\n}\n.remotePlayerDiv {\r\n            height: 1176px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 768px) and (max-width: 768px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n        /* .telemedForm {\r\n             height: 766px;\r\n         }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 635px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 18px;\r\n            left: 90px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 20px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 972px;\n}\n.remotePlayerDiv {\r\n            height: 1020px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\n@media (min-width: 912px) and (max-width: 912px ) {\n.col-lg-8 {\r\n            background-color: black;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n            border: 1px outset green;\r\n            height: auto;\n}\r\n        /* .telemedForm {\r\n             height: 766px;\r\n         }*/\n.tableForm {\r\n            font-size: 18px;\r\n            height: 642px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 10px;\r\n            left: 10px;\r\n            z-index: 2;\r\n            height: 92px;\r\n            width: 96px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 15px;\r\n            left: 155px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 16px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 13px;\r\n            border: 1px outset transparent;\r\n            font-size: 24px;\r\n            font-family: Calibri;\n}\n.img-fluid {\r\n            position: relative;\r\n            height: 50vh;\r\n            width: 100%;\n}\n.img2 {\r\n            height: 154px;\r\n            width: 114px;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n.localPlayerDiv {\r\n            top: auto;\r\n            right: 0;\r\n            bottom: 20px;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.remotePlayerLayer {\r\n            height: 1316px;\n}\n.remotePlayerDiv {\r\n            height: 1364px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n}\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n\r\n\r\n    /*------------------------------------------------------------------------------------*/\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (max-width: 575.98px) {\n}\r\n    /*Small devices (landscape phones, less than 768px)*/\n@media (max-width: 767.98px) {\n}\r\n    /*Medium devices (tablets, less than 992px)*/\n@media (max-width: 991.98px) {\n}\r\n    /*Large devices (desktops, less than 1200px)*/\n@media (max-width: 1199.98px) {\n}\r\n    /*X-Large devices (large desktops, less than 1400px)*/\n@media (max-width: 1399.98px) {\n}\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

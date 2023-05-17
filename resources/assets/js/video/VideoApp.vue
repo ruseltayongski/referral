@@ -9,6 +9,7 @@
         },
         data() {
             return {
+                ringingPhoneUrl: $("#broadcasting_url").val()+"/public/ringing.mp3",
                 baseUrl: $("#broadcasting_url").val(),
                 doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor5.png",
                 doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor6.png",
@@ -31,8 +32,6 @@
                 patient_age: "",
                 file_path: [],
                 file_name: [],
-
-
                 videoStreaming: true,
                 audioStreaming: true,
                 channelParameters: {
@@ -48,6 +47,8 @@
                     remoteUid: null
                 },
                 showDiv: false,
+                prescription: "",
+                disabledPrescription: false
             }
         },
         mounted() {
@@ -83,12 +84,16 @@
             window.addEventListener('click', this.showDivAgain);
         },
         beforeUnmount() {
-            this.clearTimeout();
+            //this.clearTimeout();
             window.removeEventListener('click', this.showDivAgain);
         },
         props : ["user"],
         created() {
-            console.log(this.user)
+            let self = this
+            $(document).ready(function() {
+                console.log( "ready!" );
+                self.ringingPhoneFunc();
+            });
             this.startBasicCall();
         },
 
@@ -135,6 +140,7 @@
                         self.channelParameters.remoteUid = user.uid.toString();
                         /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                         // Append the remote container to the page body.
+                        self.$refs.ringingPhone.pause();
                         document.body.append(remotePlayerContainer);
                         $(".remotePlayerDiv").html(remotePlayerContainer)
                         $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
@@ -209,7 +215,7 @@
                 setTimeout(() => {
                     $(".iconCall").removeClass("fade-in");
                     this.showDiv = false;
-                }, 6000);
+                }, 10000);
             },
             showDivAgain() {
                 this.showDiv = true;
@@ -219,17 +225,37 @@
                 // Clear the timeout if the component is about to be unmounted
                 // to prevent memory leaks
                 clearTimeout(this.timeoutId);
+            },
+            async ringingPhoneFunc() {
+                await this.$refs.ringingPhone.play();
+                let self = this;
+                setTimeout(function() {
+                    console.log("pause");
+                    self.$refs.ringingPhone.pause();
+                },60000);
+            },
+            submitPrescription() {
+                if(this.prescription) {
+                    this.disabledPrescription = true
+                    Lobibox.alert("success",
+                    {
+                        msg: "Successfully submitted prescription!"
+                    });
+                }
             }
         },
     }
 </script>
-
 <template>
+    <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-8">
                 <div class="mainPic">
                     <div class="remotePlayerDiv">
+                        <div id="calling">
+                            <h3>Calling...</h3>
+                        </div>
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
                     <Transition name="fade">
@@ -338,11 +364,12 @@
                 </div>
                 <div class="row prescription">
                     <div class="col">
-                        <textarea class="form-control textArea" id="FormControlTextarea" rows="4"></textarea>
+                        <textarea class="form-control textArea" id="FormControlTextarea" v-model="prescription" rows="4" :disabled="disabledPrescription"></textarea>
                     </div>
                 </div>
                 <div>
-                    <button class="btn btn-success btn-md btn-block" type="button" onclick="alert('Successfuly Submit')">Submit</button>
+                    <button class="btn btn-success btn-md btn-block" type="button" v-if="disabledPrescription" disabled>Successfully Submit Prescription!</button>
+                    <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" :disabled="disabledPrescription" v-else>Submit</button>
                 </div>
             </div>
         </div>
@@ -374,6 +401,17 @@
         /*height: auto;*/
         height: 978px;
     }
+
+    #calling {
+        display: flex;
+        position: absolute;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
     .mainPic {
         position: relative;
         border: 2px outset transparent;
@@ -573,23 +611,6 @@
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
 
-    /*@media (max-width: 321px) {
-        .remotePlayerDiv {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 80vh;
-            background-color:blue;
-        }
-        .remotePlayerLayer {
-            height: 600px;
-        }
-        .img-fluid {
-            !*background-color: blue;*!
-            height: 40vh;
-        }
-    }*/
-
     /*------------------------------------------------------------------------------------*/
 
     @media (min-width: 375px) and (max-width: 375px) {
@@ -628,7 +649,6 @@
             line-height: .1px;
             font-size: 9px;
         }
-
         .clinical {
             position: relative;
             text-align: center;
@@ -637,7 +657,6 @@
             font-size: 15px;
             font-family: Calibri;
         }
-
         .localPlayerDiv {
             top: 20px;
             right: 0;
@@ -1356,13 +1375,6 @@
 
 
 
-
-
-
-
-
-
-
     /*------------------------------------------------------------------------------------*/
     /*X-Small devices (portrait phones, less than 576px)*/
     @media (max-width: 575.98px) {
@@ -1385,6 +1397,5 @@
 
     }
     /*------------------------------------------------------------------------------------*/
-
 
 </style>
