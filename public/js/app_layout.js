@@ -19721,7 +19721,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 self = _this;
                 setTimeout(function () {
                   console.log("pause");
-                  $("#video-call-confirmation").modal('toggle');
+                  $("#video-call-confirmation").modal('hide');
                   self.$refs.audioVideo.pause();
                 }, 60000);
 

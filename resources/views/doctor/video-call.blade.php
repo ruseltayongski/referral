@@ -22,9 +22,10 @@
         {{--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">--}}
         <link rel="stylesheet" href="{{ asset('resources/assets/bootstrap-4.6.2-dist/css/bootstrap-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('resources/assets/bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('resources/plugin/Lobibox/lobibox.css') }}">
         <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
         <script src="{{ asset('resources/assets/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
-
+        <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
         <script src="{{ asset('public/js/app_video.js?version=').date('YmdHis') }}" defer></script>
     </head>
     <body>
