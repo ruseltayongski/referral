@@ -352,7 +352,8 @@
 <style>
     .container-fluid {
         border: 4px outset green;
-        height: auto;
+        /*height: auto;*/
+        height: 975px;
     }
     .mainPic {
         position: relative;
@@ -366,7 +367,7 @@
     .remotePlayerDiv {
         height: 960px;
         width: 100%;
-        border: 2px outset transparent;
+        /*border: 2px outset transparent;*/
     }
     .localPlayerLayer {
         height: 300px;
@@ -378,7 +379,8 @@
     .localPlayerDiv {
         position: absolute;
         right: 20px;
-        bottom: 20px;
+        /*bottom: 20px;*/
+        bottom: 10px;
         border: 2px outset green;
         border-radius: 11px;
     }
@@ -416,7 +418,8 @@
         position: relative;
         border: 2px outset black;
         margin-top: 5px;
-        height: 797px;
+        /*height: 797px;*/
+        height: 790px;
         padding: 0;
     }
     .dohLogo {
@@ -440,7 +443,7 @@
     .clinical {
         position: relative;
         text-align: center;
-        margin-top: 25px;
+        margin-top: 28px;
         border: 1px outset transparent;
         font-size: 20px;
         font-family: Calibri;
@@ -448,10 +451,11 @@
     .tableForm {
         position: relative;
         border: 1px outset transparent;
-        height: 664px;
+        /*height: 664px;*/
+        height: 655px;
         width: auto;
         text-align: left;
-        line-height: 1;
+        line-height: 1.2;
         font-weight: bold;
         font-size: 14px;
         font-family: Calibri;
@@ -550,16 +554,25 @@
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
     /*------------------------------------------------------------------------------------*/
+
     /*X-Small devices (portrait phones, less than 576px)*/
-    @media (max-width: 575.98px) {
+    @media (min-width: 375px) and (max-width: 413px) {
         .col-lg-8 {
-            background-color: black;
+            background-color: red;
         }
         .iconCall {
             bottom: 20px;
         }
         .container-fluid {
            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 10px;
+            height: 640px;
         }
         .dohLogo {
             position: relative;
@@ -573,8 +586,8 @@
 
         .formHeader {
             position: absolute;
-            top: 15px;
-            left: 25px;
+            top: 11px;
+            left: 11px;
             border: 1px outset transparent;
             text-align: center;
             line-height: .1px;
@@ -590,11 +603,9 @@
             font-family: Calibri;
         }
 
-        .tableForm {
-            font-size: 10px;
-        }
         .localPlayerDiv {
             top: 20px;
+            right: 0;
             bottom: auto;
         }
         .localPlayerLayer{
@@ -608,7 +619,8 @@
             width: 100%;
         }
         .remotePlayerLayer {
-            height: 660px;
+            /*height: 660px;*/
+            height: 615px;
         }
         .remotePlayerDiv {
             height: 660px;
@@ -626,6 +638,14 @@
         .remotePlayerLayer div video {
             object-fit: contain !important;
         }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+
+    /*X-Small devices (portrait phones, less than 576px)*/
+    @media (max-width: 575.98px) {
+
     }
     /*Small devices (landscape phones, less than 768px)*/
     @media (max-width: 767.98px) {
@@ -644,13 +664,14 @@
 
     }
 
-    @media (max-width: 321px) {
+
+    @media (min-width: 321px) {
         .remotePlayerDiv {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 80vh; /* Adjust the height as needed */
-            /*background-color:blue;*/
+            height: 80vh; /*Adjust the height as needed*/
+            background-color: blue;
         }
         .remotePlayerLayer {
             height: 600px;
@@ -660,4 +681,63 @@
             height: 40vh;
         }
     }
+
+
+    @media (min-width: 414px) and (max-width: 575.98px ) {
+
+        .remotePlayerDiv {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80vh; /*!* Adjust the height as needed */
+            background-color: black;
+        }
+
+        .remotePlayerLayer {
+            height: 600px;
+        }
+
+        /*.img-fluid {
+            !*!*background-color: blue;*!*!
+            height: 40vh;
+        }
+        .container-fluid {
+         border: 1px outset green;
+         height: auto;
+         }
+         .formHeader {
+             position: absolute;
+             top: 11px;
+             left: 30px;
+             border: 1px outset transparent;
+             text-align: center;
+             line-height: .1px;
+             font-size: 9px;
+         }*/
+         .localPlayerDiv {
+             top: 20px;
+             right: 0;
+             bottom: auto;
+         }
+         .localPlayerLayer{
+             height: 150px;
+             width: 110px;
+         }
+         .remotePlayerLayer {
+             height: 843px;
+         }
+         .remotePlayerDiv {
+             /*!*height: 660px;*!*/
+             height: 891px;
+             width: 100%;
+             border: 2px outset transparent;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+         }
+         .remotePlayerLayer div video {
+             object-fit: contain !important;
+         }
+    }
+
 </style>
