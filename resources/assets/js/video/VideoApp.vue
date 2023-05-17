@@ -1,5 +1,6 @@
 <script>
     import axios from 'axios';
+    import { Transition } from 'vue';
 
     import AgoraRTC from "agora-rtc-sdk-ng"
     export default {
@@ -46,7 +47,7 @@
                     // A variable to hold the remote user id.s
                     remoteUid: null
                 },
-                showDiv: true,
+                showDiv: false,
             }
         },
         mounted() {
@@ -204,14 +205,11 @@
                 this.audioStreaming = this.audioStreaming ? false : true
                 this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
             },
-            formatTextWithLineBreaks(text) {
-                return text
-            },
-
             hideDivAfterTimeout() {
                 setTimeout(() => {
+                    $(".iconCall").removeClass("fade-in");
                     this.showDiv = false;
-                }, 5000);
+                }, 6000);
             },
             showDivAgain() {
                 this.showDiv = true;
@@ -234,11 +232,13 @@
                     <div class="remotePlayerDiv">
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
-                    <div class="iconCall position-absolute" v-if="showDiv">
+                    <Transition name="fade">
+                    <div class="iconCall position-absolute fade-in" v-if="showDiv">
                         <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                         <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                         <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
                     </div>
+                    </Transition>
                     <div class="localPlayerDiv">
                         <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2">
                     </div>
@@ -350,6 +350,25 @@
 </template>
 
 <style>
+    .fade-enter,
+    .fade-leave-to {
+        animation: fadeOut 2s;
+    }
+
+    .fade-in {
+        animation: fadeIn 2s;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
     .container-fluid {
         border: 4px outset green;
         /*height: auto;*/
@@ -553,6 +572,24 @@
         background-color: rgba(2, 133, 221, 0.911);
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
+
+    @media (max-width: 321px) {
+        .remotePlayerDiv {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80vh; /* Adjust the height as needed */
+            background-color:blue;
+        }
+        .remotePlayerLayer {
+            height: 600px;
+        }
+        .img-fluid {
+            /*background-color: blue;*/
+            height: 40vh;
+        }
+    }
+
     /*------------------------------------------------------------------------------------*/
 
     /*X-Small devices (portrait phones, less than 576px)*/
@@ -664,7 +701,6 @@
 
     }
 
-
     @media (min-width: 321px) {
         .remotePlayerDiv {
             display: flex;
@@ -739,5 +775,4 @@
              object-fit: contain !important;
          }
     }
-
 </style>

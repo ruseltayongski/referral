@@ -19697,13 +19697,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! agora-rtc-sdk-ng */ "./node_modules/agora-rtc-sdk-ng/AgoraRTC_N-production.js");
-/* harmony import */ var agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! agora-rtc-sdk-ng */ "./node_modules/agora-rtc-sdk-ng/AgoraRTC_N-production.js");
+/* harmony import */ var agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -19748,7 +19750,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // A variable to hold the remote user id.s
         remoteUid: null
       },
-      showDiv: true
+      showDiv: false
     };
   },
   mounted: function mounted() {
@@ -19797,7 +19799,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 // Create an instance of the Agora Engine
-                agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createClient({
+                agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3___default().createClient({
                   mode: "rtc",
                   codec: "vp8"
                 }); // Dynamically create a container in the form of a DIV element to play the remote video track.
@@ -19918,12 +19920,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 3:
                 _context3.next = 5;
-                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createMicrophoneAudioTrack();
+                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3___default().createMicrophoneAudioTrack();
 
               case 5:
                 channelParameters.localAudioTrack = _context3.sent;
                 _context3.next = 8;
-                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2___default().createCameraVideoTrack();
+                return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_3___default().createCameraVideoTrack();
 
               case 8:
                 channelParameters.localVideoTrack = _context3.sent;
@@ -19961,15 +19963,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.audioStreaming = this.audioStreaming ? false : true;
       this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     },
-    formatTextWithLineBreaks: function formatTextWithLineBreaks(text) {
-      return text;
-    },
     hideDivAfterTimeout: function hideDivAfterTimeout() {
       var _this3 = this;
 
       setTimeout(function () {
+        $(".iconCall").removeClass("fade-in");
         _this3.showDiv = false;
-      }, 5000);
+      }, 6000);
     },
     showDivAgain: function showDivAgain() {
       this.showDiv = true;
@@ -20026,7 +20026,7 @@ var _hoisted_5 = {
 var _hoisted_6 = ["src"];
 var _hoisted_7 = {
   key: 0,
-  "class": "iconCall position-absolute"
+  "class": "iconCall position-absolute fade-in"
 };
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
@@ -20277,33 +20277,42 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: "Image1"
   }, null, 8
   /* PROPS */
-  , _hoisted_6)]), $data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg mic-button", {
-      'mic-button-slash': !$data.audioStreaming
-    }]),
-    onClick: _cache[0] || (_cache[0] = function () {
-      return $options.audioStreamingOnAnddOff && $options.audioStreamingOnAnddOff.apply($options, arguments);
+  , _hoisted_6)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+    name: "fade"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg mic-button", {
+          'mic-button-slash': !$data.audioStreaming
+        }]),
+        onClick: _cache[0] || (_cache[0] = function () {
+          return $options.audioStreamingOnAnddOff && $options.audioStreamingOnAnddOff.apply($options, arguments);
+        }),
+        type: "button"
+      }, _hoisted_9, 2
+      /* CLASS */
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg video-button", {
+          'video-button-slash': !$data.videoStreaming
+        }]),
+        onClick: _cache[1] || (_cache[1] = function () {
+          return $options.videoStreamingOnAndOff && $options.videoStreamingOnAndOff.apply($options, arguments);
+        }),
+        type: "button"
+      }, _hoisted_11, 2
+      /* CLASS */
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-danger btn-lg decline-button",
+        onClick: _cache[2] || (_cache[2] = function () {
+          return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
+        }),
+        type: "button"
+      }, _hoisted_13)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
-    type: "button"
-  }, _hoisted_9, 2
-  /* CLASS */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-lg video-button", {
-      'video-button-slash': !$data.videoStreaming
-    }]),
-    onClick: _cache[1] || (_cache[1] = function () {
-      return $options.videoStreamingOnAndOff && $options.videoStreamingOnAndOff.apply($options, arguments);
-    }),
-    type: "button"
-  }, _hoisted_11, 2
-  /* CLASS */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    "class": "btn btn-danger btn-lg decline-button",
-    onClick: _cache[2] || (_cache[2] = function () {
-      return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
-    }),
-    type: "button"
-  }, _hoisted_13)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
@@ -22360,7 +22369,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container-fluid {\r\n        border: 4px outset green;\r\n        /*height: auto;*/\r\n        height: 975px;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 960px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        /*border: 2px outset transparent;*/\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 10px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        /*bottom: 20px;*/\r\n        bottom: 10px;\r\n        border: 2px outset green;\r\n        border-radius: 11px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\r\n        opacity: 1;\r\n        transition: opacity 0.5s ease-in-out;\n}\n.iconCall.hidden {\r\n        display: none;\r\n        opacity: 0;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        /*height: 797px;*/\r\n        height: 790px;\r\n        padding: 0;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 28px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        /*height: 664px;*/\r\n        height: 655px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: 1.2;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (min-width: 375px) and (max-width: 413px) {\n.col-lg-8 {\r\n            background-color: red;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n           border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 11px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 660px;*/\r\n            height: 615px;\n}\n.remotePlayerDiv {\r\n            height: 660px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            height: 120px;\r\n            width: 110px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (max-width: 575.98px) {\n}\r\n    /*Small devices (landscape phones, less than 768px)*/\n@media (max-width: 767.98px) {\n}\r\n    /*Medium devices (tablets, less than 992px)*/\n@media (max-width: 991.98px) {\n}\r\n    /*Large devices (desktops, less than 1200px)*/\n@media (max-width: 1199.98px) {\n}\r\n    /*X-Large devices (large desktops, less than 1400px)*/\n@media (max-width: 1399.98px) {\n}\n@media (min-width: 321px) {\n.remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh; /*Adjust the height as needed*/\r\n            background-color: blue;\n}\n.remotePlayerLayer {\r\n            height: 600px;\n}\n.img-fluid {\r\n            /*background-color: blue;*/\r\n            height: 40vh;\n}\n}\n@media (min-width: 414px) and (max-width: 575.98px ) {\n.remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh; /*!* Adjust the height as needed */\r\n            background-color: black;\n}\n.remotePlayerLayer {\r\n            height: 600px;\n}\r\n\r\n        /*.img-fluid {\r\n            !*!*background-color: blue;*!*!\r\n            height: 40vh;\r\n        }\r\n        .container-fluid {\r\n         border: 1px outset green;\r\n         height: auto;\r\n         }\r\n         .formHeader {\r\n             position: absolute;\r\n             top: 11px;\r\n             left: 30px;\r\n             border: 1px outset transparent;\r\n             text-align: center;\r\n             line-height: .1px;\r\n             font-size: 9px;\r\n         }*/\n.localPlayerDiv {\r\n             top: 20px;\r\n             right: 0;\r\n             bottom: auto;\n}\n.localPlayerLayer{\r\n             height: 150px;\r\n             width: 110px;\n}\n.remotePlayerLayer {\r\n             height: 843px;\n}\n.remotePlayerDiv {\r\n             /*!*height: 660px;*!*/\r\n             height: 891px;\r\n             width: 100%;\r\n             border: 2px outset transparent;\r\n             display: flex;\r\n             align-items: center;\r\n             justify-content: center;\n}\n.remotePlayerLayer div video {\r\n             -o-object-fit: contain !important;\r\n                object-fit: contain !important;\n}\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter,\r\n    .fade-leave-to {\r\n        -webkit-animation: fadeOut 2s;\r\n                animation: fadeOut 2s;\n}\n.fade-in {\r\n        -webkit-animation: fadeIn 2s;\r\n                animation: fadeIn 2s;\n}\n@-webkit-keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@keyframes fadeIn {\n0% { opacity: 0;\n}\n100% { opacity: 1;\n}\n}\n@-webkit-keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n@keyframes fadeOut {\n0% { opacity: 1;\n}\n100% { opacity: 0;\n}\n}\n.container-fluid {\r\n        border: 4px outset green;\r\n        /*height: auto;*/\r\n        height: 975px;\n}\n.mainPic {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        height: 100%;\r\n        width: 100%;\n}\n.remotePlayerLayer {\r\n        height: 960px;\n}\n.remotePlayerDiv {\r\n        height: 960px;\r\n        width: 100%;\r\n        /*border: 2px outset transparent;*/\n}\n.localPlayerLayer {\r\n        height: 300px;\r\n        width: 250px;\n}\n.localPlayerLayer div{\r\n        border-radius: 10px;\n}\n.localPlayerDiv {\r\n        position: absolute;\r\n        right: 20px;\r\n        /*bottom: 20px;*/\r\n        bottom: 10px;\r\n        border: 2px outset green;\r\n        border-radius: 11px;\n}\n.img-fluid {\r\n        border: 3px outset transparent;\r\n        width: 100%;\n}\n.img2 {\r\n        border-radius: 30px;\n}\n.iconCall {\r\n        border: 1px outset transparent;\r\n        width: 100%;\r\n        bottom: 220px;\r\n        text-align: center;\r\n        opacity: 1;\r\n        transition: opacity 0.5s ease-in-out;\n}\n.iconCall.hidden {\r\n        display: none;\r\n        opacity: 0;\n}\n.mic-button {\r\n        border-radius: 50%;\n}\n.video-button {\r\n        border-radius: 50%;\n}\n.decline-button {\r\n        border-radius: 50%;\r\n        border: 0;\n}\n.telemedForm {\r\n        position: relative;\r\n        border: 2px outset black;\r\n        margin-top: 5px;\r\n        /*height: 797px;*/\r\n        height: 790px;\r\n        padding: 0;\n}\n.dohLogo {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        top: 10px;\r\n        left: 10px;\r\n        z-index: 2;\r\n        height: 72px;\r\n        width: 76px;\n}\n.formHeader {\r\n        position: absolute;\r\n        top: 15px;\r\n        left: 105px;\r\n        border: 1px outset transparent;\r\n        text-align: center;\r\n        line-height: .0;\r\n        font-size: 13px;\n}\n.clinical {\r\n        position: relative;\r\n        text-align: center;\r\n        margin-top: 28px;\r\n        border: 1px outset transparent;\r\n        font-size: 20px;\r\n        font-family: Calibri;\n}\n.tableForm {\r\n        position: relative;\r\n        border: 1px outset transparent;\r\n        /*height: 664px;*/\r\n        height: 655px;\r\n        width: auto;\r\n        text-align: left;\r\n        line-height: 1.2;\r\n        font-weight: bold;\r\n        font-size: 14px;\r\n        font-family: Calibri;\r\n\r\n        display: flex;\r\n        flex-direction: column;\r\n        overflow-y: auto;\r\n        overflow-x: hidden;\n}\n.prescription {\r\n        position: relative;\r\n        border: 2px outset transparent;\r\n        margin-top: 5px;\r\n        font-family: Calibri;\n}\n.textArea {\r\n        border: 1px outset black;\n}\n.btn {\r\n        position: relative;\r\n        margin-top: 5px;\n}\n.forDetails {\r\n        color: #E18E0B;\n}\n.caseforDetails {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-line;\n}\n.dateReferred {\r\n        color: #E18E0B;\n}\n.recoSummary {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\r\n        white-space: pre-wrap;\n}\n.mdHcw {\r\n        color: #E18E0B;\r\n        line-height: 1.2;\n}\ntr:nth-child(odd) {\r\n        background-color: #f2f2f2;\r\n        border: 1px outset transparent;\n}\ntr:nth-child(even) {\r\n        background-color: white;\r\n        border: 1px outset transparent;\n}\n.mic-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.mic-button-slash:before, .mic-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.mic-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.mic-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.video-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n.video-button-slash:before, .video-button-slash:after {\r\n        content: \"\";\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 0;\r\n        right: 0;\r\n        transform: translateY(-50%);\r\n        height: 2px;\r\n        background-color: #FF0000; /* set the color of the lines */\n}\n.video-button-slash:before {\r\n        transform: rotate(-45deg);\r\n        padding: 2px;\n}\n.video-button-slash:after {\r\n        transform: rotate(-45deg);\n}\n.decline-button:hover {\r\n        background-color: rgba(2, 133, 221, 0.911);\r\n        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);\n}\n@media (max-width: 321px) {\n.remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh; /* Adjust the height as needed */\r\n            background-color:blue;\n}\n.remotePlayerLayer {\r\n            height: 600px;\n}\n.img-fluid {\r\n            /*background-color: blue;*/\r\n            height: 40vh;\n}\n}\r\n\r\n    /*------------------------------------------------------------------------------------*/\r\n\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (min-width: 375px) and (max-width: 413px) {\n.col-lg-8 {\r\n            background-color: red;\n}\n.iconCall {\r\n            bottom: 20px;\n}\n.container-fluid {\r\n           border: 1px outset green;\r\n            height: auto;\n}\n.telemedForm {\r\n            height: 766px;\n}\n.tableForm {\r\n            font-size: 10px;\r\n            height: 640px;\n}\n.dohLogo {\r\n            position: relative;\r\n            border: 1px outset transparent;\r\n            top: 5px;\r\n            left: 5px;\r\n            z-index: 2;\r\n            height: 42px;\r\n            width: 46px;\n}\n.formHeader {\r\n            position: absolute;\r\n            top: 11px;\r\n            left: 11px;\r\n            border: 1px outset transparent;\r\n            text-align: center;\r\n            line-height: .1px;\r\n            font-size: 9px;\n}\n.clinical {\r\n            position: relative;\r\n            text-align: center;\r\n            margin-top: 55px;\r\n            border: 1px outset transparent;\r\n            font-size: 15px;\r\n            font-family: Calibri;\n}\n.localPlayerDiv {\r\n            top: 20px;\r\n            right: 0;\r\n            bottom: auto;\n}\n.localPlayerLayer{\r\n            height: 150px;\r\n            width: 110px;\n}\n.img-fluid {\r\n            position: relative;\r\n            /*border: 1px outset transparent;*/\r\n            height: 32vh;\r\n            width: 100%;\n}\n.remotePlayerLayer {\r\n            /*height: 660px;*/\r\n            height: 615px;\n}\n.remotePlayerDiv {\r\n            height: 660px;\r\n            width: 100%;\r\n            border: 2px outset transparent;\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            /*background-color:red;*/\n}\n.img2 {\r\n            height: 120px;\r\n            width: 110px;\n}\n.remotePlayerLayer div video {\r\n            -o-object-fit: contain !important;\r\n               object-fit: contain !important;\n}\n.btn {\r\n            margin-bottom: 10px;\n}\n}\r\n\r\n    /*X-Small devices (portrait phones, less than 576px)*/\n@media (max-width: 575.98px) {\n}\r\n    /*Small devices (landscape phones, less than 768px)*/\n@media (max-width: 767.98px) {\n}\r\n    /*Medium devices (tablets, less than 992px)*/\n@media (max-width: 991.98px) {\n}\r\n    /*Large devices (desktops, less than 1200px)*/\n@media (max-width: 1199.98px) {\n}\r\n    /*X-Large devices (large desktops, less than 1400px)*/\n@media (max-width: 1399.98px) {\n}\n@media (min-width: 321px) {\n.remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh; /*Adjust the height as needed*/\r\n            background-color: blue;\n}\n.remotePlayerLayer {\r\n            height: 600px;\n}\n.img-fluid {\r\n            /*background-color: blue;*/\r\n            height: 40vh;\n}\n}\n@media (min-width: 414px) and (max-width: 575.98px ) {\n.remotePlayerDiv {\r\n            display: flex;\r\n            align-items: center;\r\n            justify-content: center;\r\n            height: 80vh; /*!* Adjust the height as needed */\r\n            background-color: black;\n}\n.remotePlayerLayer {\r\n            height: 600px;\n}\r\n\r\n        /*.img-fluid {\r\n            !*!*background-color: blue;*!*!\r\n            height: 40vh;\r\n        }\r\n        .container-fluid {\r\n         border: 1px outset green;\r\n         height: auto;\r\n         }\r\n         .formHeader {\r\n             position: absolute;\r\n             top: 11px;\r\n             left: 30px;\r\n             border: 1px outset transparent;\r\n             text-align: center;\r\n             line-height: .1px;\r\n             font-size: 9px;\r\n         }*/\n.localPlayerDiv {\r\n             top: 20px;\r\n             right: 0;\r\n             bottom: auto;\n}\n.localPlayerLayer{\r\n             height: 150px;\r\n             width: 110px;\n}\n.remotePlayerLayer {\r\n             height: 843px;\n}\n.remotePlayerDiv {\r\n             /*!*height: 660px;*!*/\r\n             height: 891px;\r\n             width: 100%;\r\n             border: 2px outset transparent;\r\n             display: flex;\r\n             align-items: center;\r\n             justify-content: center;\n}\n.remotePlayerLayer div video {\r\n             -o-object-fit: contain !important;\r\n                object-fit: contain !important;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

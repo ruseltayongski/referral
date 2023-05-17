@@ -20004,7 +20004,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     acceptCall: function acceptCall() {
       this.$refs.audioVideo.pause();
-      window.open($("#broadcasting_url").val() + "/doctor/telemedicine?id=" + this.tracking_id + "&code=" + this.referral_code, "_blank", "fullscreen=yes");
+      $("#video-call-confirmation").modal('toggle');
+      var windowName = 'NewWindow'; // Name of the new window
+
+      var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+
+      var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=" + this.tracking_id + "&code=" + this.referral_code;
+      var newWindow = window.open(url, windowName, windowFeatures);
+
+      if (newWindow && newWindow.outerWidth) {
+        // If the window was successfully opened, attempt to maximize it
+        newWindow.moveTo(0, 0);
+        newWindow.resizeTo(screen.availWidth, screen.availHeight);
+      }
     },
     cancelCall: function cancelCall() {
       this.$refs.audioVideo.pause();
