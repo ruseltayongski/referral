@@ -457,7 +457,16 @@
             },
             acceptCall() {
                 this.$refs.audioVideo.pause();
-                window.open($("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code, "_blank", "fullscreen=yes");
+                $("#video-call-confirmation").modal('toggle');
+                let windowName = 'NewWindow'; // Name of the new window
+                let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code
+                let newWindow = window.open(url, windowName, windowFeatures);
+                if (newWindow && newWindow.outerWidth) {
+                    // If the window was successfully opened, attempt to maximize it
+                    newWindow.moveTo(0, 0);
+                    newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                }
             },
             cancelCall() {
                 this.$refs.audioVideo.pause();
