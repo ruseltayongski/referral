@@ -19723,6 +19723,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       micUrl: $("#broadcasting_url").val() + "/resources/img/video/mic.png",
       dohLogoUrl: $("#broadcasting_url").val() + "/resources/img/video/doh-logo.png",
       tracking_id: this.getUrlVars()["id"],
+      referral_code: this.getUrlVars()["code"],
+      referring_md: this.getUrlVars()["referring_md"],
       options: {
         // Pass your App ID here.
         appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
@@ -19753,7 +19755,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       showDiv: false,
       prescription: "",
-      disabledPrescription: false
+      prescriptionSubmitted: false
     };
   },
   mounted: function mounted() {
@@ -20026,12 +20028,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     submitPrescription: function submitPrescription() {
+      var _this5 = this;
+
       if (this.prescription) {
-        this.disabledPrescription = true;
-        Lobibox.alert("success", {
-          msg: "Successfully submitted prescription!"
+        var updatePrescription = {
+          code: this.referral_code,
+          prescription: this.prescription
+        };
+        axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
+          console.log(response.status);
+
+          if (response.data === 'success') {
+            _this5.prescriptionSubmitted = true;
+            Lobibox.alert("success", {
+              msg: "Successfully submitted prescription!"
+            });
+          } else {
+            Lobibox.alert("error", {
+              msg: "Error in server!"
+            });
+          }
+        });
+      } else {
+        Lobibox.alert("error", {
+          msg: "No prescription inputted!"
         });
       }
+    },
+    generatePrescription: function generatePrescription() {
+      var _this6 = this;
+
+      var getPrescription = {
+        code: this.referral_code
+      };
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
+        console.log(response);
+
+        if (response.data === 'success') {
+          window.open("".concat(_this6.baseUrl, "/doctor/print/prescription/").concat(_this6.tracking_id), '_blank');
+        } else {
+          Lobibox.alert("error", {
+            msg: "No added prescription!"
+          });
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   }
 });
@@ -20301,19 +20343,37 @@ var _hoisted_81 = {
   "class": "mdHcw"
 };
 var _hoisted_82 = {
+  key: 0
+};
+
+var _hoisted_83 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "bi bi-prescription"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_84 = {
+  key: 1
+};
+var _hoisted_85 = {
   "class": "row prescription"
 };
-var _hoisted_83 = {
+var _hoisted_86 = {
   "class": "col"
 };
-var _hoisted_84 = ["disabled"];
-var _hoisted_85 = {
-  key: 0,
-  "class": "btn btn-success btn-md btn-block",
-  type: "button",
-  disabled: ""
-};
-var _hoisted_86 = ["disabled"];
+
+var _hoisted_87 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "bi bi-prescription"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_88 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "bi bi-prescription"
+}, null, -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "ringingPhone",
@@ -20436,27 +20496,36 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_79, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Name of referred MD/HCW-Mobile Contact # (ReCo): "), _hoisted_80, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_81, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1
   /* TEXT */
-  )])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_82, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_83, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+  )])])])])])]), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_82, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-success btn-md btn-block",
+    type: "button",
+    onClick: _cache[3] || (_cache[3] = function ($event) {
+      return $options.generatePrescription();
+    })
+  }, [_hoisted_83, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription")])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_84, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_85, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_86, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     "class": "form-control textArea",
     id: "FormControlTextarea",
-    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.prescription = $event;
     }),
-    rows: "4",
-    disabled: $data.disabledPrescription
-  }, null, 8
-  /* PROPS */
-  , _hoisted_84), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.prescription]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.disabledPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_85, "Successfully Submit Prescription!")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    rows: "4"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.prescription]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.prescriptionSubmitted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    "class": "btn btn-success btn-md btn-block",
+    type: "button",
+    onClick: _cache[5] || (_cache[5] = function ($event) {
+      return $options.submitPrescription();
+    })
+  }, [_hoisted_87, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Update Prescription")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
     "class": "btn btn-success btn-md btn-block",
     type: "button",
-    onClick: _cache[4] || (_cache[4] = function ($event) {
+    onClick: _cache[6] || (_cache[6] = function ($event) {
       return $options.submitPrescription();
-    }),
-    disabled: $data.disabledPrescription
-  }, "Submit", 8
-  /* PROPS */
-  , _hoisted_86))])])])])], 64
+    })
+  }, [_hoisted_88, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Submit Prescription")]))])]))])])])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -24352,11 +24421,6 @@ function compileToFunction(template, options) {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/nonce */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nc = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

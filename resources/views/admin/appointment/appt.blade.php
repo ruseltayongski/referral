@@ -150,6 +150,7 @@ $morrow = $morrow->format('Y-m-d');
         @endif
 
         function ApptBody(id){
+            $('.appt_body').html(loading);
             var json = {
                 "id" : id,
                 "_token" : "<?php echo csrf_token()?>"

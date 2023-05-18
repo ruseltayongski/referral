@@ -182,11 +182,29 @@ class UserCtrl extends Controller
     }
 
     public function editProfile(Request $req) {
+        $user = Session::get('auth');
         $data = $req->all();
         unset($data['_token']);
         unset($data['id']);
 
+        if(isset($data['sign_type']) && isset($data['signature'])) {
+            if($data['sign_type'] == "draw") {
+                $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
+                $file_path = base_path()."/public/signatures/";
+                $filename = $file_path.$user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
+                if(!is_dir($file_path)) {
+                    mkdir($file_path);
+                }
+                file_put_contents($filename, $sign);
+            } else if($data['sign_type'] == "upload") {
+
+            }
+        }
+
+        unset($data['signature'], $data['sign_type']);
+
         $user = User::where('id',$req->id)->first();
+        $user->signature = $filename;
         $user->update($data);
 
         Session::put('auth', $user);

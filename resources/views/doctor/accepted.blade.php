@@ -106,8 +106,10 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                         <td class="activity_{{ $row->code }}">{{ $status }}</td>
                                         <td style="white-space: nowrap;">
                                             @if($row->department_id === 5 && $row->action_md === $user->id)
-                                                    <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}','{{ $row->action_md }}','{{ $row->referring_md }}');"><i class="fa fa-camera"></i></button>
+                                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}','{{ $row->action_md }}','{{ $row->referring_md }}');"><i class="fa fa-camera"></i></button>
+                                                @if($row->prescription)
                                                 <a href="{{ url('doctor/print/prescription').'/'.$row->id }}" target="_blank" type="button" style="border: 1px solid black;color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i></a>
+                                                @endif
                                             @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))
                                                 <button class="btn btn-sm btn-primary btn-action"
@@ -273,7 +275,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
             /*window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");*/
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, windowName, windowFeatures);
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&referring_md=no", windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {
                 // If the window was successfully opened, attempt to maximize it
                 newWindow.moveTo(0, 0);

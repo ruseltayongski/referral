@@ -18,6 +18,8 @@
                 micUrl: $("#broadcasting_url").val()+"/resources/img/video/mic.png",
                 dohLogoUrl: $("#broadcasting_url").val()+"/resources/img/video/doh-logo.png",
                 tracking_id: this.getUrlVars()["id"],
+                referral_code: this.getUrlVars()["code"],
+                referring_md: this.getUrlVars()["referring_md"],
                 options: {
                     // Pass your App ID here.
                     appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
@@ -48,7 +50,7 @@
                 },
                 showDiv: false,
                 prescription: "",
-                disabledPrescription: false
+                prescriptionSubmitted: false
             }
         },
         mounted() {
@@ -96,7 +98,6 @@
             });
             this.startBasicCall();
         },
-
         methods: {
             async startBasicCall()
             {
@@ -167,7 +168,6 @@
                     self.joinVideo(agoraEngine,self.channelParameters,localPlayerContainer,self)
                 }
             },
-
             getUrlVars()
             {
                 var vars = [], hash;
@@ -236,12 +236,50 @@
             },
             submitPrescription() {
                 if(this.prescription) {
-                    this.disabledPrescription = true
-                    Lobibox.alert("success",
+                    const updatePrescription = {
+                        code : this.referral_code,
+                        prescription: this.prescription
+                    }
+                    axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
+                        console.log(response.status)
+                        if(response.data === 'success') {
+                            this.prescriptionSubmitted = true
+                            Lobibox.alert("success",
+                            {
+                                msg: "Successfully submitted prescription!"
+                            });
+                        } else {
+                            Lobibox.alert("error",
+                            {
+                                msg: "Error in server!"
+                            });
+                        }
+                    });
+                } else {
+                    Lobibox.alert("error",
                     {
-                        msg: "Successfully submitted prescription!"
+                        msg: "No prescription inputted!"
                     });
                 }
+            },
+            generatePrescription() {
+                const getPrescription = {
+                    code : this.referral_code
+                }
+                axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
+                    console.log(response)
+                    if(response.data === 'success') {
+                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}`, '_blank');
+                    } else {
+                        Lobibox.alert("error",
+                        {
+                            msg: "No added prescription!"
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             }
         },
     }
@@ -362,14 +400,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="row prescription">
-                    <div class="col">
-                        <textarea class="form-control textArea" id="FormControlTextarea" v-model="prescription" rows="4" :disabled="disabledPrescription"></textarea>
-                    </div>
+                <div v-if="referring_md == 'yes'">
+                    <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                 </div>
-                <div>
-                    <button class="btn btn-success btn-md btn-block" type="button" v-if="disabledPrescription" disabled>Successfully Submit Prescription!</button>
-                    <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" :disabled="disabledPrescription" v-else>Submit</button>
+                <div v-else>
+                    <div class="row prescription" >
+                        <div class="col">
+                            <textarea class="form-control textArea" id="FormControlTextarea" v-model="prescription" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
+                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
+                    </div>
                 </div>
             </div>
         </div>
