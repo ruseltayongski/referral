@@ -357,6 +357,24 @@ class PrintCtrl extends Controller
         exit;
     }
 
+    public function printPrescription() {
+        $pdf = new Fpdf();
+
+        $pdf->setTopMargin(17);
+        $pdf->setTitle("Vicente Sotto Memorial Medical Center");
+        $pdf->addPage();
+
+        $pdf->SetFont('Arial','B',12);
+        $pdf->Cell(0,0,"CENTRAL VISAYAS HEALTH REFERRAL SYSTEM",0,"","C");
+        $pdf->ln();
+        $pdf->Cell(0,12,"Clinical Referral Form",0,"","C");
+        $pdf->Ln(20);
+
+        $pdf->Output();
+
+        exit;
+    }
+
     public function orange($pdf,$val,$str)
     {
         $y = $pdf->getY()+4.5;

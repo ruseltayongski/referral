@@ -207,7 +207,7 @@
         <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
         <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
     @endif
-    <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form{{ $_GET['referredCode'] }}</a>
+    <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
 
@@ -238,9 +238,17 @@
             "trigger_by" : "{{ $user->id }}"
         };
         $.post(url,json,function(){
-            console.log("join to call");
+
         });
-        window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
+        /*window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");*/
+        var windowName = 'NewWindow'; // Name of the new window
+        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, windowName, windowFeatures);
+        if (newWindow && newWindow.outerWidth) {
+            // If the window was successfully opened, attempt to maximize it
+            newWindow.moveTo(0, 0);
+            newWindow.resizeTo(screen.availWidth, screen.availHeight);
+        }
     }
 </script>
 

@@ -157,13 +157,13 @@
         <div class="header" style="background-color:#59ab91;padding:10px;">
             <div class="container">
                 @if($user->level == 'opcen')
-                    <img src="{{ asset('resources/img/opcen_banner1.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/banner_711healthline2023v1.png') }}" class="img-responsive" />
                 @elseif($user->level == 'bed_tracker')
                     <img src="{{ asset('resources/img/bed_banner.png') }}" class="img-responsive" />
                 @elseif($user->level == 'vaccine')
                     <img src="{{ asset('resources/img/updated_vaccine_logo.png') }}" class="img-responsive" />
                 @else
-                    <img src="{{ asset('resources/img/referral_banner.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/banner_referral2023v1.png') }}" class="img-responsive" />
                 @endif
             </div>
         </div>

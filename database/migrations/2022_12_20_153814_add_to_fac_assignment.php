@@ -13,13 +13,26 @@ class AddToFacAssignment extends Migration
      */
     public function up()
     {
-        Schema::table('facility_assignment', function (Blueprint $table) {
-            $table->integer('user_id')->after('username');
-            $table->integer('facility_id')->after('user_id');
-            $table->integer('department_id')->after('facility_code');
-            $table->string('status')->after('email');
-            $table->dateTime('last_login')->after('status');
-            $table->string('login_status')->after('last_login');
+        $tableName = 'facility_assignment';
+        Schema::table($tableName, function (Blueprint $table) use ($tableName) {
+            if (!Schema::hasColumn($tableName, 'user_id')) {
+                $table->integer('user_id')->after('username');
+            }
+            if (!Schema::hasColumn($tableName, 'facility_id')) {
+                $table->integer('facility_id')->after('user_id');
+            }
+            if (!Schema::hasColumn($tableName, 'department_id')) {
+                $table->integer('department_id')->after('facility_code');
+            }
+            if (!Schema::hasColumn($tableName, 'status')) {
+                $table->string('status')->after('email');
+            }
+            if (!Schema::hasColumn($tableName, 'last_login')) {
+                $table->dateTime('last_login')->after('status');
+            }
+            if (!Schema::hasColumn($tableName, 'login_status')) {
+                $table->dateTime('login_status')->after('status');
+            }
         });
     }
 

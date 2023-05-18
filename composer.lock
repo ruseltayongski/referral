@@ -2941,18 +2941,6 @@
         },
         {
             "name": "paragonie/sodium_compat",
-<<<<<<< HEAD
-            "version": "v1.19.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "cb15e403ecbe6a6cc515f855c310eb6b1872a933"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/cb15e403ecbe6a6cc515f855c310eb6b1872a933",
-                "reference": "cb15e403ecbe6a6cc515f855c310eb6b1872a933",
-=======
             "version": "v1.20.0",
             "source": {
                 "type": "git",
@@ -2963,7 +2951,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/e592a3e06d1fa0d43988c7c7d9948ca836f644b6",
                 "reference": "e592a3e06d1fa0d43988c7c7d9948ca836f644b6",
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
                 "shasum": ""
             },
             "require": {
@@ -3034,15 +3021,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-<<<<<<< HEAD
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.19.0"
-            },
-            "time": "2022-09-26T03:40:35+00:00"
-=======
                 "source": "https://github.com/paragonie/sodium_compat/tree/v1.20.0"
             },
             "time": "2023-04-30T00:54:53+00:00"
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -5727,18 +5708,6 @@
         },
         {
             "name": "symfony/mime",
-<<<<<<< HEAD
-            "version": "v5.4.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/mime.git",
-                "reference": "ef57d9fb9cdd5e6b2ffc567d109865d10b6920cd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/ef57d9fb9cdd5e6b2ffc567d109865d10b6920cd",
-                "reference": "ef57d9fb9cdd5e6b2ffc567d109865d10b6920cd",
-=======
             "version": "v5.4.23",
             "source": {
                 "type": "git",
@@ -5749,7 +5718,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/mime/zipball/ae0a1032a450a3abf305ee44fc55ed423fbf16e3",
                 "reference": "ae0a1032a450a3abf305ee44fc55ed423fbf16e3",
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
                 "shasum": ""
             },
             "require": {
@@ -5804,11 +5772,7 @@
                 "mime-type"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/mime/tree/v5.4.21"
-=======
                 "source": "https://github.com/symfony/mime/tree/v5.4.23"
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
             },
             "funding": [
                 {
@@ -5824,11 +5788,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-02-21T19:46:44+00:00"
-=======
             "time": "2023-04-19T09:49:13+00:00"
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7992,18 +7952,6 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-<<<<<<< HEAD
-            "version": "1.19.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "f545fc30978190a056832aa7ed995e36a66267f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/f545fc30978190a056832aa7ed995e36a66267f3",
-                "reference": "f545fc30978190a056832aa7ed995e36a66267f3",
-=======
             "version": "1.20.3",
             "source": {
                 "type": "git",
@@ -8014,7 +7962,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6c04009f6cae6eda2f040745b6b846080ef069c2",
                 "reference": "6c04009f6cae6eda2f040745b6b846080ef069c2",
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
                 "shasum": ""
             },
             "require": {
@@ -8044,15 +7991,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-<<<<<<< HEAD
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.19.1"
-            },
-            "time": "2023-04-18T11:30:56+00:00"
-=======
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.3"
             },
             "time": "2023-04-25T09:01:03+00:00"
->>>>>>> ffe086f8a7c88ba4d208ed93145b456228aa2c06
         },
         {
             "name": "phpunit/php-code-coverage",

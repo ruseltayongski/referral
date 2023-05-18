@@ -1,5 +1,18 @@
 <template>
     <audio ref="audioVideo" :src="audioVideoUrl" loop></audio>
+    <div class="modal fade" role="dialog" id="video-call-confirmation">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p class="text-danger text-bold" style="font-size: 1.3em;padding: 3px;">Do you wish to accept the call?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" @click="cancelCall"><i class="fa fa-times"></i> No</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-dismiss="modal" @click="acceptCall"><i class="fa fa-trash"></i> Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
     export default {
@@ -13,6 +26,8 @@
                 increment_referral: Number,
                 reco_count : $("#reco_count_val").val(),
                 audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
+                tracking_id: Number,
+                referral_code: String
             }
         },
         methods: {
@@ -27,8 +42,9 @@
                 let self = this;
                 setTimeout(function() {
                     console.log("pause");
+                    $("#video-call-confirmation").modal('hide');
                     self.$refs.audioVideo.pause();
-                },20000);
+                },60000);
             },
             notifyReco(code, feedback_count, redirect_track) {
                 let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
@@ -358,7 +374,6 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-
             notifyNewWalkin(patient_name, referred_to, date_referred) {
                 let msg = "<b> " + patient_name + "</b> was registered as a walk-in patient at <b> " + referred_to + "</b>.<br><br>" + date_referred + '<br>\n' +
                     '       <a href="../patient/walkin" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
@@ -422,7 +437,14 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code) {
+                this.tracking_id = tracking_id
+                this.referral_code = code
                 this.playVideoCallAudio();
+                $(document).ready(function() {
+                    console.log( "ready!" );
+                    $("#video-call-confirmation").modal('toggle');
+                });
+                /*this.playVideoCallAudio();
                 let self = this;
                 Lobibox.confirm({
                     msg: "Do you want to accept a call?",
@@ -432,11 +454,31 @@
                         }
                         self.$refs.audioVideo.pause();
                     }
-                });
+                });*/
+            },
+            acceptCall() {
+                this.$refs.audioVideo.pause();
+                $("#video-call-confirmation").modal('toggle');
+                let windowName = 'NewWindow'; // Name of the new window
+                let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code
+                let newWindow = window.open(url, windowName, windowFeatures);
+                if (newWindow && newWindow.outerWidth) {
+                    // If the window was successfully opened, attempt to maximize it
+                    newWindow.moveTo(0, 0);
+                    newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                }
+            },
+            cancelCall() {
+                this.$refs.audioVideo.pause();
             }
         },
         created() {
-            console.log("VUE.JS 3.2.31!!!")
+            /*$(document).ready(function() {
+                console.log( "ready!" );
+                $("#video-call-confirmation").modal('show');
+            });*/
+            console.log("VUE.JS 3.2.3")
             Echo.join('chat')
                 .here(users => {
                     //console.log(users)

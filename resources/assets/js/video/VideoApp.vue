@@ -1,6 +1,6 @@
-
 <script>
     import axios from 'axios';
+    import { Transition } from 'vue';
 
     import AgoraRTC from "agora-rtc-sdk-ng"
     export default {
@@ -9,9 +9,10 @@
         },
         data() {
             return {
+                ringingPhoneUrl: $("#broadcasting_url").val()+"/public/ringing.mp3",
                 baseUrl: $("#broadcasting_url").val(),
-                doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor.jpg",
-                doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor1.png",
+                doctorUrl: $("#broadcasting_url").val()+"/resources/img/video/Doctor5.png",
+                doctorUrl1: $("#broadcasting_url").val()+"/resources/img/video/Doctor6.png",
                 declineUrl: $("#broadcasting_url").val()+"/resources/img/video/decline.png",
                 videoCallUrl: $("#broadcasting_url").val()+"/resources/img/video/videocall.png",
                 micUrl: $("#broadcasting_url").val()+"/resources/img/video/mic.png",
@@ -27,57 +28,78 @@
                     // Set the user ID.
                     uid: 0,
                 },
-                form: {}
+                form: {},
+                patient_age: "",
+                file_path: [],
+                file_name: [],
+                videoStreaming: true,
+                audioStreaming: true,
+                channelParameters: {
+                    // A variable to hold a local audio track.
+                    localAudioTrack: null,
+                    // A variable to hold a local video track.
+                    localVideoTrack: null,
+                    // A variable to hold a remote audio track.
+                    remoteAudioTrack: null,
+                    // A variable to hold a remote video track.
+                    remoteVideoTrack: null,
+                    // A variable to hold the remote user id.s
+                    remoteUid: null
+                },
+                showDiv: false,
+                prescription: "",
+                disabledPrescription: false
             }
         },
-
         mounted() {
             axios
                 .get(`${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`)
                 .then((res) => {
                     const response = res.data;
                     this.form = response.form
-                    console.log(response.form)
+                    if(response.ageType === "y")
+                        this.patient_age = response.age + " Years Old"
+                    else if(response.ageType === "m")
+                        this.patient_age =  response.age + " Months Old"
+
+                    /*if(count(response.file_path) > 1)
+                        this.file_path = "File Attachments:" + response.file_path
+                    else
+                        this.file_path = "File Attachment:" + response.file_path*/
+
+                    /*for(i = 0; i < count(response.file_path); i++)
+                        this.file_path = response.file_path*/
+
+                    /*if(i + 1 != count(response.file_path))*/
+                            /*,&nbsp*/
+
+
+                    console.log(response)
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+
+            this.hideDivAfterTimeout();
+            window.addEventListener('click', this.showDivAgain);
+        },
+        beforeUnmount() {
+            //this.clearTimeout();
+            window.removeEventListener('click', this.showDivAgain);
         },
         props : ["user"],
         created() {
-            console.log(this.user)
+            let self = this
+            $(document).ready(function() {
+                console.log( "ready!" );
+                self.ringingPhoneFunc();
+            });
             this.startBasicCall();
-            // Remove the video stream from the container.
         },
+
         methods: {
             async startBasicCall()
             {
-                /*let options =
-                    {
-                        // Pass your App ID here.
-                        appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
-                        // Set the channel name.
-                        channel: 'rusel',
-                        // Pass your temp token here.
-                        token: null,
-                        // Set the user ID.
-                        uid: 0,
-                    };*/
-
-                let channelParameters =
-                    {
-                        // A variable to hold a local audio track.
-                        localAudioTrack: null,
-                        // A variable to hold a local video track.
-                        localVideoTrack: null,
-                        // A variable to hold a remote audio track.
-                        remoteAudioTrack: null,
-                        // A variable to hold a remote video track.
-                        remoteVideoTrack: null,
-                        // A variable to hold the remote user id.s
-                        remoteUid: null,
-                    };
-
                 // Create an instance of the Agora Engine
                 const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
                 // Dynamically create a container in the form of a DIV element to play the remote video track.
@@ -97,6 +119,7 @@
                 remotePlayerContainer.style.height = "480px";
                 remotePlayerContainer.style.padding = "15px 5px 5px 5px";*/
                 // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
+                let self =  this
                 agoraEngine.on("user-published", async (user, mediaType) =>
                 {
                     // Subscribe to the remote user when the SDK triggers the "user-published" event.
@@ -107,29 +130,31 @@
                     {
                         console.log("remote")
                         // Retrieve the remote video track.
-                        channelParameters.remoteVideoTrack = user.videoTrack;
+                        self.channelParameters.remoteVideoTrack = user.videoTrack;
                         // Retrieve the remote audio track.
-                        channelParameters.remoteAudioTrack = user.audioTrack;
+                        self.channelParameters.remoteAudioTrack = user.audioTrack;
                         // Save the remote user id for reuse.
-                        channelParameters.remoteUid = user.uid.toString();
+                        self.channelParameters.remoteUid = user.uid.toString();
                         // Specify the ID of the DIV container. You can use the uid of the remote user.
                         remotePlayerContainer.id = user.uid.toString();
-                        channelParameters.remoteUid = user.uid.toString();
+                        self.channelParameters.remoteUid = user.uid.toString();
                         /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
                         // Append the remote container to the page body.
+                        self.$refs.ringingPhone.pause();
                         document.body.append(remotePlayerContainer);
-                        $(".divImage1").html(remotePlayerContainer)
-                        $(remotePlayerContainer).addClass("image1")
+                        $(".remotePlayerDiv").html(remotePlayerContainer)
+                        $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
+                        $(remotePlayerContainer).addClass("remotePlayerLayer");
                         // Play the remote video track.
-                        channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+                        self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                     }
                     // Subscribe and play the remote audio track If the remote user publishes the audio track only.
                     if (mediaType == "audio")
                     {
                         // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-                        channelParameters.remoteAudioTrack = user.audioTrack;
+                        self.channelParameters.remoteAudioTrack = user.audioTrack;
                         // Play the remote audio track. No need to pass any DOM element.
-                        channelParameters.remoteAudioTrack.play();
+                        self.channelParameters.remoteAudioTrack.play();
                     }
                     // Listen for the "user-unpublished" event.
                     agoraEngine.on("user-unpublished", user =>
@@ -137,56 +162,12 @@
                         console.log(user.uid+ "has left the channel");
                     });
                 });
-                let self =  this
                 window.onload = function ()
                 {
-                    self.joinVideo(agoraEngine,channelParameters,localPlayerContainer,self)
-                    // Listen to the Join button click event.
-                    /*document.getElementById("join").onclick = async function ()
-                    {
-                        console.log("local")
-                        // Join a channel.
-                        await agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-                        // Create a local audio track from the audio sampled by a microphone.
-                        channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                        // Create a local video track from the video captured by a camera.
-                        channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-                        // Append the local video container to the page body.
-                        document.body.append(localPlayerContainer);
-                        $(".divImage2").html(localPlayerContainer)
-                        $(localPlayerContainer).addClass("image2")
-                        // Publish the local audio and video tracks in the channel.
-                        await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-                        // Play the local video track.
-                        channelParameters.localVideoTrack.play(localPlayerContainer);
-                        console.log("publish success!");
-                    }*/
-                    // Listen to the Leave button click event.
-                    document.getElementById('leave').onclick = async function ()
-                    {
-                        // Destroy the local audio and video tracks.
-                        channelParameters.localAudioTrack.close();
-                        channelParameters.localVideoTrack.close();
-                        // Remove the containers you created for the local video and remote video.
-                        this.removeVideoDiv(remotePlayerContainer.id);
-                        this.removeVideoDiv(localPlayerContainer.id);
-                        // Leave the channel
-                        await agoraEngine.leave();
-                        console.log("You left the channel");
-                        // Refresh the page for reuse
-                        window.location.reload();
-                    }
+                    self.joinVideo(agoraEngine,self.channelParameters,localPlayerContainer,self)
                 }
             },
-            removeVideoDiv(elementId)
-            {
-                console.log("Removing "+ elementId+"Div");
-                let Div = document.getElementById(elementId);
-                if (Div)
-                {
-                    Div.remove();
-                }
-            },
+
             getUrlVars()
             {
                 var vars = [], hash;
@@ -209,587 +190,1212 @@
                 channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
                 // Append the local video container to the page body.
                 document.body.append(localPlayerContainer);
-                $(".divImage2").html(localPlayerContainer)
-                $(localPlayerContainer).addClass("image2")
+                $(".localPlayerDiv").html(localPlayerContainer)
+                $(localPlayerContainer).addClass("localPlayerLayer")
                 // Publish the local audio and video tracks in the channel.
                 await agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
                 // Play the local video track.
                 channelParameters.localVideoTrack.play(localPlayerContainer);
                 console.log("publish success!");
+            },
+            leaveChannel() {
+                if(confirm("Are you sure you want to leave this channel?")) {
+                    window.top.close();
+                }
+            },
+            videoStreamingOnAndOff() {
+                this.videoStreaming = this.videoStreaming ? false : true
+                this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+            },
+            audioStreamingOnAnddOff() {
+                this.audioStreaming = this.audioStreaming ? false : true
+                this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+            },
+            hideDivAfterTimeout() {
+                setTimeout(() => {
+                    $(".iconCall").removeClass("fade-in");
+                    this.showDiv = false;
+                }, 10000);
+            },
+            showDivAgain() {
+                this.showDiv = true;
+                this.hideDivAfterTimeout();
+            },
+            clearTimeout() {
+                // Clear the timeout if the component is about to be unmounted
+                // to prevent memory leaks
+                clearTimeout(this.timeoutId);
+            },
+            async ringingPhoneFunc() {
+                await this.$refs.ringingPhone.play();
+                let self = this;
+                setTimeout(function() {
+                    console.log("pause");
+                    self.$refs.ringingPhone.pause();
+                },60000);
+            },
+            submitPrescription() {
+                if(this.prescription) {
+                    this.disabledPrescription = true
+                    Lobibox.alert("success",
+                    {
+                        msg: "Successfully submitted prescription!"
+                    });
+                }
             }
-        }
-
+        },
     }
-
 </script>
-
 <template>
+    <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="mainPic">
+                    <div class="remotePlayerDiv">
+                        <div id="calling">
+                            <h3>Calling...</h3>
+                        </div>
+                        <img :src="doctorUrl" class="img-fluid" alt="Image1">
+                    </div>
+                    <Transition name="fade">
+                    <div class="iconCall position-absolute fade-in" v-if="showDiv">
+                        <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
+                        <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
+                        <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                    </div>
+                    </Transition>
+                    <div class="localPlayerDiv">
+                        <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="telemedForm">
+                    <div class="row-fluid">
+                        <div>
+                            <img :src="dohLogoUrl" alt="Image3" class="dohLogo">
+                        </div>
+                        <div class="formHeader">
+                            <p>Republic of the Philippines</p>
+                            <p>DEPARTMENT OF HEALTH</p>
+                            <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+                            <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+                            <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
+                            <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
+                        </div>
+                        <div class="clinical">
+                            <span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span>
+                        </div>
 
-    <div class="container">
-        <div class="myDiv">
-            <div class="divImage1">
-                <img :src="doctorUrl" alt="Image 1" class="image1">
+                        <div class="tableForm">
+                            <table class="table table-striped formTable">
+                                <tr>
+                                    <td colspan="12">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
+                                    <td colspan="6">Department: <span class="forDetails"> {{ form.department }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Date/Time Referred (ReCo): <span class="dateReferred"> {{ form.time_referred }} </span></td>
+                                    <td colspan="6">Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
+                                    <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
+                                    <td colspan="4">Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
+                                    <td colspan="6">Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
+                                    <td colspan="6">Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="caseforDetails">{{ form.case_summary }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):<br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">ICD-10 Code and Description: <br><span class="forDetails"> {{ form.other_diagnoses }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">File Attachments:
+                                        <a :href="file_path" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ file_name }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><span class="mdHcw"> {{ form.md_referred }} </span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row prescription">
+                    <div class="col">
+                        <textarea class="form-control textArea" id="FormControlTextarea" v-model="prescription" rows="4" :disabled="disabledPrescription"></textarea>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-success btn-md btn-block" type="button" v-if="disabledPrescription" disabled>Successfully Submit Prescription!</button>
+                    <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" :disabled="disabledPrescription" v-else>Submit</button>
+                </div>
             </div>
-            <div class="divImage2">
-                <img :src="doctorUrl1" class="image2" alt="Image 2">
-            </div>
-            <button class="decline-button" onclick="alert('Hello, world!')"><img :src="declineUrl" alt="Button Image"></button>
-            <button class="video-button" type="button" ><img :src="videoCallUrl" alt="Button Image"></button>
-            <button class="mic-button" type="button" ><img :src="micUrl" alt="Button Image"></button>
         </div>
-
-        <div class="myDiv2">
-            <img :src="dohLogoUrl" alt="Image 3" class="doh-logo">
-            <div class="myDiv4">
-                <p>Republic of the Philippines</p>
-                <p>DEPARTMENT OF HEALTH</p>
-                <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-                <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-                <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
-                <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
-            </div>
-
-            <div class="myDiv5">
-                <p><span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span></p>
-            </div>
-
-            <div class="myDiv6">
-                <table>
-                    <tr>
-                        <td>Name of Referring Facility: <span style="color: #E18E0B;"> {{ form.referring_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Facility Contact #: <span style="color: #E18E0B;"> {{ form.referring_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referring_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Referred to: <span style="color: #E18E0B;"> {{ form.referred_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.referred_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Date/Time Referred (ReCo): <span style="color: #E18E0B;"> {{ form.time_referred }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Patient: <span style="color: #E18E0B;"> {{ form.patient_name }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Address: <span style="color: #E18E0B;"> {{ form.patient_address }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Philhealth status: <span style="color: #E18E0B;"> {{ form.phic_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Covid Number: <span style="color: #E18E0B;"> {{ form.covid_number }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Clinical Status: <span style="color: #E18E0B;"> {{ form.refer_clinical_status }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Surviellance Category: <span style="color: #E18E0B;"> {{  }} </span></td>
-                    </tr>
-
-                    <tr>
-                        <td>Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span style="color: #E18E0B;"> {{ form.case_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): <br><span style="color: #E18E0B;"> {{ form.reco_summary }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>ICD-10 Code and Description: <span style="color: #E18E0B;"> {{ form.other_diagnoses }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Reason for referral: <span style="color: #E18E0B;"> {{ form.other_reason_referral }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>File Attachment: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.md_referring }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Contact # of Referring MD/HCW: <span style="color: #E18E0B;"> {{ form.referring_md_contact }} </span></td>
-                    </tr>
-                    <tr>
-                        <td>Name of referred MD/HCW-Mobile Contact # (ReCo): <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td>
-                    </tr>
-
-                    <div class="transbox"><td style="background-color: white;">Date/Time Transferred: <span style="color: #E18E0B;">{{ form.time_transferred}}</span></td></div>
-                    <div class="agebox">HSFGSDFDSFDSF<td style="background-color: #f2f2f2;">Age: <span style="color: #E18E0B;"></span></td></div>
-                    <div class="sexbox"><td style="background-color: #f2f2f2;">Sex: <span style="color: #E18E0B;"> {{ form.patient_sex }} </span></td></div>
-                    <div class="statusbox"><td style="background-color: white;">Status: <span style="color: #E18E0B;"> {{ form.patient_status }} </span></td></div>
-                    <div class="philbox"><td style="background-color: #f2f2f2;">Philhealth #: <span style="color: #E18E0B;"> {{ form.phic_id }} </span></td></div>
-                </table>
-            </div>
-
-
-        </div>
-
-        <div class="myDiv3">
-            <input type="text" id="myTextbox" name="myTextbox" placeholder="Input Prescription" v-model="options.channel">
-        </div>
-        <button class="submit-button" onclick="alert('Hello, world!')">SUBMIT</button>
     </div>
-    <h2 class="left-align">Get started with Voice Calling</h2>
-    <div class="row">
-        <div>
-            <button type="button" id="join">Join</button>
-            <button type="button" id="leave">Leave</button>
-        </div>
-    </div>
-    <br>
-    <div id="message"></div>
-
-
 </template>
 
 <style>
-
-    .container {
-        /*position: relative;
-        margin: 0 auto;*/
-        width: 1900px;
-        border: 5px outset green;
-        height: 950px;
+    .fade-enter,
+    .fade-leave-to {
+        animation: fadeOut 2s;
     }
 
-    .image1 {
-        position: relative;
-        top: 1;
-        left: 1;
-        z-index: 1;
-        height: 948px;
-        width: 1200px;
+    .fade-in {
+        animation: fadeIn 2s;
     }
 
-    .divImage2 {
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
+    .container-fluid {
+        border: 4px outset green;
+        /*height: auto;*/
+        height: 978px;
+    }
+
+    #calling {
+        display: flex;
         position: absolute;
-        top: 670px;
-        left: 915px;
-        z-index: 1;
-        border: 4px outset	green;
-        border-radius: 25px;
-        width: 270px;
-        height: 260px;
-    }
-    .image2 {
-        position: absolute;
-        /*top: .5px;
-        left: .5px;*/
-        z-index: 2;
-        /*transform: rotate(360deg);*/
-        /*border: 4px outset	green;*/
-        border-radius: 23px;
-        width: 270px;
-        height: 260px;
-    }
-
-    .decline-button {
-        position: absolute;
-        top: 750px;
-        left: 657px;
-        z-index: 2;
-        /*background-color: red;
-        border: none;
-        color: white;
-        padding: 1.2rem 1.4rem;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 100%;
-        transition: background-color 0.3s ease-in-out;*/
-
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
     }
 
-    .decline-button img {
-        display: block;
-        width: 40%;
-        height: auto;
+    .mainPic {
+        position: relative;
+        border: 2px outset transparent;
+        height: 100%;
+        width: 100%;
     }
-
-    /*.decline-button:hover {
-          transform: scale(1.1);
-    }*/
-
-    .video-button {
+    .remotePlayerLayer {
+        height: 966px;
+    }
+    .remotePlayerDiv {
+        height: 960px;
+        width: 100%;
+        /*border: 2px outset transparent;*/
+    }
+    .localPlayerLayer {
+        height: 300px;
+        width: 250px;
+    }
+    .localPlayerLayer div{
+        border-radius: 10px;
+    }
+    .localPlayerDiv {
         position: absolute;
-        top: 750px;
-        left: 580px;
-        z-index: 2;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
+        right: 20px;
+        /*bottom: 20px;*/
+        bottom: 10px;
+        border: 2px outset green;
+        border-radius: 11px;
+    }
+    .img-fluid {
+        border: 3px outset transparent;
+        width: 100%;
+    }
+    .img2 {
+        border-radius: 30px;
     }
 
-    .video-button img {
-        display: block;
-        width: 40%;
-        height: auto;
-    }
-
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
-
-    .mic-button {
-        position: absolute;
-        top: 750px;
-        left: 500px;
-        z-index: 2;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .mic-button img {
-        display: block;
-        width: 40%;
-        height: auto;
-    }
-
-    /*.video-button:hover {
-          transform: scale(1.1);
-    }*/
-
-    /*Main Video Call*/
-    .myDiv {
-        position: absolute;
-        top: 13px;
-        left: 13px;
+    .iconCall {
         border: 1px outset transparent;
-        height: 948px;
-        width:  1200px;
-    }
-
-    /*FORM*/
-    .myDiv2 {
-        position: absolute;
-        top: 25px;
-        left: 1230px;
-        border: 2px outset black;
-        height: 807px;
-        width:  660px;
-    }
-
-    /*Prescription Form*/
-    .myDiv3 {
-        position: absolute;
-        top: 840px;
-        left: 1230px;
-        border: 2px outset black;
-        height: 70px;
-        width:  660px;
-    }
-
-    /*SUBMIT BUTTON*/
-    .submit-button {
-        position: absolute;
-        top: 915px;
-        left: 1230px;
-        z-index: 2;
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 10px 20px;
+        width: 100%;
+        bottom: 220px;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-        width:  660px;
-        font-weight: bold;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
     }
-
-    .doh-logo {
+    .iconCall.hidden {
+        display: none;
+        opacity: 0;
+    }
+    .mic-button {
+        border-radius: 50%;
+    }
+    .video-button {
+        border-radius: 50%;
+    }
+    .decline-button {
+        border-radius: 50%;
+        border: 0;
+    }
+    .telemedForm {
         position: relative;
+        border: 2px outset black;
+        margin-top: 5px;
+        /*height: 797px;*/
+        height: 790px;
+        padding: 0;
+    }
+    .dohLogo {
+        position: relative;
+        border: 1px outset transparent;
         top: 10px;
         left: 10px;
         z-index: 2;
         height: 72px;
         width: 76px;
     }
-
-    /*Heading Form*/
-    .myDiv4 {
+    .formHeader {
         position: absolute;
-        top: 0px;
-        left: 10px;
+        top: 15px;
+        left: 105px;
         border: 1px outset transparent;
-        height: 90px;
-        width:  640px;
         text-align: center;
         line-height: .0;
         font-size: 13px;
     }
-
-    /*Clinical Referral Form*/
-    .myDiv5 {
-        position: absolute;
-        top: 82px;
-        left: 10px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
+    .clinical {
+        position: relative;
         text-align: center;
-        line-height: .0;
-        font-size: 23px;
+        margin-top: 28px;
+        border: 1px outset transparent;
+        font-size: 20px;
         font-family: Calibri;
     }
-
-    /*Patients Details*/
-    .myDiv6 {
-        position: absolute;
-        top: 125px;
-        left: 10px;
+    .tableForm {
+        position: relative;
         border: 1px outset transparent;
-        height: 679px;
-        width:  640px;
+        /*height: 664px;*/
+        height: 655px;
+        width: auto;
         text-align: left;
-        /*line-height: .0;*/
+        line-height: 1.2;
         font-weight: bold;
         font-size: 14px;
         font-family: Calibri;
 
-        display: flex; /* Optional: use flexbox to align items */
+        display: flex;
         flex-direction: column;
-        /*justify-content: top; /* Optional: distribute items evenly */
-
         overflow-y: auto;
         overflow-x: hidden;
     }
-
+    .prescription {
+        position: relative;
+        border: 2px outset transparent;
+        margin-top: 5px;
+        font-family: Calibri;
+    }
+    .textArea {
+        border: 1px outset black;
+    }
+    .btn {
+        position: relative;
+        margin-top: 5px;
+    }
+    .forDetails {
+        color: #E18E0B;
+    }
+    .caseforDetails {
+        color: #E18E0B;
+        line-height: 1.2;
+        white-space: pre-line;
+    }
+    .dateReferred {
+        color: #E18E0B;
+    }
+    .recoSummary {
+        color: #E18E0B;
+        line-height: 1.2;
+        white-space: pre-wrap;
+    }
+    .mdHcw {
+        color: #E18E0B;
+        line-height: 1.2;
+    }
     tr:nth-child(odd) {
         background-color: #f2f2f2;
         border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
     }
-
     tr:nth-child(even) {
         background-color: white;
         border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
     }
 
-
-
-
-    .box:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
+    .mic-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
-
-    .box:nth-child(even) {
-        background-color: white;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  640px;
-    }
-
-    .divbox1 {
-        background-color: #f2f2f2;
+    .mic-button-slash:before, .mic-button-slash:after {
+        content: "";
         position: absolute;
-        top: 383px;
-        border: 1px outset red;
-        /*height: 50px;*/
-        height: auto;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
-
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        height: 2px;
+        background-color: #FF0000; /* set the color of the lines */
     }
-
-    .divbox2 {
-        background-color: white;
+    .mic-button-slash:before {
+        transform: rotate(-45deg);
+        padding: 2px;
+    }
+    .mic-button-slash:after {
+        transform: rotate(-45deg);
+    }
+    .video-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
+    }
+    .video-button-slash:before, .video-button-slash:after {
+        content: "";
         position: absolute;
-        top: 434px;
-        border: 1px outset transparent;
-        height: 50px;
-        width:  640px;
-        text-align: left;
-        line-height: 0;
-        font-weight: bold;
-        font-size: 14px;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        height: 2px;
+        background-color: #FF0000; /* set the color of the lines */
+    }
+    .video-button-slash:before {
+        transform: rotate(-45deg);
+        padding: 2px;
+    }
+    .video-button-slash:after {
+        transform: rotate(-45deg);
+    }
+    .decline-button:hover {
+        background-color: rgba(2, 133, 221, 0.911);
+        box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
 
-    .boxDiv {
-        /*background-color: white;*/
-        position: absolute;
-        top: 485px;
-        border: 1px outset transparent;
-        height: 166px;
-        width:  640px;
-        text-align: left;
-        line-height: .0;
-        font-weight: bold;
-        font-size: 14px;
+    /*------------------------------------------------------------------------------------*/
 
-        display: flex; /* Optional: use flexbox to align items */
-        flex-direction: column;
-        justify-content: top; /* Optional: distribute items evenly */
-    }
-
-    .divbox3:nth-child(odd) {
-        background-color: #f2f2f2;
-        border: 1px outset orchid;
-        height: 30px;
-        width:  640px;
-    }
-
-    .deptbox {
-        position: absolute;
-        top: 96px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-
-
-    }
-
-    .transbox {
-        position: absolute;
-        top: 160px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-    }
-
-    .agebox {
-        position: absolute;
-        top: 192px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  131px;
-    }
-
-    .sexbox {
-        position: absolute;
-        top: 192px;
-        left: 522px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  118px;
-    }
-
-    .statusbox {
-        position: absolute;
-        top: 224px;
-        left: 390px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  250px;
-    }
-
-    .philbox {
-        position: absolute;
-        top: 256px;
-        left: 320px;
-        border: 1px outset transparent;
-        height: 30px;
-        width:  320px;
-    }
-
-    /*.textbox-container {
-        position: absolute;
-          background-color: red;
-          border: 1px solid red;
-          padding: 10px;
-          border-radius: 1px;
-
-          top: 1px;
-        left: 160px;
-          height: 30px;
-        width:  250px;
-    }*/
-
-    input[type="text"] {
-        position: absolute;
-        padding: 5px;
-        font-size: 14px;
-        border: 1px solid transparent;
-        border-radius: 0px;
-        box-sizing: border-box;
-        background-color: transparent;
-        font-weight: bold;
-        font-family: Calibri;
-
-        top: 0px;
-        left: 0px;
-        height: 69px;
-        width:  659px;
-    }
-
-
-    .mobile-view {
-        display: none;
-        visibility: hidden;
-    }
-
-    @media only screen and (max-width: 720px) {
-        .file-upload {
-            background-color: #ffffff;
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
+    @media (min-width: 375px) and (max-width: 375px) {
+        .col-lg-8 {
+            background-color: black;
         }
-
-        .web-view {
-            display: none;
-            visibility: hidden;
+        .iconCall {
+            bottom: 20px;
         }
+        .container-fluid {
+           border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 10px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 11px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            /*border: 1px outset transparent;*/
+            height: 38vh;
+            width: 100%;
+        }
+        .remotePlayerLayer {
+            /*height: 660px;*/
+            height: 614px;
+        }
+        .remotePlayerDiv {
+            height: 662px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /*background-color:red;*/
+        }
+        .img2 {
+            /*height: 154px;
+            width: 114px;*/
+            /*height: 154px;
+            width: 114px;*/
 
-        .mobile-view {
-            display: block;
-            visibility: visible;
+            height: 18vh;
+            width: 100%;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
         }
     }
+    /*------------------------------------------------------------------------------------*/
 
-    #telemedicine {
-        border-color:#00a65a;
-        border: none;
-        padding: 7px;
+    @media (min-width: 414px) and (max-width: 414px ) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 30px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            /*border: 1px outset transparent;*/
+            height: 32vh;
+            width: 100%;
+        }
+        .img2 {
+           /* height: 120px;
+            width: 110px;*/
+            height: 154px;
+            width: 114px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 843px;
+        }
+        .remotePlayerDiv {
+            /*!*height: 660px;*!*/
+            height: 891px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
     }
-    #telemedicine:hover {
-        background-color: lightgreen;
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 390px) and (max-width: 390px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 10px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 16px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            /*border: 1px outset transparent;*/
+            height: 32vh;
+            width: 100%;
+        }
+        .remotePlayerLayer {
+            /*height: 614px;*/
+            height: 791px;
+        }
+        .remotePlayerDiv {
+            height: 840px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
     }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 393px) and (max-width: 393px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 10px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 16px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 32vh;
+            width: 100%;
+        }
+        .remotePlayerLayer {
+            height: 799px;
+        }
+        .remotePlayerDiv {
+            height: 847px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 360px) and (max-width: 360px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 10px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 3px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            /*border: 1px outset transparent;*/
+            height: 34vh;
+            width: 100%;
+        }
+        .remotePlayerLayer {
+            height: 688px;
+        }
+        .remotePlayerDiv {
+            height: 736px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /*background-color:red;*/
+        }
+        .img2 {
+            height: 18vh;
+            width: 100%;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 412px) and (max-width: 412px ) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 30px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 32vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 863px;
+        }
+        .remotePlayerDiv {
+            height: 911px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 820px) and (max-width: 820px ) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+       /* .telemedForm {
+            height: 766px;
+        }*/
+        .tableForm {
+            font-size: 18px;
+            height: 635px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            height: 92px;
+            width: 96px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 120px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 16px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px outset transparent;
+            font-size: 24px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 50vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: auto;
+            right: 0;
+            bottom: 20px;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 1128px;
+        }
+        .remotePlayerDiv {
+            height: 1176px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 768px) and (max-width: 768px ) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        /* .telemedForm {
+             height: 766px;
+         }*/
+        .tableForm {
+            font-size: 18px;
+            height: 635px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            height: 92px;
+            width: 96px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 18px;
+            left: 90px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 16px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px outset transparent;
+            font-size: 24px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 50vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: auto;
+            right: 0;
+            bottom: 20px;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 972px;
+        }
+        .remotePlayerDiv {
+            height: 1020px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
+
+    @media (min-width: 912px) and (max-width: 912px ) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        /* .telemedForm {
+             height: 766px;
+         }*/
+        .tableForm {
+            font-size: 18px;
+            height: 642px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            height: 92px;
+            width: 96px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 15px;
+            left: 155px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 16px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 13px;
+            border: 1px outset transparent;
+            font-size: 24px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 50vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 154px;
+            width: 114px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: auto;
+            right: 0;
+            bottom: 20px;
+        }
+        .localPlayerLayer{
+            height: 150px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 1316px;
+        }
+        .remotePlayerDiv {
+            height: 1364px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*------------------------------------------------------------------------------------*/
 
 
 
+    /*------------------------------------------------------------------------------------*/
+    /*X-Small devices (portrait phones, less than 576px)*/
+    @media (max-width: 575.98px) {
 
+    }
+    /*Small devices (landscape phones, less than 768px)*/
+    @media (max-width: 767.98px) {
 
+    }
+    /*Medium devices (tablets, less than 992px)*/
+    @media (max-width: 991.98px) {
 
+    }
+    /*Large devices (desktops, less than 1200px)*/
+    @media (max-width: 1199.98px) {
 
+    }
+    /*X-Large devices (large desktops, less than 1400px)*/
+    @media (max-width: 1399.98px) {
 
-
-
-
-
-
-
-
-
-
+    }
+    /*------------------------------------------------------------------------------------*/
 
 </style>
