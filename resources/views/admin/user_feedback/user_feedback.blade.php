@@ -31,7 +31,7 @@ $counter = 1;
                             <th class="text-center"> Name / Facility Name</th>
                             <th class="text-center"> Contact </th>
                             <th class="text-center"> &emsp;Subject&emsp;</th>
-                            <th class="text-center"> Feedback </th>
+                            <th class="text-center"> Message </th>
                             <th class="text-center"> Date Submitted </th>
                             <th class="text-center"> Status </th>
                             <th class="text-center" colspan="2"> Action </th>
@@ -160,6 +160,7 @@ $counter = 1;
         }
 
         function FeedbackRemarks(id){
+            $('.loading').show();
             $('#feedback_id').val(id);
             var url = "{{ asset('user_feedback/details') }}";
             var json = {
@@ -167,6 +168,7 @@ $counter = 1;
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(data){
+                $('.loading').hide();
                 console.log(data.remarks);
                 if(data.status === 'resolved') {
                     $('#modal_remarks').val(data.remarks);
