@@ -191,7 +191,8 @@ class UserCtrl extends Controller
             if($data['sign_type'] == "draw") {
                 $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
                 $file_path = base_path()."/public/signatures/";
-                $filename = $file_path.$user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
+                $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
+                $filename = $file_path.$name;
                 if(!is_dir($file_path)) {
                     mkdir($file_path);
                 }
@@ -204,7 +205,7 @@ class UserCtrl extends Controller
         unset($data['signature'], $data['sign_type']);
 
         $user = User::where('id',$req->id)->first();
-        $user->signature = $filename;
+        $user->signature = "public/signatures/".$name;
         $user->update($data);
 
         Session::put('auth', $user);
