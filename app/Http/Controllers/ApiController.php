@@ -71,6 +71,24 @@ class ApiController extends Controller
         broadcast(new SocketReferralDischarged($call));
     }
 
+    public function updatePrescription(Request $request) {
+        $patient_form = PatientForm::where("code",$request->code)->first();
+        if($patient_form) {
+            $patient_form->prescription = $request->prescription;
+            $patient_form->save();
+            return "success";
+        }
+        return "failed";
+    }
+
+    public function checkPrescription(Request $request) {
+        $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
+        if($check_prescription) {
+            return "success";
+        }
+        return "failed";
+    }
+
     public function testSocketRedirected(Request $request) {
         $user = User::find(25);
         $patient = Patients::find(5);

@@ -19695,7 +19695,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       reco_count: $("#reco_count_val").val(),
       audioVideoUrl: $("#broadcasting_url").val() + "/public/facebook.mp3",
       tracking_id: Number,
-      referral_code: String
+      referral_code: String,
+      action_md: Number
     };
   },
   methods: {
@@ -19990,17 +19991,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log("ready!");
         $("#video-call-confirmation").modal('toggle');
       });
-      /*this.playVideoCallAudio();
-      let self = this;
-      Lobibox.confirm({
-          msg: "Do you want to accept a call?",
-          callback: function ($this, type, ev) {
-              if (type === 'yes') {
-                  window.open($("#broadcasting_url").val()+"/doctor/telemedicine?id="+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
-              }
-              self.$refs.audioVideo.pause();
-          }
-      });*/
     },
     acceptCall: function acceptCall() {
       this.$refs.audioVideo.pause();
@@ -20009,7 +19999,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
 
-      var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=" + this.tracking_id + "&code=" + this.referral_code;
+      var referring_md_status = this.user.id === this.action_md ? 'no' : 'yes';
+      var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=" + this.tracking_id + "&code=" + this.referral_code + "&referring_md=" + referring_md_status;
       var newWindow = window.open(url, windowName, windowFeatures);
 
       if (newWindow && newWindow.outerWidth) {
@@ -20139,6 +20130,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (event.payload.status === 'telemedicine') {
         if ((event.payload.action_md === _this2.user.id || event.payload.referring_md === _this2.user.id) && event.payload.trigger_by !== _this2.user.id) {
           console.log("join haha");
+          _this2.action_md = event.payload.action_md;
 
           _this2.callADoctor(event.payload.tracking_id, event.payload.code);
         }

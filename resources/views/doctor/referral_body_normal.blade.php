@@ -243,7 +243,7 @@
         /*window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");*/
         var windowName = 'NewWindow'; // Name of the new window
         var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, windowName, windowFeatures);
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&referring_md=yes", windowName, windowFeatures);
         if (newWindow && newWindow.outerWidth) {
             // If the window was successfully opened, attempt to maximize it
             newWindow.moveTo(0, 0);

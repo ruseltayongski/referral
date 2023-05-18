@@ -27,7 +27,8 @@
                 reco_count : $("#reco_count_val").val(),
                 audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
                 tracking_id: Number,
-                referral_code: String
+                referral_code: String,
+                action_md: Number
             }
         },
         methods: {
@@ -443,24 +444,14 @@
                     console.log( "ready!" );
                     $("#video-call-confirmation").modal('toggle');
                 });
-                /*this.playVideoCallAudio();
-                let self = this;
-                Lobibox.confirm({
-                    msg: "Do you want to accept a call?",
-                    callback: function ($this, type, ev) {
-                        if (type === 'yes') {
-                            window.open($("#broadcasting_url").val()+"/doctor/telemedicine?id="+tracking_id+"&code="+code, "_blank", "fullscreen=yes");
-                        }
-                        self.$refs.audioVideo.pause();
-                    }
-                });*/
             },
             acceptCall() {
                 this.$refs.audioVideo.pause();
                 $("#video-call-confirmation").modal('toggle');
                 let windowName = 'NewWindow'; // Name of the new window
                 let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code
+                const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
+                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code+"&referring_md="+referring_md_status
                 let newWindow = window.open(url, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
@@ -632,6 +623,7 @@
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             console.log("join haha")
+                            this.action_md = event.payload.action_md
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
                         }
                     } else {
