@@ -46,26 +46,25 @@ class PDFPrescription extends FPDF {
         $this->Ln();
         $this->Cell(0,12,$this->facility_contact,0,"","C");
 
-        $this->Ln(12);
+        $this->Ln(17);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
         $this->Ln(0.5);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
     }
     
     public function Footer() {
-        $this->SetY(-40);
+        $this->SetY(-30);
+        $this->Setx(120);
         $this->SetTextColor(0,0,0);
         $this->SetFont('Arial', 'B', 15);
         $this->SetUnderline(true);
-        $this->Cell(0, 10, $this->header, 0, 1, 'C');
-        $this->SetFont('Arial', '', 12);
-        $this->Cell(0, 10,$this->department, 0, 1, 'C');
-        // Set the underline style for the footer text
-
-        // $this->Cell(0, 10, 'Page '.$this->PageNo(), 0, 0, 'C');
-
-        // Reset the underline style
-        $this->SetUnderline(false);
+        $this->Cell(0, 10, $this->header."   ", 0, 1, '');
+        $this->SetFont('Arial', '', 10);
+        $this->Setx(120);
+        $this->Cell(0, 0,$this->department, 0, 1, '');
+        $this->Ln(4);
+        $this->Setx(120);
+        $this->Cell(0, 0,'asdeasd', 0, 1, '');
     }
 
     public function SetUnderline($value) {
@@ -73,9 +72,6 @@ class PDFPrescription extends FPDF {
     }
     
     public function _putdecoration($txt, $decor) {
-        if ($this->underline) {
-            $txt .= ' /U';
-        }
         return $txt;
     }
     
@@ -121,8 +117,6 @@ class PrintCtrl extends Controller
             ->leftJoin("facility","facility.id","=","action_md.facility_id")
             ->first();
 
-        //return $prescription;
-
         $header = $prescription->action_md;
         $department = $prescription->department;
         $facility = $prescription->facility;
@@ -133,10 +127,8 @@ class PrintCtrl extends Controller
         $pdf->setTitle($prescription->facility);
         $pdf->AddPage();
 
-        // Load the background image
         $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
-        // Repeat the background image horizontally
-        $imageWidth = 20;  // Width of the background image
+        $imageWidth = 20; 
         $pageWidth = $pdf->GetPageWidth();
         $pageHeight = $pdf->GetPageHeight();
         for ($x = 5; $x <= $pageWidth-10; $x += $imageWidth+40) {
