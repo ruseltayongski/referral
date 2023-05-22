@@ -8,13 +8,211 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\ParamCtrl;
+
+class PDFPrescription extends FPDF {
+    public $underline = false;
+    public $header = "";
+    public $department = "";
+    public $facility = "";
+    public $facility_address = "";
+    public $facility_contact = "";
+    public $facility_email = "";
+    public $signature_path = "";
+    
+    public function __construct($header = "",$department = "",$facility="",$facility_address="",$facility_contact="",$facility_email="",$signature_path="") {
+        $this->header = $header;
+        $this->department = $department;
+        $this->facility = $facility;
+        $this->facility_address = $facility_address;
+        $this->facility_contact = $facility_contact;
+        $this->facility_email = $facility_email;
+        $this->signature_path = $signature_path;
+        parent::__construct();
+    }
+
+    public function Header() {
+        $this->SetFont('Arial', 'B', 18);
+        $this->Cell(0, 5, $this->header, 0, 1, 'C');
+        $this->SetFont('Arial', '', 12);
+        $this->Cell(0, 10,$this->department, 0, 1, 'C');
+
+        $this->Ln(10);
+
+        $this->SetFont('Arial','B',13);
+        $this->Cell(0,0,$this->facility,0,"","C");
+        $this->Ln();
+        $this->SetFont('Arial','',12);
+        $this->Cell(0,12,$this->facility_address,0,"","C");
+        $this->Ln();
+        $this->Cell(0,0,$this->facility_email,0,"","C");
+        $this->Ln();
+        $this->Cell(0,12,$this->facility_contact,0,"","C");
+
+        $this->Ln(17);
+        $this->Line(10, $this->GetY(), 200, $this->GetY());
+        $this->Ln(0.5);
+        $this->Line(10, $this->GetY(), 200, $this->GetY());
+    }
+    
+    public function Footer() {
+        $this->SetY(-30);
+        $this->Setx(120);
+        $this->SetTextColor(0,0,0);
+        $this->SetFont('Arial', 'B', 14);
+        $this->SetUnderline(true);
+        $this->Cell(0, 10, $this->header."   ", 0, 1, '');
+        $this->SetFont('Arial', '', 10);
+        $this->Setx(120);
+        $this->Cell(0, 0,"LICENSE NO.: DR1234", 0, 1, '');
+        $this->Ln(4);
+        $this->Setx(120);
+        $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
+        $this->Image($this->signature_path, 120, 250, 50, 0);
+    }
+
+    public function SetUnderline($value) {
+        $this->underline = $value;
+    }
+    
+    public function _putdecoration($txt, $decor) {
+        return $txt;
+    }
+    
+    public function Cell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '') {
+        $txt = $this->_putdecoration($txt, 'T');
+        parent::Cell($w, $h, $txt, $border, $ln, $align, $fill, $link);
+    }
+    
+    public function Write($h, $txt, $link = '') {
+        $txt = $this->_putdecoration($txt, 'T');
+        parent::Write($h, $txt, $link);
+    }
+
+    public function GetPageWidth() {
+        return $this->w;
+    }
+
+    public function GetPageHeight() {
+        return $this->h;
+    }
+}
 
 class PrintCtrl extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        //this->middleware('doctor');
+    }
+
+    public function printPrescription($tracking_id) {
+        $prescription = Tracking::
+            select(
+                \DB::raw("concat('DR. ',action_md.fname,' ',action_md.lname) as action_md"),
+                "action_md.signature as action_md_signature",
+                "department.description as department",
+                "facility.name as facility",
+                "facility.address as facility_address",
+                "facility.contact as facility_contact",
+                "facility.email as facility_email",
+                \DB::raw("concat(patient_n.fname,' ',patient_n.lname) as normal_name"),
+                \DB::raw("concat(patient_f.fname,' ',patient_f.lname) as pregnant_name"),
+                "pf.updated_at as normal_date",
+                "preg_f.updated_at as pregnant_date",
+                "patient_n.dob",
+                \DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
+            )
+            ->where("tracking.id",$tracking_id)
+            ->leftJoin("users as action_md","action_md.id","=","tracking.action_md")
+            ->leftJoin("department","department.id","=","action_md.department_id")
+            ->leftJoin("facility","facility.id","=","action_md.facility_id")
+            ->leftJoin("patient_form as pf","pf.code","=","tracking.code")
+            ->leftJoin("pregnant_form as preg_f","preg_f.code","=","tracking.code")
+            ->leftJoin("patients as patient_n","patient_n.id","=","pf.patient_id")
+            ->leftJoin("patients as patient_f","patient_f.id","=","preg_f.patient_woman_id")
+            ->leftJoin("muncity as muncity_n","muncity_n.id","=","patient_n.muncity")
+            ->leftJoin("muncity as muncity_f","muncity_f.id","=","patient_f.muncity")
+            ->first();
+
+        $header = $prescription->action_md;
+        $department = $prescription->department;
+        $facility = $prescription->facility;
+        $facility_address = $prescription->facility_address;
+        $facility_contact = $prescription->facility_contact;
+        $facility_email = $prescription->facility_email;
+        $signature_path = realpath(__DIR__.'/../../../../'.$prescription->action_md_signature);
+        $pdf = new PDFPrescription($header,$department,$facility,$facility_address,$facility_contact,$facility_email,$signature_path);
+        $pdf->setTitle($prescription->facility);
+        $pdf->AddPage();
+
+        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
+        $imageWidth = 20; 
+        $pageWidth = $pdf->GetPageWidth();
+        $pageHeight = $pdf->GetPageHeight();
+        for ($x = 5; $x <= $pageWidth-10; $x += $imageWidth+40) {
+            $flag = true;
+            for($y=0; $y<=$pageHeight; $y += 20) {
+                $paddingX = 0;
+                if($flag) {
+                    $paddingX = 30;
+                    $flag = false;
+                } else {
+                    $flag = true;
+                }
+                $pdf->Image($imagePath, $x+$paddingX, $y, $imageWidth);
+            }
+        }
+
+        Session::put('date_referral', $prescription->date_referred);
+        $patient_age_year =  ParamCtrl::getAge($prescription->dob);
+        $patient_age_month = ParamCtrl::getMonths($prescription->dob);
+
+        if($patient_age_year == 1)
+            $patient_age .= $patient_age_year." year ";
+        else
+            $patient_age .= $patient_age_year." years ";
+ 
+        if($patient_age_month['month'] == 1)
+            $patient_age .= $patient_age_month['month']." month ";
+        else
+            $patient_age .= $patient_age_month['month']." months ";
+
+        if($patient_age_month['days'] == 1)
+            $patient_age .= $patient_age_month['days']." day old";
+        else
+            $patient_age .= $patient_age_month['days']." days old"; 
+        
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$prescription->normal_name,"Name: "), 0, 'L');
+        $y = $pdf->getY();
+        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($prescription->normal_date)),"Date: "), 0);
+
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
+        $y = $pdf->getY();
+        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,"Female","Sex: "), 0);
+
+        $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,"Cebu City Capital","Address:"), 0, 'L');
+
+        $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
+        $pdf->Image($rxPath, 10, 95, 50, 0);
+
+        $pdf->Ln(10);
+        $leftMargin = 65;
+        $pdf->SetLeftMargin($leftMargin);
+        $text = "Drug: [Name of Medication]
+        Dosage: [Dosage Strength]
+        Frequency: [Frequency]
+        Route of Administration: [Route]
+        Duration: [Duration]";
+        $pdf->MultiCell(0, 7, self::black($pdf,"Prescription: "), 0, 'L');
+        $pdf->SetTextColor(102,56,0);
+        $pdf->SetFont('Arial','I',10);
+        $pdf->MultiCell(0, 5, $text , 0, 'L');
+
+        $pdf->Output();
+
+        exit;
     }
 
     public function printReferral($track_id)
@@ -351,24 +549,6 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name of referring MD/HCW: ").self::orange($pdf,$data->md_referring,"Name of referring MD/HCW:"), 0, 'L');
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Contact # of referring MD/HCW: ").self::orange($pdf,$data->referring_md_contact,"Contact # of referring MD/HCW:"), 0, 'L');
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name of referred MD/HCW- Mobile Contact # (ReCo): ").self::orange($pdf,$data->md_referred,"Name of referred MD/HCW- Mobile Contact # (ReCo):"), 0, 'L');
-
-        $pdf->Output();
-
-        exit;
-    }
-
-    public function printPrescription() {
-        $pdf = new Fpdf();
-
-        $pdf->setTopMargin(17);
-        $pdf->setTitle("Vicente Sotto Memorial Medical Center");
-        $pdf->addPage();
-
-        $pdf->SetFont('Arial','B',12);
-        $pdf->Cell(0,0,"CENTRAL VISAYAS HEALTH REFERRAL SYSTEM",0,"","C");
-        $pdf->ln();
-        $pdf->Cell(0,12,"Clinical Referral Form",0,"","C");
-        $pdf->Ln(20);
 
         $pdf->Output();
 
