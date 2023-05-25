@@ -4,16 +4,90 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    <p class="text-danger text-bold" style="font-size: 1.3em;padding: 3px;">Do you wish to accept the call?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" @click="cancelCall"><i class="fa fa-times"></i> No</button>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-dismiss="modal" @click="acceptCall"><i class="fa fa-trash"></i> Yes</button>
+                    <img :src="imageUrl" alt="Image">
+                    <p class="txt">Dr. Dela Cruz is calling you</p>
+                    <p style="font-size: .9em">The call will start as soon as you accept</p>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div>
+                                <button type="button" class="btn btn-default btn-sm acceptButton" data-toggle="modal" data-dismiss="modal" @click="acceptCall"><i class="fa fa-check"></i></button>
+                            </div>
+                            <div class="textAccept">Accept</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div>
+                                <button type="button" class="btn btn-default btn-sm ignoreButton" data-dismiss="modal" @click="cancelCall"><i class="fa fa-times"></i></button>
+                            </div>
+                            <div class="textDecline">Decline</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+<style>
+    .modal-body {
+        padding-left: 10px;
+        padding-right: 10px;
+        border: 4px solid black;
+        border-radius: 5px;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .txt{
+        font-weight: bold;
+        font-size: 1.5em;
+        padding: 3px;
+    }
+    .acceptButton{
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: green;
+        font-size: 24px;
+        cursor: pointer;
+        left: 15px;
+    }
+    .acceptButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .ignoreButton {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: red;
+        font-size: 24px;
+        cursor: pointer;
+        right: 15px;
+    }
+    .ignoreButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .textAccept {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-left: 30px;
+    }
+    .textDecline {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-right: 28px;
+    }
+</style>
+
 <script>
     export default {
         name : "ReferralApp",
@@ -28,7 +102,8 @@
                 audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
                 tracking_id: Number,
                 referral_code: String,
-                action_md: Number
+                action_md: Number,
+                imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
             }
         },
         methods: {
