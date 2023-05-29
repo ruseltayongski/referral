@@ -22,7 +22,7 @@
                 referring_md: this.getUrlVars()["referring_md"],
                 options: {
                     // Pass your App ID here.
-                    appId: 'da7a671355bc4560bb7b8a53bd7b2a96',
+                    appId: '549fd533b0b440719166c7d3e47da1bb',
                     // Set the channel name.
                     channel: this.getUrlVars()["code"],
                     // Pass your temp token here.
@@ -30,10 +30,13 @@
                     // Set the user ID.
                     uid: 0,
                 },
+
                 form: {},
                 patient_age: "",
                 file_path: [],
                 file_name: [],
+                icd: [],
+
                 videoStreaming: true,
                 audioStreaming: true,
                 channelParameters: {
@@ -58,23 +61,19 @@
                 .get(`${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`)
                 .then((res) => {
                     const response = res.data;
-                    this.form = response.form
-                    if(response.ageType === "y")
-                        this.patient_age = response.age + " Years Old"
-                    else if(response.ageType === "m")
-                        this.patient_age =  response.age + " Months Old"
+                    console.log("testing");
+                    console.log(response);
+                    this.form = response.form;
+                    if(response.age_type === "y")
+                        this.patient_age = response.patient_age + " Years Old";
+                    else if(response.age_type === "m")
+                        this.patient_age =  response.patient_age + " Months Old";
 
-                    /*if(count(response.file_path) > 1)
-                        this.file_path = "File Attachments:" + response.file_path
-                    else
-                        this.file_path = "File Attachment:" + response.file_path*/
+                    this.icd = response.icd;
+                    console.log("testing\n"+this.icd);
 
-                    /*for(i = 0; i < count(response.file_path); i++)
-                        this.file_path = response.file_path*/
-
-                    /*if(i + 1 != count(response.file_path))*/
-                            /*,&nbsp*/
-
+                    this.file_path = response.file_path;
+                    this.file_name = response.file_name;
 
                     console.log(response)
                 })
@@ -377,14 +376,23 @@
                                     <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):<br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12">ICD-10 Code and Description: <br><span class="forDetails"> {{ form.other_diagnoses }}</span></td>
+                                    <td colspan="12">ICD-10 Code and Description:
+                                        <li v-for="i in icd">
+                                            <span class="caseforDetails">{{ i.code }} - {{ i.description }}</span>
+                                        </li>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="12">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
                                 </tr>
-                                <tr>
-                                    <td colspan="12">File Attachments:
-                                        <a :href="file_path" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ file_name }}</a>
+                                <tr v-if="file_path">
+                                    <td colspan="12">
+                                        <span v-if="file_path.length > 1">File Attachments: </span>
+                                        <span v-else>File Attachment: </span>
+                                        <span v-for="(path, index) in file_path" :key="index">
+                                            <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
+                                            <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -424,27 +432,22 @@
     .fade-leave-to {
         animation: fadeOut 2s;
     }
-
     .fade-in {
         animation: fadeIn 2s;
     }
-
     @keyframes fadeIn {
         0% { opacity: 0; }
         100% { opacity: 1; }
     }
-
     @keyframes fadeOut {
         0% { opacity: 1; }
         100% { opacity: 0; }
     }
-
     .container-fluid {
         border: 4px outset green;
         /*height: auto;*/
         height: 978px;
     }
-
     #calling {
         display: flex;
         position: absolute;
@@ -454,7 +457,6 @@
         width: 100%;
         height: 100%;
     }
-
     .mainPic {
         position: relative;
         border: 2px outset transparent;
@@ -467,7 +469,6 @@
     .remotePlayerDiv {
         height: 960px;
         width: 100%;
-        /*border: 2px outset transparent;*/
     }
     .localPlayerLayer {
         height: 300px;
@@ -490,7 +491,6 @@
     .img2 {
         border-radius: 30px;
     }
-
     .iconCall {
         border: 1px outset transparent;
         width: 100%;
@@ -792,7 +792,92 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 640px) and (max-height: 640px) {
+    @media only screen and (min-width: 320px) and (max-width: 320px) and (max-height: 480px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 9px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 5%;
+            right: 5%;
+            transform: translate(-0%, -50%);
+            font-size: 7px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 11px;
+            font-family: Calibri;
+        }
+
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 36vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 590px;
+        }
+        .remotePlayerDiv {
+            height: 638px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 600px) and (max-height: 640px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -874,7 +959,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 640px) and (max-width: 640px) and (max-height: 360px) {
+    @media only screen and (min-width: 600px) and (max-width: 640px) and (max-height: 360px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -932,7 +1017,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 740px) and (max-height: 740px) {
+    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 641px) and (max-height: 740px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1014,7 +1099,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 740px) and (max-width: 740px) and (max-height: 360px) {
+    @media only screen and (min-width: 641px) and (max-width: 740px) and (max-height: 360px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1066,7 +1151,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 760px) and (max-height: 760px) {
+    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 741px) and (max-height: 760px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1148,7 +1233,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 760px) and (max-width: 760px) and (max-height: 360px) {
+    @media only screen and (min-width: 741px) and (max-width: 760px) and (max-height: 360px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1200,7 +1285,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 780px) and (max-height: 780px) {
+    @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 761px) and (max-height: 780px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1282,7 +1367,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 780px) and (max-width: 780px) and (max-height: 360px) {
+    @media only screen and (min-width: 761px) and (max-width: 780px) and (max-height: 360px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1334,7 +1419,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 667px) and (max-height: 667px) {
+    @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 640px) and (max-height: 667px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1417,7 +1502,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 667px) and (max-width: 667px) and (max-height: 375px) {
+    @media only screen and (min-width: 640px) and (max-width: 667px) and (max-height: 375px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1465,7 +1550,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 812px) and (max-height: 812px) {
+    @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 720px) and (max-height: 812px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1546,7 +1631,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 812px) and (max-width: 812px) and (max-height: 375px) {
+    @media only screen and (min-width: 720px) and (max-width: 812px) and (max-height: 375px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1759,7 +1844,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 393px) and (max-width: 393px) and (max-height: 851px) {
+    @media only screen and (min-width: 393px) and (max-width: 393px) and (max-height: 852px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1841,7 +1926,7 @@
             margin-bottom: 10px;
         }
     }
-    @media only screen and (min-width: 851px) and (max-width: 851px) and (max-height: 393px) {
+    @media only screen and (min-width: 851px) and (max-width: 852px) and (max-height: 393px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1893,410 +1978,7 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 869px) and (max-height: 869px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 32vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 818px;
-        }
-        .remotePlayerDiv {
-            height: 866px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 869px) and (max-width: 869px) and (max-height: 412px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 362px;
-        }
-        .remotePlayerDiv {
-            height: 409px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 914px) and (max-height: 914px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            top: 11px;
-            left: 30px;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            font-size: 9px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 32vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 863px;
-        }
-        .remotePlayerDiv {
-            height: 911px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 914px) and (max-width: 914px) and (max-height: 412px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            left: 200px;
-            border: 1px outset transparent;
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 360px;
-        }
-        .remotePlayerDiv {
-            height: 408px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 915px) and (max-height: 915px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            top: 11px;
-            left: 30px;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            font-size: 9px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 32vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 863px;
-        }
-        .remotePlayerDiv {
-            height: 911px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 915px) and (max-width: 915px) and (max-height: 412px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            left: 200px;
-            border: 1px outset transparent;
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 360px;
-        }
-        .remotePlayerDiv {
-            height: 408px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 414px) and (max-width: 414px) and (min-height: 736px) and (max-height: 736px) {
+    @media only screen and (min-width: 412px) and (max-width: 414px) and (min-height: 732px) and (max-height: 736px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -2378,7 +2060,7 @@
             object-fit: contain !important;
         }
     }
-    @media only screen and (min-width: 736px) and (max-width: 736px) and (max-height: 414px) {
+    @media only screen and (min-width: 732px) and (max-width: 736px) and (min-height: 412px) and (max-height: 414px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -2425,6 +2107,571 @@
         }
         .remotePlayerDiv {
             height: 410px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 823px) and (max-height: 847px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 1%;
+            right: 1%;
+            transform: translate(-0%, -50%);
+            font-size: 10px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 34vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 794px;
+        }
+        .remotePlayerDiv {
+            height: 843px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    @media only screen and (min-width: 823px) and (max-width: 847px) and (min-height: 412px) and (max-height: 412px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 1%;
+            right: 1%;
+            transform: translate(-0%, -50%);
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 360px;
+        }
+        .remotePlayerDiv {
+            height: 408px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 848px) and (max-height: 869px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 1%;
+            right: 1%;
+            transform: translate(-0%, -50%);
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 32vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 818px;
+        }
+        .remotePlayerDiv {
+            height: 866px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    @media only screen and (min-width: 848px) and (max-width: 869px) and (min-height: 412px) and (max-height: 412px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 1%;
+            right: 1%;
+            transform: translate(-0%, -50%);
+        }
+        .localPlayerDiv {
+            top: 250px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .remotePlayerLayer {
+            height: 362px;
+        }
+        .remotePlayerDiv {
+            height: 409px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 906px) and (max-height: 915px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 30px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 32vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 863px;
+        }
+        .remotePlayerDiv {
+            height: 911px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    @media only screen and (min-width: 906px) and (max-width: 915px) and (max-height: 412px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .formHeader {
+            left: 200px;
+            border: 1px outset transparent;
+        }
+        .localPlayerDiv {
+            top: 250px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .remotePlayerLayer {
+            height: 360px;
+        }
+        .remotePlayerDiv {
+            height: 408px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 916px) and (max-height: 919px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 52px;
+            width: 56px;
+        }
+        .formHeader {
+            position: absolute;
+            top: 11px;
+            left: 30px;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            font-size: 9px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 45px;
+            border: 1px outset transparent;
+            font-size: 15px;
+            font-family: Calibri;
+        }
+        .img-fluid {
+            position: relative;
+            height: 32vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .remotePlayerLayer {
+            height: 866px;
+        }
+        .remotePlayerDiv {
+            height: 914px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    @media only screen and (min-width: 916px) and (max-width: 919px) and (max-height: 412px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .formHeader {
+            left: 200px;
+            border: 1px outset transparent;
+        }
+        .localPlayerDiv {
+            top: 250px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 134px;
+            width: 110px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 134px;
+            width: 110px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .remotePlayerLayer {
+            height: 360px;
+        }
+        .remotePlayerDiv {
+            height: 408px;
             width: 100%;
             border: 2px outset transparent;
             display: flex;
@@ -2559,6 +2806,58 @@
         }
         .remotePlayerDiv {
             height: 410px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 884px) and (max-width: 884px) and (max-height: 1104px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .formHeader {
+            left: 200px;
+            border: 1px outset transparent;
+        }
+        .localPlayerDiv {
+            top: 880px;
+            right: 5px;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 204px;
+            width: 180px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 58vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 204px;
+            width: 180px;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+        .remotePlayerLayer {
+            height: 1051px;
+        }
+        .remotePlayerDiv {
+            height: 1100px;
             width: 100%;
             border: 2px outset transparent;
             display: flex;

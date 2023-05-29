@@ -239,6 +239,12 @@ class ReferralCtrl extends Controller
         return $file_link;
     }
 
+    public function normalFormTelemed($id){
+        $track = Tracking::select('status', 'type')->where('id', $id)->first();
+        Session::put('telemed', true);
+        return self::normalForm($id, $track->status, $track->type);
+    }
+
     public static function normalForm($id,$referral_status,$form_type) {
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
@@ -270,20 +276,38 @@ class ReferralCtrl extends Controller
 
         $form = self::normalFormData($id);
 
-        return view("doctor.referral_body_normal",[
-            "form" => $form['form'],
-            "id" => $id,
-            "patient_age" => $form['age'],
-            "age_type" => $form['ageType'],
-            "reason" => $reason,
-            "icd" => $icd,
-            "file_path" => $path,
-            "file_name" => $file_name,
-            "referral_status" => $referral_status,
-            "cur_status" => $track->status,
-            "referring_fac_id" => $track->referring_fac_id,
-            "form_type" => $form_type
-        ]);
+        if(Session::get('telemed')) {
+            Session::put('telemed',false);
+            return [
+                "form" => $form['form'],
+                "id" => $id,
+                "patient_age" => $form['age'],
+                "age_type" => $form['ageType'],
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "referral_status" => $referral_status,
+                "cur_status" => $track->status,
+                "referring_fac_id" => $track->referring_fac_id,
+                "form_type" => $form_type
+            ];
+        } else {
+            return view("doctor.referral_body_normal",[
+                "form" => $form['form'],
+                "id" => $id,
+                "patient_age" => $form['age'],
+                "age_type" => $form['ageType'],
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "referral_status" => $referral_status,
+                "cur_status" => $track->status,
+                "referring_fac_id" => $track->referring_fac_id,
+                "form_type" => $form_type
+            ]);
+        }
     }
 
     public static function normalFormData($id) {

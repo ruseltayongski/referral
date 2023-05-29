@@ -19725,7 +19725,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log("pause");
                   $("#video-call-confirmation").modal('hide');
                   self.$refs.audioVideo.pause();
-                }, 60000);
+                }, 600000);
+                /*60000);*/
 
               case 4:
               case "end":
@@ -20284,7 +20285,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = ["src"];
 var _hoisted_2 = {
-  "class": "modal fade",
+  "class": "modal fade callModal",
   role: "dialog",
   id: "video-call-confirmation"
 };
@@ -20467,7 +20468,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.modal-body {\r\n        padding-left: 10px;\r\n        padding-right: 10px;\r\n        border: 4px solid black;\r\n        border-radius: 5px;\n}\n.modal-content {\r\n        padding: 20px;\n}\n.txt{\r\n        font-weight: bold;\r\n        font-size: 1.5em;\r\n        padding: 3px;\n}\n.acceptButton{\r\n        position: relative;\r\n        width: 40px;\r\n        height: 40px;\r\n        border-radius: 50%;\r\n        color: green;\r\n        font-size: 24px;\r\n        cursor: pointer;\r\n        left: 15px;\n}\n.acceptButton i {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\n}\n.ignoreButton {\r\n        position: relative;\r\n        width: 40px;\r\n        height: 40px;\r\n        border-radius: 50%;\r\n        color: red;\r\n        font-size: 24px;\r\n        cursor: pointer;\r\n        right: 15px;\n}\n.ignoreButton i {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\n}\n.textAccept {\r\n        text-align: center;\r\n        font-size: 14px;\r\n        margin-top: 15px;\r\n        margin-bottom: 10px;\r\n        margin-left: 30px;\n}\n.textDecline {\r\n        text-align: center;\r\n        font-size: 14px;\r\n        margin-top: 15px;\r\n        margin-right: 28px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.callModal {\r\n        position: fixed;\r\n        left: 0;\r\n        right: 0;\r\n        margin-top: 15%;\r\n        margin-bottom: 10%;\n}\r\n\r\n/*---------------------------------*/\n.modal-body {\r\n        padding-left: 10px;\r\n        padding-right: 10px;\r\n        border: 4px solid black;\r\n        border-radius: 5px;\n}\n.modal-content {\r\n        padding: 20px;\n}\n.txt{\r\n        font-weight: bold;\r\n        font-size: 1.5em;\r\n        padding: 3px;\n}\n.acceptButton{\r\n        position: relative;\r\n        width: 40px;\r\n        height: 40px;\r\n        border-radius: 50%;\r\n        color: green;\r\n        font-size: 24px;\r\n        cursor: pointer;\r\n        left: 15px;\n}\n.acceptButton i {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\n}\n.ignoreButton {\r\n        position: relative;\r\n        width: 40px;\r\n        height: 40px;\r\n        border-radius: 50%;\r\n        color: red;\r\n        font-size: 24px;\r\n        cursor: pointer;\r\n        right: 15px;\n}\n.ignoreButton i {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\n}\n.textAccept {\r\n        text-align: center;\r\n        font-size: 14px;\r\n        margin-top: 15px;\r\n        margin-bottom: 10px;\r\n        margin-left: 30px;\n}\n.textDecline {\r\n        text-align: center;\r\n        font-size: 14px;\r\n        margin-top: 15px;\r\n        margin-right: 28px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
