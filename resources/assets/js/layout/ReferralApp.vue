@@ -1,6 +1,6 @@
 <template>
     <audio ref="audioVideo" :src="audioVideoUrl" loop></audio>
-    <div class="modal fade callModal" role="dialog" id="video-call-confirmation">
+    <div class="modal fade callModal" role="dialog" id="video-call-confirmation" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -26,7 +26,7 @@
         </div>
     </div>
 </template>
-<style>
+<style scoped>
 
     .callModal {
         position: fixed;
@@ -34,9 +34,8 @@
         right: 0;
         margin-top: 15%;
         margin-bottom: 10%;
+        background: rgba(0,0,0,0);
     }
-
-/*---------------------------------*/
     .modal-body {
         padding-left: 10px;
         padding-right: 10px;
@@ -130,7 +129,7 @@
                     console.log("pause");
                     $("#video-call-confirmation").modal('hide');
                     self.$refs.audioVideo.pause();
-                },600000);    /*60000);*/
+                },60000);
             },
             notifyReco(code, feedback_count, redirect_track) {
                 let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +

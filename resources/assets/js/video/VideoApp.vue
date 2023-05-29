@@ -845,23 +845,106 @@
             bottom: auto;
         }
         .localPlayerLayer{
-            height: 134px;
-            width: 110px;
+            height: 114px;
+            width: 90px;
         }
         .img-fluid {
             position: relative;
-            height: 36vh;
+            height: 44vh;
             width: 100%;
         }
         .img2 {
-            height: 134px;
-            width: 110px;
+            height: 114px;
+            width: 90px;
         }
         .remotePlayerLayer {
-            height: 590px;
+            height: 428px;
         }
         .remotePlayerDiv {
-            height: 638px;
+            height: 476px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+    @media only screen and (min-width: 480px) and (max-width: 480px) and (max-height: 320px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 640px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 62px;
+            width: 66px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 5%;
+            right: 5%;
+            transform: translate(-0%, -50%);
+            font-size: 10px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 35px;
+            border: 1px outset transparent;
+            font-size: 14px;
+            font-family: Calibri;
+        }
+
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 114px;
+            width: 90px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 94vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 114px;
+            width: 90px;
+        }
+        .remotePlayerLayer {
+            height: 268px;
+        }
+        .remotePlayerDiv {
+            height: 316px;
             width: 100%;
             border: 2px outset transparent;
             display: flex;
@@ -876,7 +959,177 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
+    @media only screen and (min-width: 320px) and (max-width: 320px) and (max-height: 568px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 9px;
+            height: 646px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 42px;
+            width: 46px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 5%;
+            right: 5%;
+            transform: translate(-0%, -50%);
+            font-size: 7px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 55px;
+            border: 1px outset transparent;
+            font-size: 11px;
+            font-family: Calibri;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 114px;
+            width: 90px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 38vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 114px;
+            width: 90px;
+        }
+        .remotePlayerLayer {
+            height: 516px;
+        }
+        .remotePlayerDiv {
+            height: 565px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
+    @media only screen and (min-width: 568px) and (max-width: 568px) and (max-height: 320px) {
+        .col-lg-8 {
+            background-color: black;
+        }
+        .iconCall {
+            bottom: 20px;
+        }
+        .container-fluid {
+            border: 1px outset green;
+            height: auto;
+        }
+        .telemedForm {
+            height: 766px;
+        }
+        .tableForm {
+            font-size: 11px;
+            height: 645px;
+        }
+        .dohLogo {
+            position: relative;
+            border: 1px outset transparent;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+            height: 62px;
+            width: 66px;
+        }
+        .formHeader {
+            position: absolute;
+            border: 1px outset transparent;
+            text-align: center;
+            line-height: .1px;
+            top: 60px;
+            left: 5%;
+            right: 5%;
+            transform: translate(-0%, -50%);
+            font-size: 11px;
+        }
+        .clinical {
+            position: relative;
+            text-align: center;
+            margin-top: 35px;
+            border: 1px outset transparent;
+            font-size: 12px;
+            font-family: Calibri;
+        }
+        .localPlayerDiv {
+            top: 20px;
+            right: 0;
+            bottom: auto;
+        }
+        .localPlayerLayer{
+            height: 114px;
+            width: 90px;
+        }
+        .img-fluid {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        .img2 {
+            height: 114px;
+            width: 90px;
+        }
+        .remotePlayerLayer {
+            height: 268px;
+        }
+        .remotePlayerDiv {
+            height: 316px;
+            width: 100%;
+            border: 2px outset transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remotePlayerLayer div video {
+            object-fit: contain !important;
+        }
+        .btn {
+            margin-bottom: 10px;
+        }
+    }
 
+
+
+
+
+
+    /*----------------------------------------------------------------------------------------------------------------*/
     @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 600px) and (max-height: 640px) {
         .col-lg-8 {
             background-color: black;
@@ -2870,7 +3123,6 @@
     }
     /*----------------------------------------------------------------------------------------------------------------*/
 
-
     /*----------------------------------------------------------------------------------------------------------------*/
     /*TAB VIEWPORT*/
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -4003,7 +4255,6 @@
         }
     }
     /*----------------------------------------------------------------------------------------------------------------*/
-
 
     /*----------------------------------------------------------------------------------------------------------------*/
     /*DESKTOP VIEWPORT*/
