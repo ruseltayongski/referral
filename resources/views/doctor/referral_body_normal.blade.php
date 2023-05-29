@@ -78,7 +78,9 @@
                     {{ $patient_age['days'] }} days old
                 @endif
             @endif
-            </span></td>
+            </span><br>
+            <small><i>(at time of referral)</i></small>
+        </td>
         <td>Sex: <span class="patient_sex form-details">{{ $form->patient_sex }}</span></td>
         <td>Status: <span class="patient_status form-details">{{ $form->patient_status }}</span></td>
     </tr>

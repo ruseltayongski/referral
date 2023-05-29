@@ -76,7 +76,7 @@ $user = Session::get('auth');
             </tr>
             <tr>
                 <td colspan="3">Name: <span class="woman_name form-details">{{ $form['pregnant']->woman_name }}</span></td>
-                <td>Age: <span class="patient_age form-details"> {{ $form['pregnant']->woman_age }}</span></td>
+                <td>Age: <span class="patient_age form-details"> {{ $form['pregnant']->woman_age }}</span><br><small><i>(at time of referral)</i></small></td>
             </tr>
             <tr>
                 <td colspan="4">Address: <span class="woman_address form-details">{{ $form['pregnant']->patient_address }}</span></td>
