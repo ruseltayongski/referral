@@ -142,6 +142,27 @@
                 ?>
             >Primary Care Facility
             </option>
+            <option value="dialysis_center"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'dialysis_center'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Dialysis Center
+            </option>
+            <option value="clinic"
+            <?php
+                if(isset($data->level)){
+                    if($data->level == 'clinic'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Clinic
+            </option>
+
         </select>
     </div>
     <div class="form-group">
@@ -236,6 +257,46 @@
                 }
                 ?>
             >DOH Hospital
+            </option>
+            <option value="private_clinic"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'private_clinic'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Private Clinic
+            </option>
+            <option value="government_clinic"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'government_clinic'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Government Clinic
+            </option>
+            <option value="private_dialysis_center"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'private_dialysis_center'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Private Dialysis Center
+            </option>
+            <option value="government_dialysis_center"
+            <?php
+                if(isset($data->level)){
+                    if($data->hospital_type == 'government_dialysis_center'){
+                        echo 'selected';
+                    }
+                }
+                ?>
+            >Government Dialysis Center
             </option>
         </select>
     </div>
