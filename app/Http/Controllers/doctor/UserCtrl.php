@@ -184,8 +184,7 @@ class UserCtrl extends Controller
     public function editProfile(Request $req) {
         $user = Session::get('auth');
         $data = $req->all();
-        unset($data['_token']);
-        unset($data['id']);
+        unset($data['_token'], $data['id']);
 
         if(isset($data['sign_type']) && isset($data['signature'])) {
             if($data['sign_type'] == "draw") {
@@ -202,10 +201,12 @@ class UserCtrl extends Controller
             }
         }
 
-        unset($data['signature'], $data['sign_type']);
+        if(isset($data['signature']))
+            $user->signature = "public/signatures/".$name;
+        else
+            $user->signature = null;
 
-        $user = User::where('id',$req->id)->first();
-        $user->signature = "public/signatures/".$name;
+        unset($data['signature'], $data['sign_type']);
         $user->update($data);
 
         Session::put('auth', $user);

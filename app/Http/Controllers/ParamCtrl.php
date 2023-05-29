@@ -24,15 +24,16 @@ class ParamCtrl extends Controller
         $birthDate = explode("/", $birthDate);
         //get age from date or birthdate
         $date_referral = Session::get('date_referral');
-        if(isset($date_referral)) {
+        if(isset($date_referral)) { // age compared to date of referral
             $date_referral = explode('/', $date_referral);
             $bday = mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]);
             $refer = mktime(0, 0, 0, $date_referral[0], $date_referral[1], $date_referral[2]);
             $age = (date("md", $bday)) > date("md", $refer)
                 ? ((date("Y", $refer) - (date("Y", $bday)) - 1))
                 : (date("Y", $refer) - $birthDate[2]);
-            Session::put('date_referral', null);
-        } else {
+            if($age > 0)
+                Session::put('date_referral', null);
+        } else { // age compared to now
             $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
                 ? ((date("Y") - $birthDate[2]) - 1)
                 : (date("Y") - $birthDate[2]));
@@ -41,7 +42,15 @@ class ParamCtrl extends Controller
     }
 
     static function getMonths($date){
-        $diff = date_diff(date_create($date), date_create('now'));
+        $date_referral = Session::get('date_referral');
+
+        if(isset($date_referral)) {
+            $diff = date_diff(date_create($date), date_create($date_referral));
+            Session::put('date_referral', null);
+        } else {
+            $diff = date_diff(date_create($date), date_create('now'));
+        }
+
         return ['month' => $diff->m, 'days' => $diff->d];
     }
 
