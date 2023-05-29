@@ -76,7 +76,17 @@
                                 <td><small>{{ $row->email }}</small></td>
                                 <td><small>{{ $row->chief_hospital }}</small></td>
                                 <td class="text-center">
-                                    <span class="badge bg-purple">{{ $row->level == 'primary_care_facility' ? 'Primary Care Facility' : $row->level }}</span>
+                                    <span class="badge bg-purple">
+                                        @if($row->level == 'primary_care_facility')
+                                            Primary Care Facility
+                                        @elseif($row->level == 'dialysis_center')
+                                            Dialysis Center
+                                        @elseif($row->level == 'clinic')
+                                            Clinic
+                                        @else
+                                            {{ $row->level }}
+                                        @endif
+                                    </span>
                                 </td>
                                 <td class="text-center">
                                     <span class="
@@ -102,9 +112,29 @@
                                         elseif($row->hospital_type == 'EOC'){
                                             echo 'badge bg-black';
                                         }
+                                        elseif($row->hospital_type == 'private_clinic'){
+                                            echo 'badge bg-blue';
+                                        }
+                                        elseif($row->hospital_type == 'government_clinic'){
+                                            echo 'badge bg-green';
+                                        }
+                                        elseif($row->hospital_type == 'private_dialysis_center'){
+                                            echo 'badge bg-orange';
+                                        }
+                                        elseif($row->hospital_type == 'government_dialysis_center'){
+                                            echo 'badge bg-teal';
+                                        }
                                     ?>">
                                         @if($row->hospital_type == 'gov_birthing_home')
                                             Government Birthing Home
+                                        @elseif($row->hospital_type == 'private_clinic')
+                                            Private Clinic
+                                        @elseif($row->hospital_type == 'government_clinic')
+                                            Government Clinic
+                                        @elseif($row->hospital_type == 'private_dialysis_center')
+                                            Private Dialysis Center
+                                        @elseif($row->hospital_type == 'government_dialysis_center')
+                                            Government Dialysis Center
                                         @else
                                             {{ $row->hospital_type == 'birthing_home' ? 'Birthing Home' : ucfirst($row->hospital_type) }}
                                         @endif
