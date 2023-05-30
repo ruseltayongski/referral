@@ -22,7 +22,7 @@
                 referring_md: this.getUrlVars()["referring_md"],
                 options: {
                     // Pass your App ID here.
-                    appId: '549fd533b0b440719166c7d3e47da1bb',
+                    appId: '1e264d7f57994a64b4ceb42f80188d06',
                     // Set the channel name.
                     channel: this.getUrlVars()["code"],
                     // Pass your temp token here.
@@ -445,7 +445,6 @@
     }
     .container-fluid {
         border: 4px outset green;
-        /*height: auto;*/
         height: 978px;
     }
     #calling {
@@ -464,15 +463,28 @@
         width: 100%;
     }
     .remotePlayerLayer {
+
         height: 966px;
+
+        /*display: flex;
+        margin: 1em auto;
+        width: 100%;
+        height: calc(.5626 * 87vw);*/
     }
     .remotePlayerDiv {
         height: 960px;
         width: 100%;
+
     }
     .localPlayerLayer {
+
         height: 300px;
         width: 250px;
+
+        /*display: block;
+        margin: 1em auto;
+        width:  100%
+        height: calc(.5626 * 25vw);*/
     }
     .localPlayerLayer div{
         border-radius: 10px;
@@ -517,7 +529,6 @@
         position: relative;
         border: 2px outset black;
         margin-top: 5px;
-        /*height: 797px;*/
         height: 790px;
         padding: 0;
     }
@@ -532,11 +543,13 @@
     }
     .formHeader {
         position: absolute;
-        top: 15px;
-        left: 105px;
         border: 1px outset transparent;
         text-align: center;
         line-height: .0;
+        top: 60px;
+        left: 5%;
+        right: 5%;
+        transform: translate(-0%, -50%);
         font-size: 13px;
     }
     .clinical {
@@ -604,7 +617,6 @@
         background-color: white;
         border: 1px outset transparent;
     }
-
     .mic-button:hover {
         background-color: rgba(2, 133, 221, 0.911);
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
@@ -617,7 +629,7 @@
         right: 0;
         transform: translateY(-50%);
         height: 2px;
-        background-color: #FF0000; /* set the color of the lines */
+        background-color: #FF0000;
     }
     .mic-button-slash:before {
         transform: rotate(-45deg);
@@ -638,7 +650,7 @@
         right: 0;
         transform: translateY(-50%);
         height: 2px;
-        background-color: #FF0000; /* set the color of the lines */
+        background-color: #FF0000;
     }
     .video-button-slash:before {
         transform: rotate(-45deg);
@@ -652,9 +664,12 @@
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
 
-    /*----------------------------------------------------------------------------------------------------------------*/
+
+
+
+
     /*MOBILE VIEWPORT*/
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 280px) and (max-width: 280px) and (max-height: 653px) {
         .col-lg-8 {
             background-color: black;
@@ -711,7 +726,6 @@
         }
         .img-fluid {
             position: relative;
-            /*border: 1px outset transparent;*/
             height: 28vh;
             width: 100%;
         }
@@ -725,7 +739,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /*background-color:red;*/
         }
         .img2 {
             height: 120px;
@@ -791,7 +804,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 320px) and (max-width: 320px) and (max-height: 480px) {
         .col-lg-8 {
             background-color: black;
@@ -958,8 +971,8 @@
             margin-bottom: 10px;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 320px) and (max-width: 320px) and (max-height: 568px) {
+
+    @media only screen and (min-width: 320px) and (max-width: 320px) and (min-height: 568px) and (max-height: 568px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -1127,9 +1140,6 @@
 
 
 
-
-
-    /*----------------------------------------------------------------------------------------------------------------*/
     @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 600px) and (max-height: 640px) {
         .col-lg-8 {
             background-color: black;
@@ -1269,7 +1279,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 641px) and (max-height: 740px) {
         .col-lg-8 {
             background-color: black;
@@ -1403,7 +1413,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 741px) and (max-height: 760px) {
         .col-lg-8 {
             background-color: black;
@@ -1537,7 +1547,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 360px) and (max-width: 360px) and (min-height: 761px) and (max-height: 780px) {
         .col-lg-8 {
             background-color: black;
@@ -1671,7 +1681,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 640px) and (max-height: 667px) {
         .col-lg-8 {
             background-color: black;
@@ -1727,7 +1737,6 @@
         }
         .img-fluid {
             position: relative;
-            /*border: 1px outset transparent;*/
             height: 38vh;
             width: 100%;
         }
@@ -1745,7 +1754,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /*background-color:red;*/
         }
 
         .remotePlayerLayer div video {
@@ -1802,7 +1810,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 375px) and (max-width: 375px) and (min-height: 720px) and (max-height: 812px) {
         .col-lg-8 {
             background-color: black;
@@ -1961,7 +1969,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 390px) and (max-width: 390px) and (max-height: 844px) {
         .col-lg-8 {
             background-color: black;
@@ -2019,7 +2027,6 @@
         }
         .img-fluid {
             position: relative;
-            /*border: 1px outset transparent;*/
             height: 32vh;
             width: 100%;
         }
@@ -2096,7 +2103,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 393px) and (max-width: 393px) and (max-height: 852px) {
         .col-lg-8 {
             background-color: black;
@@ -2230,7 +2237,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 412px) and (max-width: 414px) and (min-height: 732px) and (max-height: 736px) {
         .col-lg-8 {
             background-color: black;
@@ -2370,7 +2377,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 823px) and (max-height: 847px) {
         .col-lg-8 {
             background-color: black;
@@ -2532,7 +2539,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 848px) and (max-height: 869px) {
         .col-lg-8 {
             background-color: black;
@@ -2671,7 +2678,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 906px) and (max-height: 915px) {
         .col-lg-8 {
             background-color: black;
@@ -2803,7 +2810,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 916px) and (max-height: 919px) {
         .col-lg-8 {
             background-color: black;
@@ -2935,7 +2942,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 414px) and (max-width: 414px) and (min-height: 896px) and (max-height: 896px) {
         .col-lg-8 {
             background-color: black;
@@ -2982,7 +2989,6 @@
         }
         .img-fluid {
             position: relative;
-            /*border: 1px outset transparent;*/
             height: 32vh;
             width: 100%;
         }
@@ -3006,7 +3012,6 @@
             height: 843px;
         }
         .remotePlayerDiv {
-            /*!*height: 660px;*!*/
             height: 891px;
             width: 100%;
             border: 2px outset transparent;
@@ -3069,7 +3074,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 884px) and (max-width: 884px) and (max-height: 1104px) {
         .col-lg-8 {
             background-color: black;
@@ -3121,11 +3126,11 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
 
-    /*----------------------------------------------------------------------------------------------------------------*/
+
+
     /*TAB VIEWPORT*/
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 540px) and (max-width: 540px) and (max-height: 720px) {
         .col-lg-8 {
             background-color: black;
@@ -3253,7 +3258,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 601px) and (max-width: 601px) and (max-height: 962px) {
         .col-lg-8 {
             background-color: black;
@@ -3391,7 +3396,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 768px) and (max-width: 768px) and (max-height: 1024px) {
         .col-lg-8 {
             background-color: black;
@@ -3546,7 +3551,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 800px) and (max-width: 800px) and (max-height: 1280px) {
         .col-lg-8 {
             background-color: black;
@@ -3701,7 +3706,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 810px) and (max-width: 810px) and (max-height: 1080px) {
         .col-lg-8 {
             background-color: black;
@@ -3860,7 +3865,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 820px) and (max-width: 820px) and (max-height: 1180px) {
         .col-lg-8 {
             background-color: black;
@@ -3872,9 +3877,6 @@
             border: 1px outset green;
             height: auto;
         }
-        /* .telemedForm {
-             height: 766px;
-         }*/
         .tableForm {
             font-size: 18px;
             height: 639px;
@@ -4018,8 +4020,8 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    @media only screen and (min-width: 912px) and (max-width: 912px) and (max-height: 1368px) {
+
+    @media only screen and (min-width: 912px) and (max-width: 912px) and (max-height: 1368px){
         .col-lg-8 {
             background-color: black;
         }
@@ -4030,9 +4032,6 @@
             border: 1px outset green;
             height: auto;
         }
-        /* .telemedForm {
-             height: 766px;
-         }*/
         .tableForm {
             font-size: 18px;
             height: 642px;
@@ -4176,7 +4175,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1024px) and (max-width: 1024px) and (min-height: 600px) and (max-height: 600px) {
         .col-lg-8 {
             background-color: black;
@@ -4254,11 +4253,11 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
 
-    /*----------------------------------------------------------------------------------------------------------------*/
+
+
     /*DESKTOP VIEWPORT*/
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1920px) and (max-width: 1920px) and (max-height: 1080px) {
         .col-lg-8 {
             background-color: black;
@@ -4340,7 +4339,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1664px) and (max-width: 1664px) and (max-height: 1110px) {
         .col-lg-8 {
             background-color: black;
@@ -4420,7 +4419,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1620px) and (max-width: 1620px) and (max-height: 1080px) {
         .col-lg-8 {
             background-color: black;
@@ -4500,7 +4499,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1600px) and (max-width: 1600px) and (max-height: 900px) {
         .col-lg-8 {
             background-color: black;
@@ -4580,7 +4579,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1536px) and (max-width: 1536px) and (min-height: 900px) and (max-height: 960px) {
         .col-lg-8 {
             background-color: black;
@@ -4660,7 +4659,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1536px) and (max-width: 1536px) and (max-height: 864px) {
         .col-lg-8 {
             background-color: black;
@@ -4673,7 +4672,6 @@
             height: auto;
         }
         .tableForm {
-/*            font-size: 18px;*/
             height: 557px;
         }
         .telemedForm {
@@ -4741,7 +4739,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1500px) and (max-width: 1504px) and (min-height: 1000px) and (max-height: 1003px) {
         .col-lg-8 {
             background-color: black;
@@ -4821,7 +4819,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1440px) and (max-width: 1440px) and (min-height: 901px) and (max-height: 960px) {
         .col-lg-8 {
             background-color: black;
@@ -4902,7 +4900,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1440px) and (max-width: 1440px) and (max-height: 900px) {
         .col-lg-8 {
             background-color: black;
@@ -4983,7 +4981,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1368px) and (max-width: 1368px) and (max-height: 912px) {
         .col-lg-8 {
             background-color: black;
@@ -5065,7 +5063,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1366px) and (max-width: 1366px) and (max-height: 768px) {
         .col-lg-8 {
             background-color: black;
@@ -5148,7 +5146,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1280px) and (max-width: 1280px) and (min-height: 920px) and (max-height: 1024px) {
         .col-lg-8 {
             background-color: black;
@@ -5229,7 +5227,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1280px) and (max-width: 1280px) and (min-height: 721px) and (max-height: 800px) {
         .col-lg-8 {
             background-color: black;
@@ -5310,7 +5308,7 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
+
     @media only screen and (min-width: 1280px) and (max-width: 1280px) and (min-height: 720px) and (max-height: 720px) {
         .col-lg-8 {
             background-color: black;
@@ -5380,12 +5378,6 @@
         }
         .remotePlayerLayer {
            height: 667px;
-            /*display: block;*/
-            /*justify-content: center;
-            align-items: center;*/
-            /*margin: 1em auto;
-            width: 80%;
-            height: calc(.5625 * 80vw)*/
         }
         .remotePlayerDiv {
             height: 715px;
@@ -5399,8 +5391,10 @@
             object-fit: contain !important;
         }
     }
-    /*----------------------------------------------------------------------------------------------------------------*/
-    /*----------------------------------------------------------------------------------------------------------------*/
+
+
+
+
 
 
     /*X-Small devices (portrait phones, less than 576px)*/
