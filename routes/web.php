@@ -206,7 +206,7 @@ Route::post('doctor/referral/redirect','doctor\ReferralCtrl@redirect');//if pati
 
 
 Route::get('doctor/referral/data/normal/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@normalForm');
-Route::get('doctor/referral/video/normal/form/{id}','doctor\ReferralCtrl@normalFormData');
+Route::get('doctor/referral/video/normal/form/{id}','doctor\ReferralCtrl@normalFormTelemed');
 Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@pregnantForm');
 
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
