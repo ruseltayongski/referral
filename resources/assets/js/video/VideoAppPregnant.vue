@@ -244,21 +244,21 @@
                         if(response.data === 'success') {
                             this.prescriptionSubmitted = true
                             Lobibox.alert("success",
-                            {
-                                msg: "Successfully submitted prescription!"
-                            });
+                                {
+                                    msg: "Successfully submitted prescription!"
+                                });
                         } else {
                             Lobibox.alert("error",
-                            {
-                                msg: "Error in server!"
-                            });
+                                {
+                                    msg: "Error in server!"
+                                });
                         }
                     });
                 } else {
                     Lobibox.alert("error",
-                    {
-                        msg: "No prescription inputted!"
-                    });
+                        {
+                            msg: "No prescription inputted!"
+                        });
                 }
             },
             generatePrescription() {
@@ -271,14 +271,14 @@
                         window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}`, '_blank');
                     } else {
                         Lobibox.alert("error",
-                        {
-                            msg: "No added prescription!"
-                        });
+                            {
+                                msg: "No added prescription!"
+                            });
                     }
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
     }
@@ -296,11 +296,11 @@
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
                     <Transition name="fade">
-                    <div class="iconCall position-absolute fade-in" v-if="showDiv">
-                        <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
-                        <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
-                        <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
-                    </div>
+                        <div class="iconCall position-absolute fade-in" v-if="showDiv">
+                            <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
+                            <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
+                            <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                        </div>
                     </Transition>
                     <div class="localPlayerDiv">
                         <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2">
@@ -309,104 +309,163 @@
             </div>
             <div class="col-lg-4">
                 <div class="telemedForm">
-                <div class="row-fluid">
-                    <div>
-                        <img :src="dohLogoUrl" alt="Image3" class="dohLogo">
-                    </div>
-                    <div class="formHeader">
-                        <p>Republic of the Philippines</p>
-                        <p>DEPARTMENT OF HEALTH</p>
-                        <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-                        <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-                        <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
-                        <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
-                    </div>
-                    <div class="clinical">
-                        <span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span>
-                    </div>
-                    <div class="tableForm">
-                        <table class="table table-striped formTable">
-                            <tr>
-                                <td colspan="12">Name of Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Address: <span class="forDetails"> {{ form.referring_address }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
-                                <td colspan="6">Department: <span class="forDetails"> {{ form.department }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Address: <span class="forDetails"> {{ form.referred_address }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">Date/Time Referred (ReCo): <span class="dateReferred"> {{ form.time_referred }} </span></td>
-                                <td colspan="6">Date/Time Transferred:<span class="forDetails"> {{ form.time_transferred}} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
-                                <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
-                                <td colspan="4">Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
-                                <td colspan="6">Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">Philhealth status: <span class="forDetails"> {{ form.phic_status }} </span></td>
-                                <td colspan="6">Philhealth #: <span class="forDetails"> {{ form.phic_id }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Case Summary (pertinent Hx/PE, including meds, labs, course etc.): <br><span class="caseforDetails">{{ form.case_summary }}</span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):<br><span class="recoSummary"> {{ form.reco_summary }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">ICD-10 Code and Description:
-                                    <li v-for="i in icd">
-                                        <span class="caseforDetails">{{ i.code }} - {{ i.description }}</span>
-                                    </li>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
-                            </tr>
-                            <tr v-if="file_path">
-                                <td colspan="12">
-                                    <span v-if="file_path.length > 1">File Attachments: </span>
-                                    <span v-else>File Attachment: </span>
-                                    <span v-for="(path, index) in file_path" :key="index">
-                                            <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
-                                            <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
-                                        </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Name of Referring MD/HCW: <span class="forDetails"> {{ form.md_referring }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><span class="mdHcw"> {{ form.md_referred }} </span></td>
-                            </tr>
-                        </table>
+                    <div class="row-fluid">
+                        <div>
+                            <img :src="dohLogoUrl" alt="Image3" class="dohLogo">
+                        </div>
+                        <div class="formHeader">
+                            <p>Republic of the Philippines</p>
+                            <p>DEPARTMENT OF HEALTH</p>
+                            <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+                            <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+                            <p>Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</p>
+                            <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
+                        </div>
+                        <div class="clinical">
+                            <span style="color: #4CAF50;"><b>BEmONC/CEmONC REFERRAL FORM</b></span>
+                        </div>
+                        <div class="tableForm">
+                            <table class="table table-striped form-label formTable">
+                                <tr>
+                                    <th colspan="12">REFERRAL RECORD</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Who is referring</td>
+                                    <td colspan="6">Record Number: <span> </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Referred Date: <span> </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Referring Name: <span class="forDetails"> {{ form.md_referring }} </span></td>
+                                    <td colspan="6">Arrival Date:</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Contact # of Referring MD/HCW: <span class="forDetails"> {{ form.referring_md_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Referring Facility: <span class="forDetails"> {{ form.referring_name }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Facility Contact #: <span class="forDetails"> {{ form.referring_contact }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Accompanied by the Health Worker: <span></span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Referred to: <span class="forDetails"> {{ form.referred_name }} </span></td>
+                                    <td colspan="6">Department: <span class="forDetails"> {{ form.department }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Covid Number: <span class="forDetails"> {{ form.covid_number }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Clinical Status: <span class="forDetails"> {{ form.refer_clinical_status }} </span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
+                                </tr>
+                            </table>
+                                <div class="row">
+                                    <div class="col">
+                                        <table>
+                                            <tr class="bg-gray">
+                                                <th colspan="6">WOMAN</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">Name:</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Age: <span> </span><br><small>(at time of referral)</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Address: <span> </span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Main Reason for Referral: </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Major Findings (Clinica and BP,Temp,Lab) <br><span> </span></td>
+                                            </tr>
+                                            <tr><td></td></tr>
+                                            <tr class="bg-gray">
+                                                <td colspan="6">Treatments Give Time</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Before Referral: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">During Referral: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral <br><span> </span> </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">ICD-10 Code and Description:
+                                                    <li v-for="i in icd">
+                                                        <span class="caseforDetails">{{ i.code }} - {{ i.description }}</span>
+                                                    </li>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Reason for referral: <span class="forDetails"> {{ form.other_reason_referral }} </span></td>
+                                            </tr>
+                                            <tr v-if="file_path">
+                                                <td colspan="6">
+                                                    <span v-if="file_path.length > 1">File Attachments: </span>
+                                                    <span v-else>File Attachment: </span>
+                                                    <span v-for="(path, index) in file_path" :key="index">
+                                                        <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
+                                                        <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col">
+                                        <table>
+                                            <tr class="bg-gray">
+                                                <th colspan="6">BABY</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Name: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Date of Birth: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Birth Weight: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Gestational Age: </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Main Reason for Referral: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Major Findings (Clinical and BP,Temp,Lab) <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Last (Breast) Feed (Time): <span></span></td>
+                                            </tr>
+                                            <tr class="bg-gray">
+                                                <td colspan="6">Treatments Give Time</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Before Referral: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">During Transport: <span></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral <br><span></span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
-            </div>
                 <div v-if="referring_md == 'yes'">
                     <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                 </div>
@@ -427,6 +486,7 @@
 </template>
 
 <style>
+    /*
     .fade-enter,
     .fade-leave-to {
         animation: fadeOut 2s;
@@ -444,7 +504,6 @@
     }
     .container-fluid {
         border: 4px outset green;
-        /*height: 978px;*/
         object-fit: cover;
     }
     #calling {
@@ -502,7 +561,7 @@
         font-family: Calibri;
     }
     .dohLogo {
-       position: relative;
+        position: relative;
         border: 1px outset transparent;
         top: 10px;
         left: 10px;
@@ -651,9 +710,10 @@
         background-color: rgba(2, 133, 221, 0.911);
         box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
     }
-
+*/
 
     /*MOBILE VIEWPORT*/
+    /*
     @media only screen and (min-width: 280px) and (max-width: 280px) and (min-height: 653px) and (max-height: 653px) {
         .col-lg-8 {
             background-color: black;
@@ -4472,6 +4532,11 @@
         }
     }
 
+
+
+
+
+
     @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 823px) and (max-height: 847px) {
         .col-lg-8 {
             background-color: black;
@@ -4937,14 +5002,12 @@
         }
         .formHeader {
             position: absolute;
+            top: 11px;
+            left: 30px;
             border: 1px outset transparent;
             text-align: center;
             line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
+            font-size: 9px;
         }
         .clinical {
             position: relative;
@@ -5002,14 +5065,8 @@
             height: auto;
         }
         .formHeader {
-            position: absolute;
+            left: 200px;
             border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
         }
         .localPlayerDiv {
             top: 250px;
@@ -5037,171 +5094,6 @@
         }
         .remotePlayerDiv {
             height: 408px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
-    @media only screen and (min-width: 412px) and (max-width: 412px) and (min-height: 1004px) and (max-height: 1004px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .0;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 28vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 936px;
-        }
-        .remotePlayerDiv {
-            height: 984px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 1004px) and (max-width: 1004px) and (min-height: 412px) and (max-height: 412px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            top: 340px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .tableForm {
-            font-size: 9px;
-            height: 273px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 42px;
-            width: 46px;
-        }
-        .telemedForm {
-            height: 395px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .0;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 8px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 55px;
-            border: 1px outset transparent;
-            font-size: 12px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 140px;
-            width: 114px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0px;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 140px;
-            width: 114px;
-        }
-        .remotePlayerLayer {
-            height: 350px;
-        }
-        .remotePlayerDiv {
-            height: 400px;
             width: 100%;
             border: 2px outset transparent;
             display: flex;
@@ -5487,871 +5379,6 @@
         }
     }
 
-    @media only screen and (min-width: 428px) and (max-width: 428px) and (min-height: 926px) and (max-height: 926px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 32vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 860px;
-        }
-        .remotePlayerDiv {
-            height: 907px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 926px) and (max-width: 926px) and (min-height: 428px) and (max-height: 428px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 370px;
-        }
-        .remotePlayerDiv {
-            height: 418px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
-    @media only screen and (min-width: 430px) and (max-width: 430px) and (min-height: 932px) and (max-height: 932px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 32vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 866px;
-        }
-        .remotePlayerDiv {
-            height: 914px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 932px) and (max-width: 932px) and (min-height: 430px) and (max-height: 430px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 250px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 372px;
-        }
-        .remotePlayerDiv {
-            height: 420px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
-    @media only screen and (min-width: 432px) and (max-width: 432px) and (min-height: 768px) and (max-height: 768px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 37vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 704px;
-        }
-        .remotePlayerDiv {
-            height: 752px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 768px) and (max-width: 768px) and (min-height: 432px) and (max-height: 432px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 15px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 260px;
-            right: 10px;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 374px;
-        }
-        .remotePlayerDiv {
-            height: 422px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
-    @media only screen and (min-width: 540px) and (max-width: 540px) and (min-height: 960px) and (max-height: 960px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 11px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 10px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 40vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 140px;
-            width: 120px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: auto;
-            right: 0;
-            bottom: 20px;
-        }
-        .localPlayerLayer{
-            height: 140px;
-            width: 120px;
-        }
-        .remotePlayerLayer {
-            height: 893px;
-        }
-        .remotePlayerDiv {
-            height: 941px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 960px) and (max-width: 962px) and (min-height: 540px) and (max-height: 540px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 5%;
-            right: 5%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 370px;
-            right: 10px;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 480px;
-        }
-        .remotePlayerDiv {
-            height: 528px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
-    /*
-    @media only screen and (min-width: 480px) and (max-width: 480px) and (min-height: 853px) and (max-height: 853px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .telemedForm {
-            height: 766px;
-        }
-        .tableForm {
-            font-size: 12px;
-            height: 640px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 52px;
-            width: 56px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 11px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 45px;
-            border: 1px outset transparent;
-            font-size: 15px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 38vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 140px;
-            width: 120px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 30px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 140px;
-            width: 120px;
-        }
-        .remotePlayerLayer {
-            height: 788px;
-        }
-        .remotePlayerDiv {
-            height: 836px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 853px) and (max-width: 853px) and (min-height: 480px) and (max-height: 480px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 15px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 5%;
-            right: 5%;
-            transform: translate(-0%, -50%);
-        }
-        .localPlayerDiv {
-            top: 310px;
-            right: 10px;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 421px;
-        }
-        .remotePlayerDiv {
-            height: 469px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    */
-
-    @media only screen and (min-width: 768px) and (max-width: 768px) and (min-height: 1076px) and (max-height: 1076px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .tableForm {
-            font-size: 18px;
-            height: 648px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 10px;
-            left: 10px;
-            z-index: 2;
-            height: 92px;
-            width: 96px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 16px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 5px;
-            border: 1px outset transparent;
-            font-size: 24px;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 50vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 174px;
-            width: 150px
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: auto;
-            right: 0;
-            bottom: 20px;
-        }
-        .localPlayerLayer{
-            height: 174px;
-            width: 150px
-        }
-        .remotePlayerLayer {
-            height: 1008px;
-        }
-        .remotePlayerDiv {
-            height: 1056px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-    @media only screen and (min-width: 1076px) and (max-width: 1076px) and (min-height: 768px) and (max-height: 768px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 10px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .tableForm {
-            font-size: 10px;
-            height: 456px;
-        }
-        .telemedForm {
-            height: 582px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-0%, -50%);
-            font-size: 9px;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 42px;
-            width: 46px;
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 55px;
-            border: 1px outset transparent;
-            font-size: 14px;
-            font-family: Calibri;
-        }
-        .localPlayerDiv {
-            top: 610px;
-            right: 10px;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .img-fluid {
-            position: relative;
-            height: 66vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .remotePlayerLayer {
-            height: 713px;
-        }
-        .remotePlayerDiv {
-            height: 408px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 200px;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
-    }
-
     @media only screen and (min-width: 884px) and (max-width: 884px) and (min-height: 1104px) and (max-height: 1104px) {
         .col-lg-8 {
             background-color: black;
@@ -6403,10 +5430,10 @@
             object-fit: contain !important;
         }
     }
-
-
+/*
 
     /*TAB VIEWPORT*/
+    /*
     @media only screen and (min-width: 540px) and (max-width: 540px) and (min-height: 720px) and (max-height: 720px) {
         .col-lg-8 {
             background-color: black;
@@ -6498,7 +5525,7 @@
             border: 1px outset green;
             height: auto;
         }
-       .formHeader {
+        .formHeader {
             position: absolute;
             top: 11px;
             left: 125px;
@@ -6680,7 +5707,7 @@
         }
     }
 
-    @media only screen and (min-width: 768px) and (max-width: 768px) and (min-height: 1024px) and (max-height: 1024px) {
+    @media only screen and (min-width: 768px) and (max-width: 768px) and (max-height: 1024px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -6757,7 +5784,7 @@
             object-fit: contain !important;
         }
     }
-    @media only screen and (min-width: 1024px) and (max-width: 1024px) and (min-height: 768px) and (max-height: 768px) {
+    @media only screen and (min-width: 1024px) and (max-width: 1024px) and (max-height: 768px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -6990,7 +6017,7 @@
         }
     }
 
-    @media only screen and (min-width: 810px) and (max-width: 810px) and (min-height: 1080px) and (max-height: 1080px) {
+    @media only screen and (min-width: 810px) and (max-width: 810px) and (max-height: 1080px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -7149,7 +6176,7 @@
         }
     }
 
-    @media only screen and (min-width: 820px) and (max-width: 820px) and (min-height: 1180px) and (max-height: 1180px) {
+    @media only screen and (min-width: 820px) and (max-width: 820px) and (max-height: 1180px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -7309,7 +6336,7 @@
         }
     }
 
-    @media only screen and (min-width: 912px) and (max-width: 912px) and (min-height: 1368px) and (max-height: 1368px){
+    @media only screen and (min-width: 912px) and (max-width: 912px) and (max-height: 1368px){
         .col-lg-8 {
             background-color: black;
         }
@@ -7386,7 +6413,7 @@
             object-fit: contain !important;
         }
     }
-    @media only screen and (min-width: 1368px) and (max-width: 1368px) and (min-height: 912px) and (max-height: 912px) {
+    @media only screen and (min-width: 1368px) and (max-width: 1368px) and (max-height: 912px) {
         .col-lg-8 {
             background-color: black;
         }
@@ -7544,11 +6571,10 @@
             object-fit: contain !important;
         }
     }
-
-
-
+*/
 
     /*DESKTOP VIEWPORT*/
+    /*
     @media only screen and (min-width: 1920px) and (max-width: 1920px) and (min-height: 1080px) and (max-height: 1080px) {
         .col-lg-8 {
             background-color: black;
@@ -9071,7 +8097,7 @@
             width: 144px;
         }
         .remotePlayerLayer {
-           height: 667px;
+            height: 667px;
         }
         .remotePlayerDiv {
             height: 715px;
@@ -9251,83 +8277,87 @@
             object-fit: contain !important;
         }
     }
+*/
+
+
+
 
 
     /*X-Small devices (portrait phones, less than 576px)*/
-   /* @media only screen and (min-width: 541px) and (max-width: 575.98px){
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 5px;
-            left: 5px;
-            z-index: 2;
-            height: 62px;
-            width: 66px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 1%;
-            right: 1%;
-            transform: translate(-1%, -50%);
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 35px;
-            border: 1px outset transparent;
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 52vh;
-            width: 100%;
-        }
-        .img2 {
+    /* @media only screen and (min-width: 541px) and (max-width: 575.98px){
+         .col-lg-8 {
+             background-color: black;
+         }
+         .iconCall {
+             bottom: 20px;
+         }
+         .container-fluid {
+             border: 1px outset green;
+             height: auto;
+         }
+         .dohLogo {
+             position: relative;
+             border: 1px outset transparent;
+             top: 5px;
+             left: 5px;
+             z-index: 2;
+             height: 62px;
+             width: 66px;
+         }
+         .formHeader {
+             position: absolute;
+             border: 1px outset transparent;
+             text-align: center;
+             line-height: .1px;
+             top: 60px;
+             left: 1%;
+             right: 1%;
+             transform: translate(-1%, -50%);
+         }
+         .clinical {
+             position: relative;
+             text-align: center;
+             margin-top: 35px;
+             border: 1px outset transparent;
+             font-family: Calibri;
+         }
+         .img-fluid {
+             position: relative;
+             height: 52vh;
+             width: 100%;
+         }
+         .img2 {
+              height: 134px;
+              width: 110px;
+          }
+         .btn {
+             margin-bottom: 10px;
+         }
+         .localPlayerDiv {
+             top: 20px;
+             right: 0;
+             bottom: auto;
+         }
+         .localPlayerLayer{
              height: 134px;
              width: 110px;
          }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 670px;
-        }
-        .remotePlayerDiv {
-            height: 720px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
+         .remotePlayerLayer {
+             height: 670px;
+         }
+         .remotePlayerDiv {
+             height: 720px;
+             width: 100%;
+             border: 2px outset transparent;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+         }
+         .remotePlayerLayer div video {
+             object-fit: contain !important;
+         }
 
-    }*/
+     }*/
     /*------------------------------------------------------------------------------------*/
 
     /*Small devices (landscape phones, less than 768px)*/
@@ -9409,81 +8439,81 @@
     /*------------------------------------------------------------------------------------*/
 
     /*Medium devices (tablets, less than 992px)*/
-   /* @media only screen and (min-width: 769px) and (max-width: 991.98px) {
-        .col-lg-8 {
-            background-color: black;
-        }
-        .iconCall {
-            bottom: 20px;
-        }
-        .container-fluid {
-            border: 1px outset green;
-            height: auto;
-        }
-        .dohLogo {
-            position: relative;
-            border: 1px outset transparent;
-            top: 10px;
-            left: 10px;
-            z-index: 2;
-            height: 62px;
-            width: 66px;
-        }
-        .formHeader {
-            position: absolute;
-            border: 1px outset transparent;
-            text-align: center;
-            line-height: .1px;
-            top: 60px;
-            left: 5%;
-            right: 5%;
-            transform: translate(-0%, -50%);
-        }
-        .clinical {
-            position: relative;
-            text-align: center;
-            margin-top: 35px;
-            border: 1px outset transparent;
-            !*font-size: 15px;*!
-            font-family: Calibri;
-        }
-        .img-fluid {
-            position: relative;
-            height: 52vh;
-            width: 100%;
-        }
-        .img2 {
-            height: 134px;
-            width: 110px;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-        .localPlayerDiv {
-            top: 20px;
-            right: 0;
-            bottom: auto;
-        }
-        .localPlayerLayer{
-            height: 134px;
-            width: 110px;
-        }
-        .remotePlayerLayer {
-            height: 670px;
-        }
-        .remotePlayerDiv {
-            height: 720px;
-            width: 100%;
-            border: 2px outset transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .remotePlayerLayer div video {
-            object-fit: contain !important;
-        }
+    /* @media only screen and (min-width: 769px) and (max-width: 991.98px) {
+         .col-lg-8 {
+             background-color: black;
+         }
+         .iconCall {
+             bottom: 20px;
+         }
+         .container-fluid {
+             border: 1px outset green;
+             height: auto;
+         }
+         .dohLogo {
+             position: relative;
+             border: 1px outset transparent;
+             top: 10px;
+             left: 10px;
+             z-index: 2;
+             height: 62px;
+             width: 66px;
+         }
+         .formHeader {
+             position: absolute;
+             border: 1px outset transparent;
+             text-align: center;
+             line-height: .1px;
+             top: 60px;
+             left: 5%;
+             right: 5%;
+             transform: translate(-0%, -50%);
+         }
+         .clinical {
+             position: relative;
+             text-align: center;
+             margin-top: 35px;
+             border: 1px outset transparent;
+             !*font-size: 15px;*!
+             font-family: Calibri;
+         }
+         .img-fluid {
+             position: relative;
+             height: 52vh;
+             width: 100%;
+         }
+         .img2 {
+             height: 134px;
+             width: 110px;
+         }
+         .btn {
+             margin-bottom: 10px;
+         }
+         .localPlayerDiv {
+             top: 20px;
+             right: 0;
+             bottom: auto;
+         }
+         .localPlayerLayer{
+             height: 134px;
+             width: 110px;
+         }
+         .remotePlayerLayer {
+             height: 670px;
+         }
+         .remotePlayerDiv {
+             height: 720px;
+             width: 100%;
+             border: 2px outset transparent;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+         }
+         .remotePlayerLayer div video {
+             object-fit: contain !important;
+         }
 
-    }*/
+     }*/
     /*------------------------------------------------------------------------------------*/
     /*Large devices (desktops, less than 1200px)*/
    /* @media (max-width: 1199.98px) {
@@ -9491,7 +8521,7 @@
     }*/
     /*------------------------------------------------------------------------------------*/
     /*X-Large devices (large desktops, less than 1400px)*/
-   /* @media (max-width: 1399.98px) {
+    /*@media (max-width: 1399.98px) {
 
     }*/
     /*------------------------------------------------------------------------------------*/

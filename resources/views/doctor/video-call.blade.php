@@ -27,11 +27,18 @@
         <script src="{{ asset('resources/assets/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
         <script src="{{ asset('public/js/app_video.js?version=').date('YmdHis') }}" defer></script>
+        <script src="{{ asset('public/js/app_video_pregnant.js?version=').date('YmdHis') }}" defer></script>
     </head>
     <body>
         <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
-        <div id="app_video">
-            <video-app :user="{{ Session::get('auth') }}"></video-app>
-        </div>
+        @if($referral_type == 'normal')
+            <div id="app_video">
+                <video-app :user="{{ Session::get('auth') }}"></video-app>
+            </div>
+        @elseif($referral_type == 'pregnant')
+            <div id="app_video_pregnant">
+                <video-app-pregnant :user="{{ Session::get('auth') }}"></video-app-pregnant>
+            </div>
+        @endif
     </body>
 </html>
