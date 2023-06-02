@@ -777,6 +777,16 @@ class ReportCtrl extends Controller
 
                 if($redirect_to_accept) {
                     $redirect_accept_holder[] = $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at); //redirect to accept
+                    ////
+                    $redirect_accept_details[] = [
+                        "code" => $redirect_to_accept->code,
+                        "minutes" => $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at),
+                        "date_redirected" => $redirect->created_at,
+                        "date_accepted" => $redirect_to_accept->created_at,
+                        "date_redirected_format" => date("M d, Y h:i A",strtotime($redirect->created_at)),
+                        "date_accepted_format" => date("M d, Y h:i A",strtotime($redirect_to_accept->created_at)),
+                        "status" => "redirected"
+                    ];
                 }
             }
 
@@ -796,6 +806,9 @@ class ReportCtrl extends Controller
             $c = array_column($refer_accept_details,'minutes'); // which column needed to be sorted
             array_multisort($c,SORT_DESC,$refer_accept_details); // sorts the array $refer_accept_details with respective of aray $c
 
+            $d = array_column($redirect_accept_details,'minutes'); // which column needed to be sorted
+            array_multisort($d,SORT_DESC,$redirect_accept_details); // sorts the array $redirect_accept_details with respective of aray $c
+
             $data[] = [
                 "date" => date("M d",strtotime($per_day)),
                 "referred" => count($referred),
@@ -803,6 +816,7 @@ class ReportCtrl extends Controller
                 "transferred" => count($transferred),
                 "refer_to_accept_details" => $refer_accept_details,
                 "refer_to_accept" => round(collect($refer_accept_holder)->avg(),2),
+                "redirect_to_accept_details" => $redirect_accept_details,
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
