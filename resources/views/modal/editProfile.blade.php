@@ -143,8 +143,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
-<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script>
+{{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
 
     var signaturePad, sign_type;
