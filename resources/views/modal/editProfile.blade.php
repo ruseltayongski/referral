@@ -122,7 +122,7 @@
                             <input type="hidden" name="signature" id="signature_final" value="">
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
-                            @if(isset($user->signature) && $user->signature != null && file_exists(asset($user->signature)))
+                            @if(isset($user->signature) && $user->signature != null)
                                 <img src="{{ asset($user->signature) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
                             @else
@@ -143,8 +143,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
-<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script>
+{{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
 
     var signaturePad, sign_type;
