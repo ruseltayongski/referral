@@ -209,6 +209,9 @@ Route::get('doctor/referral/data/normal/{id}/{referral_status}/{form_type}','doc
 Route::get('doctor/referral/video/normal/form/{id}','doctor\ReferralCtrl@normalFormTelemed');
 Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','doctor\ReferralCtrl@pregnantForm');
 
+Route::get('doctor/referral/video/pregnant/form/{id}','doctor\ReferralCtrl@pregnantFormTelemed');
+
+
 Route::get('doctor/referred','doctor\ReferralCtrl@referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
 Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
