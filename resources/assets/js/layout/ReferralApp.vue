@@ -5,10 +5,7 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <img :src="imageUrl" alt="Image">
-                    <tr>
-                        <td>Dr. <span>{{}}</span> is calling you</td>
-                    </tr>
-                    <p class="txt">Dr. Dela Cruz is calling you</p>
+                    <p class="txt">{{ doctorCaller }}</p>
                     <p style="font-size: .9em">The call will start as soon as you accept</p>
                     <div class="row">
                         <div class="col-xs-6">
@@ -29,77 +26,6 @@
         </div>
     </div>
 </template>
-<style scoped>
-
-    .callModal {
-        position: fixed;
-        left: 0;
-        right: 0;
-        margin-top: 15%;
-        margin-bottom: 10%;
-        background: rgba(0,0,0,0);
-    }
-    .modal-body {
-        padding-left: 10px;
-        padding-right: 10px;
-        border: 4px solid black;
-        border-radius: 5px;
-    }
-    .modal-content {
-        padding: 20px;
-    }
-    .txt{
-        font-weight: bold;
-        font-size: 1.5em;
-        padding: 3px;
-    }
-    .acceptButton{
-        position: relative;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        color: green;
-        font-size: 24px;
-        cursor: pointer;
-        left: 15px;
-    }
-    .acceptButton i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    .ignoreButton {
-        position: relative;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        color: red;
-        font-size: 24px;
-        cursor: pointer;
-        right: 15px;
-    }
-    .ignoreButton i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    .textAccept {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 15px;
-        margin-bottom: 10px;
-        margin-left: 30px;
-    }
-    .textDecline {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 15px;
-        margin-right: 28px;
-    }
-</style>
-
 <script>
     export default {
         name : "ReferralApp",
@@ -112,33 +38,13 @@
                 increment_referral: Number,
                 reco_count : $("#reco_count_val").val(),
                 audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
-                /*tracking_id: Number,*/
+                tracking_id: Number,
                 referral_code: String,
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
-
-
-                baseUrl: $("#broadcasting_url").val(),
-                tracking_id: this.getUrlVars()["track_id"],
-
-                $user: {},
-
+                doctorCaller: String,
             }
         },
-
-        mounted() {
-            axios
-                .get(`${this.baseUrl}/doctor/referral/calling/${this.tracking_id}`)
-                .then((res) => {
-                    const response = res.data;
-                    console.log("testing");
-                    console.log(response);
-                    this.user = response.user;
-
-                })
-        },
-
-
         methods: {
             playAudio() {
                 audioElement.play();
@@ -733,6 +639,7 @@
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             console.log("join haha")
                             this.action_md = event.payload.action_md
+                            this.doctorCaller = event.payload.doctorCaller
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
                         }
                     } else {
@@ -1005,3 +912,74 @@
         }
     }
 </script>
+
+<style scoped>
+
+    .callModal {
+        position: fixed;
+        left: 0;
+        right: 0;
+        margin-top: 15%;
+        margin-bottom: 10%;
+        background: rgba(0,0,0,0);
+    }
+    .modal-body {
+        padding-left: 10px;
+        padding-right: 10px;
+        border: 4px solid black;
+        border-radius: 5px;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .txt{
+        font-weight: bold;
+        font-size: 1.5em;
+        padding: 3px;
+    }
+    .acceptButton{
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: green;
+        font-size: 24px;
+        cursor: pointer;
+        left: 15px;
+    }
+    .acceptButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .ignoreButton {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: red;
+        font-size: 24px;
+        cursor: pointer;
+        right: 15px;
+    }
+    .ignoreButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .textAccept {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-left: 30px;
+    }
+    .textDecline {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-right: 28px;
+    }
+</style>

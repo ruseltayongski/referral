@@ -268,28 +268,10 @@
                                         <small class="@if($row['hospital_type'] == 'government'){{ 'text-yellow' }}@else{{ 'text-maroon' }}@endif">{{ $row['hospital_type'] == 'doh_hospital' ? 'DOH HOSPITAL' : ucfirst($row['hospital_type']) }}</small>
                                     </td>
                                     <td width="10%">
-                                        <!--
                                         <span class="text-blue" style="font-size: 15pt" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','referred','{{ $date_range }}')">
                                             <?php $statistics_referred += $row['data']['referred']; ?>
                                             {{ $row['data']['referred'] }}
                                         </span><br><br>
-                                        -->
-                                        <!-------------------------------->
-
-
-                                        <span class="text-red" style="font-size: 15pt" onclick="if ('{{ $user->level }}' === 'doctor' && '{{ $facility_id }}' === '{{ $row['facility_id'] }}') {
-                                                statisticsData($(this), '{{ $request_type }}', '{{ $row['facility_id'] }}', 'referred', '{{ $date_range }}');
-                                                } else {
-                                                        Lobibox.alert('error', {
-                                                        msg: 'You are not authorized to view this data!'
-                                                        });
-                                                        }">
-                                                <?php $statistics_referred += $row['data']['referred']; ?>
-                                                {{ $row['data']['referred'] }}
-                                        </span><br><br>
-
-
-                                        <!-------------------------------->
                                     </td>
                                     <td>
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','redirected','{{ $date_range }}')">
@@ -429,8 +411,15 @@
         });
 
         var user_level = "<?php echo $user->level; ?>";
+        var user_facility_id = "<?php echo $user->facility_id; ?>";
+
         function statisticsData(data,request_type,facility_id,status,date_range) {
-            if(user_level === "mayor" || user_level === "dmo") return;
+            if(user_level === "mayor" || user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
+                /*Lobibox.alert('error', {
+                    msg: 'You are not authorized to view this data!'
+                });*/
+                return;
+            }
 
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");

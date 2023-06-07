@@ -60,13 +60,16 @@ class ApiController extends Controller
     }
 
     public function callADoctor(Request $request) {
+        $user = Session::get('auth');
+        $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
         $call = [
             "tracking_id" => $request->tracking_id,
             "code" => $request->code,
             "action_md" => (int)$request->action_md,
             "referring_md" => (int)$request->referring_md,
             "trigger_by" => (int)$request->trigger_by,
-            "status" => "telemedicine"
+            "status" => "telemedicine",
+            "doctorCaller" => $doctorCaller
         ];
         broadcast(new SocketReferralDischarged($call));
     }
