@@ -108,7 +108,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                             @if($row->department_id === 5 && $row->action_md === $user->id)
                                                 <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $row->id }}','{{ $row->code }}','{{ $row->action_md }}','{{ $row->referring_md }}','{{ $type }}');"><i class="fa fa-camera"></i></button>
                                                 @if($row->prescription)
-                                                <a href="{{ url('doctor/print/prescription').'/'.$row->id }}" target="_blank" type="button" style="border: 1px solid black;color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i></a>
+                                                    <a href="{{ url('doctor/print/prescription').'/'.$row->id }}" target="_blank" type="button" style="border: 1px solid black;color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i></a>
                                                 @endif
                                             @endif
                                             @if( ($status=='ACCEPTED' || $status == 'TRAVEL'))

@@ -2,6 +2,65 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .legend-container{
+            display:flex;
+            align-items: center;
+        }
+        .legend-item{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .legend-box{
+            width: 24px;
+            height: 22px;
+            margin-right: 7px;
+        }
+        .legend-box1{
+            background-color: #11ffc5;
+        }
+        .legend-box2{
+            background-color: #00008b;
+        }
+        .legend-box3{
+            background-color: #96bd2b;
+        }
+        .legend-box4{
+            background-color: #28a99e;
+        }
+        .legend-box5{
+            background-color: #6b538b;
+        }
+        .legend-label{
+            font-size: 10px;
+            font-weight: bold;
+            font-family: Arial;
+            margin-right: 10px;
+        }
+        .medium-label{
+            font-size: 15px;
+            font-weight: bold;
+            margin-right: 17px;
+            margin-left: 20px;
+        }
+        .legend-item1{
+            margin-left: 90px;
+        }
+        .table-data{
+            border-collapse: collapse;
+            border: 1px solid black;
+            width:100%;
+        }
+        .table-data th{
+            width: 5%;
+            padding: 5px;
+            border: 1px solid black;
+        }
+        .cell, .table-data td{
+            border-bottom: 1px solid black;
+        }
+    </style>
     <div class="row">
         <div class="col-md-12">
             <div style="background-color: white;padding: 10px;">
@@ -44,67 +103,6 @@
             <div id="chartContainer" style="height: 600px; width: 100%;"></div>
             <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
         </div>
-
-        <!--modification started in here-->
-        <style>
-            .legend-container{
-                display:flex;
-                align-items: center;
-            }
-            .legend-item{
-                display: flex;
-                align-items: center;
-                margin-right: 10px;
-            }
-            .legend-box{
-                width: 24px;
-                height: 22px;
-                margin-right: 7px;
-            }
-            .legend-box1{
-                background-color: #11ffc5;
-            }
-            .legend-box2{
-                background-color: #00008b;
-            }
-            .legend-box3{
-                background-color: #96bd2b;
-            }
-            .legend-box4{
-                background-color: #28a99e;
-            }
-            .legend-box5{
-                background-color: #6b538b;
-            }
-            .legend-label{
-                font-size: 10px;
-                font-weight: bold;
-                font-family: Arial;
-                margin-right: 10px;
-            }
-            .medium-label{
-                font-size: 15px;
-                font-weight: bold;
-                margin-right: 17px;
-                margin-left: 20px;
-            }
-            .legend-item1{
-                margin-left: 90px;
-            }
-            .table-data{
-                border-collapse: collapse;
-                border: 1px solid black;
-                width:100%;
-            }
-            th{
-                width: 5%;
-                padding: 5px;
-                border: 1px solid black;
-            }
-            .cell, td{
-                border-bottom: 1px solid black;
-            }
-        </style>
 
         <div class="col-md-12">
             <div class="jim-content">
@@ -269,7 +267,7 @@
                 </div>
             </div>
         </div>
-    </div> <!--modification ended in here-->
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="statistics-modal" tabindex="-1" aria-hidden="true">
@@ -325,7 +323,8 @@
                 });
                 refer_to_accept.push({
                     y : data.refer_to_accept ? data.refer_to_accept : '',
-                    details : data.refer_to_accept_details
+                    details : data.refer_to_accept_details,
+                    indexLabel : `${data.refer_to_accept_details?.length ?? 0} : ${(data.refer_to_accept ? data.refer_to_accept : '')}`,
                 });
 
                 redirected.push({
@@ -334,7 +333,8 @@
                 });
                 redirect_to_accept.push({
                     y : data.redirect_to_accept ? data.redirect_to_accept : '',
-                    details : data.redirect_to_accept_details
+                    details : data.redirect_to_accept_details,
+                    indexLabel: `${data.redirect_to_accept_details?.length ?? 0} : ${(data.redirect_to_accept ? data.redirect_to_accept : '')}`
                 });
 
                 transferred.push({
@@ -445,7 +445,7 @@
                 $("#statistics-modal").modal('show');
                 $(".statistics-body").html(loading);
                 setTimeout(function() {
-                    $(".statistics-title").html('STATISTICS');
+                    $(".statistics-title").html(e.dataPoint.details[0]["status"]);
                     $(".statistics-body").html(
                         "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
                         "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>TAT</th><th class='text-green'>Date Referred</th><th class='text-green'>Accepted Date</th></tr>\n" +
@@ -459,7 +459,7 @@
                             "</a>");
                         tr.append( $('<td />', { text : value["code"] } ));
                         tr.append( $('<td />', { text : timeDiffCalc(new Date(value["date_accepted"]),new Date(value["date_"+value["status"]])) } ));
-                        tr.append( $('<td />', { text : getMinutesBetweenDates(new Date(value["date_accepted"]),new Date(value["date_"+value["status"]])) } ));
+                        // tr.append( $('<td />', { text : getMinutesBetweenDates(new Date(value["date_accepted"]),new Date(value["date_"+value["status"]])) } ));
                         tr.append( $('<td />', { text : value["date_"+value["status"]+"_format"] } ));
                         tr.append( $('<td />', { text : value["date_accepted_format"] } ));
                         $("#table").append(tr);

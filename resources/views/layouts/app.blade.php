@@ -154,7 +154,7 @@
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="header" style="background-color:#59ab91;padding:10px;">
+        <div class="header" style="background-color:#59ab91;padding:15px;">
             <div class="container">
                 @if($user->level == 'opcen')
                     <img src="{{ asset('resources/img/banner_711healthline2023v1.png') }}" class="img-responsive" />

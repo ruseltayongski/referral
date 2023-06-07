@@ -208,6 +208,8 @@ class UserCtrl extends Controller
 
         unset($data['signature'], $data['sign_type']);
         $user->update($data);
+        Session::forget('auth');
+        $user = User::where('username',$user->username)->first();
 
         Session::put('auth', $user);
 

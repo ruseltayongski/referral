@@ -2,7 +2,6 @@
     $user = Session::get('auth');
     $counter = 0;
 ?>
-
 @extends('layouts.app')
 
 @section('content')
@@ -245,40 +244,66 @@
                                                data-toggle="modal"
                                                data-type="pregnant"
                                                class="btn btn-primary btn-xs profile_info hide"
-                                               style="margin-right: 13px;">
-                                                <i class="fa fa-stethoscope"></i>
+                                               onclick="handleRefer()"
+                                               style="width:100%;margin-bottom:5px;">
+                                               <i class="fa fa-ambulance"></i>
                                                 Refer
-                                            </a>
+                                            </a><br>
+                                            <a href="#pregnantModal"
+                                               data-patient_id = "{{ $row->id }}"
+                                               data-toggle="modal"
+                                               data-type="pregnant"
+                                               data-telemedicine="1"
+                                               onclick="handleTelemedicine()"
+                                               class="btn btn-success btn-xs profile_info hide"
+                                               style="width:100%;margin-bottom:5px;">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
+                                            </a><br>
                                             <a href="#"
                                                id="walkinPregnant{{ $counter }}"
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
                                                onclick="promptWalkinPregnant(<?php echo $counter++?>)"
+                                               style="width:100%;"
                                                class="btn btn-warning btn-xs profile_info hide">
-                                                <i class="fa fa-ambulance"></i>
+                                               <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
                                         @else
                                             <a href="#normalFormModal"
-                                               data-patient_id = "{{ $row->id }}"
-                                               data-backdrop="static"
-                                               data-toggle="modal"
-                                               data-type="normal"
-                                               class="btn btn-primary btn-xs profile_info hide"
-                                               style="margin-right: 13px;">
-                                                <i class="fa fa-stethoscope"></i>
-                                                Refer
-                                            </a>
-                                            <a href="#"
-                                               id="walkinNormal{{ $counter }}"
-                                               data-patient_id = "{{ $row->id }}"
-                                               data-backdrop="static"
-                                               data-toggle="modal"
-                                               data-type="normal"
-                                               onclick="promptWalkinNormal(<?php echo $counter++?>)"
-                                               class="btn btn-warning btn-xs profile_info hide">
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                style="width:100%;margin-bottom:5px;"
+                                                onclick="handleRefer()"
+                                                class="btn btn-primary btn-xs profile_info">
                                                 <i class="fa fa-ambulance"></i>
+                                                Refer
+                                            </a><br>
+                                            <a href="#normalFormModal"
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                onclick="handleTelemedicine()"
+                                                style="width:100%;margin-bottom:5px;"
+                                                class="btn btn-success btn-xs profile_info">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
+                                            </a><br>
+                                            <a href="#"
+                                                id="walkinNormal{{ $counter }}"
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
+                                                style="width:100%;"
+                                                class="btn btn-warning btn-xs profile_info">
+                                                <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
                                         @endif
@@ -317,6 +342,34 @@
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 @include('script.datetime')
 <script>
+    function handleRefer() {
+        $(".telemedicine").val(0);
+        selectFormTitle("Clinical ");
+    }
+
+    function handleTelemedicine() {
+        $(".telemedicine").val(1);
+        selectFormTitle("Clinical ");
+    }
+
+    function setClinicalFormTile(type) {
+        if(type == "pregnant") {
+            selectFormTitle("BEmONC/ CEmONC ");
+        }
+        else {
+            selectFormTitle("Clinical ");
+        }
+    }
+
+    function selectFormTitle(initialTitle) {
+        const telemedicine = parseInt($(".telemedicine").val());
+        if(telemedicine) {
+            $(".clinical-form-title").html(`${initialTitle} Telemedicine Consultation`);
+        } else {
+            $(".clinical-form-title").html(`${initialTitle} Referral Form`);
+        }
+    }
+
     function promptWalkinPregnant(counter) {
         Lobibox.confirm({
             msg: "Do you want to proceed to walkin?",
@@ -344,6 +397,7 @@
     });
 
     function promptWalkinNormal(counter) {
+        selectFormTitle("Clinical ");
         Lobibox.confirm({
             msg: "Do you want to proceed to walkin?",
             callback: function ($this, type, ev) {
@@ -357,13 +411,6 @@
                 }
             }
         });
-    }
-
-    function setClinicalFormTile(type) {
-        if(type == "pregnant")
-            $(".clinical-form-title").html("BEmONC/ CEmONC REFERRAL FORM");
-        else
-            $(".clinical-form-title").html("Clinical Referral Form");
     }
 
     function PatientBody(patient_id) {
@@ -397,7 +444,7 @@
         department_id,
         department_name;
 
-    $('.select_facility_walkin').on('change',function(){
+    $('.select_facility_walkin').on('change',function() {
         var id = $(this).val();
         referred_facility = "{{ $user->facility_id }}";
         var url = "{{ url('location/facility/') }}";
@@ -558,8 +605,8 @@
                 else {
                     $(location).attr('href', "{{ asset('doctor/referred') }}");
                 }
-                //$(location).attr('href', "{{ asset('doctor/referred') }}");
-            }/*,
+            }
+            /*,
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest);
                 console.log(textStatus);
