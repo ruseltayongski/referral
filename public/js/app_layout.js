@@ -19694,11 +19694,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       increment_referral: Number,
       reco_count: $("#reco_count_val").val(),
       audioVideoUrl: $("#broadcasting_url").val() + "/public/facebook.mp3",
-      tracking_id: Number,
+
+      /*tracking_id: Number,*/
       referral_code: String,
       action_md: Number,
-      imageUrl: $("#broadcasting_url").val() + "/resources/img/video/doctorLogo.png"
+      imageUrl: $("#broadcasting_url").val() + "/resources/img/video/doctorLogo.png",
+      baseUrl: $("#broadcasting_url").val(),
+      tracking_id: this.getUrlVars()["track_id"],
+      $user: {}
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get("".concat(this.baseUrl, "/doctor/referral/calling/").concat(this.tracking_id)).then(function (res) {
+      var response = res.data;
+      console.log("testing");
+      console.log(response);
+      _this.user = response.user;
+    });
   },
   methods: {
     playAudio: function playAudio() {
@@ -19708,7 +19722,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, 10000);
     },
     playVideoCallAudio: function playVideoCallAudio() {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var self;
@@ -19717,10 +19731,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _this.$refs.audioVideo.play();
+                return _this2.$refs.audioVideo.play();
 
               case 2:
-                self = _this;
+                self = _this2;
                 setTimeout(function () {
                   console.log("pause");
                   $("#video-call-confirmation").modal('hide');
@@ -20015,7 +20029,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     /*$(document).ready(function() {
         console.log( "ready!" );
@@ -20030,14 +20044,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     this.increment_referral = this.count_referral;
     Echo.join('new_referral').listen('NewReferral', function (event) {
-      if (_this2.user.facility_id === event.payload.referred_to) {
-        _this2.playAudio();
+      if (_this3.user.facility_id === event.payload.referred_to) {
+        _this3.playAudio();
 
-        _this2.increment_referral++;
+        _this3.increment_referral++;
 
         if ($("#referral_page_check").val()) {
           console.log("append the refer patient");
-          $('.count_referral').html(_this2.increment_referral);
+          $('.count_referral').html(_this3.increment_referral);
           var position = event.payload.position;
           var position_bracket = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', '18th', '19th', '20th'];
           var position_content = '';
@@ -20052,33 +20066,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           var content = '<li id="referral_incoming' + event.payload.patient_code + '">' + position_content + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.referred_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <span>' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </span>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="text-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n';
           /*if(my_department_id==data.department_id) {*/
 
-          content += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this2.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
+          content += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
           /*}*/
 
           content += '' + '        </div>\n' + '    </div>\n' + '</li>';
           $('.timeline').prepend(content);
         }
 
-        _this2.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
+        _this3.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
       }
     });
     Echo.join('reco').listen('SocketReco', function (event) {
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
-      axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this2.user.facility_id).then(function (response) {
-        if (response.data && event.payload.sender_facility !== _this2.user.facility_id && $("#archived_reco_page").val() !== 'true') {
-          _this2.reco_count++;
-          $("#reco_count").html(_this2.reco_count);
+      axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this3.user.facility_id).then(function (response) {
+        if (response.data && event.payload.sender_facility !== _this3.user.facility_id && $("#archived_reco_page").val() !== 'true') {
+          _this3.reco_count++;
+          $("#reco_count").html(_this3.reco_count);
 
-          _this2.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message);
+          _this3.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message);
 
           try {
             var objDiv = document.getElementById(event.payload.code);
             objDiv.scrollTop = objDiv.scrollHeight;
-            if (!objDiv.scrollTop) _this2.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
+            if (!objDiv.scrollTop) _this3.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
           } catch (err) {
             console.log("modal not open");
 
-            _this2.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
+            _this3.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
           }
         }
       });
@@ -20086,78 +20100,78 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     Echo.join('referral_seen').listen('SocketReferralSeen', function (event) {
       $("#count_seen" + event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
 
-      if (event.payload.referring_facility_id === _this2.user.facility_id) {
-        _this2.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track);
+      if (event.payload.referring_facility_id === _this3.user.facility_id) {
+        _this3.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track);
       }
     });
     Echo.join('referral_accepted').listen('SocketReferralAccepted', function (event) {
-      if (event.payload.referred_from === _this2.user.facility_id) {
-        _this2.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id, event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track);
+      if (event.payload.referred_from === _this3.user.facility_id) {
+        _this3.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id, event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track);
       }
     });
     Echo.join('referral_rejected').listen('SocketReferralRejected', function (event) {
-      if (event.payload.referred_from === _this2.user.facility_id) {
-        _this2.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track);
+      if (event.payload.referred_from === _this3.user.facility_id) {
+        _this3.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track);
       }
     });
     Echo.join('referral_call').listen('SocketReferralCall', function (event) {
-      if (event.payload.called_to === _this2.user.facility_id) {
-        _this2.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track);
+      if (event.payload.called_to === _this3.user.facility_id) {
+        _this3.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track);
       }
     });
     Echo.join('referral_departed').listen('SocketReferralDeparted', function (event) {
-      if (event.payload.referred_to === _this2.user.facility_id) {
-        _this2.notifyReferralDeparted(event.payload.patient_name, event.payload.departed_by, event.payload.departed_by_facility, event.payload.departed_date, event.payload.mode_transportation, event.payload.redirect_track);
+      if (event.payload.referred_to === _this3.user.facility_id) {
+        _this3.notifyReferralDeparted(event.payload.patient_name, event.payload.departed_by, event.payload.departed_by_facility, event.payload.departed_date, event.payload.mode_transportation, event.payload.redirect_track);
       }
     });
     Echo.join('referral_arrived').listen('SocketReferralArrived', function (event) {
-      if (event.payload.referred_from === _this2.user.facility_id) {
-        _this2.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
+      if (event.payload.referred_from === _this3.user.facility_id) {
+        _this3.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
       }
     });
     Echo.join('referral_not_arrived').listen('SocketReferralNotArrived', function (event) {
-      if (event.payload.referred_from === _this2.user.facility_id) {
-        _this2.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
+      if (event.payload.referred_from === _this3.user.facility_id) {
+        _this3.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
       }
     });
     Echo.join('referral_admitted').listen('SocketReferralAdmitted', function (event) {
-      if (event.payload.referred_from === _this2.user.facility_id) {
-        _this2.notifyReferralAdmitted(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.redirect_track);
+      if (event.payload.referred_from === _this3.user.facility_id) {
+        _this3.notifyReferralAdmitted(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.redirect_track);
       }
     });
     Echo.join('referral_discharged').listen('SocketReferralDischarged', function (event) {
       console.log(event);
 
       if (event.payload.status === 'telemedicine') {
-        if ((event.payload.action_md === _this2.user.id || event.payload.referring_md === _this2.user.id) && event.payload.trigger_by !== _this2.user.id) {
+        if ((event.payload.action_md === _this3.user.id || event.payload.referring_md === _this3.user.id) && event.payload.trigger_by !== _this3.user.id) {
           console.log("join haha");
-          _this2.action_md = event.payload.action_md;
+          _this3.action_md = event.payload.action_md;
 
-          _this2.callADoctor(event.payload.tracking_id, event.payload.code);
+          _this3.callADoctor(event.payload.tracking_id, event.payload.code);
         }
       } else {
-        if (event.payload.referred_from === _this2.user.facility_id) {
-          _this2.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
+        if (event.payload.referred_from === _this3.user.facility_id) {
+          _this3.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
         }
       }
     });
     Echo.join('referral_update').listen('SocketReferralUpdate', function (event) {
       if (event.payload.notif_type === "cancel referral") {
-        if (event.payload.referred_to === _this2.user.facility_id) {
+        if (event.payload.referred_to === _this3.user.facility_id) {
           $('#closeReferralForm' + event.payload.patient_code).click();
-          var content = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.cancelled_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '            was <span class="text-red"> cancelled </span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
+          var content = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.cancelled_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '            was <span class="text-red"> cancelled </span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
           $('#referral_incoming' + event.payload.patient_code).html(content);
 
-          _this2.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track);
+          _this3.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track);
         }
 
-        if (event.payload.referred_from === _this2.user.facility_id && event.payload.admin === 'yes') {
+        if (event.payload.referred_from === _this3.user.facility_id && event.payload.admin === 'yes') {
           console.log("admin cancellation!!");
 
-          _this2.notifyReferralCancelledAdmin(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track, event.payload.remarks);
+          _this3.notifyReferralCancelledAdmin(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track, event.payload.remarks);
         }
       } else if (event.payload.notif_type === "undo cancel") {
-        if (event.payload.referred_to === _this2.user.facility_id) {
+        if (event.payload.referred_to === _this3.user.facility_id) {
           console.log('undo cancel');
           console.log(event.payload);
           var status = event.payload.status;
@@ -20183,14 +20197,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
             }
 
-            _content += _this2.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco);
+            _content += _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco);
             _content += '             </div>\n' + '        </div>\n' + '    </div>\n';
             $('#referral_incoming' + event.payload.patient_code).html(_content);
             var msg = event.payload.patient_name + " was referred again by Dr. " + event.payload.referring_md + " of " + event.payload.referring_name + "<br>" + event.payload.undo_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
 
-            _this2.notifyReferralUndoCancel(event.payload.patient_code, event.payload.activity_id, msg, status);
+            _this3.notifyReferralUndoCancel(event.payload.patient_code, event.payload.activity_id, msg, status);
           } else if (status === 'rejected') {
-            var _content2 = '' + '   <i class="fa fa-user-times bg-maroon"></i>\n' + '   <div class="timeline-item">\n' + '       <span class="time"><i class="fa fa-calendar"></i>' + event.payload.undo_date + '</span>\n' + '       <h3 class="timeline-header no-border">\n' + '           <span>\n' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" target="_blank">' + event.payload.patient_name + '</a>\n' + '           </span>\n' + '          was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. ' + event.payload.referring_md + '</span>\n' + '       </h3>\n' + _this2.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '   </div>';
+            var _content2 = '' + '   <i class="fa fa-user-times bg-maroon"></i>\n' + '   <div class="timeline-item">\n' + '       <span class="time"><i class="fa fa-calendar"></i>' + event.payload.undo_date + '</span>\n' + '       <h3 class="timeline-header no-border">\n' + '           <span>\n' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" target="_blank">' + event.payload.patient_name + '</a>\n' + '           </span>\n' + '          was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. ' + event.payload.referring_md + '</span>\n' + '       </h3>\n' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '   </div>';
 
             $('#referral_incoming' + event.payload.patient_code).html(_content2);
           }
@@ -20199,24 +20213,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         $('#closeReferralForm' + event.payload.patient_code).click();
 
         if (event.payload.faci_changed === true) {
-          if (event.payload.old_facility === _this2.user.facility_id) {
-            var _content3 = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <span class="text-warning"> Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span> updated ' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '`s</a>' + '           </strong>' + "          form and <span class='text-red'> referred </span> pt to another facility. </h3>\n" + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
+          if (event.payload.old_facility === _this3.user.facility_id) {
+            var _content3 = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <span class="text-warning"> Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span> updated ' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '`s</a>' + '           </strong>' + "          form and <span class='text-red'> referred </span> pt to another facility. </h3>\n" + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
 
             $('#referral_incoming' + event.payload.patient_code).html(_content3);
 
             var _msg = event.payload.patient_name + "'s referral form was updated and pt was referred to another facility. <br>" + event.payload.update_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
 
-            _this2.notifyReferralUpdateFormFaciChanged(_msg);
+            _this3.notifyReferralUpdateFormFaciChanged(_msg);
           }
 
-          if (event.payload.referred_to === _this2.user.facility_id) {
-            _this2.playAudio();
+          if (event.payload.referred_to === _this3.user.facility_id) {
+            _this3.playAudio();
 
-            _this2.increment_referral++;
+            _this3.increment_referral++;
 
             if ($("#referral_page_check").val()) {
               console.log("append the refer patient");
-              $('.count_referral').html(_this2.increment_referral);
+              $('.count_referral').html(_this3.increment_referral);
               var _type = event.payload.form_type;
               _type = _type === 'normal' ? 'normal-section' : 'pregnant-section';
 
@@ -20224,43 +20238,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               var _content4 = '<li id="referral_incoming' + event.payload.patient_code + '">' + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + _type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n';
 
-              _content4 += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this2.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
+              _content4 += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
               _content4 += '' + '        </div>\n' + '    </div>\n' + '</li>';
               $('.timeline').prepend(_content4);
             }
 
-            _this2.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
+            _this3.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
           }
         } else if (event.payload.faci_changed === false) {
-          if (event.payload.referred_to === _this2.user.facility_id) {
+          if (event.payload.referred_to === _this3.user.facility_id) {
             var _type2 = event.payload.form_type;
             _type2 = _type2 === 'normal' ? 'normal-section' : 'pregnant-section';
 
             var _referral_type2 = _type2 === 'normal-section' ? 'normal' : 'pregnant';
 
-            var _content5 = '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + _type2 + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type2 + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this2.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this2.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">FORM HAS BEEN UPDATED!</h5>' + '             </div>\n' + '        </div>\n' + '    </div>\n';
+            var _content5 = '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + _type2 + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type2 + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">FORM HAS BEEN UPDATED!</h5>' + '             </div>\n' + '        </div>\n' + '    </div>\n';
 
             $('#referral_incoming' + event.payload.patient_code).html(_content5);
 
             var _msg2 = event.payload.patient_name + "'s referral form was updated by Dr. " + event.payload.referring_md + " of " + event.payload.referring_name + " <br> " + event.payload.update_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
 
-            _this2.notifyReferralUpdateFormFaciSame(_msg2);
+            _this3.notifyReferralUpdateFormFaciSame(_msg2);
           }
         }
       } else if (event.payload.notif_type === "queue patient") {
-        if (event.payload.referred_from === _this2.user.facility_id) {
-          _this2.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
+        if (event.payload.referred_from === _this3.user.facility_id) {
+          _this3.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
         }
       }
     });
     Echo.join('admin_notifs').listen('AdminNotifs', function (event) {
-      if (_this2.user.level === "admin") {
+      if (_this3.user.level === "admin") {
         if (event.payload.notif_type === "new walkin") {
-          _this2.notifyNewWalkin(event.payload.patient_name, event.payload.referred_to, event.payload.date_referred);
+          _this3.notifyNewWalkin(event.payload.patient_name, event.payload.referred_to, event.payload.date_referred);
         } else if (event.payload.notif_type === "new appointment") {
-          _this2.notifyNewAppointment(event.payload.appt_faci, event.payload.appt_requester, event.payload.date_requested);
+          _this3.notifyNewAppointment(event.payload.appt_faci, event.payload.appt_requester, event.payload.date_requested);
         } else if (event.payload.notif_type === "new feedback") {
-          _this2.notifyNewUserFeedback(event.payload.date_submitted);
+          _this3.notifyNewUserFeedback(event.payload.date_submitted);
         }
       }
     });
@@ -20384,7 +20398,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: "Image"
   }, null, 8
   /* PROPS */
-  , _hoisted_6), _hoisted_7, _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Dr. "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" is calling you")])]), _hoisted_7, _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-default btn-sm acceptButton",
     "data-toggle": "modal",
