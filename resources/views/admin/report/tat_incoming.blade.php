@@ -72,7 +72,7 @@
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
                         From:
                         <select name="province_from" class="form-control" onchange="onChangeProvinceFrom($(this).val())">
-                            <option value="">Select All Province</option>
+                            <option id="myOption" value="">Select All Province</option>
                             @foreach(\App\Province::get() as $pro)
                                 <option value="{{ $pro->id }}" <?php if(isset($province_select_from)){if($pro->id == $province_select_from)echo 'selected';} ?>>{{ $pro->description }}</option>
                             @endforeach
@@ -80,8 +80,9 @@
                         <select name="facility_from" id="facility_from" class="from_tat_select2">
 
                         </select>
-                        To:
-                        <select name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
+                        <span class="special-text"> To:</span>
+                        <select id="mySelect" name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
+
                             <option value="">Select All Province</option>
                             @foreach(\App\Province::get() as $pro)
                                 <option value="{{ $pro->id }}" <?php if(isset($province_select_to)){if($pro->id == $province_select_to)echo 'selected';} ?>>{{ $pro->description }}</option>
@@ -103,7 +104,150 @@
             <div id="chartContainer" style="height: 600px; width: 100%;"></div>
             <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
         </div>
+        <!--modification started in here-->
+        <style>
+            #myOption{
+                flex-wrap: nowrap;
+            }
+            .legend-container{
+                display:flex;
+                align-items: center;
+            }
+            #mySelect{
+                white-space: nowrap;
+            }
+            .legend-item{
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+            }
+            .legend-box{
+                width: 24px;
+                height: 22px;
+                margin-right: 7px;
+            }
+            .legend-box1{
+                background-color: #11ffc5;
+            }
+            .legend-box2{
+                background-color: #00008b;
+            }
+            .legend-box3{
+                background-color: #96bd2b;
+            }
+            .legend-box4{
+                background-color: #28a99e;
+            }
+            .legend-box5{
+                background-color: #6b538b;
+            }
+            .legend-label{
+                font-size: 9px;
+                font-weight: bold;
+                font-family: Arial;
+                margin-right: 10px;
+            }
+            .medium-label{
+                font-size: 14px;
+                font-weight: bold;
+                margin-right: 17px;
+                margin-left: 40px;
+            }
+            .table-data{
+                border-collapse: collapse;
+                border: 1px solid black;
+                width:100%;
+            }
+            th{
+                width: 5%;
+                padding: 5px;
+                border: 1px solid black;
+            }
+            .cell, td{
+                border-bottom: 1px solid black;
+            }
+            @media only screen and (max-width: 767px) {
+                /* For mobile phones: */
+                 .table-data {
+                    front-size: 8px;
+                }
 
+                .table-data cell,
+                .table-data th,
+                .table-data td {
+                    padding: 4px;
+                    display: block;
+                    text-align: center;
+                }
+
+                .table-data td, th, cell::before{
+                    content: attr(data-label);
+                    display: block;
+                }
+            }
+            @media only screen and (max-width: 480px) {
+                /* For mobile phones: */
+                .special-text{
+                   display: block;
+                }
+                .form-control{
+                    width: 100%;
+                }
+                .legend-container {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .medium-label{
+                    font-size: 10px;
+                    margin:auto;
+                }
+                .legend-label{
+                    font-size: 9px;
+                    margin:auto;
+                }
+            }
+           /* Media query for iPad screen sizes */
+            @media screen and (max-width: 1024px) and (max-height: 1366px) {
+
+                .special-text::before{
+                    content: attr(data-label);
+                    display: block;
+                }
+                #myOption {
+                    flex-wrap: nowrap;
+                }
+                .medium-label{
+                    font-size: 11px;
+                    font-weight: bold;
+                    margin: auto;
+                }
+                .legend-label{
+                    font-size: 9px;
+                    font-weight: bold;
+                    margin: auto;
+                }
+                .legend-box{
+                    margin-right: 3px;
+                }
+            }
+            /* Media query for Surface Duo screen sizes */
+            @media screen and (max-width: 540px) and (max-height: 720px) {
+                .special-text::before{
+                    content: attr(data-label);
+                    display: block;
+                }
+                .legend-container {
+                    front-size: 8px;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+            }
+            /* Media query for Surface pro7 screen sizes */
+            @media screen and (max-width: 1824px) and (max-height: 2736px) {
+
+            }
+
+        </style>
         <div class="col-md-12">
             <div class="jim-content">
                 <div class="legend-container">
@@ -111,7 +255,7 @@
                         <span class="medium-label">BAR CHART LEGEND</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-box legend-box1 background-color: #11ffc5"></div>
+                        <div class="legend-box legend-box1"></div>
                         <span class="legend-label"> TOTAL NUMBER OF <br>PATIENT (REFERRED)</span>
                     </div>
                     <div class="legend-item">
@@ -122,7 +266,7 @@
                         <div class="legend-box legend-box3"></div>
                         <span class="legend-label"> TOTAL NUMBER OF <br>PATIENT (TRANSFERRED)</span>
                     </div>
-                    <div class="legend-item1">
+                    <div class="legend-item">
                         <span class="medium-label">LINE CHART LEGEND</span>
                     </div>
                     <div class="legend-item">
@@ -137,7 +281,7 @@
                 <div class="row" style="margin-top: 1.5%;">
                     <table class="table-data">
                         <tr>
-                            <th>REFERRED</th>
+                            <td style="font-weight:bold; border: 1px solid black">REFERRED</td>
                                 <td class="cell">
                                     <div style="cursor: pointer;" onclick="referToSeenPeak()">
                                         <div class="description-block border-right">
@@ -199,7 +343,7 @@
                                 </td>
                         </tr>
                         <tr>
-                            <th>REDIRECTED</th>
+                            <td style="font-weight:bold; border: 1px solid black">REDIRECTED</td>
                                 <td>
                                     <!-- /.col -->
                                     <div >
@@ -301,8 +445,86 @@
     @include('script.chart')
     <script>
         var user_level = "<?php echo $user->level; ?>";
-        $(".from_tat_select2").select2({ width: '250px' });
-        $(".to_tat_select2").select2({ width: '250px' });
+        function  handleScreenSize() {
+            const viewportWidth =window.innerWidth;
+            const viewportHeight =window.innerHeight;
+            if (viewportWidth<viewportHeight){/*portrait*/
+                if(window.innerWidth<576) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<768) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<992 && window.innerHeight<1366) {
+                    $(".from_tat_select2").select2({width: '265'});
+                    $(".to_tat_select2").select2({width: '265'});
+                }
+                else if(window.innerWidth<1024 && window.innerHeight<600) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<912 || window.innerHeight<1368) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<1824 || window.innerHeight<2736) {
+                    $(".from_tat_select2").select2({width: '270'});
+                    $(".to_tat_select2").select2({width: '270'});
+                }
+                else if(window.innerWidth<1080) {
+                    $(".from_tat_select2").select2({width: '265'});
+                    $(".to_tat_select2").select2({width: '265'});
+                }
+                else if(window.innerWidth<1200) {
+                    $(".from_tat_select2").select2({width: '300'});
+                    $(".to_tat_select2").select2({width: '300'});
+                }
+                else {
+                    $(".from_tat_select2").select2({width: '250'});
+                    $(".to_tat_select2").select2({width: '250'});
+                }
+            }
+            else{ /*landscape*/
+                if(window.innerWidth<576) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<768) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<992) {
+                    $(".from_tat_select2").select2({width: '200'});
+                    $(".to_tat_select2").select2({width: '200'});
+                }
+                else if(window.innerWidth<1024 && window.innerHeight<1366) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<1024 && window.innerHeight<600) {
+                    $(".from_tat_select2").select2({width: '100%'});
+                    $(".to_tat_select2").select2({width: '100%'});
+                }
+                else if(window.innerWidth<1080) {
+                    $(".from_tat_select2").select2({width: '200'});
+                    $(".to_tat_select2").select2({width: '200'});
+                }
+                else if(window.innerWidth>1824 && window.innerHeight>2736) {
+                    $(".from_tat_select2").select2({width: '250'});
+                    $(".to_tat_select2").select2({width: '250'});
+                }
+                else {
+                    $(".from_tat_select2").select2({width: '250'});
+                    $(".to_tat_select2").select2({width: '250'});
+                }
+            }
+        }
+        handleScreenSize();
+        window.addEventListener("resize", handleScreenSize);
+
+        <!--modification ended in here-->
 
         $('#consolidate_date_range').daterangepicker({
             maxDate: new Date()
