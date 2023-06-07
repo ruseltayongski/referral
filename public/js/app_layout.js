@@ -19697,7 +19697,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       tracking_id: Number,
       referral_code: String,
       action_md: Number,
-      imageUrl: $("#broadcasting_url").val() + "/resources/img/video/doctorLogo.png"
+      imageUrl: $("#broadcasting_url").val() + "/resources/img/video/doctorLogo.png",
+      doctorCaller: String
     };
   },
   methods: {
@@ -20132,6 +20133,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if ((event.payload.action_md === _this2.user.id || event.payload.referring_md === _this2.user.id) && event.payload.trigger_by !== _this2.user.id) {
           console.log("join haha");
           _this2.action_md = event.payload.action_md;
+          _this2.doctorCaller = event.payload.doctorCaller;
 
           _this2.callADoctor(event.payload.tracking_id, event.payload.code);
         }
@@ -20306,14 +20308,9 @@ var _hoisted_5 = {
   "class": "modal-body text-center"
 };
 var _hoisted_6 = ["src"];
-
-var _hoisted_7 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-    "class": "txt"
-  }, "Dr. Dela Cruz is calling you", -1
-  /* HOISTED */
-  );
-});
+var _hoisted_7 = {
+  "class": "txt"
+};
 
 var _hoisted_8 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
@@ -20384,7 +20381,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: "Image"
   }, null, 8
   /* PROPS */
-  , _hoisted_6), _hoisted_7, _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.doctorCaller), 1
+  /* TEXT */
+  ), _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-default btn-sm acceptButton",
     "data-toggle": "modal",

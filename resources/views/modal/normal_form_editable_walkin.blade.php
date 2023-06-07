@@ -15,7 +15,6 @@ $referral_reasons = \App\ReasonForReferral::get();
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form_walkin">
                 <div class="jim-content">
-                    {{--<div class="title-form">CENTRAL VISAYAS HEALTH REFERRAL SYSTEM<br /><small>Clinical Referral Form</small></div>--}}
                     @include('include.header_form')
                     <div class="form-group-sm form-inline">
                         {{ csrf_field() }}

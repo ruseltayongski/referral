@@ -411,7 +411,8 @@ class PatientCtrl extends Controller
             'form_id' => $form_id,
             'remarks' => ($req->reason) ? $req->reason: '',
             'status' => ($status=='walkin') ? 'accepted' : 'referred',
-            'walkin' => 'no'
+            'walkin' => 'no',
+            'telemedicine' => $req->telemedicine
         );
 
         if($status=='walkin'){

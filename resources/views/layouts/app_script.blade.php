@@ -113,7 +113,7 @@
         }, 500);
     }
 
-    $('.select_facility').on('change',function(){
+    $('.select_facility').on('change',function() {
         var id = $(this).val();
         referred_facility = id;
         if(referred_facility){
@@ -122,9 +122,7 @@
                 url: url+'/'+id,
                 type: 'GET',
                 success: function(data){
-                    console.log(data);
                     $('.facility_address').html(data.address);
-
                     $('.select_department').empty()
                         .append($('<option>', {
                             value: '',
@@ -135,8 +133,8 @@
                             value: val.id,
                             text : val.description
                         }));
-
                     });
+                    facilityForTelemedicine(data.departments)
                 },
                 error: function(error){
                     $('#serverModal').modal();
@@ -144,5 +142,30 @@
             });
         }
     });
+
+    function facilityForTelemedicine(departments) {
+        const telemedicine = parseInt($(".telemedicine").val());
+        const checkOPD = departments.find(obj => obj.id === 5);
+        if(telemedicine && !checkOPD) {
+            Lobibox.alert("error", {
+                msg: "This facility is not allowed to perform telemedicine because there is no doctor assigned to the OPD department. Please call this facility for verification."
+            });
+            const select_facility = $('.select_facility');
+            select_facility.val(select_facility.find('option:first').val()).trigger('change');
+
+            const select_department = $('.select_department');
+            select_department.empty().append($('<option>', {
+                value: '',
+                text : 'Select Department...'
+            })).trigger('change');
+        }
+        else if(telemedicine && checkOPD) {
+            const select_department = $('.select_department');
+            select_department.empty().append($('<option>', {
+                value: '5',
+                text : 'OPD'
+            })).trigger('change');
+        }
+    }
 
 </script>

@@ -502,7 +502,7 @@
         font-family: Calibri;
     }
     .dohLogo {
-       position: relative;
+        position: relative;
         border: 1px outset transparent;
         top: 10px;
         left: 10px;
