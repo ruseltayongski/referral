@@ -156,14 +156,14 @@
         </div>
         <div class="header" style="background-color:#59ab91;padding:15px;">
             <div class="container">
-                @if($user->level == 'opcen')
-                    <img src="{{ asset('resources/img/banner_711healthline2023v1.png') }}" class="img-responsive" />
+                    @if($user->level == 'opcen')
+                    <img src="{{ asset('resources/img/banner_711healthline2023v1.png?v=1') }}" class="img-responsive" />
                 @elseif($user->level == 'bed_tracker')
-                    <img src="{{ asset('resources/img/bed_banner.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/bed_banner.png?v=1') }}" class="img-responsive" />
                 @elseif($user->level == 'vaccine')
-                    <img src="{{ asset('resources/img/updated_vaccine_logo.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/updated_vaccine_logo.png?v=1') }}" class="img-responsive" />
                 @else
-                    <img src="{{ asset('resources/img/banner_referral2023v1.png') }}" class="img-responsive" />
+                    <img src="{{ asset('resources/img/banner_referral2023v1.png?v=1') }}" class="img-responsive" />
                 @endif
             </div>
         </div>

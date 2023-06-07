@@ -5,6 +5,9 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <img :src="imageUrl" alt="Image">
+                    <tr>
+                        <td>Dr. <span>{{}}</span> is calling you</td>
+                    </tr>
                     <p class="txt">Dr. Dela Cruz is calling you</p>
                     <p style="font-size: .9em">The call will start as soon as you accept</p>
                     <div class="row">
@@ -109,12 +112,33 @@
                 increment_referral: Number,
                 reco_count : $("#reco_count_val").val(),
                 audioVideoUrl: $("#broadcasting_url").val()+"/public/facebook.mp3",
-                tracking_id: Number,
+                /*tracking_id: Number,*/
                 referral_code: String,
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
+
+
+                baseUrl: $("#broadcasting_url").val(),
+                tracking_id: this.getUrlVars()["track_id"],
+
+                $user: {},
+
             }
         },
+
+        mounted() {
+            axios
+                .get(`${this.baseUrl}/doctor/referral/calling/${this.tracking_id}`)
+                .then((res) => {
+                    const response = res.data;
+                    console.log("testing");
+                    console.log(response);
+                    this.user = response.user;
+
+                })
+        },
+
+
         methods: {
             playAudio() {
                 audioElement.play();
