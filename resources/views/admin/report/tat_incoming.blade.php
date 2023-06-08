@@ -3,9 +3,15 @@
 
 @section('content')
     <style>
+        #myOption{
+            flex-wrap: nowrap;
+        }
         .legend-container{
             display:flex;
             align-items: center;
+        }
+        #mySelect{
+            white-space: nowrap;
         }
         .legend-item{
             display: flex;
@@ -33,19 +39,16 @@
             background-color: #6b538b;
         }
         .legend-label{
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
             font-family: Arial;
             margin-right: 10px;
         }
         .medium-label{
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             margin-right: 17px;
-            margin-left: 20px;
-        }
-        .legend-item1{
-            margin-left: 90px;
+            margin-left: 40px;
         }
         .table-data{
             border-collapse: collapse;
@@ -59,6 +62,82 @@
         }
         .cell, .table-data td{
             border-bottom: 1px solid black;
+        }
+        @media only screen and (max-width: 767px) {
+            /* For mobile phones: */
+            .table-data {
+                front-size: 8px;
+            }
+
+            .table-data cell,
+            .table-data th,
+            .table-data td {
+                padding: 4px;
+                display: block;
+                text-align: center;
+            }
+
+            .table-data td, th, cell::before{
+                content: attr(data-label);
+                display: block;
+            }
+        }
+        @media only screen and (max-width: 480px) {
+            /* For mobile phones: */
+            .special-text{
+                display: block;
+            }
+            .form-control{
+                width: 100%;
+            }
+            .legend-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .medium-label{
+                font-size: 10px;
+                margin:auto;
+            }
+            .legend-label{
+                font-size: 9px;
+                margin:auto;
+            }
+        }
+        /* Media query for iPad screen sizes */
+        @media screen and (max-width: 1024px) and (max-height: 1366px) {
+
+            .special-text::before{
+                content: attr(data-label);
+                display: block;
+            }
+            #myOption {
+                flex-wrap: nowrap;
+            }
+            .medium-label{
+                font-size: 11px;
+                font-weight: bold;
+                margin: auto;
+            }
+            .legend-label{
+                font-size: 9px;
+                font-weight: bold;
+                margin: auto;
+            }
+            .legend-box{
+                margin-right: 3px;
+            }
+        }
+        /* Media query for Surface Duo screen sizes */
+        @media screen and (max-width: 540px) and (max-height: 720px) {
+            .special-text::before{
+                content: attr(data-label);
+                display: block;
+            }
+            .legend-container {
+                front-size: 8px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
     <div class="row">
@@ -104,150 +183,6 @@
             <div id="chartContainer" style="height: 600px; width: 100%;"></div>
             <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
         </div>
-        <!--modification started in here-->
-        <style>
-            #myOption{
-                flex-wrap: nowrap;
-            }
-            .legend-container{
-                display:flex;
-                align-items: center;
-            }
-            #mySelect{
-                white-space: nowrap;
-            }
-            .legend-item{
-                display: flex;
-                align-items: center;
-                margin-right: 10px;
-            }
-            .legend-box{
-                width: 24px;
-                height: 22px;
-                margin-right: 7px;
-            }
-            .legend-box1{
-                background-color: #11ffc5;
-            }
-            .legend-box2{
-                background-color: #00008b;
-            }
-            .legend-box3{
-                background-color: #96bd2b;
-            }
-            .legend-box4{
-                background-color: #28a99e;
-            }
-            .legend-box5{
-                background-color: #6b538b;
-            }
-            .legend-label{
-                font-size: 9px;
-                font-weight: bold;
-                font-family: Arial;
-                margin-right: 10px;
-            }
-            .medium-label{
-                font-size: 14px;
-                font-weight: bold;
-                margin-right: 17px;
-                margin-left: 40px;
-            }
-            .table-data{
-                border-collapse: collapse;
-                border: 1px solid black;
-                width:100%;
-            }
-            th{
-                width: 5%;
-                padding: 5px;
-                border: 1px solid black;
-            }
-            .cell, td{
-                border-bottom: 1px solid black;
-            }
-            @media only screen and (max-width: 767px) {
-                /* For mobile phones: */
-                 .table-data {
-                    front-size: 8px;
-                }
-
-                .table-data cell,
-                .table-data th,
-                .table-data td {
-                    padding: 4px;
-                    display: block;
-                    text-align: center;
-                }
-
-                .table-data td, th, cell::before{
-                    content: attr(data-label);
-                    display: block;
-                }
-            }
-            @media only screen and (max-width: 480px) {
-                /* For mobile phones: */
-                .special-text{
-                   display: block;
-                }
-                .form-control{
-                    width: 100%;
-                }
-                .legend-container {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-                .medium-label{
-                    font-size: 10px;
-                    margin:auto;
-                }
-                .legend-label{
-                    font-size: 9px;
-                    margin:auto;
-                }
-            }
-           /* Media query for iPad screen sizes */
-            @media screen and (max-width: 1024px) and (max-height: 1366px) {
-
-                .special-text::before{
-                    content: attr(data-label);
-                    display: block;
-                }
-                #myOption {
-                    flex-wrap: nowrap;
-                }
-                .medium-label{
-                    font-size: 11px;
-                    font-weight: bold;
-                    margin: auto;
-                }
-                .legend-label{
-                    font-size: 9px;
-                    font-weight: bold;
-                    margin: auto;
-                }
-                .legend-box{
-                    margin-right: 3px;
-                }
-            }
-            /* Media query for Surface Duo screen sizes */
-            @media screen and (max-width: 540px) and (max-height: 720px) {
-                .special-text::before{
-                    content: attr(data-label);
-                    display: block;
-                }
-                .legend-container {
-                    front-size: 8px;
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            }
-            /* Media query for Surface pro7 screen sizes */
-            @media screen and (max-width: 1824px) and (max-height: 2736px) {
-
-            }
-
-        </style>
         <div class="col-md-12">
             <div class="jim-content">
                 <div class="legend-container">
@@ -282,130 +217,129 @@
                     <table class="table-data">
                         <tr>
                             <td style="font-weight:bold; border: 1px solid black">REFERRED</td>
-                                <td class="cell">
-                                    <div style="cursor: pointer;" onclick="referToSeenPeak()">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header refer_to_seen">{{ $refer_to_seen }}</h5>
-                                            <span class="description-text">Refer to Seen</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                            <td class="cell">
+                                <div style="cursor: pointer;" onclick="referToSeenPeak()">
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header refer_to_seen">{{ $refer_to_seen }}</h5>
+                                        <span class="description-text">Refer to Seen</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $seen_to_accept }}</h5>
-                                            <span class="description-text">Seen to Accepted</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $seen_to_accept }}</h5>
+                                        <span class="description-text">Seen to Accepted</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $seen_to_reject }}</h5>
-                                            <span class="description-text">Seen to Recommend to Redirect</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $seen_to_reject }}</h5>
+                                        <span class="description-text">Seen to Recommend to Redirect</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $accept_to_arrive }}</h5>
-                                            <span class="description-text">Accepted to Arrived</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $accept_to_arrive }}</h5>
+                                        <span class="description-text">Accepted to Arrived</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $arrive_to_admit }}</h5>
-                                            <span class="description-text">Arrived to Admitted</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $arrive_to_admit }}</h5>
+                                        <span class="description-text">Arrived to Admitted</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $admit_to_discharge }}</h5>
-                                            <span class="description-text">Admitted to Discharge</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $admit_to_discharge }}</h5>
+                                        <span class="description-text">Admitted to Discharge</span>
                                     </div>
-                                </td>
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold; border: 1px solid black">REDIRECTED</td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $redirect_to_seen }}</h5>
-                                            <span class="description-text">REDIRECTED TO SEEN</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $redirect_to_seen }}</h5>
+                                        <span class="description-text">REDIRECTED TO SEEN</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $seen_to_accept_redirect }}</h5>
-                                            <span class="description-text">SEEN TO ACCEPTED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $seen_to_accept_redirect }}</h5>
+                                        <span class="description-text">SEEN TO ACCEPTED</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $seen_to_reject_redirect}}</h5>
-                                            <span class="description-text">Seen to Recommend to Redirect</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $seen_to_reject_redirect}}</h5>
+                                        <span class="description-text">Seen to Recommend to Redirect</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div class=" row text-danger">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $accept_to_arrive_redirect }}</h5>
-                                            <span class="description-text">ACCEPTED TO ARRIVED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div class=" row text-danger">
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $accept_to_arrive_redirect }}</h5>
+                                        <span class="description-text">ACCEPTED TO ARRIVED</span>
                                     </div>
-                                    <!-- /.col -->
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $arrive_to_admit_redirect }}</h5>
-                                            <span class="description-text">ARRIVED TO ADMITTED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $arrive_to_admit_redirect }}</h5>
+                                        <span class="description-text">ARRIVED TO ADMITTED</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $admit_to_discharge_redirect }}</h5>
-                                            <span class="description-text">ADMITTED TO DISCHARGE </span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $admit_to_discharge_redirect }}</h5>
+                                        <span class="description-text">ADMITTED TO DISCHARGE </span>
                                     </div>
-                                </td>
-                            </div>
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>

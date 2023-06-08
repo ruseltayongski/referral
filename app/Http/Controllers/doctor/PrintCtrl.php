@@ -71,7 +71,9 @@ class PDFPrescription extends FPDF {
         $this->Ln(4);
         $this->Setx(120);
         $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
-        $this->Image($this->signature_path, 120, 250, 50, 0);
+        if(is_file($this->signature_path)) {
+            $this->Image($this->signature_path, 120, 250, 50, 0);
+        }
     }
 
     public function SetUnderline($value) {
@@ -172,6 +174,7 @@ class PrintCtrl extends Controller
         $patient_age_year =  ParamCtrl::getAge($prescription->dob);
         $patient_age_month = ParamCtrl::getMonths($prescription->dob);
 
+        $patient_age = "";
         if($patient_age_year == 1)
             $patient_age .= $patient_age_year." year ";
         else
