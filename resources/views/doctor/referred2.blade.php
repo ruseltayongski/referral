@@ -290,7 +290,7 @@ $user = Session::get('auth');
                             <div class="stepper-wrapper">
                                 <div class="stepper-item completed">
                                     <div class="step-counter">1</div>
-                                    <div class="step-name">Referred</div>
+                                    <div class="step-name">{{ $row->telemedicine ? 'Appointment' : 'Referred' }}</div>
                                 </div>
                                 <div class="stepper-item @if($referred_seen_track || $referred_accepted_track || $referred_rejected_track) completed @endif" id="seen_progress{{ $referred_track->code.$referred_track->id }}">
                                     <div class="step-counter">2</div>
@@ -523,13 +523,6 @@ $user = Session::get('auth');
                                                             <td>
                                                                 <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
-                                                            </td>
-                                                        </tr>
-                                                    @elseif($act->status=='redirected')
-                                                        <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                                            <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
-                                                            <td>
-                                                                <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was referred by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                                             </td>
                                                         </tr>
                                                     @elseif($act->status=='calling')

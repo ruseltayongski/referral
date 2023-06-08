@@ -1,5 +1,6 @@
 <?php
     $user = Illuminate\Support\Facades\Session::get('auth');
+    $cacheBuster = time();
 ?>
 <style>
     center-align {
@@ -123,7 +124,7 @@
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
                             @if(isset($user->signature) && $user->signature != null)
-                                <img src="{{ asset($user->signature) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
+                                <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
                             @else
                                 {{--<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;--}}

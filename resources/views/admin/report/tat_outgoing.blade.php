@@ -195,7 +195,8 @@
                     "y" : data.referred
                 });
                 refer_to_accept.push({
-                    y : data.refer_to_accept ? data.refer_to_accept : ''
+                    y : data.refer_to_accept ? data.refer_to_accept : '',
+                    details : data.refer_to_accept_details
                 });
 
                 redirected.push({
@@ -203,7 +204,8 @@
                     "y" : data.redirected
                 });
                 redirect_to_accept.push({
-                    y : data.redirect_to_accept ? data.redirect_to_accept : ''
+                    y : data.redirect_to_accept ? data.redirect_to_accept : '',
+                    details : data.redirect_to_accept_details
                 });
 
                 transferred.push({
@@ -211,7 +213,8 @@
                     "y" : data.transferred
                 });
                 transfer_to_accept.push({
-                    y : data.transfer_to_accept ? data.transfer_to_accept : ''
+                    y : data.transfer_to_accept ? data.transfer_to_accept : '',
+                    details : data.refer_to_accept_details
                 });
             });
 
@@ -272,7 +275,12 @@
                     yValueFormatString: "0.##\"\"",
                     indexLabel: "{y}",
                     indexLabelFontColor: "#C24642",
-                    dataPoints: refer_to_accept
+                    mouseover: function(e) {
+                        e.dataPoint.cursor = "pointer";
+                        chart.render();
+                    },
+                    dataPoints: refer_to_accept,
+                    click: handleClick
                 });
                 chart.addTo("data", {
                     type:"line",
@@ -280,7 +288,12 @@
                     yValueFormatString: "0.##\"\"",
                     indexLabel: "{y}",
                     indexLabelFontColor: "#C24642",
-                    dataPoints: redirect_to_accept
+                    mouseover: function(e) {
+                        e.dataPoint.cursor = "pointer";
+                        chart.render();
+                    },
+                    dataPoints: redirect_to_accept,
+                    click: handleClick
                 });
                 chart.addTo("data", {
                     type:"line",
@@ -288,8 +301,47 @@
                     yValueFormatString: "0.##\"\"",
                     indexLabel: "{y}",
                     indexLabelFontColor: "#C24642",
-                    dataPoints: transfer_to_accept
+                    mouseover: function(e) {
+                        e.dataPoint.cursor = "pointer";
+                        chart.render();
+                    },
+                    dataPoints: transfer_to_accept,
+                    click: handleClick
                 });
+            }
+
+            function handleClick(e) {
+                //console.log("Data Point: ", e.dataPoint.x, e.dataPoint.y, e.dataPoint.details);
+                if(user_level === "mayor" || user_level === "dmo") return;
+                $("#statistics-modal").modal('show');
+                $(".statistics-body").html(loading);
+                setTimeout(function() {
+                    $(".statistics-title").html('STATISTICS');
+                    $(".statistics-body").html(
+                        "<table id=\"table\" class='table table-hover table-bordered' style='font-size: 9pt;'>\n" +
+                        "    <tr class='bg-success'><th></th><th class='text-green'>Code</th><th class='text-green'>TAT</th><th class='text-green'>Date Referred</th><th class='text-green'>Accepted Date</th></tr>\n" +
+                        "</table>"
+                    );
+                    jQuery.each(e.dataPoint.details, function(index, value) {
+                        var track_url = "<?php echo asset('doctor/referred?referredCode='); ?>"+value["code"];
+                        var tr = $('<tr />');
+                        tr.append("<a href='"+track_url+"' class=\"btn btn-xs btn-success\" target=\"_blank\">\n" +
+                            "<i class=\"fa fa-stethoscope\"></i> Track\n" +
+                            "</a>");
+                        tr.append( $('<td />', { text : value["code"] } ));
+                        tr.append( $('<td />', { text : timeDiffCalc(new Date(value["date_accepted"]),new Date(value["date_"+value["status"]])) } ));
+                        tr.append( $('<td />', { text : getMinutesBetweenDates(new Date(value["date_accepted"]),new Date(value["date_"+value["status"]])) } ));
+                        tr.append( $('<td />', { text : value["date_"+value["status"]+"_format"] } ));
+                        tr.append( $('<td />', { text : value["date_accepted_format"] } ));
+                        $("#table").append(tr);
+                    });
+                },500);
+            }
+
+            function getMinutesBetweenDates(startDate, endDate) {
+                const diff = endDate.getTime() - startDate.getTime();
+                const minutes = Math.floor(diff / (1000 * 60));
+                return minutes;
             }
 
         }

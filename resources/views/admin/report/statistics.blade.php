@@ -411,8 +411,15 @@
         });
 
         var user_level = "<?php echo $user->level; ?>";
+        var user_facility_id = "<?php echo $user->facility_id; ?>";
+
         function statisticsData(data,request_type,facility_id,status,date_range) {
-            if(user_level === "mayor" || user_level === "dmo") return;
+            if(user_level === "mayor" || user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
+                /*Lobibox.alert('error', {
+                    msg: 'You are not authorized to view this data!'
+                });*/
+                return;
+            }
 
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
