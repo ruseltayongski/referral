@@ -237,7 +237,8 @@
                 if(this.prescription) {
                     const updatePrescription = {
                         code : this.referral_code,
-                        prescription: this.prescription
+                        prescription: this.prescription,
+                        form_type: "normal"
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
                         console.log(response.status)
@@ -263,7 +264,8 @@
             },
             generatePrescription() {
                 const getPrescription = {
-                    code : this.referral_code
+                    code : this.referral_code,
+                    form_type : "normal"
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
                     console.log(response)

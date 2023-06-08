@@ -444,6 +444,8 @@ class ReferralCtrl extends Controller
     public static function pregnantFormData($id) {
         $form = PregnantForm::select(
             DB::raw("'$id' as tracking_id"),
+            'tracking.action_md',
+            'tracking.referring_md',
             'pregnant_form.patient_baby_id',
             'pregnant_form.code',
             'pregnant_form.record_no',

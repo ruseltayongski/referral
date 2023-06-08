@@ -43,6 +43,7 @@
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
                 doctorCaller: String,
+                telemedicineFormType: String
             }
         },
         methods: {
@@ -466,7 +467,7 @@
                 let windowName = 'NewWindow'; // Name of the new window
                 let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
                 const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
-                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code+"&referring_md="+referring_md_status
+                let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}`
                 let newWindow = window.open(url, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
@@ -637,9 +638,10 @@
                     console.log(event)
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            console.log("join haha")
+                            console.log(event.payload)
                             this.action_md = event.payload.action_md
                             this.doctorCaller = event.payload.doctorCaller
+                            this.telemedicineFormType = event.payload.form_type
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
                         }
                     } else {

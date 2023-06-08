@@ -210,7 +210,11 @@ class PrintCtrl extends Controller
         if(isset($icd[0])) {
             $pdf->MultiCell(0, 7,self::black($pdf,"Diagnoses: "), 0, 'L');
             foreach($icd as $i) {
-                $pdf->MultiCell(0, 7,self::orange($pdf,$i->code.' - '.$i->description,"Diagnoses:"), 0, 'L');
+                $pdf->SetX(25); // Set the left margin position
+                $pdf->SetTextColor(102,56,0);
+                $pdf->SetFont('Arial','I',10);
+                $icd_description = str_replace(array("\r", "\n"), '', $i->code.' - '.$i->description);
+                $pdf->MultiCell(0, 7,$icd_description, 0, 'L');
             }
         } else {
             $pdf->MultiCell(0, 7, self::black($pdf,"Diagnoses: ").self::orange($pdf,$prescription->other_diagnosis,"Diagnoses:"), 0, 'L');

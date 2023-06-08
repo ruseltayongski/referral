@@ -69,13 +69,20 @@ class ApiController extends Controller
             "referring_md" => (int)$request->referring_md,
             "trigger_by" => (int)$request->trigger_by,
             "status" => "telemedicine",
-            "doctorCaller" => $doctorCaller
+            "doctorCaller" => $doctorCaller,
+            "form_type" => $request->form_type
         ];
         broadcast(new SocketReferralDischarged($call));
     }
 
     public function updatePrescription(Request $request) {
-        $patient_form = PatientForm::where("code",$request->code)->first();
+        $patient_form = null;
+        if($request->form_type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+        }
+        else if($request->form_type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+        }
         if($patient_form) {
             $patient_form->prescription = $request->prescription;
             $patient_form->save();
@@ -85,7 +92,13 @@ class ApiController extends Controller
     }
 
     public function checkPrescription(Request $request) {
-        $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
+        $check_prescription = null;
+        if($request->form_type == 'normal') {
+            $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
+        }
+        else if($request->form_type == 'pregnant') {
+            $check_prescription = PregnantForm::where("code",$request->code)->first()->prescription;
+        }
         if($check_prescription) {
             return "success";
         }

@@ -194,8 +194,8 @@
 <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
 <div class="form-fotter pull-right">
     @if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
-        <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
         <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+        <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
     @endif
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
         <button class="btn-sm btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
@@ -212,7 +212,6 @@
     <a href="{{ url('doctor/print/form').'/'.$form->tracking_id }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
-
 
 <script>
     function getParameterByName(name) {
@@ -237,15 +236,15 @@
             "code" : code,
             "action_md" : action_md,
             "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}"
+            "trigger_by" : "{{ $user->id }}",
+            "form_type" : "normal"
         };
         $.post(url,json,function(){
 
         });
-        /*window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code, "_blank", "fullscreen=yes");*/
         var windowName = 'NewWindow'; // Name of the new window
         var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&referring_md=yes", windowName, windowFeatures);
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
         if (newWindow && newWindow.outerWidth) {
             // If the window was successfully opened, attempt to maximize it
             newWindow.moveTo(0, 0);

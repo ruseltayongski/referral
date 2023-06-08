@@ -250,10 +250,11 @@
                 if(this.prescription) {
                     const updatePrescription = {
                         code : this.referral_code,
-                        prescription: this.prescription
+                        prescription: this.prescription,
+                        form_type: "pregnant"
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
-                        console.log(response.status)
+                        console.log(response)
                         if(response.data === 'success') {
                             this.prescriptionSubmitted = true
                             Lobibox.alert("success",
@@ -276,7 +277,8 @@
             },
             generatePrescription() {
                 const getPrescription = {
-                    code : this.referral_code
+                    code : this.referral_code,
+                    form_type : "pregnant"
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
                     console.log(response)
