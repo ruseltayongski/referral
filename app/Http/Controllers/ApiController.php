@@ -437,8 +437,9 @@ class ApiController extends Controller
             $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
-
-        $data = \DB::connection('mysql')->select("call statistics_report_individual('$request->request_type','$request->facility_id','$date_start','$date_end','$request->status')");
+        $final_date_start = utf8_encode($date_start);
+        $final_date_end = utf8_encode($date_end);
+        $data = \DB::connection('mysql')->select("call statistics_report_individual('$request->request_type','$request->facility_id','$final_date_start','$final_date_end','$request->status')");
         Session::put("statistics_report_individual",$data);
         Session::put("individual_status",$request->status);
         return $data;
