@@ -3,9 +3,15 @@
 
 @section('content')
     <style>
+        #myOption{
+            flex-wrap: nowrap;
+        }
         .legend-container{
             display:flex;
             align-items: center;
+        }
+        #mySelect{
+            white-space: nowrap;
         }
         .legend-item{
             display: flex;
@@ -33,13 +39,13 @@
             background-color: #6b538b;
         }
         .legend-label{
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
             font-family: Arial;
             margin-right: 10px;
         }
         .medium-label{
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             margin-right: 17px;
             margin-left: 20px;
@@ -62,7 +68,6 @@
             .table-data {
                 front-size: 8px;
             }
-
             .table-data cell,
             .table-data th,
             .table-data td {
@@ -70,7 +75,6 @@
                 display: block;
                 text-align: center;
             }
-
             .table-data td, table-data th, cell::before{
                 content: attr(data-label);
                 display: block;
@@ -133,10 +137,7 @@
                 align-items: flex-start;
             }
         }
-        /* Media query for Surface pro7 screen sizes */
-        @media screen and (max-width: 1824px) and (max-height: 2736px) {
 
-        }
     </style>
     <div class="row">
         <div class="col-md-12">
@@ -157,7 +158,7 @@
                         <select name="facility_from" id="facility_from" class="from_tat_select2">
 
                         </select>
-                        <span class="special-text"> To:</span>
+                        <span class="special-text">To:</span>
                         <select id="mySelect" name="province_to" class="form-control" onchange="onChangeProvinceTo($(this).val())">
 
                             <option value="">Select All Province</option>
@@ -181,7 +182,6 @@
             <div id="chartContainer" style="height: 600px; width: 100%;"></div>
             <div style="width: 20%;height:20px;background-color: white;position: absolute;margin-top: -12px;"></div>
         </div>
-
         <div class="col-md-12">
             <div class="jim-content">
                 <div class="legend-container">
@@ -216,130 +216,129 @@
                     <table class="table-data">
                         <tr>
                             <td style="font-weight:bold; border: 1px solid black">REFERRED</td>
-                                <td class="cell">
-                                    <div style="cursor: pointer;" onclick="referToSeenPeak()">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header refer_to_seen">{{ $refer_to_seen }}</h5>
-                                            <span class="description-text">Refer to Seen</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                            <td class="cell">
+                                <div style="cursor: pointer;" onclick="referToSeenPeak()">
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header refer_to_seen">{{ $refer_to_seen }}</h5>
+                                        <span class="description-text">Refer to Seen</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $seen_to_accept }}</h5>
-                                            <span class="description-text">Seen to Accepted</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $seen_to_accept }}</h5>
+                                        <span class="description-text">Seen to Accepted</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $seen_to_reject }}</h5>
-                                            <span class="description-text">Seen to Recommend to Redirect</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $seen_to_reject }}</h5>
+                                        <span class="description-text">Seen to Recommend to Redirect</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $accept_to_arrive }}</h5>
-                                            <span class="description-text">Accepted to Arrived</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $accept_to_arrive }}</h5>
+                                        <span class="description-text">Accepted to Arrived</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $arrive_to_admit }}</h5>
-                                            <span class="description-text">Arrived to Admitted</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $arrive_to_admit }}</h5>
+                                        <span class="description-text">Arrived to Admitted</span>
                                     </div>
-                                </td>
-                                <td class="cell">
-                                    <!-- /.col -->
-                                    <div>
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $admit_to_discharge }}</h5>
-                                            <span class="description-text">Admitted to Discharge</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td class="cell">
+                                <!-- /.col -->
+                                <div>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $admit_to_discharge }}</h5>
+                                        <span class="description-text">Admitted to Discharge</span>
                                     </div>
-                                </td>
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold; border: 1px solid black">REDIRECTED</td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $redirect_to_seen }}</h5>
-                                            <span class="description-text">REDIRECTED TO SEEN</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $redirect_to_seen }}</h5>
+                                        <span class="description-text">REDIRECTED TO SEEN</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $seen_to_accept_redirect }}</h5>
-                                            <span class="description-text">SEEN TO ACCEPTED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $seen_to_accept_redirect }}</h5>
+                                        <span class="description-text">SEEN TO ACCEPTED</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $seen_to_reject_redirect}}</h5>
-                                            <span class="description-text">Seen to Recommend to Redirect</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $seen_to_reject_redirect}}</h5>
+                                        <span class="description-text">Seen to Recommend to Redirect</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div class=" row text-danger">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header">{{ $accept_to_arrive_redirect }}</h5>
-                                            <span class="description-text">ACCEPTED TO ARRIVED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div class=" row text-danger">
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">{{ $accept_to_arrive_redirect }}</h5>
+                                        <span class="description-text">ACCEPTED TO ARRIVED</span>
                                     </div>
-                                    <!-- /.col -->
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $arrive_to_admit_redirect }}</h5>
-                                            <span class="description-text">ARRIVED TO ADMITTED</span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $arrive_to_admit_redirect }}</h5>
+                                        <span class="description-text">ARRIVED TO ADMITTED</span>
                                     </div>
-                                </td>
-                                <td>
-                                    <!-- /.col -->
-                                    <div >
-                                        <div class="description-block border-right row text-danger">
-                                            <h5 class="description-header">{{ $admit_to_discharge_redirect }}</h5>
-                                            <span class="description-text">ADMITTED TO DISCHARGE </span>
-                                        </div>
-                                        <!-- /.description-block -->
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
+                            <td>
+                                <!-- /.col -->
+                                <div >
+                                    <div class="description-block border-right row text-danger">
+                                        <h5 class="description-header">{{ $admit_to_discharge_redirect }}</h5>
+                                        <span class="description-text">ADMITTED TO DISCHARGE </span>
                                     </div>
-                                </td>
-                            </div>
+                                    <!-- /.description-block -->
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -458,11 +457,58 @@
         handleScreenSize();
         window.addEventListener("resize", handleScreenSize);
 
-        <!--modification ended in here-->
+        $(document).ready(function() {
+            var datePicker = $('#consolidate_date_range');
+            var initialOptions={
+                maxDate: new Date(),
+                opens: 'center'
+            };
+            datePicker.daterangepicker(initialOptions);
 
-        $('#consolidate_date_range').daterangepicker({
-            maxDate: new Date()
+            function adjustCalendarPosition() {
+                var container = datePicker.data('daterangepicker').container;
+                var calendar = container.find('.calendar');
+                if (window.matchMedia('(max-width: 280px) and (max-height: 653px)').matches) { // fold
+                    container.css({opens: 'center', width: '250px', display: 'flex',
+                        'flex-direction': 'column-reverse', alignItems: 'flex-start'});
+                    calendar.css({left: 'initial'});
+                    container.hide();
+                }else if (window.matchMedia('(max-width: 375px) and (max-height: 667px)').matches) { //se
+                    container.css({opens: 'center', width: '330px', display: 'flex',
+                        'flex-direction': 'column-reverse', 'align-items': 'flex-start'});
+                    calendar.css({width: '100%', left: 'initial', transform: 'translateX(8%)'});
+                    container.hide();
+                }else if (window.matchMedia('(max-width: 360px) and (max-height: 740px)').matches) { //s8 s20
+                    container.css({opens: 'center', width: '310px', display: 'flex', 'flex-direction': 'column-reverse'});
+                    calendar.css({width: '100%', left: 'initial', transform: 'translateX(4%)'});
+                    container.hide();
+                }else if (window.matchMedia('(max-width: 390px) and (max-height: 915px)').matches) { //12pro
+                    container.css({opens: 'center', width: '335px', display: 'flex', 'flex-direction': 'column-reverse'});
+                    calendar.css({width: '100%', left: 'initial', transform: 'translateX(10%)'});
+                    container.hide();
+                }else if (window.matchMedia('(max-width: 412px) and (max-height: 915px)').matches) { //pixel5, s8
+                    container.css({opens: 'center', width: '350px', display: 'flex', 'flex-direction': 'column-reverse'});
+                    calendar.css({width: '100%', left: 'initial', transform: 'translateX(10%)'});
+                    container.hide();
+                } else if (window.matchMedia('(max-width: 414px) and (max-height: 912px)').matches) {//xr
+                    container.css({opens: 'center', width: '360px', display: 'flex', 'flex-direction': 'column-reverse'});
+                    calendar.css({width: '100%', left: 'initial', transform: 'translateX(12%)'});
+                    container.hide();
+                } else if (window.matchMedia('(max-width: 540px) and (max-height: 720px)').matches) {
+                    container.css({opens: 'center', width: '500px'});
+                    calendar.css({left: 'initial'});
+                    container.hide();
+                }else {
+                    container.css({opens: 'center', width: 'auto'});
+                    calendar.css({left: 'initial'});
+                }
+            }
+            adjustCalendarPosition();
+            $(window).addEventListener('resize',function(){
+                adjustCalendarPosition();
+            });
         });
+
 
         window.onload = function () {
 
