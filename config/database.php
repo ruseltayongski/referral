@@ -1,5 +1,7 @@
-
 <?php
+$host = "172.16.2.74";
+$username = "root";
+$password = "HPCgqd68312";
 
 return [
 
@@ -42,11 +44,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => $host,
             'port' => '3306',
-            'database' => 'doh_referral', //doh_referral dummy_referral
-            'username' => 'root',
-            'password' => 'adm1n',
+            'database' => 'doh_referral',
+            'username' => $username,
+            'password' => $password,
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -57,11 +59,11 @@ return [
 
         'tsekap' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => $host,
             'port' => '3306',
             'database' => 'tsekap_main',
-            'username' => 'root',
-            'password' => 'adm1n',
+            'username' => $username,
+            'password' => $password,
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -134,3 +136,10 @@ return [
     ],
 
 ];
+
+
+
+
+
+
+
