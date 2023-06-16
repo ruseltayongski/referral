@@ -563,7 +563,7 @@
         //create table
         var requestRef = dbRef.ref('23');
 
-        requestRef.push({
+        const newRef = requestRef.push({
             age: age,
             chiefComplaint: chiefComplaint,
             department: department,
@@ -573,6 +573,36 @@
             referring_hospital : referring_hospital,
             date_referred : moment(date_referred).format("YYYY-MM-DD HH:mm:ss"),
             patient_code : patient_code
+        });
+
+        const firebase_key = newRef.key;
+        console.log(firebase_key)
+
+
+        var form = new FormData();
+        form.append("age", age);
+        form.append("chiefComplaint", chiefComplaint);
+        form.append("department", department);
+        form.append("diagnosis", diagnosis);
+        form.append("patient", patient);
+        form.append("sex", sex);
+        form.append("referring_hospital", referring_hospital);
+        form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
+        form.append("patient_code", patient_code);
+        form.append("firebase_key", firebase_key);
+
+        var settings = {
+            "url": "https://dohcsmc.site/notifier/api/insert_referral_5pm",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
         });
     }
 

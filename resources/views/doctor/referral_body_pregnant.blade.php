@@ -234,8 +234,8 @@ $user = Session::get('auth');
 <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
 <div class="pull-right">
     @if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form['pregnant']->department_id === 5 && $user->id == $form['pregnant']->md_referring_id)
+        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form['pregnant']->tracking_id }}','{{ $form['pregnant']->code }}','{{ $form['pregnant']->action_md }}','{{ $form['pregnant']->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
         <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
     @endif
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
@@ -252,3 +252,43 @@ $user = Session::get('auth');
     <a href="{{ url('doctor/print/form').'/'.$form['pregnant']->tracking_id }}" target="_blank" class="btn-refer-pregnant btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
+
+<script>
+    function getParameterByName(name) {
+        url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    if(getParameterByName('referredCode')) {
+        $("#telemedicine").addClass('hide');
+        $(".edit_form_btn").addClass('hide');
+    }
+
+    function openTelemedicine(tracking_id, code, action_md, referring_md) {
+        var url = "<?php echo asset('api/video/call'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "tracking_id" : tracking_id,
+            "code" : code,
+            "action_md" : action_md,
+            "referring_md" : referring_md,
+            "trigger_by" : "{{ $user->id }}",
+            "form_type" : "pregnant"
+        };
+        $.post(url,json,function(){
+
+        });
+        var windowName = 'NewWindow'; // Name of the new window
+        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=pregnant&referring_md=yes", windowName, windowFeatures);
+        if (newWindow && newWindow.outerWidth) {
+            // If the window was successfully opened, attempt to maximize it
+            newWindow.moveTo(0, 0);
+            newWindow.resizeTo(screen.availWidth, screen.availHeight);
+        }
+    }
+</script>

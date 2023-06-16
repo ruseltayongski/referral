@@ -12,7 +12,6 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
-        $type = Tracking::select('type')->where('id', $req->id)->first()->type;
-        return view('doctor.video-call', ['referral_type'=>$type]);
+        return view('doctor.video-call', ['referral_type'=>$req->form_type]);
     }
 }
