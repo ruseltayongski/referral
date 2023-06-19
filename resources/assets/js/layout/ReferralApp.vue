@@ -6,6 +6,7 @@
                 <div class="modal-body text-center">
                     <img :src="imageUrl" alt="Image">
                     <p class="txt">{{ doctorCaller }}</p>
+                    <p class="isCalling">is calling you</p>
                     <p style="font-size: .9em">The call will start as soon as you accept</p>
                     <div class="row">
                         <div class="col-xs-6">
@@ -938,6 +939,10 @@
         font-weight: bold;
         font-size: 1.5em;
         padding: 3px;
+    }
+    .isCalling {
+        font-weight: bold;
+        font-size: 1.3em;
     }
     .acceptButton{
         position: relative;
