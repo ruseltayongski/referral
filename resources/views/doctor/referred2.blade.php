@@ -128,20 +128,20 @@ $user = Session::get('auth');
                             @endif
                             Referred by:
                             <span class="txtDoctor" href="#">
-                            <?php
-                                if($row->user_level == 'doctor'){
-                                    $referring_md = "Dr. ".$row->referring_md;
-                                } else{
-                                    $referring_md = $row->referring_md;
-                                }
-                                ?>
-                                {{ $referring_md }}
-                        </span>
+                                <?php
+                                    if($row->user_level == 'doctor'){
+                                        $referring_md = "Dr. ".$row->referring_md;
+                                    } else{
+                                        $referring_md = $row->referring_md;
+                                    }
+                                    ?>
+                                    {{ $referring_md }}
+                            </span>
                             <br />
                             Patient Code: <span class="txtCode">{{ $row->code }}</span>
                         </div>
                         @if($row->telemedicine)
-                            @include('doctor.include.referred_panel_body')
+                            @include('doctor.include.telemedicine_panel_body')
                         @else
                             @include('doctor.include.referred_panel_body')
                         @endif
@@ -173,7 +173,7 @@ $user = Session::get('auth');
                                 </a>
                             @endif
                             <div id="html_websocket_departed{{ $row->code }}" style="display: inline;"></div>
-                            @if(($referred_accepted_track || $redirected_accepted_track) && !$referred_travel_track && !$redirected_travel_track && !$referred_arrived_track && !$redirected_arrived_track && $row->referred_from == $user->facility_id)
+                            @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track') ) && !$referred_travel_track && !$redirected_travel_track && !$referred_arrived_track && !$redirected_arrived_track && $row->referred_from == $user->facility_id)
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif

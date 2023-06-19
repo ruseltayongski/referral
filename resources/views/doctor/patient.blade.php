@@ -544,19 +544,22 @@
     });
 
     function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
-            authDomain: "notifier-5e4e8.firebaseapp.com",
-            databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
-            projectId: "notifier-5e4e8",
-            storageBucket: "notifier-5e4e8.appspot.com",
-            messagingSenderId: "359294836752",
-            appId: "1:359294836752:web:87c854779366d0f11d2a95",
-            measurementId: "G-HEYDWWHLKV"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Check if Firebase app with name '[DEFAULT]' already exists
+        if (!firebase.apps.length) {
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
+                authDomain: "notifier-5e4e8.firebaseapp.com",
+                databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
+                projectId: "notifier-5e4e8",
+                storageBucket: "notifier-5e4e8.appspot.com",
+                messagingSenderId: "359294836752",
+                appId: "1:359294836752:web:87c854779366d0f11d2a95",
+                measurementId: "G-HEYDWWHLKV"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+        }
 
         //initialize firebase
         var dbRef = firebase.database();

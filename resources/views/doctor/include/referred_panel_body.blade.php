@@ -92,6 +92,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","accepted")
         ->exists();
+    Session::put('referred_accepted_track',$referred_accepted_track);
     $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -219,6 +220,7 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","accepted")
                 ->exists();
+            Session::put('redirected_accepted_track',$redirected_accepted_track);
             $redirected_rejected_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_to",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
