@@ -329,6 +329,16 @@ class ReportCtrl extends Controller
 
                 if($refer_to_accept) {
                     $refer_accept_holder[] = $this->getMinutes($refer->created_at,$refer_to_accept->created_at);
+                    ////
+                    $refer_accept_details[] = [
+                        "code" => $refer_to_accept->code,
+                        "minutes" => $this->getMinutes($refer->created_at,$refer_to_accept->created_at),
+                        "date_referred" => $refer->created_at,
+                        "date_accepted" => $refer_to_accept->created_at,
+                        "date_referred_format" => date("M d, Y h:i A",strtotime($refer->created_at)),
+                        "date_accepted_format" => date("M d, Y h:i A",strtotime($refer_to_accept->created_at)),
+                        "status" => "referred"
+                    ];
                 }
             }
 
@@ -425,6 +435,16 @@ class ReportCtrl extends Controller
 
                 if($redirect_to_accept) {
                     $redirect_accept_holder[] = $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at); //redirect to accept
+                    ////
+                    $redirect_accept_details[] = [
+                        "code" => $redirect_to_accept->code,
+                        "minutes" => $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at),
+                        "date_redirected" => $redirect->created_at,
+                        "date_accepted" => $redirect_to_accept->created_at,
+                        "date_redirected_format" => date("M d, Y h:i A",strtotime($redirect->created_at)),
+                        "date_accepted_format" => date("M d, Y h:i A",strtotime($redirect_to_accept->created_at)),
+                        "status" => "redirected"
+                    ];
                 }
             }
 
@@ -446,25 +466,34 @@ class ReportCtrl extends Controller
                 }
             }
 
+            $c = array_column($refer_accept_details,'minutes'); // which column needed to be sorted
+            array_multisort($c,SORT_DESC,$refer_accept_details); // sorts the array $refer_accept_details with respective of aray $c
+
+            $d = array_column($redirect_accept_details,'minutes'); // which column needed to be sorted
+            array_multisort($d,SORT_DESC,$redirect_accept_details); // sorts the array $redirect_accept_details with respective of aray $c
+
             $data[] = [
                 "date" => date("M d",strtotime($per_day)),
                 "referred" => count($referred),
                 "redirected" => count($redirected),
                 "transferred" => count($transferred),
-                "refer_to_seen" => round(collect($refer_seen_holder)->avg(),2),
+                //"refer_to_seen" => round(collect($refer_seen_holder)->avg(),2),
+                "refer_to_accept_details" => $refer_accept_details,
                 "refer_to_accept" => round(collect($refer_accept_holder)->avg(),2),
+                "redirect_to_accept_details" => $redirect_accept_details,
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
             $refer_seen_holder = [];
+            $refer_accept_details = [];
+            $redirect_accept_details = [];
             $refer_accept_holder = [];
             $redirect_accept_holder = [];
             $transfer_accept_holder = [];
         }
 
-
         $b = array_column($refer_seen_details,'minutes'); // which column needed to be sorted
-        array_multisort($b,SORT_DESC,$refer_seen_details); // sorts the array $a with respective of aray $b
+        array_multisort($b,SORT_DESC,$refer_seen_details); // sorts the array $refer_seen_details with respective of aray $b
 
         return view('admin.report.tat_incoming',[
             "data_points" => $data,
@@ -646,6 +675,16 @@ class ReportCtrl extends Controller
 
                 if($refer_to_accept) {
                     $refer_accept_holder[] = $this->getMinutes($refer->created_at,$refer_to_accept->created_at);
+                    ////
+                    $refer_accept_details[] = [
+                        "code" => $refer_to_accept->code,
+                        "minutes" => $this->getMinutes($refer->created_at,$refer_to_accept->created_at),
+                        "date_referred" => $refer->created_at,
+                        "date_accepted" => $refer_to_accept->created_at,
+                        "date_referred_format" => date("M d, Y h:i A",strtotime($refer->created_at)),
+                        "date_accepted_format" => date("M d, Y h:i A",strtotime($refer_to_accept->created_at)),
+                        "status" => "referred"
+                    ];
                 }
             }
 
@@ -738,6 +777,16 @@ class ReportCtrl extends Controller
 
                 if($redirect_to_accept) {
                     $redirect_accept_holder[] = $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at); //redirect to accept
+                    ////
+                    $redirect_accept_details[] = [
+                        "code" => $redirect_to_accept->code,
+                        "minutes" => $this->getMinutes($redirect->created_at,$redirect_to_accept->created_at),
+                        "date_redirected" => $redirect->created_at,
+                        "date_accepted" => $redirect_to_accept->created_at,
+                        "date_redirected_format" => date("M d, Y h:i A",strtotime($redirect->created_at)),
+                        "date_accepted_format" => date("M d, Y h:i A",strtotime($redirect_to_accept->created_at)),
+                        "status" => "redirected"
+                    ];
                 }
             }
 
@@ -754,16 +803,25 @@ class ReportCtrl extends Controller
                 }
             }
 
+            $c = array_column($refer_accept_details,'minutes'); // which column needed to be sorted
+            array_multisort($c,SORT_DESC,$refer_accept_details); // sorts the array $refer_accept_details with respective of aray $c
+
+            $d = array_column($redirect_accept_details,'minutes'); // which column needed to be sorted
+            array_multisort($d,SORT_DESC,$redirect_accept_details); // sorts the array $redirect_accept_details with respective of aray $c
+
             $data[] = [
                 "date" => date("M d",strtotime($per_day)),
                 "referred" => count($referred),
                 "redirected" => count($redirected),
                 "transferred" => count($transferred),
+                "refer_to_accept_details" => $refer_accept_details,
                 "refer_to_accept" => round(collect($refer_accept_holder)->avg(),2),
+                "redirect_to_accept_details" => $redirect_accept_details,
                 "redirect_to_accept" => round(collect($redirect_accept_holder)->avg(),2),
                 "transfer_to_accept" => round(collect($transfer_accept_holder)->avg(),2)
             ];
             $refer_accept_holder = [];
+            $refer_accept_details = [];
             $redirect_accept_holder = [];
             $transfer_accept_holder = [];
         }

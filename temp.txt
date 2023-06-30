@@ -10,6 +10,7 @@ BEGIN
         tra.action_md,
         tra.referring_md,
 		fac.name,
+        tra.type,
         if(tra.type = 'normal', pf.prescription, prf.prescription) as prescription,
 		concat(pat.fname," ",pat.mname," ",pat.lname) as patient_name,
 		DATE_FORMAT(tra.date_accepted,'%M %d, %Y %h:%i %p') as date_accepted,

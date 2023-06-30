@@ -16,6 +16,7 @@
                 @include('include.header_form')
                 <div class="form-group-sm form-inline">
                 {{ csrf_field() }}
+                    <input type="hidden" name="telemedicine" class="telemedicine" value="">
                     <input type="hidden" name="patient_id" class="patient_id" value="" />
                     <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
                     <input type="hidden" name="code" value="" />

@@ -204,6 +204,8 @@ class UserCtrl extends Controller
         }
 
         $user->update($data);
+        Session::forget('auth');
+        $user = User::where('username',$user->username)->first();
 
         Session::put('auth', $user);
 

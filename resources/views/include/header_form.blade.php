@@ -18,11 +18,7 @@
                 <img src="{{ asset('resources/img/f1.jpg') }}" width="100">
             </div>
         </div>
-        @if($form_type == 'normal' || !isset($form_type))
-            <h3 class="text-green clinical-form-title" style="font-size: 23pt;">CLINICAL REFERRAL FORM</h3>
-        @else
-            <h3 class="text-green clinical-form-title" style="font-size: 23pt;">BEmONC/ CEmONC REFERRAL FORM</h3>
-        @endif
+        <h3 class="text-green clinical-form-title" style="font-size: 23pt;"><!-- TITLE HERE IS APPENDED FROM JQUERY--></h3>
     </div>
     <div class="mobile-view">
         <div class="row" style="margin-top: 15px;">
@@ -42,10 +38,6 @@
                 </div>
             </div>
         </div>
-        @if($form_type == 'normal' || !isset($form_type))
-            <h3 class="text-green clinical-form-title" style="font-size: 18pt;">CLINICAL REFERRAL FORM</h3>
-        @else
-            <h3 class="text-green clinical-form-title" style="font-size: 18pt;">BEmONC/ CEmONC REFERRAL FORM</h3>
-        @endif
+        <h3 class="text-green clinical-form-title" style="font-size: 18pt;"><!-- TITLE HERE IS APPENDED FROM JQUERY--></h3>
     </div>
 </center>

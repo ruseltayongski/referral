@@ -26,6 +26,7 @@ class Tracking extends Model
         'type',
         'form_id',
         'walkin',
-        'source'
+        'source',
+        'telemedicine'
     ];
 }

@@ -5,7 +5,8 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <img :src="imageUrl" alt="Image">
-                    <p class="txt">Dr. Dela Cruz is calling you</p>
+                    <p class="txt">{{ doctorCaller }}</p>
+                    <p class="isCalling">is calling you</p>
                     <p style="font-size: .9em">The call will start as soon as you accept</p>
                     <div class="row">
                         <div class="col-xs-6">
@@ -26,77 +27,6 @@
         </div>
     </div>
 </template>
-<style scoped>
-
-    .callModal {
-        position: fixed;
-        left: 0;
-        right: 0;
-        margin-top: 15%;
-        margin-bottom: 10%;
-        background: rgba(0,0,0,0);
-    }
-    .modal-body {
-        padding-left: 10px;
-        padding-right: 10px;
-        border: 4px solid black;
-        border-radius: 5px;
-    }
-    .modal-content {
-        padding: 20px;
-    }
-    .txt{
-        font-weight: bold;
-        font-size: 1.5em;
-        padding: 3px;
-    }
-    .acceptButton{
-        position: relative;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        color: green;
-        font-size: 24px;
-        cursor: pointer;
-        left: 15px;
-    }
-    .acceptButton i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    .ignoreButton {
-        position: relative;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        color: red;
-        font-size: 24px;
-        cursor: pointer;
-        right: 15px;
-    }
-    .ignoreButton i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    .textAccept {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 15px;
-        margin-bottom: 10px;
-        margin-left: 30px;
-    }
-    .textDecline {
-        text-align: center;
-        font-size: 14px;
-        margin-top: 15px;
-        margin-right: 28px;
-    }
-</style>
-
 <script>
     export default {
         name : "ReferralApp",
@@ -113,6 +43,8 @@
                 referral_code: String,
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
+                doctorCaller: String,
+                telemedicineFormType: String
             }
         },
         methods: {
@@ -536,7 +468,7 @@
                 let windowName = 'NewWindow'; // Name of the new window
                 let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
                 const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
-                let url = $("#broadcasting_url").val()+"/doctor/telemedicine?id="+this.tracking_id+"&code="+this.referral_code+"&referring_md="+referring_md_status
+                let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}`
                 let newWindow = window.open(url, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
@@ -707,8 +639,10 @@
                     console.log(event)
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            console.log("join haha")
+                            console.log(event.payload)
                             this.action_md = event.payload.action_md
+                            this.doctorCaller = event.payload.doctorCaller
+                            this.telemedicineFormType = event.payload.form_type
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
                         }
                     } else {
@@ -981,3 +915,78 @@
         }
     }
 </script>
+
+<style scoped>
+
+    .callModal {
+        position: fixed;
+        left: 0;
+        right: 0;
+        margin-top: 15%;
+        margin-bottom: 10%;
+        background: rgba(0,0,0,0);
+    }
+    .modal-body {
+        padding-left: 10px;
+        padding-right: 10px;
+        border: 4px solid black;
+        border-radius: 5px;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .txt{
+        font-weight: bold;
+        font-size: 1.5em;
+        padding: 3px;
+    }
+    .isCalling {
+        font-weight: bold;
+        font-size: 1.3em;
+    }
+    .acceptButton{
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: green;
+        font-size: 24px;
+        cursor: pointer;
+        left: 15px;
+    }
+    .acceptButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .ignoreButton {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: red;
+        font-size: 24px;
+        cursor: pointer;
+        right: 15px;
+    }
+    .ignoreButton i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .textAccept {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-left: 30px;
+    }
+    .textDecline {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-right: 28px;
+    }
+</style>

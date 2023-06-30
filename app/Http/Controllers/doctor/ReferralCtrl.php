@@ -275,38 +275,26 @@ class ReferralCtrl extends Controller
             ->where('patient_form.code', $track->code)->first();
 
         $form = self::normalFormData($id);
+        $arr = [
+            "form" => $form['form'],
+            "id" => $id,
+            "patient_age" => $form['age'],
+            "age_type" => $form['ageType'],
+            "reason" => $reason,
+            "icd" => $icd,
+            "file_path" => $path,
+            "file_name" => $file_name,
+            "referral_status" => $referral_status,
+            "cur_status" => $track->status,
+            "referring_fac_id" => $track->referring_fac_id,
+            "form_type" => $form_type
+        ];
 
         if(Session::get('telemed')) {
             Session::put('telemed',false);
-            return [
-                "form" => $form['form'],
-                "id" => $id,
-                "patient_age" => $form['age'],
-                "age_type" => $form['ageType'],
-                "reason" => $reason,
-                "icd" => $icd,
-                "file_path" => $path,
-                "file_name" => $file_name,
-                "referral_status" => $referral_status,
-                "cur_status" => $track->status,
-                "referring_fac_id" => $track->referring_fac_id,
-                "form_type" => $form_type
-            ];
+            return $arr;
         } else {
-            return view("doctor.referral_body_normal",[
-                "form" => $form['form'],
-                "id" => $id,
-                "patient_age" => $form['age'],
-                "age_type" => $form['ageType'],
-                "reason" => $reason,
-                "icd" => $icd,
-                "file_path" => $path,
-                "file_name" => $file_name,
-                "referral_status" => $referral_status,
-                "cur_status" => $track->status,
-                "referring_fac_id" => $track->referring_fac_id,
-                "form_type" => $form_type
-            ]);
+            return view("doctor.referral_body_normal",$arr);
         }
     }
 
@@ -399,6 +387,13 @@ class ReferralCtrl extends Controller
         ];
     }
 
+
+    public static function pregnantFormTelemed($id){
+        $track = Tracking::select('status', 'type')->where('id', $id)->first();
+        Session::put('telemed', true);
+        return self::pregnantForm($id, $track->status, $track->type);
+    }
+
     public static function pregnantForm($id,$referral_status) {
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
@@ -409,6 +404,7 @@ class ReferralCtrl extends Controller
 
         $path = [];
         $file_name = [];
+
         if($file_link != null && $file_link != "") {
             $explode = explode("|",$file_link);
             foreach($explode as $link) {
@@ -424,7 +420,7 @@ class ReferralCtrl extends Controller
             ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
             ->where('pregnant_form.code', $track->code)->first();
 
-        return view('doctor.referral_body_pregnant',[
+        $arr = [
             "form" => self::pregnantFormData($id),
             "id" => $id,
             "reason" => $reason,
@@ -435,12 +431,21 @@ class ReferralCtrl extends Controller
             "cur_status" => $track->status,
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => "pregnant"
-        ]);
+        ];
+
+        if(Session::get('telemed')) {
+            Session::put('telemed',false);
+            return $arr;
+        } else {
+            return view("doctor.referral_body_pregnant",$arr);
+        }
     }
 
     public static function pregnantFormData($id) {
         $form = PregnantForm::select(
             DB::raw("'$id' as tracking_id"),
+            'tracking.action_md',
+            'tracking.referring_md',
             'pregnant_form.patient_baby_id',
             'pregnant_form.code',
             'pregnant_form.record_no',

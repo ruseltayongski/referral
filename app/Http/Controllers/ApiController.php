@@ -60,19 +60,29 @@ class ApiController extends Controller
     }
 
     public function callADoctor(Request $request) {
+        $user = Session::get('auth');
+        $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
         $call = [
             "tracking_id" => $request->tracking_id,
             "code" => $request->code,
             "action_md" => (int)$request->action_md,
             "referring_md" => (int)$request->referring_md,
             "trigger_by" => (int)$request->trigger_by,
-            "status" => "telemedicine"
+            "status" => "telemedicine",
+            "doctorCaller" => $doctorCaller,
+            "form_type" => $request->form_type
         ];
         broadcast(new SocketReferralDischarged($call));
     }
 
     public function updatePrescription(Request $request) {
-        $patient_form = PatientForm::where("code",$request->code)->first();
+        $patient_form = null;
+        if($request->form_type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+        }
+        else if($request->form_type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+        }
         if($patient_form) {
             $patient_form->prescription = $request->prescription;
             $patient_form->save();
@@ -82,7 +92,13 @@ class ApiController extends Controller
     }
 
     public function checkPrescription(Request $request) {
-        $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
+        $check_prescription = null;
+        if($request->form_type == 'normal') {
+            $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
+        }
+        else if($request->form_type == 'pregnant') {
+            $check_prescription = PregnantForm::where("code",$request->code)->first()->prescription;
+        }
         if($check_prescription) {
             return "success";
         }
@@ -421,7 +437,6 @@ class ApiController extends Controller
             $date_start = Activity::select("created_at")->orderBy("created_at","asc")->first()->created_at;
             $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
         }
-
         $data = \DB::connection('mysql')->select("call statistics_report_individual('$request->request_type','$request->facility_id','$date_start','$date_end','$request->status')");
         Session::put("statistics_report_individual",$data);
         Session::put("individual_status",$request->status);
@@ -1219,13 +1234,19 @@ class ApiController extends Controller
     }
 
     public static function pushNotificationCCMC($push) {
+        if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
+            $topic = "/topics/referrals_ER";
+        } else {
+            $topic = "/topics/referrals_TRIAGGE";
+        }
+
         $data = [
             "age" => $push['age'],
             "patient" => $push['patient'],
             "hospital_referrer" => $push['referring_hospital'],
             "sex"=> $push['sex']
         ];
-        $CURL_POST_FIELDS = ["to"=>"/topics/referrals_TRIAGGE","data"=>$data];
+        $CURL_POST_FIELDS = ["to"=>$topic,"data"=>$data];
 
         $curl = curl_init();
         curl_setopt_array($curl, array(

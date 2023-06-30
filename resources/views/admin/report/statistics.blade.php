@@ -1,51 +1,52 @@
 <?php $user = Session::get('auth'); ?>
 @extends('layouts.app')
-<style>
-    span{
-        cursor: pointer;
-    }
-    .tooltip1 {
-        position: relative;
-        display: inline-block;
-        /*border-bottom: 1px dotted black;*/
-        cursor: help;
-    }
-    .tooltip1 .tooltiptext {
-        visibility: hidden;
-        width: 200px;
-        background-color: #00a65a;
-        color: white;
-        text-align: center;
-        border-radius: 6px;
-        padding: 10px;
-        position: absolute;
-        z-index: 1;
-        top: 150%;
-        left: 50%;
-        margin-left: -60px;
-        font-weight: normal;
-    }
-    .tooltip1 .tooltiptext::after {
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -40px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: transparent transparent #00a65a transparent;
-    }
-    .tooltip1:hover .tooltiptext {
-        visibility: visible;
-    }
 
-    @media (min-width: 992px){
-        .modal-lg {
-            width: 1100px !important;
-        }
-    }
-</style>
 @section('content')
+    <style>
+        span{
+            cursor: pointer;
+        }
+        .tooltip1 {
+            position: relative;
+            display: inline-block;
+            /*border-bottom: 1px dotted black;*/
+            cursor: help;
+        }
+        .tooltip1 .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #00a65a;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 150%;
+            left: 50%;
+            margin-left: -60px;
+            font-weight: normal;
+        }
+        .tooltip1 .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -40px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #00a65a transparent;
+        }
+        .tooltip1:hover .tooltiptext {
+            visibility: visible;
+        }
+
+        @media (min-width: 992px){
+            .modal-lg {
+                width: 1100px !important;
+            }
+        }
+    </style>
     <div class="row col-md-12">
         <div class="box box-success">
             <section class="content-header">
@@ -392,8 +393,6 @@
     </div>
 
 @endsection
-@section('css')
-@endsection
 
 @section('js')
     @include('script.filterMuncity')
@@ -411,8 +410,15 @@
         });
 
         var user_level = "<?php echo $user->level; ?>";
+        var user_facility_id = "<?php echo $user->facility_id; ?>";
+
         function statisticsData(data,request_type,facility_id,status,date_range) {
-            if(user_level === "mayor" || user_level === "dmo") return;
+            if(user_level === "mayor" || user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
+                Lobibox.alert('error', {
+                    msg: 'You are not authorized to view this data!'
+                });
+                return;
+            }
 
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
