@@ -24,6 +24,12 @@ class UserCtrl extends Controller
         $user = Session::get('auth');
         $search = $request->search;
 
+        if($request->view_all) {
+            $search = '';
+            Session::put('suser_dept_id','');
+            Session::put('suser_last_login','');
+        }
+
         $data = User::where('facility_id',$user->facility_id)
             ->where(function($q) use($search){
                 $q->where("users.level","doctor")
@@ -40,13 +46,17 @@ class UserCtrl extends Controller
                 ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$search");
             });
 
-        if($request->department_id)
-            $data = $data->where("department_id",$request->department_id == 'no_department' ? 0 : $request->department_id);
+        $dept_id = Session::get('suser_dept_id');
+        if(isset($dept_id) && $dept_id != '')
+            $data = $data->where("department_id",$dept_id == 'no_department' ? 0 : $dept_id);
 
+        $last_login = Session::get('suser_last_login');
+        if(isset($last_login) && $last_login != '')
+            $data = $data->orderBy('last_login',$last_login);
+        else
+            $data = $data->orderBy('fname','asc');
 
-        $data = $data
-            ->orderBy('fname','asc')
-            ->paginate(15);
+        $data = $data->paginate(15);
 
         $departments = Department::get();
         $group_by_department = User::
@@ -69,8 +79,16 @@ class UserCtrl extends Controller
             'data' => $data,
             'departments' => $departments,
             'search' => $search,
-            "group_by_department" => $group_by_department
+            "group_by_department" => $group_by_department,
+            'dept_id' => $request->department_id,
+            'last_login' => $request->last_login
         ]);
+    }
+
+    public function filter(Request $req) {
+        Session::put('suser_dept_id', $req->department_id);
+        Session::put('suser_last_login',$req->last_login);
+        return self::index($req);
     }
 
     public function create()

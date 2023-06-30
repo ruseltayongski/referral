@@ -386,7 +386,7 @@
                         <div class="member d-flex align-items-start">
                             <div class="pic"><img :src="ccatubig" class="img-fluid" alt=""></div>
                             <div class="member-info">
-                                <h4>Christine Anne I. Catubig</h4>
+                                <h4>Christine Anne I. Catubig</h4> <!--I was here hahaha-->
                                 <span>Computer Programmer I</span>
                                 <p>09226204186</p>
                                 <div class="social">

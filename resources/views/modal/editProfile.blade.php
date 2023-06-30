@@ -111,22 +111,21 @@
                         <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>License No.:</label>
-                        <input type="text" class="form-control license" name="license" value="{{ $user->license }}">
-                    </div>
-
                     @if($user->level == "doctor")
+                        <div class="form-group">
+                            <label>License No.:</label>
+                            <input type="text" class="form-control license" name="license" value="{{ $user->license }}">
+                        </div>
+
                         <div class="form-group">
                             <label>Signature:</label>
                             <input type="hidden" name="signature" id="signature_final" value="">
-                            <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
                             @if(isset($user->signature) && $user->signature != null)
                                 <img src="{{ asset($user->signature) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
                             @else
-                                {{--<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;--}}
+                                <input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">
                             @endif
                             </div>
@@ -144,6 +143,8 @@
 </div><!-- /.modal -->
 
 {{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
 <script>
 
     var signaturePad, sign_type;
@@ -151,18 +152,19 @@
     $('#update_btn').on('click', function(e) {
         $('#stored_sign').src = null;
         $('.loading').show();
+        var data;
         if(sign_type === "upload") {
-
+            var canvas = document.getElementById('upload_canvas');
+            data = canvas.toDataURL('image/png');
         } else if(sign_type === "draw") {
-            var data = signaturePad.toDataURL('image/png');
-            $('#signature_final').val(data);
-            $('#sign_type').val(sign_type);
+            data = signaturePad.toDataURL('image/png');
         }
+        $('#signature_final').val(data);
     });
 
     function replaceSignature() {
         $('#signature_field').html(
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
             '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
         )
     }
@@ -177,7 +179,7 @@
             );
         } else {
             $('#signature_field').html(
-//                '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+                '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
                 '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
             );
         }
@@ -190,12 +192,12 @@
             '<div class="file_upload">\n' +
             '   <div class="text-center image_upload_wrap" id="image_upload_wrap">\n' +
             '       <input class="file_upload_input files" id="file_upload_input" type="file" onchange="readFile(this);" accept="image/png, image/jpeg, image/jpg"/>\n' +
-            '       <img src="'+src+'" style="width: 30%; height: 30%;">\n' +
+            '       <img id="init_img" src="'+src+'" style="width: 30%; height: 30%;">\n' +
             '   </div>\n' +
             '   <div class="file_upload_content" id="file_upload_content">\n' +
-            '       <canvas width="408" height="245" style="border: 1px solid black" id="file_upload_image"/></canvas><br><br><br>\n' +
+            '       <canvas style="border: 2px solid black;" id="upload_canvas"></canvas>' +
             '   </div>\n' +
-            '</div><br><br>' +
+            '</div>' +
             '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'upload\')">Remove Signature</button><br><br>' +
             '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" onclick="showDrawField()" readonly>'
         );
@@ -207,55 +209,49 @@
             var file = input.files[0];
             if(file && file !== null) {
                 var reader = new FileReader();
-                reader.onloadend = function(e) {
-//                    $('#file_upload_image').attr('src', e.target.result);
-//                    $('#tempo').attr('src',e.target.result);
-                    filterImage(e.target.result);
-                };
-                $('#image_upload_wrap').hide();
-                $('#file_upload_content').show();
                 reader.readAsDataURL(file);
+                reader.onloadend = function(e) {
+                    $('#init_img').attr('src',e.target.result);
+                    filterImage();
+                };
             }
         }
         $('#remove_signature').show();
     }
 
-    function filterImage(img) {
-        var canvas = document.getElementById("file_upload_image"),
-            ctx = canvas.getContext("2d");
+    function filterImage() {
+        var canvas = document.getElementById("upload_canvas"),
+            ctx = canvas.getContext("2d"),
+            image = document.getElementById("init_img");
 
-        ctx.drawImage(img,0,0);
+        var h = canvas.height = 200;
+        var w = canvas.width = 450;
+        ctx.drawImage(image,0,0, canvas.width, canvas.height);
 
-        var imgd = ctx.getImageData(0, 0, 135, 135),
-            pix = imgd.data,
-            newColor = {r:0,g:0,b:0, a:0};
-
-        for (var i = 0, n = pix.length; i <n; i += 4) {
-            var r = pix[i],
-                g = pix[i+1],
-                b = pix[i+2];
-
-            if(r == 255&& g == 255 && b == 255){
-                // Change the white to the new color.
-                pix[i] = newColor.r;
-                pix[i+1] = newColor.g;
-                pix[i+2] = newColor.b;
-                pix[i+3] = newColor.a;
-            }
+        var imgd = ctx.getImageData(0, 0, w, h);
+        for (
+            let index = 0, dataLength = imgd.data.length;
+            index < dataLength;
+            index += 4
+        ) {
+            const r = imgd.data[index];
+            const g = imgd.data[index + 1];
+            const b = imgd.data[index + 2];
+            if ([r, g, b].every((item) => item > 230))
+            imgd.data[index + 3] = 0;
         }
-
         ctx.putImageData(imgd, 0, 0);
-        var final = new Image();
-        final.src = canvas.toDataURL();
-        console.log(final);
+        $('#image_upload_wrap').hide();
+        $('#file_upload_content').show();
+        console.log("done cleaning image");
     }
 
     function showDrawField() {
         sign_type = "draw";
         $('#signature_field').html(
             '<canvas class="canvas_sign" style="border: 2px solid black;" width="450" height="200" id="signature-pad"></canvas><br><br>' +
-            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>'
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
+            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>' +
+            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
         );
         triggerDraw();
     }

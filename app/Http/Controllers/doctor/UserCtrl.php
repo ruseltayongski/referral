@@ -186,27 +186,23 @@ class UserCtrl extends Controller
         $data = $req->all();
         unset($data['_token'], $data['id']);
 
-        if(isset($data['sign_type']) && isset($data['signature'])) {
-            if($data['sign_type'] == "draw") {
-                $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
-                $file_path = base_path()."/public/signatures/";
-                $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
-                $filename = $file_path.$name;
-                if(!is_dir($file_path)) {
-                    mkdir($file_path);
-                }
-                file_put_contents($filename, $sign);
-            } else if($data['sign_type'] == "upload") {
-
+        $file_path = base_path()."/public/signatures/";
+        $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
+        $filename = $file_path.$name;
+        if(isset($data['signature'])) {
+            $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
+            if(!is_dir($file_path)) {
+                mkdir($file_path);
             }
+            file_put_contents($filename, $sign);
+
+            $data['signature'] = "public/signatures/".$name;
+        } else { /* no signatures were uploaded, to "promote" data privacy? char, delete the existing signature */
+            if(is_file($filename))
+                unlink($filename);
+            $data['signature'] = null;
         }
 
-        if(isset($data['signature']))
-            $user->signature = "public/signatures/".$name;
-        else
-            $user->signature = null;
-
-        unset($data['signature'], $data['sign_type']);
         $user->update($data);
 
         Session::put('auth', $user);

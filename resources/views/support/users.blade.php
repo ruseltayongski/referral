@@ -30,7 +30,7 @@ if($searchKeyword){
                         <a href="#filter_user" data-toggle="modal" class="btn btn-info btn-sm">
                             <i class="fa fa-filter"></i> Filter
                         </a>
-                        <button type="button" class="btn btn-sm btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                        <button type="submit" class="btn btn-sm btn-warning" name="view_all" value="view_all"><i class="fa fa-eye"></i> View All</button>
                         <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm ">
                             <i class="fa fa-user-plus"></i> Add User
                         </a>
@@ -38,17 +38,23 @@ if($searchKeyword){
                 </form>
                 <div class="modal fade" role="dialog" id="filter_user">
                     <div class="modal-dialog modal-sm" role="document">
-                        <form method="GET" action="{{ url('support/users') }}">
+                        <form method="GET" action="{{ url('support/users/filter') }}">
                             {{ csrf_field() }}
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label>Department:</label>
                                         <select class="form-control" name="department_id" required>
-                                            <option value="">Select Department...</option>
+                                            <option value="" selected>Select Department...</option>
                                             @foreach($group_by_department as $row)
-                                                <option value="{{ $row->department_id }}">{{ $row->label }}</option>
+                                                <option <?php if($dept_id === $row->department_id) echo 'selected'; ?> value="{{ $row->department_id }}">{{ $row->label }}</option>
                                             @endforeach
+                                        </select><br>
+                                        <label>Last Login</label>
+                                        <select class="form-control" name="last_login">
+                                            <option value="">Select order...</option>
+                                            <option <?php if($last_login == 'asc') echo 'selected';?> value="asc">Ascending</option>
+                                            <option <?php if($last_login == 'desc') echo 'selected';?> value="desc">Descending</option>
                                         </select>
                                     </div>
                                 </div>
@@ -127,7 +133,7 @@ if($searchKeyword){
                         </tr>
                         @endforeach
                     </table>
-                    <div class="pagination">
+                    <div class="">
                         {{ $data->links() }}
                     </div>
                 </div>
