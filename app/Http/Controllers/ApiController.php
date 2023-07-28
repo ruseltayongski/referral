@@ -1532,12 +1532,13 @@ class ApiController extends Controller
     }
 
     public static function pushNotificationCCMC($push) {
-        if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
+        /*if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
             $topic = "/topics/referrals_ER";
         } else {
             $topic = "/topics/referrals_TRIAGGE";
-        }
+        }*/
 
+        $topic = "/topics/referrals_TRIAGGE";
         $data = [
             "age" => $push['age'],
             "patient" => $push['patient'],
