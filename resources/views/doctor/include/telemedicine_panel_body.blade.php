@@ -1,4 +1,4 @@
-<link href="{{ asset('public/css/app.css') }}" rel="stylesheet">
+<link href="{{ asset('public/css/telemedicine_panel.css?v=8') }}" rel="stylesheet">
 <div class="panel-body panel-scoped-telemedicine">
     <?php
     $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
@@ -14,11 +14,11 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","queued")
         ->exists();
-    $referred_accepted_track = \App\Activity::where("code",$referred_track->code)
+    $referred_accepted_hold = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","accepted")
-        ->exists();
+        ->where("status","accepted");
+    $referred_accepted_track = $referred_accepted_hold->exists();
     $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -29,45 +29,68 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","cancelled")
         ->exists();
-    $referred_travel_track = \App\Activity::where("code",$referred_track->code)
-        ->where("referred_to",$referred_track->referred_from)
+    $referred_examined_track = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","travel")
+        ->where("status","examined")
         ->exists();
-    $referred_arrived_track = \App\Activity::where("code",$referred_track->code)
-        ->where("referred_from",$referred_track->referred_to)
+    $referred_prescription_hold = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","arrived")
-        ->exists();
-    $referred_notarrived_track = \App\Activity::where("code",$referred_track->code)
-        ->where("referred_from",$referred_track->referred_to)
+        ->where("status","prescription");
+    $referred_prescription_track = $referred_prescription_hold->exists();
+    $referred_upward_track = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","archived")
+        ->where("status","upward")
         ->exists();
-    $referred_admitted_track = \App\Activity::where("code",$referred_track->code)
-        ->where("referred_from",$referred_track->referred_to)
+    $referred_redirected_track = \App\Activity::where("code",$referred_track->code)
+        ->where("status","redirected")
+        ->exists();
+    $referred_treated_track = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","admitted")
+        ->where("status","treated")
         ->exists();
-    $referred_discharged_track = \App\Activity::where("code",$referred_track->code)
-        ->where("referred_from",$referred_track->referred_to)
+    $referred_followup_track = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","discharged")
+        ->where("status","followup")
         ->exists();
+    $referred_end_track = \App\Activity::where("code",$referred_track->code)
+        ->where("referred_from",$referred_track->referred_from)
+        ->where("created_at",">=",$referred_track->created_at)
+        ->where("status","end")
+        ->exists();
+
     $redirected_track = \App\Activity::where("code",$row->code)
         ->where(function($query) {
             $query->where("status","redirected")
                 ->orWhere("status","transferred");
         })
         ->get();
+    $followup_track = \App\Activity::where("code",$row->code)
+        ->where("status","followup")
+        ->get();
+
+    //reset the variable in followup if followup not exist
+    $followup_queued_track = 0;
+    $followup_accepted_track = 0;
+    $followup_rejected_track = 0;
+    $followup_cancelled_track = 0;
+    $followup_examined_track = 0;
+    $followup_upward_track = 0;
+    $followup_admitted_track = 0;
+    $followup_discharged_track = 0;
+    //end reset
 
     //reset the variable in redirected if redirected not exist
     $redirected_queued_track = 0;
     $redirected_accepted_track = 0;
     $redirected_rejected_track = 0;
     $redirected_cancelled_track = 0;
-    $redirected_travel_track = 0;
-    $redirected_arrived_track = 0;
+    $redirected_examined_track = 0;
+    $redirected_upward_track = 0;
     $redirected_admitted_track = 0;
     $redirected_discharged_track = 0;
     //end reset
@@ -82,35 +105,171 @@
             <div class="step-counter">2</div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter
-                                        <?php
-            if($referred_cancelled_track)
-                echo "bg-yellow";
-            elseif($referred_rejected_track)
-                echo "bg-red";
-            elseif($referred_queued_track && !$referred_accepted_track)
-                echo "bg-orange";
-            ?>
-                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">3</span></div>
+        <div class="text-center stepper-item @if($referred_accepted_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter" ><span id="queue_number{{ $referred_track->code }}">3</span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
-                <?php
-                if($referred_cancelled_track)
-                    echo 'Cancelled';
-                elseif($referred_rejected_track)
-                    echo 'Declined';
-                elseif($referred_queued_track && !$referred_accepted_track)
-                    echo 'Queued at <br> <b>'. $queue_referred.'</b>';
-                else
-                    echo 'Accepted'
-                ?>
+                Accepted
             </div>
         </div>
-        <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter">4</div>
-            <div class="step-name">Examine</div>
+        <div class="stepper-item @if($referred_examined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_track }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}')">4</div>
+            <div class="step-name">Examined</div>
+        </div>
+        <div class="stepper-item stepper-item-prescription @if($referred_prescription_track) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter step-counter-prescription" onclick="telemedicinePrescription('{{ $row->id }}','{{ $referred_prescription_hold->first()->id }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">5</div>
+            <div class="step-name">Prescribed</div>
+        </div>
+        <div class="stepper-item-upward @if($referred_upward_track) completed @endif" id="upward_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter">6</div>
+            <div class="step-name">Upward</div>
+
+            <div class="stepper-item-treated @if($referred_treated_track) completed @endif" id="treated_progress{{ $referred_track->code.$referred_track->id }}">
+                <div class="step-counter-treated step-counter-treated" onclick="telemedicineTreatedPatient('{{ $referred_upward_track }}','{{ $referred_examined_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">6</div>
+                <div class="step-name">Treated</div>
+            </div>
+        </div>
+        <div class="stepper-item stepper-item-referred @if($referred_redirected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_upward_track }}','{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
+            <div class="step-name">Referred</div>
+            <div class="stepper-item stepper-item-follow @if($referred_followup_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+                <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
+                <div class="step-name">Follow Up</div>
+            </div>
+            <div class="stepper-item stepper-item-end @if($referred_end_track && !$referred_followup_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+                <div class="step-counter-end" onclick="telemedicineEndPatient('{{ $referred_treated_track }}','{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_end_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
+                <div class="step-name step-name-end">Ended</div>
+            </div>
         </div>
     </div>
+    @if(count($followup_track) > 0)
+        @foreach($followup_track as $follow_track)
+            <?php
+            $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
+            $position_count++;
+            $follow_seen_track = \App\Seen::where("code",$follow_track->code)
+                ->where("facility_id",$follow_track->referred_to)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->exists();
+            $follow_queued_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_to",$follow_track->referred_to)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","queued")
+                ->exists();
+            $follow_accepted_hold = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_to",$follow_track->referred_to)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","accepted");
+            $follow_accepted_track = $follow_accepted_hold->exists();
+            $follow_rejected_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_to",$follow_track->referred_to)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","rejected")
+                ->exists();
+            $follow_cancelled_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_to",$follow_track->referred_to)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","cancelled")
+                ->exists();
+            $follow_examined_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","examined")
+                ->exists();
+            $follow_prescription_hold = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","prescription");
+            $follow_prescription_track = $follow_prescription_hold->exists();
+            $follow_upward_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","upward")
+                ->exists();
+            $follow_redirected_track = \App\Activity::where("code",$follow_track->code)
+                ->where("status","redirected")
+                ->exists();
+            $follow_treated_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">=",$follow_track->created_at)
+                ->where("status","treated")
+                ->exists();
+            $follow_followup_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">",$follow_track->created_at)
+                ->where("status","followup")
+                ->exists();
+            $follow_end_track = \App\Activity::where("code",$follow_track->code)
+                ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">",$follow_track->created_at)
+                ->where("status","end")
+                ->exists();
+            ?>
+            <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
+            <div class="stepper-wrapper">
+                <div class="stepper-item completed">
+                    <div class="step-counter">1</div>
+                    <div class="step-name">Appointment</div>
+                </div>
+                <div class="stepper-item @if($follow_seen_track || $follow_accepted_track || $follow_rejected_track) completed @endif" id="seen_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter">2</div>
+                    <div class="step-name">Seen</div>
+                </div>
+                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter
+                    <?php
+                        if($follow_cancelled_track)
+                            echo "bg-yellow";
+                        elseif($follow_rejected_track)
+                            echo "bg-red";
+                        elseif($follow_queued_track && !$follow_accepted_track)
+                            echo "bg-orange";
+                    ?>"
+                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">3</span></div>
+                    <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
+                    <?php
+                        if($follow_cancelled_track)
+                            echo 'Cancelled';
+                        elseif($follow_rejected_track)
+                            echo 'Declined';
+                        elseif($follow_queued_track && !$follow_accepted_track)
+                            echo 'Queued at <br> <b>'. $queue_referred.'</b>';
+                        else
+                            echo 'Accepted'
+                    ?>
+                    </div>
+                </div>
+                <div class="stepper-item @if($follow_examined_track) completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_track }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}')">4</div>
+                    <div class="step-name">Examined</div>
+                </div>
+                <div class="stepper-item stepper-item-prescription @if($follow_examined_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter step-counter-prescription" onclick="telemedicinePrescription('{{ $row->id }}','{{ $follow_prescription_hold->first()->id }}','{{ $follow_track->code }}','{{ $follow_track->id }}')">5</div>
+                    <div class="step-name">Prescribed</div>
+                </div>
+                <div class="stepper-item-upward @if($follow_upward_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter">5</div>
+                    <div class="step-name">Upward</div>
+
+                    <div class="stepper-item-treated @if($follow_treated_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div class="step-counter-treated step-counter-treated" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')">5</div>
+                        <div class="step-name">Treated</div>
+                    </div>
+                </div>
+                <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_track->code }}')">6</div>
+                    <div class="step-name">Referred</div>
+                    <div class="stepper-item stepper-item-follow @if($follow_followup_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')">6</div>
+                        <div class="step-name">Follow Up</div>
+                    </div>
+                    <div class="stepper-item stepper-item-end @if($follow_end_track) completed @endif" id="end_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div class="step-counter-end" onclick="telemedicineEndPatient('{{ $follow_treated_track }}','{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_end_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')">7</div>
+                        <div class="step-name step-name-end">Ended</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
     @if(count($redirected_track) > 0)
         @foreach($redirected_track as $redirect_track)
             <?php
@@ -170,7 +329,7 @@
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter">1</div>
-                    <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
+                    <div class="step-name">{{ count($redirected_track) > 1 ? 'Redirected' : 'Referred' }}</div>
                 </div>
                 <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter">2</div>
@@ -278,7 +437,7 @@
                                             else
                                                 $referred_md = 'Dr. '.$act->referring_md;
                                             ?>
-                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
+                                            <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ count($redirected_track) > 1 ? 'redirected' : 'referred' }} by <span class="txtDoctor">{{ $referred_md }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                             @if($act->remarks)
                                                 <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                             @endif
@@ -305,11 +464,11 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @elseif($act->status=='accepted')
+                            @elseif($act->status=='accepted' || $act->status=='examined' || $act->status=='treated' || $act->status=='upward' || $act->status=='followup')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                                     <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
                                     <td>
-                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was accepted by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
+                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                     </td>
                                 </tr>

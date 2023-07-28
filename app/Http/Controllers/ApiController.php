@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Login;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Matrix\Exception;
 use App\Events\SocketReco;
@@ -59,6 +60,59 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }
 
+    public function endorseUpward(Request $request) {
+        $user = Session::get('auth');
+        $patient_form = null;
+        $patient_id = 0;
+        if($request->form_type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($request->form_type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+        if($patient_form) {
+            $tracking = Tracking::where("code",$request->code)->first();
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient endorse for an upward level of referral',
+                'status' => 'upward'
+            );
+            Activity::create($activity);
+
+            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred")
+                    ->orWhere("status","followup");
+            })
+                ->orderBy("id","desc")
+                ->first();
+
+            $broadcast_upward = [
+                "activity_id" => $latest_activity->id,
+                "code" => $request->code,
+                "referred_from" => $latest_activity->referred_from,
+                "status" => "telemedicine",
+                "telemedicine_status" => "upward"
+            ];
+
+            broadcast(new SocketReferralDischarged($broadcast_upward));
+
+            return "success";
+        }
+        return "failed";
+    }
+
     public function callADoctor(Request $request) {
         $user = Session::get('auth');
         $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
@@ -70,38 +124,282 @@ class ApiController extends Controller
             "trigger_by" => (int)$request->trigger_by,
             "status" => "telemedicine",
             "doctorCaller" => $doctorCaller,
-            "form_type" => $request->form_type
+            "form_type" => $request->form_type,
+            "activity_id" => $request->activity_id
         ];
         broadcast(new SocketReferralDischarged($call));
     }
 
-    public function updatePrescription(Request $request) {
+    public function patientExamined(Request $request) {
+        $user = Session::get('auth');
         $patient_form = null;
-        if($request->form_type == 'normal') {
+        $patient_id = 0;
+
+        $tracking = Tracking::where("code",$request->code)->first();
+
+        if($tracking->type == 'normal') {
             $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
         }
-        else if($request->form_type == 'pregnant') {
+        else if($tracking->type == 'pregnant') {
             $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
         }
+
         if($patient_form) {
-            $patient_form->prescription = $request->prescription;
-            $patient_form->save();
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient examined',
+                'status' => 'examined'
+            );
+            Activity::create($activity);
+
+            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred")
+                    ->orWhere("status","followup");
+            })
+                ->orderBy("id","desc")
+                ->first();
+
+            $broadcast_examined = [
+                "activity_id" => $latest_activity->id,
+                "code" => $request->code,
+                "referred_from" => $latest_activity->referred_from,
+                "status" => "telemedicine",
+                "telemedicine_status" => "examined"
+            ];
+
+            broadcast(new SocketReferralDischarged($broadcast_examined));
+
             return "success";
         }
         return "failed";
     }
 
     public function checkPrescription(Request $request) {
-        $check_prescription = null;
-        if($request->form_type == 'normal') {
-            $check_prescription = PatientForm::where("code",$request->code)->first()->prescription;
-        }
-        else if($request->form_type == 'pregnant') {
-            $check_prescription = PregnantForm::where("code",$request->code)->first()->prescription;
-        }
+        $check_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
         if($check_prescription) {
             return "success";
         }
+        return "failed";
+    }
+
+    public function updatePrescription(Request $request) {
+        $user = Session::get('auth');
+        $patient_form = null;
+        $patient_id = 0;
+        if($request->form_type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($request->form_type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+        if($patient_form) {
+            $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
+
+            if($activity_prescription) {
+                $activity_prescription->remarks = $request->prescription;
+                $activity_prescription->save();
+
+            } else {
+                $tracking = Tracking::where("code",$request->code)->first();
+                $activity = array(
+                    'code' => $request->code,
+                    'patient_id' => $patient_id,
+                    'date_referred' => date('Y-m-d H:i:s'),
+                    'date_seen' => "0000-00-00 00:00:00",
+                    'referred_from' => $tracking->referred_from,
+                    'referred_to' => $tracking->referred_to,
+                    'department_id' => $tracking->department_id,
+                    'referring_md' => $tracking->referring_md,
+                    'action_md' => $user->id,
+                    'remarks' => $request->prescription,
+                    'status' => 'prescription'
+                );
+                Activity::create($activity); //new prescription in activity
+            }
+
+            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred")
+                    ->orWhere('status',"followup");
+            })
+                ->orderBy("id","desc")
+                ->first();
+
+            $broadcast_prescribed = [
+                "activity_id" => $latest_activity->id,
+                "code" => $request->code,
+                "referred_from" => $latest_activity->referred_from,
+                "status" => "telemedicine",
+                "telemedicine_status" => "prescription"
+            ];
+
+            broadcast(new SocketReferralDischarged($broadcast_prescribed));
+
+            return "success";
+        }
+        return "failed";
+    }
+
+    public function patientTreated(Request $request) {
+        $user = Session::get('auth');
+        $patient_form = null;
+        $patient_id = 0;
+
+        $tracking = Tracking::where("code",$request->code)->first();
+
+        if($tracking->type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($tracking->type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+
+        if($patient_form) {
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient treated',
+                'status' => 'treated'
+            );
+            Activity::create($activity);
+
+            return "success";
+        }
+        return "failed";
+    }
+
+    public function patientFollowUp(Request $request) {
+        $user = Session::get('auth');
+        $patient_form = null;
+        $patient_id = 0;
+
+        $tracking = Tracking::where("code",$request->code)->first();
+        $tracking->status = 'followup';
+        $tracking->save();
+
+        if($tracking->type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($tracking->type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+
+        if($patient_form) {
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient follow up',
+                'status' => 'followup'
+            );
+            Activity::create($activity);
+        }
+
+        //start broadcast
+        $patient = Patients::find($tracking->patient_id);
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$tracking->code)->count();
+        $redirect_track = asset("doctor/referred?referredCode=").$tracking->code;
+        $position = Activity::where("code",$tracking->code)
+            ->where(function($query) {
+                $query->where("status","redirected")
+                    ->orWhere("status","transferred")
+                    ->orWhere("status","followup");
+            })
+            ->count();
+        $new_referral = [
+            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "referred_name" => Facility::find($tracking->referred_to)->name,
+            "referred_to" => (int)$tracking->referred_to,
+            "referred_department" => Department::find($tracking->department_id)->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $tracking->type,
+            "tracking_id" => $tracking->id,
+            "referred_date" => date('M d, Y h:i A'),
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "patient_code" => $tracking->code,
+            "status" => "followup",
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco,
+            "redirect_track" => $redirect_track,
+            "position" => $position
+        ];
+        broadcast(new NewReferral($new_referral)); //websockets notification for new referral
+        //end broadcast
+
+        return Redirect::back();
+    }
+
+    public function patientEndCycle(Request $request) {
+        $user = Session::get('auth');
+        $patient_form = null;
+        $patient_id = 0;
+
+        $tracking = Tracking::where("code",$request->code)->first();
+
+        if($tracking->type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($tracking->type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+
+        if($patient_form) {
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient end cycle',
+                'status' => 'end'
+            );
+            Activity::create($activity);
+
+            return "success";
+        }
+
         return "failed";
     }
 

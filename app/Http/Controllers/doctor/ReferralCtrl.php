@@ -33,6 +33,7 @@ use App\Monitoring;
 use App\PatientForm;
 use App\Patients;
 use App\PregnantForm;
+use App\Province;
 use App\ReasonForReferral;
 use App\Seen;
 use App\Tracking;
@@ -122,6 +123,10 @@ class ReferralCtrl extends Controller
             $data = $data->where(DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred'))"),$request->more_position == 5 ? ">" : "=",$request->more_position);
         }
 
+        if($request->province_filter) {
+            $data = $data->where("facility.province",$request->province_filter);
+        }
+
         if($request->option_filter)
         {
             $option = $request->option_filter;
@@ -171,13 +176,29 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.status','discharged')
                     ->orwhere('tracking.status','transferred')
                     ->orwhere('tracking.status','archived')
-                    ->orwhere('tracking.status','cancelled');
+                    ->orwhere('tracking.status','cancelled')
+                    ->orWhere('tracking.status','followup');
             });
         }
 
         $data = $data->whereBetween('tracking.date_referred',[$start_date,$end_date])
             ->orderBy("tracking.date_referred","desc")
             ->paginate(15);
+
+        $facilities = Facility::where('id','<>',$user->facility_id)
+            ->where('status',1)
+            ->select('facility.id','facility.name')
+            ->orderBy('name','asc')
+            ->get();
+
+        $departments = Department::leftJoin('users','users.department_id','=','department.id')
+            ->select('department.*')
+            ->where('users.department_id','<>','')
+            ->where('users.facility_id',$user->facility_id)
+            ->distinct('department.id')
+            ->get();
+
+        $provinces = Province::get();
 
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
@@ -187,8 +208,12 @@ class ReferralCtrl extends Controller
             'keyword' => $keyword,
             'department' => $dept,
             'facility' => $fac,
+            'province' => $request->province_filter,
             'option' => $option,
-            'more_position' => $request->more_position
+            'more_position' => $request->more_position,
+            'facilities' => $facilities,
+            'departments' => $departments,
+            'provinces' => $provinces
         ]);
     }
 
@@ -967,7 +992,8 @@ class ReferralCtrl extends Controller
         $latest_activity = Activity::where("code",$track->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
-                ->orWhere("status","transferred");
+                ->orWhere("status","transferred")
+                ->orWhere("status","followup");
         })
             ->orderBy("id","desc")
             ->first();
@@ -1432,7 +1458,8 @@ class ReferralCtrl extends Controller
         $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
-                ->orWhere("status","transferred");
+                ->orWhere("status","transferred")
+                ->orWhere("status","followup");
         })
         ->orderBy("id","desc")
         ->first();

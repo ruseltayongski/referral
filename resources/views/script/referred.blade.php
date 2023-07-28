@@ -1,222 +1,218 @@
 <script>
     <?php $user=Session::get('auth');?>
     var myfacility_name = "{{ \App\Facility::find($user->facility_id)->name }}";
-    /*var referralRef = dbRef.ref('Referral');
-    var seenRef = dbRef.ref('Seen');
-    var acceptRef = dbRef.ref('Accept');
-    var rejectRef = dbRef.ref('Reject');
-    var callRef = dbRef.ref('Call');
-    var arriveRef = dbRef.ref('Arrival');
-    var admitRef = dbRef.ref('Admit');
-    var dischargeRef = dbRef.ref('Discharge');
-    var transferRef = dbRef.ref('Transfer');
-    var redirectedRef = dbRef.ref('Redirected');
 
-    seenRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var item = '.code-'+data.code;
-        var activity = '#activity-'+data.activity_id;
-        var date = data.date;
-        item = $(item).find('#item-'+data.item);
-
-        $(item).removeClass('pregnant-section normal-section').addClass('read-section');
-        $(item).find('.icon').removeClass('fa-ambulance').addClass('fa-eye');
-        $(item).find('.date_activity').html(date);
-        $(activity).removeClass('pregnant-section normal-section').addClass('read-section');
-        $(activity).find('.icon').removeClass('fa-ambulance').addClass('fa-eye');
-        $(activity).find('.date_activity').html(date);
-    });*/
-
-//    var referralContent = '';
-//    referralRef.on('child_added',function(snapshot){
-//        snapshot.forEach(function(childSnapshot) {
-//            var data = childSnapshot.val();
-//            var date = data.date;
-//            var action_md = data.action_md;
-//            var facility_name = data.facility_name;
-//            var patient_name = data.patient_name;
-//            console.log(snapshot.val());
-//            referralContent = '<li>' +
-//                '<div class="timeline-item normal-section" id="activity-'+data.activity_id+'">\n' +
-//                '    <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+date+'</span></span>\n' +
-//                '    <a>\n' +
-//                '        <div class="timeline-header no-border">\n' +
-//                '            '+data.name+'  was referred by <span class="text-success">Dr. '+data.referring_md+'</span> to <span class="facility">'+data.referred_facility+'.</span>\n' +
-//                '        </div>\n' +
-//                '    </a>\n' +
-//                '</div>' +
-//                '</li>';
-//
-//            $('.code-'+data.patient_code+' > li:nth-child(1)').after(referralContent);
-//        });
-//
-//        //$('.code-'+data.code).append(acceptContent);
-//    });
-
-    var acceptContent = '';
-    var rejectContent = '';
-    /*acceptRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var action_md = data.action_md;
-        var facility_name = data.facility_name;
-        var patient_name = data.patient_name;
-        acceptContent = '<li>\n' +
-            '    <div class="timeline-item read-section">\n' +
-            '        <span class="time"><i class="fa fa-user-plus"></i> '+date+'</span>\n' +
-            '        <a>\n' +
-            '            <div class="timeline-header no-border">\n' +
-            '                '+patient_name+'  was accepted by <span class="text-success">Dr. '+action_md+'</span> of <span class="facility">'+facility_name+'</span>.</span>\n' +
-            '            <br />' +
-            '            <div class="text-remarks">Remarks: '+data.reason+'</div>'+
-            '            </div>\n' +
-            '        </a>\n' +
-            '\n' +
-            '    </div>\n' +
-            '</li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(acceptContent);
-    });
-
-    rejectRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var patient_name = data.patient_name;
-        var action_md = data.action_md;
-        var facility = data.old_facility;
-        var reason = data.reason;
-        var code = data.code;
-        console.log("receive recommend to redirect");
-        $(".prepend_from_firebase"+data.code).prepend('' +
-            '<tr>\n' +
-            '                                                    <td>'+date+'</td>\n' +
-            '                                                    <td>\n' +
-            '                                                        <span class="txtDoctor">'+action_md+'</span> of <span class="txtHospital">'+facility+'</span> recommended to redirect <span class="txtPatient">'+patient_name+'</span> to other facility.\n' +
-            '                                                        <span class="remarks">Remarks: '+reason+'</span>\n' +
-            '                                                        <br>\n' +
-            '                                                                                                                    <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+code+'">\n' +
-            '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
-            '                                                            </button>\n' +
-            '                                                                                                            </td>\n' +
-            '                                                </tr>');
-    });*/
-
-    /*var callContent = '';
-    callRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-
-        var date = data.date;
-        var action_md = data.action_md;
-        var facility_calling = data.facility_calling;
-        console.log(data.code);
-        callContent = '<li><div class="timeline-item normal-section">\n' +
-            '    <span class="time"><i class="fa fa-phone"></i> '+date+'</span>\n' +
-            '    <a>\n' +
-            '        <div class="timeline-header no-border">\n' +
-            '            <span class="text-info">Dr. '+action_md+'</span> of <span class="facility">'+facility_calling+'</span> is requesting a call from <span class="facility">'+data.referred_name+'</span>. ';
-
-        if(data.referred_from=="{{ $user->facility_id }}"){
-            callContent += 'Please contact this number <span class="text-danger">('+data.contact+')</span>.</span>\n' +
-                '<br />\n' +
-                '  <button type="button" class="btn btn-success btn-sm btn-call"\n' +
-                '   data-action_md = "'+data.action_md+'"\n' +
-                '     data-facility_name = "'+data.facility_calling+'"\n' +
-                '      data-activity_id="'+data.activity_id+'"><i class="fa fa-phone"></i> Called</button>\n';
+    function telemedicineReferPatient(endorseUpward,alreadyRedirected,alreadyFollowup,code,referred_id) {
+        const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
+        $(".telemedicine").val(0);
+        $("#telemedicine_redirected_code").val(code);
+        if(endorseUpward && upwardIsCompleted && !alreadyRedirected && !alreadyFollowup) {
+            $("#telemedicineRedirectedFormModal").modal('show');
         }
+        else if(alreadyRedirected) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been referred!"
+                });
+        } else if(alreadyFollowup) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been follow-up!"
+                });
+        }
+        else {
+            Lobibox.alert("error",
+                {
+                    msg: "You cannot refer a patient to an upward level because the receiving doctor has not yet endorsed your patient's referral to an upward level."
+                });
+        }
+    }
 
-        callContent += '        <div class="text-remarks hide"></div>' +
-            '        </div>\n' +
-            '    </a>\n' +
-            '\n' +
-            '</div></li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(callContent);
-    });
-*/
-    /*var arriveContent = '';
-    arriveRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var patient_name = data.patient_name;
-        var current_facility = data.current_facility;
+    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id) {
+        const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
+        const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
+        if((examinedPatient || prescriptionIsCompleted) && !alreadyTreated && (!alreadyUpward || !upwardIsCompleted)) {
+            Lobibox.confirm({
+                msg: "Do you want to treat this patient?",
+                callback: function ($this, type, ev) {
+                    if(type === 'yes') {
+                        var json = {
+                            "_token" : "<?php echo csrf_token(); ?>",
+                            "code" : code
+                        };
+                        var url = "<?php echo asset('api/video/treated') ?>";
+                        $.post(url,json,function(result){
+                            if(result === 'success') {
+                                Lobibox.alert("success",
+                                {
+                                    msg: "The patient was successfully treated."
+                                });
+                                $("#treated_progress"+code+referred_id).addClass('completed');
+                            }
+                        })
+                    }
+                }
+            });
+        } else if(alreadyTreated) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been treated!"
+                });
+        } else if(alreadyUpward || upwardIsCompleted) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been upward!"
+                });
+        }
+        else {
+            Lobibox.alert("error",
+                {
+                    msg: "You can't treat a patient because the patient has not been examined."
+                });
+        }
+    }
 
-        arriveContent = '<li><div class="timeline-item read-section">\n' +
-            '    <span class="time"><i class="fa fa-wheelchair"></i> '+date+'</span>\n' +
-            '    <a>\n' +
-            '        <div class="timeline-header no-border">\n' +
-            '            '+patient_name+' arrived at <span class="facility">'+current_facility+'</span>.\n' +
-            '            <br />' +
-            '            <div class="text-remarks">Remarks: '+data.remarks+'</div>'+
-            '        </div>\n' +
-            '    </a>\n' +
-            '\n' +
-            '</div></li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(arriveContent);
-    });*/
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, alreadyTreated, code, referred_id) {
+        $("#telemedicine_followup_code").val(code);
+        $(".telemedicine").val(1);
+        const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
+        if(alreadyFollowUp) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been follow up!"
+                });
+        }
+        else if(alreadyReferred) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been referred!"
+                });
+        }
+        else if(alreadyEnded) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been ended!"
+                });
+        }
+        else if(treatedIsCompleted) {
+            telemedicine = 1;
+            $("#telemedicineFollowupFormModal").modal('show');
+        }
+        else if(!examinedPatient) {
+            Lobibox.alert("error",
+                {
+                    msg: "You cannot follow up on a patient because it has not yet been examined."
+                });
+        }
+        else if(!alreadyTreated) {
+            Lobibox.alert("error",
+                {
+                    msg: "You cannot follow up on a patient because it has not yet been treated."
+                });
+        }
+        else {
+            telemedicine = 1;
+            $("#telemedicineFollowupFormModal").modal('show');
+        }
+    }
 
-    /*var admitContent = '';
-    admitRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var patient_name = data.patient_name;
-        var current_facility = data.current_facility;
+    function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id) {
+        if(alreadyAccepted) {
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "action_md" : action_md,
+                "referring_md" : referring_md,
+                "trigger_by" : "{{ $user->id }}",
+                "form_type" : "normal",
+                "activity_id" : activity_id
+            };
+            $.post(url,json,function(){
 
-        admitContent = '<li><div class="timeline-item read-section">\n' +
-            '    <span class="time"><i class="fa fa-stethoscope"></i> '+date+'</span>\n' +
-            '    <a>\n' +
-            '        <div class="timeline-header no-border">\n' +
-            '            '+patient_name+' admitted at <span class="facility">'+current_facility+'</span>.\n' +
-            '        </div>\n' +
-            '    </a>\n' +
-            '\n' +
-            '</div></li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(admitContent);
-
-    });
-
-    var dischargeContent = '';
-    dischargeRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var patient_name = data.patient_name;
-        var current_facility = data.current_facility;
-
-        dischargeContent = '<li><div class="timeline-item read-section">\n' +
-            '    <span class="time"><i class="fa fa-wheelchair-alt"></i> '+date+'</span>\n' +
-            '    <a>\n' +
-            '        <div class="timeline-header no-border">\n' +
-            '            '+patient_name+' discharged from <span class="facility">'+current_facility+'</span>.\n' +
-            '            <br />' +
-            '            <div class="text-remarks">Remarks: '+data.remarks+'</div>'+
-            '        </div>\n' +
-            '    </a>\n' +
-            '\n' +
-            '</div></li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(dischargeContent);
-
-    });
-
-    var transferContent = '';
-    transferRef.on('child_added',function(snapshot){
-        var data = snapshot.val();
-        var date = data.date;
-        var patient_name = data.patient_name;
-        var action_md = data.action_md;
-        var old_facility = data.old_facility;
-        var new_facility = data.new_facility;
-
-        transferContent = '<li><div class="timeline-item normal-section" id="activity-'+data.activity_id+'">\n' +
-            '    <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+date+'</span></span>\n' +
-            '    <a>\n' +
-            '        <div class="timeline-header no-border">\n' +
-            '            '+patient_name+'  was referred by <span class="text-success">Dr. '+action_md+'</span> of <span class="facility">'+old_facility+'</span> to <span class="facility">'+new_facility+'.</span>\n';
-            if(data.reason){
-                transferContent += '<br />' +
-                    '            <div class="text-remarks">Remarks: '+data.reason+'</div>';
+            });
+            var windowName = 'NewWindow'; // Name of the new window
+            var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
+            if (newWindow && newWindow.outerWidth) {
+                // If the window was successfully opened, attempt to maximize it
+                newWindow.moveTo(0, 0);
+                newWindow.resizeTo(screen.availWidth, screen.availHeight);
             }
-        transferContent += '        </div>\n' +
-            '    </a>\n' +
-            '</div></li>';
-        $('.code-'+data.code+' > li:nth-child(1)').after(transferContent);
-    });*/
+        } else if(!alreadyAccepted) {
+            Lobibox.alert("error",
+            {
+                msg: "You cannot follow up on a patient because it has not yet been examined."
+            });
+        }
+    }
+
+    function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
+        const prescriptionIsCompleted = $('#prescribed_progress'+referred_code+referred_id).hasClass('completed');
+        const url = "{{ asset('doctor/print/prescription') }}";
+        if(activity_id) {
+            window.open(`${url}/${track_id}/${activity_id}`);
+        } else if(prescriptionIsCompleted) {
+            window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
+        }
+        else {
+            Lobibox.alert("error",
+            {
+                msg: "No prescription has been created by the referred doctor"
+            });
+        }
+    }
+
+    function telemedicineEndPatient(alreadyTreated, alreadyReferred, alreadyFollowUp, alreadyEnd, code, referred_id) {
+        const endIsCompleted = $('#end_progress'+code+referred_id).hasClass('completed');
+        if(alreadyTreated && !alreadyReferred && !alreadyFollowUp && (!alreadyEnd || !endIsCompleted)) {
+            Lobibox.confirm({
+                msg: "Do you want to cycle end this patient?",
+                callback: function ($this, type, ev) {
+                    if(type === 'yes') {
+                        var json = {
+                            "_token" : "<?php echo csrf_token(); ?>",
+                            "code" : code
+                        };
+                        var url = "<?php echo asset('api/video/end') ?>";
+                        $.post(url,json,function(result){
+                            if(result === 'success') {
+                                Lobibox.alert("success",
+                                    {
+                                        msg: "The patient was successfully end cycle."
+                                    });
+                                $("#end_progress"+code+referred_id).addClass('completed');
+                            }
+                        })
+                    }
+                }
+            });
+        } else if(alreadyReferred) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been referred!"
+                });
+        } else if(alreadyFollowUp) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been follow up!"
+                });
+        }
+        else if(alreadyEnd || endIsCompleted) {
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been end cycle!"
+                });
+        }
+        else {
+            Lobibox.alert("error",
+                {
+                    msg: "You can't end cycle a patient because the patient has not been examined."
+                });
+        }
+    }
+
 </script>
 
 {{--Script for Call Button--}}
@@ -254,6 +250,12 @@
     });
     $('body').on('submit','#redirectedForm',function(e){
         $("#redirected_submit").attr("disabled",true);
+    });
+    $('body').on('submit','#telemedicineRedirectedForm',function(e){
+        $("#redirected_submit_telemedicine").attr("disabled",true);
+    });
+    $('body').on('submit','#telemedicineFollowupForm',function(e){
+        $("#followup_submit_telemedicine").attr("disabled",true);
     });
 </script>
 

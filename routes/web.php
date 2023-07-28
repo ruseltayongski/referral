@@ -262,7 +262,7 @@ Route::get('doctor/patient/tsekapinfo/{id}','doctor\PatientCtrl@showTsekapProfil
 Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
-Route::get('doctor/print/prescription/{track_id}','doctor\PrintCtrl@printPrescription');
+Route::get('doctor/print/prescription/{track_id}/{activity_id}','doctor\PrintCtrl@printPrescription');
 
 Route::get('doctor/list','doctor\UserCtrl@index');
 Route::post('doctor/list','doctor\UserCtrl@searchDoctor');
@@ -338,6 +338,11 @@ Route::get('resetPassword/{username}',function($username){
 Route::get('api','ApiController@api');
 Route::post('api/video/call','ApiController@callADoctor');
 Route::post('api/video/prescription/update','ApiController@updatePrescription');
+Route::post('api/video/examined','ApiController@patientExamined');
+Route::post('api/video/upward','ApiController@endorseUpward');
+Route::post('api/video/treated','ApiController@patientTreated');
+Route::post('api/video/end','ApiController@patientEndCycle');
+Route::post('api/video/followup','ApiController@patientFollowUp');
 Route::post('api/video/prescription/check','ApiController@checkPrescription');
 Route::get('api/get_report','ApiController@apiGetReport');
 Route::get('api/referral_list','ApiController@apiGetReferralList');

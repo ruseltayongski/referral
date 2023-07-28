@@ -44,7 +44,8 @@
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
                 doctorCaller: String,
-                telemedicineFormType: String
+                telemedicineFormType: String,
+                activity_id: Number
             }
         },
         methods: {
@@ -110,6 +111,7 @@
                 });
             },
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
+                console.log("#seen_progress"+patient_code+activity_id);
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 let msg = patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
@@ -468,23 +470,37 @@
                 let windowName = 'NewWindow'; // Name of the new window
                 let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
                 const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
-                let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}`
+                let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
                 let newWindow = window.open(url, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
                     newWindow.moveTo(0, 0);
                     newWindow.resizeTo(screen.availWidth, screen.availHeight);
                 }
+                this.telemedicineExamined();
+            },
+            examinedCompleted(patient_code, activity_id) {
+                $("#examined_progress"+patient_code+activity_id).addClass("completed");
+            },
+            prescribedCompleted(patient_code, activity_id) {
+                $("#prescribed_progress"+patient_code+activity_id).addClass("completed");
+            },
+            upwardCompleted(patient_code, activity_id) {
+                $("#upward_progress"+patient_code+activity_id).addClass("completed");
+            },
+            async telemedicineExamined() {
+                const updateExamined = {
+                    code : this.referral_code,
+                }
+                await axios.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined).then(response => {
+                    console.log(response)
+                });
             },
             cancelCall() {
                 this.$refs.audioVideo.pause();
             }
         },
         created() {
-            /*$(document).ready(function() {
-                console.log( "ready!" );
-                $("#video-call-confirmation").modal('show');
-            });*/
             console.log("VUE.JS 3.2.3")
             Echo.join('chat')
                 .here(users => {
@@ -636,14 +652,25 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                    console.log(event)
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            console.log(event.payload)
-                            this.action_md = event.payload.action_md
-                            this.doctorCaller = event.payload.doctorCaller
-                            this.telemedicineFormType = event.payload.form_type
+                            console.log("callAdoctor");
+                            this.action_md = event.payload.action_md;
+                            this.doctorCaller = event.payload.doctorCaller;
+                            this.telemedicineFormType = event.payload.form_type;
+                            this.activity_id = event.payload.activity_id;
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
+                        } else if(event.payload.referred_from === this.user.facility_id) {
+                            if(event.payload.telemedicine_status === 'examined') {
+                                console.log("examinedcompleted");
+                                this.examinedCompleted(event.payload.code, event.payload.activity_id);
+                            } else if(event.payload.telemedicine_status === 'prescription') {
+                                console.log("prescribedCompleted");
+                                this.prescribedCompleted(event.payload.code, event.payload.activity_id)
+                            } else if(event.payload.telemedicine_status === 'upward') {
+                                console.log("upwardCompleted");
+                                this.upwardCompleted(event.payload.code, event.payload.activity_id)
+                            }
                         }
                     } else {
                         if(event.payload.referred_from === this.user.facility_id) {

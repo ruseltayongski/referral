@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\doctor;
 
 use Anouar\Fpdf\Fpdf;
+use App\Activity;
 use App\Tracking;
 use App\Icd;
 use Illuminate\Http\Request;
@@ -110,11 +111,15 @@ class PrintCtrl extends Controller
         $this->middleware('auth');
     }
 
-    public function printPrescription($tracking_id) {
+    public function printPrescription($tracking_id,$activity_id,Request $request) {
+        if($request->prescription_new) {
+            $code = Activity::find($activity_id)->code;
+            $activity_id = Activity::where("code",$code)->where("status","prescription")->where("id",">",$activity_id)->first()->id;
+        }
         $prescription = Tracking::
             select(
                 "tracking.code",
-                \DB::raw("concat('DR. ',action_md.fname,' ',action_md.lname) as action_md"),
+                \DB::raw("concat('Dr. ',action_md.fname,' ',action_md.lname) as action_md"),
                 "action_md.signature as action_md_signature",
                 "action_md.license",
                 "department.description as department",
@@ -123,8 +128,10 @@ class PrintCtrl extends Controller
                 "facility.contact as facility_contact",
                 "facility.email as facility_email",
                 \DB::raw("concat(patients.fname,' ',patients.lname) as patient_name"),
-                \DB::raw("if(tracking.type='normal',pf.updated_at,preg_f.updated_at) as prescription_date"),
-                \DB::raw("if(tracking.type='normal',pf.prescription,preg_f.prescription) as prescription"),
+                /*\DB::raw("if(tracking.type='normal',pf.updated_at,preg_f.updated_at) as prescription_date"),
+                \DB::raw("if(tracking.type='normal',pf.prescription,preg_f.prescription) as prescription"),*/
+                "activity.created_at as prescription_date",
+                "activity.remarks as prescription",
                 \DB::raw("if(tracking.type='normal',pf.other_diagnoses,preg_f.other_diagnoses) as other_diagnosis"),
                 "patients.dob",
                 "patients.sex",
@@ -132,6 +139,7 @@ class PrintCtrl extends Controller
                 \DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
             )
             ->where("tracking.id",$tracking_id)
+            ->where("activity.id",$activity_id)
             ->leftJoin("users as action_md","action_md.id","=","tracking.action_md")
             ->leftJoin("department","department.id","=","action_md.department_id")
             ->leftJoin("facility","facility.id","=","action_md.facility_id")  
@@ -139,6 +147,7 @@ class PrintCtrl extends Controller
             ->leftJoin("pregnant_form as preg_f","preg_f.code","=","tracking.code") 
             ->leftJoin("patients","patients.id","=",\DB::raw("if(tracking.type = 'normal',pf.patient_id,preg_f.patient_woman_id)"))
             ->leftJoin("muncity","muncity.id","=","patients.muncity")
+            ->leftJoin("activity","activity.code","=","tracking.code")
             ->first();
 
         $header = $prescription->action_md;

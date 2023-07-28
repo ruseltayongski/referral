@@ -1,0 +1,324 @@
+.panel-scoped-telemedicine {
+  .stepper-wrapper {
+    font-family: Arial;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .stepper-item::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: -50%;
+    z-index: 2;
+  }
+
+  /*.stepper-item::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 2;
+  }*/
+
+  .stepper-item .step-counter {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
+  }
+
+  .stepper-item.active {
+    font-weight: bold;
+  }
+
+  .stepper-item.completed .step-counter {
+    background-color: #4bb543;
+  }
+
+  .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+  }
+
+  .step-counter-examined:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 120px;
+    top: 49px;
+    left: 40px;
+    z-index: 3;
+    transform: rotate(26deg);
+  }
+
+  .stepper-item-prescription::after {
+    transform: rotate(160deg);
+    margin-top: -28px;
+  }
+
+  .step-counter-prescription:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .stepper-item-upward {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .stepper-item-upward .step-counter {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
+    margin-top:-50px;
+  }
+
+  .stepper-item-upward.completed .step-counter {
+    background-color: #4bb543;
+  }
+
+  .stepper-item-upward.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 100%;
+    left: 60%;
+    z-index: 3;
+    margin-top: -30px;
+  }
+
+  .stepper-item-upward::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    left: -45%;
+    z-index: 2;
+    transform: rotate(160deg);
+    margin-top: -10px;
+  }
+
+  .stepper-item-treated .step-counter-treated {
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-top: -44px;
+  }
+
+  .stepper-item-treated.completed .step-counter-treated {
+    background-color: #4bb543;
+  }
+
+  .stepper-item-treated {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    margin-top: 100px;
+  }
+
+  /*.stepper-item-treated.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 130px;
+    left: 20px;
+    z-index: 3;
+    margin-top: -29px;
+  }*/
+
+  .stepper-item-treated::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 120px;
+    z-index: 2;
+    left: -110px;
+    transform: rotate(26deg);
+    margin-top: -55px;
+  }
+
+  /*.stepper-item-treated::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 120px;
+    z-index: 2;
+    left: 30px;
+    margin-top: -30px;
+  }*/
+
+  .step-counter-treated:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /*.stepper-item-treated.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 130px;
+    left: 15px;
+    z-index: 3;
+    margin-top: 18px;
+    transform: rotate(30deg);
+  }*/
+
+  .step-counter-referred {
+    cursor: pointer;
+  }
+
+  .step-counter-referred:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .stepper-item-referred {
+    margin-top:-50px;
+  }
+
+  .stepper-item .step-counter-follow {
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-top: 5px;
+  }
+
+  .stepper-item-follow {
+    margin-top:35px;
+    width: 150px;
+  }
+
+  .stepper-item-follow.completed .step-counter-follow {
+    background-color: #4bb543;
+  }
+
+  .stepper-item-follow.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 135px;
+    z-index: 3;
+    margin-top: -1px;
+  }
+
+  .step-counter-follow:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .stepper-item-end {
+    width: 150px;
+    top: 20px;
+    margin-bottom: 40px;
+  }
+
+  .stepper-item .step-counter-end {
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-top: 5px;
+  }
+
+  .step-name-end {
+    margin-top: 1px;
+  }
+
+  .stepper-item-end.completed .step-counter-end {
+    background-color: #4bb543;
+  }
+
+  .stepper-item-end::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 150px;
+    transform: rotate(30deg);
+    top: -18px;
+  }
+
+  .stepper-item-end.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 145px;
+    z-index: 3;
+    transform: rotate(30deg);
+    margin-top: -5px;
+  }
+
+  .step-counter-end:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .stepper-item-follow::after {
+    content: none !important;
+  }
+
+  .stepper-item:first-child::before {
+    content: none;
+  }
+  .stepper-item:last-child::after {
+    content: none;
+  }
+  .stepper-item:nth-child(6)::after {
+    content: none;
+  }
+
+}

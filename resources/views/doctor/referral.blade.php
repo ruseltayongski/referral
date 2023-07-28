@@ -131,8 +131,8 @@ $user = Session::get('auth');
                             @foreach($data as $row)
                                 <?php
                                 $type = ($row->type=='normal') ? 'normal-section':'pregnant-section';
-                                $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred') ? $type : 'read-section';
-                                $icon = ($row->status=='referred' || $row->status=='redirected') ? 'fa-ambulance' : 'fa-eye';
+                                $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred' || $row->status=='followup') ? $type : 'read-section';
+                                $icon = ($row->status=='referred' || $row->status=='redirected' || $row->status=='followup') ? 'fa-ambulance' : 'fa-eye';
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
@@ -155,7 +155,7 @@ $user = Session::get('auth');
                                             <span class='top-right badge1 red'>{{ $position_bracket[$row->position+1] }} Position</span>
                                         </div>
                                     @endif
-                                    @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected')
+                                    @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status=='followup')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                             <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>

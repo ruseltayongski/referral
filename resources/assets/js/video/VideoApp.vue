@@ -20,6 +20,7 @@
                 tracking_id: this.getUrlVars()["id"],
                 referral_code: this.getUrlVars()["code"],
                 referring_md: this.getUrlVars()["referring_md"],
+                activity_id: this.getUrlVars()["activity_id"],
                 options: {
                     // Pass your App ID here.
                     appId: '1e264d7f57994a64b4ceb42f80188d06',
@@ -238,10 +239,11 @@
                     const updatePrescription = {
                         code : this.referral_code,
                         prescription: this.prescription,
-                        form_type: "normal"
+                        form_type: "normal",
+                        activity_id: this.activity_id
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
-                        console.log(response.status)
+                        console.log(response)
                         if(response.data === 'success') {
                             this.prescriptionSubmitted = true
                             Lobibox.alert("success",
@@ -265,12 +267,13 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "normal"
+                    form_type : "normal",
+                    activity_id : this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
                     console.log(response)
                     if(response.data === 'success') {
-                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}`, '_blank');
+                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${this.activity_id}`, '_blank');
                     } else {
                         Lobibox.alert("error",
                         {
@@ -280,6 +283,34 @@
                 })
                 .catch((error) => {
                     console.log(error);
+                });
+            },
+            endorseUpward() {
+                let self = this
+                Lobibox.confirm({
+                    msg: "Do you want to endorse this patient for an upward level of referral?",
+                    callback: function ($this, type, ev) {
+                        if(type == 'yes') {
+                            const endorseUpward = {
+                                code : self.referral_code,
+                                form_type: "normal"
+                            }
+                            axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
+                                console.log(response.status)
+                                if(response.data === 'success') {
+                                    Lobibox.alert("success",
+                                        {
+                                            msg: "Successfully endorse the patient for upward referral!"
+                                        });
+                                } else {
+                                    Lobibox.alert("error",
+                                        {
+                                            msg: "Error in server!"
+                                        });
+                                }
+                            });
+                        }
+                    }
                 });
             }
         },
@@ -301,7 +332,8 @@
                     <div class="iconCall position-absolute fade-in" v-if="showDiv">
                         <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                         <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
-                        <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                        <button class="btn btn-danger btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>&nbsp;
+                        <button class="btn btn-warning btn-lg decline-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
                     </div>
                     </Transition>
                     <div class="localPlayerDiv">

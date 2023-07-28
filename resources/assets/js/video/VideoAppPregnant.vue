@@ -20,6 +20,7 @@
                 tracking_id: this.getUrlVars()["id"],
                 referral_code: this.getUrlVars()["code"],
                 referring_md: this.getUrlVars()["referring_md"],
+                activity_id: this.getUrlVars()["activity_id"],
                 options: {
                     // Pass your App ID here.
                     appId: '1e264d7f57994a64b4ceb42f80188d06',
@@ -278,12 +279,13 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "pregnant"
+                    form_type : "pregnant",
+                    activity_id: this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
                     console.log(response)
                     if(response.data === 'success') {
-                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}`, '_blank');
+                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${this.activity_id}`, '_blank');
                     } else {
                         Lobibox.alert("error",
                             {
