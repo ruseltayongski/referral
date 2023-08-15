@@ -1,3 +1,4 @@
+<script src="{{ asset('public/js/app_qr.js?version=').date('YmdHis') }}" defer></script>
 <center>
     <div class="web-view">
         <div class="row" style="margin-top: 15px;">
@@ -15,7 +16,10 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <img src="{{ asset('resources/img/f1.jpg') }}" width="100">
+                {{--<img src="{{ asset('resources/img/f1.jpg') }}" width="100">--}}
+                <div id="app_qr">
+                    <qr-app :patient_code="'{{ $form->code }}'" :telemedicine="{{ $form->telemedicine }}"></qr-app>
+                </div>
             </div>
         </div>
         <h3 class="text-green clinical-form-title" style="font-size: 23pt;"><!-- TITLE HERE IS APPENDED FROM JQUERY--></h3>

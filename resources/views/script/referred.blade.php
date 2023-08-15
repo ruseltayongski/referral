@@ -111,9 +111,18 @@
                 });
         }
         else {
+            $("#followup_header").html("Follow Up Patient");
             telemedicine = 1;
             $("#telemedicineFollowupFormModal").modal('show');
         }
+    }
+
+    function consultToOtherFacilities(code) {
+        $("#followup_header").html("Consult to other facilities");
+        $("#telemedicine_followup_code").val(code);
+        $(".telemedicine").val(1);
+        telemedicine = 1;
+        $("#telemedicineFollowupFormModal").modal('show');
     }
 
     function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id) {

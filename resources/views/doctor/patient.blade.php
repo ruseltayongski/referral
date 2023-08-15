@@ -285,7 +285,6 @@
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
-                                            <!--
                                             <a href="#normalFormModal"
                                                 data-patient_id="{{ $row->id }}"
                                                 data-backdrop="static"
@@ -297,7 +296,6 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Consultation
                                             </a><br>
-                                            -->
                                             <a href="#"
                                                 id="walkinNormal{{ $counter }}"
                                                 data-patient_id="{{ $row->id }}"

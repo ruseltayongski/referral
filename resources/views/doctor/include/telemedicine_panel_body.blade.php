@@ -106,9 +106,29 @@
             <div class="step-name">Seen</div>
         </div>
         <div class="text-center stepper-item @if($referred_accepted_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter" ><span id="queue_number{{ $referred_track->code }}">3</span></div>
+            <div class="step-counter
+            <?php
+                if($referred_cancelled_track)
+                    echo "bg-yellow";
+                elseif($referred_rejected_track)
+                    echo "bg-red";
+                elseif($referred_queued_track && !$referred_accepted_track)
+                    echo "bg-orange";
+            ?>
+            "
+             id="rejected_progress{{ $referred_track->code.$referred_track->id }}"
+            ><span id="queue_number{{ $referred_track->code }}">3</span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
-                Accepted
+                <?php
+                if($referred_cancelled_track)
+                    echo 'Cancelled';
+                elseif($referred_rejected_track)
+                    echo 'Declined';
+                elseif($referred_queued_track && !$referred_accepted_track)
+                    echo 'Queued at <br> <b>'. $queue_referred.'</b>';
+                else
+                    echo 'Accepted'
+                ?>
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
@@ -131,7 +151,7 @@
         <div class="stepper-item stepper-item-referred @if($referred_redirected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_upward_track }}','{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
             <div class="step-name">Referred</div>
-            <div class="stepper-item stepper-item-follow @if($referred_followup_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="stepper-item stepper-item-follow @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
                 <div class="step-name">Follow Up</div>
             </div>
@@ -258,7 +278,7 @@
                 <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_track->code }}')">6</div>
                     <div class="step-name">Referred</div>
-                    <div class="stepper-item stepper-item-follow @if($follow_followup_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="stepper-item stepper-item-follow @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                         <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')">6</div>
                         <div class="step-name">Follow Up</div>
                     </div>
@@ -420,8 +440,8 @@
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                         <br />
                                         @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
-                                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
-                                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
+                                            <button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities('{{ $act->code }}')">
+                                                <i class="fa fa-camera"></i> Consult other facilities<br>
                                             </button>
                                         @endif
                                     </td>

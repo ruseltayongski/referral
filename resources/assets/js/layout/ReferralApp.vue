@@ -111,7 +111,6 @@
                 });
             },
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
-                console.log("#seen_progress"+patient_code+activity_id);
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 let msg = patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
@@ -147,11 +146,21 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
                 });
             },
-            notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track) {
+            notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track, telemedicine) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 let rejected_process_element = $("#rejected_progress"+patient_code+activity_id);
                 rejected_process_element.removeClass("bg-orange");
                 rejected_process_element.addClass("bg-red");
+                let redirectButtonName = "";
+                if(telemedicine)
+                    redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' +
+                        '    <i class="fa fa-camera"></i> Consult other facilities<br>\n' +
+                        '</button>';
+                else
+                    redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
+                        '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
+                        '                                                            </button>\n';
+
                 $("#rejected_name"+patient_code+activity_id).html("Declined");
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
@@ -160,9 +169,7 @@
                     '                                                        <span class="txtDoctor">'+rejected_by+'</span> of <span class="txtHospital">'+rejected_by_facility+'</span> recommended to redirect <span class="txtPatient">'+patient_name+'</span> to other facility.\n' +
                     '                                                        <span class="remarks">Remarks: '+remarks+'</span>\n' +
                     '                                                        <br>\n' +
-                    '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
-                    '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
-                    '                                                            </button>\n' +
+                    redirectButtonName+
                     '                                                     </td>\n' +
                     '                                                </tr>');
                 let msg = patient_name+' was recommend to redirect by Dr. '+rejected_by+' of '+rejected_by_facility + '<br><br>\n' +
@@ -611,7 +618,7 @@
             Echo.join('referral_rejected')
                 .listen('SocketReferralRejected', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
-                        this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track)
+                        this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine)
                     }
                 });
 

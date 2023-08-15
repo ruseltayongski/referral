@@ -1,9 +1,9 @@
 <script>
-    import ReferralApp from './RecoApp.vue'
+    import RecolApp from './RecoApp.vue'
     export default {
         name: 'App',
         components : {
-            'reco-app': ReferralApp
+            'reco-app': RecolApp
         }
     }
 </script>

@@ -108,7 +108,7 @@ $facilities = \App\Facility::select('id','name')
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;">Follow Up Patient</h4>
+                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
                 <hr />
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm">
                     <input type="hidden" name="code" id="telemedicine_followup_code" value="">

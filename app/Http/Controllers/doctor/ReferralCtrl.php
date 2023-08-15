@@ -328,6 +328,7 @@ class ReferralCtrl extends Controller
             DB::raw("'$id' as tracking_id"),
             'tracking.action_md',
             'tracking.referring_md',
+            'tracking.telemedicine',
             'patient_form.code as code',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             'patients.dob as dob',
@@ -935,7 +936,8 @@ class ReferralCtrl extends Controller
         $latest_referred_or_redirected = Activity::where("code",$track->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
-                ->orWhere("status","transferred");
+                ->orWhere("status","transferred")
+                ->orWhere("status","followup");
         })
             ->orderBy("id","desc")
             ->first();
@@ -952,6 +954,9 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_referred_or_redirected->id,
             "redirect_track" => $redirect_track
         ];
+        if($track->telemedicine)
+            $referral_rejected['telemedicine'] = $track->telemedicine;
+
         broadcast(new SocketReferralRejected($referral_rejected));
         //end websocket
     }

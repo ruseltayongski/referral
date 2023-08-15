@@ -29,7 +29,12 @@
                     // Pass your temp token here.
                     token: null,
                     // Set the user ID.
-                    uid: 0,
+                    /*appId: 'dfeb75b62b234be38d6b954b97577c99',
+                    // Set the channel name.
+                    channel: 'test',
+                    // Pass your temp token here.
+                    token: null,
+                    uid: 0,*/
                 },
 
                 form: {},

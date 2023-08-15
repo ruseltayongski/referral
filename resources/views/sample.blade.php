@@ -1,20 +1,11 @@
-<?php
-$user = Session::get('auth');
-?>
-@extends('layouts.app')
-
-@section('content')
-    <div class="box box-success">
-        <div class="box-header with-border">
-            <h1>Hello World!</h1>
-        </div>
-        <div class="box-body">
-            <h3>This is body content!</h3>
-        </div>
+<html>
+<head>
+    <script src="{{ asset('public/js/app_qr.js?version=').date('YmdHis') }}" defer></script>
+</head>
+ <body>
+    <h1>hahahah!!</h1>
+    <div id="app_qr">
+        <qr-app></qr-app>
     </div>
-@endsection
-
-@section('js')
-
-@endsection
-
+ </body>
+</html>
