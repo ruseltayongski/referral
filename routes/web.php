@@ -417,7 +417,7 @@ Route::get("insert_activity",function(){
 });
 
 //API RUSEL
-Route::get('gbm9Ti6UBpT5K2P5qQ5bD0OMhvxJnYNZ/{offset}/{limit}','ApiController@getActivity'); //GET ACTIVITY
+Route::get('gbm9Ti6UBpT5K2P5qQ5bD0OMhvxJnYNZ/api/verify/tracking/{code}','ApiController@verifyTracking'); //GET ACTIVITY
 Route::get('bHDMSB83RwoznXAcnnC6aFtqiL1djvJs','ApiController@getBaby'); //GET BABY
 Route::get('xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil','ApiController@getBarangay'); //GET BARANGAY
 Route::get('XO2XFSiDX2PdHyLbq9WNHhA95vy3Fdld','ApiController@getDepartment'); //GET DEPARTMENT

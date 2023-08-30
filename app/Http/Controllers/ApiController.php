@@ -1568,5 +1568,10 @@ class ApiController extends Controller
         curl_close($curl);
     }
 
-
+    public function verifyTracking($code) {
+        if(Tracking::where("code",$code)->first()){
+            return json_encode(true);
+        }
+        return json_encode(false);
+    }
 }
