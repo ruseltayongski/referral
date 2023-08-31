@@ -1579,16 +1579,54 @@ class ApiController extends Controller
     public function getFormData(Request $request) {
         $tracking = Tracking::where("code",$request->code)->first();
         if($tracking->type == 'normal') {
-            $request = ReferralCtrl::normalFormData($tracking->id);
-            $request['form']['age'] = $request['age'];
-            $request['form']['type'] = $tracking->type;
-            return $request['form'];
+            $response = ReferralCtrl::normalFormData($tracking->id);
+            $response['form']['age'] = $response['age'];
+            $response['form']['type'] = $tracking->type;
+            $response['form']['icd'] = Icd::select("icd10.code","icd10.description")->where("icd.code",$tracking->code)->leftJoin("icd10","icd10.id","=","icd.icd_id")->get();
+            $file_link = (PatientForm::select('file_path')->where('code', $tracking->code)->first())->file_path;
+            $file_attachment = [];
+            if($file_link != null && $file_link != "") {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = ReferralCtrl::securedFile($link);
+                    if($path_tmp != '') {
+                        $file_attachment[] = [
+                            "file_name" => basename($path_tmp),
+                            "file_path" => $path_tmp,
+                        ];
+                    }
+                }
+            }
+            $response['form']['file_attachment'] = $file_attachment;
+            $response['form']['note_diagnosis'] = $response['form']['diagnosis'];
+            unset($response['form']['diagnosis']);
+            return $response['form'];
         } elseif($tracking->type == 'pregnant') {
-            $request = ReferralCtrl::pregnantFormData($tracking->id);
-            $request['pregnant']['age'] = $request['pregnant']['woman_age'];
-            $request['pregnant']['type'] = $tracking->type;
-            $request['pregnant']['baby'] = $request['baby'];
-            return $request['pregnant'];
+            $response = ReferralCtrl::pregnantFormData($tracking->id);
+            $response['pregnant']['age'] = $response['pregnant']['woman_age'];
+            $response['pregnant']['type'] = $tracking->type;
+            $response['pregnant']['baby'] = $response['baby'];
+            $response['pregnant']['icd'] = Icd::select("icd10.code","icd10.description")->where("icd.code",$tracking->code)->leftJoin("icd10","icd10.id","=","icd.icd_id")->get();
+            $file_link = (PregnantForm::select('file_path')->where('code', $tracking->code)->first())->file_path;
+            $file_attachment = [];
+            if($file_link != null && $file_link != "") {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = ReferralCtrl::securedFile($link);
+                    if($path_tmp != '') {
+                        $file_attachment[] = [
+                            "file_name" => basename($path_tmp),
+                            "file_path" => $path_tmp,
+                        ];
+                    }
+                }
+            }
+            $response['pregnant']['file_attachment'] = $file_attachment;
+            $response['pregnant']['note_diagnosis'] = $response['pregnant']['notes_diagnoses'];
+            $response['pregnant']['other_diagnosis'] = $response['pregnant']['other_diagnoses'];
+            unset($response['pregnant']['notes_diagnoses']);
+            unset($response['pregnant']['other_diagnoses']);
+            return $response['pregnant'];
         }
 
     }
