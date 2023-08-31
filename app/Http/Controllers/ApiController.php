@@ -12,6 +12,7 @@ use App\Events\SocketReferralCall;
 use App\Events\SocketReferralDischarged;
 use App\Facility;
 use App\Feedback;
+use App\Http\Controllers\doctor\ReferralCtrl;
 use App\Icd;
 use App\Icd10;
 use App\Issue;
@@ -1573,5 +1574,22 @@ class ApiController extends Controller
             return json_encode(true);
         }
         return json_encode(false);
+    }
+
+    public function getFormData(Request $request) {
+        $tracking = Tracking::where("code",$request->code)->first();
+        if($tracking->type == 'normal') {
+            $request = ReferralCtrl::normalFormData($tracking->id);
+            $request['form']['age'] = $request['age'];
+            $request['form']['type'] = $tracking->type;
+            return $request['form'];
+        } elseif($tracking->type == 'pregnant') {
+            $request = ReferralCtrl::pregnantFormData($tracking->id);
+            $request['pregnant']['age'] = $request['pregnant']['woman_age'];
+            $request['pregnant']['type'] = $tracking->type;
+            $request['pregnant']['baby'] = $request['baby'];
+            return $request['pregnant'];
+        }
+
     }
 }
