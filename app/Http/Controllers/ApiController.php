@@ -1583,7 +1583,8 @@ class ApiController extends Controller
             $response['form']['age'] = $response['age'];
             $response['form']['type'] = $tracking->type;
             $response['form']['icd'] = Icd::select("icd10.code","icd10.description")->where("icd.code",$tracking->code)->leftJoin("icd10","icd10.id","=","icd.icd_id")->get();
-            $file_link = (PatientForm::select('file_path')->where('code', $tracking->code)->first())->file_path;
+            $patient_form = PatientForm::select('patient_form.file_path','reason_referral.reason')->where('patient_form.code', $tracking->code)->leftJoin("reason_referral","reason_referral.id","=","patient_form.reason_referral")->first();
+            $file_link = $patient_form->file_path;
             $file_attachment = [];
             if($file_link != null && $file_link != "") {
                 $explode = explode("|",$file_link);
@@ -1599,6 +1600,7 @@ class ApiController extends Controller
             }
             $response['form']['file_attachment'] = $file_attachment;
             $response['form']['note_diagnosis'] = $response['form']['diagnosis'];
+            $response['form']['reason_referral'] = $patient_form->reason;
             unset($response['form']['diagnosis']);
             return $response['form'];
         } elseif($tracking->type == 'pregnant') {
@@ -1607,7 +1609,8 @@ class ApiController extends Controller
             $response['pregnant']['type'] = $tracking->type;
             $response['pregnant']['baby'] = $response['baby'];
             $response['pregnant']['icd'] = Icd::select("icd10.code","icd10.description")->where("icd.code",$tracking->code)->leftJoin("icd10","icd10.id","=","icd.icd_id")->get();
-            $file_link = (PregnantForm::select('file_path')->where('code', $tracking->code)->first())->file_path;
+            $pregnant_form = PregnantForm::select('pregnant_form.file_path','reason_referral.reason')->where('pregnant_form.code', $tracking->code)->leftJoin("reason_referral","reason_referral.id","=","pregnant_form.reason_referral")->first();
+            $file_link = $pregnant_form->file_path;
             $file_attachment = [];
             if($file_link != null && $file_link != "") {
                 $explode = explode("|",$file_link);
@@ -1624,6 +1627,7 @@ class ApiController extends Controller
             $response['pregnant']['file_attachment'] = $file_attachment;
             $response['pregnant']['note_diagnosis'] = $response['pregnant']['notes_diagnoses'];
             $response['pregnant']['other_diagnosis'] = $response['pregnant']['other_diagnoses'];
+            $response['pregnant']['reason_referral'] = $pregnant_form->reason;
             unset($response['pregnant']['notes_diagnoses']);
             unset($response['pregnant']['other_diagnoses']);
             return $response['pregnant'];
