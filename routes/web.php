@@ -20,7 +20,7 @@ use App\FacilityAssign;
 
 Route::get('/', 'HomeCtrl@index');
 
-Route::get('logout', function() {
+Route::match(['GET','POST'],'logout', function() {
     $user = Session::get('auth');
     Session::flush();
     Session::forget('auth');

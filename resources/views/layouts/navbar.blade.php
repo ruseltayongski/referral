@@ -213,7 +213,12 @@ $multi_faci = Session::get('multiple_login');
                 @else
                     <li class="divider"></li>
                 @endif
-                <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                <li>
+                    <form action="{{ asset('logout') }}" method="post">
+                        {{ csrf_field() }}
+                        <button type="submit"><i class="fa fa-sign-out"></i> Logout</button>
+                    </form>
+                </li>
                 @if(Session::get('admin'))
                     <?php
                     $check_login_as = \App\User::find($user->id);
