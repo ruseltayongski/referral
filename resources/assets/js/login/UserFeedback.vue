@@ -25,10 +25,12 @@
 </template>
 
 <script>
-    let path = window.location.origin;
-    if(path === 'https://site.test' || path === 'http://site.test') {
+    import $ from "jquery";
+    /*let path = window.location.origin;
+    if(path === 'https://site.test' || path === 'http://site.test' || path === 'http://localhost') {
         path += '/referral';
-    }
+    }*/
+    let path = $("#login_root_url").val();
 
     export default {
         name: "User Feedback",
