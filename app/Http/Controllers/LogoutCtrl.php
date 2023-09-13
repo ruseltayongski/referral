@@ -13,7 +13,7 @@ class LogoutCtrl extends Controller
     public function logout() {
         $user = Session::get('auth');
         session()->flush();
-        session()->regenerate();
+        session()->regenerate(); //by using this code, my bugs has been fixed, where after logout, the session never flush
         if(isset($user)){
             User::where('id',$user->id)
                 ->update([
