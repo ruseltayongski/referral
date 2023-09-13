@@ -22,6 +22,9 @@ Route::get('/', 'HomeCtrl@index');
 
 Route::get('logout', function() {
     $user = Session::get('auth');
+    Session::flush();
+    Session::forget('auth');
+    Session::put("auth",false);
     if(isset($user)){
         \App\User::where('id',$user->id)
             ->update([
@@ -40,20 +43,13 @@ Route::get('logout', function() {
                 'logout' => $logout
             ]);
 
-        $multiple_faci_id = Session::get('multiple_faci_id');
+        /*$multiple_faci_id = Session::get('multiple_faci_id');
         $faci = FacilityAssign::where('user_id', $user->id)->where('facility_id', $multiple_faci_id)->first();
         if(count($faci) > 0) {
             $faci->login_status = "logout";
             $faci->save();
-        }
-
-        Session::flush();
-        Session::forget('auth');
-        Session::put("auth",false);
+        }*/
     }
-    Session::flush();
-    Session::forget('auth');
-    Session::put("auth",false);
     return redirect('login');
 });
 
