@@ -1600,7 +1600,9 @@ class ApiController extends Controller
             }
             $response['form']['file_attachment'] = $file_attachment;
             $response['form']['note_diagnosis'] = $response['form']['diagnosis'];
+            $response['form']['other_diagnosis'] = $response['pregnant']['other_diagnoses'];
             $response['form']['reason_referral'] = $patient_form->reason;
+            unset($response['form']['notes_diagnoses']);
             unset($response['form']['diagnosis']);
             return $response['form'];
         } elseif($tracking->type == 'pregnant') {
@@ -1632,6 +1634,35 @@ class ApiController extends Controller
             unset($response['pregnant']['other_diagnoses']);
             return $response['pregnant'];
         }
-
     }
+
+    public function checkUsername(Request $request) {
+        $username = $request->username;
+        $patient_code = $request->patient_code;
+        $result = User::select(
+                            "users.id",
+                            DB::raw("concat('Dr.',users.fname,' ',users.lname) as name"),
+                            DB::raw("if(users.facility_id = tracking.referred_from,'referring','referred') as status"),
+                            DB::raw("200 as status_code")
+                        )
+                        ->where("users.username",$username)
+                        ->where("tracking.status","accepted")
+                        ->where("tracking.code",$patient_code)
+                        ->leftJoin("tracking",function($join){
+                            $join->on(function($query) {
+                                $query->whereRaw("tracking.referred_from = users.facility_id")
+                                    ->orWhereRaw("tracking.referred_to = users.facility_id");
+                            });
+                        })
+                        ->first();
+
+        if($result->status_code == "200")
+            return $result;
+        else {
+            return [
+                "status_code" => 204
+            ];
+        }
+    }
+
 }

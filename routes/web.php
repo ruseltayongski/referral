@@ -417,9 +417,9 @@ Route::get("insert_activity",function(){
 });
 
 //API RUSEL
-Route::get('gbm9Ti6UBpT5K2P5qQ5bD0OMhvxJnYNZ/api/verify/tracking/{code}','ApiController@verifyTracking'); //GET ACTIVITY
-Route::post('bHDMSB83RwoznXAcnnC6aFtqiL1djvJs/api/data','ApiController@getFormData'); //GET BABY
-Route::get('xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil','ApiController@getBarangay'); //GET BARANGAY
+Route::get('gbm9Ti6UBpT5K2P5qQ5bD0OMhvxJnYNZ/api/verify/tracking/{code}','ApiController@verifyTracking'); //telemedicine API
+Route::post('bHDMSB83RwoznXAcnnC6aFtqiL1djvJs/api/data','ApiController@getFormData'); //telemedicine API
+Route::post('xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil/api/check/username','ApiController@checkUsername'); //telemedicine API
 Route::get('XO2XFSiDX2PdHyLbq9WNHhA95vy3Fdld','ApiController@getDepartment'); //GET DEPARTMENT
 Route::get('iMkiW5YcHA6D9Gd7BuTteeQPVx4a1UxK','ApiController@getFacility'); //GET FACILITY
 Route::get('Cj7lhsInOGIvKKdpHB3kIhrectxLgTeU','ApiController@getFeedback'); //GET FEEDBACK

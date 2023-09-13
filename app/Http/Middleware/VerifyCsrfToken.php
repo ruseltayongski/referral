@@ -22,6 +22,7 @@ class VerifyCsrfToken extends BaseVerifier
         'mobile/get/v2/reason_for_referral',
         'mobile/get/v2/icd10',
         'file_upload',
-        'bHDMSB83RwoznXAcnnC6aFtqiL1djvJs/api/data'
+        'bHDMSB83RwoznXAcnnC6aFtqiL1djvJs/api/data',
+        'xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil/api/check/username'
     ];
 }
