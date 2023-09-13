@@ -55,6 +55,8 @@ Route::get('logout', function() {
 
 Route::get('login_expire', function(){
     Session::flush();
+    Session::forget('auth');
+    Session::put("auth",false);
     return redirect('login');
 });
 
