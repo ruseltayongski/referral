@@ -43,6 +43,8 @@ class LoginCtrl extends Controller
 
     public function index3()
     {
+        #return session()->getId();
+        #return storage_path('framework/sessions');
         if($login = Session::get('auth')){
             return redirect($login->level);
         }

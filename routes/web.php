@@ -21,6 +21,7 @@ use App\FacilityAssign;
 Route::get('/', 'HomeCtrl@index');
 
 Route::match(['GET','POST'],'logout','LogoutCtrl@logout');
+Route::get('check/session', 'LogoutCtrl@checkSession');
 
 Route::get('login_expire', function(){
     Session::flush();

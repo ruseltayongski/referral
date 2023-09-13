@@ -41,4 +41,8 @@ class LogoutCtrl extends Controller
         }
         return redirect('login');
     }
+
+    public function checkSession() {
+        return session()->getId();
+    }
 }
