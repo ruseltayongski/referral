@@ -41,8 +41,7 @@
                             $("#login_btn").html('Login');
                         } else {
                             this.error_message = ""
-                            /*window.location.href = response.data;*/
-                            location.reload();
+                            window.location.href = response.data;
                         }
                     })
             },

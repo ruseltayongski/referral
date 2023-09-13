@@ -20,38 +20,7 @@ use App\FacilityAssign;
 
 Route::get('/', 'HomeCtrl@index');
 
-Route::match(['GET','POST'],'logout', function() {
-    $user = Session::get('auth');
-    Session::flush();
-    Session::forget('auth');
-    Session::put("auth",false);
-    if(isset($user)){
-        \App\User::where('id',$user->id)
-            ->update([
-                'login_status' => 'logout'
-            ]);
-        $logout = date('Y-m-d H:i:s');
-
-        $logoutId = \App\Login::where('userId',$user->id)
-            ->orderBy('id','desc')
-            ->first()
-            ->id;
-
-        \App\Login::where('id',$logoutId)
-            ->update([
-                'status' => 'login_off',
-                'logout' => $logout
-            ]);
-
-        /*$multiple_faci_id = Session::get('multiple_faci_id');
-        $faci = FacilityAssign::where('user_id', $user->id)->where('facility_id', $multiple_faci_id)->first();
-        if(count($faci) > 0) {
-            $faci->login_status = "logout";
-            $faci->save();
-        }*/
-    }
-    return redirect('login');
-});
+Route::match(['GET','POST'],'logout','LogoutCtrl@logout');
 
 Route::get('login_expire', function(){
     Session::flush();
