@@ -13,6 +13,7 @@ class LogoutCtrl extends Controller
     public function logout() {
         $user = Session::get('auth');
         session()->flush();
+        session()->forget('auth');
         if(isset($user)){
             User::where('id',$user->id)
                 ->update([
