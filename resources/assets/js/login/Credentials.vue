@@ -41,7 +41,7 @@
                             $("#login_btn").html('Login');
                         } else {
                             this.error_message = ""
-                            window.location.replace(response.data)
+                            window.location.href = response.data;
                         }
                     })
             },

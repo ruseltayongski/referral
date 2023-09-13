@@ -214,10 +214,7 @@ $multi_faci = Session::get('multiple_login');
                     <li class="divider"></li>
                 @endif
                 <li>
-                    <form action="{{ asset('logout') }}" method="post">
-                        {{ csrf_field() }}
-                        <button type="submit"><i class="fa fa-sign-out"></i> Logout</button>
-                    </form>
+                    <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
                 </li>
                 @if(Session::get('admin'))
                     <?php
