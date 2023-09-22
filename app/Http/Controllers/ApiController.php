@@ -132,7 +132,11 @@ class ApiController extends Controller
     }
 
     public function patientExamined(Request $request) {
-        $user = Session::get('auth');
+        if($request->username) //it means from mobile
+            $user = User::where('username',$request->username)->first();
+        else
+            $user = Session::get('auth');
+
         $patient_form = null;
         $patient_id = 0;
 
@@ -182,9 +186,25 @@ class ApiController extends Controller
 
             broadcast(new SocketReferralDischarged($broadcast_examined));
 
-            return "success";
+            $response =  "success";
+        } else {
+            $response = "failed";
         }
-        return "failed";
+
+        if($request->username) { //it means from mobile
+            if($response == 'success') {
+                return [
+                    "status_code" => 200,
+                    "activity_id" => $latest_activity->id
+                ];
+            } else {
+                return [
+                    "status_code" => 204
+                ];
+            }
+        } else {
+            return $response;
+        }
     }
 
     public function checkPrescription(Request $request) {
@@ -196,7 +216,11 @@ class ApiController extends Controller
     }
 
     public function updatePrescription(Request $request) {
-        $user = Session::get('auth');
+        if($request->username) //it means from mobile
+            $user = User::where('username',$request->username)->first();
+        else
+            $user = Session::get('auth');
+
         $patient_form = null;
         $patient_id = 0;
         if($request->form_type == 'normal') {
@@ -251,9 +275,24 @@ class ApiController extends Controller
 
             broadcast(new SocketReferralDischarged($broadcast_prescribed));
 
-            return "success";
+            $response =  "success";
+        } else {
+            $response = "failed";
         }
-        return "failed";
+
+        if($request->username) { //it means from mobile
+            if($response == 'success') {
+                return [
+                    "status_code" => 200
+                ];
+            } else {
+                return [
+                    "status_code" => 204
+                ];
+            }
+        } else {
+            return $response;
+        }
     }
 
     public function patientTreated(Request $request) {
@@ -1217,7 +1256,7 @@ class ApiController extends Controller
     }
 
     public static function fileUploadUrl(){
-        return 'http://180.232.110.44/';
+        return 'http://180.232.110.32/';
     }
 
     public static function fileUpload(Request $request) {
@@ -1233,7 +1272,8 @@ class ApiController extends Controller
                     'username' => $username
                 );
 
-                $url = self::fileUploadUrl().'file_upload.php';
+                //$url = self::fileUploadUrl().'file_upload.php';
+                $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
