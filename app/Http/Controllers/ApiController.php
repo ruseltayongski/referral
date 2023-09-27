@@ -61,76 +61,6 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
     }
 
-    public function endorseUpward(Request $request) {
-        $user = Session::get('auth');
-        $patient_form = null;
-        $patient_id = 0;
-        if($request->form_type == 'normal') {
-            $patient_form = PatientForm::where("code",$request->code)->first();
-            $patient_id = $patient_form->patient_id;
-        }
-        else if($request->form_type == 'pregnant') {
-            $patient_form = PregnantForm::where("code",$request->code)->first();
-            $patient_id = $patient_form->patient_woman_id;
-        }
-        if($patient_form) {
-            $tracking = Tracking::where("code",$request->code)->first();
-            $activity = array(
-                'code' => $request->code,
-                'patient_id' => $patient_id,
-                'date_referred' => date('Y-m-d H:i:s'),
-                'date_seen' => "0000-00-00 00:00:00",
-                'referred_from' => $tracking->referred_from,
-                'referred_to' => $tracking->referred_to,
-                'department_id' => $tracking->department_id,
-                'referring_md' => $tracking->referring_md,
-                'action_md' => $user->id,
-                'remarks' => 'patient endorse for an upward level of referral',
-                'status' => 'upward'
-            );
-            Activity::create($activity);
-
-            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
-                $query->where("status","referred")
-                    ->orWhere("status","redirected")
-                    ->orWhere("status","transferred")
-                    ->orWhere("status","followup");
-            })
-                ->orderBy("id","desc")
-                ->first();
-
-            $broadcast_upward = [
-                "activity_id" => $latest_activity->id,
-                "code" => $request->code,
-                "referred_from" => $latest_activity->referred_from,
-                "status" => "telemedicine",
-                "telemedicine_status" => "upward"
-            ];
-
-            broadcast(new SocketReferralDischarged($broadcast_upward));
-
-            return "success";
-        }
-        return "failed";
-    }
-
-    public function callADoctor(Request $request) {
-        $user = Session::get('auth');
-        $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
-        $call = [
-            "tracking_id" => $request->tracking_id,
-            "code" => $request->code,
-            "action_md" => (int)$request->action_md,
-            "referring_md" => (int)$request->referring_md,
-            "trigger_by" => (int)$request->trigger_by,
-            "status" => "telemedicine",
-            "doctorCaller" => $doctorCaller,
-            "form_type" => $request->form_type,
-            "activity_id" => $request->activity_id
-        ];
-        broadcast(new SocketReferralDischarged($call));
-    }
-
     public function patientExamined(Request $request) {
         if($request->username) //it means from mobile
             $user = User::where('username',$request->username)->first();
@@ -205,6 +135,80 @@ class ApiController extends Controller
         } else {
             return $response;
         }
+    }
+
+    public function endorseUpward(Request $request) {
+        if($request->username) //it means from mobile
+            $user = User::where('username',$request->username)->first();
+        else
+            $user = Session::get('auth');
+
+        $patient_form = null;
+        $patient_id = 0;
+        if($request->form_type == 'normal') {
+            $patient_form = PatientForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_id;
+        }
+        else if($request->form_type == 'pregnant') {
+            $patient_form = PregnantForm::where("code",$request->code)->first();
+            $patient_id = $patient_form->patient_woman_id;
+        }
+        if($patient_form) {
+            $tracking = Tracking::where("code",$request->code)->first();
+            $activity = array(
+                'code' => $request->code,
+                'patient_id' => $patient_id,
+                'date_referred' => date('Y-m-d H:i:s'),
+                'date_seen' => "0000-00-00 00:00:00",
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $tracking->referred_to,
+                'department_id' => $tracking->department_id,
+                'referring_md' => $tracking->referring_md,
+                'action_md' => $user->id,
+                'remarks' => 'patient endorse for an upward level of referral',
+                'status' => 'upward'
+            );
+            Activity::create($activity);
+
+            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+                $query->where("status","referred")
+                    ->orWhere("status","redirected")
+                    ->orWhere("status","transferred")
+                    ->orWhere("status","followup");
+            })
+                ->orderBy("id","desc")
+                ->first();
+
+            $broadcast_upward = [
+                "activity_id" => $latest_activity->id,
+                "code" => $request->code,
+                "referred_from" => $latest_activity->referred_from,
+                "status" => "telemedicine",
+                "telemedicine_status" => "upward"
+            ];
+
+            broadcast(new SocketReferralDischarged($broadcast_upward));
+
+            return "success";
+        }
+        return "failed";
+    }
+
+    public function callADoctor(Request $request) {
+        $user = Session::get('auth');
+        $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
+        $call = [
+            "tracking_id" => $request->tracking_id,
+            "code" => $request->code,
+            "action_md" => (int)$request->action_md,
+            "referring_md" => (int)$request->referring_md,
+            "trigger_by" => (int)$request->trigger_by,
+            "status" => "telemedicine",
+            "doctorCaller" => $doctorCaller,
+            "form_type" => $request->form_type,
+            "activity_id" => $request->activity_id
+        ];
+        broadcast(new SocketReferralDischarged($call));
     }
 
     public function checkPrescription(Request $request) {
