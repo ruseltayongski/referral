@@ -116,8 +116,8 @@
                                     <div class="col-xl-4 d-flex align-items-stretch">
                                         <div class="icon-box mt-3 mt-xl-0">
                                             <i class="bx bx-images"></i>
-                                            <h4>Bed Occupancy Status</h4>
-                                            <p>Check the availability of beds in health facilities.</p>
+                                            <h4>Telemedicine</h4>
+                                            <p>Allows patients to connect with healthcare professionals via video calls, phone calls.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -140,29 +140,47 @@
                                     <strong>Central Visayas Electronic Health Referral System(CVe-HRS) Version 6.7</strong><br>
                                 </span>
                             </div>
+
                             <div class="icon-box">
+                                <div class="icon"><i class="bx bxl-android"></i></div>
+                                <h4 class="title"><a href="">Telemedicine Mobile App for Android Version 1.0.0</a></h4>
+                                <p class="description">
+                                    Introducing our brand new Android app, designed to provide seamless access to healthcare services. With this app, patients can now have video consultations with healthcare professionals, and securely access their medical records, all from the convenience of their Android devices. Stay connected with your healthcare team and receive the care you need, anytime and anywhere.
+                                    
+                                    <br><br>This app is your dedicated healthcare companion, designed to make your health journey smoother and more efficient. Say goodbye to long waiting times and hello to healthcare on your terms.
+
+                                    <strong class="text-primary"><a href="#">Click here to download and experience healthcare reinvented!</a></strong>
+                                </p>
+                            </div>
+
+                            <div class="icon-box">
+                                <div class="icon"><i class="bx bxl-apple"></i></div>
+                                <h4 class="title"><a href="">Telemedicine iOS App Version 1.0.0</a></h4>
+                                <p class="description">
+                                    We are excited to announce the release of our iOS app, bringing telemedicine to your Apple devices. The Telemedicine iOS App offers a user-friendly interface, enabling patients to consult with healthcare professionals through high-quality video calls,and securely manage their health information. Experience the future of healthcare at your fingertips with our iOS app.
+                                    
+                                    <br><br>This app is not just about convenience; it's about a new era of healthcare that prioritizes your needs and empowers you to make informed decisions.
+
+                                    <strong class="text-primary"><a href="#">Click here to download and embrace the future of healthcare!</a></strong>
+                                </p>
+                            </div>
+
+                            <!-- <div class="icon-box">
                                 <div class="icon"><i class="bx bx-fingerprint"></i></div>
                                 <h4 class="title"><a href="">ICD-10 CODE</a></h4>
                                 <p class="description">
-                                    A feature that allows the user to easily choose the patient's diagnosis for an accurate and uniform diagnosis.
+                                    Our ICD-10 CODE feature is a powerful tool designed to enhance the accuracy and uniformity of patient diagnoses. With this feature, healthcare professionals can easily access and select the appropriate ICD-10 code for a patient's medical condition. This not only streamlines the diagnostic process but also ensures that medical records are consistently coded, making it easier for healthcare providers to track and manage patient health. Improve the precision of your diagnoses with our ICD-10 CODE feature.
+                                </p>
+                            </div> -->
+
+                            <div class="icon-box">
+                                <div class="icon"><i class="bx bx-merge"></i></div>
+                                <h4 class="title"><a href="">E-referral and Telemedicine Integration</a></h4>
+                                <p class="description">
+                                    Our E-referral and Telemedicine Integration feature revolutionizes the way healthcare is accessed and coordinated. This innovative integration allows healthcare providers to seamlessly refer patients to specialists or telemedicine services within the same platform. Patients can now receive specialized care. This streamlined process not only improves patient convenience but also enhances the continuity of care, ensuring that medical information is securely shared between providers. Experience a more connected and efficient healthcare ecosystem with our E-referral and Telemedicine Integration.
                                 </p>
                             </div>
 
-                            <div class="icon-box">
-                                <div class="icon"><i class="bx bx-gift"></i></div>
-                                <h4 class="title"><a href="">Reason for Referral</a></h4>
-                                <p class="description">
-                                    A drop-down feature in Clinical Referral Form and in Pregnant Form, wherein the referring facility/ies can choose the reasons for Referral.
-                                </p>
-                            </div>
-
-                            <div class="icon-box">
-                                <div class="icon"><i class="bx bx-atom"></i></div>
-                                <h4 class="title"><a href="">File Attachment</a></h4>
-                                <p class="description">
-                                    A new feature in Clinical Referral Form and in Pregnant Form that allows the user to attach documents or files of their patients.
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -249,7 +249,7 @@
                                                <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
-                                            <!--
+                                            @if($user->id == 4959 || $user->id == 6733)
                                             <a href="#pregnantModal"
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
@@ -261,7 +261,7 @@
                                                 <i class="fa fa-stethoscope"></i>
                                                 Consultation
                                             </a><br>
-                                            -->
+                                            @endif
                                             <a href="#"
                                                id="walkinPregnant{{ $counter }}"
                                                data-patient_id = "{{ $row->id }}"
@@ -285,7 +285,8 @@
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
-                                            {{--<a href="#normalFormModal"
+                                            @if(@if($user->id == 4959 || $user->id == 6733))
+                                            <a href="#normalFormModal"
                                                 data-patient_id="{{ $row->id }}"
                                                 data-backdrop="static"
                                                 data-toggle="modal"
@@ -295,7 +296,8 @@
                                                 class="btn btn-success btn-xs profile_info">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Consultation
-                                            </a><br>--}}
+                                            </a><br>
+                                            @endif
                                             <a href="#"
                                                 id="walkinNormal{{ $counter }}"
                                                 data-patient_id="{{ $row->id }}"
