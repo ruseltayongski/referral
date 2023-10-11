@@ -129,12 +129,12 @@
                 loading : $('#loadingGif').val()
             }
         },
-        created(){
+        async created(){
             this.proceedForm()
-            this.barChart()
-            this.optionPerDepartment()
-            this.optionPerActivity()
-            this.optionLastTransaction()
+            await this.barChart()
+            await this.optionPerDepartment()
+            await this.optionPerActivity()
+            await this.optionLastTransaction()
         },
         methods : {
             showIncomingModal(type) {
@@ -160,8 +160,8 @@
                     });
                 }
             },
-            barChart() {
-                axios.get('doctor/monthly/report').then(response => {
+            async barChart() {
+                await axios.get('doctor/monthly/report').then(response => {
                     let doctor_monthly_report = response.data
                     let chartdata = {
                         type: 'bar',
@@ -192,8 +192,8 @@
                     new Chart(ctx, chartdata);
                 });
             },
-            optionPerDepartment() {
-                axios.get('doctor/option/per/department').then(response => {
+            async optionPerDepartment() {
+                await axios.get('doctor/option/per/department').then(response => {
                     let options_user_per_department = {
                         title: {
                             text: "Login users per department as of today",
@@ -217,8 +217,8 @@
                     $("#user_per_department").CanvasJSChart(options_user_per_department);
                 });
             },
-            optionPerActivity() {
-                axios.get('doctor/option/per/activity').then(response => {
+            async optionPerActivity() {
+                await axios.get('doctor/option/per/activity').then(response => {
                     //for statistics
                     this.incoming_statistics = response.data
 
@@ -272,8 +272,8 @@
                     $("#number_of_transaction").CanvasJSChart(options_activity);
                 });
             },
-            optionLastTransaction() {
-                axios.get('doctor/option/last/transaction').then(response => {
+            async optionLastTransaction() {
+                await axios.get('doctor/option/last/transaction').then(response => {
                     //line chart
                     let datapoints_referred = [];
                     let datapoints_accepted = [];

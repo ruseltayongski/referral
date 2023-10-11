@@ -285,7 +285,7 @@
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
-                                            @if(@if($user->id == 4959 || $user->id == 6733))
+                                            @if($user->id == 4959 || $user->id == 6733)
                                             <a href="#normalFormModal"
                                                 data-patient_id="{{ $row->id }}"
                                                 data-backdrop="static"
