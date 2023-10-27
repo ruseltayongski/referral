@@ -1006,6 +1006,7 @@ class ReferralCtrl extends Controller
         $redirect_track = asset("doctor/referred?referredCode=").$latest_activity->code;
         $referral_accepted = [
             "patient_name" => ucfirst($patient->fname).' '.$patient->mname.'. '.ucfirst($patient->lname),
+            "accepting_doctor_id" => $user->id,
             "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "accepting_facility_name" => Facility::find($user->facility_id)->name,
             "referred_from" => $latest_activity->referred_from,

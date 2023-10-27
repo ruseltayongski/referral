@@ -123,8 +123,9 @@
                     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
                 });
             },
-            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track) {
+            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track, accepting_doctor_id) {
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+                $("#accepted_progress"+patient_code+activity_id).attr("data-actionmd", accepting_doctor_id);
                 $("#rejected_progress"+patient_code+activity_id).removeClass("bg-orange");
                 $("#rejected_name"+patient_code+activity_id).html("Accepted");
                 $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
@@ -611,7 +612,7 @@
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
                     if(event.payload.referred_from === this.user.facility_id) {
-                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track)
+                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id)
                     }
                 });
 
@@ -659,6 +660,7 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
+                    console.log(event);
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             console.log("callAdoctor");

@@ -126,13 +126,13 @@
     }
 
     function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id) {
-        if(alreadyAccepted) {
+        if(alreadyAccepted || $("#accepted_progress"+code+activity_id).hasClass("completed")) {
             var url = "<?php echo asset('api/video/call'); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token(); ?>",
                 "tracking_id" : tracking_id,
                 "code" : code,
-                "action_md" : action_md,
+                "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
                 "referring_md" : referring_md,
                 "trigger_by" : "{{ $user->id }}",
                 "form_type" : "normal",

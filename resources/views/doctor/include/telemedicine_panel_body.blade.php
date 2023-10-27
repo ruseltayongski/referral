@@ -105,7 +105,7 @@
             <div class="step-counter">2</div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="text-center stepper-item @if($referred_accepted_track) completed @endif" data-actionmd="" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
             <?php
                 if($referred_cancelled_track)
@@ -234,7 +234,7 @@
                     <div class="step-counter">2</div>
                     <div class="step-name">Seen</div>
                 </div>
-                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
+                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter
                     <?php
                         if($follow_cancelled_track)
