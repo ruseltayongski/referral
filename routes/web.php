@@ -644,3 +644,5 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
 
 Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
+
+Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');

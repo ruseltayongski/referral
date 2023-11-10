@@ -14,4 +14,8 @@ class TelemedicineCtrl extends Controller
     {
         return view('doctor.video-call', ['referral_type'=>$req->form_type]);
     }
+
+    public function appointmentCalendar() {
+        return view('doctor.telemedicine_calendar');
+    }
 }
