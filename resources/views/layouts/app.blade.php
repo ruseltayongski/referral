@@ -185,7 +185,9 @@
                                 'vaccine','bed_admin','reports','monitoring', 'admin/report/tat' ,'admin/report/tat/incoming', 'admin/report/tat/outgoing','admin/report/top/icd',
                                 'admin/report/top/reason_for_referral','bed/'.$user->facility_id,
                                 'admin/report/covid/1','admin/report/covid/2','admin/report/covid/3','admin/report/covid/4',
-                                'report/walkin/1','report/walkin/2','report/walkin/3','report/walkin/4'
+                                'report/walkin/1','report/walkin/2','report/walkin/3','report/walkin/4',
+
+                                'doctor/appointment/calendar'
                                 ]))
                                 ? 'container-fluid'
                                 : 'container'

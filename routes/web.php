@@ -644,15 +644,24 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
 Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
 
+Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
 
 Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
-Route::get('edit-appointment/{id}', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
+//Route::get('edit-appointment/{id}', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
 
-Route::put('update-appointment/{id}', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
+//Route::post('/appointment/update', 'doctor\TelemedicineCtrl@update')->name('update-appointment');
+Route::get('/appointment/update', 'doctor\TelemedicineCtrl@update')->name('update-appointment');
+Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
 
-//Route::put('update-appointment/{id}', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
-//Route::post('/update-appointment', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
-//Route::get('delete-appointment/{id}', 'doctor\TelemedicineCtrl@deleteAppointment')->name('delete-appointment');
+
+
+
+
+
+//Route::get('/appointment/edit/{id}', 'TelemedicineCtrl@edit')->name('get-appointment-edit-form');
+//Route::get('/edit-appointment/{id}', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
+//Route::get('/appointments/{id}/edit', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
+//Route::put('/update-appointment/{id}', 'TelemedicineCtrl@update')->name('update-appointment');
 
 

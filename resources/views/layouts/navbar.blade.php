@@ -22,6 +22,7 @@ $multi_faci = Session::get('multiple_login');
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
+                    <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Appointment Calendar</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
                     <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-users"></i> Discharged Patients</a></li>

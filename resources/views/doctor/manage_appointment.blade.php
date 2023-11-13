@@ -15,16 +15,19 @@
         }
     </style>
 
-
-    <!-- Modal -->
-    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false">
+    <!-- Add Modal -->
+    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" tabindex="-1"  aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document">
-            <form action="{{ route('create-appointment') }}" method="POST">
-                {{ csrf_field() }}
-                <div class="modal-content">
-                    <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="{{ route('create-appointment') }}" method="POST">
+                        {{ csrf_field() }}
                         <fieldset>
-                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment</legend>
+                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
                         </fieldset>
                         <div class="form-group">
                             <label for="appointed_date">Appointed Date:</label>
@@ -64,15 +67,17 @@
                                 </ul>
                             </div>
                         @endif
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" onclick="resetSignatureField()"><i class="fa fa-times"></i> Cancel</button>
-                        <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" onclick="resetSignatureField()"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+
+
 
 
     <div class="box box-primary">
@@ -145,9 +150,11 @@
                             <td> {{ $row->status }} </td>
                             <td> {{ $row->slot }} </td>
                             <td>
-                                <button class="btn btn-primary btn-sm edit-appointment" data-id="{{ $row->id }}">Edit</button>
-                                {{--<a href="{{ route('edit-appointment', ['id' => $row->id]) }}">Edit</a>--}}
-                                <button class="btn btn-danger btn-sm delete-appointment" data-id="{{ $row->id }}">Delete</button>
+                                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $row->id }})">Edit</button>
+                               {{-- <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $row->id }}, '{{ $row->appointed_date }}')">Edit</button>--}}
+
+                                {{--<button class="btn btn-primary btn-sm">Edit</button>--}}
+                                <button class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
                     @endforeach
@@ -183,42 +190,64 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!--=============================================-->
+
+    <!--========================================-->
     <!-- Edit Appointment Modal -->
-    <div class="modal fade" id="editAppointmentModal" role="dialog"  data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" role="dialog" id="editAppointmentModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="editAppointmentModalLabel">Edit Appointment</h4>
-                </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded via AJAX -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Appointment Modal -->
-    <div class="modal fade" id="deleteAppointmentModal" tabindex="-1" role="dialog" aria-labelledby="deleteAppointmentModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="deleteAppointmentModalLabel">Delete Appointment</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
+                    <form id="editAppointmentForm" method="get" action="{{ route('update-appointment') }}">
+                        {{--@csrf--}}
                         {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
-                        <p>Are you sure you want to delete this appointment?</p>
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <fieldset>
+                            <legend><i class="fa fa-edit"></i> Edit Appointment
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
+                        </fieldset>
+                        <div class="form-group">
+                            {{--<input type="hidden" name="appointment_id" id="editAppointmentId" value="">--}}
+                            <label for="edit_appointed_date">Appointed Date:</label>
+                            <input type="date" class="form-control" name="edit_appointed_date" id="edit_appointed_date" required>
+
+                            <label for="edit_appointed_time">Appointed Time:</label>
+                            <input type="time" class="form-control" name="edit_appointed_time" id="edit_appointed_time" required>
+
+                            <label for="edit_created_by">Created By:</label>
+                            <input type="number" class="form-control" name="edit_created_by" id="edit_created_by" required>
+
+                            <label for="edit_facility_id">Facility:</label>
+                            <input type="number" class="form-control" name="edit_facility_id" id="edit_facility_id" required>
+
+                            <label for="edit_department_id">Department:</label>
+                            <input type="number" class="form-control" name="edit_department_id" id="edit_department_id" required>
+
+                            <label for="edit_appointed_by">Appointed By:</label>
+                            <input type="number" class="form-control" name="edit_appointed_by" id="edit_appointed_by" required>
+
+                            <label for="edit_code">Code:</label>
+                            <input type="text" class="form-control" name="edit_code" id="edit_code" required>
+
+                            <label for="edit_status">Status:</label>
+                            <input type="text" class="form-control" name="edit_status" id="edit_status" required>
+
+                            <label for="edit_slot">Slot:</label>
+                            <input type="number" class="form-control" name="edit_slot" id="edit_slot" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm" onclick="updateAppointment()"><i class="fa fa-check"></i> Update</button>
+                        </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!--=============================================-->
-
 @endsection
+
 @section('js')
     <script>
         @if(Session::get('appt_notif'))
@@ -245,24 +274,57 @@
                 $('.appt_body').html(response);
             });
         }
+        //===========================================================
 
-        $(document).ready(function () {
-            // Handle Edit Appointment Modal
-            $('.edit-appointment').click(function () {
-                var appointmentId = $(this).data('id');
-                // Fetch appointment data via AJAX and populate the edit modal
-                $.get('/edit-appointment/' + appointmentId, function (data) {
-                    $('#editAppointmentModal .modal-body').html(data);
-                });
-                $('#editAppointmentModal').modal('show');
+
+        function openEditModal(appointmentId, appointedDate) {
+            $('#editAppointmentId').val(appointmentId);
+            //$('#edit_appointed_date').val(appointedDate);
+
+            // Make an AJAX request to fetch additional data for the appointment
+            var url = "{{ route('get-appointment-data', ':id') }}";
+            url = url.replace(':id', appointmentId);
+
+            $.get(url, function(data) {
+                console.log(data); // Log the data to the console
+                // Update other fields in the modal with the fetched data
+                $('#edit_appointed_date').val(data.appointed_date);
+                $('#edit_appointed_time').val(data.appointed_time);
+                $('#edit_created_by').val(data.created_by);
+                $('#edit_facility_id').val(data.facility_id);
+                $('#edit_department_id').val(data.department_id);
+                $('#edit_appointed_by').val(data.appointed_by);
+                $('#edit_code').val(data.code);
+                $('#edit_status').val(data.status);
+                $('#edit_slot').val(data.slot);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("AJAX Error: " + errorThrown);
+                // Handle the error as needed, e.g., display an error message to the user
             });
 
-            // Handle Delete Appointment Modal
-            $('.delete-appointment').click(function () {
-                var appointmentId = $(this).data('id');
-                $('#deleteAppointmentModal form').attr('action', '/delete-appointment/' + appointmentId);
-                $('#deleteAppointmentModal').modal('show');
+            $('#editAppointmentModal').modal('show');
+        }
+
+        function updateAppointment() {
+            // Perform the update operation using AJAX
+            var appointmentId = $('#editAppointmentId').val();
+            var appointedDate = $('#edit_appointed_date').val();
+
+            // Make an AJAX request to update the appointment
+            var url = "{{ route('update-appointment') }}";
+            var data = {
+                _token: "{{ csrf_token() }}",
+                appointment_id: appointmentId,
+                appointed_date: appointedDate,
+                // Include other fields for updating data
+            };
+
+            $.post(url, data, function(response) {
+                // Handle the response as needed
+                $('#editAppointmentModal').modal('hide');
             });
-        });
+        }
+
+
     </script>
 @endsection

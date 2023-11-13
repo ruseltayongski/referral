@@ -30,6 +30,10 @@ class TelemedicineCtrl extends Controller
         return view('doctor.manage_appointment', $data);
     }
 
+    public function appointmentCalendar() {
+        return view('doctor.telemedicine_calendar');
+    }
+
     public function createAppointment(Request $request)
     {
         //Validate the incoming request data
@@ -52,57 +56,61 @@ class TelemedicineCtrl extends Controller
         return redirect()->back()->with('success', 'Appointment created successfully');
     }
 
-    public function editAppointment($id)
+
+    public function update(Request $request)
     {
-        $appointment = AppointmentSchedule::find($id);
-        if (!$appointment) {
-            // Handle not found case, e.g., show an error message or redirect
-        }
-
-        return view('doctor.edit_appointment', compact('appointment'));
-    }
-
-    public function getEditAppointment($id)
-    {
-        $appointment = AppointmentSchedule::find($id);
-        return view('doctor.edit_appointment_modal', compact('appointment'));
-    }
-
-    /*public function editAppointment($id)
-    {
-        $appointment = AppointmentSchedule::findOrFail($id);
-
-        return view('edit_appointment', compact('appointment'));
-    }*/
-
-    public function updateAppointment(Request $request, $id)
-    {
-        $appointment = AppointmentSchedule::find($id);
-        if (!$appointment) {
-            // Handle not found case, e.g., show an error message or redirect
-        }
-
+        // Validate the request data as needed
         $validatedData = $request->validate([
+            //'id' => 'required|integer', // Adjust validation rules as needed
             'appointed_date' => 'required|date',
             'appointed_time' => 'required',
-            // Include other fields here
+            'created_by' => 'required',
+            'facility_id' => 'required',
+            'department_id' => 'required',
+            'appointed_by' => 'required',
+            'code' => 'required|max:255',
+            'status' => 'required|max:255',
+            'slot' => 'required|integer',
         ]);
 
-        $appointment->update($validatedData);
+        // Retrieve the appointment by ID
+        $appointmentId = $validatedData['id'];
+        $appointment = AppointmentSchedule::find($appointmentId);
 
-        return redirect()->route('manage-appointment')->with('success', 'Appointment updated successfully');
-    }
-
-
-    public function deleteAppointment($id)
-    {
-        $appointment = AppointmentSchedule::find($id);
         if (!$appointment) {
-            // Handle not found case, e.g., show an error message or redirect
+            // Handle the case where the appointment is not found
+            return response()->json(['error' => 'Appointment not found'], 404);
         }
 
-        $appointment->delete();
+        // Update the appointment data with the new values
+        $appointment->appointed_date = $request->input('appointed_date');
+        // Update other fields as needed
 
-        return redirect()->route('manage-appointment')->with('success', 'Appointment deleted successfully');
+        // Save the updated appointment
+        $appointment->save();
+
+        // Return a success response
+        return response()->json(['message' => 'Appointment updated successfully'], 200);
     }
+
+    public function getAppointmentData($id)
+    {
+        // Debugging - Display the $id to see if it's received correctly
+        //dd($id);
+
+        // Retrieve the appointment by ID
+        $appointment = AppointmentSchedule::find($id);
+
+        // Debugging - Display $appointment to check if it's retrieved correctly
+        //dd($appointment);
+
+        if (!$appointment) {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        // Return the appointment data as JSON
+        return response()->json($appointment);
+    }
+
 }
+
