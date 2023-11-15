@@ -1,6 +1,6 @@
 <?php
-    $user = Session::get('auth');
-    $counter = 0;
+$user = Session::get('auth');
+$counter = 0;
 ?>
 @extends('layouts.app')
 
@@ -246,21 +246,21 @@
                                                class="btn btn-primary btn-xs profile_info hide"
                                                onclick="handleRefer()"
                                                style="width:100%;margin-bottom:5px;">
-                                               <i class="fa fa-ambulance"></i>
+                                                <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
                                             @if($user->id == 4959 || $user->id == 6733)
-                                            <a href="#pregnantModal"
-                                               data-patient_id = "{{ $row->id }}"
-                                               data-toggle="modal"
-                                               data-type="pregnant"
-                                               data-telemedicine="1"
-                                               onclick="handleTelemedicine()"
-                                               class="btn btn-success btn-xs profile_info hide"
-                                               style="width:100%;margin-bottom:5px;">
-                                                <i class="fa fa-stethoscope"></i>
-                                                Consultation
-                                            </a><br>
+                                                <a href="#pregnantModal"
+                                                   data-patient_id = "{{ $row->id }}"
+                                                   data-toggle="modal"
+                                                   data-type="pregnant"
+                                                   data-telemedicine="1"
+                                                   onclick="handleTelemedicine()"
+                                                   class="btn btn-success btn-xs profile_info hide"
+                                                   style="width:100%;margin-bottom:5px;">
+                                                    <i class="fa fa-stethoscope"></i>
+                                                    Consultation
+                                                </a><br>
                                             @endif
                                             <a href="#"
                                                id="walkinPregnant{{ $counter }}"
@@ -270,43 +270,43 @@
                                                onclick="promptWalkinPregnant(<?php echo $counter++?>)"
                                                style="width:100%;"
                                                class="btn btn-warning btn-xs profile_info hide">
-                                               <i class="fa fa-stethoscope"></i>
+                                                <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
                                         @else
                                             <a href="#normalFormModal"
-                                                data-patient_id="{{ $row->id }}"
-                                                data-backdrop="static"
-                                                data-toggle="modal"
-                                                data-type="normal"
-                                                style="width:100%;margin-bottom:5px;"
-                                                onclick="handleRefer()"
-                                                class="btn btn-primary btn-xs profile_info">
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               style="width:100%;margin-bottom:5px;"
+                                               onclick="handleRefer()"
+                                               class="btn btn-primary btn-xs profile_info">
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
                                             @if($user->id == 4959 || $user->id == 6733 || $user->id == 4975)
-                                            <a href="#normalFormModal"
-                                                data-patient_id="{{ $row->id }}"
-                                                data-backdrop="static"
-                                                data-toggle="modal"
-                                                data-type="normal"
-                                                onclick="handleTelemedicine()"
-                                                style="width:100%;margin-bottom:5px;"
-                                                class="btn btn-success btn-xs profile_info">
-                                                <i class="fa fa-stethoscope"></i>
-                                                Consultation
-                                            </a><br>
+                                                <a href="#normalFormModal"
+                                                   data-patient_id="{{ $row->id }}"
+                                                   data-backdrop="static"
+                                                   data-toggle="modal"
+                                                   data-type="normal"
+                                                   onclick="handleTelemedicine()"
+                                                   style="width:100%;margin-bottom:5px;"
+                                                   class="btn btn-success btn-xs profile_info">
+                                                    <i class="fa fa-stethoscope"></i>
+                                                    Consultation
+                                                </a><br>
                                             @endif
                                             <a href="#"
-                                                id="walkinNormal{{ $counter }}"
-                                                data-patient_id="{{ $row->id }}"
-                                                data-backdrop="static"
-                                                data-toggle="modal"
-                                                data-type="normal"
-                                                onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
-                                                style="width:100%;"
-                                                class="btn btn-warning btn-xs profile_info">
+                                               id="walkinNormal{{ $counter }}"
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
+                                               style="width:100%;"
+                                               class="btn btn-warning btn-xs profile_info">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
@@ -341,375 +341,375 @@
 @endsection
 
 @section('js')
-@include('script.filterMuncity')
-{{--@include('script.firebase')--}}
-<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
-@include('script.datetime')
-<script>
-    function handleRefer() {
-        $(".telemedicine").val(0);
-        selectFormTitle("Clinical ");
-    }
-
-    function handleTelemedicine() {
-        $(".telemedicine").val(1);
-        selectFormTitle("Clinical ");
-    }
-
-    function setClinicalFormTile(type) {
-        if(type == "pregnant") {
-            selectFormTitle("BEmONC/ CEmONC ");
-        }
-        else {
+    @include('script.filterMuncity')
+    {{--@include('script.firebase')--}}
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
+    @include('script.datetime')
+    <script>
+        function handleRefer() {
+            $(".telemedicine").val(0);
             selectFormTitle("Clinical ");
         }
-    }
 
-    function selectFormTitle(initialTitle) {
-        const telemedicine = parseInt($(".telemedicine").val());
-        if(telemedicine) {
-            $(".clinical-form-title").html(`${initialTitle} Telemedicine Consultation`);
-        } else {
-            $(".clinical-form-title").html(`${initialTitle} Referral Form`);
+        function handleTelemedicine() {
+            $(".telemedicine").val(1);
+            selectFormTitle("Clinical ");
         }
-    }
 
-    function promptWalkinPregnant(counter) {
-        Lobibox.confirm({
-            msg: "Do you want to proceed to walkin?",
-            callback: function ($this, type, ev) {
-                if(type == 'yes') {
-                    $('#walkinPregnant'+counter).attr('onclick', "");
-                    $('#walkinPregnant'+counter).attr('href','#pregnantModalWalkIn');
-                    $('#walkinPregnant'+counter).click();
-                } else {
-                    $('#walkinPregnant'+counter).attr('onClick','promptWalkinPregnant('+counter+')');
-                    $('#walkinPregnant'+counter).attr('href', '#');
-                }
+        function setClinicalFormTile(type) {
+            if(type == "pregnant") {
+                selectFormTitle("BEmONC/ CEmONC ");
             }
-        });
-    }
-
-    $('.cancelWalkin').on('click', function() {
-        var counter = "<?php echo $counter;?>";
-        for(var i = 0; i < counter; i++){
-            $('#walkinPregnant'+i).attr('href', '#');
-            $('#walkinPregnant'+i).attr('onClick','promptWalkinPregnant('+i+')');
-            $('#walkinNormal'+i).attr('href', '#');
-            $('#walkinNormal'+i).attr('onClick','promptWalkinNormal('+i+')');
+            else {
+                selectFormTitle("Clinical ");
+            }
         }
-    });
 
-    function promptWalkinNormal(counter) {
-        selectFormTitle("Clinical ");
-        Lobibox.confirm({
-            msg: "Do you want to proceed to walkin?",
-            callback: function ($this, type, ev) {
-                if(type == 'yes') {
-                    $('#walkinNormal'+counter).attr('onclick', "");
-                    $('#walkinNormal'+counter).attr('href','#normalFormModalWalkIn');
-                    $('#walkinNormal'+counter).click();
-                } else {
-                    $('#walkinNormal'+counter).attr('onClick','promptWalkinNormal('+counter+')');
-                    $('#walkinNormal'+counter).attr('href', '#');
-                }
+        function selectFormTitle(initialTitle) {
+            const telemedicine = parseInt($(".telemedicine").val());
+            if(telemedicine) {
+                $(".clinical-form-title").html(`${initialTitle} Telemedicine Consultation`);
+            } else {
+                $(".clinical-form-title").html(`${initialTitle} Referral Form`);
             }
-        });
-    }
+        }
 
-    function PatientBody(patient_id) {
-        console.log(patient_id);
-        var url = "<?php echo asset('doctor/patient/update'); ?>";
-        var json = {
-            "patient_id" : patient_id,
-            "_token" : "<?php echo csrf_token(); ?>"
-        };
-        $.post(url,json,function(result){
-            $(".patient_body").html(result);
-        });
-    }
-
-    $(".select2").select2({ width: '100%' });
-
-    var referring_facility = "{{ $user->facility_id }}";
-    var referred_facility = '';
-    var referring_facility_name = $(".referring_name").val();
-    var referring_md = "{{ $user->fname }} {{ $user->mname }} {{ $user->lname }}";
-    var name,
-        age,
-        sex,
-        address,
-        form_type,
-        reason,
-        patient_id,
-        civil_status,
-        phic_status,
-        phic_id,
-        department_id,
-        department_name;
-
-    $('.select_facility_walkin').on('change',function() {
-        var id = $(this).val();
-        referred_facility = "{{ $user->facility_id }}";
-        var url = "{{ url('location/facility/') }}";
-        referring_facility_name = $(this).find(':selected').data('name');
-
-        $.ajax({
-            url: url+'/'+id,
-            type: 'GET',
-            success: function(data){
-                console.log(data);
-                $('.facility_address').html(data.address);
-            },
-            error: function(){
-                $('#serverModal').modal();
-            }
-        });
-    });
-
-    $('.select_department').on('change',function() {
-        var id = $(this).val();
-        var list = "{{ url('list/doctor') }}";
-        if(id){
-            if(referred_facility==0){
-                referred_facility = "{{ $user->facility_id }}";
-            }
-            $.ajax({
-                url: list+'/'+referred_facility+'/'+id,
-                type: 'GET',
-                success: function(data){
-                    $('.referred_md').empty()
-                        .append($('<option>', {
-                            value: '',
-                            text : 'Any...'
-                        }));
-                    jQuery.each(data, function(i,val){
-                        $('.referred_md').append($('<option>', {
-                            value: val.id,
-                            text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
-                        }));
-
-                    });
-                },
-                error:function(){
-                    $('#serverModal').modal();
+        function promptWalkinPregnant(counter) {
+            Lobibox.confirm({
+                msg: "Do you want to proceed to walkin?",
+                callback: function ($this, type, ev) {
+                    if(type == 'yes') {
+                        $('#walkinPregnant'+counter).attr('onclick', "");
+                        $('#walkinPregnant'+counter).attr('href','#pregnantModalWalkIn');
+                        $('#walkinPregnant'+counter).click();
+                    } else {
+                        $('#walkinPregnant'+counter).attr('onClick','promptWalkinPregnant('+counter+')');
+                        $('#walkinPregnant'+counter).attr('href', '#');
+                    }
                 }
             });
         }
-    });
 
-    $('.profile_info').removeClass('hide');
-    $('.profile_info').on('click',function(){
-        patient_id = $(this).data('patient_id');
-        $.ajax({
-            url: "{{ url('doctor/patient/info/') }}/"+patient_id,
-            type: "GET",
-            success: function(data){
-                patient_id = data.id;
-                name = data.patient_name;
-                sex = data.sex;
-                age = data.age;
-                civil_status = data.civil_status;
-                phic_status = data.phic_status;
-                phic_id = data.phic_id;
-                address = data.address;
-
-                $('.patient_name').html(name);
-                $('.patient_address').html(address);
-                $('input[name="phic_status"][value="'+phic_status+'"]').attr('checked',true);
-                $('.phic_id').val(phic_id);
-                $('.patient_sex').val(sex);
-                if(data.ageType === 'y') {
-                    if(age === 1)
-                        $('.patient_age').html(age + " year old");
-                    else
-                        $('.patient_age').html(age + " years old");
-                } else if(data.ageType === 'm') {
-                    var age_str = "";
-                    if(age.month === 1)
-                        age_str = age.month + " month, ";
-                    else
-                        age_str = age.month + " months, ";
-
-                    if(age.days === 1)
-                        age_str += age.days + " day old";
-                    else
-                        age_str += age.days + " days old";
-
-                    $('.patient_age').html(age_str);
-                }
-                $('.civil_status').val(civil_status);
-                $('.patient_id').val(patient_id);
-            },
-            error: function(){
-                $('#serverModal').modal();
+        $('.cancelWalkin').on('click', function() {
+            var counter = "<?php echo $counter;?>";
+            for(var i = 0; i < counter; i++){
+                $('#walkinPregnant'+i).attr('href', '#');
+                $('#walkinPregnant'+i).attr('onClick','promptWalkinPregnant('+i+')');
+                $('#walkinNormal'+i).attr('href', '#');
+                $('#walkinNormal'+i).attr('onClick','promptWalkinNormal('+i+')');
             }
         });
-    });
 
-    function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
-        // Check if Firebase app with name '[DEFAULT]' already exists
-        if (!firebase.apps.length) {
-            // Your web app's Firebase configuration
-            var firebaseConfig = {
-                apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
-                authDomain: "notifier-5e4e8.firebaseapp.com",
-                databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
-                projectId: "notifier-5e4e8",
-                storageBucket: "notifier-5e4e8.appspot.com",
-                messagingSenderId: "359294836752",
-                appId: "1:359294836752:web:87c854779366d0f11d2a95",
-                measurementId: "G-HEYDWWHLKV"
-            };
-            // Initialize Firebase
-            firebase.initializeApp(firebaseConfig);
+        function promptWalkinNormal(counter) {
+            selectFormTitle("Clinical ");
+            Lobibox.confirm({
+                msg: "Do you want to proceed to walkin?",
+                callback: function ($this, type, ev) {
+                    if(type == 'yes') {
+                        $('#walkinNormal'+counter).attr('onclick', "");
+                        $('#walkinNormal'+counter).attr('href','#normalFormModalWalkIn');
+                        $('#walkinNormal'+counter).click();
+                    } else {
+                        $('#walkinNormal'+counter).attr('onClick','promptWalkinNormal('+counter+')');
+                        $('#walkinNormal'+counter).attr('href', '#');
+                    }
+                }
+            });
         }
 
-        //initialize firebase
-        var dbRef = firebase.database();
-        //create table
-        var requestRef = dbRef.ref('23');
+        function PatientBody(patient_id) {
+            console.log(patient_id);
+            var url = "<?php echo asset('doctor/patient/update'); ?>";
+            var json = {
+                "patient_id" : patient_id,
+                "_token" : "<?php echo csrf_token(); ?>"
+            };
+            $.post(url,json,function(result){
+                $(".patient_body").html(result);
+            });
+        }
 
-        const newRef = requestRef.push({
-            age: age,
-            chiefComplaint: chiefComplaint,
-            department: department,
-            diagnosis: diagnosis,
-            patient: patient,
-            sex: sex,
-            referring_hospital : referring_hospital,
-            date_referred : moment(date_referred).format("YYYY-MM-DD HH:mm:ss"),
-            patient_code : patient_code
+        $(".select2").select2({ width: '100%' });
+
+        var referring_facility = "{{ $user->facility_id }}";
+        var referred_facility = '';
+        var referring_facility_name = $(".referring_name").val();
+        var referring_md = "{{ $user->fname }} {{ $user->mname }} {{ $user->lname }}";
+        var name,
+            age,
+            sex,
+            address,
+            form_type,
+            reason,
+            patient_id,
+            civil_status,
+            phic_status,
+            phic_id,
+            department_id,
+            department_name;
+
+        $('.select_facility_walkin').on('change',function() {
+            var id = $(this).val();
+            referred_facility = "{{ $user->facility_id }}";
+            var url = "{{ url('location/facility/') }}";
+            referring_facility_name = $(this).find(':selected').data('name');
+
+            $.ajax({
+                url: url+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    console.log(data);
+                    $('.facility_address').html(data.address);
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
         });
 
-        const firebase_key = newRef.key;
-        console.log(firebase_key)
+        $('.select_department').on('change',function() {
+            var id = $(this).val();
+            var list = "{{ url('list/doctor') }}";
+            if(id){
+                if(referred_facility==0){
+                    referred_facility = "{{ $user->facility_id }}";
+                }
+                $.ajax({
+                    url: list+'/'+referred_facility+'/'+id,
+                    type: 'GET',
+                    success: function(data){
+                        $('.referred_md').empty()
+                            .append($('<option>', {
+                                value: '',
+                                text : 'Any...'
+                            }));
+                        jQuery.each(data, function(i,val){
+                            $('.referred_md').append($('<option>', {
+                                value: val.id,
+                                text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
+                            }));
 
-
-        var form = new FormData();
-        form.append("age", age);
-        form.append("chiefComplaint", chiefComplaint);
-        form.append("department", department);
-        form.append("diagnosis", diagnosis);
-        form.append("patient", patient);
-        form.append("sex", sex);
-        form.append("referring_hospital", referring_hospital);
-        form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
-        form.append("patient_code", patient_code);
-        form.append("firebase_key", firebase_key);
-
-        var settings = {
-            "url": "https://dohcsmc.site/notifier/api/insert_referral_5pm",
-            "method": "POST",
-            "timeout": 0,
-            "processData": false,
-            "mimeType": "multipart/form-data",
-            "contentType": false,
-            "data": form
-        };
-
-        $.ajax(settings).done(function (response) {
-            console.log(response);
+                        });
+                    },
+                    error:function(){
+                        $('#serverModal').modal();
+                    }
+                });
+            }
         });
-    }
 
-    $('.normal_form').on('submit',function(e){
-        e.preventDefault();
-        $('.loading').show();
-        $('.btn-submit').attr('disabled',true);
-        form_type = '#normalFormModal';
-        department_id = $('.select_department_normal').val();
-        department_name = $('.select_department_normal option:selected').html();
-        $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient/refer/normal') }}",
-            type: 'POST',
-            success: function(data) {
-                console.log(data);
-                console.log("successfully referred!");
-                //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
-                if(data.referred_to == 790 || data.referred_to == 23) {
-                    var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
-                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+        $('.profile_info').removeClass('hide');
+        $('.profile_info').on('click',function(){
+            patient_id = $(this).data('patient_id');
+            $.ajax({
+                url: "{{ url('doctor/patient/info/') }}/"+patient_id,
+                type: "GET",
+                success: function(data){
+                    patient_id = data.id;
+                    name = data.patient_name;
+                    sex = data.sex;
+                    age = data.age;
+                    civil_status = data.civil_status;
+                    phic_status = data.phic_status;
+                    phic_id = data.phic_id;
+                    address = data.address;
+
+                    $('.patient_name').html(name);
+                    $('.patient_address').html(address);
+                    $('input[name="phic_status"][value="'+phic_status+'"]').attr('checked',true);
+                    $('.phic_id').val(phic_id);
+                    $('.patient_sex').val(sex);
+                    if(data.ageType === 'y') {
+                        if(age === 1)
+                            $('.patient_age').html(age + " year old");
+                        else
+                            $('.patient_age').html(age + " years old");
+                    } else if(data.ageType === 'm') {
+                        var age_str = "";
+                        if(age.month === 1)
+                            age_str = age.month + " month, ";
+                        else
+                            age_str = age.month + " months, ";
+
+                        if(age.days === 1)
+                            age_str += age.days + " day old";
+                        else
+                            age_str += age.days + " days old";
+
+                        $('.patient_age').html(age_str);
+                    }
+                    $('.civil_status').val(civil_status);
+                    $('.patient_id').val(patient_id);
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
+        });
+
+        function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
+            // Check if Firebase app with name '[DEFAULT]' already exists
+            if (!firebase.apps.length) {
+                // Your web app's Firebase configuration
+                var firebaseConfig = {
+                    apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
+                    authDomain: "notifier-5e4e8.firebaseapp.com",
+                    databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
+                    projectId: "notifier-5e4e8",
+                    storageBucket: "notifier-5e4e8.appspot.com",
+                    messagingSenderId: "359294836752",
+                    appId: "1:359294836752:web:87c854779366d0f11d2a95",
+                    measurementId: "G-HEYDWWHLKV"
+                };
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+            }
+
+            //initialize firebase
+            var dbRef = firebase.database();
+            //create table
+            var requestRef = dbRef.ref('23');
+
+            const newRef = requestRef.push({
+                age: age,
+                chiefComplaint: chiefComplaint,
+                department: department,
+                diagnosis: diagnosis,
+                patient: patient,
+                sex: sex,
+                referring_hospital : referring_hospital,
+                date_referred : moment(date_referred).format("YYYY-MM-DD HH:mm:ss"),
+                patient_code : patient_code
+            });
+
+            const firebase_key = newRef.key;
+            console.log(firebase_key)
+
+
+            var form = new FormData();
+            form.append("age", age);
+            form.append("chiefComplaint", chiefComplaint);
+            form.append("department", department);
+            form.append("diagnosis", diagnosis);
+            form.append("patient", patient);
+            form.append("sex", sex);
+            form.append("referring_hospital", referring_hospital);
+            form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
+            form.append("patient_code", patient_code);
+            form.append("firebase_key", firebase_key);
+
+            var settings = {
+                "url": "https://dohcsmc.site/notifier/api/insert_referral_5pm",
+                "method": "POST",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+                "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+
+        $('.normal_form').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            $('.btn-submit').attr('disabled',true);
+            form_type = '#normalFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/normal') }}",
+                type: 'POST',
+                success: function(data) {
+                    console.log(data);
+                    console.log("successfully referred!");
+                    //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+                    if(data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#normalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } //push notification for CCMD
+                    else {
+                        $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    }
+                }
+                /*,
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
                     $('#normalFormModal').modal('hide');
                     $('.btn-submit').attr('disabled',false);
-                    Lobibox.alert("success",
-                    {
-                        msg: "Successfully referred the patient!"
+                    Lobibox.notify('error', {
+                        title: "Error",
+                        msg: "Status: " + textStatus+" Error: " + errorThrown
                     });
-                } //push notification for CCMD
-                else {
-                    $(location).attr('href', "{{ asset('doctor/referred') }}");
-                }
-            }
-            /*,
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest);
-                console.log(textStatus);
-                console.log(errorThrown);
-                $('.loading').hide();
-                $('#pregnantModal').modal('hide');
-                $('#normalFormModal').modal('hide');
-                $('.btn-submit').attr('disabled',false);
-                Lobibox.notify('error', {
-                    title: "Error",
-                    msg: "Status: " + textStatus+" Error: " + errorThrown
-                });
-            }*/
+                }*/
+            });
         });
-    });
 
-    $('.normal_form_walkin').on('submit',function(e){
-        e.preventDefault();
-        $('.loading').show();
-        reason = $('.reason_referral').val();
-        form_type = '#normalFormModal';
-        department_id = $('.select_department_normal').val();
-        department_name = $('.select_department_normal option:selected').html();
-        $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient/refer/walkin/normal') }}",
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-                setTimeout(function(){
-                    window.location.reload(false);
-                },500);
-            },
-            error: function(){
-                $('#serverModal').modal();
-            }
-        });
-    });
-
-    $('.pregnant_form').on('submit',function(e){
-        e.preventDefault();
-        $('.loading').show();
-        form_type = '#pregnantFormModal';
-        sex = 'Female';
-        reason = $('.woman_information_given').val();
-        department_id = $('.select_department_pregnant').val();
-        department_name = $('.select_department_pregnant :selected').text();
-        $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient/refer/pregnant') }}",
-            type: 'POST',
-            success: function(data){
-                //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
-                if(data.referred_to == 790 || data.referred_to == 23) {
-                    var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
-                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
-                    $('.loading').hide();
-                    $('#pregnantModal').modal('hide');
-                    $('#pregnantFormModal').modal('hide');
-                    $('.btn-submit').attr('disabled',false);
-                    Lobibox.alert("success",
-                    {
-                        msg: "Successfully referred the patient!"
-                    });
-                } else {
-                    $(location).attr('href', "{{ asset('doctor/referred') }}");
+        $('.normal_form_walkin').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            reason = $('.reason_referral').val();
+            form_type = '#normalFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/walkin/normal') }}",
+                type: 'POST',
+                success: function(data){
+                    console.log(data);
+                    setTimeout(function(){
+                        window.location.reload(false);
+                    },500);
+                },
+                error: function(){
+                    $('#serverModal').modal();
                 }
-            }/*,
+            });
+        });
+
+        $('.pregnant_form').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            form_type = '#pregnantFormModal';
+            sex = 'Female';
+            reason = $('.woman_information_given').val();
+            department_id = $('.select_department_pregnant').val();
+            department_name = $('.select_department_pregnant :selected').text();
+            $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/pregnant') }}",
+                type: 'POST',
+                success: function(data){
+                    //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+                    if(data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#pregnantFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } else {
+                        $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    }
+                }/*,
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 $('.loading').hide();
                 $('#pregnantModal').modal('hide');
@@ -720,119 +720,118 @@
                     msg: "Status: " + textStatus+" Error: " + errorThrown
                 });
             }*/
-        });
-
-    });
-
-    $('.pregnant_form_walkin').on('submit',function(e){
-        e.preventDefault();
-        $('.loading').show();
-        form_type = '#pregnantFormModal';
-        sex = 'Female';
-        reason = $('.woman_information_given').val();
-        department_id = $('.select_department_pregnant').val();
-        department_name = $('.select_department_pregnant :selected').text();
-        $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient/refer/walkin/pregnant') }}",
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-                setTimeout(function(){
-                    window.location.reload(false);
-                },500);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                console.log(XMLHttpRequest);
-                console.log(textStatus);
-                console.log(errorThrown);
-                console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
-                $('#serverModal').modal();
-            }
-        });
-
-    });
-
-    function sendNormalData(data)
-    {
-        console.log("ni sud!");
-        if(data.id!=0){
-            var form_data = {
-                referring_name: referring_facility_name,
-                patient_code: data.patient_code,
-                patient_name: name,
-                age: age,
-                sex: sex,
-                date: data.referred_date,
-                form_type: form_type,
-                tracking_id: data.id,
-                referring_md: referring_md,
-                referred_from: referring_facility,
-                department_id: department_id,
-                department_name: department_name
-            };
-
-            var dbRef = firebase.database();
-            var connRef = dbRef.ref('Referral');
-            connRef.child(referred_facility).push(form_data);
-
-            var data = {
-                "to": "/topics/ReferralSystem"+referred_facility,
-                "data": {
-                    "subject": "New Referral",
-                    "date": data.referred_date,
-                    "body": name+" was referred to your facility from "+referring_facility_name+"!"
-                }
-            };
-
-            connRef.on('child_added',function(data){
-                setTimeout(function(){
-                    connRef.child(data.key).remove();
-                    window.location.reload(false);
-                },500);
             });
 
-            $.ajax({
-                url: 'https://fcm.googleapis.com/fcm/send',
-                type: 'post',
-                data: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
-                },
-                dataType: 'json',
-                success: function (data) {
+        });
+
+        $('.pregnant_form_walkin').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            form_type = '#pregnantFormModal';
+            sex = 'Female';
+            reason = $('.woman_information_given').val();
+            department_id = $('.select_department_pregnant').val();
+            department_name = $('.select_department_pregnant :selected').text();
+            $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/walkin/pregnant') }}",
+                type: 'POST',
+                success: function(data){
                     console.log(data);
-                    setTimeout(function () {
-                        console.log("Force refresh!");
+                    setTimeout(function(){
                         window.location.reload(false);
-                    },15000);
+                    },500);
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
                     console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+                    $('#serverModal').modal();
                 }
             });
 
-        } else {
-            console.log("error else");
-            setTimeout(function(){
-                window.location.reload(false);
-            },500);
-        }
-        console.log("ni lahus sa last!");
-    }
+        });
 
-    @if(Session::get('patient_update_save'))
+        function sendNormalData(data)
+        {
+            console.log("ni sud!");
+            if(data.id!=0){
+                var form_data = {
+                    referring_name: referring_facility_name,
+                    patient_code: data.patient_code,
+                    patient_name: name,
+                    age: age,
+                    sex: sex,
+                    date: data.referred_date,
+                    form_type: form_type,
+                    tracking_id: data.id,
+                    referring_md: referring_md,
+                    referred_from: referring_facility,
+                    department_id: department_id,
+                    department_name: department_name
+                };
+
+                var dbRef = firebase.database();
+                var connRef = dbRef.ref('Referral');
+                connRef.child(referred_facility).push(form_data);
+
+                var data = {
+                    "to": "/topics/ReferralSystem"+referred_facility,
+                    "data": {
+                        "subject": "New Referral",
+                        "date": data.referred_date,
+                        "body": name+" was referred to your facility from "+referring_facility_name+"!"
+                    }
+                };
+
+                connRef.on('child_added',function(data){
+                    setTimeout(function(){
+                        connRef.child(data.key).remove();
+                        window.location.reload(false);
+                    },500);
+                });
+
+                $.ajax({
+                    url: 'https://fcm.googleapis.com/fcm/send',
+                    type: 'post',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'key=AAAAJjRh3xQ:APA91bFJ3YMPNZZkuGMZq8MU8IKCMwF2PpuwmQHnUi84y9bKiozphvLFiWXa5I8T-lP4aHVup0Ch83PIxx8XwdkUZnyY-LutEUGvzk2mu_YWPar8PmPXYlftZnsJCazvpma3y5BI7QHP'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        setTimeout(function () {
+                            console.log("Force refresh!");
+                            window.location.reload(false);
+                        },15000);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+                    }
+                });
+
+            } else {
+                console.log("error else");
+                setTimeout(function(){
+                    window.location.reload(false);
+                },500);
+            }
+            console.log("ni lahus sa last!");
+        }
+
+        @if(Session::get('patient_update_save'))
         Lobibox.notify('success', {
             title: "",
             msg: "<?php echo Session::get("patient_message"); ?>",
             size: 'mini',
             rounded: true
         });
-    <?php
+        <?php
         Session::put("patient_update_save",false);
         Session::put("patient_message",false)
-    ?>
-    @endif
-</script>
+        ?>
+        @endif
+    </script>
 @endsection
-
