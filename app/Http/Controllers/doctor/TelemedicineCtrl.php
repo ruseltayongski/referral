@@ -18,15 +18,14 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
-        $appointment_schedule = AppointmentSchedule::paginate(15);
+        $appointment_schedule = AppointmentSchedule::orderBy('id', 'desc')->paginate(15);
 
         $data = [
             'appointment_schedule' => $appointment_schedule,
-            'keyword' => $req->input('appt_keyword', ''), // Assuming you're using a keyword input
+            'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
         ];
-
         return view('doctor.manage_appointment', $data);
     }
 
@@ -36,7 +35,6 @@ class TelemedicineCtrl extends Controller
 
     public function createAppointment(Request $request)
     {
-        //Validate the incoming request data
         $validateData = $request->validate([
            'appointed_date' => 'required|date',
            'appointed_time' => 'required',
@@ -48,20 +46,16 @@ class TelemedicineCtrl extends Controller
            'status' => 'required|max:255',
            'slot' => 'required|integer',
         ]);
-        //Create a new AppointmentSchedule instance
         $appointment = new AppointmentSchedule($validateData);
-        //Save the appointment to the database
         $appointment->save();
-        //Redirect back or perform any other action
+
         return redirect()->back()->with('success', 'Appointment created successfully');
     }
 
-
-    public function update(Request $request)
+    public function updateAppointment(Request $request)
     {
-        // Validate the request data as needed
         $validatedData = $request->validate([
-            //'id' => 'required|integer', // Adjust validation rules as needed
+            'id' => 'required|integer', // Adjust validation rules as needed
             'appointed_date' => 'required|date',
             'appointed_time' => 'required',
             'created_by' => 'required',
@@ -73,7 +67,6 @@ class TelemedicineCtrl extends Controller
             'slot' => 'required|integer',
         ]);
 
-        // Retrieve the appointment by ID
         $appointmentId = $validatedData['id'];
         $appointment = AppointmentSchedule::find($appointmentId);
 
@@ -82,35 +75,44 @@ class TelemedicineCtrl extends Controller
             return response()->json(['error' => 'Appointment not found'], 404);
         }
 
-        // Update the appointment data with the new values
-        $appointment->appointed_date = $request->input('appointed_date');
-        // Update other fields as needed
+        $appointment->fill($validatedData); // Update appointment attributes
 
-        // Save the updated appointment
-        $appointment->save();
-
-        // Return a success response
-        return response()->json(['message' => 'Appointment updated successfully'], 200);
+        if ($appointment->save()) {
+            return response()->json(['message' => 'Appointment updated successfully'], 200);
+        } else {
+            return response()->json(['error' => 'Failed to update appointment'], 500);
+        }
     }
 
     public function getAppointmentData($id)
     {
         // Debugging - Display the $id to see if it's received correctly
         //dd($id);
-
-        // Retrieve the appointment by ID
         $appointment = AppointmentSchedule::find($id);
 
         // Debugging - Display $appointment to check if it's retrieved correctly
         //dd($appointment);
-
         if (!$appointment) {
             return response()->json(['error' => 'Appointment not found'], 404);
         }
-
-        // Return the appointment data as JSON
         return response()->json($appointment);
     }
+
+    public function deleteAppointment(Request $request)
+    {
+        $id = $request->input('id');
+        $appointment = AppointmentSchedule::find($id);
+
+        if($appointment->delete()){
+            return response()->json(['success' => 'Appointment deleted successfully']);
+        } else {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+    }
+
+
+
+
 
 }
 

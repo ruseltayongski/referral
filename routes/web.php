@@ -648,20 +648,7 @@ Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCa
 
 Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
-//Route::get('edit-appointment/{id}', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
 
-//Route::post('/appointment/update', 'doctor\TelemedicineCtrl@update')->name('update-appointment');
-Route::get('/appointment/update', 'doctor\TelemedicineCtrl@update')->name('update-appointment');
 Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
-
-
-
-
-
-
-//Route::get('/appointment/edit/{id}', 'TelemedicineCtrl@edit')->name('get-appointment-edit-form');
-//Route::get('/edit-appointment/{id}', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
-//Route::get('/appointments/{id}/edit', 'doctor\TelemedicineCtrl@editAppointment')->name('edit-appointment');
-//Route::put('/update-appointment/{id}', 'TelemedicineCtrl@update')->name('update-appointment');
-
-
+Route::post('/appointment/update', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
+Route::post('/appointment/delete', 'doctor\TelemedicineCtrl@deleteAppointment')->name('delete-appointment');
