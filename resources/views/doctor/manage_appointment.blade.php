@@ -32,27 +32,23 @@
                         <div class="form-group">
                             <label for="appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="appointed_date" required>
-
                             <label for="appointed_time">Appointed Time:</label>
                             <input type="time" class="form-control" name="appointed_time" required>
 
-                            <label for="created_by">Created By:</label>
-                            <input type="number" class="form-control" name="created_by" required>
+                           {{-- <label for="created_by">Created By:</label>
+                            <input type="number" class="form-control" name="created_by" required>--}}
 
                             <label for="facility_id">Facility:</label>
                             <input type="number" class="form-control" name="facility_id" required>
-
                             <label for="department_id">Department:</label>
                             <input type="number" class="form-control" name="department_id" required>
 
-                            <label for="appointed_by">Appointed By:</label>
+                            {{--<label for="appointed_by">Appointed By:</label>
                             <input type="number" class="form-control" name="appointed_by" required>
-
                             <label for="code">Code:</label>
                             <input type="text" class="form-control" name="code" required>
-
                             <label for="status">Status:</label>
-                            <input type="text" class="form-control" name="status" required>
+                            <input type="text" class="form-control" name="status" required>--}}
 
                             <label for="slot">Slot:</label>
                             <input type="number" class="form-control" name="slot" required>
@@ -205,27 +201,23 @@
                             <input type="hidden" name="appointment_id" id="editAppointmentId" value="" class="form-control">
                             <label for="edit_appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="edit_appointed_date" id="edit_appointed_date" required>
-
                             <label for="edit_appointed_time">Appointed Time:</label>
                             <input type="time" class="form-control" name="edit_appointed_time" id="edit_appointed_time" required>
 
-                            <label for="edit_created_by">Created By:</label>
-                            <input type="number" class="form-control" name="edit_created_by" id="edit_created_by" required>
+                           {{-- <label for="edit_created_by">Created By:</label>
+                            <input type="number" class="form-control" name="edit_created_by" id="edit_created_by" required>--}}
 
                             <label for="edit_facility_id">Facility:</label>
                             <input type="number" class="form-control" name="edit_facility_id" id="edit_facility_id" required>
-
                             <label for="edit_department_id">Department:</label>
                             <input type="number" class="form-control" name="edit_department_id" id="edit_department_id" required>
 
-                            <label for="edit_appointed_by">Appointed By:</label>
+                           {{-- <label for="edit_appointed_by">Appointed By:</label>
                             <input type="number" class="form-control" name="edit_appointed_by" id="edit_appointed_by" required>
-
                             <label for="edit_code">Code:</label>
                             <input type="text" class="form-control" name="edit_code" id="edit_code" required>
-
                             <label for="edit_status">Status:</label>
-                            <input type="text" class="form-control" name="edit_status" id="edit_status" required>
+                            <input type="text" class="form-control" name="edit_status" id="edit_status" required>--}}
 
                             <label for="edit_slot">Slot:</label>
                             <input type="number" class="form-control" name="edit_slot" id="edit_slot" required>
@@ -251,7 +243,7 @@
                             <h5><strong><p>Are you sure you want to delete this appointment?</p></strong></h5>
                         </fieldset>
                         <div class="form-group">
-                            <input type="number" name="appointment_id" id="deleteAppointmentId" value="" class="form-control" readonly>
+                            <input type="hidden" name="appointment_id" id="deleteAppointmentId" value="" class="form-control" readonly>
                             <label for="del_appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="del_appointed_date" id="del_appointed_date" readonly>
 
