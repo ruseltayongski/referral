@@ -16,10 +16,21 @@
     </style>
 
     <!-- Add Modal -->
-    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" tabindex="-1"  aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('create-appointment') }}" method="POST">
                         {{ csrf_field() }}
                         <fieldset>
@@ -38,10 +49,20 @@
                            {{-- <label for="created_by">Created By:</label>
                             <input type="number" class="form-control" name="created_by" required>--}}
 
+
                             <label for="facility_id">Facility:</label>
-                            <input type="number" class="form-control" name="facility_id" required>
+                            <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))">
+                                <option selected>Select Facility</option>
+                                @foreach($facility as $Facility)
+                                    <option value="{{ $Facility->id }}">{{ $Facility->name }}</option>
+                                @endforeach
+                            </select>
+
                             <label for="department_id">Department:</label>
-                            <input type="number" class="form-control" name="department_id" required>
+                            <select class="form-control select2" name="department_id" id="department_id">
+                                <option selected>Select Department</option>
+                                <option value=""></option>
+                            </select>
 
                             {{--<label for="appointed_by">Appointed By:</label>
                             <input type="number" class="form-control" name="appointed_by" required>
@@ -53,18 +74,8 @@
                             <label for="slot">Slot:</label>
                             <input type="number" class="form-control" name="slot" required>
                         </div>
-                       {{-- <!-- Display validation errors -->
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif--}}
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" onclick="resetSignatureField()"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
                             <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
@@ -138,9 +149,9 @@
                            {{-- <td>{{ $row->id }}</td>--}}
                             <td> {{ $row->appointed_date }} </td>
                             <td> {{ $row->appointed_time }} </td>
-                            <td> {{ $row->created_by }} </td>
-                            <td> {{ $row->facility_id }} </td>
-                            <td> {{ $row->department_id }} </td>
+                            <td> {{ $row->createdBy->username }} </td>
+                            <td> {{ $row->facility->name }} </td>
+                            <td> {{ $row->department->description }} </td>
                             <td> {{ $row->appointed_by }} </td>
                             <td> {{ $row->code }} </td>
                             <td> {{ $row->status }} </td>
@@ -184,7 +195,7 @@
     </div><!-- /.modal -->
 
     <!-- Edit Appointment Modal -->
-    <div class="modal fade" role="dialog" id="editAppointmentModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
+    <div class="modal fade" role="dialog" id="editAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -208,9 +219,10 @@
                             <input type="number" class="form-control" name="edit_created_by" id="edit_created_by" required>--}}
 
                             <label for="edit_facility_id">Facility:</label>
-                            <input type="number" class="form-control" name="edit_facility_id" id="edit_facility_id" required>
+                            <input type="text" class="form-control" name="edit_facility_id" id="edit_facility_id" required>
+                            
                             <label for="edit_department_id">Department:</label>
-                            <input type="number" class="form-control" name="edit_department_id" id="edit_department_id" required>
+                            <input type="text" class="form-control" name="edit_department_id" id="edit_department_id" required>
 
                            {{-- <label for="edit_appointed_by">Appointed By:</label>
                             <input type="number" class="form-control" name="edit_appointed_by" id="edit_appointed_by" required>
@@ -278,6 +290,33 @@
 
 @section('js')
     <script>
+
+        function onchangeDepartment(data) {
+            if(data.val()) {
+                $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
+                    //console.log('Department Data:', result);
+                    $('#department_id').html('');
+                    $('#department_id').append($('<option>', {
+                        value: "",
+                        text: "Select Department"
+                    }));
+                    // Use an object to store unique department IDs
+                    var uniqueDepartments = {};
+                    $.each(result, function(index, userData){
+                        if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
+                            $('#department_id').append($('<option>', {
+                                value: userData.department.id,
+                                text: userData.department.description,
+                            }));
+                            // Mark department ID as visited to avoid duplicates
+                            uniqueDepartments[userData.department.id] = true;
+                        }
+                    });
+                });
+            }
+        }
+
+        //--------------------------------------------------------------
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",
@@ -311,7 +350,7 @@
             url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                console.log(data);
+                //console.log(data);
 
                 $('#edit_appointed_date').val(data.appointed_date);
                 $('#edit_appointed_time').val(data.appointed_time);
@@ -379,8 +418,7 @@
             url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                console.log(data);
-
+                //console.log(data);
                 $('#del_appointed_date').val(data.appointed_date);
                 $('#del_appointed_time').val(data.appointed_time);
                 $('#del_created_by').val(data.created_by);
@@ -406,7 +444,7 @@
                     'id': appointmentId
                 },
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $('#deleteConfirmationModal').modal('hide');
 
                     // Add auto-refresh after a successful deletion

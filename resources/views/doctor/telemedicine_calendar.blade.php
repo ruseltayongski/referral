@@ -55,11 +55,11 @@
             color: white;
         }
         .widget-user-header .widget-user-desc {
-            max-width: 75%;
-            font-size: 13px;
+            max-width: 65%;
+            font-size: 14px;
         }
         .widget-user-header .widget-user-username {
-            font-size: 20px;
+            font-size: 21px;
         }
         .widget-user .widget-user-image {
             position: absolute;
@@ -93,19 +93,21 @@
             font-weight: bold;
             z-index: 2;
         }
-        /*===============================================================*/
 
         .widget-user-image {
             overflow: hidden;
         }
-
         .widget-user-image img {
             transition: transform .3s ease-in-out;
         }
-
         .scroll-item:hover .widget-user-image img {
-            transform: scale(.8); /* You can adjust the scale factor as needed */
+            /*transform: scale(.9);*/
+            width: 100px;
         }
+        /*===============================================================*/
+
+
+
 
 
 
