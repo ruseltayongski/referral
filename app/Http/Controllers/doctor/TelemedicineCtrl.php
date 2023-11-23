@@ -21,11 +21,8 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
-        // Get the current page from the request, default to 1 if not provided
         $page = $req->input('page', 1);
-
-        // Define the number of items per page
-        $perPage = 10; // You can adjust this as needed
+        $perPage = 10;
 
         $appointment_schedule = AppointmentSchedule::
             with([
@@ -54,14 +51,14 @@ class TelemedicineCtrl extends Controller
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => Facility::all(),
+            'facilityList' => Facility::all(),
+            'departmentList' => Department::all(),
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
         ];
         return view('doctor.manage_appointment', $data);
     }
-
-    /*--------------------------------------------------*/
 
     function departmentGet(Request $request){
         $users = User::with(['facility', 'department'])
@@ -70,7 +67,6 @@ class TelemedicineCtrl extends Controller
 
         return $users;
     }
-    /*--------------------------------------------------*/
 
     public function appointmentCalendar() {
         return view('doctor.telemedicine_calendar');
@@ -156,5 +152,17 @@ class TelemedicineCtrl extends Controller
             return response()->json(['error' => 'Appointment not found'], 404);
         }
     }
+
+    public function getUserData($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json($user);
+    }
+
 }
 
