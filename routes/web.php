@@ -642,7 +642,13 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 
 // duplicate referrals
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
-
 Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
 
 Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
+
+Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
+Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
+
+Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
+Route::post('/appointment/update', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
+Route::post('/appointment/delete', 'doctor\TelemedicineCtrl@deleteAppointment')->name('delete-appointment');
