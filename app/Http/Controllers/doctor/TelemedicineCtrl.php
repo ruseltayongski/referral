@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\doctor;
 
-
 use App\AppointmentSchedule;
 use App\Department;
 use App\Facility;
@@ -69,16 +68,14 @@ class TelemedicineCtrl extends Controller
     }
 
     public function appointmentCalendar() {
-        return view('doctor.telemedicine_calendar');
+        $appointment_sched = AppointmentSchedule::groupBy('facility_id')->get();
+        return view('doctor.telemedicine_calendar',[
+            'appointment_sched' => $appointment_sched
+        ]);
     }
 
     public function createAppointment(Request $request)
     {
-         /*'appointed_by' => 'required',
-           'code' => 'required|max:255',
-           'status' => 'required|max:255',*/
-        //dd($request->all()); // Dump the form data
-
         $validateData = $request->validate([
            'appointed_date' => 'required|date',
            'appointed_time' => 'required',
@@ -86,28 +83,22 @@ class TelemedicineCtrl extends Controller
            'department_id' => 'required',
            'slot' => 'required|integer',
         ]);
-        //dd($userId);
         $user = Session::get('auth');
         $validateData['created_by'] = $user->id;
 
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
         return redirect()->back()->with('success', 'Appointment created successfully');
-        /*--------------------------------------------------------------------------------*/
     }
 
     public function updateAppointment(Request $request)
     {
         $validatedData = $request->validate([
-            'id' => 'required|integer', // Adjust validation rules as needed
+            'id' => 'required|integer',
             'appointed_date' => 'required|date',
             'appointed_time' => 'required',
-            /*'created_by' => 'required',*/
             'facility_id' => 'required',
             'department_id' => 'required',
-            /*'appointed_by' => 'required',
-            'code' => 'required|max:255',
-            'status' => 'required|max:255',*/
             'slot' => 'required|integer',
         ]);
 
@@ -127,19 +118,19 @@ class TelemedicineCtrl extends Controller
         }
     }
 
-    public function getAppointmentData($id)
+    
+    public function getAppointmentData(Request $request)
     {
-        // Debugging - Display the $id to see if it's received correctly
         //dd($id);
-        $appointment = AppointmentSchedule::find($id);
-
-        // Debugging - Display $appointment to check if it's retrieved correctly
-        //dd($appointment);
+        $appointment = AppointmentSchedule::find($request->id);
+       
         if (!$appointment) {
             return response()->json(['error' => 'Appointment not found'], 404);
         }
+
         return response()->json($appointment);
     }
+
 
     public function deleteAppointment(Request $request)
     {
@@ -163,6 +154,5 @@ class TelemedicineCtrl extends Controller
 
         return response()->json($user);
     }
-
 }
 

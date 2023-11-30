@@ -154,217 +154,54 @@
 
 
             <div class="scroll-container">
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Dumdum Medical Clinic</h3>
-                            <h5 class="widget-user-desc">Brgy. Sambag II, Fuente Osmeña Jones Ave., Cebu City</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                       <button class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Talisay City District Hospital</h3>
-                            <h5 class="widget-user-desc">Bascon St. Purok Calachuchi, Brgy. Dumlog, Talisay City, Cebu</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                        <button class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Department of Health - Region VII</h3>
-                            <h5 class="widget-user-desc">Sambag II, Cebu City, Cebu</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                        <button class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Alexander Pierce</h3>
-                            <h5 class="widget-user-desc">Founder & CEO</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                        <button id="selectButton" class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Alexander Pierce</h3>
-                            <h5 class="widget-user-desc">Founder & CEO</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                        <button id="selectButton" class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
-                <div class="col-md-4 scroll-item">
-                    <!-- Widget: user widget style 1 -->
-                    <div class="box box-widget widget-user with-badge">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header">
-                            <h3 class="widget-user-username">Alexander Pierce</h3>
-                            <h5 class="widget-user-desc">Founder & CEO</h5>
-                        </div>
-                        <div class="widget-user-image">
-                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row">
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">Slot</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4 border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">Available</span>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                                <div class="col-sm-4">
-                                    <div class="description-block">
-                                        <button id="selectButton" class="btn btn-block btn-success btn-select">Select</button>
-                                    </div><!-- /.description-block -->
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div>
-                    </div><!-- /.widget-user -->
-                </div><!-- /.col -->
-
+                @if(isset($appointment_sched))
+                    @foreach($appointment_sched as $row)
+                        <div class="col-md-4 scroll-item">
+                            <!-- Widget: user widget style 1 -->
+                            <div class="box box-widget widget-user with-badge">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header">
+                                    <h3 class="widget-user-username">
+                                        <?php
+                                        $facility_name = \App\Facility::find($row->facility_id)->name;
+                                        echo $facility_name;
+                                        ?></h3>
+                                    <h5 class="widget-user-desc">
+                                        <?php
+                                        $address = \App\Facility::find($row->facility_id)->address;
+                                        echo $address;
+                                        ?>
+                                    </h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">3,200</h5>
+                                                <span class="description-text">Slot</span>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">13,000</h5>
+                                                <span class="description-text">Available</span>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="description-block">
+                                            <button class="btn btn-block btn-success btn-select" id="selected_data" name="selected_data"
+                                                    value={{$row->facility_id}}>Select</button>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                    </div><!-- /.row -->
+                                </div>
+                            </div><!-- /.widget-user -->
+                        </div><!-- /.col -->
+                    @endforeach
+                @endif
             </div>
 
 
@@ -456,6 +293,12 @@
                 "color": "white"
             });
 */
+           //try to check selected facility id
+//            $('#select').on('click', function () {
+//               var data = $('#select').val();
+//               console.log("data", data);
+//            });
+
             $(".btn-select").on("click", function() {
                 console.log("Button is clicked!..")
                 // Remove the "selected" class from all buttons
