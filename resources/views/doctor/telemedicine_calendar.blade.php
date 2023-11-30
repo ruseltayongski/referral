@@ -7,194 +7,141 @@
 
     <style>
         :root {
-            --red: #ef233c;
+           /* --red: #ef233c;
             --darkred: #c00424;
             --platinum: #e5e5e5;
             --black: #2b2d42;
+            --blue: #3379A1;*/
+            --green: #59AB91;
             --white: #fff;
             --thumb: #edf2f4;
-            --green: #00904E;
-            --blue: #00A7D0;
         }
-
-       /* * {
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-        }*/
-
-       /* body {
-            font: 16px / 24px "Rubik", sans-serif;
-            color: var(--black);
-            background: var(--platinum);
-            margin: 50px 0;
-        }
-*/
-       /* .container {
-            max-width: 1400px;
-            !*padding: 0 25px;
-            margin: 0 auto;*!
-        }*/
-
-       /* h2 {
-            font-size: 32px;
-            margin-bottom: 1em;
-        }*/
-
-        .cards {
+        .scroll-container {
             display: flex;
-            padding: 25px 0px;
             list-style: none;
             overflow-x: scroll;
             scroll-snap-type: x mandatory;
         }
-
-        .card {
+        .scroll-container::-webkit-scrollbar {
+            height: 12px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb,
+        .scroll-container::-webkit-scrollbar-track {
+            border-radius: 92px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: var(--green);
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: var(--thumb);
+        }
+        .scroll-item {
             display: flex;
             flex-direction: column;
             flex: 0 0 100%;
             background: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
+            border-radius: 4px;
             scroll-snap-align: start;
             transition: all 0.2s;
-            padding-bottom: 20px;
         }
-
-        .card:not(:last-child) {
+        .scroll-item .widget-user {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
+        }
+        .scroll-item:not(:last-child) {
             margin-right: 10px;
         }
-
-        .card:hover .card-header {
-            /*color: var(--white);
-            background: var(--red);*/
-            background-color: #007F99;
+        .scroll-item .widget-user-header {
+            background: var(--green);
+            color: white;
         }
-
-        /*.card .card-title {
-            font-size: 18px;
-        }*/
-
-        .card .card-content {
-           /* margin: 5px 0;*/
-            max-width: 100%;
-            font-size: 13px;
-           /* border-bottom: solid 1px darkgray;
-            margin-bottom: 20px;*/
+        .widget-user-header .widget-user-desc {
+            max-width: 65%;
+            font-size: 14px;
         }
-
-        /*.card .card-link-wrapper {
-            margin-top: auto;
-        }*/
-
-        .card .card-link {
+        .widget-user-header .widget-user-username {
+            font-size: 21px;
+        }
+        .widget-user .widget-user-image {
+            position: absolute;
+            top: 65px;
+            left: 75%;
+            margin-left: -45px;
+        }
+        .with-badge {
+            position: relative;
             display: inline-block;
-            text-decoration: none;
+        }
+        .with-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(to bottom left, transparent 30%, #ef233c 4%, #ef233c 50.5%, transparent 50.5%);
+            transform-origin: bottom right;
+            z-index: 1;
+        }
+        .with-badge::after {
+            content: 'Government';
+            position: absolute;
+            top: 9%;
+            right: 5%;
+            transform: translate(50%, -50%) rotate(45deg);
             color: white;
-            background: var(--blue);
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: none;
-            transition: background 0.2s;
-            margin-top: 15px;
-            margin-left: 15px;
-            margin-bottom: 15px;
-        }
-
-        .card-link:hover {
-            background-color: #007F99;
-        }
-
-       /* .card:hover .card-link {
-            background: var(--darkred);
-        }*/
-
-        .cards::-webkit-scrollbar {
-            height: 12px;
-        }
-
-        .cards::-webkit-scrollbar-thumb,
-        .cards::-webkit-scrollbar-track {
-            border-radius: 92px;
-        }
-
-        .cards::-webkit-scrollbar-thumb {
-            background: var(--blue);
-        }
-
-        .cards::-webkit-scrollbar-track {
-            background: var(--thumb);
-        }
-
-        .card .card-header {
-            background-color:var(--blue); /* Add your desired background color here */
-           /* padding: 10px;*/ /* Adjust padding as needed */
-            padding: 20px 20px 0px;
-            border-radius: 12px 12px 0 0; /* Round only the top corners */
-            color: white;
-        }
-
-        /*.card-header:hover {
-            background-color: #007F99;
-        }*/
-
-        .card .card-header h3 {
-            font-size: 18px;
-            margin: 0; /* Remove default margin for the heading */
+            font-size: 8px;
+            font-weight: bold;
+            z-index: 2;
         }
 
         .widget-user-image {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px; /* Adjust as needed */
+            overflow: hidden;
         }
-
-        .border-right {
-            border-right: solid 1px lightgrey;
+        .widget-user-image img {
+            transition: transform .3s ease-in-out;
         }
-
-        .description-text {
-            font-size: 13px;
+        .scroll-item:hover .widget-user-image img {
+            /*transform: scale(.9);*/
+            width: 100px;
         }
-
-        .description-block .description-header {
-            font-size: 14px;
-        }
-
-        .img-circle {
-            height: 20%;
-            width: 20%;
-        }
+        /*===============================================================*/
 
 
+
+
+
+
+
+
+
+
+
+        /*===============================================================*/
         @media (min-width: 500px) {
-            .card {
+            .scroll-item {
                 flex-basis: calc(50% - 10px);
             }
 
-            .card:not(:last-child) {
+            .scroll-item:not(:last-child) {
                 margin-right: 20px;
             }
         }
-
         @media (min-width: 700px) {
-            .card {
+            .scroll-item {
                 flex-basis: calc(calc(100% / 3) - 20px);
             }
 
-            .card:not(:last-child) {
+            .scroll-item:not(:last-child) {
                 margin-right: 30px;
             }
         }
-
         @media (min-width: 1100px) {
-            .card {
+            .scroll-item {
                 flex-basis: calc(25% - 30px);
             }
 
-            .card:not(:last-child) {
-                margin-right: 40px;
+            .scroll-item:not(:last-child) {
+                margin-right: 1px;
             }
         }
     </style>
@@ -205,145 +152,57 @@
         <div class="jim-content">
             <h3 class="page-header">Appointment Calendar</h3>
 
-            {{--------------------------------------------------------}}
 
-            <ul class="cards">
-                <li class="card">
-                    <div class="card-header">
-                        <h3>DUMDUM MEDICAL CLINIC</h3>
-                        <div class="card-content">
-                            <p>Brgy. Sambag II, Jones Ave., Cebu City</p>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="widget-user-image text-center">
-                            <img src="<?php echo e(asset('resources/img/avatar5.png')); ?>" class="img-circle" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 border-right">
-                            <div class="description-block">
-                                <p class="description-header">3,200</p>
-                                <span class="description-text">Slot</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 border-right">
-                            <div class="description-block">
-                                <p class="description-header">13,000</p>
-                                <span class="description-text">Available</span>
-                            </div>
-                        </div>
-                        <div class="card-link-wrapper text-center">
-                            <button class="card-link btn-sm" type="button">Select</button>
-                            {{--<input type="radio" name="selectedCard"> Select--}}
-                        </div>
-                    </div>
-                </li>
-
-                <li class="card">
-                    <div class="card-header">
-                        <h3>Facility 2</h3>
-                        <div class="card-content">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        </div>
-                    </div>
-                    <div class="card-link-wrapper">
-                        <a href="" class="card-link">Learn More</a>
-                    </div>
-                </li>
-
-                <li class="card">
-                    <div class="card-header">
-                        <h3>Facility 3</h3>
-                        <div class="card-content">
-                            <p>Phasellus ultrices lorem vel bibendum ultricies.</p>
-                        </div>
-                    </div>
-                    <div class="card-link-wrapper">
-                        <a href="" class="card-link">Learn More</a>
-                    </div>
-                </li>
-
-                <li class="card">
-                    <div  class="card-header">
-                        <h3>Facility 4</h3>
-                        <div class="card-content">
-                            <p>Aenean posuere mauris quam, pellentesque auctor mi.</p>
-                        </div>
-                    </div>
-                    <div class="card-link-wrapper">
-                        <a href="" class="card-link">Learn More</a>
-                    </div>
-                </li>
-
-                <li class="card">
-                    <div  class="card-header">
-                        <h3>Facility 5</h3>
-                        <div class="card-content">
-                            <p>Vestibulum pharetra fringilla felis sit amet tempor.</p>
-                        </div>
-                    </div>
-                    <div class="card-link-wrapper">
-                        <a href="" class="card-link">Learn More</a>
-                    </div>
-                </li>
-
-                <li class="card">
-                    <div  class="card-header">
-                        <h3>Facility 6</h3>
-                        <div class="card-content">
-                            <p>Donec ut tincidunt nisl. Vivamus eget eros id elit feugiat mollis.</p>
-                        </div>
-                    </div>
-                    <div class="card-link-wrapper">
-                        <a href="" class="card-link">Learn More</a>
-                    </div>
-                </li>
-            </ul>
-
-
-            {{--<div class="col-md-4">
-                <!-- Widget: user widget style 1 -->
-                <div class="box box-widget widget-user">
-                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-aqua-active">
-                        <h3 class="widget-user-username">Alexander Pierce</h3>
-                        <h5 class="widget-user-desc">Founder & CEO</h5>
-                    </div>
-                    <div class="widget-user-image">
-                        <img class="img-circle" src="/resources/img/user1-128x128.jpg" alt="User Avatar">
-                    </div>
-
-                    <div class="box-footer">
-                        <div class="row">
-
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">3,200</h5>
-                                    <span class="description-text">SALES</span>
-                                </div><!-- /.description-block -->
-                            </div><!-- /.col -->
-
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">13,000</h5>
-                                    <span class="description-text">FOLLOWERS</span>
-                                </div><!-- /.description-block -->
-                            </div><!-- /.col -->
-
-                            <div class="col-sm-4">
-                                <div class="description-block">
-                                    <h5 class="description-header">35</h5>
-                                    <span class="description-text">PRODUCTS</span>
-                                </div><!-- /.description-block -->
-                            </div><!-- /.col -->
-
-                        </div><!-- /.row -->
-                    </div>
-
-                </div><!-- /.widget-user -->
-            </div><!-- /.col -->
---}}
+            <div class="scroll-container">
+                @if(isset($appointment_sched))
+                    @foreach($appointment_sched as $row)
+                        <div class="col-md-4 scroll-item">
+                            <!-- Widget: user widget style 1 -->
+                            <div class="box box-widget widget-user with-badge">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header">
+                                    <h3 class="widget-user-username">
+                                        <?php
+                                        $facility_name = \App\Facility::find($row->facility_id)->name;
+                                        echo $facility_name;
+                                        ?></h3>
+                                    <h5 class="widget-user-desc">
+                                        <?php
+                                        $address = \App\Facility::find($row->facility_id)->address;
+                                        echo $address;
+                                        ?>
+                                    </h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">3,200</h5>
+                                                <span class="description-text">Slot</span>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">13,000</h5>
+                                                <span class="description-text">Available</span>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="description-block">
+                                            <button class="btn btn-block btn-success btn-select" id="selected_data" name="selected_data"
+                                                    value={{$row->facility_id}}>Select</button>
+                                            </div><!-- /.description-block -->
+                                        </div><!-- /.col -->
+                                    </div><!-- /.row -->
+                                </div>
+                            </div><!-- /.widget-user -->
+                        </div><!-- /.col -->
+                    @endforeach
+                @endif
+            </div>
 
 
             {{--------------------------------------------------------}}
@@ -368,10 +227,10 @@
                                         <!-- the events -->
                                         <div id="external-events">
                                         <div class="external-event bg-green">Lunch</div>
-                                        <div class="external-event bg-yellow">Go home</div>
+                                        {{--<div class="external-event bg-yellow">Go home</div>
                                         <div class="external-event bg-aqua">Do homework</div>
                                         <div class="external-event bg-light-blue">Work on UI design</div>
-                                        <div class="external-event bg-red">Sleep tight</div>
+                                        <div class="external-event bg-red">Sleep tight</div>--}}
                                         <div class="checkbox">
                                             <label for="drop-remove">
                                             <input type="checkbox" id="drop-remove">
@@ -424,17 +283,56 @@
 @section('js')
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ asset('resources/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
-
     <script>
-
         /*-----------------------------------------------------------------*/
 
+        $(document).ready(function() {
+            // Apply default background when the page loads
+           /* $(".scroll-item .widget-user-header").css({
+                "background-color": "#59AB91",
+                "color": "white"
+            });
+*/
+           //try to check selected facility id
+//            $('#select').on('click', function () {
+//               var data = $('#select').val();
+//               console.log("data", data);
+//            });
+
+            $(".btn-select").on("click", function() {
+                console.log("Button is clicked!..")
+                // Remove the "selected" class from all buttons
+                $(".scroll-item").removeClass("selected");
+                $(".btn-select").text("Select");
+                $(".scroll-item .widget-user-header").css({
+                    "background-color": "#59AB91",
+                    "color": "white"
+                });
+
+                // Add the "selected" class to the clicked button
+                var $parentItem = $(this).closest(".scroll-item");
+                $parentItem.addClass("selected");
+
+                // Change the text of the button based on its current state
+                var buttonText = $parentItem.hasClass("selected") ? "Selected" : "Select";
+                $(this).text(buttonText);
+
+                // Apply the background color to .widget-user-header if selected
+                if ($parentItem.hasClass("selected")) {
+                    $parentItem.find(".widget-user-header").css({
+                        "background-color": "#008E4D",
+                        "color": "white"
+                    });
+                }
+            });
+        });
 
 
+
+
+        /*-----------------------------------------------------------------*/
         $(function () {
-
-            /* initialize the external events
-            -----------------------------------------------------------------*/
+            /*initialize the external events*/
             function ini_events(ele) {
             ele.each(function () {
 
