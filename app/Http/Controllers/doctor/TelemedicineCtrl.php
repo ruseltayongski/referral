@@ -91,6 +91,18 @@ class TelemedicineCtrl extends Controller
         return redirect()->back()->with('success', 'Appointment created successfully');
     }
 
+    public function getAppointmentData(Request $request)
+    {
+        //dd($id);
+        $appointment = AppointmentSchedule::find($request->id);
+
+        if (!$appointment) {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        return response()->json($appointment);
+    }
+
     public function updateAppointment(Request $request)
     {
         $validatedData = $request->validate([
@@ -118,20 +130,6 @@ class TelemedicineCtrl extends Controller
         }
     }
 
-    
-    public function getAppointmentData(Request $request)
-    {
-        //dd($id);
-        $appointment = AppointmentSchedule::find($request->id);
-       
-        if (!$appointment) {
-            return response()->json(['error' => 'Appointment not found'], 404);
-        }
-
-        return response()->json($appointment);
-    }
-
-
     public function deleteAppointment(Request $request)
     {
         $id = $request->input('id');
@@ -153,6 +151,34 @@ class TelemedicineCtrl extends Controller
         }
 
         return response()->json($user);
+    }
+
+
+
+
+    public function getFacilityDetails(Request $request)
+    {
+        $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
+
+        if (!$facility_data) {
+
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        /*return response()->json($facility_data);*/
+        return response()->json(['facility_data' => $facility_data]);
+    }
+
+    public function getAvailableTimeSlots(Request $request)
+    {
+        $date = $request->input('selected_date');
+
+        // Fetch available time slots based on the selected date
+        $timeSlots = AppointmentSchedule::where('appointed_date', $date)
+            ->pluck('appointed_time')
+            ->toArray();
+
+        return response()->json(['time_slots' => $timeSlots]);
     }
 }
 

@@ -652,3 +652,6 @@ Route::post('/appointment/update', 'doctor\TelemedicineCtrl@updateAppointment')-
 Route::post('/appointment/delete', 'doctor\TelemedicineCtrl@deleteAppointment')->name('delete-appointment');
 Route::get('department/get/{facility_id}', 'doctor\TelemedicineCtrl@departmentGet')->name('department.get');
 Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-user-data');
+Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
+
+Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
