@@ -104,15 +104,10 @@
             /*transform: scale(.9);*/
             width: 100px;
         }
+        .available-slot-event {
+            cursor: pointer;
+        }
         /*===============================================================*/
-
-
-
-
-
-
-
-
 
 
 
@@ -152,7 +147,6 @@
         <div class="jim-content">
             <h3 class="page-header">Appointment Calendar</h3>
 
-
             <div class="scroll-container">
                 @if(isset($appointment_sched))
                     @foreach($appointment_sched as $row)
@@ -180,7 +174,16 @@
                                     <div class="row">
                                         <div class="col-sm-4 border-right">
                                             <div class="description-block">
-                                                <h5 class="description-header">3,200</h5>
+                                                {{--<h5 class="description-header">3,200</h5>--}}
+                                                <h5 class="description-header"><?php
+                                                    $slot = \App\AppointmentSchedule::where('facility_id', $row->facility_id)->get();
+                                                    if($slot){
+                                                        $count =0;
+                                                        foreach ($slot as $ind){
+                                                            $count = $count + $ind->slot;
+                                                        }
+                                                    }
+                                                    echo $count;?></h5>
                                                 <span class="description-text">Slot</span>
                                             </div><!-- /.description-block -->
                                         </div><!-- /.col -->
@@ -192,8 +195,7 @@
                                         </div><!-- /.col -->
                                         <div class="col-sm-4">
                                             <div class="description-block">
-                                            <button class="btn btn-block btn-success btn-select" id="selected_data" name="selected_data"
-                                                    value={{$row->facility_id}}>Select</button>
+                                            <button class="btn btn-block btn-success btn-select" onclick="calendar_display({{$row->facility_id}})" id="selected_data" name="selected_data"> Select</button>
                                             </div><!-- /.description-block -->
                                         </div><!-- /.col -->
                                     </div><!-- /.row -->
@@ -213,34 +215,39 @@
                             <div class="col-md-9">
                                 <div class="box box-primary">
                                     <div class="box-body no-padding">
+
                                     <!-- THE CALENDAR -->
                                     <div id="calendar"></div>
                                     </div><!-- /.box-body -->
+
+
                                 </div><!-- /. box -->
                             </div><!-- /.col -->
                             <div class="col-md-3">
                                 <div class="box box-solid">
                                     <div class="box-header with-border">
-                                        <h4 class="box-title">Draggable Events</h4>
+                                        <h4 class="box-title">Clickable Event</h4>
                                     </div>
                                     <div class="box-body">
                                         <!-- the events -->
                                         <div id="external-events">
-                                        <div class="external-event bg-green">Lunch</div>
+                                        <div class="external-event bg-green">Available Slot</div>
                                         {{--<div class="external-event bg-yellow">Go home</div>
                                         <div class="external-event bg-aqua">Do homework</div>
                                         <div class="external-event bg-light-blue">Work on UI design</div>
                                         <div class="external-event bg-red">Sleep tight</div>--}}
-                                        <div class="checkbox">
-                                            <label for="drop-remove">
-                                            <input type="checkbox" id="drop-remove">
-                                            remove after drop
-                                            </label>
-                                        </div>
+                                        {{--<div class="checkbox">--}}
+                                            {{--<label for="drop-remove">--}}
+                                            {{--<input type="checkbox" id="drop-remove">--}}
+                                            {{--remove after drop--}}
+                                            {{--</label>--}}
+                                        {{--</div>--}}
                                         </div>
                                     </div><!-- /.box-body -->
                                 </div><!-- /. box -->
-                                <div class="box box-solid">
+
+
+                                {{--<div class="box box-solid">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Create Event</h3>
                                     </div>
@@ -270,7 +277,42 @@
                                         </div><!-- /btn-group -->
                                         </div><!-- /input-group -->
                                     </div>
+                                </div>--}}
+
+
+                                <!-- Radio Button List -->
+                                <div class="box box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Select Time of Appointment</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div id="appointment-time-list">
+                                           {{-- <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    Time 1
+                                                </label>
+                                            </div>
+
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                    Time 2
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                                                <label class="form-check-label" for="flexRadioDefault3">
+                                                    Time 3
+                                                </label>
+                                            </div>--}}
+                                        </div>
+                                    </div>
                                 </div>
+
+
+
                             </div><!-- /.col -->
                         </div><!-- /.row -->
                     </section><!-- /.content -->
@@ -284,20 +326,192 @@
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ asset('resources/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
     <script>
-        /*-----------------------------------------------------------------*/
 
+
+        /*-----------------------------------------------------------------*/
+        function calendar_display(appointmentId) {
+            $('#calendar').val(appointmentId);
+
+            var url = "{{ route('get-Facility-Details', ':id') }}";
+            url = url.replace(':id', appointmentId);
+            var appointedDates = [];
+
+            $.get(url, function (data) {
+                console.log('my data', data);
+
+                /*for (var i = 0; i < data.length; i++) {
+                    var date = data[i].appointed_date;
+                    if (!appointedDates.includes(date)) {
+                        appointedDates.push(date);
+                    }
+                }*/
+
+                for (var i = 0; i < data.facility_data.length; i++) {
+                    var date = data.facility_data[i].appointed_date;
+                    var time = data.facility_data[i].appointed_time;
+
+                    // Combine date and time to create a unique identifier
+                    var dateTimeIdentifier = date + ' ' + time;
+
+                    if (!appointedDates.includes(dateTimeIdentifier)) {
+                        appointedDates.push(dateTimeIdentifier);
+                    }
+                }
+
+                console.log('checking', appointedDates);
+                doSomethingWithAppointedDates();
+
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("AJAX Error: " + errorThrown);
+            });
+
+            var calendarEvents = [];
+
+            function doSomethingWithAppointedDates() {
+                console.log("Value of the first appointment globally:", appointedDates[0]);
+
+                calendarEvents = [];
+
+                appointedDates.forEach(function (date) {
+                    var event = {
+                        title: 'Available Slot', // You can customize the title if needed
+                        start: new Date(date),
+                        allDay: true, // Set to true to make it an all-day event
+                        backgroundColor: "#00a65a", // Success (green)
+                        borderColor: "#00a65a", // Success (green)
+                        className: 'available-slot-event' // Add the class here
+                    };
+                    calendarEvents.push(event);
+                });
+                refreshCalendar();
+            }
+
+            function refreshCalendar() {
+                if ($('#calendar').fullCalendar('getView')) {
+                    $('#calendar').fullCalendar('destroy');
+                }
+
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    buttonText: {
+                        today: 'today',
+                        month: 'month',
+                        week: 'week',
+                        day: 'day'
+                    },
+                    events: calendarEvents,
+                    editable: false,
+                    droppable: false,
+                    eventClick: function (calEvent, jsEvent, view) {
+                        // Handle the click event here
+                        alert('You clicked on ' + calEvent.title);
+                    },
+                    drop: function (date, allDay) {
+                        var originalEventObject = $(this).data('eventObject');
+
+                        if (originalEventObject.title !== 'Available Slot') {
+                            var copiedEventObject = $.extend({}, originalEventObject);
+
+                            copiedEventObject.start = date;
+                            copiedEventObject.allDay = allDay;
+                            copiedEventObject.backgroundColor = $(this).css("background-color");
+                            copiedEventObject.borderColor = $(this).css("border-color");
+
+                            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                            if ($('#drop-remove').is(':checked')) {
+                                $(this).remove();
+                            }
+                        }
+                    }
+                });
+            }
+            refreshCalendar();
+        }
+
+        /*----------------------------------------------------------------*/
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#calendar').fullCalendar({
+                // Your existing fullCalendar configuration...
+
+                dayClick: function (date, jsEvent, view) {
+                    var selectedDate = date.format('YYYY-MM-DD');
+
+                    // Make an AJAX request to fetch available time slots
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route("get-available-time-slots") }}',
+                        data: {
+                            selected_date: selectedDate
+                        },
+                        success: function (response) {
+                            // Update the radio button list with available time slots
+                            updateAvailableTimeSlots(response.time_slots);
+                        },
+                        error: function (error) {
+                            console.error('Error fetching available time slots:', error);
+                        }
+                    });
+                }
+            });
+
+            function updateAvailableTimeSlots(timeSlots) {
+                var timeListDiv = $('#appointment-time-list');
+
+                // Clear existing content
+                timeListDiv.empty();
+
+                // Add radio buttons for each available time slot
+                for (var i = 0; i < timeSlots.length; i++) {
+                    var timeSlot = timeSlots[i];
+                    var radioButton = $('<div class="form-check">' +
+                        '<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault' + (i + 1) + '" value="' + timeSlot + '">' +
+                        '<label class="form-check-label" for="flexRadioDefault' + (i + 1) + '">' +
+                        timeSlot +
+                        '</label>' +
+                        '</div>');
+
+                    timeListDiv.append(radioButton);
+                }
+
+                // Call the function to update the appointment time list
+                updateAppointmentTimeList(timeSlots);
+            }
+        });
+
+        function updateAppointmentTimeList(timeSlots) {
+            // Assuming you have an element with id 'appointment-time-list'
+            var appointmentTimeList = $('#appointment-time-list');
+
+            // Clear existing content
+            appointmentTimeList.empty();
+
+            // Add radio buttons for each available time slot
+            for (var i = 0; i < timeSlots.length; i++) {
+                var timeSlot = timeSlots[i];
+                var radioButton = $('<div class="form-check">' +
+                    '<input class="form-check-input" type="radio" name="appointmentTime" value="' + timeSlot + '">' +
+                    '<label class="form-check-label" for="flexRadioDefault' + (i + 1) + '">' +
+                    'Time: ' + timeSlot +
+                    '</label>' +
+                    '</div>');
+
+                appointmentTimeList.append(radioButton);
+            }
+        }
+
+
+        /*----------------------------------------------------------------*/
         $(document).ready(function() {
             // Apply default background when the page loads
-           /* $(".scroll-item .widget-user-header").css({
+            $(".scroll-item .widget-user-header").css({
                 "background-color": "#59AB91",
                 "color": "white"
             });
-*/
-           //try to check selected facility id
-//            $('#select').on('click', function () {
-//               var data = $('#select').val();
-//               console.log("data", data);
-//            });
 
             $(".btn-select").on("click", function() {
                 console.log("Button is clicked!..")
@@ -326,163 +540,7 @@
                 }
             });
         });
-
-
-
-
         /*-----------------------------------------------------------------*/
-        $(function () {
-            /*initialize the external events*/
-            function ini_events(ele) {
-            ele.each(function () {
-
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                title: $.trim($(this).text()) // use the element's text as the event title
-                };
-
-                // store the Event Object in the DOM element so we can get to it later
-                $(this).data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
-                $(this).draggable({
-                zIndex: 1070,
-                revert: true, // will cause the event to go back to its
-                revertDuration: 0  //  original position after the drag
-                });
-
-            });
-            }
-            ini_events($('#external-events div.external-event'));
-
-            /* initialize the calendar
-            -----------------------------------------------------------------*/
-            //Date for the calendar events (dummy data)
-            var date = new Date();
-            var d = date.getDate(),
-                    m = date.getMonth(),
-                    y = date.getFullYear();
-            $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            buttonText: {
-                today: 'today',
-                month: 'month',
-                week: 'week',
-                day: 'day'
-            },
-            //Random default events
-            events: [
-                {
-                title: 'All Day Event',
-                start: new Date(y, m, 1),
-                backgroundColor: "#f56954", //red
-                borderColor: "#f56954" //red
-                },
-                {
-                title: 'Long Event',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: "#f39c12", //yellow
-                borderColor: "#f39c12" //yellow
-                },
-                {
-                title: 'Meeting',
-                start: new Date(y, m, d, 10, 30),
-                allDay: false,
-                backgroundColor: "#0073b7", //Blue
-                borderColor: "#0073b7" //Blue
-                },
-                {
-                title: 'Lunch',
-                start: new Date(y, m, d, 12, 0),
-                end: new Date(y, m, d, 14, 0),
-                allDay: false,
-                backgroundColor: "#00c0ef", //Info (aqua)
-                borderColor: "#00c0ef" //Info (aqua)
-                },
-                {
-                title: 'Birthday Party',
-                start: new Date(y, m, d + 1, 19, 0),
-                end: new Date(y, m, d + 1, 22, 30),
-                allDay: false,
-                backgroundColor: "#00a65a", //Success (green)
-                borderColor: "#00a65a" //Success (green)
-                },
-                {
-                title: 'Click for Google',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                url: 'http://google.com/',
-                backgroundColor: "#3c8dbc", //Primary (light-blue)
-                borderColor: "#3c8dbc" //Primary (light-blue)
-                }
-            ],
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar !!!
-            drop: function (date, allDay) { // this function is called when something is dropped
-
-                // retrieve the dropped element's stored Event Object
-                var originalEventObject = $(this).data('eventObject');
-
-                // we need to copy it, so that multiple events don't have a reference to the same object
-                var copiedEventObject = $.extend({}, originalEventObject);
-
-                // assign it the date that was reported
-                copiedEventObject.start = date;
-                copiedEventObject.allDay = allDay;
-                copiedEventObject.backgroundColor = $(this).css("background-color");
-                copiedEventObject.borderColor = $(this).css("border-color");
-
-                // render the event on the calendar
-                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-
-                // is the "remove after drop" checkbox checked?
-                if ($('#drop-remove').is(':checked')) {
-                // if so, remove the element from the "Draggable Events" list
-                $(this).remove();
-                }
-
-            }
-            });
-
-            /* ADDING EVENTS */
-            var currColor = "#3c8dbc"; //Red by default
-            //Color chooser button
-            var colorChooser = $("#color-chooser-btn");
-            $("#color-chooser > li > a").click(function (e) {
-            e.preventDefault();
-            //Save color
-            currColor = $(this).css("color");
-            //Add color effect to button
-            $('#add-new-event').css({"background-color": currColor, "border-color": currColor});
-            });
-            $("#add-new-event").click(function (e) {
-            e.preventDefault();
-            //Get value and make sure it is not null
-            var val = $("#new-event").val();
-            if (val.length == 0) {
-                return;
-            }
-
-            //Create events
-            var event = $("<div />");
-            event.css({"background-color": currColor, "border-color": currColor, "color": "#fff"}).addClass("external-event");
-            event.html(val);
-            $('#external-events').prepend(event);
-
-            //Add draggable funtionality
-            ini_events(event);
-
-            //Remove event from text input
-            $("#new-event").val("");
-            });
-        });
     </script>
 @endsection
 

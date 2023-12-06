@@ -52,6 +52,7 @@ class TelemedicineCtrl extends Controller
             'facility' => Facility::all(),
             'facilityList' => Facility::all(),
             'departmentList' => Department::all(),
+            'doctors' => User::get(),
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
@@ -63,6 +64,16 @@ class TelemedicineCtrl extends Controller
         $users = User::with(['facility', 'department'])
             ->where('facility_id', $request->facility_id)
             ->get();
+
+
+//        $facilityId = $request->facility_id;
+//        // Retrieve users with the specified facility and 'OPD' department value
+//        $users = User::where('facility_id', $facilityId)
+//            ->whereHas('department', function ($query) {
+//                $query->where('description', 'OPD');
+//            })
+//            ->with(['facility', 'department'])
+//            ->get();
 
         return $users;
     }
@@ -79,8 +90,10 @@ class TelemedicineCtrl extends Controller
         $validateData = $request->validate([
            'appointed_date' => 'required|date',
            'appointed_time' => 'required',
+           'appointedTime_to' => 'required',
            'facility_id' => 'required',
            'department_id' => 'required',
+           'opdCategory' => 'required',
            'slot' => 'required|integer',
         ]);
         $user = Session::get('auth');
@@ -88,7 +101,32 @@ class TelemedicineCtrl extends Controller
 
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
+
+        //------------------------------------------------------------------
+        // Create a new TelemedAssignDoctor instance and save the relationship
+        $telemedAssignDoctor = new TelemedAssignDoctor([
+            'appointment_id' => $appointment->id,
+            'doctor_id' => $user->id, // Modify this based on your actual structure
+            'status' => 'pending', // Set an appropriate status
+            'created_by' => $user->id,
+        ]);
+        $telemedAssignDoctor->save();
+        //------------------------------------------------------------------
+
+
         return redirect()->back()->with('success', 'Appointment created successfully');
+    }
+
+    public function getAppointmentData(Request $request)
+    {
+        //dd($id);
+        $appointment = AppointmentSchedule::find($request->id);
+
+        if (!$appointment) {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        return response()->json($appointment);
     }
 
     public function updateAppointment(Request $request)
@@ -97,8 +135,10 @@ class TelemedicineCtrl extends Controller
             'id' => 'required|integer',
             'appointed_date' => 'required|date',
             'appointed_time' => 'required',
+            'appointedTime_to' => 'required',
             'facility_id' => 'required',
             'department_id' => 'required',
+            'opdCategory' => 'required',
             'slot' => 'required|integer',
         ]);
 
@@ -117,20 +157,6 @@ class TelemedicineCtrl extends Controller
             return response()->json(['error' => 'Failed to update appointment'], 500);
         }
     }
-
-    
-    public function getAppointmentData(Request $request)
-    {
-        //dd($id);
-        $appointment = AppointmentSchedule::find($request->id);
-       
-        if (!$appointment) {
-            return response()->json(['error' => 'Appointment not found'], 404);
-        }
-
-        return response()->json($appointment);
-    }
-
 
     public function deleteAppointment(Request $request)
     {
@@ -154,5 +180,45 @@ class TelemedicineCtrl extends Controller
 
         return response()->json($user);
     }
+
+    public function getFacilityDetails(Request $request)
+    {
+        $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
+
+        if (!$facility_data) {
+
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        /*return response()->json($facility_data);*/
+        return response()->json(['facility_data' => $facility_data]);
+    }
+
+    public function getAvailableTimeSlots(Request $request)
+    {
+        $date = $request->input('selected_date');
+
+        // Fetch available time slots based on the selected date
+        $timeSlots = AppointmentSchedule::where('appointed_date', $date)
+            ->pluck('appointed_time')
+            ->toArray();
+
+        return response()->json(['time_slots' => $timeSlots]);
+    }
+
+
+    public function getDoctors($departmentId)
+    {
+        // Assuming 'level' column represents the user type
+        $doctors = User::where([
+            ['level', '=', 'doctor'],
+            ['department_id', '=', $departmentId],
+        ])->get(['id', 'username']);
+
+        return response()->json($doctors);
+    }
+
+
+
 }
 

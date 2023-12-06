@@ -43,11 +43,11 @@
                         <div class="form-group">
                             <label for="appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="appointed_date" required>
-                            <label for="appointed_time">Appointed Time:</label>
+                            <label for="appointed_time">Appointed Time:</label><br>
+                            <span>From:</span>
                             <input type="time" class="form-control" name="appointed_time" required>
-
-                           {{-- <label for="created_by">Created By:</label>
-                            <input type="number" class="form-control" name="created_by" required>--}}
+                            <span>To:</span>
+                            <input type="time" class="form-control" name="appointedTime_to" required>
 
                             <label for="facility_id">Facility:</label>
                             <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))">
@@ -63,15 +63,38 @@
                                 <option value=""></option>
                             </select>
 
-                            {{--<label for="appointed_by">Appointed By:</label>
-                            <input type="number" class="form-control" name="appointed_by" required>
-                            <label for="code">Code:</label>
-                            <input type="text" class="form-control" name="code" required>
-                            <label for="status">Status:</label>
-                            <input type="text" class="form-control" name="status" required>--}}
+                            {{--==================================================================================--}}
+
+                            {{--==================================================================================--}}
+
+                            <label for="opdCategory">OPD Category:</label>
+                            <select class="form-control select2" name="opdCategory" id="opdCategory" required>
+                                <option selected>Select OPD Category</option>
+                                <option value="Family Medicine">Family Medicine</option>
+                                <option value="Internal Medicine">Internal Medicine</option>
+                                <option value="General Surgery">General Surgery</option>
+                                <option value="Trauma Care">Trauma Care</option>
+                                <option value="Burn Care">Burn Care</option>
+                                <option value="Ophthalmology">Ophthalmology</option>
+                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                <option value="ENT">ENT</option>
+                                <option value="Neurosurgery">Neurosurgery</option>
+                                <option value="Urosurgery">Urosurgery</option>
+                                <option value="Toxicology">Toxicology</option>
+                                <option value="OB-GYNE">OB-GYNE</option>
+                                <option value="Pediatric">Pediatric</option>
+                            </select>
+
+                            <label>Available Doctor</label>
+                            <select class="form-control select2" id="available_doctor" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;">
+                                @foreach($doctors as $doctor)
+                                    <option value="{{ $doctor->id }}">{{ $doctor->username }}</option>
+                                @endforeach
+                            </select>
 
                             <label for="slot">Slot:</label>
                             <input type="number" class="form-control" name="slot" required>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
@@ -126,35 +149,42 @@
                     <tr class="bg-success bg-navy-active">
                         <!--<th class="text-center">Id</th>-->
                         <th class="text-center">Date</th>
-                        <th class="text-center">Time</th>
+                        <th class="text-center">From</th>
+                        <th class="text-center">To</th>
                         <th class="text-center">Created By</th>
                         <th class="text-center">Facility</th>
                         <th class="text-center">Department</th>
+                        <th class="text-center">OPD Category</th>
                         <!-- <th class="text-center">Appointed By</th> -->
-                        <th class="text-center">Code</th>
-                        <th class="text-center">Status</th>
+                        {{--<th class="text-center">Code</th>--}}
+                        {{--<th class="text-center">Status</th>--}}
+                        <th class="text-center">Available Doctor</th>
                         <th class="text-center">Slot</th>
                         <th class="text-center">Action</th>
                     </tr>
                     @foreach($appointment_schedule as $row)
                         <tr style="font-size: 12px">
-                            <!--<td style="white-space: nowrap;">
+                            {{--<td style="white-space: nowrap;">
                                 <b>
                                     <a href="#appt_modal" data-toggle="modal" onclick="ApptBody('{{ $row->id }}')">
                                     {{ $row->appointed_date }}
                                     </a>
                                 </b>
-                            </td> -->
+                            </td>--}}
                            <!--<td>{{ $row->id }}</td>-->
                             <td> {{ $row->appointed_date }} </td>
                             <td> {{ $row->appointed_time }} </td>
+                            <td> {{ $row->appointedTime_to }}</td>
                             <td> {{ $row->createdBy->username }} </td>
                             <td> {{ $row->facility->name }} </td>
                             <td> {{ $row->department->description }} </td>
+                            <td> {{ $row->opdCategory }} </td>
                             <!-- <td> {{ $row->appointed_by }} </td> -->
-                            <td> {{ $row->code }} </td>
-                            <td> {{ $row->status }} </td>
+                            {{--<td> {{ $row->code }} </td>--}}
+                            {{--<td> {{ $row->status }} </td>--}}
+                            <td>  </td>
                             <td> {{ $row->slot }} </td>
+
                             <td>
                                 <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                 <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
@@ -185,60 +215,9 @@
                     <h4 class="modal-title"><b>APPOINTMENT SCHEDULE</b></h4>
                 </div>
                 <div class="modal-body appt_body">
-                </div><!-- /.modal-body -->
+                </div>
                 <div class="modal-footer">
                     <button class="btn btn-default btn-sm btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close </button>
-                </div>
-            </div>
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- Edit Appointment Modal -->
-    <div class="modal fade" role="dialog" id="editAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="editAppointmentModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form id="editAppointmentForm" method="post" action="{{ route('update-appointment') }}">
-                        {{ csrf_field() }}
-                        <fieldset>
-                            <legend><i class="fa fa-edit"></i> Edit Appointment
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </legend>
-                        </fieldset>
-                        <div class="form-group">
-                            <input type="hidden" name="appointment_id" id="editAppointmentId" value="" class="form-control">
-                            <label for="edit_appointed_date">Appointed Date:</label>
-                            <input type="date" class="form-control" name="edit_appointed_date" id="edit_appointed_date" required>
-
-                            <label for="edit_appointed_time">Appointed Time:</label>
-                            <input type="time" class="form-control" name="edit_appointed_time" id="edit_appointed_time" required>
-                       
-                            <label for="edit_facility_id">Facility:</label>
-                            <select class="form-control select2" name="edit_facility_id" id="edit_facility_id" onchange="onchangeEditDepartment($(this))" >
-                                <option value="" selected>Select Facility</option>
-                                @foreach($facilityList as $facility)
-                                    <option value="{{ $facility->id }}" {{ $facility->id ==  $appointment->facility_id ? 'selected' : '' }}>{{ $facility->name }}</option>
-                                @endforeach 
-                            </select>
-
-                            <label for="edit_department_id">Department:</label>
-                            <select class="form-control select2" name="edit_department_id" id="edit_department_id">
-                                <option value="" selected>Select Department</option>
-                                @foreach($departmentList as $department)
-                                    <option value="{{ $department->id }}" {{ $department->id == $appointment->department_id ? 'selected' : '' }}>{{ $department->description }}</option>
-                                @endforeach
-                            </select>
-
-                            <label for="edit_slot">Slot:</label>
-                            <input type="number" class="form-control" name="edit_slot" id="edit_slot" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm" onclick="updateAppointment()"><i class="fa fa-check"></i> Update</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -262,11 +241,14 @@
                             <label for="update_appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="update_appointed_date" id="update_appointed_date">
 
-                            <label for="update_appointed_time">Appointed Time:</label>
+                            <label for="update_appointed_time">Appointed Time:</label><br>
+                            <span>From: </span>
                             <input type="time" class="form-control" name="update_appointed_time" id="update_appointed_time">
+                            <span> To: </span>
+                            <input type="time" class="form-control" name="update_appointedTime_to" id="update_appointedTime_to">
 
                             <label for="update_facility_id">Facility:</label>
-                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeEditDepartment($(this))">
+                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))">
                             <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
                                 @foreach($facilityList as $facility)
                                     <option value="{{ $facility->id }}" selected>{{ $facility->name }}</option>
@@ -278,6 +260,24 @@
                                 @foreach($departmentList as $department)
                                     <option value="{{ $department->id }}">{{ $department->description }}</option>
                                 @endforeach
+                            </select>
+
+                            <label for="update_opdCategory">OPD Category:</label>
+                            <select class="form-control" name="update_opdCategory" id="update_opdCategory" required>
+                                <option selected>Select OPD Category</option>
+                                <option value="Family Medicine">Family Medicine</option>
+                                <option value="Internal Medicine">Internal Medicine</option>
+                                <option value="General Surgery">General Surgery</option>
+                                <option value="Trauma Care">Trauma Care</option>
+                                <option value="Burn Care">Burn Care</option>
+                                <option value="Ophthalmology">Ophthalmology</option>
+                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                <option value="ENT">ENT</option>
+                                <option value="Neurosurgery">Neurosurgery</option>
+                                <option value="Urosurgery">Urosurgery</option>
+                                <option value="Toxicology">Toxicology</option>
+                                <option value="OB-GYNE">OB-GYNE</option>
+                                <option value="Pediatric">Pediatric</option>
                             </select>
 
                             <label for="update_slot">Slot:</label>
@@ -309,8 +309,11 @@
                             <label for="del_appointed_date">Appointed Date:</label>
                             <input type="date" class="form-control" name="del_appointed_date" id="del_appointed_date" readonly>
 
-                            <label for="del_appointed_time">Appointed Time:</label>
+                            <label for="del_appointed_time">Appointed Time:</label><br>
+                            <span>From:</span>
                             <input type="time" class="form-control" name="del_appointed_time" id="del_appointed_time" readonly>
+                            <span>To:</span>
+                            <input type="time" class="form-control" name="del_appointedTime_to" id="del_appointedTime_to" readonly>
 
                             <label for="del_created_by">Created By:</label>
                             <input type="text" class="form-control" name="del_created_by" id="del_created_by" readonly>
@@ -349,32 +352,20 @@
 @section('js')
     <script>
 
-        function EditModal(appointmentId) {
-            $('#editAppointmentId').val(appointmentId);
-
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
-
-            $.get(url, function(data) {
-                console.log(data);
-
-                $('#edit_appointed_date').val(data.appointed_date);
-                $('#edit_appointed_time').val(data.appointed_time);
-                $('#edit_created_by').val(data.created_by);
-                $('#edit_facility_id').val(data.facility_id);
-                $('#edit_department_id').val(data.department_id);
-                $('#edit_appointed_by').val(data.appointed_by);
-                $('#edit_code').val(data.code);
-                $('#edit_status').val(data.status);
-                $('#edit_slot').val(data.slot);
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("AJAX Error: " + errorThrown);
+        function fetchDoctorsByDepartment(departmentId) {
+            $.get("{{ url('get-doctors') }}/" + departmentId, function(data) {
+                var select = $('#available_doctor');
+                select.empty(); // Clear existing options
+                $.each(data, function(index, doctor) {
+                    select.append('<option value="' + doctor.id + '">' + doctor.username + '</option>');
+                });
             });
-
-            $('#updateAppointmentModal').modal('show');
         }
-        //--------------------------------------------------------------
+
+
+
+
+        //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
 
@@ -386,9 +377,11 @@
 
                 $('#update_appointed_date').val(data.appointed_date);
                 $('#update_appointed_time').val(data.appointed_time);
+                $('#update_appointedTime_to').val(data.appointedTime_to);
                 $('#update_created_by').val(data.created_by);
                 $('#update_facility_id').val(data.facility_id);
                 $('#update_department_id').val(data.department_id);
+                $('#update_opdCategory').val(data.opdCategory);
                 $('#update_appointed_by').val(data.appointed_by);
                 $('#update_code').val(data.code);
                 $('#update_status').val(data.status);
@@ -411,6 +404,7 @@
                 //console.log(data);
                 $('#del_appointed_date').val(data.appointed_date);
                 $('#del_appointed_time').val(data.appointed_time);
+                $('#del_appointedTime_to').val(data.appointedTime_to);
                 $('#del_created_by').val(data.created_by);
                 $('#del_facility_id').val(data.facility_id);
                 $('#del_department_id').val(data.department_id);
@@ -457,9 +451,11 @@
             var appointmentId = $('#updateAppointmentId').val();
             var appointedDate = $('#update_appointed_date').val();
             var appointedTime = $('#update_appointed_time').val();
+            var appointedTo = $('#update_appointedTime_to').val();
             var appointmentCreatedBy = $('#update_created_by').val();
             var appointmentFacilityId = $('#update_facility_id').val();
             var appointmentDepartmentId = $('#update_department_id').val();
+            var appointmentOpdCategory = $('#update_opdCategory').val();
             var appointmentAppointedBy = $('#update_appointed_by').val();
             var appointmentCode = $('#update_code').val();
             var appointmentStatus = $('#update_status').val();
@@ -471,9 +467,11 @@
                 id: appointmentId,
                 appointed_date: appointedDate,
                 appointed_time: appointedTime,
+                appointedTime_to: appointedTo,
                 created_by: appointmentCreatedBy,
                 facility_id: appointmentFacilityId,
                 department_id: appointmentDepartmentId,
+                opdCategory: appointmentOpdCategory,
                 appointed_by: appointmentAppointedBy,
                 code: appointmentCode,
                 status: appointmentStatus,
@@ -494,14 +492,14 @@
             });
         }
         //--------------------------------------------------------------
-        
-        function onchangeEditDepartment(data){
 
-            if(data.val()) { 
+        function onchangeUpdateDepartment(data){
+
+            if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
                     //console.log('Department Data:', result);
-                    $('#edit_department_id').html('');
-                    $('#edit_department_id').append($('<option>', {
+                    $('#update_department_id').html('');
+                    $('#update_department_id').append($('<option>', {
                         value: "",
                         text: "Select Department"
                     }));
@@ -509,7 +507,7 @@
                     var uniqueDepartments = {};
                     $.each(result, function(index, userData){
                         if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
-                            $('#edit_department_id').append($('<option>', {
+                            $('#update_department_id').append($('<option>', {
                                 value: userData.department.id,
                                 text: userData.department.description,
                             }));
@@ -542,6 +540,9 @@
                             uniqueDepartments[userData.department.id] = true;
                         }
                     });
+
+                    // Call the function to fetch and update doctors
+                    fetchDoctorsByDepartment(data.val());
                 });
             }
         }
