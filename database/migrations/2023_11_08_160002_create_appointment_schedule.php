@@ -20,6 +20,7 @@ class CreateAppointmentSchedule extends Migration
             $table->integer('created_by')->nullable();
             $table->integer('facility_id')->nullable();
             $table->integer('department_id')->nullable();
+            $table->string('opdCategory',255)->nullable();
             $table->integer('appointed_by')->nullable();
             $table->string('code',255)->nullable();
             $table->string('status',255)->nullable();

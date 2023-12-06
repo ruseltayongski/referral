@@ -52,6 +52,7 @@ class TelemedicineCtrl extends Controller
             'facility' => Facility::all(),
             'facilityList' => Facility::all(),
             'departmentList' => Department::all(),
+            'doctors' => User::get(),
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
@@ -63,6 +64,16 @@ class TelemedicineCtrl extends Controller
         $users = User::with(['facility', 'department'])
             ->where('facility_id', $request->facility_id)
             ->get();
+
+
+//        $facilityId = $request->facility_id;
+//        // Retrieve users with the specified facility and 'OPD' department value
+//        $users = User::where('facility_id', $facilityId)
+//            ->whereHas('department', function ($query) {
+//                $query->where('description', 'OPD');
+//            })
+//            ->with(['facility', 'department'])
+//            ->get();
 
         return $users;
     }
@@ -79,8 +90,10 @@ class TelemedicineCtrl extends Controller
         $validateData = $request->validate([
            'appointed_date' => 'required|date',
            'appointed_time' => 'required',
+           'appointedTime_to' => 'required',
            'facility_id' => 'required',
            'department_id' => 'required',
+           'opdCategory' => 'required',
            'slot' => 'required|integer',
         ]);
         $user = Session::get('auth');
@@ -88,6 +101,19 @@ class TelemedicineCtrl extends Controller
 
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
+
+        //------------------------------------------------------------------
+        // Create a new TelemedAssignDoctor instance and save the relationship
+        $telemedAssignDoctor = new TelemedAssignDoctor([
+            'appointment_id' => $appointment->id,
+            'doctor_id' => $user->id, // Modify this based on your actual structure
+            'status' => 'pending', // Set an appropriate status
+            'created_by' => $user->id,
+        ]);
+        $telemedAssignDoctor->save();
+        //------------------------------------------------------------------
+
+
         return redirect()->back()->with('success', 'Appointment created successfully');
     }
 
@@ -109,8 +135,10 @@ class TelemedicineCtrl extends Controller
             'id' => 'required|integer',
             'appointed_date' => 'required|date',
             'appointed_time' => 'required',
+            'appointedTime_to' => 'required',
             'facility_id' => 'required',
             'department_id' => 'required',
+            'opdCategory' => 'required',
             'slot' => 'required|integer',
         ]);
 
@@ -153,9 +181,6 @@ class TelemedicineCtrl extends Controller
         return response()->json($user);
     }
 
-
-
-
     public function getFacilityDetails(Request $request)
     {
         $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
@@ -180,5 +205,20 @@ class TelemedicineCtrl extends Controller
 
         return response()->json(['time_slots' => $timeSlots]);
     }
+
+
+    public function getDoctors($departmentId)
+    {
+        // Assuming 'level' column represents the user type
+        $doctors = User::where([
+            ['level', '=', 'doctor'],
+            ['department_id', '=', $departmentId],
+        ])->get(['id', 'username']);
+
+        return response()->json($doctors);
+    }
+
+
+
 }
 
