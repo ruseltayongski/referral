@@ -207,11 +207,12 @@ class TelemedicineCtrl extends Controller
     }
 
 
-    public function getDoctors($departmentId)
+    public function getDoctors($facilityId,$departmentId)
     {
         // Assuming 'level' column represents the user type
         $doctors = User::where([
             ['level', '=', 'doctor'],
+            ['facility_id', '=', $facilityId],
             ['department_id', '=', $departmentId],
         ])->get(['id', 'username']);
 

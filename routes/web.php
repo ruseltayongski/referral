@@ -655,4 +655,5 @@ Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-u
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 
-Route::get('/get-doctors/{departmentId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
+Route::get('/get-doctors/{facilityId}/{departmentId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
+//Route::get('/get-doctors/{facilityId}/{departmentId}', [doctor\TelemedicineCtrl::class, 'getDoctors']);

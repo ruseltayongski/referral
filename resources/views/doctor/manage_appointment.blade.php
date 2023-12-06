@@ -352,8 +352,9 @@
 @section('js')
     <script>
 
-        function fetchDoctorsByDepartment(departmentId) {
-            $.get("{{ url('get-doctors') }}/" + departmentId, function(data) {
+        // Add this function in your existing script
+        function fetchDoctorsByFacilityAndDepartment(facilityId, departmentId) {
+            $.get("{{ url('get-doctors') }}/" + facilityId + "/" + departmentId, function(data) {
                 var select = $('#available_doctor');
                 select.empty(); // Clear existing options
                 $.each(data, function(index, doctor) {
@@ -420,6 +421,7 @@
 
             $('#deleteConfirmationModal').modal('show');
         }
+
         //--------------------------------------------------------------
         function deleteAppointment() {
             var appointmentId = $('#deleteAppointmentId').val();
@@ -445,8 +447,8 @@
                 }
             });
         }
-        //--------------------------------------------------------------
 
+        //--------------------------------------------------------------
         function updateAppointment() {
             var appointmentId = $('#updateAppointmentId').val();
             var appointedDate = $('#update_appointed_date').val();
@@ -491,6 +493,7 @@
                 }
             });
         }
+
         //--------------------------------------------------------------
 
         function onchangeUpdateDepartment(data){
@@ -519,6 +522,8 @@
             }
         }
 
+        //--------------------------------------------------------------
+
         function onchangeDepartment(data) {
             if(data.val()) { 
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
@@ -541,8 +546,11 @@
                         }
                     });
 
+                    // Get the selected facility_id (assuming you have a way to retrieve it)
+                    var facilityId = $('#facility_id').val(); // Update this line based on your actual field
+
                     // Call the function to fetch and update doctors
-                    fetchDoctorsByDepartment(data.val());
+                    fetchDoctorsByFacilityAndDepartment(facilityId, data.val());
                 });
             }
         }
