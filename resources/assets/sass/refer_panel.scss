@@ -53,6 +53,7 @@
 
   .stepper-item.completed .step-counter {
     background-color: #4bb543;
+    color:white; //
   }
 
   .stepper-item.completed::after {
@@ -63,6 +64,7 @@
     top: 20px;
     left: 50%;
     z-index: 3;
+    color:white; //
   }
 
   .stepper-item:first-child::before {
