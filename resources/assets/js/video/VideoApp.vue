@@ -450,9 +450,48 @@
                     <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                 </div>
                 <div v-else>
-                    <div class="row prescription" >
-                        <div class="col">
-                            <textarea class="form-control textArea" id="FormControlTextarea" v-model="prescription" rows="4"></textarea>
+                    <div class="container">
+                        <div class="row prescription">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="genericName">Generic Name:</label>
+                                      <input type="text" class="form-control" id="genericName" name="genericName">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dosage">Dosage:</label>
+                                    <input type="text" class="form-control" id="dosage" name="dosage">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="formulation">Formulation:</label>
+                                    <input type="text" class="form-control" id="formulation" name="formulation">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="brandName">Brand Name:</label>
+                                    <input type="text" class="form-control" id="brandName" name="brandName">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row prescription">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="frequency">Frequency:</label>
+                                    <input type="text" class="form-control" id="frequency" name="frequency">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="duration">Duration:</label>
+                                    <input type="text" class="form-control" id="duration" name="duration">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="quantity">Quantity:</label>
+                                    <input type="text" class="form-control" id="quantity" name="quantity">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div>
