@@ -139,6 +139,20 @@
                 margin-right: 1px;
             }
         }
+        .selected-date {
+            background-color: #ffc73d; /* Change this color to the desired highlight color */
+            /*color: #0000CC; !* Adjust text color if necessary *!*/
+        }
+
+        /* Define borders for FullCalendar cells */
+        .fc-day .fc-day-top {
+            border: 1px solid #ddd; !important;/* Add borders around each day */
+        }
+
+        .available-slot-event {
+            /* Custom styling for events */
+
+        }
     </style>
 @endsection
 
@@ -208,7 +222,7 @@
 
 
             {{--------------------------------------------------------}}
-            <div class="calendar-container">
+                <div class="calendar-container">
                 <div class="row">
                     <section class="content">
                         <div class="row">
@@ -226,7 +240,7 @@
                             <div class="col-md-3">
                                 <div class="box box-solid">
                                     <div class="box-header with-border">
-                                        <h4 class="box-title">Clickable Event</h4>
+                                        <h4 class="box-title">Legends</h4>
                                     </div>
                                     <div class="box-body">
                                         <!-- the events -->
@@ -246,67 +260,14 @@
                                     </div><!-- /.box-body -->
                                 </div><!-- /. box -->
 
-
-                                {{--<div class="box box-solid">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Create Event</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                                        <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                                        <ul class="fc-color-picker" id="color-chooser">
-                                            <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
-                                            <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
-                                        </ul>
-                                        </div><!-- /btn-group -->
-                                        <div class="input-group">
-                                        <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-                                        <div class="input-group-btn">
-                                            <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Add</button>
-                                        </div><!-- /btn-group -->
-                                        </div><!-- /input-group -->
-                                    </div>
-                                </div>--}}
-
-
                                 <!-- Radio Button List -->
                                 <div class="box box-solid">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Select Time of Appointment</h3>
+                                        <div id="date-selected"></div>
                                     </div>
                                     <div class="box-body">
                                         <div id="appointment-time-list">
-                                           {{-- <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Time 1
-                                                </label>
-                                            </div>
-
-
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                                                <label class="form-check-label" for="flexRadioDefault2">
-                                                    Time 2
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                                                <label class="form-check-label" for="flexRadioDefault3">
-                                                    Time 3
-                                                </label>
-                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -326,19 +287,84 @@
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ asset('resources/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
     <script>
-
+        var appointedDates = [];
 
         /*-----------------------------------------------------------------*/
         function calendar_display(appointmentId) {
+//            refreshCalendar();
             $('#calendar').val(appointmentId);
+            console.log('appointedId', appointmentId);
+
+            $('#calendar').fullCalendar({
+               dayRender: function (date, cell) {
+//
+                   var formattedDate = moment(date).format('YYYY-MM-DD');
+                   var url = "{{ route('get-Facility-Details', ':id') }}";
+                   url = url.replace(':id', appointmentId);
+
+                   var all_dates =[];
+                   $.get(url, function (data) {
+                       console.log('my data', data);
+                       for (var i = 0; i < data.facility_data.length; i++) {
+                           var date = data.facility_data[i].appointed_date;
+
+                           all_dates.push(date);
+                       }
+
+                       console.log('new ',all_dates);
+                       console.log('new_length', all_dates.length);
+
+                       console.log('apilido',formattedDate);
+
+                       var found = all_dates.some(function(dateItem) {
+                           return dateItem === formattedDate;
+                       });
+
+                       if (found) {
+                           cell.css("background-color", "green");
+                       } else {
+                           cell.css("background-color", ""); // Reset background color to default
+                       }
+
+                   }).fail(function (jqXHR, textStatus, errorThrown) {
+                       console.log("AJAX Error: " + errorThrown);
+                   });
+               },
+                dayClick: function (date, info, jsEvent, view) {
+                    // Handle the click event here
+//                        alert('You clicked on ' + calEvent.title);
+                    var selectedDate = date.format('YYYY-MM-DD');
+
+                    // Make an AJAX request to fetch available time slots
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ route("get-available-time-slots") }}',
+                        data: {
+                            selected_date: selectedDate
+//                                facility_id: facility_id
+                        },
+                        success: function (response) {
+                            // Update the radio button list with available time slots
+                            if(response.time_slots) {
+                                updateAvailableTimeSlots(response.time_slots);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Error fetching available time slots:', error);
+                        }
+                    });
+//                        applyCustomStyleToCell(info.date, info.dayEl, selectedDate);
+                }
+            });
+            refreshCalendar();
 
             var url = "{{ route('get-Facility-Details', ':id') }}";
             url = url.replace(':id', appointmentId);
-            var appointedDates = [];
+
 
             $.get(url, function (data) {
                 console.log('my data', data);
-
+                var appointedDates =[];
                 /*for (var i = 0; i < data.length; i++) {
                     var date = data[i].appointed_date;
                     if (!appointedDates.includes(date)) {
@@ -348,22 +374,43 @@
 
                 for (var i = 0; i < data.facility_data.length; i++) {
                     var date = data.facility_data[i].appointed_date;
-                    var time = data.facility_data[i].appointed_time;
+//                    var time = data.facility_data[i].appointed_time;
 
-                    // Combine date and time to create a unique identifier
-                    var dateTimeIdentifier = date + ' ' + time;
-
-                    if (!appointedDates.includes(dateTimeIdentifier)) {
-                        appointedDates.push(dateTimeIdentifier);
-                    }
+                        appointedDates.push(date);
                 }
 
                 console.log('checking', appointedDates);
+                $('#calendar').fullCalendar('render'); // Render the updated data
                 doSomethingWithAppointedDates();
 
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
+
+//            function getAllDatesForCurrentMonth() {
+//                const today = new Date();
+//                const year = today.getFullYear();
+//                const month = today.getMonth();
+//
+//                const allDates = [];
+//                const startDate = new Date(year, month, 1);
+//                const endDate = new Date(year, month + 1, 0); // Get the last day of the month
+//
+//                for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+//                     const formattedDate = formatDate(date);
+//                     allDates.push(formattedDate);
+////                    allDates.push(new Date(date)); // Store a copy of the date object
+//                }
+//                return allDates;
+//            }
+//
+//            function formatDate(date) {
+//                const year = date.getFullYear();
+//                const month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+//                const day = String(date.getDate()).padStart(2, '0'); // Add leading zero if needed
+//
+//                return `${year}-${month}-${day}`;
+//            }
 
             var calendarEvents = [];
 
@@ -372,25 +419,26 @@
 
                 calendarEvents = [];
 
-                appointedDates.forEach(function (date) {
-                    var event = {
-                        title: 'Available Slot', // You can customize the title if needed
-                        start: new Date(date),
-                        allDay: true, // Set to true to make it an all-day event
-                        backgroundColor: "#00a65a", // Success (green)
-                        borderColor: "#00a65a", // Success (green)
-                        className: 'available-slot-event' // Add the class here
-                    };
-                    calendarEvents.push(event);
-                });
+//                appointedDates.forEach(function (date) {
+//                    calendarEvents.push({
+////                        title: 'Available Slot', // You can customize the title if needed
+//                        start: date,
+//                        allDay: true, //
+//                        backgroundColor: "green", // Success (green)
+////                        rendering: 'background',
+////                        border: '#000000',
+////                        className: 'available-slot-event' // Add the class here
+//                    });
+//
+////                    calendarEvents.push(event);
+//                });
                 refreshCalendar();
             }
 
             function refreshCalendar() {
-                if ($('#calendar').fullCalendar('getView')) {
-                    $('#calendar').fullCalendar('destroy');
-                }
-
+                $('#calendar').fullCalendar('removeEvents'); // Clear previous events
+                $('#calendar').fullCalendar('addEventSource', calendarEvents); // Add updated events
+                $('#calendar').fullCalendar('refetchEvents');
                 $('#calendar').fullCalendar({
                     header: {
                         left: 'prev,next today',
@@ -404,60 +452,14 @@
                         day: 'day'
                     },
                     events: calendarEvents,
+//                    rendering: 'background',
+                    eventDisplay: 'block',
                     editable: false,
                     droppable: false,
-                    eventClick: function (calEvent, jsEvent, view) {
-                        // Handle the click event here
-                        alert('You clicked on ' + calEvent.title);
-                    },
-                    drop: function (date, allDay) {
-                        var originalEventObject = $(this).data('eventObject');
-
-                        if (originalEventObject.title !== 'Available Slot') {
-                            var copiedEventObject = $.extend({}, originalEventObject);
-
-                            copiedEventObject.start = date;
-                            copiedEventObject.allDay = allDay;
-                            copiedEventObject.backgroundColor = $(this).css("background-color");
-                            copiedEventObject.borderColor = $(this).css("border-color");
-
-                            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-
-                            if ($('#drop-remove').is(':checked')) {
-                                $(this).remove();
-                            }
-                        }
-                    }
-                });
+                    selectable: false
+                })
             }
             refreshCalendar();
-        }
-
-        /*----------------------------------------------------------------*/
-        document.addEventListener('DOMContentLoaded', function () {
-            $('#calendar').fullCalendar({
-                // Your existing fullCalendar configuration...
-
-                dayClick: function (date, jsEvent, view) {
-                    var selectedDate = date.format('YYYY-MM-DD');
-
-                    // Make an AJAX request to fetch available time slots
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route("get-available-time-slots") }}',
-                        data: {
-                            selected_date: selectedDate
-                        },
-                        success: function (response) {
-                            // Update the radio button list with available time slots
-                            updateAvailableTimeSlots(response.time_slots);
-                        },
-                        error: function (error) {
-                            console.error('Error fetching available time slots:', error);
-                        }
-                    });
-                }
-            });
 
             function updateAvailableTimeSlots(timeSlots) {
                 var timeListDiv = $('#appointment-time-list');
@@ -469,10 +471,8 @@
                 for (var i = 0; i < timeSlots.length; i++) {
                     var timeSlot = timeSlots[i];
                     var radioButton = $('<div class="form-check">' +
-                        '<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault' + (i + 1) + '" value="' + timeSlot + '">' +
-                        '<label class="form-check-label" for="flexRadioDefault' + (i + 1) + '">' +
-                        timeSlot +
-                        '</label>' +
+                        '<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault' + (i + 1) + '" value="' + timeSlot.appointed_time + '">' +
+                        '<label class="form-check-label" for="flexRadioDefault' + (i + 1) + '">' + timeSlot.appointedTime_to + '</label>' +
                         '</div>');
 
                     timeListDiv.append(radioButton);
@@ -481,7 +481,8 @@
                 // Call the function to update the appointment time list
                 updateAppointmentTimeList(timeSlots);
             }
-        });
+
+        }
 
         function updateAppointmentTimeList(timeSlots) {
             // Assuming you have an element with id 'appointment-time-list'
@@ -493,17 +494,35 @@
             // Add radio buttons for each available time slot
             for (var i = 0; i < timeSlots.length; i++) {
                 var timeSlot = timeSlots[i];
-                var radioButton = $('<div class="form-check">' +
-                    '<input class="form-check-input" type="radio" name="appointmentTime" value="' + timeSlot + '">' +
-                    '<label class="form-check-label" for="flexRadioDefault' + (i + 1) + '">' +
-                    'Time: ' + timeSlot +
-                    '</label>' +
+                var radioButton =  $('<div class="time-slot">' +
+                    '<span class="time-label" type="radio">' + timeSlot.appointed_time + '</span>' +
+                    '<span class="time-label" type="radio">' + timeSlot.appointedTime_to + '</span>' +
                     '</div>');
+
+                radioButton.css({
+//                   'border': '2px solid #000', // Set border properties as needed
+                    'padding': '15px', // Optional: Add padding around the content
+                    'margin-bottom': '15px', // Optional: Add margin between slots
+                    'width': '200px', // Set the width of each time slot
+                    'height': '25px', // Set the height of each time slot
+                    'display': 'flex', // Use flexbox to align content
+                    'justify-content': 'center', // Center the content horizontally
+                    'align-items': 'center' // Center the content vertically
+                });
+
+                radioButton.find('.form-check-input').css({
+                    'margin-right': '10px' // Adjust the spacing between the radio button and text
+                });
+
+                radioButton.find('.time-label').css({
+                    'font-size': '18px', // Set the font size for the time labels
+                    'padding': '15px', // Optional: Add padding around the content
+                    'border': '1px #000'
+                });
 
                 appointmentTimeList.append(radioButton);
             }
         }
-
 
         /*----------------------------------------------------------------*/
         $(document).ready(function() {
