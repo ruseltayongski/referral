@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use App\AppointmentSchedule;
 use App\Department;
 use App\Facility;
+use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
 use Illuminate\Http\Request;
@@ -110,6 +111,7 @@ class TelemedicineCtrl extends Controller
             'status' => 'pending', // Set an appropriate status
             'created_by' => $user->id,
         ]);
+
         $telemedAssignDoctor->save();
         //------------------------------------------------------------------
 
@@ -186,7 +188,6 @@ class TelemedicineCtrl extends Controller
         $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
 
         if (!$facility_data) {
-
             return response()->json(['error' => 'Appointment not found'], 404);
         }
 
@@ -199,9 +200,9 @@ class TelemedicineCtrl extends Controller
         $date = $request->input('selected_date');
 
         // Fetch available time slots based on the selected date
-        $timeSlots = AppointmentSchedule::where('appointed_date', $date)
-            ->pluck('appointed_time')
-            ->toArray();
+        $timeSlots = AppointmentSchedule::select('appointed_time','appointedTime_to','appointed_date')
+            ->where('appointed_date', $date)
+            ->get();
 
         return response()->json(['time_slots' => $timeSlots]);
     }
