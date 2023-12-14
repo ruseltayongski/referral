@@ -45,6 +45,7 @@
     border-radius: 50%;
     background: #ccc;
     margin-bottom: 6px;
+
   }
 
   .stepper-item.active {
@@ -53,8 +54,9 @@
 
   .stepper-item.completed .step-counter {
     background-color: #4bb543;
+    color:white;
   }
-
+  
   .stepper-item.completed::after {
     position: absolute;
     content: "";
@@ -63,6 +65,7 @@
     top: 20px;
     left: 50%;
     z-index: 3;
+    color: white;
   }
 
   .step-counter-examined:hover {
@@ -115,6 +118,7 @@
 
   .stepper-item-upward.completed .step-counter {
     background-color: #4bb543;
+    color:white;
   }
 
   .stepper-item-upward.completed::after {
@@ -152,6 +156,7 @@
 
   .stepper-item-treated.completed .step-counter-treated {
     background-color: #4bb543;
+    color: white;
   }
 
   .stepper-item-treated {
@@ -241,6 +246,7 @@
 
   .stepper-item-follow.completed .step-counter-follow {
     background-color: #4bb543;
+    color: white;
   }
 
   .stepper-item-follow.completed::before {
@@ -300,6 +306,7 @@
     z-index: 3;
     transform: rotate(30deg);
     margin-top: -5px;
+    color:white; 
   }
 
   .step-counter-end:hover {

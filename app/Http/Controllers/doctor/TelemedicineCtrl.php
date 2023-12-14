@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class TelemedicineCtrl extends Controller
 {
@@ -97,9 +98,11 @@ class TelemedicineCtrl extends Controller
     }
 
     public function appointmentCalendar() {
-        $appointment_sched = AppointmentSchedule::groupBy('facility_id')->get();
-        return view('doctor.telemedicine_calendar',[
-            'appointment_sched' => $appointment_sched
+        $user = Session::get('auth');
+        $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
+        return view('doctor.telemedicine_calendar1',[
+            'appointment_sched' => $appointment_sched,
+            'user' => $user
         ]);
     }
 
@@ -124,7 +127,22 @@ class TelemedicineCtrl extends Controller
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
 
+<<<<<<< HEAD
         $selectedDoctors = $request->available_doctor;
+=======
+        //------------------------------------------------------------------
+        // Create a new TelemedAssignDoctor instance and save the relationship
+        $telemedAssignDoctor = new TelemedAssignDoctor([
+            'appointment_id' => $appointment->id,
+            'doctor_id' => $user->id, // Modify this based on your actual structure
+            'status' => 'pending', // Set an appropriate status
+            'created_by' => $user->id,
+        ]);
+
+        $telemedAssignDoctor->save();
+        //------------------------------------------------------------------
+
+>>>>>>> 30d98136c67a94ee9a44ceb07115c23c724334d9
 
         try {
             foreach ($selectedDoctors as $doctorId) {
@@ -211,7 +229,6 @@ class TelemedicineCtrl extends Controller
         $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
 
         if (!$facility_data) {
-
             return response()->json(['error' => 'Appointment not found'], 404);
         }
 
@@ -224,9 +241,9 @@ class TelemedicineCtrl extends Controller
         $date = $request->input('selected_date');
 
         // Fetch available time slots based on the selected date
-        $timeSlots = AppointmentSchedule::where('appointed_date', $date)
-            ->pluck('appointed_time')
-            ->toArray();
+        $timeSlots = AppointmentSchedule::select('appointed_time','appointedTime_to','appointed_date')
+            ->where('appointed_date', $date)
+            ->get();
 
         return response()->json(['time_slots' => $timeSlots]);
     }

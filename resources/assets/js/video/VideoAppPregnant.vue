@@ -23,7 +23,7 @@
                 activity_id: this.getUrlVars()["activity_id"],
                 options: {
                     // Pass your App ID here.
-                    appId: '1e264d7f57994a64b4ceb42f80188d06',
+                    appId: '0fc02f6b7ce04fbcb1991d71df2dbe0d',
                     // Set the channel name.
                     channel: this.getUrlVars()["code"],
                     // Pass your temp token here.

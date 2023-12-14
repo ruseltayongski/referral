@@ -1043,6 +1043,10 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::find($track_id);
+        
+        if($track->status == 'rejected')
+            return;
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,

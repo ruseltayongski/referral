@@ -1,0 +1,138 @@
+<template>
+    <div class="col-md-9">
+        <div class="jim-content">
+            <h3 class="page-header">Appointment Calendar</h3>
+            <div class="calendar-container">
+                <section class="content">
+                    <div class="row">
+                        <div class="box box-primary">
+                            <div class="box-body no-padding">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import { appointmentScheduleDate } from "./api/index"
+    export default {
+        name: 'AppointmentCalendar',
+        data() {
+            return {
+                calendar: null,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today: 'today',
+                    month: 'month',
+                    week: 'week',
+                    day: 'day'
+                },
+                events: [],
+            }
+        },
+        props: {
+            isSelectedId: {
+                type: Number
+            }
+        },
+        watch: {
+            isSelectedId: async function (payload) {
+                this.events = await this.__appointmentScheduleDate(payload)
+                this.updateCalendarEvents();
+            }
+        },
+        mounted() {
+            this.ini_events($('#external-events div.external-event'));
+            this.generateCalendar()
+        },
+        methods: {
+            ini_events(ele) {
+                ele.each(function () {
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    };
+                    $(this).data('eventObject', eventObject);
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, 
+                        revertDuration: 0 
+                    });
+                });
+            },
+            async generateCalendar() {
+                let self = this
+                this.calendar = $('#calendar').fullCalendar({
+                    dayRender: this.dayRenderFunction.bind(this),
+                    eventRender: this.eventRenderFunction.bind(this),
+                    dayClick: this.dayClickFunction.bind(this),
+                    header: self.header,
+                    buttonText: self.buttonText,
+                    events: this.events,
+                    editable: true,
+                    droppable: true,
+                    drop: this.handleDrop,
+                });
+            },
+            dayRenderFunction(date, cell) {
+                var eventsOnDate = this.events.filter(function (event) {
+                    return moment(event.start).isSame(date, 'day');
+                });
+
+                if (eventsOnDate.length > 0) {
+                    cell.css("background-color", "green");
+                    cell.addClass("add-cursor-pointer");
+                }
+            },
+            eventRenderFunction(event, element) {
+                console.log(event,event.start.format('YYYY-MM-DD'))
+                //remove element
+                $(".fc-day").css("background-color","")
+                $(".fc-day").removeClass("add-cursor-pointer")
+                //
+                this.$nextTick(() => {
+                    const targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']")
+                    targetTd.css('background-color', '#00a65a') //color the td of day in calendar
+                    targetTd.addClass("add-cursor-pointer");
+                    $(".fc-content").remove()
+                });
+            },
+            async dayClickFunction(date, allDay, jsEvent, view) {
+                const eventsOnDate = this.events.filter(function (event) {
+                    return moment(event.start).isSame(date, 'day');
+                });
+                if (eventsOnDate.length > 0) {
+                    console.log("day clickssss")
+                }
+            },
+            updateCalendarEvents() {
+                this.calendar.fullCalendar('removeEvents');
+                this.events.forEach((event) => {
+                    this.calendar.fullCalendar('renderEvent', event, true);
+                });
+            },
+            getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            },
+            async __appointmentScheduleDate(facility_id) {
+                const response = await appointmentScheduleDate(facility_id)
+                return response.data.facility_data.map((item) => {
+                    return {
+                            title: 'All Day Event',
+                            start: new Date(item.appointed_date),
+                            backgroundColor: "#00a65a",
+                            borderColor: "#00a65a"
+                    }
+                })
+            }
+        }
+    }
+</script>

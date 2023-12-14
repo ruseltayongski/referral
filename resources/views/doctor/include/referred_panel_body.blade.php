@@ -1,4 +1,4 @@
-<link href="{{ asset('public/css/refer_panel.css?v=1') }}" rel="stylesheet">
+<link href="{{ asset('public/css/refer_panel.css?v=3') }}" rel="stylesheet">
 <div class="panel-body panel-scoped-refer">
     <?php
     $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
@@ -76,11 +76,11 @@
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
-            <div class="step-counter">1</div>
+            <div class="step-counter"><i class="fa fa-share" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Referred</div>
         </div>
         <div class="stepper-item @if($referred_seen_track || $referred_accepted_track || $referred_rejected_track) completed @endif" id="seen_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter">2</div>
+            <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
         <div class="text-center stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
@@ -93,7 +93,7 @@
             elseif($referred_queued_track && !$referred_accepted_track)
                 echo "bg-orange";
             ?>
-                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">3</span></div>
+                    " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}"><i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i></span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
                 if($referred_cancelled_track)
@@ -108,11 +108,11 @@
             </div>
         </div>
         <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter">4</div>
+            <div class="step-counter"><i class="fa fa-bed" aria-hidden="true"></i></div>
             <div class="step-name">Departed</div>
         </div>
         <div class="stepper-item @if( ($referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter {{ $referred_notarrived_track && !$referred_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">5</div>
+            <div class="step-counter {{ $referred_notarrived_track && !$referred_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}"><i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px"></i></div>
             @if($referred_notarrived_track)
                 <div class="step-name not_arrived">Not Arrived</div>
             @else
@@ -120,11 +120,11 @@
             @endif
         </div>
         <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter">6</div>
+            <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
         <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter">7</div>
+            <div class="step-counter"><i class="fa fa-wheelchair" aria-hidden="true" style="font-size: 18px;"></i></div>
             <div class="step-name">Discharged</div>
         </div>
     </div>
