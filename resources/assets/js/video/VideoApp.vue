@@ -321,6 +321,7 @@
         },
     }
 </script>
+
 <template>
     <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
     <div class="container-fluid">
@@ -346,7 +347,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4" ><!-- --- -->
                 <div class="telemedForm">
                 <div class="row-fluid">
                     <div>
@@ -443,54 +444,114 @@
                                 <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><span class="mdHcw"> {{ form.md_referred }} </span></td>
                             </tr>
                         </table>
+                        <!-- ====================================================================================================-->
+                        <div v-if="referring_md == 'yes'">
+                            <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
+                        </div>
+                        <div v-else>
+                            <div class="container PrescripBorder">
+                                <div class="row examplePriscribe">
+                                    <div class="col"> 
+                                        <p class="ExampleAscorbic">Ex: 1.)&nbsp;Ascorbic Acid&nbsp;2.)&nbsp;500mg&nbsp;3.)&nbsp;Tablet&nbsp;4.)&nbsp;Brand Name &nbsp;5.)
+                                        &nbsp;Once a Day &nbsp;6.) For 7 Days&nbsp;7.)&nbsp;30pcs</p>
+                                    </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="generic name">1.)Generic Name:</label> 
+                                        <input type="text" v-model="genericname" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="dosage">2.)Dosage:</label>
+                                        <input type="text" v-model="dosage" class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="Formulation">3.)Formulation:</label>
+                                        <input type="text" v-model="formulation" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="brandName">4.)Brand Name:</label>
+                                        <input type="text" v-model="brandName" class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="frequency">5.)Frequency:</label>
+                                        <input type="text" v-model="frequency" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="brandName">6.)Duration:</label>
+                                        <input type="text" v-model="duration" class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="quantity">7.)Quantity:</label>
+                                        <input type="number" v-model="quantity"  class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
+                                <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
+                            </div>
+                        </div>
+                        <!-- ====================================================================================================-->
                     </div>
                 </div>
             </div>
-                <div v-if="referring_md == 'yes'">
+
+
+
+
+                <!-- <div v-if="referring_md == 'yes'">
                     <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                 </div>
                 <div v-else>
                     <div class="container">
-                        <div class="row prescription">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="genericName">Generic Name:</label>
-                                      <input type="text" class="form-control" id="genericName" name="genericName">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="dosage">Dosage:</label>
-                                    <input type="text" class="form-control" id="dosage" name="dosage">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="formulation">Formulation:</label>
-                                    <input type="text" class="form-control" id="formulation" name="formulation">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="brandName">Brand Name:</label>
-                                    <input type="text" class="form-control" id="brandName" name="brandName">
-                                </div>
+                        <div class="row examplePriscribe">
+                            <div class="col"> 
+                                <p class="ExampleAscorbic">Ex: 1.)&nbsp;Ascorbic Acid&nbsp;2.)&nbsp;500mg&nbsp;3.)&nbsp;Tablet&nbsp;4.)&nbsp;Brand Name &nbsp;5.)
+                                &nbsp;Once a Day &nbsp;<br>
+                                <span class="ExampleFor7Days">6.) For 7 Days&nbsp;7.)&nbsp;30pcs</span></p>
                             </div>
                         </div>
-
                         <div class="row prescription">
                             <div class="col">
-                                <div class="form-group">
-                                    <label for="frequency">Frequency:</label>
-                                    <input type="text" class="form-control" id="frequency" name="frequency">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="duration">Duration:</label>
-                                    <input type="text" class="form-control" id="duration" name="duration">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="quantity">Quantity:</label>
-                                    <input type="text" class="form-control" id="quantity" name="quantity">
-                                </div>
+                                <label for="generic name">1.)Generic Name:</label> 
+                                <input type="text" v-model="genericname" class="form-control" >
+                            </div>
+                        </div>
+                       <div class="row prescription">
+                            <div class="col">
+                                <label for="dosage">2.)Dosage:</label>
+                                <input type="text" v-model="dosage" class="form-control">
+                            </div>
+                            <div class="col">
+                                <label for="Formulation">3.)Formulation:</label>
+                                <input type="text" v-model="formulation" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="brandName">4.)Brand Name:</label>
+                                <input type="text" v-model="brandName" class="form-control">
+                            </div>
+                            <div class="col">
+                                <label for="frequency">5.)Frequency:</label>
+                                <input type="text" v-model="frequency" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="brandName">6.)Duration:</label>
+                                <input type="text" v-model="duration" class="form-control">
+                            </div>
+                            <div class="col">
+                                <label for="quantity">7.)Quantity:</label>
+                                <input type="number" v-model="quantity"  class="form-control">
                             </div>
                         </div>
                     </div>
@@ -498,13 +559,26 @@
                         <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                         <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
                     </div>
-                </div>
+                </div> -->
+
+
+
             </div>
         </div>
     </div>
 </template>
 
 <style>
+.PrescripBorder{
+    border: 1px solid lightgrey; margin-bottom: 10px; padding-bottom: 10px; margin-right: 15px; margin-top:3px;
+}
+.ExampleAscorbic{
+    font-size: 13px;
+}
+.row .examplePriscribe{
+    margin-bottom: -10px;
+    background-color: rgb(250, 246, 246);
+}
     .fade-enter,
     .fade-leave-to {
         animation: fadeOut 2s;
@@ -569,8 +643,16 @@
         border-radius: 50%;
         border: 0;
     }
-
     .telemedForm {
+        position: relative;
+        border: 2px outset black;
+        margin-top: 5px;
+        height: 955px;
+        padding: 0;
+        font-size: 14px;
+        font-family: Calibri;
+    }
+    /* .telemedForm {
         position: relative;
         border: 2px outset black;
         margin-top: 5px;
@@ -578,7 +660,7 @@
         padding: 0;
         font-size: 14px;
         font-family: Calibri;
-    }
+    } */
     .dohLogo {
         position: relative;
         border: 1px outset transparent;
@@ -608,7 +690,8 @@
     .tableForm {
         position: relative;
         border: 1px outset transparent;
-        height: 655px;
+        /* height: 655px; */
+        height: 818px;
         width: auto;
         text-align: left;
         line-height: 1.2;
