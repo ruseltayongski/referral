@@ -18,6 +18,7 @@ class Facility extends Model
     {
         return $this->belongsTo(User::class, 'id', 'facility_id');
     }
+
     //------------------------------------------------
 
 
