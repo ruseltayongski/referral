@@ -49,12 +49,30 @@ class TelemedicineCtrl extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
 
+        $user_facility = User::
+            with([
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                }
+            ])
+            ->where('department_id',"=", '5')
+            ->groupBy('facility_id')
+            ->get();
+
         $data = [
             'appointment_schedule' => $appointment_schedule,
-            'facility' => Facility::all(),
+            'facility' => $user_facility,
             'facilityList' => Facility::all(),
             'departmentList' => Department::all(),
-            'doctors' => User::get(),
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
@@ -62,11 +80,10 @@ class TelemedicineCtrl extends Controller
         return view('doctor.manage_appointment', $data);
     }
 
-    function departmentGet(Request $request){
-        $users = User::with(['facility', 'department'])
-            ->where('facility_id', $request->facility_id)
-            ->get();
-
+    public function departmentGet(Request $request){
+//        $users = User::with(['facility', 'department'])
+//            ->where('facility_id', $request->facility_id)
+//            ->get();
 
 //        $facilityId = $request->facility_id;
 //        // Retrieve users with the specified facility and 'OPD' department value
@@ -76,8 +93,8 @@ class TelemedicineCtrl extends Controller
 //            })
 //            ->with(['facility', 'department'])
 //            ->get();
-
-        return $users;
+//
+//        return $users;
     }
 
     public function appointmentCalendar() {
@@ -100,12 +117,19 @@ class TelemedicineCtrl extends Controller
            'opdCategory' => 'required',
            'slot' => 'required|integer',
         ]);
+
         $user = Session::get('auth');
         $validateData['created_by'] = $user->id;
+
+        // Set the department to "OPD"
+        $validateData['department_id'] = 5;
 
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
 
+<<<<<<< HEAD
+        $selectedDoctors = $request->available_doctor;
+=======
         //------------------------------------------------------------------
         // Create a new TelemedAssignDoctor instance and save the relationship
         $telemedAssignDoctor = new TelemedAssignDoctor([
@@ -118,7 +142,21 @@ class TelemedicineCtrl extends Controller
         $telemedAssignDoctor->save();
         //------------------------------------------------------------------
 
+>>>>>>> 30d98136c67a94ee9a44ceb07115c23c724334d9
 
+        try {
+            foreach ($selectedDoctors as $doctorId) {
+                TelemedAssignDoctor::create([
+                    'appointment_id' => $appointment->id,
+                    'doctor_id' => $doctorId,
+                    'status' => 'pending',
+                    'created_by' => $user->id,
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error saving data to TelemedAssignDoctor: ' . $e->getMessage());
+            // Handle the error as needed
+        }
         return redirect()->back()->with('success', 'Appointment created successfully');
     }
 
@@ -210,16 +248,39 @@ class TelemedicineCtrl extends Controller
         return response()->json(['time_slots' => $timeSlots]);
     }
 
-
-    public function getDoctors($departmentId)
+    public function getDoctors($facilityId)
     {
-        // Assuming 'level' column represents the user type
-        $doctors = User::where([
-            ['level', '=', 'doctor'],
-            ['department_id', '=', $departmentId],
-        ])->get(['id', 'username']);
+        try {
+            // Assuming 'level' is a column in the users table
+            $doctors = User::where('facility_id', $facilityId)
+                ->where('department_id','=',5)
+                ->where('level', 'doctor')
+                ->get();
 
-        return response()->json($doctors);
+            // You can return the doctors as JSON or in any other format you prefer
+            return $doctors;
+        } catch (\Exception $e) {
+            // Log the exception for debugging purposes
+            \Log::error("Error fetching doctors: " . $e->getMessage());
+
+            // Return an error response
+            return response()->json(['error' => 'Failed to fetch doctors'], 500);
+        }
+
+    }
+
+    public function getFacilitiesByDepartmentAndType($departmentId) {
+        // Assuming Facility and Department models with relationships
+
+        // Fetch facilities based on department ID and type
+        $facilities = Facility::where('department_id', $departmentId)
+            ->where(function($query) {
+                $query->where('type', 'OPD')
+                    ->orWhere('type', 5);
+            })
+            ->get();
+
+        return response()->json($facilities);
     }
 
 

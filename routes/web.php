@@ -653,6 +653,15 @@ Route::post('/appointment/delete', 'doctor\TelemedicineCtrl@deleteAppointment')-
 Route::get('department/get/{facility_id}', 'doctor\TelemedicineCtrl@departmentGet')->name('department.get');
 Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-user-data');
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
+<<<<<<< HEAD
+Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
+Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
+=======
 Route::get('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
+>>>>>>> 30d98136c67a94ee9a44ceb07115c23c724334d9
 
-Route::get('/get-doctors/{departmentId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
+
+//Route::get('/doctor/additional_timeSlot', 'doctor\TelemedicineCtrl@additionalTimeSlotView');
+
+
+

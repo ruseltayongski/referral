@@ -1,6 +1,10 @@
+
 @extends('layouts.app')
 
+
 @section('content')
+    {{--@include('doctor/additional_timeSlot')--}}
+
     <style>
         .bg_new {
             background-color: #ffcba4;
@@ -13,11 +17,33 @@
         .bg_resolved {
             background-color: #ace1af;
         }
-    </style>
 
+        .label-border {
+            border: 1px solid #ccc;
+            padding: 5px 5px 10px 5px;
+            margin-top: 12px;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+        }
+        .label-border-time {
+            border: 1px solid lightslategray;
+            padding: 5px 5px 10px 5px;
+            margin-top: 12px;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+        }
+
+        label[for="opdCategory"],
+        label[for="available_doctor"],
+        label[for="slot"] {
+        @extend .label-border-time;
+        }
+    </style>
     <!-- Add Modal -->
     <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body">
 
@@ -41,66 +67,100 @@
                             </legend>
                         </fieldset>
                         <div class="form-group">
-                            <label for="appointed_date">Appointed Date:</label>
-                            <input type="date" class="form-control" name="appointed_date" required>
-                            <label for="appointed_time">Appointed Time:</label><br>
-                            <span>From:</span>
-                            <input type="time" class="form-control" name="appointed_time" required>
-                            <span>To:</span>
-                            <input type="time" class="form-control" name="appointedTime_to" required>
 
-                            <label for="facility_id">Facility:</label>
-                            <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))">
-                                <option selected>Select Facility</option>
-                                @foreach($facility as $Facility)
-                                    <option value="{{ $Facility->id }}">{{ $Facility->name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-border">
+                                        <label for="appointed_date">Appointed Date:</label>
+                                        <input type="date" class="form-control" name="appointed_date" required>
 
-                            <label for="department_id">Department:</label>
-                            <select class="form-control select2" name="department_id" id="department_id">
-                                <option selected>Select Department</option>
-                                <option value=""></option>
-                            </select>
+                                        <label for="facility_id">Facility:</label>
+                                        <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))">
+                                            <option selected>Select Facility</option>
+                                            @foreach($facility as $Facility)
+                                                <option value="{{ $Facility->facility->id}}">{{ $Facility->facility->name }}</option>
+                                            @endforeach
+                                        </select>
 
-                            {{--==================================================================================--}}
+                                        <label for="department_id">Department:</label>
+                                     {{--   <select class="form-control select2" name="department_id" id="department_id">
+                                            <option selected>OPD</option>
+                                        </select>--}}
+                                        <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
+                                    </div>
 
-                            {{--==================================================================================--}}
+                                </div>
 
-                            <label for="opdCategory">OPD Category:</label>
-                            <select class="form-control select2" name="opdCategory" id="opdCategory" required>
-                                <option selected>Select OPD Category</option>
-                                <option value="Family Medicine">Family Medicine</option>
-                                <option value="Internal Medicine">Internal Medicine</option>
-                                <option value="General Surgery">General Surgery</option>
-                                <option value="Trauma Care">Trauma Care</option>
-                                <option value="Burn Care">Burn Care</option>
-                                <option value="Ophthalmology">Ophthalmology</option>
-                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                <option value="ENT">ENT</option>
-                                <option value="Neurosurgery">Neurosurgery</option>
-                                <option value="Urosurgery">Urosurgery</option>
-                                <option value="Toxicology">Toxicology</option>
-                                <option value="OB-GYNE">OB-GYNE</option>
-                                <option value="Pediatric">Pediatric</option>
-                            </select>
+                                <div class="col-md-8">
+                                    <div class="label-border">
+                                        <label for="appointed_time">Appointed Time:</label><br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <span>From:</span>
+                                                <input type="time" class="form-control" name="appointed_time" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span>To:</span>
+                                                <input type="time" class="form-control" name="appointedTime_to" required>
+                                            </div>
+                                        </div>
 
-                            <label>Available Doctor</label>
-                            <select class="form-control select2" id="available_doctor" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;">
-                                @foreach($doctors as $doctor)
-                                    <option value="{{ $doctor->id }}">{{ $doctor->username }}</option>
-                                @endforeach
-                            </select>
 
-                            <label for="slot">Slot:</label>
-                            <input type="number" class="form-control" name="slot" required>
+                                        <div id="opdCategoryContainer">
+                                        <div class="label-border">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="opdCategory">OPD Category:</label>
+                                                    <select class="form-control select2" name="opdCategory" id="opdCategory" required>
+                                                        <option selected>Select OPD Category</option>
+                                                        <option value="Family Medicine">Family Medicine</option>
+                                                        <option value="Internal Medicine">Internal Medicine</option>
+                                                        <option value="General Surgery">General Surgery</option>
+                                                        <option value="Trauma Care">Trauma Care</option>
+                                                        <option value="Burn Care">Burn Care</option>
+                                                        <option value="Ophthalmology">Ophthalmology</option>
+                                                        <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                        <option value="ENT">ENT</option>
+                                                        <option value="Neurosurgery">Neurosurgery</option>
+                                                        <option value="Urosurgery">Urosurgery</option>
+                                                        <option value="Toxicology">Toxicology</option>
+                                                        <option value="OB-GYNE">OB-GYNE</option>
+                                                        <option value="Pediatric">Pediatric</option>
+                                                    </select>
+                                                </div>
 
+                                                <div class="col-md-6">
+                                                    <label for="slot">Slot:</label>
+                                                    <input type="number" class="form-control" name="slot" required>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label>Available Doctor</label>
+                                                <select class="form-control select2" name="available_doctor[]" id="available_doctor" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>
+                                            </div>
+                                            <div style="margin-top: 15px;">
+                                                {{--<button type="button" class="btn btn-info btn-sm">Add More Category and Slot</button>--}}
+                                                <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
+                                            </div>
+                                        </div>
+                                        </div>
+
+
+
+                                        <!-- Container for additional time inputs (initially hidden) -->
+                                        <div id="additionalTimeContainer" style="display: none;"></div>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
                             <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -142,6 +202,7 @@
             <h3>APPOINTMENTS {{--<small>{{ $appointment_schedule }}</small>--}} </h3>
         </div>
 
+        <!-- Table List -->
         <div class="box-body appointments">
             @if(count($appointment_schedule)>0)
             <div class="table-responsive">
@@ -350,21 +411,8 @@
 @endsection
 
 @section('js')
+
     <script>
-
-        function fetchDoctorsByDepartment(departmentId) {
-            $.get("{{ url('get-doctors') }}/" + departmentId, function(data) {
-                var select = $('#available_doctor');
-                select.empty(); // Clear existing options
-                $.each(data, function(index, doctor) {
-                    select.append('<option value="' + doctor.id + '">' + doctor.username + '</option>');
-                });
-            });
-        }
-
-
-
-
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
@@ -393,60 +441,8 @@
 
             $('#updateConfirmationModal').modal('show');
         }
+
         //--------------------------------------------------------------
-        function DeleteModal(appointmentId) {
-            $('#deleteAppointmentId').val(appointmentId);
-
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
-
-            $.get(url, function(data) {
-                //console.log(data);
-                $('#del_appointed_date').val(data.appointed_date);
-                $('#del_appointed_time').val(data.appointed_time);
-                $('#del_appointedTime_to').val(data.appointedTime_to);
-                $('#del_created_by').val(data.created_by);
-                $('#del_facility_id').val(data.facility_id);
-                $('#del_department_id').val(data.department_id);
-                $('#del_appointed_by').val(data.appointed_by);
-                var createdByUserId = data.created_by;
-                $.get("{{ route('get-user-data', ':id') }}".replace(':id', createdByUserId), function(user) {
-                    $('#del_created_by').val(user.username);
-                });
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("AJAX Error: " + errorThrown);
-            });
-
-            $('#deleteConfirmationModal').modal('show');
-        }
-        //--------------------------------------------------------------
-        function deleteAppointment() {
-            var appointmentId = $('#deleteAppointmentId').val();
-
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('delete-appointment') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'id': appointmentId
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $('#deleteConfirmationModal').modal('hide');
-
-                    // Add auto-refresh after a successful deletion
-                    setTimeout(function () {
-                        location.reload();
-                    }, 300);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("AJAX Error: " + errorThrown);
-                }
-            });
-        }
-        //--------------------------------------------------------------
-
         function updateAppointment() {
             var appointmentId = $('#updateAppointmentId').val();
             var appointedDate = $('#update_appointed_date').val();
@@ -491,10 +487,64 @@
                 }
             });
         }
+
+        //--------------------------------------------------------------
+        function DeleteModal(appointmentId) {
+            $('#deleteAppointmentId').val(appointmentId);
+
+            var url = "{{ route('get-appointment-data', ':id') }}";
+            url = url.replace(':id', appointmentId);
+
+            $.get(url, function(data) {
+                //console.log(data);
+                $('#del_appointed_date').val(data.appointed_date);
+                $('#del_appointed_time').val(data.appointed_time);
+                $('#del_appointedTime_to').val(data.appointedTime_to);
+                $('#del_created_by').val(data.created_by);
+                $('#del_facility_id').val(data.facility_id);
+                $('#del_department_id').val(data.department_id);
+                $('#del_appointed_by').val(data.appointed_by);
+                var createdByUserId = data.created_by;
+                $.get("{{ route('get-user-data', ':id') }}".replace(':id', createdByUserId), function(user) {
+                    $('#del_created_by').val(user.username);
+                });
+
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("AJAX Error: " + errorThrown);
+            });
+
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        //--------------------------------------------------------------
+        function deleteAppointment() {
+            var appointmentId = $('#deleteAppointmentId').val();
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('delete-appointment') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'id': appointmentId
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#deleteConfirmationModal').modal('hide');
+
+                    // Add auto-refresh after a successful deletion
+                    setTimeout(function () {
+                        location.reload();
+                    }, 300);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("AJAX Error: " + errorThrown);
+                }
+            });
+        }
+
         //--------------------------------------------------------------
 
         function onchangeUpdateDepartment(data){
-
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
                     //console.log('Department Data:', result);
@@ -518,36 +568,142 @@
                 });
             }
         }
+        //--------------------------------------------------------------
 
         function onchangeDepartment(data) {
-            if(data.val()) { 
+
+            if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
                     //console.log('Department Data:', result);
-                    $('#department_id').html('');
-                    $('#department_id').append($('<option>', {
-                        value: "",
-                        text: "Select Department"
-                    }));
-                    // Use an object to store unique department IDs
-                    var uniqueDepartments = {};
-                    $.each(result, function(index, userData){
-                        if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
-                            $('#department_id').append($('<option>', {
-                                value: userData.department.id,
-                                text: userData.department.description,
-                            }));
-                            // Mark department ID as visited to avoid duplicates
-                            uniqueDepartments[userData.department.id] = true;
-                        }
+//                    $('#department_id').html('');
+//                    $('#department_id').append($('<option>', {
+//                        value: "",
+//                        text: "Select Department"
+//                    }));
+
+//                    var uniqueDepartments = {};
+//                    $.each(result, function (index, userData) {
+//                        if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
+//                            $('#department_id').append($('<option>', {
+//                                value: userData.department.id,
+//                                text: userData.department.description,
+//                            }));
+//                            // Mark department ID as visited to avoid duplicates
+//                            uniqueDepartments[userData.department.id] = true;
+//                        }
+//                    });
+
+                    //-------------------------------------------------------------------
+                    // Assuming this code is inside a function or an event handler
+                    console.log(data.val());
+                    $.get("{{ url('get-doctors').'/' }}" + data.val(), function (result) {
+                        // Initialize the uniqueUser variable
+                        var uniqueUser = {};
+
+                        // For #available_doctor
+                        $('#available_doctor').html('');
+                        $('#available_doctor').append($('<option>', {
+                            value: "",
+                            text: "Select Doctors"
+                        }));
+
+                        // For #available_doctor1
+                        $('#available_doctor1').html('');
+                        $('#available_doctor1').append($('<option>', {
+                            value: "",
+                            text: "Select Doctors"
+                        }));
+
+                        // Loop through the result data
+                        $.each(result, function (index, userData) {
+                            if (userData.id && userData.username && !uniqueUser[userData.id]) {
+                                // For #available_doctor
+                                $('#available_doctor').append($('<option>', {
+                                    value: userData.id,
+                                    text: userData.username
+                                }));
+
+                                // For #available_doctor1
+                                $('#available_doctor1').append($('<option>', {
+                                    value: userData.id,
+                                    text: userData.username
+                                }));
+
+                                // Mark user ID as visited to avoid duplicates for both dropdowns
+                                uniqueUser[userData.id] = true;
+                            }
+                        });
                     });
 
-                    // Call the function to fetch and update doctors
-                    fetchDoctorsByDepartment(data.val());
-                });
+                })
             }
         }
+
+        //=======================================================================================
+
+        function addTimeInput(ok) {
+
+            var timeInputGroup = $('<div class="time-input-group">');
+
+            var additionalTimeInput = '<div class="label-border-time">' +
+                                        '<div class="row">' +
+                                            '<div class="col-md-6">' +
+                                                '<label for="opdCategory">OPD Category:</label>' +
+                                                '<select class="form-control select2"  name="opdCategory" required>' +
+                                                    '<option selected>Select OPD Category</option>' +
+                                                    '<option value="Family Medicine">Family Medicine</option>' +
+                                                    '<option value="Internal Medicine">Internal Medicine</option>' +
+                                                    '<option value="General Surgery">General Surgery</option>' +
+                                                    '<option value="Trauma Care">Trauma Care</option>' +
+                                                    '<option value="Burn Care">Burn Care</option>' +
+                                                    '<option value="Ophthalmology">Ophthalmology</option>' +
+                                                    '<option value="Plastic and Reconstructive">Plastic and Reconstructive</option>' +
+                                                    '<option value="ENT">ENT</option>' +
+                                                    '<option value="Neurosurgery">Neurosurgery</option>' +
+                                                    '<option value="Urosurgery">Urosurgery</option>' +
+                                                    '<option value="Toxicology">Toxicology</option>' +
+                                                    '<option value="OB-GYNE">OB-GYNE</option>' +
+                                                    '<option value="Pediatric">Pediatric</option>' +
+                                                '</select>' +
+                                            '</div>' +
+                                            '<div class="col-md-6">' +
+                                                '<label for="slot">Slot:</label>' +
+                                                '<input type="number" class="form-control" name="slot" required>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div>' +
+                                            '<label>Available Doctor</label>' +
+                                            '<select class="form-control select2" name="available_doctor1[]" id="available_doctor1" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>' +
+                                        '</div>' +
+                                    '</div>';
+
+            // Add the delete button
+            var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
+            timeInputGroup.append(deleteBtn);
+
+            // Append the additional time input structure
+            timeInputGroup.append(additionalTimeInput);
+
+            // Append the timeInputGroup to the additionalTimeContainer
+            $('#additionalTimeContainer').append(timeInputGroup);
+
+            // Add a click event listener for the delete button
+            timeInputGroup.find('.delete-time-input').on('click', function () {
+                timeInputGroup.remove();
+            });
+
+            $('#additionalTimeContainer').show();
+
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
+        }
+
+
         //--------------------------------------------------------------
-        
+
+
+
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",

@@ -9,8 +9,6 @@ class TelemedAssignDoctor extends Model
     protected $table = 'telemed_assign_doctor';
     protected $guarded = array();
 
-    public function assignDoctor(){
-        return $this -> belongsTo (User::class, 'doctor_id', 'id');
-    }
+    protected $fillable = ['appointment_id', 'doctor_id', 'status', 'created_by'];
 
 }
