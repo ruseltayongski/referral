@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class TelemedicineCtrl extends Controller
 {
@@ -80,9 +81,11 @@ class TelemedicineCtrl extends Controller
     }
 
     public function appointmentCalendar() {
-        $appointment_sched = AppointmentSchedule::groupBy('facility_id')->get();
-        return view('doctor.telemedicine_calendar',[
-            'appointment_sched' => $appointment_sched
+        $user = Session::get('auth');
+        $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
+        return view('doctor.telemedicine_calendar1',[
+            'appointment_sched' => $appointment_sched,
+            'user' => $user
         ]);
     }
 
