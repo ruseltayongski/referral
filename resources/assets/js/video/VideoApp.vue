@@ -431,48 +431,40 @@
                                 <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                             </div>
                             <div v-else>
-                                <div class="container PrescripBorder">
-                                    <div class="row examplePriscribe">
-                                        <div class="col"> 
-                                            <p class="ExampleAscorbic">Ex: 1.)&nbsp;Ascorbic Acid&nbsp;2.)&nbsp;500mg&nbsp;3.)&nbsp;Tablet&nbsp;4.)&nbsp;Brand Name &nbsp;5.)
-                                            &nbsp;Once a Day &nbsp;6.) For 7 Days&nbsp;7.)&nbsp;30pcs</p>
-                                        </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="generic name">1.)Generic Name:</label> 
+                                        <input type="text" v-model="prescription" class="form-control" >
                                     </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="generic name">1.)Generic Name:</label> 
-                                            <input type="text" v-model="genericname" class="form-control" >
-                                        </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="dosage">2.)Dosage:</label>
+                                        <input type="text" v-model="dosage" class="form-control">
                                     </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="dosage">2.)Dosage:</label>
-                                            <input type="text" v-model="dosage" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="Formulation">3.)Formulation:</label>
-                                            <input type="text" v-model="formulation" class="form-control">
-                                        </div>
+                                    <div class="col">
+                                        <label for="Formulation">3.)Formulation:</label>
+                                        <input type="text" v-model="formulation" class="form-control">
                                     </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="brandName">4.)Brand Name:</label>
-                                            <input type="text" v-model="brandName" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="frequency">5.)Frequency:</label>
-                                            <input type="text" v-model="frequency" class="form-control">
-                                        </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="brandName">4.)Brand Name:</label>
+                                        <input type="text" v-model="brandName" class="form-control">
                                     </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="brandName">6.)Duration:</label>
-                                            <input type="text" v-model="duration" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="quantity">7.)Quantity:</label>
-                                            <input type="number" v-model="quantity"  class="form-control">
-                                        </div>
+                                    <div class="col">
+                                        <label for="frequency">5.)Frequency:</label>
+                                        <input type="text" v-model="frequency" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row prescription">
+                                    <div class="col">
+                                        <label for="brandName">6.)Duration:</label>
+                                        <input type="text" v-model="duration" class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="quantity">7.)Quantity:</label>
+                                        <input type="number" v-model="quantity"  class="form-control">
                                     </div>
                                 </div>
                                 <div>
