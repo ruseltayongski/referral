@@ -4,7 +4,6 @@
     <!-- fullCalendar 2.2.5-->
     <link rel="stylesheet" href="{{ asset('resources/plugin/fullcalendar/fullcalendar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('resources/plugin/fullcalendar/fullcalendar.print.css') }}" media="print">
-
     <style>
         :root {
            /* --red: #ef233c;
@@ -157,129 +156,131 @@
 @endsection
 
 @section('content')
-    <div class="col-md-12">
-        <div class="jim-content">
-            <h3 class="page-header">Appointment Calendar</h3>
-
-            <div class="scroll-container">
-                @if(isset($appointment_sched))
-                    @foreach($appointment_sched as $row)
-                        <div class="col-md-4 scroll-item">
-                            <!-- Widget: user widget style 1 -->
-                            <div class="box box-widget widget-user with-badge">
-                                <!-- Add the bg color to the header using any of the bg-* classes -->
-                                <div class="widget-user-header">
-                                    <h3 class="widget-user-username">
-                                        <?php
-                                        $facility_name = \App\Facility::find($row->facility_id)->name;
-                                        echo $facility_name;
-                                        ?></h3>
-                                    <h5 class="widget-user-desc">
-                                        <?php
-                                        $address = \App\Facility::find($row->facility_id)->address;
-                                        echo $address;
-                                        ?>
-                                    </h5>
-                                </div>
-                                <div class="widget-user-image">
-                                    <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
-                                </div>
-                                <div class="box-footer">
-                                    <div class="row">
-                                        <div class="col-sm-4 border-right">
-                                            <div class="description-block">
-                                                {{--<h5 class="description-header">3,200</h5>--}}
-                                                <h5 class="description-header"><?php
-                                                    $slot = \App\AppointmentSchedule::where('facility_id', $row->facility_id)->get();
-                                                    if($slot){
-                                                        $count =0;
-                                                        foreach ($slot as $ind){
-                                                            $count = $count + $ind->slot;
-                                                        }
-                                                    }
-                                                    echo $count;?></h5>
-                                                <span class="description-text">Slot</span>
-                                            </div><!-- /.description-block -->
-                                        </div><!-- /.col -->
-                                        <div class="col-sm-4 border-right">
-                                            <div class="description-block">
-                                                <h5 class="description-header">13,000</h5>
-                                                <span class="description-text">Available</span>
-                                            </div><!-- /.description-block -->
-                                        </div><!-- /.col -->
-                                        <div class="col-sm-4">
-                                            <div class="description-block">
-                                            <button class="btn btn-block btn-success btn-select" onclick="calendar_display({{$row->facility_id}})" id="selected_data" name="selected_data"> Select</button>
-                                            </div><!-- /.description-block -->
-                                        </div><!-- /.col -->
-                                    </div><!-- /.row -->
-                                </div>
-                            </div><!-- /.widget-user -->
-                        </div><!-- /.col -->
-                    @endforeach
-                @endif
-            </div>
-
-
-            {{--------------------------------------------------------}}
-                <div class="calendar-container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jim-content">
+                <h3 class="page-header">Select Facility</h3>
                 <div class="row">
-                    <section class="content">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <div class="box box-primary">
-                                    <div class="box-body no-padding">
-
-                                    <!-- THE CALENDAR -->
-                                    <div id="calendar"></div>
-                                    </div><!-- /.box-body -->
-
-
-                                </div><!-- /. box -->
-                            </div><!-- /.col -->
-                            <div class="col-md-3">
-                                <div class="box box-solid">
-                                    <div class="box-header with-border">
-                                        <h4 class="box-title">Legends</h4>
-                                    </div>
-                                    <div class="box-body">
-                                        <!-- the events -->
-                                        <div id="external-events">
-                                        <div class="external-event bg-green">Available Slot</div>
-                                        {{--<div class="external-event bg-yellow">Go home</div>
-                                        <div class="external-event bg-aqua">Do homework</div>
-                                        <div class="external-event bg-light-blue">Work on UI design</div>
-                                        <div class="external-event bg-red">Sleep tight</div>--}}
-                                        {{--<div class="checkbox">--}}
-                                            {{--<label for="drop-remove">--}}
-                                            {{--<input type="checkbox" id="drop-remove">--}}
-                                            {{--remove after drop--}}
-                                            {{--</label>--}}
-                                        {{--</div>--}}
+                    <div class="scroll-container">
+                        @if(isset($appointment_sched))
+                            @foreach($appointment_sched as $row)
+                                <div class="col-md-4 scroll-item">
+                                    <!-- Widget: user widget style 1 -->
+                                    <div class="box box-widget widget-user with-badge">
+                                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                                        <div class="widget-user-header">
+                                            <h3 class="widget-user-username">
+                                                <?php
+                                                $facility_name = \App\Facility::find($row->facility_id)->name;
+                                                echo $facility_name;
+                                                ?></h3>
+                                            <h5 class="widget-user-desc">
+                                                <?php
+                                                $address = \App\Facility::find($row->facility_id)->address;
+                                                echo $address;
+                                                ?>
+                                            </h5>
                                         </div>
-                                    </div><!-- /.box-body -->
-                                </div><!-- /. box -->
-
-                                <!-- Radio Button List -->
-                                <div class="box box-solid">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Select Time of Appointment</h3>
-                                        <div id="date-selected"></div>
-                                    </div>
-                                    <div class="box-body">
-                                        <div id="appointment-time-list">
+                                        <div class="widget-user-image">
+                                            <img src="<?php echo e(asset('resources/img/video/doh-logo.png')); ?>" class="img-circle" alt="User Avatar"/>
                                         </div>
-                                    </div>
-                                </div>
-
-
-
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </section><!-- /.content -->
+                                        <div class="box-footer">
+                                            <div class="row">
+                                                <div class="col-sm-4 border-right">
+                                                    <div class="description-block">
+                                                        {{--<h5 class="description-header">3,200</h5>--}}
+                                                        <h5 class="description-header"><?php
+                                                            $slot = \App\AppointmentSchedule::where('facility_id', $row->facility_id)->get();
+                                                            if($slot){
+                                                                $count =0;
+                                                                foreach ($slot as $ind){
+                                                                    $count = $count + $ind->slot;
+                                                                }
+                                                            }
+                                                            echo $count;?></h5>
+                                                        <span class="description-text">Slot</span>
+                                                    </div><!-- /.description-block -->
+                                                </div><!-- /.col -->
+                                                <div class="col-sm-4 border-right">
+                                                    <div class="description-block">
+                                                        <h5 class="description-header">13,000</h5>
+                                                        <span class="description-text">Available</span>
+                                                    </div><!-- /.description-block -->
+                                                </div><!-- /.col -->
+                                                <div class="col-sm-4">
+                                                    <div class="description-block">
+                                                    <button class="btn btn-block btn-success btn-select" onclick="calendar_display({{$row->facility_id}})" id="selected_data" name="selected_data"> Select</button>
+                                                    </div><!-- /.description-block -->
+                                                </div><!-- /.col -->
+                                            </div><!-- /.row -->
+                                        </div>
+                                    </div><!-- /.widget-user -->
+                                </div><!-- /.col -->
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="jim-content">
+                        <h3 class="page-header">Appointment Calendar</h3>
+                        {{--------------------------------------------------------}}
+                        <div class="calendar-container">
+                            <section class="content">
+                                <div class="row">
+                                    <div class="box box-primary">
+                                        <div class="box-body no-padding">
+                                            <div id="calendar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div> <!-- calendar container -->
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="jim-content">
+                        <h3 class="page-header">Time Slot</h3>
+                        {{--------------------------------------------------------}}
+                        <div class="calendar-container">
+                            <section class="content">
+                                <div class="row">
+                                    <div class="box box-primary">
+                                        <div class="box-body no-padding">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">Legends</h4>
+                                            </div>
+                                            <div id="external-events">
+                                                <div class="external-event bg-green">Available Slot</div>
+                                            </div>
+                                            <div class="box box-solid">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Select Time of Appointment</h3>
+                                                    <div id="date-selected"></div>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div id="appointment-time-list">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div> <!-- calendar container -->
+                    </div>
+                </div>
+
+            </div>
+        </div> 
     </div>
 @endsection
 
@@ -329,7 +330,7 @@
                    }).fail(function (jqXHR, textStatus, errorThrown) {
                        console.log("AJAX Error: " + errorThrown);
                    });
-               },
+                },
                 dayClick: function (date, info, jsEvent, view) {
                     // Handle the click event here
 //                        alert('You clicked on ' + calEvent.title);
