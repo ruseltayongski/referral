@@ -127,9 +127,8 @@ class TelemedicineCtrl extends Controller
         $appointment = new AppointmentSchedule($validateData);
         $appointment->save();
 
-<<<<<<< HEAD
         $selectedDoctors = $request->available_doctor;
-=======
+
         //------------------------------------------------------------------
         // Create a new TelemedAssignDoctor instance and save the relationship
         $telemedAssignDoctor = new TelemedAssignDoctor([
@@ -140,9 +139,6 @@ class TelemedicineCtrl extends Controller
         ]);
 
         $telemedAssignDoctor->save();
-        //------------------------------------------------------------------
-
->>>>>>> 30d98136c67a94ee9a44ceb07115c23c724334d9
 
         try {
             foreach ($selectedDoctors as $doctorId) {
