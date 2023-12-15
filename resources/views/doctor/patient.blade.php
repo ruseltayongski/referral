@@ -249,7 +249,7 @@ $counter = 0;
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
                                             </a><br>
-                                            @if($user->id == 4959 || $user->id == 6733)
+                                            @if($user->id == 4959 || $user->id == 6733 || $user->id == 4975)
                                                 <a href="#pregnantModal"
                                                    data-patient_id = "{{ $row->id }}"
                                                    data-toggle="modal"

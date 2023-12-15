@@ -122,16 +122,6 @@
                 const localPlayerContainer = document.createElement('div');
                 // Specify the ID of the DIV container. You can use the uid of the local user.
                 localPlayerContainer.id = this.options.uid;
-                // Set the textContent property of the local video container to the local user id.
-                /*localPlayerContainer.textContent = "Local user " + this.options.uid;
-                // Set the local video container size.
-                localPlayerContainer.style.width = "640px";
-                localPlayerContainer.style.height = "480px";
-                localPlayerContainer.style.padding = "15px 5px 5px 5px";
-                // Set the remote video container size.
-                remotePlayerContainer.style.width = "640px";
-                remotePlayerContainer.style.height = "480px";
-                remotePlayerContainer.style.padding = "15px 5px 5px 5px";*/
                 // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
                 let self =  this
                 agoraEngine.on("user-published", async (user, mediaType) =>
@@ -293,9 +283,9 @@
                             });
                     }
                 })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                .catch((error) => {
+                    console.log(error);
+                });
             }
         },
     }
