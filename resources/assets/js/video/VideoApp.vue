@@ -459,7 +459,7 @@
                                 <div class="row prescription">
                                     <div class="col">
                                         <label for="generic name">1.)Generic Name:</label> 
-                                        <input type="text" v-model="genericname" class="form-control" >
+                                        <input type="text" v-model="prescription" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="row prescription">

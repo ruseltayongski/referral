@@ -14,7 +14,8 @@
                 {
                     msg: "This tracking area has already been referred!"
                 });
-        } else if(alreadyFollowup) {
+        } 
+        else if(alreadyFollowup) {
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been follow-up!"
