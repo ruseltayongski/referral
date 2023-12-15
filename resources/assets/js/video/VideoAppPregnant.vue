@@ -592,5 +592,5 @@
     .padded-header {
         padding: 10px;
     }
-    @import './css/index.css';
+    @import './css/index.css'; 
 </style>
