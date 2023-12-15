@@ -481,6 +481,6 @@
     </div>
 </template>
 
-<style>
-    @import './css/normal.css';
+<style scoped>
+    @import './css/index.css';
 </style>
