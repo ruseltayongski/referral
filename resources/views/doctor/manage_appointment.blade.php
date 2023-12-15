@@ -1,10 +1,6 @@
-
 @extends('layouts.app')
 
-
-@section('content')
-    {{--@include('doctor/additional_timeSlot')--}}
-
+@section('css')
     <style>
         .bg_new {
             background-color: #ffcba4;
@@ -34,137 +30,10 @@
             display: block;
             width: 100%;
         }
-
-        label[for="opdCategory"],
-        label[for="available_doctor"],
-        label[for="slot"] {
-        @extend .label-border-time;
-        }
     </style>
-    <!-- Add Modal -->
-    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
+@endsection
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('create-appointment') }}" method="POST">
-                        {{ csrf_field() }}
-                        <fieldset>
-                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </legend>
-                        </fieldset>
-                        <div class="form-group">
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="label-border">
-                                        <label for="appointed_date">Appointed Date:</label>
-                                        <input type="date" class="form-control" name="appointed_date" required>
-
-                                        <label for="facility_id">Facility:</label>
-                                        <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))">
-                                            <option selected>Select Facility</option>
-                                            @foreach($facility as $Facility)
-                                                <option value="{{ $Facility->facility->id}}">{{ $Facility->facility->name }}</option>
-                                            @endforeach
-                                        </select>
-
-                                        <label for="department_id">Department:</label>
-                                     {{--   <select class="form-control select2" name="department_id" id="department_id">
-                                            <option selected>OPD</option>
-                                        </select>--}}
-                                        <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-8">
-                                    <div class="label-border">
-                                        <label for="appointed_time">Appointed Time:</label><br>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <span>From:</span>
-                                                <input type="time" class="form-control" name="appointed_time" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <span>To:</span>
-                                                <input type="time" class="form-control" name="appointedTime_to" required>
-                                            </div>
-                                        </div>
-
-
-                                        <div id="opdCategoryContainer">
-                                        <div class="label-border">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label for="opdCategory">OPD Category:</label>
-                                                    <select class="form-control select2" name="opdCategory" id="opdCategory" required>
-                                                        <option selected>Select OPD Category</option>
-                                                        <option value="Family Medicine">Family Medicine</option>
-                                                        <option value="Internal Medicine">Internal Medicine</option>
-                                                        <option value="General Surgery">General Surgery</option>
-                                                        <option value="Trauma Care">Trauma Care</option>
-                                                        <option value="Burn Care">Burn Care</option>
-                                                        <option value="Ophthalmology">Ophthalmology</option>
-                                                        <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                        <option value="ENT">ENT</option>
-                                                        <option value="Neurosurgery">Neurosurgery</option>
-                                                        <option value="Urosurgery">Urosurgery</option>
-                                                        <option value="Toxicology">Toxicology</option>
-                                                        <option value="OB-GYNE">OB-GYNE</option>
-                                                        <option value="Pediatric">Pediatric</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <label for="slot">Slot:</label>
-                                                    <input type="number" class="form-control" name="slot" required>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label>Available Doctor</label>
-                                                <select class="form-control select2" name="available_doctor[]" id="available_doctor" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>
-                                            </div>
-                                            <div style="margin-top: 15px;">
-                                                {{--<button type="button" class="btn btn-info btn-sm">Add More Category and Slot</button>--}}
-                                                <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
-                                            </div>
-                                        </div>
-                                        </div>
-
-
-
-                                        <!-- Container for additional time inputs (initially hidden) -->
-                                        <div id="additionalTimeContainer" style="display: none;"></div>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
+@section('content')
 
     <div class="box box-primary">
         <div class="box-header with-border">
@@ -182,24 +51,14 @@
                     <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
                         <i class="fa fa-eye"></i> View All
                     </button>
-                    <!-- {{--<a href="{{ asset('admin/appointment/export') }}" class="btn btn-danger btn-sm btn-flat" target="_blank">
-                        <i class="fa fa-file-excel-o"></i> Export
-                    </a>--}} -->
                     <br><br>
-                    <!-- {{--<select class="form-control select" id="status_filter" name="status_filter">
-                        <option value="">Select status...</option>
-                        <option value="new" @if($status == "new") selected @endif> New </option>
-                        <option value="seen" @if($status == 'seen') selected @endif> Seen </option>
-                        <option value="ongoing" @if($status == 'ongoing') selected @endif> Ongoing </option>
-                        <option value="resolved" @if($status == 'resolved') selected @endif> Resolved </option>
-                    </select>--}} -->
                     <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ $date }}">
                     <button type="submit" class="btn btn-info btn-sm btn-flat">
                         <i class="fa fa-filter"></i> Filter
                     </button>
                 </div>
             </div>
-            <h3>APPOINTMENTS {{--<small>{{ $appointment_schedule }}</small>--}} </h3>
+            <h3>APPOINTMENTS</h3>
         </div>
 
         <!-- Table List -->
@@ -208,7 +67,6 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-hover table-fixed-header">
                     <tr class="bg-success bg-navy-active">
-                        <!--<th class="text-center">Id</th>-->
                         <th class="text-center">Date</th>
                         <th class="text-center">From</th>
                         <th class="text-center">To</th>
@@ -216,36 +74,21 @@
                         <th class="text-center">Facility</th>
                         <th class="text-center">Department</th>
                         <th class="text-center">OPD Category</th>
-                        <!-- <th class="text-center">Appointed By</th> -->
-                        {{--<th class="text-center">Code</th>--}}
-                        {{--<th class="text-center">Status</th>--}}
                         <th class="text-center">Available Doctor</th>
                         <th class="text-center">Slot</th>
                         <th class="text-center">Action</th>
                     </tr>
                     @foreach($appointment_schedule as $row)
                         <tr style="font-size: 12px">
-                            {{--<td style="white-space: nowrap;">
-                                <b>
-                                    <a href="#appt_modal" data-toggle="modal" onclick="ApptBody('{{ $row->id }}')">
-                                    {{ $row->appointed_date }}
-                                    </a>
-                                </b>
-                            </td>--}}
-                           <!--<td>{{ $row->id }}</td>-->
                             <td> {{ $row->appointed_date }} </td>
                             <td> {{ $row->appointed_time }} </td>
                             <td> {{ $row->appointedTime_to }}</td>
                             <td> {{ $row->createdBy->username }} </td>
                             <td> {{ $row->facility->name }} </td>
                             <td> {{ $row->department->description }} </td>
-                            <td> {{ $row->opdCategory }} </td>
-                            <!-- <td> {{ $row->appointed_by }} </td> -->
-                            {{--<td> {{ $row->code }} </td>--}}
-                            {{--<td> {{ $row->status }} </td>--}}
-                            <td>  </td>
+                            <td> {{ $row->opdCategory }}</td>
+                            <td> Available Doctor</td>
                             <td> {{ $row->slot }} </td>
-
                             <td>
                                 <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                 <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
@@ -264,6 +107,100 @@
                     </span>
                 </div>
             @endif
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="{{ route('create-appointment') }}" method="POST">
+                        {{ csrf_field() }}
+                        <fieldset>
+                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
+                        </fieldset>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-border">
+                                        <label for="appointed_date">Appointed Date:</label>
+                                        <input type="date" class="form-control" name="appointed_date" required>
+                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+                                        <label for="facility_id">Facility:</label>
+                                        <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))" required>
+                                            <option selected>Select Facility</option>
+                                            @foreach($facility as $Facility)
+                                                <option value="{{ $Facility->facility->id}}">{{ $Facility->facility->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="department_id">Department:</label>
+                                        <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="label-border">
+                                        <div id="opdCategoryContainer">
+                                            <div class="label-border">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time1" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to1" required>
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory1" id="opdCategory" required>
+                                                            <option selected value="">Select OPD Category</option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option>
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot1" required>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor1" name="available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
+                                                </div>
+                                                <div style="margin-top: 15px;">
+                                                    <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="additionalTimeContainer" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -309,20 +246,18 @@
                             <input type="time" class="form-control" name="update_appointedTime_to" id="update_appointedTime_to">
 
                             <label for="update_facility_id">Facility:</label>
-                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))">
+                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))" required>
                             <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
                                 @foreach($facilityList as $facility)
                                     <option value="{{ $facility->id }}" selected>{{ $facility->name }}</option>
                                 @endforeach
                             </select>
-
                             <label for="update_department_id">Department:</label>
-                            <select class="form-control" name="update_department_id" id="update_department_id">
+                            <select class="form-control" name="update_department_id" id="update_department_id" required>
                                 @foreach($departmentList as $department)
                                     <option value="{{ $department->id }}">{{ $department->description }}</option>
                                 @endforeach
                             </select>
-
                             <label for="update_opdCategory">OPD Category:</label>
                             <select class="form-control" name="update_opdCategory" id="update_opdCategory" required>
                                 <option selected>Select OPD Category</option>
@@ -411,8 +346,16 @@
 @endsection
 
 @section('js')
-
     <script>
+        @if(Session::get('appointment_save'))
+            Lobibox.notify('success', {
+                title: "",
+                msg: "Appointment Susccessfully Save!",
+                size: 'mini',
+                rounded: true
+            });
+            <?php Session::put('appointment_save',false); ?>
+        @endif
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
@@ -542,8 +485,6 @@
             });
         }
 
-        //--------------------------------------------------------------
-
         function onchangeUpdateDepartment(data){
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
@@ -568,114 +509,77 @@
                 });
             }
         }
-        //--------------------------------------------------------------
 
+        var query_doctor_store = [];
         function onchangeDepartment(data) {
-
-            if(data.val()) {
-                $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
-                    //console.log('Department Data:', result);
-//                    $('#department_id').html('');
-//                    $('#department_id').append($('<option>', {
-//                        value: "",
-//                        text: "Select Department"
-//                    }));
-
-//                    var uniqueDepartments = {};
-//                    $.each(result, function (index, userData) {
-//                        if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
-//                            $('#department_id').append($('<option>', {
-//                                value: userData.department.id,
-//                                text: userData.department.description,
-//                            }));
-//                            // Mark department ID as visited to avoid duplicates
-//                            uniqueDepartments[userData.department.id] = true;
-//                        }
-//                    });
-
-                    //-------------------------------------------------------------------
-                    // Assuming this code is inside a function or an event handler
-                    console.log(data.val());
+            $(document).ready(function() {
+                if(data.val()) {
                     $.get("{{ url('get-doctors').'/' }}" + data.val(), function (result) {
-                        // Initialize the uniqueUser variable
-                        var uniqueUser = {};
-
-                        // For #available_doctor
-                        $('#available_doctor').html('');
-                        $('#available_doctor').append($('<option>', {
-                            value: "",
-                            text: "Select Doctors"
-                        }));
-
-                        // For #available_doctor1
-                        $('#available_doctor1').html('');
-                        $('#available_doctor1').append($('<option>', {
-                            value: "",
-                            text: "Select Doctors"
-                        }));
-
-                        // Loop through the result data
-                        $.each(result, function (index, userData) {
-                            if (userData.id && userData.username && !uniqueUser[userData.id]) {
-                                // For #available_doctor
-                                $('#available_doctor').append($('<option>', {
+                        query_doctor_store = result;
+                        const current_appointment_count = $(".appointment_count").val();
+                        for(var i=1; i<=current_appointment_count; i++) {
+                            $(`.available_doctor${i}`).html('');
+                            $(`.available_doctor${i}`).append($('<option>', {
+                                value: "",
+                                text: "Select Doctors"
+                            }));
+                            $.each(query_doctor_store, function (index, userData) {
+                                $(`.available_doctor${i}`).append($('<option>', {
                                     value: userData.id,
                                     text: userData.username
                                 }));
-
-                                // For #available_doctor1
-                                $('#available_doctor1').append($('<option>', {
-                                    value: userData.id,
-                                    text: userData.username
-                                }));
-
-                                // Mark user ID as visited to avoid duplicates for both dropdowns
-                                uniqueUser[userData.id] = true;
-                            }
-                        });
+                            });
+                        }
                     });
-
-                })
-            }
+                }
+            });
         }
 
-        //=======================================================================================
-
+        
         function addTimeInput(ok) {
-
+            let currentCount = $(".appointment_count").val();
+            $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
-
-            var additionalTimeInput = '<div class="label-border-time">' +
-                                        '<div class="row">' +
-                                            '<div class="col-md-6">' +
-                                                '<label for="opdCategory">OPD Category:</label>' +
-                                                '<select class="form-control select2"  name="opdCategory" required>' +
-                                                    '<option selected>Select OPD Category</option>' +
-                                                    '<option value="Family Medicine">Family Medicine</option>' +
-                                                    '<option value="Internal Medicine">Internal Medicine</option>' +
-                                                    '<option value="General Surgery">General Surgery</option>' +
-                                                    '<option value="Trauma Care">Trauma Care</option>' +
-                                                    '<option value="Burn Care">Burn Care</option>' +
-                                                    '<option value="Ophthalmology">Ophthalmology</option>' +
-                                                    '<option value="Plastic and Reconstructive">Plastic and Reconstructive</option>' +
-                                                    '<option value="ENT">ENT</option>' +
-                                                    '<option value="Neurosurgery">Neurosurgery</option>' +
-                                                    '<option value="Urosurgery">Urosurgery</option>' +
-                                                    '<option value="Toxicology">Toxicology</option>' +
-                                                    '<option value="OB-GYNE">OB-GYNE</option>' +
-                                                    '<option value="Pediatric">Pediatric</option>' +
-                                                '</select>' +
-                                            '</div>' +
-                                            '<div class="col-md-6">' +
-                                                '<label for="slot">Slot:</label>' +
-                                                '<input type="number" class="form-control" name="slot" required>' +
-                                            '</div>' +
-                                        '</div>' +
-                                        '<div>' +
-                                            '<label>Available Doctor</label>' +
-                                            '<select class="form-control select2" name="available_doctor1[]" id="available_doctor1" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>' +
-                                        '</div>' +
-                                    '</div>';
+                var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" required>
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" required>
+                                                            <option selected>Select OPD Category</option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option>
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot${currentCount}" required>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
+                                                </div>
+                                            </div>`;
 
             // Add the delete button
             var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
@@ -693,16 +597,17 @@
             });
 
             $('#additionalTimeContainer').show();
-
             $(document).ready(function() {
                 $('.select2').select2();
+                $.each(query_doctor_store, function (index, userData) {
+                    $(`.available_doctor${currentCount}`).append($('<option>', {
+                        value: userData.id,
+                        text: userData.username
+                    }));
+                });
             });
         }
-
-
         //--------------------------------------------------------------
-
-
 
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
