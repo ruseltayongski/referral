@@ -117,7 +117,7 @@
             ?>
             "
              id="rejected_progress{{ $referred_track->code.$referred_track->id }}"
-            ><span id="queue_number{{ $referred_track->code }}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span></span></div>
+            ><span id="queue_number{{ $referred_track->code }}">{!! $referred_cancelled_track || $referred_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($referred_queued_track && !$referred_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</i></span></span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
                 if($referred_cancelled_track)
@@ -244,7 +244,7 @@
                         elseif($follow_queued_track && !$follow_accepted_track)
                             echo "bg-orange";
                     ?>"
-                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span></div>
+                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">{!! $follow_cancelled_track || $follow_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($follow_queued_track && !$follow_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</span></div>
                     <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
                     <?php
                         if($follow_cancelled_track)
@@ -276,7 +276,7 @@
                     </div>
                 </div>
                 <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_track->code }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
                     <div class="step-name">Referred</div>
                     <div class="stepper-item stepper-item-follow @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                         <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
