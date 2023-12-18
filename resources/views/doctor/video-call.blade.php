@@ -12,8 +12,11 @@
         <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
         <script src="{{ asset('resources/assets/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
+        @if($referral_type == 'normal')
         <script src="{{ asset('public/js/app_video.js?version=').date('YmdHis') }}" defer></script>
+        @elseif($referral_type == 'pregnant')
         <script src="{{ asset('public/js/app_video_pregnant.js?version=').date('YmdHis') }}" defer></script>
+        @endif
     </head>
     <body>
         <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
