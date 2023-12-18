@@ -80,23 +80,6 @@ class TelemedicineCtrl extends Controller
         return view('doctor.manage_appointment', $data);
     }
 
-    public function departmentGet(Request $request){
-//        $users = User::with(['facility', 'department'])
-//            ->where('facility_id', $request->facility_id)
-//            ->get();
-
-//        $facilityId = $request->facility_id;
-//        // Retrieve users with the specified facility and 'OPD' department value
-//        $users = User::where('facility_id', $facilityId)
-//            ->whereHas('department', function ($query) {
-//                $query->where('description', 'OPD');
-//            })
-//            ->with(['facility', 'department'])
-//            ->get();
-//
-//        return $users;
-    }
-
     public function appointmentCalendar() {
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
@@ -108,52 +91,29 @@ class TelemedicineCtrl extends Controller
 
     public function createAppointment(Request $request)
     {
-        $validateData = $request->validate([
-           'appointed_date' => 'required|date',
-           'appointed_time' => 'required',
-           'appointedTime_to' => 'required',
-           'facility_id' => 'required',
-           'department_id' => 'required',
-           'opdCategory' => 'required',
-           'slot' => 'required|integer',
-        ]);
-
         $user = Session::get('auth');
-        $validateData['created_by'] = $user->id;
-
-        // Set the department to "OPD"
-        $validateData['department_id'] = 5;
-
-        $appointment = new AppointmentSchedule($validateData);
-        $appointment->save();
-
-        $selectedDoctors = $request->available_doctor;
-
-        //------------------------------------------------------------------
-        // Create a new TelemedAssignDoctor instance and save the relationship
-        $telemedAssignDoctor = new TelemedAssignDoctor([
-            'appointment_id' => $appointment->id,
-            'doctor_id' => $user->id, // Modify this based on your actual structure
-            'status' => 'pending', // Set an appropriate status
-            'created_by' => $user->id,
-        ]);
-
-        $telemedAssignDoctor->save();
-
-        try {
-            foreach ($selectedDoctors as $doctorId) {
-                TelemedAssignDoctor::create([
-                    'appointment_id' => $appointment->id,
-                    'doctor_id' => $doctorId,
-                    'status' => 'pending',
-                    'created_by' => $user->id,
-                ]);
+        for($i=1; $i<=$request->appointment_count; $i++) {
+            $appointment_schedule = new AppointmentSchedule();
+            $appointment_schedule->appointed_date = $request->appointed_date;
+            $appointment_schedule->facility_id = $request->facility_id;
+            $appointment_schedule->department_id = 5;
+            $appointment_schedule->appointed_time = $request->appointed_time.$i;
+            $appointment_schedule->appointedTime_to = $request->appointedTime_to.$i;
+            $appointment_schedule->opdCategory = $request->opdCategory.$i;
+            $appointment_schedule->slot = $request->slot.$i;
+            $appointment_schedule->created_by = $user->id;
+            $appointment_schedule->save();
+            for($x=0; $x<count($request['available_doctor'.$i]); $x++) {
+                $tele_assign_doctor = new TelemedAssignDoctor();
+                $tele_assign_doctor->appointment_id = $appointment_schedule->id;
+                $tele_assign_doctor->doctor_id = $request['available_doctor'.$i][$x];
+                $tele_assign_doctor->created_by = $user->id;
+                $tele_assign_doctor->save();
             }
-        } catch (\Exception $e) {
-            \Log::error('Error saving data to TelemedAssignDoctor: ' . $e->getMessage());
-            // Handle the error as needed
         }
-        return redirect()->back()->with('success', 'Appointment created successfully');
+
+        Session::put('appointment_save',true);
+        return redirect()->back();
     }
 
     public function getAppointmentData(Request $request)
@@ -246,23 +206,12 @@ class TelemedicineCtrl extends Controller
 
     public function getDoctors($facilityId)
     {
-        try {
-            // Assuming 'level' is a column in the users table
-            $doctors = User::where('facility_id', $facilityId)
+        $doctors = User::where('facility_id', $facilityId)
                 ->where('department_id','=',5)
                 ->where('level', 'doctor')
                 ->get();
 
-            // You can return the doctors as JSON or in any other format you prefer
-            return $doctors;
-        } catch (\Exception $e) {
-            // Log the exception for debugging purposes
-            \Log::error("Error fetching doctors: " . $e->getMessage());
-
-            // Return an error response
-            return response()->json(['error' => 'Failed to fetch doctors'], 500);
-        }
-
+        return $doctors;
     }
 
     public function getFacilitiesByDepartmentAndType($departmentId) {
