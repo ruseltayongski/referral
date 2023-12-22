@@ -119,42 +119,70 @@ class TelemedicineCtrl extends Controller
     public function getAppointmentData(Request $request)
     {
         //dd($id);
-        $appointment = AppointmentSchedule::find($request->id);
+        // $appointment = AppointmentSchedule::find($request->id);
+        $appointment = AppointmentSchedule::find($request->id)->
+            with([
+                'createdBy' => function ($query) {
+                    $query->select(
+                        'id',
+                        'username'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                },
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'telemeAssignDoctor' => function ($query) {
+                    $query->select(
+                        'appointment_id',
+                        'doctor_id'
+                    );
+                },
+            ])->first();
 
         if (!$appointment) {
             return response()->json(['error' => 'Appointment not found'], 404);
         }
 
         return response()->json($appointment);
+
     }
 
     public function updateAppointment(Request $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required|integer',
-            'appointed_date' => 'required|date',
-            'appointed_time' => 'required',
-            'appointedTime_to' => 'required',
-            'facility_id' => 'required',
-            'department_id' => 'required',
-            'opdCategory' => 'required',
-            'slot' => 'required|integer',
-        ]);
+        // $validatedData = $request->validate([
+        //     'id' => 'required|integer',
+        //     'appointed_date' => 'required|date',
+        //     'appointed_time' => 'required',
+        //     'appointedTime_to' => 'required',
+        //     'facility_id' => 'required',
+        //     'department_id' => 'required',
+        //     'opdCategory' => 'required',
+        //     'slot' => 'required|integer',
+        // ]);
 
-        $appointmentId = $validatedData['id'];
-        $appointment = AppointmentSchedule::find($appointmentId);
+        // $appointmentId = $validatedData['id'];
+        // $appointment = AppointmentSchedule::find($appointmentId);
 
-        if (!$appointment) {
-            return response()->json(['error' => 'Appointment not found'], 404);
-        }
+        // if (!$appointment) {
+        //     return response()->json(['error' => 'Appointment not found'], 404);
+        // }
 
-        $appointment->fill($validatedData); // Update appointment attributes
+        // $appointment->fill($validatedData); // Update appointment attributes
 
-        if ($appointment->save()) {
-            return response()->json(['message' => 'Appointment updated successfully'], 200);
-        } else {
-            return response()->json(['error' => 'Failed to update appointment'], 500);
-        }
+        // if ($appointment->save()) {
+        //     return response()->json(['message' => 'Appointment updated successfully'], 200);
+        // } else {
+        //     return response()->json(['error' => 'Failed to update appointment'], 500);
+        // }
     }
 
     public function deleteAppointment(Request $request)
