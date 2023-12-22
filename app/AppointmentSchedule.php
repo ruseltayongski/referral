@@ -20,4 +20,12 @@ class AppointmentSchedule extends Model
     public function department(){
         return $this -> belongsTo(Department::class, 'department_id', 'id');
     }
+    
+    public function availableDoctors(){
+        return $this -> belongsTo(User::class,'doctor_id','id');
+    }
+    
+    public function telemeAssignDoctor(){
+        return $this->belongsTo(TelemedAssignDoctor::class, 'appointment_id', 'id');
+    }
 }

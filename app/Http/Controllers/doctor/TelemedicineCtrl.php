@@ -115,18 +115,107 @@ class TelemedicineCtrl extends Controller
         Session::put('appointment_save',true);
         return redirect()->back();
     }
+    public function editAppointment(Request $request){
+        $appointment = AppointmentSchedule::find($request->id)->    
+            with([
+                'createdBy' => function ($query) {
+                    $query->select(
+                        'id',
+                        'username'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                },
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'telemeAssignDoctor' => function ($query) {
+                    $query->select(
+                        'appointment_id',
+                        'doctor_id'
+                    );
+                },
+            ])->first();
 
-    public function getAppointmentData(Request $request)
-    {
-        //dd($id);
-        $appointment = AppointmentSchedule::find($request->id);
+            $user_facility = User::
+            with([
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                }
+            ])
 
-        if (!$appointment) {
-            return response()->json(['error' => 'Appointment not found'], 404);
-        }
+            ->where('department_id',"=", '5')
+            ->groupBy('facility_id')
+            ->get();
 
-        return response()->json($appointment);
+            $data = [
+                'appointment_schedule' => $appointment,
+                'facility' => $user_facility
+            ];
+
+        return view('doctor.edit_manage_appointment', $data);
     }
+    // public function getAppointmentData(Request $request)
+    // {
+    //     //dd($id);
+    //     // $appointment = AppointmentSchedule::find($request->id);
+
+    //     $appointment = AppointmentSchedule::find($request->id)->
+    //     with([
+    //         'createdBy' => function ($query) {
+    //             $query->select(
+    //                 'id',
+    //                 'username'
+    //             );
+    //         },
+    //         'facility' => function ($query) {
+    //             $query->select(
+    //                 'id',
+    //                 'name'
+    //             );
+    //         },
+    //         'department' => function ($query) {
+    //             $query->select(
+    //                 'id',
+    //                 'description'
+    //             );
+    //         },
+    //         'telemeAssignDoctor' => function ($query) {
+    //             $query->select(
+    //                 'appointment_id',
+    //                 'doctor_id'
+    //             );
+    //         },
+    //     ])->first();
+    
+    //     if (!$appointment) {
+    //         return response()->json(['error' => 'Appointment not found'], 404);
+    //     }
+
+    //     return response()->json($appointment);
+    // }//end of function
+
+    public function retrieveDoctors(Request $request){
+        
+        // return $avaiDoctors = TelemedAssignDoctor::where('id', )
+        // with('availableDoctors')->first();
+      }
 
     public function updateAppointment(Request $request)
     {

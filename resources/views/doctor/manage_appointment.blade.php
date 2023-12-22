@@ -222,72 +222,16 @@
     </div>
 
     <!-- Update Appointment Modal -->
-    <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+     <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form id="updateAppointmentForm" method="post" action="{{ route('update-appointment') }}">
-                        {{ csrf_field() }}
-                        <legend><i class="fa fa-edit"></i> Edit Appointment
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </legend>
-                        <div class="form-group">
-                            <input type="hidden" name="update_appointment_id" id="updateAppointmentId" value="" class="form-control">
-
-                            <label for="update_appointed_date">Appointed Date:</label>
-                            <input type="date" class="form-control" name="update_appointed_date" id="update_appointed_date">
-
-                            <label for="update_appointed_time">Appointed Time:</label><br>
-                            <span>From: </span>
-                            <input type="time" class="form-control" name="update_appointed_time" id="update_appointed_time">
-                            <span> To: </span>
-                            <input type="time" class="form-control" name="update_appointedTime_to" id="update_appointedTime_to">
-
-                            <label for="update_facility_id">Facility:</label>
-                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))" required>
-                            <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
-                                @foreach($facilityList as $facility)
-                                    <option value="{{ $facility->id }}" selected>{{ $facility->name }}</option>
-                                @endforeach
-                            </select>
-                            <label for="update_department_id">Department:</label>
-                            <select class="form-control" name="update_department_id" id="update_department_id" required>
-                                @foreach($departmentList as $department)
-                                    <option value="{{ $department->id }}">{{ $department->description }}</option>
-                                @endforeach
-                            </select>
-                            <label for="update_opdCategory">OPD Category:</label>
-                            <select class="form-control" name="update_opdCategory" id="update_opdCategory" required>
-                                <option selected>Select OPD Category</option>
-                                <option value="Family Medicine">Family Medicine</option>
-                                <option value="Internal Medicine">Internal Medicine</option>
-                                <option value="General Surgery">General Surgery</option>
-                                <option value="Trauma Care">Trauma Care</option>
-                                <option value="Burn Care">Burn Care</option>
-                                <option value="Ophthalmology">Ophthalmology</option>
-                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                <option value="ENT">ENT</option>
-                                <option value="Neurosurgery">Neurosurgery</option>
-                                <option value="Urosurgery">Urosurgery</option>
-                                <option value="Toxicology">Toxicology</option>
-                                <option value="OB-GYNE">OB-GYNE</option>
-                                <option value="Pediatric">Pediatric</option>
-                            </select>
-
-                            <label for="update_slot">Slot:</label>
-                            <input type="number" class="form-control" name="update_slot" id="update_slot" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm" onclick="updateAppointment()"><i class="fa fa-check"></i> Update</button>
-                        </div>
-                    </form>
+                    
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Delete Appointment Modal -->
     <div class="modal fade" role="dialog" id="deleteConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
@@ -358,32 +302,45 @@
         @endif
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
-            $('#updateAppointmentId').val(appointmentId);
-
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
-
-            $.get(url, function(data) {
-                console.log(data);
-
-                $('#update_appointed_date').val(data.appointed_date);
-                $('#update_appointed_time').val(data.appointed_time);
-                $('#update_appointedTime_to').val(data.appointedTime_to);
-                $('#update_created_by').val(data.created_by);
-                $('#update_facility_id').val(data.facility_id);
-                $('#update_department_id').val(data.department_id);
-                $('#update_opdCategory').val(data.opdCategory);
-                $('#update_appointed_by').val(data.appointed_by);
-                $('#update_code').val(data.code);
-                $('#update_status').val(data.status);
-                $('#update_slot').val(data.slot);
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("AJAX Error: " + errorThrown);
-            });
-
+            //$('#updateAppointmentId').val(appointmentId);
+            console.log('id: ', appointmentId);
             $('#updateConfirmationModal').modal('show');
-        }
+             var url = "{{ url('EditAppointment').'/' }}"+appointmentId;
+                $.ajax({
+                   url: url,
+                   type: 'GET',
+                   success: function(result) {
+                      $('.modal-body').html(result);
+                   }
+                });
+         }
+        // function UpdateModal(appointmentId) {
+        //     $('#updateAppointmentId').val(appointmentId);
+            
+        //     var url = "{{ route('get-appointment-data', ':id') }}";
+        //     url = url.replace(':id', appointmentId);
+
+        //     $.get(url, function(data) {
+        //         console.log(data);
+
+        //         $('#update_appointed_date').val(data.appointed_date);
+        //         $('#update_appointed_time').val(data.appointed_time);
+        //         $('#update_appointedTime_to').val(data.appointedTime_to);
+        //         $('#update_created_by').val(data.created_by);
+        //         $('#update_facility_id').val(data.facility_id);
+        //         $('#update_department_id').val(data.department.description);
+        //         $('#update_opdCategory').val(data.opdCategory);
+        //         $('#update_appointed_by').val(data.appointed_by);
+        //         $('#update_code').val(data.code);
+        //         $('#update_status').val(data.status);
+        //         $('#update_slot').val(data.slot);
+
+        //     }).fail(function(jqXHR, textStatus, errorThrown) {
+        //         console.log("AJAX Error: " + errorThrown);
+        //     });
+
+        //     $('#updateConfirmationModal').modal('show');
+        // }
 
         //--------------------------------------------------------------
         function updateAppointment() {
