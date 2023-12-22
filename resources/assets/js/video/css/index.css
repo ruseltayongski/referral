@@ -23,13 +23,16 @@
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
-
+/*------------------------------------------*/
 
 
 .container-fluid {
     border: 4px outset green;
-    /*height: 978px;*/
-    object-fit: cover;
+    /*height: 978px;
+    object-fit: cover;*/
+
+    width: 100vw;
+    height: 100vh;
 }
 #calling {
     display: flex;
@@ -80,6 +83,10 @@
     border: 0;
     margin-right: 8px;
 }
+.prescription-button{
+    border-radius: 50%;
+    margin-right: 8px;
+}
 .lab-button {
     border-radius: 50%;
 }
@@ -87,10 +94,28 @@
     position: relative;
     border: 2px outset black;
     margin-top: 5px;
-    height: 955px;
+   /* height: 917px;*/
     padding: 0;
     font-size: 14px;
     font-family: Calibri;
+
+    height: 99%;
+}
+.tableForm {
+    position: relative;
+    border: 1px outset transparent;
+    /*max-height: 783px;*/
+    /*height: auto;*/
+    text-align: left;
+    line-height: 1.2;
+    font-size: 14px;
+    font-family: Calibri;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    height: 83.5vh;
 }
 .dohLogo {
     position: relative;
@@ -118,35 +143,19 @@
     font-size: 18px;
     font-family: Calibri;
 }
-.tableForm {
-    position: relative;
-    border: 1px outset transparent;
-    /* height: 655px; */
-    height: 818px;
-    width: auto;
-    text-align: left;
-    line-height: 1.2;
-    font-size: 14px;
-    font-family: Calibri;
 
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
 .remotePlayerLayer {
-    height: 966px;
+    /*height: 920px;*/
+    height: 98.5vh;
 }
 .remotePlayerDiv {
     height: 960px;
     width: 100%;
 }
 .localPlayerLayer {
-   /* height: 300px;
-    width: 250px;*/
 
-    height: 53vh;
-    width: 43vh;
+    height: 300px;
+    width: 250px;
 }
 
 .localPlayerLayer div{
@@ -154,14 +163,14 @@
 }
 .localPlayerDiv {
     position: absolute;
-    /*right: 20px;
+   /* right: 20px;
     bottom: 10px;*/
     bottom: 2%;
     right: 2%;
     border: 2px outset green;
     border-radius: 11px;
 }
-
+/*------------------------------------------*/
 
 .prescription {
     position: relative;
@@ -206,10 +215,6 @@ tr:nth-child(even) {
     background-color: white;
     border: 1px outset transparent;
 }
-.mic-button:hover {
-    background-color: rgba(2, 133, 221, 0.911);
-    box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
-}
 .mic-button-slash:before, .mic-button-slash:after {
     content: "";
     position: absolute;
@@ -226,10 +231,6 @@ tr:nth-child(even) {
 }
 .mic-button-slash:after {
     transform: rotate(-45deg);
-}
-.video-button:hover {
-    background-color: rgba(2, 133, 221, 0.911);
-    box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
 }
 .video-button-slash:before, .video-button-slash:after {
     content: "";
@@ -248,14 +249,11 @@ tr:nth-child(even) {
 .video-button-slash:after {
     transform: rotate(-45deg);
 }
-.decline-button:hover {
-    background-color: rgba(2, 133, 221, 0.911);
-    box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
-}
-.upward-button:hover {
-    background-color: rgba(2, 133, 221, 0.911);
-    box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
-}
+.video-button:hover,
+.mic-button:hover,
+.decline-button:hover,
+.upward-button:hover,
+.prescription-button:hover,
 .lab-button:hover {
     background-color: rgba(2, 133, 221, 0.911);
     box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
@@ -265,30 +263,10 @@ tr:nth-child(even) {
 
 
 
-/* For desktop: */
-.col-1 {width: 8.33%;}
-.col-2 {width: 16.66%;}
-.col-3 {width: 25%;}
-.col-4 {width: 33.33%;}
-.col-5 {width: 41.66%;}
-.col-6 {width: 50%;}
-.col-7 {width: 58.33%;}
-.col-8 {width: 66.66%;}
-.col-9 {width: 75%;}
-.col-10 {width: 83.33%;}
-.col-11 {width: 91.66%;}
-.col-12 {width: 100%;}
-
-@media only screen and (max-width: 768px) {
-    /* For mobile phones: */
-    [class*="col-"] {
-        width: 100%;
-    }
-}
 
 /*MOBILE VIEWPORT*/
 
-/*
+
 @media only screen and (min-width: 280px) and (max-width: 280px) and (min-height: 653px) and (max-height: 653px) {
     .col-lg-8 {
         background-color: black;
@@ -304,8 +282,9 @@ tr:nth-child(even) {
         height: 766px;
     }
     .tableForm {
-        font-size: 10px;
+        font-size: 8px;
         height: 640px;
+        overflow-x: auto;
     }
     .dohLogo {
         position: relative;
@@ -383,8 +362,6 @@ tr:nth-child(even) {
         height: auto;
     }
     .formHeader {
-        top: 15px;
-        left: 25px;
         border: 1px outset transparent;
         text-align: center;
     }
@@ -1940,6 +1917,8 @@ tr:nth-child(even) {
     }
     .remotePlayerLayer {
         height: 614px;
+        /*aspect-ratio: 4/3;*/
+
     }
     .remotePlayerDiv {
         height: 662px;
@@ -1948,6 +1927,7 @@ tr:nth-child(even) {
         display: flex;
         align-items: center;
         justify-content: center;
+        top: 50%;
     }
 
     .remotePlayerLayer div video {
@@ -5412,8 +5392,8 @@ tr:nth-child(even) {
     }
     .img-fluid {
         position: relative;
-        height: 100vh;
-        width: 100%;
+        height: 95vh;
+        width: 60%;
     }
     .img2 {
         height: 134px;
@@ -5423,7 +5403,7 @@ tr:nth-child(even) {
         margin-bottom: 10px;
     }
     .remotePlayerLayer {
-        height: 372px;
+        height: 377px;
     }
     .remotePlayerDiv {
         height: 420px;
@@ -5936,13 +5916,10 @@ tr:nth-child(even) {
     }
 }
 
-*/
-
-
 
 
 /*TAB VIEWPORT*/
-/*
+
 @media only screen and (min-width: 540px) and (max-width: 540px) and (min-height: 720px) and (max-height: 720px) {
     .col-lg-8 {
         background-color: black;
@@ -6000,9 +5977,7 @@ tr:nth-child(even) {
         margin-bottom: 10px;
     }
     .localPlayerDiv {
-        top: auto;
-        right: 0;
-        bottom: 20px;
+        bottom: 560px;
     }
     .localPlayerLayer{
         height: 140px;
@@ -6452,84 +6427,6 @@ tr:nth-child(even) {
     }
 }
 
-@media only screen and (min-width: 1280px) and (max-width: 1280px) and (min-height: 800px) and (max-height: 800px) {
-    .col-lg-8 {
-        background-color: black;
-    }
-    .iconCall {
-        bottom: 180px;
-    }
-    .container-fluid {
-        border: 1px outset green;
-        height: auto;
-    }
-    .tableForm {
-        font-size: 12px;
-        height: 667px;
-    }
-    .dohLogo {
-        position: relative;
-        border: 1px outset transparent;
-        top: 5px;
-        left: 5px;
-        z-index: 2;
-        height: 56px;
-        width: 60px;
-    }
-    .formHeader {
-        position: absolute;
-        top: 10px;
-        left: 25px;
-        border: 1px outset transparent;
-        text-align: center;
-        line-height: .1px;
-        font-size: 10px;
-    }
-    .clinical {
-        position: relative;
-        text-align: center;
-        margin-top: 40px;
-        border: 1px outset transparent;
-        font-size: 15px;
-        font-family: Calibri;
-    }
-    .img-fluid {
-        position: relative;
-        height: 80vh;
-        width: 100%;
-    }
-    .img2 {
-        height: 170px;
-        width: 144px;
-    }
-    .btn {
-        margin-bottom: 10px;
-    }
-    .localPlayerDiv {
-        top: 520px;
-        right: 10px;
-        bottom: auto;
-    }
-    .localPlayerLayer{
-        height: 170px;
-        width: 144px;
-    }
-    .remotePlayerLayer {
-        height: 740px;
-    }
-    .remotePlayerDiv {
-        height: 800px;
-        width: 100%;
-        border: 2px outset transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .remotePlayerLayer div video {
-        object-fit: contain !important;
-    }
-}
-
 @media only screen and (min-width: 810px) and (max-width: 810px) and (min-height: 1080px) and (max-height: 1080px) {
     .col-lg-8 {
         background-color: black;
@@ -6856,7 +6753,7 @@ tr:nth-child(even) {
         background-color: black;
     }
     .iconCall {
-        bottom: 20px;
+        bottom: 60px;
     }
     .container-fluid {
         border: 1px outset green;
@@ -6864,7 +6761,8 @@ tr:nth-child(even) {
     }
     .tableForm {
         font-size: 18px;
-        height: 642px;
+        height: 768px;
+        border: 1px outset transparent;
     }
     .dohLogo {
         position: relative;
@@ -6894,7 +6792,7 @@ tr:nth-child(even) {
     }
     .img-fluid {
         position: relative;
-        height: 50vh;
+        height: 48vh;
         width: 100%;
     }
     .img2 {
@@ -6906,8 +6804,8 @@ tr:nth-child(even) {
     }
     .localPlayerDiv {
         top: auto;
-        right: 0;
-        bottom: 20px;
+        right: 2%;
+        bottom: 100px;
     }
     .localPlayerLayer{
         height: 204px;
@@ -6917,7 +6815,7 @@ tr:nth-child(even) {
         height: 1316px;
     }
     .remotePlayerDiv {
-        height: 1364px;
+        height: 1323px;
         width: 100%;
         border: 2px outset transparent;
         display: flex;
@@ -7020,10 +6918,10 @@ tr:nth-child(even) {
     }
     .tableForm {
         font-size: 8px;
-        height: 299px;
+        height: 77vh;
     }
     .telemedForm {
-        height: 421px;
+        height: 98%
     }
     .dohLogo {
         position: relative;
@@ -7088,53 +6986,67 @@ tr:nth-child(even) {
     }
 }
 
-
-
-
 @media only screen and (min-width: 1024px) and (max-width: 1024px) and (min-height: 1366px) and (max-height: 1366px){
     .col-lg-8 {
         background-color: black;
+
+        position: relative; /* Add relative positioning to create a stacking context */
     }
     .iconCall {
-        bottom: 20px;
+        bottom: 60px;
     }
     .container-fluid {
         border: 1px outset green;
         height: auto;
     }
+    .telemedForm {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border: 2px outset black;
+        margin-left: 2px;
+        margin-top: 2px;
+        margin-bottom: 9px;
+    }
     .tableForm {
-        font-size: 18px;
-        height: 642px;
+        /*font-size: 18px;*/
+        /*height: 768px;*/
+        border: 1px outset transparent;
+
+        overflow-y: auto;
+        overflow-x: auto;
+        height: 88vh;
     }
     .dohLogo {
-        position: relative;
+       /* position: relative;
         border: 1px outset transparent;
         top: 10px;
         left: 10px;
-        z-index: 2;
-        height: 92px;
-        width: 96px;
+        z-index: 2;*/
+
+        height: 12%;
+        width: 12%;
     }
     .formHeader {
         position: absolute;
-        top: 15px;
-        left: 175px;
+        top: 1%;
+        left: 1%;
         border: 1px outset transparent;
         text-align: center;
         line-height: .1px;
-        font-size: 16px;
+        font-size: 10px;
     }
     .clinical {
         position: relative;
         text-align: center;
-        margin-top: 13px;
         border: 1px outset transparent;
-        font-size: 24px;
-        font-family: Calibri;
+        margin-top: 20%;
+
     }
     .img-fluid {
         position: relative;
-        height: 50vh;
+        height: 48vh;
         width: 100%;
     }
     .img2 {
@@ -7145,9 +7057,9 @@ tr:nth-child(even) {
         margin-bottom: 10px;
     }
     .localPlayerDiv {
-        top: auto;
-        right: 0;
-        bottom: 20px;
+       /* top: auto;
+        right: 2%;*/
+        bottom: 12%;
     }
     .localPlayerLayer{
         height: 204px;
@@ -7157,7 +7069,7 @@ tr:nth-child(even) {
         height: 1316px;
     }
     .remotePlayerDiv {
-        height: 1364px;
+        height: 1323px;
         width: 100%;
         border: 2px outset transparent;
         display: flex;
@@ -7169,12 +7081,12 @@ tr:nth-child(even) {
     }
 }
 
-*/
+
 
 
 
 /*DESKTOP VIEWPORT*/
-/*
+
 @media only screen and (min-width: 1920px) and (max-width: 1920px) and (min-height: 1080px) and (max-height: 1080px) {
     .col-lg-8 {
         background-color: black;
@@ -8475,15 +8387,15 @@ tr:nth-child(even) {
         bottom: 10px;
     }
     .container-fluid {
-        border: 1px outset green;
-        height: auto;
+       /* border: 1px outset green;
+        height: auto;*/
     }
     .tableForm {
         font-size: 11px;
-        height: 498px;
+        height: 82.5vh;
     }
     .telemedForm{
-        height: 621px;
+        /*height: 621px;*/
     }
     .dohLogo {
         position: relative;
@@ -8878,4 +8790,6 @@ tr:nth-child(even) {
     }
 }
 
-*/
+
+
+
