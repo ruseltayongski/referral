@@ -11,4 +11,9 @@ class TelemedAssignDoctor extends Model
 
     protected $fillable = ['appointment_id', 'doctor_id', 'status', 'created_by'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'doctor_id', 'id');
+    }
+
 }

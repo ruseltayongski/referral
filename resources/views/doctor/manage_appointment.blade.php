@@ -236,7 +236,6 @@
                         </legend>        
                      
                         <div class="form-group">
-                            <input type="hidden" name="update_appointment_id" id="updateAppointmentId" value="" class="form-control">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="label-border">
@@ -244,7 +243,7 @@
                                         <input type="date" class="form-control" name="update_appointed_date" id="update_appointed_date">
 
                                         <label for="update_facility_id">Facility:</label>
-                                        <select class="form-control select2" name="update_facility_id" id="update_facility_id" onchange="onchangeDepartment($(this))" required>
+                                        <select class="form-control select2" name="update_facility_id" id="update_facility_id" onchange="onchangeDepartment($(this))">
                                             <option selected>Select Facility</option>
                                     
                                             @foreach($facility as $Facility)
@@ -257,66 +256,20 @@
                                         <input type="text" class="form-control" name="update_department_id" id="update_department_id"   readonly>
                                     </div>
                                 </div>
-                              
-
-
                                 <div class="col-md-8">
                                     <div class="label-border">
                                         <div id="opdCategoryContainer">
-                                            <div class="label-border">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                          
-                                                        <label for="update_appointed_time">Appointed Time:</label><br>
-                                                        <div class="col-md-6">
-                                                            <span>From: </span>
-                                                            <input type="time" class="form-control" name="update_appointed_time" id="update_appointed_time">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <span> To: </span>
-                                                            <input type="time" class="form-control" name="update_appointedTime_to" id="update_appointedTime_to">
-                                                        </div>
-                                                        <label for="update_opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="update_opdCategory1" id="update_opdCategory" required>
-                                                            <option selected value="">Select OPD Category</option>
-                                                            <option value="Family Medicine">Family Medicine</option>
-                                                            <option value="Internal Medicine">Internal Medicine</option>
-                                                            <option value="General Surgery">General Surgery</option>
-                                                            <option value="Trauma Care">Trauma Care</option>
-                                                            <option value="Burn Care">Burn Care</option>
-                                                            <option value="Ophthalmology">Ophthalmology</option>
-                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                            <option value="ENT">ENT</option>
-                                                            <option value="Neurosurgery">Neurosurgery</option>
-                                                            <option value="Urosurgery">Urosurgery</option>
-                                                            <option value="Toxicology">Toxicology</option>
-                                                            <option value="OB-GYNE">OB-GYNE</option>
-                                                            <option value="Pediatric">Pediatric</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <label for="update_slot">Slot:</label>
-                                                        <input type="number" class="form-control" name="update_slot1" id="update_slot" required>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor1" name="update_available_doctor[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required>
-                                                    <option value=""></option>
-                                                   </select>
-                                                </div>
+                                          <div id="update_additionalTimeContainer" style="display: none;"></div>
                                                 <div style="margin-top: 15px;">
-                                                    <button type="button" class="btn btn-info btn-sm" id="update_add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
-                                                </div>
-                                            </div>
+                                                    <button type="button" class="btn btn-info btn-sm" id="update_add_slots" onclick="updateAddTimeInput()">Add More Category and Slot</button>
+                                                </div>    
+                                           </div>    
                                         </div>
-                                        <div id="update_additionalTimeContainer" style="display: none;"></div>
+                                        <!-- <div id="update_additionalTimeContainer" style="display: none;"></div> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-     
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
                             <button type="submit" class="btn btn-success btn-sm" onclick="updateAppointment()"><i class="fa fa-check"></i> Update</button>
@@ -397,77 +350,35 @@
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
-
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
+            
+            var url = "{{ url('appointment/data').'/'}}"+appointmentId;
+           // url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                console.log(data);
+                console.log('my appointed Id:',data);
 
-                $('#update_appointed_date').val(data.appointed_date);
-                $('#update_appointed_time').val(data.appointed_time);
-                $('#update_appointedTime_to').val(data.appointedTime_to);
-                $('#update_created_by').val(data.created_by);
-                $('#update_facility_id').val(data.facility_id);
-                $('#update_department_id').val(data.department.description);
-                $('#update_opdCategory').val(data.opdCategory);
-                $('#update_appointed_by').val(data.appointed_by);
-                $('#update_code').val(data.code);
-                $('#update_status').val(data.status);
-                $('#update_slot').val(data.slot);
+                $('#update_additionalTimeContainer').empty();
+                if(data && data.length > 0){
+                    data.forEach(function(appointment){
+                        console.log('slot:', appointment.telemed_assign_doctor);
+                  
+                        $('#update_department_id').val(appointment.department.description);
+                        $('#update_facility_id').val(appointment.facility_id).trigger('change');
+                        $('#update_appointed_date').val(appointment.appointed_date);
+                        updateAddTimeInput(appointment);
+                    });
+                }else{
+                    console.log('No appointments found.');
+                }
+                
 
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
-
             $('#updateConfirmationModal').modal('show');
         }
 
-        //--------------------------------------------------------------
-        function updateAppointment() {
-            var appointmentId = $('#updateAppointmentId').val();
-            var appointedDate = $('#update_appointed_date').val();
-            var appointedTime = $('#update_appointed_time').val();
-            var appointedTo = $('#update_appointedTime_to').val();
-            var appointmentCreatedBy = $('#update_created_by').val();
-            var appointmentFacilityId = $('#update_facility_id').val();
-            var appointmentDepartmentId = $('#update_department_id').val();
-            var appointmentOpdCategory = $('#update_opdCategory').val();
-            var appointmentAppointedBy = $('#update_appointed_by').val();
-            var appointmentCode = $('#update_code').val();
-            var appointmentStatus = $('#update_status').val();
-            var appointmentSlot = $('#update_slot').val();
-
-            var url = "{{ route('update-appointment') }}";
-            var data = {
-                _token: "{{ csrf_token() }}",
-                id: appointmentId,
-                appointed_date: appointedDate,
-                appointed_time: appointedTime,
-                appointedTime_to: appointedTo,
-                created_by: appointmentCreatedBy,
-                facility_id: appointmentFacilityId,
-                department_id: appointmentDepartmentId,
-                opdCategory: appointmentOpdCategory,
-                appointed_by: appointmentAppointedBy,
-                code: appointmentCode,
-                status: appointmentStatus,
-                slot: appointmentSlot
-            };
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                success: function(response) {
-                    $('#editAppointmentModal').modal('hide');
-                    alert(response.message);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.error("AJAX Request Failed: " + errorThrown);
-                }
-            });
-        }
+      
 
         //--------------------------------------------------------------
         function DeleteModal(appointmentId) {
@@ -645,6 +556,215 @@
                 });
             });
         }
+
+
+//-------------------update_AddTime Slot-------------------------------//
+
+function updateAddTimeInput(appointment) {
+            console.log('welcome appointment', appointment)
+            let currentCount = $(".appointment_count").val();
+            $(".appointment_count").val(++currentCount);
+            var timeInputGroup = $('<div class="time-input-group">');
+            var appointments = appointment ? appointment : '';
+            // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
+            var appointmentId = appointment.id;
+            var doctor = appointment.telemed_assign_doctor.map(doctor=> doctor.user);
+            console.log('Ids: ', appointmentId);
+               if(!appointment || appointment === null || appointment === undefined){
+                
+                  var emptyadditionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected></option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option> 
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                    <option value="" selected></option>
+                                                    </select>
+                                                </div>
+                                            </div>`;
+                                        }else{
+
+                                            var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                <input type="hidden" name="update_appointment_id" id="updateAppointmentId" name="appointmentIds${currentCount}" value="${appointmentId}" class="form-control">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" name="update_appointed_time" value="${appointments.appointed_time}">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to" name="update_appointed_to" value="${appointments.appointedTime_to}">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected>${appointments.opdCategory}</option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option>
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot" name="update_slot" value="${appointments.slot}">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                      ${generateDoctorsOptions(doctor)}
+                                                     </select>
+                                                </div>
+                                            </div>`;
+
+                                        }
+
+            // Add the delete button
+            var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
+            timeInputGroup.append(deleteBtn);
+
+            // Append the additional time input structure
+            timeInputGroup.append(additionalTimeInput);
+
+            // Append the timeInputGroup to the additionalTimeContainer
+            $('#update_additionalTimeContainer').append(timeInputGroup);
+            // Add a click event listener for the delete button
+            timeInputGroup.find('.delete-time-input').on('click', function () {
+                timeInputGroup.remove();
+            });
+       
+            if(!appointment || appointment === null || appointment === undefined){
+                var EmptytimeInputGroup = $('<div class="time-input-group">'); //uses of this is to create new form
+
+                EmptytimeInputGroup.append(emptyadditionalTimeInput);
+
+                $('#update_additionalTimeContainer').append(EmptytimeInputGroup);
+                
+                EmptytimeInputGroup.find('.delete-time-input').on('click', function () {
+                    EmptytimeInputGroup.remove();
+                });
+            }
+
+
+            $('#update_additionalTimeContainer').show();
+            $(document).ready(function() {
+                $('.select2').select2();
+                $.each(query_doctor_store, function (index, userData) {
+                    $(`.available_doctor${currentCount}`).append($('<option>', {
+                        value: userData.id,
+                        text: userData.username
+                    }));
+                });
+            });
+        }
+        var doctor = [];
+         function generateDoctorsOptions(doctor){
+            var options = '';
+            
+            doctor.forEach(function (doctors){
+                options += `<option value="${doctors.id}" selected>${doctors.username}</option>`;
+            });
+            return options;
+        //   var doctor = [
+        //     {id: doctorId,
+        //      name: doctorName 
+        //     },
+        //   ]
+        //   return doctor.map(doctor => `<option value="${doctor.id}" selected>${doctor.name}</option>`).join('');
+
+        }
+
+
+  //--------------------------------------------------------------
+  function updateAppointment() {
+            var appointmentId = $('#updateAppointmentId').val();
+            var appointedDate = $('#update_appointed_date').val();
+            var appointedTime = $('#update_appointed_time').val();
+            var appointedTo = $('#update_appointedTime_to').val();
+            var appointmentCreatedBy = $('#update_created_by').val();
+            var appointmentFacilityId = $('#update_facility_id').val();
+            var appointmentDepartmentId = $('#update_department_id').val();
+            var appointmentOpdCategory = $('#update_opdCategory').val();
+            var appointmentAppointedBy = $('#update_appointed_by').val();
+            var appointmentCode = $('#update_code').val();
+            var appointmentStatus = $('#update_status').val();
+            var appointmentSlot = $('#update_slot').val();
+            console.log('appp', appointcmentId);
+            var url = "{{ route('update-appointment') }}";
+            var data = {
+                _token: "{{ csrf_token() }}",
+                id: appointmentId,
+                appointed_date: appointedDate,
+                appointed_time: appointedTime,
+                appointedTime_to: appointedTo,
+                created_by: appointmentCreatedBy,
+                facility_id: appointmentFacilityId,
+                department_id: appointmentDepartmentId,
+                opdCategory: appointmentOpdCategory,
+                appointed_by: appointmentAppointedBy,
+                code: appointmentCode,
+                status: appointmentStatus,
+                slot: appointmentSlot
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function(response) {
+                    $('#editAppointmentModal').modal('hide');
+                    //alert(response.message);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error("AJAX Request Failed: " + errorThrown);
+                }
+            });
+        }
+
+    
         //--------------------------------------------------------------
 
         @if(Session::get('appt_notif'))
