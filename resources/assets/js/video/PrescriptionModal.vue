@@ -28,35 +28,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="row row-presLabel">
-                            <div class="col col-presLabel">
-                                <div class="circle1">1</div>
-                                <div class="col-Label">
-                                    <span class="underline">Ascorbic Acid</span>
-                                </div>
-                            </div>
-                            <div class="col col-presLabel">
-                                <div class="circle2">2</div>
-                                <div class="col-Label">
-                                    <span class="underline">500mg</span>
-                                </div>
-                            </div>
-                            <div class="col col-presLabel">
-                                <div class="circle3">3</div>
-                                <div class="col-Label">
-                                    <span class="underline">tablet</span>
-                                </div>
-                            </div>
-                            <div class="col col-presLabel">
-                                <div class="circle7">7</div>
-                                <div class="col-Label">
-                                    <span class="underline">#30</span>
-                                </div>
-                            </div>
-                        </div>-->
-
-
-
                         <div class="row row-presLabel">
                             <div class="col col-presLabel">
                                 <div class="circle4">4</div>
@@ -65,9 +36,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                         <div class="row row-circle">
                             <div class="circle5">5</div>
                             <div class="circle6">6</div>
@@ -81,15 +49,10 @@
                             </div>
                         </div>
                     </div>
-
-
-
-
-
                     <div class="row prescription">
                         <div class="col">
                             <label for="genericName">1.) Generic Name:</label>
-                            <input type="text" v-model="prescription" class="form-control" >
+                            <input type="text" v-model="generic_name" class="form-control" >
                         </div>
                     </div>
                     <div class="row prescription">
@@ -104,8 +67,8 @@
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="brandName">4.) Brand Name:</label>
-                            <input type="text" v-model="brandName" class="form-control">
+                            <label for="brandname">4.) Brand Name:</label>
+                            <input type="text" v-model="brandname" class="form-control">
                         </div>
                         <div class="col">
                             <label for="frequency">5.) Frequency:</label>
@@ -114,7 +77,7 @@
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="brandName">6.) Duration:</label>
+                            <label for="duration">6.) Duration:</label>
                             <input type="text" v-model="duration" class="form-control">
                         </div>
                         <div class="col">
@@ -134,30 +97,95 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
         data() {
             return {
-                prescription: "",
+                prescriptionSubmitted: false,
+                generic_name: "",
                 dosage: "",
                 formulation: "",
-                brandName: "",
+                brandname: "",
                 frequency: "",
                 duration: "",
                 quantity: "",
             };
         },
+        props: {
+            activity_id: {
+                type: Number
+            },
+            baseUrl: {
+                type: String
+            },
+            code: {
+                type: String
+            }
+        },
+        created() {
+            console.log(this.activity_id, this.baseUrl)
+        },
         methods: {
             submitPrescription() {
-                if(this.prescription) {
+                if(!this.generic_name) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input generic name"
+                        });
+                }
+                else if(!this.dosage) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input dosage"
+                        });
+                }
+                else if(!this.formulation) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input formulation"
+                        });
+                } 
+                else if(!this.brandname) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input brand name"
+                        });
+                }
+                else if(!this.frequency) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input frequency"
+                        });
+                }
+                else if(!this.duration) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input duration"
+                        });
+                }
+                else if(!this.quantity) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input quantity"
+                        });
+                }
+                else {
                     const updatePrescription = {
-                        code : this.referral_code,
-                        prescription: this.prescription,
+                        code : this.code,
+                        generic_name: this.generic_name,
+                        dosage: this.dosage,
+                        formulation: this.formulation,
+                        brandname: this.brandname,
+                        frequency: this.frequency,
+                        duration: this.duration,
+                        quantity: this.quantity,
                         form_type: "normal",
                         activity_id: this.activity_id
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
                         console.log(response)
                         if(response.data === 'success') {
+                            $("#prescriptionModal").modal('hide');
                             this.prescriptionSubmitted = true
                             Lobibox.alert("success",
                                 {
@@ -169,19 +197,14 @@
                                     msg: "Error in server!"
                                 });
                         }
-                    });
-                } else {
-                    Lobibox.alert("error",
-                        {
-                            msg: "No prescription inputted!"
-                        });
+                    });    
                 }
             },
         },
     };
 </script>
 
-<style>
+<style scoped>
     .container {
         border: solid 1px lightgray;
         padding-bottom: 12px;
@@ -246,9 +269,5 @@
         margin-top: 1%;
         margin-left: 14%;
     }
-
-
-
-
 
 </style>

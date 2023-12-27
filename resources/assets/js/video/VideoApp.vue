@@ -52,10 +52,7 @@
                     // A variable to hold the remote user id.s
                     remoteUid: null
                 },
-                showDiv: false,
-                prescription: "",
-                prescriptionSubmitted: false,
-
+                showDiv: false
             }
         },
         mounted() {
@@ -63,7 +60,6 @@
                 .get(`${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`)
                 .then((res) => {
                     const response = res.data;
-                    console.log("testing");
                     console.log(response);
                     this.form = response.form;
                     if(response.age_type === "y")
@@ -93,7 +89,6 @@
         created() {
             let self = this
             $(document).ready(function() {
-                console.log( "ready!" );
                 self.ringingPhoneFunc();
             });
             this.startBasicCall();
@@ -223,36 +218,6 @@
                     console.log("pause");
                     self.$refs.ringingPhone.pause();
                 },60000);
-            },
-            submitPrescription() {
-                if(this.prescription) {
-                    const updatePrescription = {
-                        code : this.referral_code,
-                        prescription: this.prescription,
-                        form_type: "normal",
-                        activity_id: this.activity_id
-                    }
-                    axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
-                        console.log(response)
-                        if(response.data === 'success') {
-                            this.prescriptionSubmitted = true
-                            Lobibox.alert("success",
-                            {
-                                msg: "Successfully submitted prescription!"
-                            });
-                        } else {
-                            Lobibox.alert("error",
-                            {
-                                msg: "Error in server!"
-                            });
-                        }
-                    });
-                } else {
-                    Lobibox.alert("error",
-                    {
-                        msg: "No prescription inputted!"
-                    });
-                }
             },
             generatePrescription() {
                 const getPrescription = {
@@ -416,9 +381,9 @@
                                         <span v-if="file_path.length > 1">File Attachments: </span>
                                         <span v-else>File Attachment: </span>
                                         <span v-for="(path, index) in file_path" :key="index">
-                                                <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
-                                                <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
-                                            </span>
+                                            <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
+                                            <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -439,12 +404,9 @@
                 </div>
             </div>
         </div>
-        <PrescriptionModal />
+        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" />
     </div>
 </template>
-
-
-
 
 <style scoped>
     @import './css/index.css';
