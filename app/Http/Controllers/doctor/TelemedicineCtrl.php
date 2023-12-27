@@ -159,23 +159,29 @@ class TelemedicineCtrl extends Controller
 
     public function updateAppointment(Request $request)
     {
+        // dd(
+        //     $appointedDate = $request->input("update_appointed_date{$i}"),
+        //     // $facility_id = $request->input("update_facility_id"),
+        //     $time_from = $request->input("update_appointed_time{$i}"),
+        //     // $department = $request->input("update_department_id"),
+        //      $time_from = $request->input("appointment_count"),  
+        //     $appointedIds = $request->input("update_appointment_id{$i}")          
+        //   );
 
-        for($i=1; $i<=$request->appointment_count; $i++) {
-      dd(
-        $appointedDate = $request->input("update_appointed_date"),
-        $facility_id = $request->input("update_facility_id"),
-        $time_from = $request->input("update_appointed_time{$i}"),
-        $department = $request->input("update_department_id"),
-        $time_from = $request->input("appointment_count")
-      );
-        // $data = [
-        //    'appointmentDate' => $appointedDate,
-        //    'facility_id' =>$facility_id,
-        //    'department' => $department,
-        //    'time_from' => $time_from,
-        // ];
-        //  return response()->json($data);
-      }
+        for($i=2; $i<=$request->appointment_count; $i++) {
+         $appointed_date = $request->input("update_appointment_date");
+         $appointedIds = AppointmentSchedule::where('appointed_date', $appointed_date)
+         ->pluck('id');
+
+       return  $upateAppointment_Sched = AppointmentSchedule::where('id', $appointedIds)
+         ->update([
+           'appointed_date' => $request->input("appointed_date"),
+           'facility_id' => $request->input("facility_id"),
+           'department_id' => $request->input("department_id"),
+         ]);
+         
+
+         }
     }
 
     public function deleteAppointment(Request $request)

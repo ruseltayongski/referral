@@ -241,10 +241,11 @@
                                 <div class="col-md-4">
                                     <div class="label-border">
                                         <label for="update_appointed_date">Appointed Date:</label>
-                                        <input type="date" class="form-control" name="update_appointed_date" id="update_appointed_date">
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+                                        
+                                        <input type="date" class="form-control" name="appointed_date1" id="update_appointed_date">
                                         <label for="update_facility_id">Facility:</label>
-                                        <select class="form-control select2" name="update_facility_id" id="update_facility_id" onchange="onchangeDepartment($(this))">
+                                        <select class="form-control select2" name="facility_id1" id="update_facility_id" onchange="onchangeDepartment($(this))">
                                             <option selected>Select Facility</option>
                                     
                                             @foreach($facility as $Facility)
@@ -254,7 +255,7 @@
 
                                         <label for="update_department_id">Department:</label>
                                         <!-- <input type="text" class="form-control" name="update_department_id" id="update_department_id" value="OPD" readonly> -->
-                                        <input type="text" class="form-control" name="update_department_id" id="update_department_id"   readonly>
+                                        <input type="text" class="form-control" name="department_id1" id="update_department_id" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -573,15 +574,15 @@ function updateAddTimeInput(appointment) {
             var timeInputGroup = $('<div class="time-input-group">');
             var appointments = appointment ? appointment : '';
             // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
-            var appointmentId = appointment && appointment.id ? appointment.id : '';
-             console.log('Ids: ', appointmentId);
+            var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
+             console.log('appointed Date: ', appointmentDate);
             var doctor = appointment && appointment.telemed_assign_doctor.map(doctor=> doctor.user) ? appointment.telemed_assign_doctor.map(doctor=> doctor.user) : '' ;
               console.log("count: ", currentCount)
                if(appointments){
                 var selectId = "Update_available_doctor" + currentCount;
                 var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
-                                                <input type="hidden" name="update_appointment_id" id="updateAppointmentId" name="appointmentIds${currentCount}" value="${appointmentId}" class="form-control">
+                                                <input type="hidden" id="updateAppointmentId" name="update_appointment_date" value="${appointmentDate}" class="form-control">
                                                     <div class="col-md-12">
                                                     {{csrf_field()}}
                                                         <label for="appointed_time">Appointed Time:</label><br>
