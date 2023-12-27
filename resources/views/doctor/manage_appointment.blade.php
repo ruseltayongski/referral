@@ -64,42 +64,42 @@
         <!-- Table List -->
         <div class="box-body appointments">
             @if(count($appointment_schedule)>0)
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover table-fixed-header">
-                    <tr class="bg-success bg-navy-active">
-                        <th class="text-center">Date</th>
-                        <th class="text-center">From</th>
-                        <th class="text-center">To</th>
-                        <th class="text-center">Created By</th>
-                        <th class="text-center">Facility</th>
-                        <th class="text-center">Department</th>
-                        <th class="text-center">OPD Category</th>
-                        <th class="text-center">Available Doctor</th>
-                        <th class="text-center">Slot</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                    @foreach($appointment_schedule as $row)
-                        <tr style="font-size: 12px">
-                            <td> {{ $row->appointed_date }} </td>
-                            <td> {{ $row->appointed_time }} </td>
-                            <td> {{ $row->appointedTime_to }}</td>
-                            <td> {{ $row->createdBy->username }} </td>
-                            <td> {{ $row->facility->name }} </td>
-                            <td> {{ $row->department->description }} </td>
-                            <td> {{ $row->opdCategory }}</td>
-                            <td> Available Doctor</td>
-                            <td> {{ $row->slot }} </td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
-                                <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover table-fixed-header">
+                        <tr class="bg-success bg-navy-active">
+                            <th class="text-center">Date</th>
+                            <th class="text-center">From</th>
+                            <th class="text-center">To</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">Facility</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">OPD Category</th>
+                            <th class="text-center">Available Doctor</th>
+                            <th class="text-center">Slot</th>
+                            <th class="text-center">Action</th>
                         </tr>
-                    @endforeach
-                </table>
-                <div class="text-center">
-                    {!! $appointment_schedule->links() !!}
+                        @foreach($appointment_schedule as $row)
+                            <tr style="font-size: 12px">
+                                <td> {{ $row->appointed_date }} </td>
+                                <td> {{ $row->appointed_time }} </td>
+                                <td> {{ $row->appointedTime_to }}</td>
+                                <td> {{ $row->createdBy->username }} </td>
+                                <td> {{ $row->facility->name }} </td>
+                                <td> {{ $row->department->description }} </td>
+                                <td> {{ $row->opdCategory }}</td>
+                                <td> Available Doctor </td>
+                                <td> {{ $row->slot }} </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                    <div class="text-center">
+                        {!! $appointment_schedule->links() !!}
+                    </div>
                 </div>
-            </div>
             @else
                 <div class="alert alert-warning">
                     <span class="text-warning">
@@ -145,7 +145,7 @@
                                 <div class="col-md-8">
                                     <div class="label-border">
                                         <div id="opdCategoryContainer">
-                                            <div class="label-border">
+                                            <div>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="appointed_time">Appointed Time:</label><br>
@@ -340,13 +340,13 @@
 @section('js')
     <script>
         @if(Session::get('appointment_save'))
-            Lobibox.notify('success', {
-                title: "",
-                msg: "Appointment Susccessfully Save!",
-                size: 'mini',
-                rounded: true
-            });
-            <?php Session::put('appointment_save',false); ?>
+        Lobibox.notify('success', {
+            title: "",
+            msg: "Appointment Susccessfully Save!",
+            size: 'mini',
+            rounded: true
+        });
+        <?php Session::put('appointment_save',false); ?>
         @endif
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
@@ -435,6 +435,7 @@
             });
         }
 
+        //--------------------------------------------------------------
         function onchangeUpdateDepartment(data){
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
@@ -460,6 +461,7 @@
             }
         }
 
+        //--------------------------------------------------------------
         var query_doctor_store = [];
         function onchangeDepartment(data) {
             $(document).ready(function() {
@@ -474,9 +476,10 @@
                                 text: "Select Doctors"
                             }));
                             $.each(query_doctor_store, function (index, userData) {
+                                console.log("userData:", userData); // Log userData to the console
                                 $(`.available_doctor${i}`).append($('<option>', {
                                     value: userData.id,
-                                    text: userData.username
+                                    text: userData.fname + ' ' + userData.lname
                                 }));
                             });
                         }
@@ -485,12 +488,12 @@
             });
         }
 
-        
+        //--------------------------------------------------------------
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
-                var additionalTimeInput = `<div class="label-border-time">
+            var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="appointed_time">Appointed Time:</label><br>
@@ -557,217 +560,7 @@
                 });
             });
         }
-
-
-//-------------------update_AddTime Slot-------------------------------//
-
-function updateAddTimeInput(appointment) {
-            console.log('welcome appointment', appointment)
-            let currentCount = $(".appointment_count").val();
-            $(".appointment_count").val(++currentCount);
-            var timeInputGroup = $('<div class="time-input-group">');
-            var appointments = appointment ? appointment : '';
-            // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
-            var appointmentId = appointment.id;
-            var doctor = appointment.telemed_assign_doctor.map(doctor=> doctor.user);
-            console.log('Ids: ', appointmentId);
-               if(!appointment || appointment === null || appointment === undefined){
-                
-                  var emptyadditionalTimeInput = `<div class="label-border-time">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <label for="appointed_time">Appointed Time:</label><br>
-                                                        <div class="col-md-6">
-                                                            <span>From:</span>
-                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" >
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <span>To:</span>
-                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to">
-                                                        </div>
-                                                        <label for="opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
-                                                            <option selected></option>
-                                                            <option value="Family Medicine">Family Medicine</option>
-                                                            <option value="Internal Medicine">Internal Medicine</option>
-                                                            <option value="General Surgery">General Surgery</option>
-                                                            <option value="Trauma Care">Trauma Care</option>
-                                                            <option value="Burn Care">Burn Care</option>
-                                                            <option value="Ophthalmology">Ophthalmology</option>
-                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                            <option value="ENT">ENT</option>
-                                                            <option value="Neurosurgery">Neurosurgery</option>
-                                                            <option value="Urosurgery">Urosurgery</option>
-                                                            <option value="Toxicology">Toxicology</option> 
-                                                            <option value="OB-GYNE">OB-GYNE</option>
-                                                            <option value="Pediatric">Pediatric</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <label for="slot">Slot:</label>
-                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
-                                                    <option value="" selected></option>
-                                                    </select>
-                                                </div>
-                                            </div>`;
-                                        }else{
-
-                                            var additionalTimeInput = `<div class="label-border-time">
-                                                <div class="row">
-                                                <input type="hidden" name="update_appointment_id" id="updateAppointmentId" name="appointmentIds${currentCount}" value="${appointmentId}" class="form-control">
-                                                    <div class="col-md-12">
-                                                        <label for="appointed_time">Appointed Time:</label><br>
-                                                        <div class="col-md-6">
-                                                            <span>From:</span>
-                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" name="update_appointed_time" value="${appointments.appointed_time}">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <span>To:</span>
-                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to" name="update_appointed_to" value="${appointments.appointedTime_to}">
-                                                        </div>
-                                                        <label for="opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
-                                                            <option selected>${appointments.opdCategory}</option>
-                                                            <option value="Family Medicine">Family Medicine</option>
-                                                            <option value="Internal Medicine">Internal Medicine</option>
-                                                            <option value="General Surgery">General Surgery</option>
-                                                            <option value="Trauma Care">Trauma Care</option>
-                                                            <option value="Burn Care">Burn Care</option>
-                                                            <option value="Ophthalmology">Ophthalmology</option>
-                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                            <option value="ENT">ENT</option>
-                                                            <option value="Neurosurgery">Neurosurgery</option>
-                                                            <option value="Urosurgery">Urosurgery</option>
-                                                            <option value="Toxicology">Toxicology</option>
-                                                            <option value="OB-GYNE">OB-GYNE</option>
-                                                            <option value="Pediatric">Pediatric</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <label for="slot">Slot:</label>
-                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot" name="update_slot" value="${appointments.slot}">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
-                                                      ${generateDoctorsOptions(doctor)}
-                                                     </select>
-                                                </div>
-                                            </div>`;
-
-                                        }
-
-            // Add the delete button
-            var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
-            timeInputGroup.append(deleteBtn);
-
-            // Append the additional time input structure
-            timeInputGroup.append(additionalTimeInput);
-
-            // Append the timeInputGroup to the additionalTimeContainer
-            $('#update_additionalTimeContainer').append(timeInputGroup);
-            // Add a click event listener for the delete button
-            timeInputGroup.find('.delete-time-input').on('click', function () {
-                timeInputGroup.remove();
-            });
-       
-            if(!appointment || appointment === null || appointment === undefined){
-                var EmptytimeInputGroup = $('<div class="time-input-group">'); //uses of this is to create new form
-
-                EmptytimeInputGroup.append(emptyadditionalTimeInput);
-
-                $('#update_additionalTimeContainer').append(EmptytimeInputGroup);
-                
-                EmptytimeInputGroup.find('.delete-time-input').on('click', function () {
-                    EmptytimeInputGroup.remove();
-                });
-            }
-
-
-            $('#update_additionalTimeContainer').show();
-            $(document).ready(function() {
-                $('.select2').select2();
-                $.each(query_doctor_store, function (index, userData) {
-                    $(`.available_doctor${currentCount}`).append($('<option>', {
-                        value: userData.id,
-                        text: userData.username
-                    }));
-                });
-            });
-        }
-        var doctor = [];
-         function generateDoctorsOptions(doctor){
-            var options = '';
-            
-            doctor.forEach(function (doctors){
-                options += `<option value="${doctors.id}" selected>${doctors.username}</option>`;
-            });
-            return options;
-        //   var doctor = [
-        //     {id: doctorId,
-        //      name: doctorName 
-        //     },
-        //   ]
-        //   return doctor.map(doctor => `<option value="${doctor.id}" selected>${doctor.name}</option>`).join('');
-
-        }
-
-
-  //--------------------------------------------------------------
-  function updateAppointment() {
-            var appointmentId = $('#updateAppointmentId').val();
-            var appointedDate = $('#update_appointed_date').val();
-            var appointedTime = $('#update_appointed_time').val();
-            var appointedTo = $('#update_appointedTime_to').val();
-            var appointmentCreatedBy = $('#update_created_by').val();
-            var appointmentFacilityId = $('#update_facility_id').val();
-            var appointmentDepartmentId = $('#update_department_id').val();
-            var appointmentOpdCategory = $('#update_opdCategory').val();
-            var appointmentAppointedBy = $('#update_appointed_by').val();
-            var appointmentCode = $('#update_code').val();
-            var appointmentStatus = $('#update_status').val();
-            var appointmentSlot = $('#update_slot').val();
-            console.log('appp', appointcmentId);
-            var url = "{{ route('update-appointment') }}";
-            var data = {
-                _token: "{{ csrf_token() }}",
-                id: appointmentId,
-                appointed_date: appointedDate,
-                appointed_time: appointedTime,
-                appointedTime_to: appointedTo,
-                created_by: appointmentCreatedBy,
-                facility_id: appointmentFacilityId,
-                department_id: appointmentDepartmentId,
-                opdCategory: appointmentOpdCategory,
-                appointed_by: appointmentAppointedBy,
-                code: appointmentCode,
-                status: appointmentStatus,
-                slot: appointmentSlot
-            };
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                success: function(response) {
-                    $('#editAppointmentModal').modal('hide');
-                    //alert(response.message);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.error("AJAX Request Failed: " + errorThrown);
-                }
-            });
-        }
-
-    
         //--------------------------------------------------------------
-
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",
@@ -796,4 +589,3 @@ function updateAddTimeInput(appointment) {
 
     </script>
 @endsection
-

@@ -1,11 +1,13 @@
 <script>
     import axios from 'axios';
     import { Transition } from 'vue';
-
     import AgoraRTC from "agora-rtc-sdk-ng"
+    import PrescriptionModal from './PrescriptionModal.vue';
+
     export default {
         name: 'RecoApp',
         components: {
+            PrescriptionModal,
         },
         data() {
             return {
@@ -52,7 +54,8 @@
                 },
                 showDiv: false,
                 prescription: "",
-                prescriptionSubmitted: false
+                prescriptionSubmitted: false,
+
             }
         },
         mounted() {
@@ -299,7 +302,7 @@
                         }
                     }
                 });
-            }
+            },
         },
     }
 </script>
@@ -321,7 +324,9 @@
                         <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                         <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                         <button class="btn btn-danger btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>&nbsp;
-                        <button class="btn btn-warning btn-lg decline-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
+                        <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
+                        <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
+                        <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
                     </div>
                     </Transition>
                     <div class="localPlayerDiv">
@@ -426,60 +431,20 @@
                                     <td colspan="12">Name of referred MD/HCW-Mobile Contact # (ReCo): <br><span class="mdHcw"> {{ form.md_referred }} </span></td>
                                 </tr>
                             </table>
-                            <!-- ====================================================================================================-->
                             <div v-if="referring_md == 'yes'">
                                 <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                             </div>
-                            <div v-else>
-                                <div class="row prescription">
-                                    <div class="col">
-                                        <label for="generic name">1.)Generic Name:</label> 
-                                        <input type="text" v-model="prescription" class="form-control" >
-                                    </div>
-                                </div>
-                                <div class="row prescription">
-                                    <div class="col">
-                                        <label for="dosage">2.)Dosage:</label>
-                                        <input type="text" v-model="dosage" class="form-control">
-                                    </div>
-                                    <div class="col">
-                                        <label for="Formulation">3.)Formulation:</label>
-                                        <input type="text" v-model="formulation" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row prescription">
-                                    <div class="col">
-                                        <label for="brandName">4.)Brand Name:</label>
-                                        <input type="text" v-model="brandName" class="form-control">
-                                    </div>
-                                    <div class="col">
-                                        <label for="frequency">5.)Frequency:</label>
-                                        <input type="text" v-model="frequency" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row prescription">
-                                    <div class="col">
-                                        <label for="brandName">6.)Duration:</label>
-                                        <input type="text" v-model="duration" class="form-control">
-                                    </div>
-                                    <div class="col">
-                                        <label for="quantity">7.)Quantity:</label>
-                                        <input type="number" v-model="quantity"  class="form-control">
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
-                                    <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
-                                </div>
-                            </div>
-                            <!-- ====================================================================================================-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <PrescriptionModal />
     </div>
 </template>
+
+
+
 
 <style scoped>
     @import './css/index.css';
