@@ -184,12 +184,13 @@
                                                     <label>Available Doctor</label>
                                                     <select class="form-control select2 available_doctor1" name="available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
                                                 </div>
+                                                <div id="additionalTimeContainer" style="display: none;"></div>
                                                 <div style="margin-top: 15px;">
                                                     <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="additionalTimeContainer" style="display: none;"></div>
+                                        <!-- <div id="additionalTimeContainer" style="display: none;"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +358,7 @@
             $.get(url, function(data) {
                 console.log('my appointed Id:',data);
 
-                $('#update_additionalTimeContainer').empty();
+                $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
                 if(data && data.length > 0){
                     data.forEach(function(appointment){
                         console.log('slot:', appointment.telemed_assign_doctor);
