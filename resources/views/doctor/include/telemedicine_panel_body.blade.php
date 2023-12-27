@@ -95,7 +95,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
+    <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
@@ -224,7 +224,7 @@
                 ->where("status","end")
                 ->exists();
             ?>
-            <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
+            <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
