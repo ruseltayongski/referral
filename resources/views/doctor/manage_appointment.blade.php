@@ -64,42 +64,42 @@
         <!-- Table List -->
         <div class="box-body appointments">
             @if(count($appointment_schedule)>0)
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover table-fixed-header">
-                    <tr class="bg-success bg-navy-active">
-                        <th class="text-center">Date</th>
-                        <th class="text-center">From</th>
-                        <th class="text-center">To</th>
-                        <th class="text-center">Created By</th>
-                        <th class="text-center">Facility</th>
-                        <th class="text-center">Department</th>
-                        <th class="text-center">OPD Category</th>
-                        <th class="text-center">Available Doctor</th>
-                        <th class="text-center">Slot</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                    @foreach($appointment_schedule as $row)
-                        <tr style="font-size: 12px">
-                            <td> {{ $row->appointed_date }} </td>
-                            <td> {{ $row->appointed_time }} </td>
-                            <td> {{ $row->appointedTime_to }}</td>
-                            <td> {{ $row->createdBy->username }} </td>
-                            <td> {{ $row->facility->name }} </td>
-                            <td> {{ $row->department->description }} </td>
-                            <td> {{ $row->opdCategory }}</td>
-                            <td> Available Doctor</td>
-                            <td> {{ $row->slot }} </td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
-                                <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover table-fixed-header">
+                        <tr class="bg-success bg-navy-active">
+                            <th class="text-center">Date</th>
+                            <th class="text-center">From</th>
+                            <th class="text-center">To</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">Facility</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">OPD Category</th>
+                            <th class="text-center">Available Doctor</th>
+                            <th class="text-center">Slot</th>
+                            <th class="text-center">Action</th>
                         </tr>
-                    @endforeach
-                </table>
-                <div class="text-center">
-                    {!! $appointment_schedule->links() !!}
+                        @foreach($appointment_schedule as $row)
+                            <tr style="font-size: 12px">
+                                <td> {{ $row->appointed_date }} </td>
+                                <td> {{ $row->appointed_time }} </td>
+                                <td> {{ $row->appointedTime_to }}</td>
+                                <td> {{ $row->createdBy->username }} </td>
+                                <td> {{ $row->facility->name }} </td>
+                                <td> {{ $row->department->description }} </td>
+                                <td> {{ $row->opdCategory }}</td>
+                                <td> Available Doctor </td>
+                                <td> {{ $row->slot }} </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                    <div class="text-center">
+                        {!! $appointment_schedule->links() !!}
+                    </div>
                 </div>
-            </div>
             @else
                 <div class="alert alert-warning">
                     <span class="text-warning">
@@ -145,7 +145,7 @@
                                 <div class="col-md-8">
                                     <div class="label-border">
                                         <div id="opdCategoryContainer">
-                                            <div class="label-border">
+                                            <div>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="appointed_time">Appointed Time:</label><br>
@@ -184,12 +184,12 @@
                                                     <label>Available Doctor</label>
                                                     <select class="form-control select2 available_doctor1" name="available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
                                                 </div>
-                                                <div style="margin-top: 15px;">
-                                                    <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
-                                                </div>
                                             </div>
                                         </div>
                                         <div id="additionalTimeContainer" style="display: none;"></div>
+                                        <div style="margin-top: 15px;">
+                                            <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -229,10 +229,10 @@
                     <form id="updateAppointmentForm" method="post" action="{{ route('update-appointment') }}">
                         {{ csrf_field() }}
                         <legend><i class="fa fa-edit"></i> Edit Appointment
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </legend>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </legend>
                         <div class="form-group">
                             <input type="hidden" name="update_appointment_id" id="updateAppointmentId" value="" class="form-control">
 
@@ -247,7 +247,7 @@
 
                             <label for="update_facility_id">Facility:</label>
                             <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))" required>
-                            <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
+                                <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
                                 @foreach($facilityList as $facility)
                                     <option value="{{ $facility->id }}" selected>{{ $facility->name }}</option>
                                 @endforeach
@@ -348,13 +348,13 @@
 @section('js')
     <script>
         @if(Session::get('appointment_save'))
-            Lobibox.notify('success', {
-                title: "",
-                msg: "Appointment Susccessfully Save!",
-                size: 'mini',
-                rounded: true
-            });
-            <?php Session::put('appointment_save',false); ?>
+        Lobibox.notify('success', {
+            title: "",
+            msg: "Appointment Susccessfully Save!",
+            size: 'mini',
+            rounded: true
+        });
+        <?php Session::put('appointment_save',false); ?>
         @endif
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
@@ -485,6 +485,7 @@
             });
         }
 
+        //--------------------------------------------------------------
         function onchangeUpdateDepartment(data){
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
@@ -510,6 +511,7 @@
             }
         }
 
+        //--------------------------------------------------------------
         var query_doctor_store = [];
         function onchangeDepartment(data) {
             $(document).ready(function() {
@@ -524,9 +526,10 @@
                                 text: "Select Doctors"
                             }));
                             $.each(query_doctor_store, function (index, userData) {
+                                console.log("userData:", userData); // Log userData to the console
                                 $(`.available_doctor${i}`).append($('<option>', {
                                     value: userData.id,
-                                    text: userData.username
+                                    text: userData.fname + ' ' + userData.lname
                                 }));
                             });
                         }
@@ -535,12 +538,12 @@
             });
         }
 
-        
+        //--------------------------------------------------------------
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
-                var additionalTimeInput = `<div class="label-border-time">
+            var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="appointed_time">Appointed Time:</label><br>
@@ -607,8 +610,8 @@
                 });
             });
         }
-        //--------------------------------------------------------------
 
+        //--------------------------------------------------------------
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",
@@ -637,4 +640,3 @@
 
     </script>
 @endsection
-

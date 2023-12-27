@@ -1,0 +1,511 @@
+[33mcommit 4d1da98e078ecfb2446299c4fd090159bdfed8ef[m[33m ([m[1;36mHEAD -> [m[1;32mDEV-2086[m[33m)[m
+Merge: 231bfe67 4039cfb9
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Mon Dec 18 09:14:13 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral into DEV-2086
+
+[33mcommit 231bfe67e11528a420b50479ab463868554ee766[m
+Merge: 9845a0e2 baa1c9cc
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Mon Dec 18 09:13:46 2023 +0800
+
+    updated
+
+[33mcommit 4039cfb998769c6edb9a414bcfdac49911d5ddc1[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 15 15:55:26 2023 +0800
+
+    Create Appoinment Dynamic
+
+[33mcommit baa1c9cc1c3049d33daa40ec6e9b3633be5024ba[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 15 11:15:53 2023 +0800
+
+    Fix some error
+
+[33mcommit ecbc8548be7b4cc78b59e61b34afbb3807e27386[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 15 11:15:22 2023 +0800
+
+    Fixe some appointment
+
+[33mcommit 9845a0e2bee8bb2a2784794d17660097ba49d510[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Fri Dec 15 10:55:19 2023 +0800
+
+    updated add modal
+
+[33mcommit acb97948cd24331bc03a864c6283f392aaa92ae0[m
+Merge: 6880d7a9 54de9808
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 15 10:23:05 2023 +0800
+
+    Fixed some errors
+
+[33mcommit 6880d7a92f4a057906d1c6a751120288cb77057f[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 15 10:12:43 2023 +0800
+
+    Fixed some issue
+
+[33mcommit 54de9808f385ba0d6c2a1d15d71e31811f8ce5fa[m
+Merge: 3213e01b deeec6d2
+Author: Ma.Angelica <83253377+Angelica1999@users.noreply.github.com>
+Date:   Fri Dec 15 10:04:44 2023 +0800
+
+    Merge pull request #74 from ruseltayongski/DEV-2087
+    
+    Dev 2087
+
+[33mcommit deeec6d27ac55937e53a7027a04da6934bdf1cd7[m
+Merge: 953be92d 3213e01b
+Author: Angelica Cadayday <maangelica.cadayday@gmail.com>
+Date:   Fri Dec 15 10:03:26 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral into DEV-2087
+
+[33mcommit 953be92d189f041019c4b2583cd0b2db2880753e[m
+Author: Angelica Cadayday <maangelica.cadayday@gmail.com>
+Date:   Fri Dec 15 10:03:13 2023 +0800
+
+    adding icon in referred panel body
+
+[33mcommit 3213e01bb44b7b13b93849c31bca19f8176855b5[m
+Merge: 906900a9 6702071c
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Thu Dec 14 11:13:51 2023 +0800
+
+    Merge pull request #73 from ruseltayongski/DEV-2086
+    
+    Dev 2086
+
+[33mcommit 906900a97636bf396a1e1d294995f889470e8d73[m
+Merge: 30d98136 520257a5
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Thu Dec 14 11:13:28 2023 +0800
+
+    Merge pull request #72 from ruseltayongski/DEV-2087
+    
+    update video form
+
+[33mcommit 6702071ce4447ce6e659dc45bf2ecf8d0480cee1[m[33m ([m[1;31morigin/DEV-2086[m[33m)[m
+Merge: 1d6c4731 30d98136
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Thu Dec 14 11:12:31 2023 +0800
+
+    updated add more time and slot
+
+[33mcommit 30d98136c67a94ee9a44ceb07115c23c724334d9[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Thu Dec 14 11:11:18 2023 +0800
+
+    Fixed the calendar in temedicine and convert it to VUE.js 3
+
+[33mcommit 1d6c4731dc33dfd59b77f896111559cf3ec7c9a2[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Thu Dec 14 11:07:34 2023 +0800
+
+    Updated Add More Time and Slot
+
+[33mcommit 520257a5314ee898985bb9bc191d99449b68b7aa[m
+Author: Angelica Cadayday <maangelica.cadayday@gmail.com>
+Date:   Wed Dec 13 16:43:22 2023 +0800
+
+    update video form
+
+[33mcommit 98093cdb0473cc2a44c8e224800e982624bc6ed5[m
+Merge: 18911836 cdd234e9
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Wed Dec 13 10:14:16 2023 +0800
+
+    Merge pull request #71 from ruseltayongski/joy
+    
+    telemedicine calendar
+
+[33mcommit cdd234e9c7266cebf0b0cb94568dba67cbf2dce4[m
+Author: Florsha <floramayjoym@gmail.com>
+Date:   Wed Dec 13 09:48:59 2023 +0800
+
+    telemedicine calendar
+
+[33mcommit 189118364f90b0a4ed053c95017e403e73531992[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Mon Dec 11 08:21:09 2023 +0800
+
+    Set up for prescription enhancement
+
+[33mcommit 9b01ff2b2012a46a02bd72c46a2d157acc7a1774[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Dec 8 11:54:55 2023 +0800
+
+    Change the track into some label and icons
+
+[33mcommit ce91fe0e503d87e6ca981ce8d3c8a651c0cf118a[m
+Merge: 26d5ef9c 80fd6634
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Wed Dec 6 11:26:30 2023 +0800
+
+    Merge pull request #70 from ruseltayongski/DEV-2085
+    
+    Dev 2085
+
+[33mcommit b455fe4fd535bd0125f0493d55dce2c1b125ee11[m[33m ([m[1;32mDEV-2085[m[33m)[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Wed Dec 6 11:24:19 2023 +0800
+
+    fetching doctor base on facility and department
+
+[33mcommit 80fd663408b253859214c805678796aefa9cca8d[m[33m ([m[1;31morigin/DEV-2085[m[33m)[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Wed Dec 6 10:56:15 2023 +0800
+
+    fetching doctors base on facility and department
+
+[33mcommit 39ed264ef1b54ac0d14c088d45207dbef4c4de90[m[33m ([m[1;31morigin/DEV-2084[m[33m, [m[1;32mDEV-2084[m[33m)[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Fri Dec 1 17:12:01 2023 +0800
+
+    Fetching All Data of Appointment Schedule on calendar
+
+[33mcommit 26d5ef9ce4c9d3067493171b5f2a5d45dbcbc339[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Thu Nov 30 13:31:44 2023 +0800
+
+    change the API key of agora
+
+[33mcommit e05ead1a1f2d28e723c255ce06673075dfdf48d2[m
+Merge: 6e12fa0c 05056b83
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Thu Nov 30 10:08:38 2023 +0800
+
+    Merge pull request #69 from ruseltayongski/lexaxis11082023
+    
+    adding badge and highlight the selected card
+
+[33mcommit 05056b83a778fc058e18571c1acce57560cee3d2[m[33m ([m[1;31morigin/lexaxis11082023[m[33m, [m[1;32mlexaxis11082023[m[33m)[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Thu Nov 30 10:07:02 2023 +0800
+
+    Updating the Manage Calendar
+
+[33mcommit 6e12fa0c1cd3b39501f759c62c31c7f9cf935556[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Nov 29 11:24:11 2023 +0800
+
+    Add trapping in calling, ingore call when patient already rejected
+
+[33mcommit 9f57f12e67ee1cc57d15ab3f23268fc5d541f1f8[m
+Merge: eeec9ec8 573b6cb6
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Nov 29 11:20:32 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral
+
+[33mcommit eeec9ec8c151a069df6fff4345a8475d80a4de04[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Nov 29 11:20:22 2023 +0800
+
+    Add trapping in calling, ingore call when patient already rejected
+
+[33mcommit b01e6aac4b1f9693c73468821ecf1038f1bbc477[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Thu Nov 23 16:18:40 2023 +0800
+
+    fetching data of facility and department to display in edit modal with select2 class
+
+[33mcommit a068e1cf52858869e4b586f627c8773d5ec612fe[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Wed Nov 22 16:22:43 2023 +0800
+
+    fetching username data to include in table
+
+[33mcommit 6d9f521d869f392695349283977773dba6001edd[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Fri Nov 17 16:06:06 2023 +0800
+
+    adding badge and highlight the selected card
+
+[33mcommit 573b6cb6c9f2ee6558113b4084ab448ae506669d[m
+Merge: 6e4dc68a ed5fb467
+Author: LexAxis06 <130950243+LexAxis06@users.noreply.github.com>
+Date:   Wed Nov 15 16:18:19 2023 +0800
+
+    Merge pull request #68 from ruseltayongski/lexaxis11082023
+    
+    Lexaxis11082023
+
+[33mcommit ed5fb46707f3a433280c31049b7e5b871a5f9c2c[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Wed Nov 15 16:13:09 2023 +0800
+
+    adding list of card for facility
+
+[33mcommit b67761770993006ad25262f0b7c00c253e6da52a[m
+Merge: e5a4f97b 6e4dc68a
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Mon Nov 13 16:10:06 2023 +0800
+
+    edit modal updated
+
+[33mcommit e5a4f97b40c2ca7cbfa226a2d2560c526a5531d9[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Fri Nov 10 16:06:07 2023 +0800
+
+    add manage appointment crud
+
+[33mcommit 6e4dc68a809771211f64fbaea826e2a8929c93d5[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Nov 10 14:53:28 2023 +0800
+
+    Add appointment calendar view
+
+[33mcommit e63d7a09490030a69143a16b9f6574ee7389558a[m[33m ([m[1;32mmaster[m[33m, [m[1;32mlexaxis[m[33m)[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Oct 27 13:56:28 2023 +0800
+
+    Fixed the tracking in referral
+
+[33mcommit fa3e99f9186b71e0337c88ad6bdaba8d30af16cc[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Oct 11 14:12:42 2023 +0800
+
+    Add tuning in dashboard
+
+[33mcommit 689af9cd0193ef0edd9611896aba53cccebdb5f7[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Sep 29 14:21:09 2023 +0800
+
+    simulate telemedicine
+
+[33mcommit 51b238f9059d126c58cc186a5cce08b2a5ce9981[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 27 13:58:41 2023 +0800
+
+    Add API for upward in telemedicine
+
+[33mcommit 7770d3a9110b19ac8a08befc42292fcc9783c716[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Sep 22 15:07:36 2023 +0800
+
+    Add api for submit prescription for Telemedicine
+
+[33mcommit 3e27ea55b50d01339d847e8a783175b99b0afffc[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 18:39:05 2023 +0800
+
+    fixed bugs after logout, flushing the session not working
+
+[33mcommit 4fdd99993622785bf97bafa3bd883ec078b8d62d[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 18:33:09 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 0bf5daf8bbfd1ecec602b61f2b264e2bf0b610e6[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 18:24:52 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 30068a9d4e92800fae1e37d41b42349dc4705700[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 17:26:56 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 16b30ab490ca50b5172623a27fb0bcb525f4c32a[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 17:23:31 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 4d700c1f56b473d35f55001a38e578b913989406[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 16:45:17 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit c95f2246895ee67809bc6c6cc8bcab12f0b9e705[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 16:27:08 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit f296ba88f1c8ff9229be00bbe19fa7d86ddfbb0d[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 15:46:49 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 0c33f628b444b26c9c820c91a2a67b7d2db0fa02[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 15:39:02 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit dac00538caec4307cb0030a9564a5b12fcd2d332[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 15:25:35 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit 5572b69f0704e368c0bc8ab67b19d5569ce05e2a[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 14:37:33 2023 +0800
+
+    Enhance the login page
+
+[33mcommit 9c75644ccbedac71b872561b0d3237a5f7021492[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 14:19:47 2023 +0800
+
+    Fixed login session bugs
+
+[33mcommit c82791129999defd47248c5884111040d08edc18[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 13:55:52 2023 +0800
+
+    Enhance the login page
+
+[33mcommit 786cc31d481634539e42fe521e09b338fca00d59[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 13 10:07:08 2023 +0800
+
+    API for checking the username if it was referring or referred in telemedicine
+
+[33mcommit 28d1dbb963036460bd624d6aa227d526c9b08fc7[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Sep 6 15:38:24 2023 +0800
+
+    add reason_referral fields in telemedicine API data
+
+[33mcommit 87a613e73259e6157a83a14914d97e4f4b112f08[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Thu Aug 31 11:03:29 2023 +0800
+
+    PUshUpdates
+
+[33mcommit ad4f0b54c5031dfb12cdaf192ccec53dc79c3d3c[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Thu Aug 31 10:11:29 2023 +0800
+
+    add api to request data both normal and pregnant for telemedicine
+
+[33mcommit d0a0281aba22a0cb3d59467369609a74404d3e77[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Wed Aug 30 16:24:46 2023 +0800
+
+    Add verify tracking for telemedicine
+
+[33mcommit 11516086c156ec7015bc495681068462dc97d5df[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Tue Aug 15 10:04:18 2023 +0800
+
+    Add redirected function in telemedicine and QR code
+
+[33mcommit a8dda697b17f73b8bf9e057be79e64a3b5bfe7fc[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Tue Aug 15 09:53:43 2023 +0800
+
+    Add redirected function in telemedicine and QR code
+
+[33mcommit 8a1fa11861fbfd32c432cce7a610299531a29081[m
+Merge: 5d955bb0 68e4bbe8
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Jul 28 09:43:32 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral
+
+[33mcommit 5d955bb0088ecdc36d85c115fd705321b66b5be2[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Jul 28 09:43:21 2023 +0800
+
+    preparation set up for telemedicine
+
+[33mcommit 68e4bbe8b81f58dee5fc4bb3458e2654704422fe[m
+Merge: 0ff62dbd e0a9483d
+Author: ruseltayongski <ruseltayong@gmail.com>
+Date:   Tue Jul 25 16:20:48 2023 +0800
+
+    Merge pull request #67 from ruseltayongski/mayor
+    
+    Comment the topic referrals_ER in pushNotificationCCMC
+
+[33mcommit e0a9483ddf606a55f70530b1f625799c9e85e3f6[m[33m ([m[1;31morigin/mayor[m[33m)[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Tue Jul 25 16:19:03 2023 +0800
+
+    Comment the topic referrals_ER in pushNotificationCCMC
+
+[33mcommit 0ff62dbdcb991aa21ec164b6a90e8838c244958a[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Mon Jun 19 14:02:05 2023 +0800
+
+    Fixed departed not display and also firebase in talisay district error
+
+[33mcommit 50ef554b74096b18cd7c12490023d72e55f37101[m
+Merge: f2daaf28 0a1c5555
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Mon Jun 19 13:58:38 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral
+
+[33mcommit f2daaf283f076c49f6a454e751b540ceb5c6b7b1[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Mon Jun 19 13:58:24 2023 +0800
+
+    Fixed departed not display and also firebase in talisay district error
+
+[33mcommit 0a1c5555a9a29b8e40afac628bcbd6119e596ef0[m
+Merge: 2f53d4bd d79d7867
+Author: LexAxis06 <130950243+LexAxis06@users.noreply.github.com>
+Date:   Mon Jun 19 11:23:11 2023 +0800
+
+    Merge pull request #66 from ruseltayongski/alexis0619
+    
+    Alexis0619
+
+[33mcommit d79d78672206a31e427825fb3653970f05a6ca79[m[33m ([m[1;31morigin/alexis0619[m[33m)[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Mon Jun 19 11:22:19 2023 +0800
+
+    Calling sa modal
+
+[33mcommit 592698710a16682c5fc3967fe545c659ca14e546[m
+Author: Alexis Tacatani <alexisptacatani@gmail>
+Date:   Mon Jun 19 11:20:09 2023 +0800
+
+    gitignore
+
+[33mcommit 9588b770ea9127b25119cca2dfda2f33ec46f54b[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Jun 16 14:13:14 2023 +0800
+
+    modify gitignore
+
+[33mcommit 2f53d4bd85b118329ccd4408e25910382b025bf9[m
+Author: Rusel T. Tayong <ruseltayong@gmail.com>
+Date:   Fri Jun 16 13:52:30 2023 +0800
+
+    PUshUpdates
+
+[33mcommit 9deff533d9f7c0c3f014125b2a1c37db052d1780[m
+Merge: 738880d0 85153ca9
+Author: Ma.Angelica <83253377+Angelica1999@users.noreply.github.com>
+Date:   Fri Jun 16 13:31:26 2023 +0800
+
+    Merge pull request #65 from ruseltayongski/angelica0607
+    
+    Angelica0607
+
+[33mcommit 85153ca960c9d4a249b0e58122099824aed5197d[m[33m ([m[1;31morigin/angelica0607[m[33m)[m
+Merge: 078e7445 738880d0
+Author: Ma.Angelica Cadayday <maangelica.cadayday@gmail.com>
+Date:   Fri Jun 16 13:29:05 2023 +0800
+
+    Merge branch 'master' of https://github.com/ruseltayongski/referral into angelica0607
+
+[33mcommit 078e7445d56a56e5a9a2f7011827b8793bf3cb6f[m
+Merge: 1b904458 1361d7b7
+Author: Ma.A

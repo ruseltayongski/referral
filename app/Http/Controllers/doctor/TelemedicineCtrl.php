@@ -65,6 +65,7 @@ class TelemedicineCtrl extends Controller
                 }
             ])
             ->where('department_id',"=", '5')
+            ->where('level',"=", 'doctor')
             ->groupBy('facility_id')
             ->get();
 
@@ -188,7 +189,6 @@ class TelemedicineCtrl extends Controller
             return response()->json(['error' => 'Appointment not found'], 404);
         }
 
-        /*return response()->json($facility_data);*/
         return response()->json(['facility_data' => $facility_data]);
     }
 
@@ -209,12 +209,12 @@ class TelemedicineCtrl extends Controller
         $doctors = User::where('facility_id', $facilityId)
                 ->where('department_id','=',5)
                 ->where('level', 'doctor')
-                ->get();
+                ->get(['id', 'fname', 'lname']);
 
         return $doctors;
     }
 
-    public function getFacilitiesByDepartmentAndType($departmentId) {
+   /* public function getFacilitiesByDepartmentAndType($departmentId) {
         // Assuming Facility and Department models with relationships
 
         // Fetch facilities based on department ID and type
@@ -226,7 +226,7 @@ class TelemedicineCtrl extends Controller
             ->get();
 
         return response()->json($facilities);
-    }
+    }*/
 
 
 

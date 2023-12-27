@@ -158,6 +158,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div><br>
 
+
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
@@ -168,6 +169,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                             </div>
                         </div>
+
+
                         <div class="row" style="padding-top: 10px;">
                             <div class="col-md-12">
                                 <button type="button" id="clear_icd" class="btn btn-xs btn-danger" onclick="clearICD()"> Clear ICD-10</button><br>
@@ -340,6 +343,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
             clearOtherReasonReferral();
         }
     });
+
+
     function searchICD10() {
         $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
@@ -384,6 +389,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         },500);
     }
 </script>
+
 <script>
     var upload_pos = 2;
     var upload_count = 0;
