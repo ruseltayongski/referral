@@ -19021,31 +19021,84 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      prescription: "",
+      prescriptionSubmitted: false,
+      generic_name: "",
       dosage: "",
       formulation: "",
-      brandName: "",
+      brandname: "",
       frequency: "",
       duration: "",
       quantity: ""
     };
   },
+  props: {
+    activity_id: {
+      type: Number
+    },
+    baseUrl: {
+      type: String
+    },
+    code: {
+      type: String
+    }
+  },
+  created: function created() {
+    console.log(this.activity_id, this.baseUrl);
+  },
   methods: {
     submitPrescription: function submitPrescription() {
       var _this = this;
-      if (this.prescription) {
+      if (!this.generic_name) {
+        Lobibox.alert("error", {
+          msg: "Please input generic name"
+        });
+      } else if (!this.dosage) {
+        Lobibox.alert("error", {
+          msg: "Please input dosage"
+        });
+      } else if (!this.formulation) {
+        Lobibox.alert("error", {
+          msg: "Please input formulation"
+        });
+      } else if (!this.brandname) {
+        Lobibox.alert("error", {
+          msg: "Please input brand name"
+        });
+      } else if (!this.frequency) {
+        Lobibox.alert("error", {
+          msg: "Please input frequency"
+        });
+      } else if (!this.duration) {
+        Lobibox.alert("error", {
+          msg: "Please input duration"
+        });
+      } else if (!this.quantity) {
+        Lobibox.alert("error", {
+          msg: "Please input quantity"
+        });
+      } else {
         var updatePrescription = {
-          code: this.referral_code,
-          prescription: this.prescription,
+          code: this.code,
+          generic_name: this.generic_name,
+          dosage: this.dosage,
+          formulation: this.formulation,
+          brandname: this.brandname,
+          frequency: this.frequency,
+          duration: this.duration,
+          quantity: this.quantity,
           form_type: "normal",
           activity_id: this.activity_id
         };
-        axios.post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
           console.log(response);
           if (response.data === 'success') {
+            $("#prescriptionModal").modal('hide');
             _this.prescriptionSubmitted = true;
             Lobibox.alert("success", {
               msg: "Successfully submitted prescription!"
@@ -19055,10 +19108,6 @@ __webpack_require__.r(__webpack_exports__);
               msg: "Error in server!"
             });
           }
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No prescription inputted!"
         });
       }
     }
@@ -19139,16 +19188,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // A variable to hold the remote user id.s
         remoteUid: null
       },
-      showDiv: false,
-      prescription: "",
-      prescriptionSubmitted: false
+      showDiv: false
     };
   },
   mounted: function mounted() {
     var _this = this;
     axios__WEBPACK_IMPORTED_MODULE_1___default().get("".concat(this.baseUrl, "/doctor/referral/video/normal/form/").concat(this.tracking_id)).then(function (res) {
       var response = res.data;
-      console.log("testing");
       console.log(response);
       _this.form = response.form;
       if (response.age_type === "y") _this.patient_age = response.patient_age + " Years Old";else if (response.age_type === "m") _this.patient_age = response.patient_age + " Months Old";
@@ -19170,7 +19216,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     var self = this;
     $(document).ready(function () {
-      console.log("ready!");
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
@@ -19369,36 +19414,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    submitPrescription: function submitPrescription() {
-      var _this5 = this;
-      if (this.prescription) {
-        var updatePrescription = {
-          code: this.referral_code,
-          prescription: this.prescription,
-          form_type: "normal",
-          activity_id: this.activity_id
-        };
-        axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
-          console.log(response);
-          if (response.data === 'success') {
-            _this5.prescriptionSubmitted = true;
-            Lobibox.alert("success", {
-              msg: "Successfully submitted prescription!"
-            });
-          } else {
-            Lobibox.alert("error", {
-              msg: "Error in server!"
-            });
-          }
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No prescription inputted!"
-        });
-      }
-    },
     generatePrescription: function generatePrescription() {
-      var _this6 = this;
+      var _this5 = this;
       var getPrescription = {
         code: this.referral_code,
         form_type: "normal",
@@ -19407,7 +19424,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
         console.log(response);
         if (response.data === 'success') {
-          window.open("".concat(_this6.baseUrl, "/doctor/print/prescription/").concat(_this6.tracking_id, "/").concat(_this6.activity_id), '_blank');
+          window.open("".concat(_this5.baseUrl, "/doctor/print/prescription/").concat(_this5.tracking_id, "/").concat(_this5.activity_id), '_blank');
         } else {
           Lobibox.alert("error", {
             msg: "No added prescription!"
@@ -19448,10 +19465,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386":
-/*!*****************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386 ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -19461,6 +19478,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
+var _withScopeId = function _withScopeId(n) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-c2b74386"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
+};
 var _hoisted_1 = {
   "class": "modal fade",
   id: "prescriptionModal",
@@ -19475,87 +19495,107 @@ var _hoisted_2 = {
 var _hoisted_3 = {
   "class": "modal-content"
 };
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h5 class=\"modal-title fs-5\" id=\"prescriptionModalLabel\"><i class=\"bi bi-prescription\"></i> Prescription</h5><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button></div>", 1);
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\" data-v-c2b74386><h5 class=\"modal-title fs-5\" id=\"prescriptionModalLabel\" data-v-c2b74386><i class=\"bi bi-prescription\" data-v-c2b74386></i> Prescription</h5><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" data-v-c2b74386><span aria-hidden=\"true\" data-v-c2b74386>×</span></button></div>", 1);
 var _hoisted_5 = {
   "class": "modal-body"
 };
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\">Ex. <div class=\"row row-circle\"><div class=\"circle1\">1</div><div class=\"circle2\">2</div><div class=\"circle3\">3</div><div class=\"circle7\">7</div></div><div class=\"row row-presLabel\"><div class=\"col col-presLabel\"><div class=\"col-Label\"><span class=\"underline\">Ascorbic Acid</span><span class=\"underline\">500mg</span><span class=\"underline\">tablet</span><span class=\"underline\">#30</span></div></div></div><!--&lt;div class=&quot;row row-presLabel&quot;&gt;\r\n                            &lt;div class=&quot;col col-presLabel&quot;&gt;\r\n                                &lt;div class=&quot;circle1&quot;&gt;1&lt;/div&gt;\r\n                                &lt;div class=&quot;col-Label&quot;&gt;\r\n                                    &lt;span class=&quot;underline&quot;&gt;Ascorbic Acid&lt;/span&gt;\r\n                                &lt;/div&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col col-presLabel&quot;&gt;\r\n                                &lt;div class=&quot;circle2&quot;&gt;2&lt;/div&gt;\r\n                                &lt;div class=&quot;col-Label&quot;&gt;\r\n                                    &lt;span class=&quot;underline&quot;&gt;500mg&lt;/span&gt;\r\n                                &lt;/div&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col col-presLabel&quot;&gt;\r\n                                &lt;div class=&quot;circle3&quot;&gt;3&lt;/div&gt;\r\n                                &lt;div class=&quot;col-Label&quot;&gt;\r\n                                    &lt;span class=&quot;underline&quot;&gt;tablet&lt;/span&gt;\r\n                                &lt;/div&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col col-presLabel&quot;&gt;\r\n                                &lt;div class=&quot;circle7&quot;&gt;7&lt;/div&gt;\r\n                                &lt;div class=&quot;col-Label&quot;&gt;\r\n                                    &lt;span class=&quot;underline&quot;&gt;#30&lt;/span&gt;\r\n                                &lt;/div&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;--><div class=\"row row-presLabel\"><div class=\"col col-presLabel\"><div class=\"circle4\">4</div><div class=\"col-Label\"><span class=\"underline\">(Brand Name)</span></div></div></div><div class=\"row row-circle\"><div class=\"circle5\">5</div><div class=\"circle6\">6</div></div><div class=\"row row-presLabel\"><div class=\"col col-presLabel\"><div class=\"col-Label\">Sig: <span class=\"underline\">Once a day</span> for <span class=\"underline\">7 Days</span></div></div></div></div>", 1);
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\" data-v-c2b74386>Ex. <div class=\"row row-circle\" data-v-c2b74386><div class=\"circle1\" data-v-c2b74386>1</div><div class=\"circle2\" data-v-c2b74386>2</div><div class=\"circle3\" data-v-c2b74386>3</div><div class=\"circle7\" data-v-c2b74386>7</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386><span class=\"underline\" data-v-c2b74386>Ascorbic Acid</span><span class=\"underline\" data-v-c2b74386>500mg</span><span class=\"underline\" data-v-c2b74386>tablet</span><span class=\"underline\" data-v-c2b74386>#30</span></div></div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"circle4\" data-v-c2b74386>4</div><div class=\"col-Label\" data-v-c2b74386><span class=\"underline\" data-v-c2b74386>(Brand Name)</span></div></div></div><div class=\"row row-circle\" data-v-c2b74386><div class=\"circle5\" data-v-c2b74386>5</div><div class=\"circle6\" data-v-c2b74386>6</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386>Sig: <span class=\"underline\" data-v-c2b74386>Once a day</span> for <span class=\"underline\" data-v-c2b74386>7 Days</span></div></div></div></div>", 1);
 var _hoisted_7 = {
   "class": "row prescription"
 };
 var _hoisted_8 = {
   "class": "col"
 };
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "genericName"
-}, "1.) Generic Name:", -1 /* HOISTED */);
+var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "genericName"
+  }, "1.) Generic Name:", -1 /* HOISTED */);
+});
 var _hoisted_10 = {
   "class": "row prescription"
 };
 var _hoisted_11 = {
   "class": "col"
 };
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "dosage"
-}, "2.) Dosage:", -1 /* HOISTED */);
+var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "dosage"
+  }, "2.) Dosage:", -1 /* HOISTED */);
+});
 var _hoisted_13 = {
   "class": "col"
 };
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "formulation"
-}, "3.) Formulation:", -1 /* HOISTED */);
+var _hoisted_14 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "formulation"
+  }, "3.) Formulation:", -1 /* HOISTED */);
+});
 var _hoisted_15 = {
   "class": "row prescription"
 };
 var _hoisted_16 = {
   "class": "col"
 };
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "brandName"
-}, "4.) Brand Name:", -1 /* HOISTED */);
+var _hoisted_17 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "brandname"
+  }, "4.) Brand Name:", -1 /* HOISTED */);
+});
 var _hoisted_18 = {
   "class": "col"
 };
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "frequency"
-}, "5.) Frequency:", -1 /* HOISTED */);
+var _hoisted_19 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "frequency"
+  }, "5.) Frequency:", -1 /* HOISTED */);
+});
 var _hoisted_20 = {
   "class": "row prescription"
 };
 var _hoisted_21 = {
   "class": "col"
 };
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "brandName"
-}, "6.) Duration:", -1 /* HOISTED */);
+var _hoisted_22 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "duration"
+  }, "6.) Duration:", -1 /* HOISTED */);
+});
 var _hoisted_23 = {
   "class": "col"
 };
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "quantity"
-}, "7.) Quantity:", -1 /* HOISTED */);
+var _hoisted_24 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "quantity"
+  }, "7.) Quantity:", -1 /* HOISTED */);
+});
 var _hoisted_25 = {
   "class": "modal-footer"
 };
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "btn btn-secondary btn-sm",
-  type: "button",
-  "data-dismiss": "modal"
-}, "Close", -1 /* HOISTED */);
-var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "bi bi-prescription"
-}, null, -1 /* HOISTED */);
-var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "bi bi-prescription"
-}, null, -1 /* HOISTED */);
+var _hoisted_26 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-secondary btn-sm",
+    type: "button",
+    "data-dismiss": "modal"
+  }, "Close", -1 /* HOISTED */);
+});
+var _hoisted_27 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "bi bi-prescription"
+  }, null, -1 /* HOISTED */);
+});
+var _hoisted_28 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "bi bi-prescription"
+  }, null, -1 /* HOISTED */);
+});
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-      return $data.prescription = $event;
+      return $data.generic_name = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.prescription]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.generic_name]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.dosage = $event;
@@ -19570,10 +19610,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formulation]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-      return $data.brandName = $event;
+      return $data.brandname = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.brandName]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.brandname]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.frequency = $event;
@@ -19591,7 +19631,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $data.quantity = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.quantity]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, _ctx.prescriptionSubmitted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.quantity]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, $data.prescriptionSubmitted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     "class": "btn btn-success btn-sm",
     type: "button",
@@ -19980,7 +20020,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[5] || (_cache[5] = function ($event) {
       return $options.generatePrescription();
     })
-  }, [_hoisted_93, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrescriptionModal)])], 64 /* STABLE_FRAGMENT */);
+  }, [_hoisted_93, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrescriptionModal, {
+    activity_id: parseInt($data.activity_id),
+    baseUrl: $data.baseUrl,
+    code: $data.referral_code
+  }, null, 8 /* PROPS */, ["activity_id", "baseUrl", "code"])])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -21946,10 +21990,10 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css":
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21963,7 +22007,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container {\r\n        border: solid 1px lightgray;\r\n        padding-bottom: 12px;\n}\n.row-presLabel {\r\n        display: flex;\n}\n.col-presLabel {\r\n        flex: 1;\r\n        display: flex;\r\n        flex-direction: column;\r\n        align-items: center;\r\n        text-align: center;\n}\n.row-presLabel, .col-presLabel{\r\n        font-size: 13px;\n}\n.col-Label {\r\n        font-style: italic;\n}\n.underline {\r\n        text-decoration: underline;\r\n        margin: 5px;\n}\n.row-circle {\r\n        display: flex;\n}\n.circle1, .circle2, .circle3, .circle4, .circle5, .circle6, .circle7 {\r\n        width: 15px;\r\n        height: 15px;\r\n        border-radius: 50%;\r\n        border: solid 1px lightgrey;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        font-size: 9px;\r\n        font-weight: bold;\n}\n.circle1 {\r\n        margin-left: 35%;\n}\n.circle2 {\r\n        margin-left: 12%;\n}\n.circle3 {\r\n        margin-left: 6%;\n}\n.circle7 {\r\n        margin-left: 5%;\n}\n.circle4{\r\n        margin-top: 1%;\n}\n.circle5 {\r\n        margin-top: 1%;\r\n        margin-left: 44%;\n}\n.circle6 {\r\n        margin-top: 1%;\r\n        margin-left: 14%;\n}\r\n\r\n\r\n\r\n\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.container[data-v-c2b74386] {\r\n        border: solid 1px lightgray;\r\n        padding-bottom: 12px;\n}\n.row-presLabel[data-v-c2b74386] {\r\n        display: flex;\n}\n.col-presLabel[data-v-c2b74386] {\r\n        flex: 1;\r\n        display: flex;\r\n        flex-direction: column;\r\n        align-items: center;\r\n        text-align: center;\n}\n.row-presLabel[data-v-c2b74386], .col-presLabel[data-v-c2b74386]{\r\n        font-size: 13px;\n}\n.col-Label[data-v-c2b74386] {\r\n        font-style: italic;\n}\n.underline[data-v-c2b74386] {\r\n        text-decoration: underline;\r\n        margin: 5px;\n}\n.row-circle[data-v-c2b74386] {\r\n        display: flex;\n}\n.circle1[data-v-c2b74386], .circle2[data-v-c2b74386], .circle3[data-v-c2b74386], .circle4[data-v-c2b74386], .circle5[data-v-c2b74386], .circle6[data-v-c2b74386], .circle7[data-v-c2b74386] {\r\n        width: 15px;\r\n        height: 15px;\r\n        border-radius: 50%;\r\n        border: solid 1px lightgrey;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        font-size: 9px;\r\n        font-weight: bold;\n}\n.circle1[data-v-c2b74386] {\r\n        margin-left: 35%;\n}\n.circle2[data-v-c2b74386] {\r\n        margin-left: 12%;\n}\n.circle3[data-v-c2b74386] {\r\n        margin-left: 6%;\n}\n.circle7[data-v-c2b74386] {\r\n        margin-left: 5%;\n}\n.circle4[data-v-c2b74386]{\r\n        margin-top: 1%;\n}\n.circle5[data-v-c2b74386] {\r\n        margin-top: 1%;\r\n        margin-left: 44%;\n}\n.circle6[data-v-c2b74386] {\r\n        margin-top: 1%;\r\n        margin-left: 14%;\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -23165,10 +23209,10 @@ try {
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23178,7 +23222,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css");
 
             
 
@@ -23187,11 +23231,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -23563,9 +23607,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _PrescriptionModal_vue_vue_type_template_id_c2b74386__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrescriptionModal.vue?vue&type=template&id=c2b74386 */ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386");
+/* harmony import */ var _PrescriptionModal_vue_vue_type_template_id_c2b74386_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true */ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true");
 /* harmony import */ var _PrescriptionModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PrescriptionModal.vue?vue&type=script&lang=js */ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=script&lang=js");
-/* harmony import */ var _PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css */ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css");
+/* harmony import */ var _PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css */ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css");
 /* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
@@ -23574,7 +23618,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrescriptionModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrescriptionModal_vue_vue_type_template_id_c2b74386__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/video/PrescriptionModal.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrescriptionModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrescriptionModal_vue_vue_type_template_id_c2b74386_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-c2b74386"],['__file',"resources/assets/js/video/PrescriptionModal.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -23662,18 +23706,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386":
-/*!***************************************************************************************!*\
-  !*** ./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386 ***!
-  \***************************************************************************************/
+/***/ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true":
+/*!***************************************************************************************************!*\
+  !*** ./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true ***!
+  \***************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_template_id_c2b74386__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_template_id_c2b74386_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_template_id_c2b74386__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=template&id=c2b74386 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_template_id_c2b74386_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=template&id=c2b74386&scoped=true");
 
 
 /***/ }),
@@ -23694,15 +23738,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css":
-/*!*****************************************************************************************************!*\
-  !*** ./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css ***!
-  \*****************************************************************************************************/
+/***/ "./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css ***!
+  \*****************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&lang=css");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PrescriptionModal_vue_vue_type_style_index_0_id_c2b74386_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/video/PrescriptionModal.vue?vue&type=style&index=0&id=c2b74386&scoped=true&lang=css");
 
 
 /***/ }),

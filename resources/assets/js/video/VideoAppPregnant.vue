@@ -488,17 +488,20 @@
                                             <tr class="padded-row">
                                                 <td colspan="6">Main Reason for Referral:
                                                     <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_reason }}</span></td>
+                                                    <span class="forDetails">{{ formBaby.baby_reason }}</span>
+                                                </td>
                                             </tr>
                                             <tr class="padded-row">
                                                 <td colspan="6">Major Findings (Clinical and BP,Temp,Lab)
                                                     <br/>
-                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_major_findings }}</span></td>
+                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_major_findings }}</span>
+                                                </td>
                                             </tr>
                                             <tr class="padded-row">
                                                 <td colspan="6">Last (Breast) Feed (Time):
                                                     <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_last_feed }}</span></td>
+                                                    <span class="forDetails">{{ formBaby.baby_last_feed }}</span>
+                                                </td>
                                             </tr>
                                             <tr class="bg-gray">
                                                 <td colspan="6" class="padded-header"><strong>Treatments Give Time</strong></td>
@@ -506,17 +509,20 @@
                                             <tr class="padded-row">
                                                 <td colspan="6">Before Referral:
                                                     <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_before_treatment }}</span> - <span class="forDetails">{{ formBaby.baby_before_given_time }}</span></td>
+                                                    <span class="forDetails">{{ formBaby.baby_before_treatment }}</span> - <span class="forDetails">{{ formBaby.baby_before_given_time }}</span>
+                                                </td>
                                             </tr>
                                             <tr class="padded-row">
                                                 <td colspan="6">During Transport:
                                                     <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_during_transport }}</span> - <span class="forDetails">{{ formBaby.baby_transport_given_time }}</span></td>
+                                                    <span class="forDetails">{{ formBaby.baby_during_transport }}</span> - <span class="forDetails">{{ formBaby.baby_transport_given_time }}</span>
+                                                </td>
                                             </tr>
                                              <tr class="padded-row">
                                                 <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral
                                                     <br>
-                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_information_given }}</span></td>
+                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_information_given }}</span>
+                                                </td>
                                              </tr>
                                         </table>
                                         <!-- ======================================================================= -->
@@ -575,11 +581,10 @@
                                         <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
                                     </div>
                                 </div>
-                        <!-- ======================================================================= -->
+                            <!-- ======================================================================= -->
                         </div>
                     </div>
                 </div>
-              
             </div>
         </div>
     </div>

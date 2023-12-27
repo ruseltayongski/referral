@@ -220,6 +220,7 @@ class ApiController extends Controller
     }
 
     public function updatePrescription(Request $request) {
+        //return $request->all();
         if($request->username) //it means from mobile
             $user = User::where('username',$request->username)->first();
         else
@@ -239,9 +240,14 @@ class ApiController extends Controller
             $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
 
             if($activity_prescription) {
-                $activity_prescription->remarks = $request->prescription;
+                $activity_prescription->generic_name = $request->generic_name;
+                $activity_prescription->dosage = $request->dosage;
+                $activity_prescription->formulation = $request->formulation;
+                $activity_prescription->brandname = $request->brandname;
+                $activity_prescription->frequency = $request->frequency;
+                $activity_prescription->duration = $request->duration;
+                $activity_prescription->quantity = $request->quantity;
                 $activity_prescription->save();
-
             } else {
                 $tracking = Tracking::where("code",$request->code)->first();
                 $activity = array(
@@ -254,7 +260,13 @@ class ApiController extends Controller
                     'department_id' => $tracking->department_id,
                     'referring_md' => $tracking->referring_md,
                     'action_md' => $user->id,
-                    'remarks' => $request->prescription,
+                    'generic_name' => $request->generic_name,
+                    'dosage' => $request->dosage,
+                    'formulation' => $request->formulation,
+                    'brandname' => $request->brandname,
+                    'frequency' => $request->frequency,
+                    'duration' => $request->duration,
+                    'quantity' => $request->quantity,
                     'status' => 'prescription'
                 );
                 Activity::create($activity); //new prescription in activity
