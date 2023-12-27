@@ -242,7 +242,7 @@
                                     <div class="label-border">
                                         <label for="update_appointed_date">Appointed Date:</label>
                                         <input type="date" class="form-control" name="update_appointed_date" id="update_appointed_date">
-
+                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
                                         <label for="update_facility_id">Facility:</label>
                                         <select class="form-control select2" name="update_facility_id" id="update_facility_id" onchange="onchangeDepartment($(this))">
                                             <option selected>Select Facility</option>
@@ -492,6 +492,7 @@
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
+            console.log("count: ", currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
             var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
@@ -533,7 +534,7 @@
                                                     <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
                                                 </div>
                                             </div>`;
-
+                                            
             // Add the delete button
             var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
             timeInputGroup.append(deleteBtn);
@@ -553,13 +554,175 @@
             $(document).ready(function() {
                 $('.select2').select2();
                 $.each(query_doctor_store, function (index, userData) {
+                  //  console.log('my user data:', userData);
                     $(`.available_doctor${currentCount}`).append($('<option>', {
                         value: userData.id,
-                        text: userData.username
+                        text: userData.fname + '' + userData.lname
                     }));
                 });
             });
         }
+//------------------------------------------------------------------------------------
+
+//-------------------update_AddTime Slot-------------------------------//
+
+function updateAddTimeInput(appointment) {
+            console.log('welcome appointment', appointment)
+            let currentCount = $(".appointment_count").val();
+            $(".appointment_count").val(++currentCount);
+            var timeInputGroup = $('<div class="time-input-group">');
+            var appointments = appointment ? appointment : '';
+            // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
+            var appointmentId = appointment && appointment.id ? appointment.id : '';
+             console.log('Ids: ', appointmentId);
+            var doctor = appointment && appointment.telemed_assign_doctor.map(doctor=> doctor.user) ? appointment.telemed_assign_doctor.map(doctor=> doctor.user) : '' ;
+              console.log("count: ", currentCount)
+               if(appointments){
+                var selectId = "Update_available_doctor" + currentCount;
+                var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                <input type="hidden" name="update_appointment_id" id="updateAppointmentId" name="appointmentIds${currentCount}" value="${appointmentId}" class="form-control">
+                                                    <div class="col-md-12">
+                                                    {{csrf_field()}}
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="update_appointed_time${currentCount}" id="update_appointed_time" name="update_appointed_time${currentCount}" value="${appointments.appointed_time}">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to" name="update_appointed_to${currentCount}" value="${appointments.appointedTime_to}">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected>${appointments.opdCategory}</option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option>
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot" name="update_slot${currentCount}" value="${appointments.slot}">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                      ${generateDoctorsOptions(doctor,appointments)}
+                                                    </select>
+                                                </div>
+                                            </div>`;
+
+                                        }else{
+                                             //this will add a new form 
+                                            var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected></option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option> 
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label for="slot">Slot:</label>
+                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" id="update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                    
+                                                    </select>
+                                                </div>
+                                            </div>`;
+                                        }
+                          
+                                 
+            // Add the delete button
+            var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
+            timeInputGroup.append(deleteBtn);
+
+            // Append the additional time input structure
+            timeInputGroup.append(additionalTimeInput);
+
+            // Append the timeInputGroup to the additionalTimeContainer
+            $('#update_additionalTimeContainer').append(timeInputGroup);
+            // Add a click event listener for the delete button
+            timeInputGroup.find('.delete-time-input').on('click', function () {
+                timeInputGroup.remove();
+            });
+       
+            // if(!appointment || appointment === null || appointment === undefined){
+            //     var EmptytimeInputGroup = $('<div class="time-input-group">'); //uses of this is to create new form
+
+            //     EmptytimeInputGroup.append(emptyadditionalTimeInput);
+
+            //     $('#update_additionalTimeContainer').append(EmptytimeInputGroup);
+                
+            //     EmptytimeInputGroup.find('.delete-time-input').on('click', function () {
+            //         EmptytimeInputGroup.remove();
+            //     });
+            // }
+
+
+            $('#update_additionalTimeContainer').show();
+            $(document).ready(function() {
+                $('.select2').select2();
+                $.each(query_doctor_store, function (index, userData) {
+                    $(`.available_doctor${currentCount}`).append($('<option>', {
+                        value: userData.id,
+                        text: userData.lname + '' + userData.lname
+                    }));
+                });
+            });
+        }
+        var doctor = [];
+         function generateDoctorsOptions(doctor){
+                var options = '';
+            doctor.forEach(function (doctors){
+                options += `<option value="${doctors.id}" selected>${doctors.username}</option>`;
+            });
+            return options;
+
+        }
+
+
+
+
+
         //--------------------------------------------------------------
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {

@@ -94,14 +94,15 @@ class TelemedicineCtrl extends Controller
     {
         $user = Session::get('auth');
         for($i=1; $i<=$request->appointment_count; $i++) {
+            
             $appointment_schedule = new AppointmentSchedule();
             $appointment_schedule->appointed_date = $request->appointed_date;
             $appointment_schedule->facility_id = $request->facility_id;
             $appointment_schedule->department_id = 5;
-            $appointment_schedule->appointed_time = $request->appointed_time.$i;
-            $appointment_schedule->appointedTime_to = $request->appointedTime_to.$i;
-            $appointment_schedule->opdCategory = $request->opdCategory.$i;
-            $appointment_schedule->slot = $request->slot.$i;
+            $appointment_schedule->appointed_time = $request->input("appointed_time{$i}");
+            $appointment_schedule->appointedTime_to = $request->input("appointed_time_to{$i}");
+            $appointment_schedule->opdCategory = $request->input("opdCategory{$i}");
+            $appointment_schedule->slot = $request->input("slot{$i}");
             $appointment_schedule->created_by = $user->id;
             $appointment_schedule->save();
             for($x=0; $x<count($request['available_doctor'.$i]); $x++) {
@@ -159,8 +160,22 @@ class TelemedicineCtrl extends Controller
     public function updateAppointment(Request $request)
     {
 
-      return  $appointedDate = $request['appointed_date'];
-         //return response()->json($appointmentId);
+        for($i=1; $i<=$request->appointment_count; $i++) {
+      dd(
+        $appointedDate = $request->input("update_appointed_date"),
+        $facility_id = $request->input("update_facility_id"),
+        $time_from = $request->input("update_appointed_time{$i}"),
+        $department = $request->input("update_department_id"),
+        $time_from = $request->input("appointment_count")
+      );
+        // $data = [
+        //    'appointmentDate' => $appointedDate,
+        //    'facility_id' =>$facility_id,
+        //    'department' => $department,
+        //    'time_from' => $time_from,
+        // ];
+        //  return response()->json($data);
+      }
     }
 
     public function deleteAppointment(Request $request)
