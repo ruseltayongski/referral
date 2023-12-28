@@ -159,29 +159,65 @@ class TelemedicineCtrl extends Controller
 
     public function updateAppointment(Request $request)
     {
-        // dd(
-        //     $appointedDate = $request->input("update_appointed_date{$i}"),
-        //     // $facility_id = $request->input("update_facility_id"),
-        //     $time_from = $request->input("update_appointed_time{$i}"),
-        //     // $department = $request->input("update_department_id"),
-        //      $time_from = $request->input("appointment_count"),  
-        //     $appointedIds = $request->input("update_appointment_id{$i}")          
-        //   );
+       // dd(
+            // $appointedDate = $request->input("update_appointed_date"),
+            // // $facility_id = $request->input("update_facility_id"),
+            // $time_from = $request->input("update_appointed_time"),
+            // // $department = $request->input("update_department_id"),
+            //  $time_from = $request->input("appointment_count"),  
+          //);
+    
+            for($i=2; $i<=$request->appointment_count; $i++) {
+        
+              $appointed_date = $request->input("update_appointment_date");
+                    $appointedIds = AppointmentSchedule::where('appointed_date', $appointed_date)
+                    ->pluck('id');
+                    $upateAppointment_Sched = AppointmentSchedule::whereIn('id', $appointedIds)
+                        ->update([
+                        'appointed_date' => $request->input("appointed_date"),
+                        'facility_id' => $request->input("facility_id"),
+                        'department_id' => 5,
+                        ]); 
+              $appointed_times = $request->input('update_appointed_time');  
+                    foreach($appointed_times as $appinted_timeId => $appointed_time){
+                    $appointed_timeModel =  AppointmentSchedule::find($appinted_timeId);
+                        if($appointed_timeModel){
+                            $appointed_timeModel->update([
+                                'appointed_time' => $appointed_time['appointed_time'],
+                            ]);
+                        }
+                }
+              $appointed_tos = $request->input('update_appointed_to');
+                foreach($appointed_tos as $appointed_toId => $appointed_to){
+                    $appointed_toModel = AppointmentSchedule::find($appointed_toId);
+                        if($appointed_toModel){
+                            $appointed_toModel->update([
+                                'appointedTime_to' => $appointed_to['appointed_to'],
+                            ]);
+                        }
+                }
+              $opdCategory = $request->input('opdCategory');
+                foreach($opdCategory as  $opdCategoryId => $opdcateg){
+                    $opdModel =  AppointmentSchedule::find($opdCategoryId);
+                        if($opdModel){
+                            $opdModel->update([
+                                'opdCategory' => $opdcateg['opdCategories'],
+                            ]);
+                        }
+                }
 
-        for($i=2; $i<=$request->appointment_count; $i++) {
-         $appointed_date = $request->input("update_appointment_date");
-         $appointedIds = AppointmentSchedule::where('appointed_date', $appointed_date)
-         ->pluck('id');
-
-       return  $upateAppointment_Sched = AppointmentSchedule::where('id', $appointedIds)
-         ->update([
-           'appointed_date' => $request->input("appointed_date"),
-           'facility_id' => $request->input("facility_id"),
-           'department_id' => $request->input("department_id"),
-         ]);
-         
-
-         }
+             $updateSlots = $request->input('update_slot');
+               foreach($updateSlots as $slotsId => $slot){
+                    $slotsModel = AppointmentSchedule::find($slotsId);
+                        if($slotsModel){
+                            $slotsModel->update([
+                                'slot' => $slot['slots'],
+                            ]);
+                        }
+              }
+              return $available_Doctors = $request->input('available_doctor');
+        }
+         return redirect()->back();
     }
 
     public function deleteAppointment(Request $request)
