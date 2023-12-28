@@ -73,7 +73,7 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, alreadyTreated, code, referred_id) {
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemedicine_followup_code").val(code);
         $(".telemedicine").val(1);
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
@@ -103,12 +103,6 @@
             Lobibox.alert("error",
                 {
                     msg: "You cannot follow up on a patient because it has not yet been examined."
-                });
-        }
-        else if(!alreadyTreated) {
-            Lobibox.alert("error",
-                {
-                    msg: "You cannot follow up on a patient because it has not yet been treated."
                 });
         }
         else {

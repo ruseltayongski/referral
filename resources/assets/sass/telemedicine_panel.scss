@@ -61,7 +61,7 @@
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 100%;
+    width: 120px;
     top: 20px;
     left: 50%;
     z-index: 3;
@@ -77,9 +77,9 @@
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 120px;
-    top: 49px;
-    left: 40px;
+    width: 125px;
+    top: 44px;
+    left: 50px;
     z-index: 3;
     transform: rotate(26deg);
   }
@@ -139,10 +139,10 @@
     left: -45%;
     z-index: 2;
     transform: rotate(160deg);
-    margin-top: -10px;
+    margin-top: -8px;
   }
 
-  .stepper-item-treated .step-counter-treated {
+  .stepper-item-follow_new .step-counter-follow_new {
     z-index: 5;
     display: flex;
     justify-content: center;
@@ -154,12 +154,12 @@
     margin-top: -44px;
   }
 
-  .stepper-item-treated.completed .step-counter-treated {
+  .stepper-item-follow_new.completed .step-counter-follow_new {
     background-color: #4bb543;
     color: white;
   }
 
-  .stepper-item-treated {
+  .stepper-item-follow_new {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -168,52 +168,22 @@
     margin-top: 100px;
   }
 
-  /*.stepper-item-treated.completed::after {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    width: 130px;
-    left: 20px;
-    z-index: 3;
-    margin-top: -29px;
-  }*/
 
-  .stepper-item-treated::before {
+  .stepper-item-follow_new::before {
     position: absolute;
     content: "";
     border-bottom: 2px solid #ccc;
     width: 120px;
     z-index: 2;
-    left: -110px;
+    left: -100px;
     transform: rotate(26deg);
-    margin-top: -55px;
+    margin-top: -74px;
   }
 
-  /*.stepper-item-treated::after {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    width: 120px;
-    z-index: 2;
-    left: 30px;
-    margin-top: -30px;
-  }*/
-
-  .step-counter-treated:hover {
+  .step-counter-follow_new:hover {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
-
-  /*.stepper-item-treated.completed::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    width: 130px;
-    left: 15px;
-    z-index: 3;
-    margin-top: 18px;
-    transform: rotate(30deg);
-  }*/
 
   .step-counter-referred {
     cursor: pointer;
@@ -263,13 +233,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
 
-  .stepper-item-end {
+  .stepper-item-treated_new {
     width: 150px;
-    top: 20px;
-    margin-bottom: 40px;
+    top: 120px;
+    margin-bottom: 150px;
   }
 
-  .stepper-item .step-counter-end {
+  .stepper-item .step-counter-treated_new {
     z-index: 5;
     display: flex;
     justify-content: center;
@@ -281,24 +251,24 @@
     margin-top: 5px;
   }
 
-  .step-name-end {
+  .step-name-treated_new {
     margin-top: 1px;
   }
 
-  .stepper-item-end.completed .step-counter-end {
+  .stepper-item-treated_new.completed .step-counter-treated_new {
     background-color: #4bb543;
   }
 
-  .stepper-item-end::before {
+  .stepper-item-treated_new::before {
     position: absolute;
     content: "";
     border-bottom: 2px solid #ccc;
-    width: 150px;
-    transform: rotate(30deg);
-    top: -18px;
+    width: 180px;
+    transform: rotate(50deg);
+    top: -42px;
   }
 
-  .stepper-item-end.completed::before {
+  .stepper-item-treated_new.completed::before {
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
@@ -309,22 +279,32 @@
     color:white; 
   }
 
-  .step-counter-end:hover {
+  .step-name-treated_new::after {
+    content: none !important;
+  }
+
+  .step-counter-treated_new:hover {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
 
-  .stepper-item-follow::after {
+  .stepper-item-follow_new::after {
     content: none !important;
   }
 
   .stepper-item:first-child::before {
     content: none;
   }
+
   .stepper-item:last-child::after {
     content: none;
   }
+  
   .stepper-item:nth-child(6)::after {
+    content: none;
+  }
+
+  .stepper-item:nth-child(7)::after {
     content: none;
   }
 

@@ -13,17 +13,17 @@
                 :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
                 :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }"
                 :dotsOptions="{
-            type: 'dots',
-            color: '#4bb543',
-            gradient: {
-              type: 'linear',
-              rotation: 0,
-              colorStops: [
-                { offset: 0, color: '#4bb543' },
-                { offset: 1, color: '#4bb543' },
-              ],
-            },
-          }"
+                    type: 'dots',
+                    color: '#4bb543',
+                    gradient: {
+                    type: 'linear',
+                    rotation: 0,
+                    colorStops: [
+                        { offset: 0, color: '#4bb543' },
+                        { offset: 1, color: '#4bb543' },
+                    ],
+                    },
+                }"
                 :backgroundOptions="{ color: '#ffffff' }"
                 :cornersSquareOptions="{ type: 'dot', color: '#000000' }"
                 :cornersDotOptions="{ type: undefined, color: '#000000' }"
@@ -52,9 +52,4 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    #qr-container {
-
-    }
-</style>
 

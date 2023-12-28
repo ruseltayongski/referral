@@ -1,4 +1,3 @@
-<script src="{{ asset('public/js/app_qr.js?version=').date('YmdHis') }}" defer></script>
 <center>
     <div class="web-view">
         <div class="row" style="margin-top: 15px;">
@@ -6,7 +5,7 @@
                 <img src="{{ asset('resources/img/doh.png') }}" width="100">
             </div>
             <div class="col-md-8">
-                <div class="align small-text" style="font-size: 12pt;">
+                <div class="align small-text" style="font-size: 10pt;width:100%;">
                     Republic of the Philippines<br>
                     DEPARTMENT OF HEALTH<br>
                     <strong>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</strong><br>
@@ -17,9 +16,12 @@
             </div>
             <div class="col-md-2">
                 {{--<img src="{{ asset('resources/img/f1.jpg') }}" width="100">--}}
-                <div id="app_qr">
-                    <qr-app :patient_code="'{{ $form->code }}'" :telemedicine="{{ $form->telemedicine }}"></qr-app>
-                </div>
+                @if($form->code)
+                    <script src="{{ asset('public/js/app_qr.js?version=').date('YmdHis') }}" defer></script>
+                    <div id="app_qr">
+                        <qr-app :patient_code="'{{ $form->code }}'" :telemedicine="{{ $form->telemedicine }}"></qr-app>
+                    </div>
+                @endif
             </div>
         </div>
         <h3 class="text-green clinical-form-title" style="font-size: 23pt;"><!-- TITLE HERE IS APPENDED FROM JQUERY--></h3>
