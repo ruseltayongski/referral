@@ -10,7 +10,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="container">Ex.
                         <div class="row row-circle">
                             <div class="circle1">1</div>

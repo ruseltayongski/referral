@@ -340,11 +340,13 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4">Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
-                                    <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
                                     <td colspan="4">Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
                                 </tr>
+                                <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
                                 <tr>
                                     <td colspan="6">Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
+                                </tr>
+                                <tr>
                                     <td colspan="6">Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
                                 </tr>
                                 <tr>
