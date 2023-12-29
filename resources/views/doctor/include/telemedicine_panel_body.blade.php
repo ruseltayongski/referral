@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_track }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_track }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
         </div>
         <div class="stepper-item stepper-item-prescription @if($referred_prescription_track) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track) completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_track }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_track }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
                 <div class="stepper-item stepper-item-prescription @if($follow_examined_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}">

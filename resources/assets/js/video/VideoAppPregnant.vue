@@ -1,11 +1,13 @@
 <script>
     import axios from 'axios';
     import { Transition } from 'vue';
-
     import AgoraRTC from "agora-rtc-sdk-ng"
+    import PrescriptionModal from './PrescriptionModal.vue';
+
     export default {
         name: 'RecoApp',
         components: {
+            PrescriptionModal,
         },
         data() {
             return {
@@ -62,7 +64,8 @@
                 },
                 showDiv: false,
                 prescription: "",
-                prescriptionSubmitted: false
+                prescriptionSubmitted: false,
+                form_type: "pregnant"
             }
         },
         mounted() {
@@ -242,7 +245,7 @@
                     const updatePrescription = {
                         code : this.referral_code,
                         prescription: this.prescription,
-                        form_type: "pregnant"
+                        form_type: this.form_type
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
                         console.log(response)
@@ -269,7 +272,7 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "pregnant",
+                    form_type : this.form_type,
                     activity_id: this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
@@ -286,7 +289,35 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            }
+            },
+            endorseUpward() {
+                let self = this
+                Lobibox.confirm({
+                    msg: "Do you want to endorse this patient for an upward level of referral?",
+                    callback: function ($this, type, ev) {
+                        if(type == 'yes') {
+                            const endorseUpward = {
+                                code : self.referral_code,
+                                form_type: "normal"
+                            }
+                            axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
+                                console.log(response.status)
+                                if(response.data === 'success') {
+                                    Lobibox.alert("success",
+                                        {
+                                            msg: "Successfully endorse the patient for upward referral!"
+                                        });
+                                } else {
+                                    Lobibox.alert("error",
+                                        {
+                                            msg: "Error in server!"
+                                        });
+                                }
+                            });
+                        }
+                    }
+                });
+            },
         },
     }
 </script>
@@ -307,6 +338,9 @@
                             <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                             <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                             <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                            <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'" style="margin-left:10px;"><i class="bi-hospital"></i></button>
+                            <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
+                            <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
                         </div>
                     </Transition>
                     <div class="localPlayerDiv">
@@ -531,62 +565,13 @@
                                 <div v-if="referring_md == 'yes'">
                                         <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
                                 </div>
-                                <div v-else>
-                                 <div class="container PrescripBorder">
-                                    <div class="row examplePriscribe">
-                                        <div class="col"> 
-                                            <p class="ExampleAscorbic">Ex: 1.)&nbsp;Ascorbic Acid&nbsp;2.)&nbsp;500mg&nbsp;3.)&nbsp;Tablet&nbsp;4.)&nbsp;Brand Name &nbsp;5.)
-                                            &nbsp;Once a Day &nbsp;6.) For 7 Days&nbsp;7.)&nbsp;30pcs</p>
-                                        </div>
-                                    </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="generic name">1.)Generic Name:</label> 
-                                            <input type="text" v-model="genericname" class="form-control" >
-                                        </div>
-                                    </div>
-                                    <div class="row prescription">
-                                            <div class="col">
-                                                <label for="dosage">2.)Dosage:</label>
-                                                <input type="text" v-model="dosage" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="Formulation">3.)Formulation:</label>
-                                                <input type="text" v-model="formulation" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="row prescription">
-                                            <div class="col">
-                                                <label for="brandName">4.)Brand Name:</label>
-                                                <input type="text" v-model="brandName" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="frequency">5.)Frequency:</label>
-                                                <input type="text" v-model="frequency" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="row prescription">
-                                            <div class="col">
-                                                <label for="brandName">6.)Duration:</label>
-                                                <input type="text" v-model="duration" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="quantity">7.)Quantity:</label>
-                                                <input type="number" v-model="quantity"  class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
-                                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
-                                    </div>
-                                </div>
                             <!-- ======================================================================= -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
     </div>
 </template>
 

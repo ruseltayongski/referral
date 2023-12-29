@@ -51,7 +51,7 @@
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="genericName">1.) Generic Name:</label>
+                            <label for="generic_name">1.) Generic Name:</label>
                             <input type="text" v-model="generic_name" class="form-control" >
                         </div>
                     </div>
@@ -120,10 +120,13 @@
             },
             code: {
                 type: String
+            },
+            form_type: {
+                type: String
             }
         },
         created() {
-            console.log(this.activity_id, this.baseUrl)
+            console.log(this.activity_id, this.baseUrl, this.code)
         },
         methods: {
             submitPrescription() {
@@ -179,7 +182,7 @@
                         frequency: this.frequency,
                         duration: this.duration,
                         quantity: this.quantity,
-                        form_type: "normal",
+                        form_type: this.form_type,
                         activity_id: this.activity_id
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {

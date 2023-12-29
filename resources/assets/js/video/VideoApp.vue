@@ -52,7 +52,8 @@
                     // A variable to hold the remote user id.s
                     remoteUid: null
                 },
-                showDiv: false
+                showDiv: false,
+                form_type: "normal"
             }
         },
         mounted() {
@@ -222,7 +223,7 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "normal",
+                    form_type : this.form_type,
                     activity_id : this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
@@ -248,7 +249,7 @@
                         if(type == 'yes') {
                             const endorseUpward = {
                                 code : self.referral_code,
-                                form_type: "normal"
+                                form_type: this.form_type
                             }
                             axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
                                 console.log(response.status)
@@ -404,7 +405,7 @@
                 </div>
             </div>
         </div>
-        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" />
+        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
     </div>
 </template>
 
