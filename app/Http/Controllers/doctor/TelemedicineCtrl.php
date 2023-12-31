@@ -159,6 +159,7 @@ class TelemedicineCtrl extends Controller
 
     public function updateAppointment(Request $request)
     {
+        $user = Session::get('auth');
        // dd(
             // $appointedDate = $request->input("update_appointed_date"),
             // // $facility_id = $request->input("update_facility_id"),
@@ -167,7 +168,7 @@ class TelemedicineCtrl extends Controller
             //  $time_from = $request->input("appointment_count"),  
           //);
     
-            for($i=2; $i<=$request->appointment_count; $i++) {
+            for($i=1; $i<=$request->appointment_count; $i++) {
         
               $appointed_date = $request->input("update_appointment_date");
                     $appointedIds = AppointmentSchedule::where('appointed_date', $appointed_date)
@@ -215,7 +216,20 @@ class TelemedicineCtrl extends Controller
                             ]);
                         }
               }
-              return $available_Doctors = $request->input('available_doctor');
+              $doctor_id = $request["available_doctor3"];
+               dd($doctor_id);
+              for($x = 0; $x < count($request['available_doctor'.$i]); $x++){
+               
+                $telemed_Doctors = TelemedAssignDoctor::where('appointment_id', $request->id)
+                ->where('doctor_id', $doctor_id)->get();
+                
+                if($telemed_Doctors){
+                    $telemed_Doctors->update([
+                        'created_by' => $user->id,
+                        $telemed_Doctors->doctor_id = $request['available_doctor'.$i][$x],
+                    ]);
+                }
+            }
         }
          return redirect()->back();
     }

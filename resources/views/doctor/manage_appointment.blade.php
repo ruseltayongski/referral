@@ -223,6 +223,7 @@
     </div>
 
     <!-- Update Appointment Modal -->
+    <!-- Update Appointment Modal -->
     <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -253,8 +254,8 @@
                                         </select>
 
                                         <label for="update_department_id">Department:</label>
-                                        <input type="text" class="form-control" name="update_department_id" id="update_department_id" value="OPD" readonly>
-                                        <!-- <input type="text" class="form-control" name="department_id" id="update_department_id" readonly> -->
+                                        <!-- <input type="text" class="form-control" name="update_department_id" id="update_department_id" value="OPD" readonly> -->
+                                        <input type="text" class="form-control" name="department_id" id="update_department_id" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -576,8 +577,7 @@ function updateAddTimeInput(appointment) {
             var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
              console.log('appointed Date: ', appointmentDate);
             var doctor = appointment && appointment.telemed_assign_doctor.map(doctor=> doctor.user) ? appointment.telemed_assign_doctor.map(doctor=> doctor.user) : '' ;
-             var telemedId = appointment.telemed_assign_doctor.appointment_id ? appointment.telemed_assign_doctor.appointment_id : '';
-              console.log("TelemedId: ",telemedId);
+              console.log("count: ", currentCount)
                if(appointments){
                 var selectId = "Update_available_doctor" + currentCount;
                 var additionalTimeInput = `<div class="label-border-time">
@@ -588,14 +588,14 @@ function updateAddTimeInput(appointment) {
                                                         <label for="appointed_time">Appointed Time:</label><br>
                                                         <div class="col-md-6">
                                                             <span>From:</span>
-                                                            <input type="time" class="form-control"  id="update_appointed_time" name="update_appointed_time[${appointments.id}][appointed_time]" value="${appointments.appointed_time}">
+                                                            <input type="time" class="form-control" name="update_appointed_time${currentCount}" id="update_appointed_time" name="update_appointed_time${currentCount}" value="${appointments.appointed_time}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <span>To:</span>
-                                                            <input type="time" class="form-control" id="update_appointedTime_to" name="update_appointed_to[${appointments.id}][appointed_to]" value="${appointments.appointedTime_to}">
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to" name="update_appointed_to${currentCount}" value="${appointments.appointedTime_to}">
                                                         </div>
                                                         <label for="opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="opdCategory[${appointments.id}][opdCategories]" id="update_opdCategory">
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
                                                             <option selected>${appointments.opdCategory}</option>
                                                             <option value="Family Medicine">Family Medicine</option>
                                                             <option value="Internal Medicine">Internal Medicine</option>
@@ -614,12 +614,12 @@ function updateAddTimeInput(appointment) {
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label for="slot">Slot:</label>
-                                                        <input type="number" class="form-control"  id="update_slot" name="update_slot[${appointments.id}][slots]" value="${appointments.slot}">
+                                                        <input type="number" class="form-control" name="slot${currentCount}"  id="update_slot" name="update_slot${currentCount}" value="${appointments.slot}">
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor[${appointments.id}][doctors]" multiple="multiple"  id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
                                                       ${generateDoctorsOptions(doctor,appointments)}
                                                     </select>
                                                 </div>
@@ -664,7 +664,7 @@ function updateAddTimeInput(appointment) {
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" id="update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor[]" multiple="multiple" id="update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
                                                     
                                                     </select>
                                                 </div>
