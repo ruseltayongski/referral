@@ -140,7 +140,7 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
                 <hr />
-                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm">
+                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
                     <input type="hidden" name="code" id="telemedicine_followup_code" value="">
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
@@ -159,7 +159,19 @@ $facilities = \App\Facility::select('id','name')
                             <option value="">Select Department...</option>
                         </select>
                     </div>
+                    <!-- -----------------------Add file--------------------------- -->
                     <div class="form-group">
+                       <!-- <form id="upload-form" enctype="multipart/form-data"> -->
+                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                        <!-- </form> -->
+                
+                        <div id="file-list" class="mt-3"></div>
+                
+                        <div class="preview-container" id="preview-container"></div>
+                    </div>
+                     <!-- -----------------------End of file--------------------------- -->
+                    <!-- <div class="form-group">
                         <form id="upload-form" enctype="multipart/form-data">
                             <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="file-input" name="files[]" multiple class="d-none">
@@ -168,7 +180,7 @@ $facilities = \App\Facility::select('id','name')
                         <div id="file-list" class="mt-3"></div>
                 
                         <div class="preview-container" id="preview-container"></div>
-                    </div>
+                    </div> -->
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -221,71 +233,5 @@ $facilities = \App\Facility::select('id','name')
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script>
-    document.getElementById('file-input').addEventListener('change', handleFileSelect);
 
-    function handleFileSelect(event) {
-      const fileList = event.target.files;
-      const fileListView = document.getElementById('file-list');
-      const previewContainer = document.getElementById('preview-container');
-      fileListView.innerHTML = '';
-      previewContainer.innerHTML = '';
-
-      for (const file of fileList) {
-        const listItem = document.createElement('div');
-        listItem.textContent = file.name;
-        fileListView.appendChild(listItem);
-
-        // Display image preview for image files
-        if (file.type.startsWith('image/')) {
-          displayImagePreview(file, previewContainer);
-        }
-        // Display document preview for .doc and .docx files
-        else if (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
-          displayDocumentPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-        }
-        // Display spreadsheet preview for .xls and .xlsx files
-        else if (file.name.toLowerCase().endsWith('.xls') || file.name.toLowerCase().endsWith('.xlsx')) {
-          displaySpreadsheetPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-        }
-        // Display PDF preview for .pdf files
-        else if (file.type === 'application/pdf') {
-          displayPdfPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-        }
-      }
-    }
-
-    function displayImagePreview(file, container) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const preview = document.createElement('img');
-        preview.setAttribute('src', e.target.result);
-        preview.setAttribute('alt', file.name);
-        preview.classList.add('preview');
-        container.appendChild(preview);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function displayDocumentPreview(file, container, placeholderUrl) {
-      displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displaySpreadsheetPreview(file, container, placeholderUrl) {
-      displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displayPdfPreview(file, container, placeholderUrl) {
-      displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displayFilePreview(file, container, placeholderUrl) {
-      // For unsupported file types, display a placeholder image
-      const preview = document.createElement('img');
-      preview.setAttribute('src', placeholderUrl);
-      preview.setAttribute('alt', file.name);
-      preview.classList.add('preview');
-      container.appendChild(preview);
-    }
-  </script>
 
