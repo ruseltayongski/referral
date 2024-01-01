@@ -387,23 +387,69 @@ class ApiController extends Controller
           $request->validate([ //this validation identify the type of file to upload
             'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
           ]);
-          
-          if($request->hasFile('files')){
-            $uploadFiles = $request->file('files');
-            $filePaths =[];
-            foreach($uploadFiles as $file){
-                $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
-                $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-                $filePaths[] = $filepath . '/' . $file->getClientOriginalName();
+
+        // if($request->hasFile('files')){
+        //     $uploadFiles = $request->file('files');
+        //     $filepaths =[];
+        //     foreach($uploadFiles as $file){
+        //         $filepath = public_path(). '/fileupload/'. $user->username;
+        //         $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
+        //         $filepaths[] = $filepath . '/' . $file->getClientOriginalName();
               
+        //     }
+        //     $activityFile = Activity::where('id', $request->followup_id)
+        //         ->where('code', $request->code)
+        //         ->first();
+        //     dd($filepaths);
+        //     $activityFile->appointment = json_encode($filepaths);
+        //     $activityFile->status = "followup";
+        //     $activityFile->action_md = $user->id;
+        //     $activityFile->save();
+
+        // if ($request->hasFile('files')) {
+        //     $uploadFiles = $request->file('files');
+        //     $fileNames = [];
+        
+        //     foreach ($uploadFiles as $file) {
+        //         $filePath = public_path() . DIRECTORY_SEPARATOR . 'fileupload' . DIRECTORY_SEPARATOR . $user->username;
+        //         $file->move($filePath, $file->getClientOriginalName());
+        //         $fileNames[] = $file->getClientOriginalName();
+        //     }
+        
+        //     $activityFile = Activity::where('id', $request->followup_id)
+        //         ->where('code', $request->code)
+        //         ->first();
+        
+        //     // Use implode to join filenames with '|'
+        //     $activityFile->appointment = implode('|', $fileNames);
+        //     $activityFile->status = "followup";
+        //     $activityFile->action_md = $user->id;
+        //     $activityFile->remarks = "patient follow up";
+            
+        //     $activityFile->save();
+        // }
+        if ($request->hasFile('files')) {
+            $uploadFiles = $request->file('files');
+            $fileNames = [];
+        
+            foreach ($uploadFiles as $file) {
+                $filePath = public_path() . DIRECTORY_SEPARATOR . 'fileupload' . DIRECTORY_SEPARATOR . $user->username;
+                $file->move($filePath, $file->getClientOriginalName());
+                $fileNames[] = $file->getClientOriginalName();
             }
+        
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->first();
-            $activityFile->appointment = json_encode($filePaths);
+        
+            // Use implode to join filenames with '|'
+            $activityFile->appointment = implode('|', $fileNames);
             $activityFile->status = "followup";
+            $activityFile->action_md = $user->id;
+            $activityFile->remarks = "patient follow up";
+            
             $activityFile->save();
-          }
+        }
 
     //  -----------------------jondy changes------------------------->
         //start broadcast

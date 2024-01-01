@@ -24,9 +24,9 @@ class Auth
         if(!$user){
             return redirect()->guest('/login');
         }
-        else if(!$check_login_now){
-            return redirect('/login_expire');
-        }
+        // else if(!$check_login_now){
+        //     return redirect('/login_expire');
+        // }
 
         //return response()->json($user, 401);
         return $next($request);
