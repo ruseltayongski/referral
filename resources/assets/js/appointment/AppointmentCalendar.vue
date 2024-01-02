@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-    import { appointmentScheduleDate } from "./api/index"
+    import { appointmentScheduleDate, appointmentScheduleHours } from "./api/index"
     export default {
         name: 'AppointmentCalendar',
         data() {
@@ -34,7 +34,7 @@
                     week: 'week',
                     day: 'day'
                 },
-                events: [],
+                events: []
             }
         },
         props: {
@@ -91,11 +91,7 @@
                 }
             },
             eventRenderFunction(event, element) {
-                console.log(event,event.start.format('YYYY-MM-DD'))
-                //remove element
-                $(".fc-day").css("background-color","")
-                $(".fc-day").removeClass("add-cursor-pointer")
-                //
+                //console.log(event,event.start.format('YYYY-MM-DD'))
                 this.$nextTick(() => {
                     const targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']")
                     targetTd.css('background-color', '#00a65a') //color the td of day in calendar
@@ -108,7 +104,13 @@
                     return moment(event.start).isSame(date, 'day');
                 });
                 if (eventsOnDate.length > 0) {
-                    console.log("day clickssss")
+                    const params = JSON.parse(JSON.stringify(eventsOnDate))[0]
+                    const responseBody = {
+                        'selected_date' : params.start,
+                        'facility_id': params.facility_id
+                    }
+                    const response = await this.__appointmentScheduleHours(responseBody); 
+                    this.$emit('appointedTime', response.data)
                 }
             },
             updateCalendarEvents() {
@@ -126,12 +128,16 @@
                 const response = await appointmentScheduleDate(facility_id)
                 return response.data.facility_data.map((item) => {
                     return {
-                            title: 'All Day Event',
+                            title: 'Appointment',
                             start: new Date(item.appointed_date),
                             backgroundColor: "#00a65a",
-                            borderColor: "#00a65a"
+                            borderColor: "#00a65a",
+                            facility_id: item.facility_id
                     }
                 })
+            },
+            async __appointmentScheduleHours(params) {
+                return await appointmentScheduleHours(params)
             }
         }
     }

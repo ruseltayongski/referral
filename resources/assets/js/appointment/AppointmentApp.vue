@@ -15,8 +15,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <appointment-calendar :isSelectedId="isSelectedId"></appointment-calendar>
-                <appointment-time></appointment-time>
+                <appointment-calendar :isSelectedId="isSelectedId" @appointedTime="appointedTime"></appointment-calendar>
+                <appointment-time :appointedTimes="appointedTimes"></appointment-time>
             </div>
         </div> 
     </div>
@@ -38,7 +38,8 @@
         ],
         data() {
             return {
-                isSelectedId : 0
+                isSelectedId : 0,
+                appointedTimes: []
             }
         },
         mounted() {
@@ -47,6 +48,10 @@
         methods: {
             isSelected(payload) {
                 this.isSelectedId = payload
+            },
+            appointedTime(payload) {
+                this.appointedTimes = payload
+                //console.log(this.)
             }
         }
     }

@@ -23,7 +23,7 @@ class TelemedicineCtrl extends Controller
     public function manageAppointment(Request $req)
     {
         $page = $req->input('page', 1);
-        $perPage = 10;
+        $perPage = 20;
 
         $appointment_schedule = AppointmentSchedule::
             with([
@@ -183,7 +183,7 @@ class TelemedicineCtrl extends Controller
 
     public function getFacilityDetails(Request $request)
     {
-        $facility_data = AppointmentSchedule::where('facility_id', $request->id)->get();
+        $facility_data = AppointmentSchedule::where('facility_id', $request->id)->groupBy('appointed_date')->get();
 
         if (!$facility_data) {
             return response()->json(['error' => 'Appointment not found'], 404);
@@ -194,14 +194,12 @@ class TelemedicineCtrl extends Controller
 
     public function getAvailableTimeSlots(Request $request)
     {
-        $date = $request->input('selected_date');
-
-        // Fetch available time slots based on the selected date
-        $timeSlots = AppointmentSchedule::select('appointed_time','appointedTime_to','appointed_date')
-            ->where('appointed_date', $date)
+        $timeSlots = AppointmentSchedule::select('id','appointed_time','appointedTime_to','appointed_date','slot')
+            ->where('appointed_date', $request->selected_date)
+            ->where('facility_id', $request->facility_id)
             ->get();
 
-        return response()->json(['time_slots' => $timeSlots]);
+        return $timeSlots;
     }
 
     public function getDoctors($facilityId)

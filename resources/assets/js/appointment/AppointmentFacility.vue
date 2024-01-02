@@ -59,6 +59,10 @@
         },
         methods: {
             facilitySelected(id) {
+                //remove element
+                $(".fc-day").css("background-color","")
+                $(".fc-day").removeClass("add-cursor-pointer")
+                //
                 this.$emit('isSelected', id)
             }
         }
