@@ -140,8 +140,9 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
                 <hr />
-                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
+                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                     <input type="hidden" name="code" id="telemedicine_followup_code" value="">
+                    <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -161,6 +162,7 @@ $facilities = \App\Facility::select('id','name')
                     </div>
                     <!-- -----------------------Add file--------------------------- -->
                     <div class="form-group">
+                        
                        <!-- <form id="upload-form" enctype="multipart/form-data"> -->
                             <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="file-input" name="files[]" multiple class="d-none">

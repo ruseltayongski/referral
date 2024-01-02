@@ -384,22 +384,23 @@ class ApiController extends Controller
             Activity::create($activity);
         }
     //  ---------------------jondy changes--------------------------->
-          $request->vaidate([ //this validation identify the type of file to upload
+          $request->validate([ //this validation identify the type of file to upload
             'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
           ]);
           
           if($request->hasFile('files')){
             $uploadFiles = $request->file('files');
-            $filepaths =[];
-
+            $filePaths =[];
             foreach($uploadFiles as $file){
-                $filepath =  $file->$path = public_path(). '/fileupload'. $user->username;
+                $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
                 $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-                $file_paths[] = $filepath . '/' . $file->getClientOriginalName();
+                $filePaths[] = $filepath . '/' . $file->getClientOriginalName();
               
             }
-            $activityFile = Activity::where('code', $request->code)->first();
-            $activityFile->appointment = json_decode($file_paths);
+            $activityFile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->first();
+            $activityFile->appointment = json_encode($filePaths);
             $activityFile->status = "followup";
             $activityFile->save();
           }
