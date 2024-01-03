@@ -387,19 +387,46 @@ class ApiController extends Controller
           $request->validate([ //this validation identify the type of file to upload
             'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
           ]);
-          if($request->hasFile('files')){
+        //   if($request->hasFile('files')){
+        //     $uploadFiles = $request->file('files');
+        //     $fileNames = [];
+        //     foreach($uploadFiles as $file){
+        //         $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
+        //         $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
+        //         $fileNames[] = $filepath . '/' . $file->getClientOriginalName();
+        //     }
+
+        //     $activityFile = Activity::where('id', $request->followup_id)
+        //         ->where('code', $request->code)
+        //         ->first();
+
+        //     $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
+        //     $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
+        //     // dd($fileNamesWithoutPaths);
+        //     $activityFile->generic_name = json_encode($fileNamesWithoutPaths);
+        //     $activityFile->save();
+        //   }
+
+        if($request->hasFile('files')){
             $uploadFiles = $request->file('files');
-            $filePaths =[];
+            $fileNames = [];
+            $fileNames2 = [];
             foreach($uploadFiles as $file){
                 $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
                 $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-                $filePaths[] = $filepath . '/' . $file->getClientOriginalName();
-              
+                $fileNames[] = $filepath . '/' . $file->getClientOriginalName();
+                $fileNames2[] = $file->getClientOriginalName();
             }
+
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->first();
-            $activityFile->generic_name = json_encode($filePaths);
+
+            // $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
+            // $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
+            // dd($fileNamesWithoutPaths);
+            //dd($fileNames2);
+            $activityFile->generic_name = implode('|', $fileNames2, $fileNames);
             $activityFile->save();
           }
 
