@@ -387,48 +387,64 @@ class ApiController extends Controller
           $request->validate([ //this validation identify the type of file to upload
             'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
           ]);
-        //   if($request->hasFile('files')){
+
+        // if($request->hasFile('files')){
         //     $uploadFiles = $request->file('files');
-        //     $fileNames = [];
+        //     $filePaths = [];
+        //     $fileNames2 = [];
+
         //     foreach($uploadFiles as $file){
         //         $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
         //         $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-        //         $fileNames[] = $filepath . '/' . $file->getClientOriginalName();
+        //         $filePaths[] = $filepath . '/' . $file->getClientOriginalName();
+        //         $fileNames2[] = $file->getClientOriginalName();
         //     }
 
         //     $activityFile = Activity::where('id', $request->followup_id)
         //         ->where('code', $request->code)
         //         ->first();
 
-        //     $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
-        //     $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
+        //     // $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
+        //     // $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
         //     // dd($fileNamesWithoutPaths);
-        //     $activityFile->generic_name = json_encode($fileNamesWithoutPaths);
+        //     //dd($fileNames2);
+
+        //     json_encode($filePaths); 
+        //     $activityFile->generic_name = implode('|', $fileNames2);
+        //     $activityFile->status = "followup";
         //     $activityFile->save();
         //   }
 
-        if($request->hasFile('files')){
+        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
-            $fileNames = [];
+            $filePaths = [];
             $fileNames2 = [];
-            foreach($uploadFiles as $file){
-                $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
-                $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-                $fileNames[] = $filepath . '/' . $file->getClientOriginalName();
-                $fileNames2[] = $file->getClientOriginalName();
+        
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $file->getClientOriginalName();
+        
+                // Check if the file already exists, and rename if necessary
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                    $counter++;
+                }
+        
+                $file->move($filepath, $originalName);
+                $filePaths[] = $filepath . '/' . $originalName;
+                $fileNames2[] = $originalName;
             }
-
+        
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->first();
-
-            // $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
-            // $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
-            // dd($fileNamesWithoutPaths);
-            //dd($fileNames2);
-            $activityFile->generic_name = implode('|', $fileNames2, $fileNames);
+        
+            json_encode($filePaths);
+            $activityFile->generic_name = implode('|', $fileNames2);
+            $activityFile->status = "followup";
             $activityFile->save();
-          }
+        }
 
     //  -----------------------jondy changes------------------------->
         //start broadcast
