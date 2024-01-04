@@ -163,15 +163,16 @@ $facilities = \App\Facility::select('id','name')
                     <!-- -----------------------Add file--------------------------- -->
                     <div class="form-group">
                         
-                       <!-- <form id="upload-form" enctype="multipart/form-data"> -->
-                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                        <!-- </form> -->
-                
-                        <div id="file-list" class="mt-3"></div>
-                
-                        <div class="preview-container" id="preview-container"></div>
+                        <!-- <form id="upload-form" enctype="multipart/form-data"> -->
+                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                            <!-- </form> -->
+                    
+                            <div id="file-list" class="mt-3"></div>
+                    
+                            <div class="preview-container" id="preview-container"></div>
                     </div>
+
                      <!-- -----------------------End of file--------------------------- -->
                     <!-- <div class="form-group">
                         <form id="upload-form" enctype="multipart/form-data">

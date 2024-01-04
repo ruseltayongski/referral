@@ -384,36 +384,10 @@ class ApiController extends Controller
             Activity::create($activity);
         }
     //  ---------------------jondy changes--------------------------->
+    
           $request->validate([ //this validation identify the type of file to upload
             'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
           ]);
-
-        // if($request->hasFile('files')){
-        //     $uploadFiles = $request->file('files');
-        //     $filePaths = [];
-        //     $fileNames2 = [];
-
-        //     foreach($uploadFiles as $file){
-        //         $filepath =  $file->$path = public_path(). '/fileupload/'. $user->username;
-        //         $file->move($filepath, $file->getClientOriginalName());//retrieve that original name.
-        //         $filePaths[] = $filepath . '/' . $file->getClientOriginalName();
-        //         $fileNames2[] = $file->getClientOriginalName();
-        //     }
-
-        //     $activityFile = Activity::where('id', $request->followup_id)
-        //         ->where('code', $request->code)
-        //         ->first();
-
-        //     // $fileNamesWithoutPaths = array_map('pathinfo', $fileNames);
-        //     // $fileNamesWithoutPaths = array_column($fileNamesWithoutPaths, 'filename');
-        //     // dd($fileNamesWithoutPaths);
-        //     //dd($fileNames2);
-
-        //     json_encode($filePaths); 
-        //     $activityFile->generic_name = implode('|', $fileNames2);
-        //     $activityFile->status = "followup";
-        //     $activityFile->save();
-        //   }
 
         if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
@@ -442,8 +416,9 @@ class ApiController extends Controller
         
             json_encode($filePaths);
             $activityFile->generic_name = implode('|', $fileNames2);
-            $activityFile->status = "followup";
+           // $activityFile->status = "followup";
             $activityFile->save();
+         
         }
 
     //  -----------------------jondy changes------------------------->
