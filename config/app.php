@@ -164,7 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Kawankoding\Fcm\FcmServiceProvider::class,
-
+        Intervention\Image\ImageServiceProvider::class, //I add this for photo compress, so that the "Class image does not exist"
         /*
          * Package Service Providers...
          */
@@ -230,6 +230,7 @@ return [
         'Fpdf' => Anouar\Fpdf\Facades\Fpdf::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Fcm' => Kawankoding\Fcm\FcmFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class, //I add this for photo compress, so that the "Class image does not exist"
     ],
 
 ];

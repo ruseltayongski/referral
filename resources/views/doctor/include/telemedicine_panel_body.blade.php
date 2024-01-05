@@ -166,6 +166,7 @@
             </div> --}}
         </div>
     </div>
+
     @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
             <?php
@@ -299,6 +300,50 @@
                     </div> --}}
                 </div>
             </div>
+            <div class="container">
+            <p class="mt-0">
+                <?php
+                //  $userActivities = $user->activities;
+                // $userActivities = \App\Activity::where('id',$follow_track->id)
+                //                                 ->where('code', $follow_track->code)
+                //                                 ->get();
+                // $userActivities = $user->activities()->where('id', $follow_track->id)
+                //                                       ->where('code', $follow_track->code)
+                //                                        ->get();
+
+              // dd($position_count == "1");
+            if($position_count)
+             {
+                $userActivities = $user->activities()->where('id', $referred_track->id)
+                    ->where('code', $follow_track->code)
+                    ->get();
+                foreach ($userActivities as $activity)
+                {
+                    //dd($activity);
+                        $fileNames = explode('|', $activity->generic_name);
+                        foreach ($fileNames as $fileName) 
+                        {
+                            $fileType =  pathinfo($fileName, PATHINFO_EXTENSION);
+                            $filePath =  public_path() . '/fileupload/' . $user->username . '/' . $fileName;
+                        // dd($filePath);
+                            // Display the link with the appropriate icon and download/view attributes
+                            echo '<a href="' . $filePath . '" target="_blank">' . $fileName . '</a>';
+                            echo '&nbsp;';
+                        //    echo '<a href="' . route('file.download', ['filename' => urlencode($fileName)]) . '" download>' . $fileName . '</a>';
+                        //    echo '&nbsp;';
+                        //    echo '</a>';
+                            
+                        }
+                    }
+
+                }else{
+                    echo "no position";
+                }
+               
+                
+               ?>
+            </p>
+        </div>
         @endforeach
     @endif
     @if(count($redirected_track) > 0)

@@ -319,6 +319,9 @@ Route::get("reports","admin\ReportCtrl@sottoReports");
 Route::get("api/individual","ApiController@individualList");
 Route::get("export/individual","ApiController@exportIndividualList");
 
+// Route::get('/download/{filename}', 'ApiController@download')->name('file.download');//I add this to download the file tracking
+// Route::get('/view/{filename}', 'ApiController@view')->name('file.view'); //I add this to view the file tracking
+
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 

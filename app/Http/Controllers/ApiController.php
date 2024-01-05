@@ -35,7 +35,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Matrix\Exception;
 use App\Events\SocketReco;
-
+use Intervention\Image\Facades\Image; // I add this to compress the photo, install: composer require intervention/image
+use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
@@ -386,7 +387,7 @@ class ApiController extends Controller
     //  ---------------------jondy changes--------------------------->
     
           $request->validate([ //this validation identify the type of file to upload
-            'files.*' => 'required|mimes:jpeg,png,jpg,doc,docx,pdf,xlsx|max:2048',
+            'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
           ]);
 
         if ($request->hasFile('files')) {
@@ -404,8 +405,17 @@ class ApiController extends Controller
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
                     $counter++;
                 }
-        
-                $file->move($filepath, $originalName);
+                
+              // Check if the file is an image before applying compression
+             if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) {
+                $image = Image::make($file);
+                $image->resize(800, null, function ($constraint){ //this will compress the photo
+                       $constraint->aspectRatio();
+                })->save($filepath . '/' . $originalName, 80);
+              } else{
+                $file->move($filepath, $originalName);// the pdf file will move here
+              }
+                //$file->move($filepath, $originalName);
                 $filePaths[] = $filepath . '/' . $originalName;
                 $fileNames2[] = $originalName;
             }
@@ -459,6 +469,22 @@ class ApiController extends Controller
 
         return Redirect::back();
     }
+// ----------------------I add this for controller of file view and download
+    // public function download($filename)
+    // {
+    //     dd($filename);
+    //     $user = Session::get('auth');
+    //     $file = public_path() . '/fileupload/' . $user->username . '/' . $filename;
+    //     return response()->download($file);
+    // }
+
+    // public function view($filename){
+    //     $user = Session::get('auth');
+    //     $file = public_path() . '/fileupload/' . $user->username . '/' . $filename;
+
+    //     return response()-> file($file);
+    // }
+// ----------------------I add this for controller of file view and download
 
     public function patientEndCycle(Request $request) {
         $user = Session::get('auth');
