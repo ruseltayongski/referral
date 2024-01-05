@@ -241,12 +241,13 @@ class ApiController extends Controller
 
             if($activity_prescription) {
                 $activity_prescription->generic_name = $request->generic_name;
-                $activity_prescription->dosage = $request->dosage;
-                $activity_prescription->formulation = $request->formulation;
                 $activity_prescription->brandname = $request->brandname;
+                $activity_prescription->dosage = $request->dosage;
+                $activity_prescription->quantity = $request->quantity;
+                $activity_prescription->formulation = $request->formulation;
                 $activity_prescription->frequency = $request->frequency;
                 $activity_prescription->duration = $request->duration;
-                $activity_prescription->quantity = $request->quantity;
+
                 $activity_prescription->save();
             } else {
                 $tracking = Tracking::where("code",$request->code)->first();
@@ -261,12 +262,12 @@ class ApiController extends Controller
                     'referring_md' => $tracking->referring_md,
                     'action_md' => $user->id,
                     'generic_name' => $request->generic_name,
-                    'dosage' => $request->dosage,
-                    'formulation' => $request->formulation,
                     'brandname' => $request->brandname,
+                    'dosage' => $request->dosage,
+                    'quantity' => $request->quantity,
+                    'formulation' => $request->formulation,
                     'frequency' => $request->frequency,
                     'duration' => $request->duration,
-                    'quantity' => $request->quantity,
                     'status' => 'prescription'
                 );
                 Activity::create($activity); //new prescription in activity

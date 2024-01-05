@@ -10,82 +10,133 @@
                     </button>
                 </div>
                 <div class="modal-body">
+
                     <div class="container">Ex.
                         <div class="row row-circle">
                             <div class="circle1">1</div>
                             <div class="circle2">2</div>
                             <div class="circle3">3</div>
-                            <div class="circle7">7</div>
+                            <div class="circle4">4</div>
+                            <div class="circle5">5</div>
                         </div>
                         <div class="row row-presLabel">
                             <div class="col col-presLabel">
                                 <div class="col-Label">
-                                    <span class="underline">Ascorbic Acid</span>
+                                    <span class="underline">Paracetamol</span>
+                                    <span class="underline">(Biogesic)</span>
                                     <span class="underline">500mg</span>
-                                    <span class="underline">tablet</span>
                                     <span class="underline">#30</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-presLabel">
-                            <div class="col col-presLabel">
-                                <div class="circle4">4</div>
-                                <div class="col-Label">
-                                    <span class="underline">(Brand Name)</span>
+                                    <span class="underline">Tablet</span>
                                 </div>
                             </div>
                         </div>
                         <div class="row row-circle">
-                            <div class="circle5">5</div>
                             <div class="circle6">6</div>
+                            <div class="circle7">7</div>
                         </div>
                         <div class="row row-presLabel">
                             <div class="col col-presLabel">
                                 <div class="col-Label">Sig:
-                                    <span class="underline">Once a day</span> for
-                                    <span class="underline">7 Days</span>
+                                    <span class="underline">1 Tab</span> for
+                                    <span class="underline">Every 4 hours</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="genericName">1.) Generic Name:</label>
-                            <input type="text" v-model="generic_name" class="form-control" >
+                            <label for="generic_name">1.) Generic Name:</label>
+                            <input type="text" v-model="generic_name" class="form-control form-control-sm" >
                         </div>
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="dosage">2.) Dosage:</label>
-                            <input type="text" v-model="dosage" class="form-control">
+                            <label for="brandname">2.) Brand Name:</label>
+                            <input type="text" v-model="brandname" class="form-control form-control-sm">
                         </div>
                         <div class="col">
-                            <label for="formulation">3.) Formulation:</label>
-                            <input type="text" v-model="formulation" class="form-control">
+                            <label for="dosage">3.) Dosage:</label>
+                            <input type="text" v-model="dosage" class="form-control form-control-sm">
                         </div>
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="brandname">4.) Brand Name:</label>
-                            <input type="text" v-model="brandname" class="form-control">
+                            <label for="quantity">4.) Quantity:</label>
+                            <input type="number" v-model="quantity"  class="form-control form-control-sm">
                         </div>
                         <div class="col">
-                            <label for="frequency">5.) Frequency:</label>
-                            <input type="text" v-model="frequency" class="form-control">
+                            <label for="formulation">5.) Formulation:</label>
+                            <input type="text" v-model="formulation" class="form-control form-control-sm">
                         </div>
                     </div>
                     <div class="row prescription">
                         <div class="col">
-                            <label for="duration">6.) Duration:</label>
-                            <input type="text" v-model="duration" class="form-control">
+                            <label for="frequency">6.) Frequency:</label>
+                            <input type="text" v-model="frequency" class="form-control form-control-sm">
                         </div>
                         <div class="col">
-                            <label for="quantity">7.) Quantity:</label>
-                            <input type="number" v-model="quantity"  class="form-control">
+                            <label for="duration">7.) Duration:</label>
+                            <input type="text" v-model="duration" class="form-control form-control-sm">
                         </div>
                     </div>
+
+
+
+                        <!-- Duplicated Prescription Fields -->
+                        <div v-for="(prescription, index) in prescriptions" :key="index" style="border: solid 1px black; margin-top: 15px; padding: 5px;">
+                            <div class="row prescription">
+                                <div class="col">
+                                    <label :for="'generic_name_'">1.) Generic Name:</label>
+                                    <input type="text" :v-model="'generic_name_' + index" class="form-control form-control-sm">
+                                </div>
+                            </div>
+
+                            <div class="row prescription">
+                                <div class="col">
+                                    <label :for="'brandname'">2.) Brand Name:</label>
+                                    <input type="text" :v-model="'brandname' + index" class="form-control form-control-sm">
+                                </div>
+                                <div class="col">
+                                    <label :for="'dosage'">3.) Dosage:</label>
+                                    <input type="text" :v-model="'dosage' + index" class="form-control form-control-sm">
+                                </div>
+                            </div>
+
+                            <div class="row prescription">
+                                <div class="col">
+                                    <label :for="'quantity'">4.) Quantity:</label>
+                                    <input type="text" :v-model="'quantity' + index" class="form-control form-control-sm">
+                                </div>
+                                <div class="col">
+                                    <label :for="'formulation'">5.) Formulation:</label>
+                                    <input type="text" :v-model="'formulation' + index" class="form-control form-control-sm">
+                                </div>
+                            </div>
+
+                            <div class="row prescription">
+                                <div class="col">
+                                    <label :for="'frequency'">6.) Frequency:</label>
+                                    <input type="text" :v-model="'quantity' + index" class="form-control form-control-sm">
+                                </div>
+                                <div class="col">
+                                    <label :for="'duration'">7.) Duration:</label>
+                                    <input type="text" :v-model="'formulation' + index" class="form-control form-control-sm">
+                                </div>
+                            </div>
+
+                        </div>
+
                 </div>
+
+
+
+
+
+
+
                 <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm" type="button" @click="addPrescriptionField">Add Prescription Field</button>
+
                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Close</button>
                     <button class="btn btn-success btn-sm" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
@@ -102,12 +153,16 @@
             return {
                 prescriptionSubmitted: false,
                 generic_name: "",
-                dosage: "",
-                formulation: "",
                 brandname: "",
+                dosage: "",
+                quantity: "",
+                formulation: "",
                 frequency: "",
                 duration: "",
-                quantity: "",
+
+
+                prescriptions: [] // Store dynamic prescriptions
+
             };
         },
         props: {
@@ -119,10 +174,13 @@
             },
             code: {
                 type: String
+            },
+            form_type: {
+                type: String
             }
         },
         created() {
-            console.log(this.activity_id, this.baseUrl)
+            console.log(this.activity_id, this.baseUrl, this.code)
         },
         methods: {
             submitPrescription() {
@@ -132,22 +190,28 @@
                             msg: "Please input generic name"
                         });
                 }
+                else if(!this.brandname) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input brand name"
+                        });
+                }
                 else if(!this.dosage) {
                     Lobibox.alert("error",
                         {
                             msg: "Please input dosage"
                         });
                 }
+                else if(!this.quantity) {
+                    Lobibox.alert("error",
+                        {
+                            msg: "Please input quantity"
+                        });
+                }
                 else if(!this.formulation) {
                     Lobibox.alert("error",
                         {
                             msg: "Please input formulation"
-                        });
-                } 
-                else if(!this.brandname) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input brand name"
                         });
                 }
                 else if(!this.frequency) {
@@ -162,12 +226,6 @@
                             msg: "Please input duration"
                         });
                 }
-                else if(!this.quantity) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input quantity"
-                        });
-                }
                 else {
                     const updatePrescription = {
                         code : this.code,
@@ -178,7 +236,7 @@
                         frequency: this.frequency,
                         duration: this.duration,
                         quantity: this.quantity,
-                        form_type: "normal",
+                        form_type: this.form_type,
                         activity_id: this.activity_id
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
@@ -196,9 +254,27 @@
                                     msg: "Error in server!"
                                 });
                         }
-                    });    
+                    });
                 }
             },
+
+
+
+            addPrescriptionField() {
+                // Add a new prescription field
+                this.prescriptions.push({
+                    generic_name: '',
+                    brandname: '',
+                    dosage: '',
+                    quantity: '',
+                    formulation: '',
+                    frequency: '',
+                    duration: ''
+                });
+            },
+
+
+
         },
     };
 </script>
@@ -211,7 +287,6 @@
     .row-presLabel {
         display: flex;
     }
-
     .col-presLabel {
         flex: 1;
         display: flex;
@@ -221,6 +296,9 @@
     }
     .row-presLabel, .col-presLabel{
         font-size: 13px;
+    }
+    label {
+        margin-bottom: 2px;
     }
 
     .col-Label {
@@ -246,27 +324,26 @@
         font-weight: bold;
     }
     .circle1 {
-        margin-left: 35%;
+        margin-left: 28%;
     }
     .circle2 {
-        margin-left: 12%;
+        margin-left: 13%;
     }
     .circle3 {
-        margin-left: 6%;
+        margin-left: 9%;
     }
-    .circle7 {
+    .circle4 {
         margin-left: 5%;
     }
-    .circle4{
-        margin-top: 1%;
-    }
     .circle5 {
-        margin-top: 1%;
-        margin-left: 44%;
+        margin-left: 5%;
     }
     .circle6 {
-        margin-top: 1%;
-        margin-left: 14%;
+        margin-top: 2%;
+        margin-left: 39%;
     }
-
+    .circle7 {
+        margin-top: 2%;
+        margin-left: 15%;
+    }
 </style>

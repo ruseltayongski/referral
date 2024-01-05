@@ -1,11 +1,13 @@
 <script>
     import axios from 'axios';
     import { Transition } from 'vue';
-
     import AgoraRTC from "agora-rtc-sdk-ng"
+    import PrescriptionModal from './PrescriptionModal.vue';
+
     export default {
         name: 'RecoApp',
         components: {
+            PrescriptionModal,
         },
         data() {
             return {
@@ -62,7 +64,8 @@
                 },
                 showDiv: false,
                 prescription: "",
-                prescriptionSubmitted: false
+                prescriptionSubmitted: false,
+                form_type: "pregnant"
             }
         },
         mounted() {
@@ -242,7 +245,7 @@
                     const updatePrescription = {
                         code : this.referral_code,
                         prescription: this.prescription,
-                        form_type: "pregnant"
+                        form_type: this.form_type
                     }
                     axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
                         console.log(response)
@@ -269,7 +272,7 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "pregnant",
+                    form_type : this.form_type,
                     activity_id: this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
@@ -283,10 +286,38 @@
                             });
                     }
                 })
-                .catch((error) => {
-                    console.log(error);
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+            endorseUpward() {
+                let self = this
+                Lobibox.confirm({
+                    msg: "Do you want to endorse this patient for an upward level of referral?",
+                    callback: function ($this, type, ev) {
+                        if(type == 'yes') {
+                            const endorseUpward = {
+                                code : self.referral_code,
+                                form_type: "normal"
+                            }
+                            axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
+                                console.log(response.status)
+                                if(response.data === 'success') {
+                                    Lobibox.alert("success",
+                                        {
+                                            msg: "Successfully endorse the patient for upward referral!"
+                                        });
+                                } else {
+                                    Lobibox.alert("error",
+                                        {
+                                            msg: "Error in server!"
+                                        });
+                                }
+                            });
+                        }
+                    }
                 });
-            }
+            },
         },
     }
 </script>
@@ -307,6 +338,9 @@
                             <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                             <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                             <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
+                            <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'" style="margin-left:10px;"><i class="bi-hospital"></i></button>
+                            <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
+                            <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
                         </div>
                     </Transition>
                     <div class="localPlayerDiv">
@@ -373,220 +407,171 @@
                                     <td colspan="12">Surviellance Category: <span class="forDetails"> {{ form.refer_sur_category }} </span></td>
                                 </tr>
                             </table>
-                                <div class="row">
-                                    <div class="col">
-                                        <table>
-                                            <tr>
-                                                <th colspan="6" class="padded-header">WOMAN</th>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="3">Name: <span class="forDetails">{{ form.woman_name }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Age: <span class="forDetails">{{ form.woman_age }}</span><br><small>(at time of referral)</small></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Address:
-                                                    <br/>
-                                                    <span class="forDetails">{{ form.patient_address }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Main Reason for Referral:
-                                                    <br/>
-                                                    <span class="forDetails">{{ form.woman_reason }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Major Findings (Clinica and BP,Temp,Lab)
-                                                    <br>
-                                                    <span class="forDetails" style="white-space: pre-line"> {{ form.woman_major_findings }} </span></td>
-                                            </tr>
+                            <div class="row">
+                                <div class="col">
+                                    <table>
+                                        <tr>
+                                            <th colspan="6" class="padded-header">WOMAN</th>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="3">Name: <span class="forDetails">{{ form.woman_name }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Age: <span class="forDetails">{{ form.woman_age }}</span><br><small>(at time of referral)</small></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Address:
+                                                <br/>
+                                                <span class="forDetails">{{ form.patient_address }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Main Reason for Referral:
+                                                <br/>
+                                                <span class="forDetails">{{ form.woman_reason }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Major Findings (Clinica and BP,Temp,Lab)
+                                                <br>
+                                                <span class="forDetails" style="white-space: pre-line"> {{ form.woman_major_findings }} </span></td>
+                                        </tr>
 
-                                            <tr class="bg-gray">
-                                                <td colspan="6" class="padded-header"><strong>Treatments Give Time</strong></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Before Referral:
-                                                    <br/>
-                                                    <span class="forDetails">{{ form.woman_before_treatment }}</span> - <span class="forDetails">{{ form.woman_before_given_time }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">During Referral:
-                                                    <br/>
-                                                    <span class="forDetails">{{ form.woman_during_transport }}</span> - <span class="forDetails">{{ form.woman_transport_given_time }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral
-                                                    <br/>
-                                                    <span class="forDetails" style="white-space: pre-line">{{form.woman_information_given}}</span></td>
-                                            </tr>
-                                            <tr v-if="icd.length > 0" class="padded-row">
-                                                <td colspan="6">
-                                                    ICD-10 Code and Description:
-                                                    <li v-for="i in icd" :key="i.code">
-                                                        <span class="forDetails">{{ i.code }} - {{ i.description }}</span>
-                                                    </li>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="form.notes_diagnoses" class="padded-row">
-                                                <td colspan="6">
-                                                    Diagnosis/Impression:
-                                                    <br />
-                                                    <span class="forDetails" style="white-space: pre-line">{{ form.notes_diagnoses }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="form.other_diagnoses" class="padded-row">
-                                                <td colspan="6">
-                                                    Other Diagnoses:
-                                                    <br />
-                                                    <span class="forDetails" style="white-space: pre-line">{{ form.other_diagnoses }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="reason" class="padded-row">
-                                                <td colspan="6">
-                                                    Reason for referral:
-                                                    <br />
-                                                    <span class="forDetails" style="white-space: pre-line">{{ reason.reason }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="form.other_reason_referral" class="padded-row">
-                                                <td colspan="6">
-                                                    Reason for referral:
-                                                    <br />
-                                                    <span class="forDetails" style="white-space: pre-line">{{ form.other_reason_referral }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="file_path" class="padded-row">
-                                                <td colspan="6">
-                                                    <span v-if="file_path.length > 1">File Attachments: </span>
-                                                    <span v-else>File Attachment: </span>
-                                                    <br/>
-                                                    <span v-for="(path, index) in file_path" :key="index">
+                                        <tr class="bg-gray">
+                                            <td colspan="6" class="padded-header"><strong>Treatments Give Time</strong></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Before Referral:
+                                                <br/>
+                                                <span class="forDetails">{{ form.woman_before_treatment }}</span> - <span class="forDetails">{{ form.woman_before_given_time }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">During Referral:
+                                                <br/>
+                                                <span class="forDetails">{{ form.woman_during_transport }}</span> - <span class="forDetails">{{ form.woman_transport_given_time }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral
+                                                <br/>
+                                                <span class="forDetails" style="white-space: pre-line">{{form.woman_information_given}}</span></td>
+                                        </tr>
+                                        <tr v-if="icd.length > 0" class="padded-row">
+                                            <td colspan="6">
+                                                ICD-10 Code and Description:
+                                                <li v-for="i in icd" :key="i.code">
+                                                    <span class="forDetails">{{ i.code }} - {{ i.description }}</span>
+                                                </li>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="form.notes_diagnoses" class="padded-row">
+                                            <td colspan="6">
+                                                Diagnosis/Impression:
+                                                <br />
+                                                <span class="forDetails" style="white-space: pre-line">{{ form.notes_diagnoses }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="form.other_diagnoses" class="padded-row">
+                                            <td colspan="6">
+                                                Other Diagnoses:
+                                                <br />
+                                                <span class="forDetails" style="white-space: pre-line">{{ form.other_diagnoses }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="reason" class="padded-row">
+                                            <td colspan="6">
+                                                Reason for referral:
+                                                <br />
+                                                <span class="forDetails" style="white-space: pre-line">{{ reason.reason }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="form.other_reason_referral" class="padded-row">
+                                            <td colspan="6">
+                                                Reason for referral:
+                                                <br />
+                                                <span class="forDetails" style="white-space: pre-line">{{ form.other_reason_referral }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="file_path" class="padded-row">
+                                            <td colspan="6">
+                                                <span v-if="file_path.length > 1">File Attachments: </span>
+                                                <span v-else>File Attachment: </span>
+                                                <br/>
+                                                <span v-for="(path, index) in file_path" :key="index">
                                                         <a :href="path" :key="index" id="file_download" class="reason" target="_blank" download>{{ file_name[index] }}</a>
                                                         <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
                                                     </span>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col">
-                                        <table>
-                                            <tr class="bg-gray">
-                                                <th colspan="6" class="padded-header">BABY</th>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Name: <span class="forDetails">{{ formBaby.baby_name }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Date of Birth: <span class="forDetails">{{ formBaby.baby_dob }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Birth Weight: <span class="forDetails">{{ formBaby.weight }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Gestational Age: <span class="forDetails">{{ formBaby.gestational_age }}</span></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Main Reason for Referral:
-                                                    <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_reason }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Major Findings (Clinical and BP,Temp,Lab)
-                                                    <br/>
-                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_major_findings }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Last (Breast) Feed (Time):
-                                                    <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_last_feed }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="bg-gray">
-                                                <td colspan="6" class="padded-header"><strong>Treatments Give Time</strong></td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">Before Referral:
-                                                    <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_before_treatment }}</span> - <span class="forDetails">{{ formBaby.baby_before_given_time }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="padded-row">
-                                                <td colspan="6">During Transport:
-                                                    <br/>
-                                                    <span class="forDetails">{{ formBaby.baby_during_transport }}</span> - <span class="forDetails">{{ formBaby.baby_transport_given_time }}</span>
-                                                </td>
-                                            </tr>
-                                             <tr class="padded-row">
-                                                <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral
-                                                    <br>
-                                                    <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_information_given }}</span>
-                                                </td>
-                                             </tr>
-                                        </table>
-                                        <!-- ======================================================================= -->
-                                    </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div v-if="referring_md == 'yes'">
-                                        <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
+                                <div class="col">
+                                    <table>
+                                        <tr class="bg-gray">
+                                            <th colspan="6" class="padded-header">BABY</th>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Name: <span class="forDetails">{{ formBaby.baby_name }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Date of Birth: <span class="forDetails">{{ formBaby.baby_dob }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Birth Weight: <span class="forDetails">{{ formBaby.weight }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Gestational Age: <span class="forDetails">{{ formBaby.gestational_age }}</span></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Main Reason for Referral:
+                                                <br/>
+                                                <span class="forDetails">{{ formBaby.baby_reason }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Major Findings (Clinical and BP,Temp,Lab)
+                                                <br/>
+                                                <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_major_findings }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Last (Breast) Feed (Time):
+                                                <br/>
+                                                <span class="forDetails">{{ formBaby.baby_last_feed }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-gray">
+                                            <td colspan="6" class="padded-header"><strong>Treatments Give Time</strong></td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Before Referral:
+                                                <br/>
+                                                <span class="forDetails">{{ formBaby.baby_before_treatment }}</span> - <span class="forDetails">{{ formBaby.baby_before_given_time }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">During Transport:
+                                                <br/>
+                                                <span class="forDetails">{{ formBaby.baby_during_transport }}</span> - <span class="forDetails">{{ formBaby.baby_transport_given_time }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="padded-row">
+                                            <td colspan="6">Information Given to the Woman and Companion About the Reason for Referral
+                                                <br>
+                                                <span class="forDetails" style="white-space: pre-line">{{ formBaby.baby_information_given }}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- ======================================================================= -->
                                 </div>
-                                <div v-else>
-                                 <div class="container PrescripBorder">
-                                    <div class="row examplePriscribe">
-                                        <div class="col"> 
-                                            <p class="ExampleAscorbic">Ex: 1.)&nbsp;Ascorbic Acid&nbsp;2.)&nbsp;500mg&nbsp;3.)&nbsp;Tablet&nbsp;4.)&nbsp;Brand Name &nbsp;5.)
-                                            &nbsp;Once a Day &nbsp;6.) For 7 Days&nbsp;7.)&nbsp;30pcs</p>
-                                        </div>
-                                    </div>
-                                    <div class="row prescription">
-                                        <div class="col">
-                                            <label for="generic name">1.)Generic Name:</label> 
-                                            <input type="text" v-model="genericname" class="form-control" >
-                                        </div>
-                                    </div>
-                                    <div class="row prescription">
-                                            <div class="col">
-                                                <label for="dosage">2.)Dosage:</label>
-                                                <input type="text" v-model="dosage" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="Formulation">3.)Formulation:</label>
-                                                <input type="text" v-model="formulation" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="row prescription">
-                                            <div class="col">
-                                                <label for="brandName">4.)Brand Name:</label>
-                                                <input type="text" v-model="brandName" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="frequency">5.)Frequency:</label>
-                                                <input type="text" v-model="frequency" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="row prescription">
-                                            <div class="col">
-                                                <label for="brandName">6.)Duration:</label>
-                                                <input type="text" v-model="duration" class="form-control">
-                                            </div>
-                                            <div class="col">
-                                                <label for="quantity">7.)Quantity:</label>
-                                                <input type="number" v-model="quantity"  class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
-                                        <button class="btn btn-success btn-md btn-block" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
-                                    </div>
-                                </div>
+                            </div>
+                            <div v-if="referring_md == 'yes'">
+                                <button class="btn btn-success btn-md btn-block" type="button" @click="generatePrescription()"><i class="bi bi-prescription"></i> Generate Prescription</button>
+                            </div>
                             <!-- ======================================================================= -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
     </div>
 </template>
 
@@ -597,5 +582,5 @@
     .padded-header {
         padding: 10px;
     }
-    @import './css/index.css'; 
+    @import './css/index.css';
 </style>

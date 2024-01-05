@@ -73,7 +73,7 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, alreadyTreated, code, referred_id) {
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemedicine_followup_code").val(code);
         $(".telemedicine").val(1);
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
@@ -105,12 +105,6 @@
                     msg: "You cannot follow up on a patient because it has not yet been examined."
                 });
         }
-        else if(!alreadyTreated) {
-            Lobibox.alert("error",
-                {
-                    msg: "You cannot follow up on a patient because it has not yet been treated."
-                });
-        }
         else {
             $("#followup_header").html("Follow Up Patient");
             telemedicine = 1;
@@ -126,7 +120,7 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id) {
+    function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id, form_tpe) {
         if(alreadyAccepted || $("#accepted_progress"+code+activity_id).hasClass("completed")) {
             var url = "<?php echo asset('api/video/call'); ?>";
             var json = {
@@ -136,7 +130,7 @@
                 "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
                 "referring_md" : referring_md,
                 "trigger_by" : "{{ $user->id }}",
-                "form_type" : "normal",
+                "form_type" : form_tpe,
                 "activity_id" : activity_id
             };
             $.post(url,json,function(){
@@ -144,7 +138,7 @@
             });
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {
                 // If the window was successfully opened, attempt to maximize it
                 newWindow.moveTo(0, 0);

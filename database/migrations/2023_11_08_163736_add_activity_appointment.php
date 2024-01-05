@@ -25,6 +25,8 @@ class AddActivityAppointment extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('activity', function (Blueprint $table) {
+            $table->dropColumn('appointment');
+        });
     }
 }

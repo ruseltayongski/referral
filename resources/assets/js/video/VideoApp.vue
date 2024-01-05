@@ -52,7 +52,8 @@
                     // A variable to hold the remote user id.s
                     remoteUid: null
                 },
-                showDiv: false
+                showDiv: false,
+                form_type: "normal"
             }
         },
         mounted() {
@@ -222,7 +223,7 @@
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
-                    form_type : "normal",
+                    form_type : this.form_type,
                     activity_id : this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
@@ -231,14 +232,14 @@
                         window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${this.activity_id}`, '_blank');
                     } else {
                         Lobibox.alert("error",
-                        {
-                            msg: "No added prescription!"
-                        });
+                            {
+                                msg: "No added prescription!"
+                            });
                     }
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                    .catch((error) => {
+                        console.log(error);
+                    });
             },
             endorseUpward() {
                 let self = this
@@ -248,7 +249,7 @@
                         if(type == 'yes') {
                             const endorseUpward = {
                                 code : self.referral_code,
-                                form_type: "normal"
+                                form_type: this.form_type
                             }
                             axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
                                 console.log(response.status)
@@ -285,14 +286,14 @@
                         <img :src="doctorUrl" class="img-fluid" alt="Image1">
                     </div>
                     <Transition name="fade">
-                    <div class="iconCall position-absolute fade-in" v-if="showDiv">
-                        <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
-                        <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
-                        <button class="btn btn-danger btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>&nbsp;
-                        <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
-                        <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
-                        <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
-                    </div>
+                        <div class="iconCall position-absolute fade-in" v-if="showDiv">
+                            <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
+                            <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
+                            <button class="btn btn-danger btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>&nbsp;
+                            <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
+                            <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
+                            <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
+                        </div>
                     </Transition>
                     <div class="localPlayerDiv">
                         <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2">
@@ -340,13 +341,11 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4">Name of Patient: <span class="forDetails"> {{ form.patient_name }} </span></td>
+                                    <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
                                     <td colspan="4">Sex: <span class="forDetails"> {{ form.patient_sex }} </span></td>
                                 </tr>
-                                <td colspan="4">Age: <span class="forDetails"> {{ patient_age }} </span></td>
                                 <tr>
                                     <td colspan="6">Address: <span class="forDetails"> {{ form.patient_address }} </span></td>
-                                </tr>
-                                <tr>
                                     <td colspan="6">Status: <span class="forDetails"> {{ form.patient_status }} </span></td>
                                 </tr>
                                 <tr>
@@ -406,7 +405,7 @@
                 </div>
             </div>
         </div>
-        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" />
+        <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
     </div>
 </template>
 

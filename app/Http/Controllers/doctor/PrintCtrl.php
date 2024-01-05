@@ -12,6 +12,8 @@ use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ParamCtrl;
 
+use App\PrescribedPrescription;
+
 class PDFPrescription extends FPDF {
     public $underline = false;
     public $header = "";
@@ -36,27 +38,39 @@ class PDFPrescription extends FPDF {
     }
 
     public function Header() {
-        $this->SetFont('Arial', 'B', 18);
-        $this->Cell(0, 5, $this->header, 0, 1, 'C');
-        $this->SetFont('Arial', '', 12);
+        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo.png');
+        $this->Image($imagePath, 10, 10, 22);
+
+        $this->SetFont('Times', '', 9);
+        $this->Cell(0, 4, 'Republic of the Philippines', 0, 1, 'C');
+        $this->SetFont('Times', '', 12);
+        $this->Cell(0, 5, 'Department of Health', 0, 1, 'C');
+        $this->SetFont('Times', 'B', 14);
+        $this->Cell(0, 6, 'CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT', 0, 1, 'C');
+        $this->Ln(15);
+
+        $this->SetFont('Arial', 'B', 16);
+        $this->Cell(0, 2, $this->header, 0, 1, 'C');
+        $this->SetFont('Arial', '', 10);
         $this->Cell(0, 10,$this->department, 0, 1, 'C');
 
-        $this->Ln(10);
+        $this->Ln(5);
 
-        $this->SetFont('Arial','B',13);
+        $this->SetFont('Arial','B',12);
         $this->Cell(0,0,$this->facility,0,"","C");
         $this->Ln();
-        $this->SetFont('Arial','',12);
+        $this->SetFont('Arial','',10);
         $this->Cell(0,12,$this->facility_address,0,"","C");
         $this->Ln();
         $this->Cell(0,0,$this->facility_email,0,"","C");
         $this->Ln();
         $this->Cell(0,12,$this->facility_contact,0,"","C");
 
-        $this->Ln(17);
+        $this->Ln(13);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
         $this->Ln(0.5);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
+        $this->Ln(3);
     }
     
     public function Footer() {
@@ -115,6 +129,10 @@ class PrintCtrl extends Controller
         if($request->prescription_new) {
             $code = Activity::find($activity_id)->code;
             $activity_id = Activity::where("code",$code)->where("status","prescription")->where("id",">",$activity_id)->first()->id;
+            dd($activity_id);
+
+
+
         }
         $prescription = Tracking::
             select(
@@ -132,6 +150,15 @@ class PrintCtrl extends Controller
                 \DB::raw("if(tracking.type='normal',pf.prescription,preg_f.prescription) as prescription"),*/
                 "activity.created_at as prescription_date",
                 "activity.remarks as prescription",
+
+//                "prescribed_prescriptions.generic_name as genericName",
+//                "prescribed_prescriptions.dosage as dosage",
+//                "prescribed_prescriptions.formulation as formulation",
+//                "prescribed_prescriptions.brandname as brandname",
+//                "prescribed_prescriptions.frequency as frequency",
+//                "prescribed_prescriptions.duration as duration",
+//                "prescribed_prescriptions.quantity as quantity",
+
                 \DB::raw("if(tracking.type='normal',pf.other_diagnoses,preg_f.other_diagnoses) as other_diagnosis"),
                 "patients.dob",
                 "patients.sex",
@@ -142,9 +169,9 @@ class PrintCtrl extends Controller
             ->where("activity.id",$activity_id)
             ->leftJoin("users as action_md","action_md.id","=","tracking.action_md")
             ->leftJoin("department","department.id","=","action_md.department_id")
-            ->leftJoin("facility","facility.id","=","action_md.facility_id")  
-            ->leftJoin("patient_form as pf","pf.code","=","tracking.code")  
-            ->leftJoin("pregnant_form as preg_f","preg_f.code","=","tracking.code") 
+            ->leftJoin("facility","facility.id","=","action_md.facility_id")
+            ->leftJoin("patient_form as pf","pf.code","=","tracking.code")
+            ->leftJoin("pregnant_form as preg_f","preg_f.code","=","tracking.code")
             ->leftJoin("patients","patients.id","=",\DB::raw("if(tracking.type = 'normal',pf.patient_id,preg_f.patient_woman_id)"))
             ->leftJoin("muncity","muncity.id","=","patients.muncity")
             ->leftJoin("activity","activity.code","=","tracking.code")
@@ -161,22 +188,22 @@ class PrintCtrl extends Controller
         $pdf->setTitle($prescription->facility);
         $pdf->AddPage();
 
-        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
-        $imageWidth = 20; 
+//        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
+        $imageWidth = 20;
         $pageWidth = $pdf->GetPageWidth();
-        $pageHeight = $pdf->GetPageHeight();
+//        $pageHeight = $pdf->GetPageHeight();
         for ($x = 5; $x <= $pageWidth-10; $x += $imageWidth+40) {
             $flag = true;
-            for($y=0; $y<=$pageHeight; $y += 20) {
-                $paddingX = 0;
-                if($flag) {
-                    $paddingX = 30;
-                    $flag = false;
-                } else {
-                    $flag = true;
-                }
-                $pdf->Image($imagePath, $x+$paddingX, $y, $imageWidth);
-            }
+//            for($y=0; $y<=$pageHeight; $y += 20) {
+//                $paddingX = 0;
+//                if($flag) {
+//                    $paddingX = 30;
+//                    $flag = false;
+//                } else {
+//                    $flag = true;
+//                }
+//                $pdf->Image($imagePath, $x+$paddingX, $y, $imageWidth);
+//            }
         }
 
         Session::put('date_referral', $prescription->date_referred);
@@ -211,37 +238,47 @@ class PrintCtrl extends Controller
 
         $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$prescription->muncity,"Address:"), 0, 'L');
 
-        $icd = Icd::select('icd10.code', 'icd10.description')
+       /* $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
-            ->where('icd.code',$prescription->code)->get();
+            ->where('icd.code',$prescription->code)->get();*/
 
-        $prescriptionSetY = 145;    
-        if(isset($icd[0])) {
-            $pdf->MultiCell(0, 7,self::black($pdf,"Diagnoses: "), 0, 'L');
-            foreach($icd as $i) {
-                $pdf->SetX(25); // Set the left margin position
-                $pdf->SetTextColor(102,56,0);
-                $pdf->SetFont('Arial','I',10);
-                $icd_description = str_replace(array("\r", "\n"), '', $i->code.' - '.$i->description);
-                $pdf->MultiCell(0, 7,$icd_description, 0, 'L');
-            }
-        } else {
-            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnoses: ").self::orange($pdf,$prescription->other_diagnosis,"Diagnoses:"), 0, 'L');
-            $prescriptionSetY = 120;
-        }
+        $prescriptionSetY = 120;
+
+//        if(isset($icd[0])) {
+//            $pdf->MultiCell(0, 7,self::black($pdf,"Diagnoses: "), 0, 'L');
+//            foreach($icd as $i) {
+//                $pdf->SetX(25); // Set the left margin position
+//                $pdf->SetTextColor(102,56,0);
+//                $pdf->SetFont('Arial','I',10);
+//                $icd_description = str_replace(array("\r", "\n"), '', $i->code.' - '.$i->description);
+//                $pdf->MultiCell(0, 7,$icd_description, 0, 'L');
+//            }
+//        } else {
+//            $pdf->MultiCell(0, 7, self::black($pdf,"Diagnoses: ").self::orange($pdf,$prescription->other_diagnosis,"Diagnoses:"), 0, 'L');
+//            /*$prescriptionSetY = 120;*/
+//            $prescriptionSetY = $pdf->getY();
+//        }
 
         $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
         $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
 
         $pdf->setY($prescriptionSetY);
         $leftMargin = 45;
-        $pdf->SetLeftMargin($leftMargin); 
-        $pdf->MultiCell(0, 7, self::black($pdf,"Prescription: "), 0, 'L');
+        $pdf->SetLeftMargin($leftMargin);
+
+//        $pdf->MultiCell(0, 7, self::black($pdf,"Prescription: "), 0, 'L');
         $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
-        $leftMargin = 48;
+        $leftMargin = 45;
         $pdf->SetLeftMargin($leftMargin);  
-        $pdf->MultiCell(0, 5, $prescription->prescription , 0, 'L');
+        /*$pdf->MultiCell(0, 5, $prescription->prescription , 0, 'L');*/
+
+
+        $rowText = "{$prescription->genericName}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
+        $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+
+        $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
+        $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
 
         $pdf->Output();
         exit;
