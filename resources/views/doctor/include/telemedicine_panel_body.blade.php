@@ -338,7 +338,7 @@
                                 $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
                         ?>
 
-                            <a href="javascript:void(0);" onclick="isPDF('{{$filePath}}')"  onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">{{ $fileName }}</a>
+                            <a href="javascript:void(0);" onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">{{ $fileName }}</a>
                             &nbsp;
                         @endforeach
                 @endforeach
@@ -352,7 +352,7 @@
 
       function isPDF(filePath){
         console.log('hello',filePath);
-            return filePath.toLowerCase().endsWith('.pdf');
+            return filePath.toLowerCase().endsWith('.pdf'); 
       }
 
         function openFileViewer(filePath, fileName) {
@@ -361,7 +361,7 @@
                 <div>
                    ${isPDF(filePath) ?
                 `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
-                `<img src="${filePath}" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;" />`
+                `<img src="${filePath}" style="width: 50%; height: 50%; display: block; margin: 0 auto;" />`
             }
                     <br />
                     <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
