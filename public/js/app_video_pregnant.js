@@ -19023,6 +19023,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -19035,7 +19038,7 @@ __webpack_require__.r(__webpack_exports__);
       formulation: "",
       frequency: "",
       duration: "",
-      prescriptions: [] // Store dynamic prescriptions
+      prescriptions: [] // Array to store multiple prescriptions
     };
   },
   props: {
@@ -19056,77 +19059,197 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.activity_id, this.baseUrl, this.code);
   },
   methods: {
-    submitPrescription: function submitPrescription() {
-      var _this = this;
-      if (!this.generic_name) {
-        Lobibox.alert("error", {
-          msg: "Please input generic name"
-        });
-      } else if (!this.brandname) {
-        Lobibox.alert("error", {
-          msg: "Please input brand name"
-        });
-      } else if (!this.dosage) {
-        Lobibox.alert("error", {
-          msg: "Please input dosage"
-        });
-      } else if (!this.quantity) {
-        Lobibox.alert("error", {
-          msg: "Please input quantity"
-        });
-      } else if (!this.formulation) {
-        Lobibox.alert("error", {
-          msg: "Please input formulation"
-        });
-      } else if (!this.frequency) {
-        Lobibox.alert("error", {
-          msg: "Please input frequency"
-        });
-      } else if (!this.duration) {
-        Lobibox.alert("error", {
-          msg: "Please input duration"
-        });
-      } else {
-        var updatePrescription = {
-          code: this.code,
+    // submitPrescription() {
+    //     if(!this.generic_name) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input generic name"
+    //             });
+    //     }
+    //     else if(!this.brandname) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input brand name"
+    //             });
+    //     }
+    //     else if(!this.dosage) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input dosage"
+    //             });
+    //     }
+    //     else if(!this.quantity) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input quantity"
+    //             });
+    //     }
+    //     else if(!this.formulation) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input formulation"
+    //             });
+    //     }
+    //     else if(!this.frequency) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input frequency"
+    //             });
+    //     }
+    //     else if(!this.duration) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "Please input duration"
+    //             });
+    //     }
+    //     else {
+    //         const updatePrescription = {
+    //             code : this.code,
+    //             generic_name: this.generic_name,
+    //             brandname: this.brandname,
+    //             dosage: this.dosage,
+    //             quantity: this.quantity,
+    //             formulation: this.formulation,
+    //             frequency: this.frequency,
+    //             duration: this.duration,
+    //             form_type: this.form_type,
+    //             activity_id: this.activity_id
+    //         };
+    //         axios
+    //             .post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription)
+    //             .then(response => {
+    //             console.log(response)
+    //             if(response.data === 'success') {
+    //                 $("#prescriptionModal").modal('hide');
+    //                 this.prescriptionSubmitted = true
+    //                 Lobibox.alert("success",
+    //                     {
+    //                         msg: "Successfully submitted prescription!"
+    //                     });
+    //             } else {
+    //                 Lobibox.alert("error", {
+    //                         msg: "Error in server!"
+    //                 });
+    //             }
+    //         })
+    //         .catch((error) => {
+    //                 console.error(error);
+    //                 Lobibox.alert("error", {
+    //                     msg: "An error occurred while saving the prescription.",
+    //                 });
+    //             });
+    //     }
+    // },
+    //------------------------------------------------------------------
+    addEmptyPrescriptionBlock: function addEmptyPrescriptionBlock() {
+      var emptyPrescription = {
+        generic_name: "",
+        brandname: "",
+        dosage: "",
+        quantity: "",
+        formulation: "",
+        frequency: "",
+        duration: ""
+      };
+      this.prescriptions.push(emptyPrescription);
+    },
+    deletePrescription: function deletePrescription(index) {
+      this.prescriptions.splice(index, 1);
+    },
+    //------------------------------------------------------------------
+    savePrescriptions: function savePrescriptions() {
+      function checkRequiredProperties(obj) {
+        if (!obj.generic_name) {
+          Lobibox.alert("error", {
+            msg: "Please input generic name"
+          });
+          return false;
+        } else if (!obj.brandname) {
+          Lobibox.alert("error", {
+            msg: "Please input brandname"
+          });
+          return false;
+        } else if (!obj.dosage) {
+          Lobibox.alert("error", {
+            msg: "Please input dosage"
+          });
+          return false;
+        } else if (!obj.quantity) {
+          Lobibox.alert("error", {
+            msg: "Please input quantity"
+          });
+          return false;
+        } else if (!obj.formulation) {
+          Lobibox.alert("error", {
+            msg: "Please input formulation"
+          });
+          return false;
+        } else if (!obj.frequency) {
+          Lobibox.alert("error", {
+            msg: "Please input frequency"
+          });
+          return false;
+        } else if (!obj.duration) {
+          Lobibox.alert("error", {
+            msg: "Please input duration"
+          });
+          return false;
+        }
+        return true;
+      }
+      if (!checkRequiredProperties(this)) {
+        return;
+      }
+      var _iterator = _createForOfIteratorHelper(this.prescriptions),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var prescription = _step.value;
+          if (!checkRequiredProperties(prescription)) {
+            return;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      var combinedPrescriptions = {
+        singlePrescription: {
           generic_name: this.generic_name,
-          dosage: this.dosage,
-          formulation: this.formulation,
           brandname: this.brandname,
+          dosage: this.dosage,
+          quantity: this.quantity,
+          formulation: this.formulation,
           frequency: this.frequency,
           duration: this.duration,
-          quantity: this.quantity,
-          form_type: this.form_type,
-          activity_id: this.activity_id
-        };
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
-          console.log(response);
-          if (response.data === 'success') {
-            $("#prescriptionModal").modal('hide');
-            _this.prescriptionSubmitted = true;
-            Lobibox.alert("success", {
-              msg: "Successfully submitted prescription!"
-            });
-          } else {
-            Lobibox.alert("error", {
-              msg: "Error in server!"
-            });
-          }
-        });
-      }
-    },
-    addPrescriptionField: function addPrescriptionField() {
-      // Add a new prescription field
-      this.prescriptions.push({
-        generic_name: '',
-        brandname: '',
-        dosage: '',
-        quantity: '',
-        formulation: '',
-        frequency: '',
-        duration: ''
+          activity_id: this.activity_id,
+          code: this.code
+        },
+        multiplePrescriptions: this.prescriptions
+      };
+      Lobibox.alert("success", {
+        msg: "Prescriptions saved successfully!"
       });
-    }
+      $("#prescriptionModal").modal("hide");
+      console.log('Combined Prescription Data:', combinedPrescriptions);
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescriptions"), combinedPrescriptions).then(function (response) {
+        console.log("Prescription submitted successfully", response.data);
+      })["catch"](function (error) {
+        console.error("Error submitting prescription", error);
+      });
+
+      // Reset the form fields and prescriptions array after saving
+      this.generic_name = '';
+      this.brandname = '';
+      this.dosage = '';
+      this.quantity = null;
+      this.formulation = '';
+      this.frequency = '';
+      this.duration = '';
+      this.prescriptions = [];
+    } //------------------------------------------------------------------
+    //------------------------------------------------------------------
   }
 });
 
@@ -19564,269 +19687,313 @@ var _hoisted_5 = {
 };
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\" data-v-c2b74386>Ex. <div class=\"row row-circle\" data-v-c2b74386><div class=\"circle1\" data-v-c2b74386>1</div><div class=\"circle2\" data-v-c2b74386>2</div><div class=\"circle3\" data-v-c2b74386>3</div><div class=\"circle4\" data-v-c2b74386>4</div><div class=\"circle5\" data-v-c2b74386>5</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386><span class=\"underline\" data-v-c2b74386>Paracetamol</span><span class=\"underline\" data-v-c2b74386>(Biogesic)</span><span class=\"underline\" data-v-c2b74386>500mg</span><span class=\"underline\" data-v-c2b74386>#30</span><span class=\"underline\" data-v-c2b74386>Tablet</span></div></div></div><div class=\"row row-circle\" data-v-c2b74386><div class=\"circle6\" data-v-c2b74386>6</div><div class=\"circle7\" data-v-c2b74386>7</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386>Sig: <span class=\"underline\" data-v-c2b74386>1 Tab</span> for <span class=\"underline\" data-v-c2b74386>Every 4 hours</span></div></div></div></div>", 1);
 var _hoisted_7 = {
-  "class": "row prescription"
+  style: {
+    "border": "solid 1px lightgray",
+    "margin-top": "10px",
+    "padding": "5px"
+  }
 };
 var _hoisted_8 = {
+  "class": "row prescription"
+};
+var _hoisted_9 = {
   "class": "col"
 };
-var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_10 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "generic_name"
   }, "1.) Generic Name:", -1 /* HOISTED */);
 });
-var _hoisted_10 = {
+var _hoisted_11 = {
   "class": "row prescription"
 };
-var _hoisted_11 = {
+var _hoisted_12 = {
   "class": "col"
 };
-var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_13 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "brandname"
   }, "2.) Brand Name:", -1 /* HOISTED */);
 });
-var _hoisted_13 = {
+var _hoisted_14 = {
   "class": "col"
 };
-var _hoisted_14 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_15 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "dosage"
   }, "3.) Dosage:", -1 /* HOISTED */);
 });
-var _hoisted_15 = {
+var _hoisted_16 = {
   "class": "row prescription"
 };
-var _hoisted_16 = {
+var _hoisted_17 = {
   "class": "col"
 };
-var _hoisted_17 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "quantity"
   }, "4.) Quantity:", -1 /* HOISTED */);
 });
-var _hoisted_18 = {
+var _hoisted_19 = {
   "class": "col"
 };
-var _hoisted_19 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_20 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "formulation"
   }, "5.) Formulation:", -1 /* HOISTED */);
 });
-var _hoisted_20 = {
+var _hoisted_21 = {
   "class": "row prescription"
 };
-var _hoisted_21 = {
+var _hoisted_22 = {
   "class": "col"
 };
-var _hoisted_22 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_23 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "frequency"
   }, "6.) Frequency:", -1 /* HOISTED */);
 });
-var _hoisted_23 = {
+var _hoisted_24 = {
   "class": "col"
 };
-var _hoisted_24 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_25 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "duration"
   }, "7.) Duration:", -1 /* HOISTED */);
 });
-var _hoisted_25 = {
-  "class": "row prescription"
-};
 var _hoisted_26 = {
+  "class": "row"
+};
+var _hoisted_27 = {
   "class": "col"
 };
-var _hoisted_27 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_28 = ["onClick"];
+var _hoisted_29 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "bi bi-trash"
+  }, null, -1 /* HOISTED */);
+});
+var _hoisted_30 = [_hoisted_29];
+var _hoisted_31 = {
+  "class": "row prescription"
+};
+var _hoisted_32 = {
+  "class": "col"
+};
+var _hoisted_33 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'generic_name_'
+    "for": "generic_name"
   }, "1.) Generic Name:", -1 /* HOISTED */);
 });
-var _hoisted_28 = ["v-model"];
-var _hoisted_29 = {
+var _hoisted_34 = ["onUpdate:modelValue"];
+var _hoisted_35 = {
   "class": "row prescription"
 };
-var _hoisted_30 = {
+var _hoisted_36 = {
   "class": "col"
 };
-var _hoisted_31 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_37 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'brandname'
+    "for": "brandname"
   }, "2.) Brand Name:", -1 /* HOISTED */);
 });
-var _hoisted_32 = ["v-model"];
-var _hoisted_33 = {
+var _hoisted_38 = ["onUpdate:modelValue"];
+var _hoisted_39 = {
   "class": "col"
 };
-var _hoisted_34 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_40 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'dosage'
+    "for": "dosage"
   }, "3.) Dosage:", -1 /* HOISTED */);
 });
-var _hoisted_35 = ["v-model"];
-var _hoisted_36 = {
+var _hoisted_41 = ["onUpdate:modelValue"];
+var _hoisted_42 = {
   "class": "row prescription"
 };
-var _hoisted_37 = {
+var _hoisted_43 = {
   "class": "col"
 };
-var _hoisted_38 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_44 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'quantity'
+    "for": "quantity"
   }, "4.) Quantity:", -1 /* HOISTED */);
 });
-var _hoisted_39 = ["v-model"];
-var _hoisted_40 = {
+var _hoisted_45 = ["onUpdate:modelValue"];
+var _hoisted_46 = {
   "class": "col"
 };
-var _hoisted_41 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_47 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'formulation'
+    "for": "formulation"
   }, "5.) Formulation:", -1 /* HOISTED */);
 });
-var _hoisted_42 = ["v-model"];
-var _hoisted_43 = {
+var _hoisted_48 = ["onUpdate:modelValue"];
+var _hoisted_49 = {
   "class": "row prescription"
 };
-var _hoisted_44 = {
-  "class": "col"
-};
-var _hoisted_45 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'frequency'
-  }, "6.) Frequency:", -1 /* HOISTED */);
-});
-var _hoisted_46 = ["v-model"];
-var _hoisted_47 = {
-  "class": "col"
-};
-var _hoisted_48 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": 'duration'
-  }, "7.) Duration:", -1 /* HOISTED */);
-});
-var _hoisted_49 = ["v-model"];
 var _hoisted_50 = {
-  "class": "modal-footer"
+  "class": "col"
 };
 var _hoisted_51 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "frequency"
+  }, "6.) Frequency:", -1 /* HOISTED */);
+});
+var _hoisted_52 = ["onUpdate:modelValue"];
+var _hoisted_53 = {
+  "class": "col"
+};
+var _hoisted_54 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "duration"
+  }, "7.) Duration:", -1 /* HOISTED */);
+});
+var _hoisted_55 = ["onUpdate:modelValue"];
+var _hoisted_56 = {
+  "class": "modal-footer"
+};
+var _hoisted_57 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-secondary btn-sm",
     type: "button",
     "data-dismiss": "modal"
   }, "Close", -1 /* HOISTED */);
 });
-var _hoisted_52 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_58 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "bi bi-prescription2"
+  }, null, -1 /* HOISTED */);
+});
+var _hoisted_59 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
   }, null, -1 /* HOISTED */);
 });
-var _hoisted_53 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_60 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
   }, null, -1 /* HOISTED */);
 });
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.generic_name = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.generic_name]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.generic_name]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.brandname = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.brandname]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.brandname]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.dosage = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.dosage]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.dosage]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.quantity = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.quantity]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.quantity]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.formulation = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formulation]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formulation]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
       return $data.frequency = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.frequency]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.frequency]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $data.duration = $event;
     }),
     "class": "form-control form-control-sm"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.duration]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Duplicated Prescription Fields "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.prescriptions, function (prescription, index) {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.duration]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("FOR DUPLICATE PRESCRIPTION"), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.prescriptions, function (prescription, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: index,
       style: {
-        "border": "solid 1px black",
-        "margin-top": "15px",
+        "border": "solid 1px slategray",
+        "margin-top": "10px",
         "padding": "5px"
       }
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      "class": "btn btn-danger btn-sm",
+      onClick: function onClick($event) {
+        return $options.deletePrescription(index);
+      }
+    }, _hoisted_30, 8 /* PROPS */, _hoisted_28)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'generic_name_' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.generic_name = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_28)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_34), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.generic_name]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [_hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'brandname' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.brandname = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_32)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_38), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.brandname]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'dosage' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.dosage = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_35)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [_hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_41), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.dosage]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [_hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      type: "number",
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.quantity = $event;
+      },
+      "class": "form-control form-control-sm"
+    }, null, 8 /* PROPS */, _hoisted_45), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.quantity]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'quantity' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.formulation = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_39)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [_hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_48), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.formulation]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [_hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'formulation' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.frequency = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_42)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_52), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.frequency]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
-      "v-model": 'quantity' + index,
+      "onUpdate:modelValue": function onUpdateModelValue($event) {
+        return prescription.duration = $event;
+      },
       "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_46)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-      type: "text",
-      "v-model": 'formulation' + index,
-      "class": "form-control form-control-sm"
-    }, null, 8 /* PROPS */, _hoisted_49)])])]);
-  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, null, 8 /* PROPS */, _hoisted_55), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, prescription.duration]])])])]);
+  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_56, [_hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-sm",
     type: "button",
-    onClick: _cache[7] || (_cache[7] = function () {
-      return $options.addPrescriptionField && $options.addPrescriptionField.apply($options, arguments);
+    onClick: _cache[7] || (_cache[7] = function ($event) {
+      return $options.addEmptyPrescriptionBlock();
     })
-  }, "Add Prescription Field"), _hoisted_51, $data.prescriptionSubmitted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, [_hoisted_58, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Add Prescription")]), $data.prescriptionSubmitted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     "class": "btn btn-success btn-sm",
     type: "button",
     onClick: _cache[8] || (_cache[8] = function ($event) {
-      return $options.submitPrescription();
+      return _ctx.submitPrescription();
     })
-  }, [_hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Update Prescription")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, [_hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Update Prescription")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
     "class": "btn btn-success btn-sm",
     type: "button",
     onClick: _cache[9] || (_cache[9] = function ($event) {
-      return $options.submitPrescription();
+      return $options.savePrescriptions();
     })
-  }, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Submit Prescription")]))])])])]);
+  }, [_hoisted_60, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Submit Prescription")]))])])])]);
 }
 
 /***/ }),

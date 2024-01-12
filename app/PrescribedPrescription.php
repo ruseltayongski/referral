@@ -13,12 +13,24 @@ use Illuminate\Database\Eloquent\Model;
 class PrescribedPrescription extends Model
 {
     protected $table = 'prescribed_prescriptions';
-    protected $guarded = array();
+    //protected $guarded = array();
 
-    public function prescribedActivityId() {
+    protected $fillable = [
+        'prescribed_activity_id',
+        'code',
+        'generic_name',
+        'dosage',
+        'formulation',
+        'brandname',
+        'frequency',
+        'duration',
+        'quantity',
+    ];
+
+    public function activity() {
         return $this -> belongsTo(Activity::class, 'prescribed_activity_id', 'id');
     }
-    public function Code() {
+    public function activityByCode() {
         return $this -> belongsTo(Activity::class, 'code', 'code');
     }
 }

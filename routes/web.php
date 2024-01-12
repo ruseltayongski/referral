@@ -319,6 +319,10 @@ Route::get("reports","admin\ReportCtrl@sottoReports");
 Route::get("api/individual","ApiController@individualList");
 Route::get("export/individual","ApiController@exportIndividualList");
 
+
+
+
+
 Route::get('/token/save/{token}','DeviceTokenCtrl@save');
 Route::get('/token/send/{title}/{body}/{token}','DeviceTokenCtrl@send');
 
@@ -657,6 +661,7 @@ Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAva
 
 
 
+Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 
 
 

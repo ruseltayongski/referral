@@ -131,8 +131,6 @@ class PrintCtrl extends Controller
             $activity_id = Activity::where("code",$code)->where("status","prescription")->where("id",">",$activity_id)->first()->id;
             dd($activity_id);
 
-
-
         }
         $prescription = Tracking::
             select(
@@ -151,13 +149,13 @@ class PrintCtrl extends Controller
                 "activity.created_at as prescription_date",
                 "activity.remarks as prescription",
 
-//                "prescribed_prescriptions.generic_name as genericName",
-//                "prescribed_prescriptions.dosage as dosage",
-//                "prescribed_prescriptions.formulation as formulation",
-//                "prescribed_prescriptions.brandname as brandname",
-//                "prescribed_prescriptions.frequency as frequency",
-//                "prescribed_prescriptions.duration as duration",
-//                "prescribed_prescriptions.quantity as quantity",
+                // "prescribed_prescriptions.generic_name as genericName",
+                // "prescribed_prescriptions.dosage as dosage",
+                // "prescribed_prescriptions.formulation as formulation",
+                // "prescribed_prescriptions.brandname as brandname",
+                // "prescribed_prescriptions.frequency as frequency",
+                // "prescribed_prescriptions.duration as duration",
+                // "prescribed_prescriptions.quantity as quantity",
 
                 \DB::raw("if(tracking.type='normal',pf.other_diagnoses,preg_f.other_diagnoses) as other_diagnosis"),
                 "patients.dob",
@@ -165,6 +163,7 @@ class PrintCtrl extends Controller
                 "muncity.description as muncity",
                 \DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
             )
+
             ->where("tracking.id",$tracking_id)
             ->where("activity.id",$activity_id)
             ->leftJoin("users as action_md","action_md.id","=","tracking.action_md")
@@ -175,6 +174,11 @@ class PrintCtrl extends Controller
             ->leftJoin("patients","patients.id","=",\DB::raw("if(tracking.type = 'normal',pf.patient_id,preg_f.patient_woman_id)"))
             ->leftJoin("muncity","muncity.id","=","patients.muncity")
             ->leftJoin("activity","activity.code","=","tracking.code")
+
+            // ->where("prescribed_prescriptions.code", "=", "activity.code")
+            // ->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.prescribed_activity_id", "=", "activity.id")
+
+
             ->first();
 
         $header = $prescription->action_md;
@@ -187,6 +191,8 @@ class PrintCtrl extends Controller
         $pdf = new PDFPrescription($header,$department,$facility,$facility_address,$facility_contact,$facility_email,$signature_path,$prescription->license);
         $pdf->setTitle($prescription->facility);
         $pdf->AddPage();
+
+        
 
 //        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
         $imageWidth = 20;

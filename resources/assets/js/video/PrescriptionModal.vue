@@ -10,7 +10,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
                     <div class="container">Ex.
                         <div class="row row-circle">
                             <div class="circle1">1</div>
@@ -43,103 +42,96 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row prescription">
-                        <div class="col">
-                            <label for="generic_name">1.) Generic Name:</label>
-                            <input type="text" v-model="generic_name" class="form-control form-control-sm" >
+                    <div style="border: solid 1px lightgray; margin-top: 10px; padding: 5px;">
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="generic_name">1.) Generic Name:</label>
+                                <input type="text" v-model="generic_name" class="form-control form-control-sm" >
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="brandname">2.) Brand Name:</label>
+                                <input type="text" v-model="brandname" class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="dosage">3.) Dosage:</label>
+                                <input type="text" v-model="dosage" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="quantity">4.) Quantity:</label>
+                                <input type="number" v-model="quantity"  class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="formulation">5.) Formulation:</label>
+                                <input type="text" v-model="formulation" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="frequency">6.) Frequency:</label>
+                                <input type="text" v-model="frequency" class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="duration">7.) Duration:</label>
+                                <input type="text" v-model="duration" class="form-control form-control-sm">
+                            </div>
                         </div>
                     </div>
-                    <div class="row prescription">
-                        <div class="col">
-                            <label for="brandname">2.) Brand Name:</label>
-                            <input type="text" v-model="brandname" class="form-control form-control-sm">
+
+                    <!--FOR DUPLICATE PRESCRIPTION-->
+                    <div v-for="(prescription, index) in prescriptions" :key="index" style="border: solid 1px slategray; margin-top: 10px; padding: 5px;">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-danger btn-sm" @click="deletePrescription(index)"><i class="bi bi-trash"></i></button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <label for="dosage">3.) Dosage:</label>
-                            <input type="text" v-model="dosage" class="form-control form-control-sm">
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="generic_name">1.) Generic Name:</label>
+                                <input type="text" v-model="prescription.generic_name" class="form-control form-control-sm" >
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="brandname">2.) Brand Name:</label>
+                                <input type="text" v-model="prescription.brandname" class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="dosage">3.) Dosage:</label>
+                                <input type="text" v-model="prescription.dosage" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="quantity">4.) Quantity:</label>
+                                <input type="number" v-model="prescription.quantity"  class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="formulation">5.) Formulation:</label>
+                                <input type="text" v-model="prescription.formulation" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="row prescription">
+                            <div class="col">
+                                <label for="frequency">6.) Frequency:</label>
+                                <input type="text" v-model="prescription.frequency" class="form-control form-control-sm">
+                            </div>
+                            <div class="col">
+                                <label for="duration">7.) Duration:</label>
+                                <input type="text" v-model="prescription.duration" class="form-control form-control-sm">
+                            </div>
                         </div>
                     </div>
-                    <div class="row prescription">
-                        <div class="col">
-                            <label for="quantity">4.) Quantity:</label>
-                            <input type="number" v-model="quantity"  class="form-control form-control-sm">
-                        </div>
-                        <div class="col">
-                            <label for="formulation">5.) Formulation:</label>
-                            <input type="text" v-model="formulation" class="form-control form-control-sm">
-                        </div>
-                    </div>
-                    <div class="row prescription">
-                        <div class="col">
-                            <label for="frequency">6.) Frequency:</label>
-                            <input type="text" v-model="frequency" class="form-control form-control-sm">
-                        </div>
-                        <div class="col">
-                            <label for="duration">7.) Duration:</label>
-                            <input type="text" v-model="duration" class="form-control form-control-sm">
-                        </div>
-                    </div>
-
-
-
-                        <!-- Duplicated Prescription Fields -->
-                        <div v-for="(prescription, index) in prescriptions" :key="index" style="border: solid 1px black; margin-top: 15px; padding: 5px;">
-                            <div class="row prescription">
-                                <div class="col">
-                                    <label :for="'generic_name_'">1.) Generic Name:</label>
-                                    <input type="text" :v-model="'generic_name_' + index" class="form-control form-control-sm">
-                                </div>
-                            </div>
-
-                            <div class="row prescription">
-                                <div class="col">
-                                    <label :for="'brandname'">2.) Brand Name:</label>
-                                    <input type="text" :v-model="'brandname' + index" class="form-control form-control-sm">
-                                </div>
-                                <div class="col">
-                                    <label :for="'dosage'">3.) Dosage:</label>
-                                    <input type="text" :v-model="'dosage' + index" class="form-control form-control-sm">
-                                </div>
-                            </div>
-
-                            <div class="row prescription">
-                                <div class="col">
-                                    <label :for="'quantity'">4.) Quantity:</label>
-                                    <input type="text" :v-model="'quantity' + index" class="form-control form-control-sm">
-                                </div>
-                                <div class="col">
-                                    <label :for="'formulation'">5.) Formulation:</label>
-                                    <input type="text" :v-model="'formulation' + index" class="form-control form-control-sm">
-                                </div>
-                            </div>
-
-                            <div class="row prescription">
-                                <div class="col">
-                                    <label :for="'frequency'">6.) Frequency:</label>
-                                    <input type="text" :v-model="'quantity' + index" class="form-control form-control-sm">
-                                </div>
-                                <div class="col">
-                                    <label :for="'duration'">7.) Duration:</label>
-                                    <input type="text" :v-model="'formulation' + index" class="form-control form-control-sm">
-                                </div>
-                            </div>
-
-                        </div>
-
                 </div>
 
-
-
-
-
-
-
                 <div class="modal-footer">
-                    <button class="btn btn-primary btn-sm" type="button" @click="addPrescriptionField">Add Prescription Field</button>
-
                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
-                    <button class="btn btn-success btn-sm" type="button" @click="submitPrescription()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
+                    <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
                 </div>
             </div>
         </div>
@@ -160,10 +152,10 @@
                 frequency: "",
                 duration: "",
 
-
-                prescriptions: [] // Store dynamic prescriptions
+                prescriptions: [], // Array to store multiple prescriptions
 
             };
+
         },
         props: {
             activity_id: {
@@ -183,96 +175,214 @@
             console.log(this.activity_id, this.baseUrl, this.code)
         },
         methods: {
-            submitPrescription() {
-                if(!this.generic_name) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input generic name"
+           
+            // submitPrescription() {
+            //     if(!this.generic_name) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input generic name"
+            //             });
+            //     }
+            //     else if(!this.brandname) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input brand name"
+            //             });
+            //     }
+            //     else if(!this.dosage) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input dosage"
+            //             });
+            //     }
+            //     else if(!this.quantity) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input quantity"
+            //             });
+            //     }
+            //     else if(!this.formulation) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input formulation"
+            //             });
+            //     }
+            //     else if(!this.frequency) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input frequency"
+            //             });
+            //     }
+            //     else if(!this.duration) {
+            //         Lobibox.alert("error",
+            //             {
+            //                 msg: "Please input duration"
+            //             });
+            //     }
+            //     else {
+            //         const updatePrescription = {
+            //             code : this.code,
+            //             generic_name: this.generic_name,
+            //             brandname: this.brandname,
+            //             dosage: this.dosage,
+            //             quantity: this.quantity,
+            //             formulation: this.formulation,
+            //             frequency: this.frequency,
+            //             duration: this.duration,
+            //             form_type: this.form_type,
+            //             activity_id: this.activity_id
+            //         };
+            //         axios
+            //             .post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription)
+            //             .then(response => {
+            //             console.log(response)
+            //             if(response.data === 'success') {
+            //                 $("#prescriptionModal").modal('hide');
+            //                 this.prescriptionSubmitted = true
+            //                 Lobibox.alert("success",
+            //                     {
+            //                         msg: "Successfully submitted prescription!"
+            //                     });
+            //             } else {
+            //                 Lobibox.alert("error", {
+            //                         msg: "Error in server!"
+            //                 });
+            //             }
+            //         })
+
+            //         .catch((error) => {
+            //                 console.error(error);
+            //                 Lobibox.alert("error", {
+            //                     msg: "An error occurred while saving the prescription.",
+            //                 });
+            //             });
+
+            //     }
+            // },
+
+            //------------------------------------------------------------------
+            
+            addEmptyPrescriptionBlock() {
+                const emptyPrescription = {
+                    generic_name: "",
+                    brandname: "",
+                    dosage: "",
+                    quantity: "",
+                    formulation: "",
+                    frequency: "",
+                    duration: "",
+                };
+                this.prescriptions.push(emptyPrescription);
+            },
+           
+            deletePrescription(index) {
+                this.prescriptions.splice(index, 1);
+            },
+
+            //------------------------------------------------------------------
+
+            savePrescriptions() {
+
+                function checkRequiredProperties(obj) {
+                    if (!obj.generic_name) {
+                        Lobibox.alert("error", {
+                            msg: "Please input generic name",
                         });
-                }
-                else if(!this.brandname) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input brand name"
-                        });
-                }
-                else if(!this.dosage) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input dosage"
-                        });
-                }
-                else if(!this.quantity) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input quantity"
-                        });
-                }
-                else if(!this.formulation) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input formulation"
-                        });
-                }
-                else if(!this.frequency) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input frequency"
-                        });
-                }
-                else if(!this.duration) {
-                    Lobibox.alert("error",
-                        {
-                            msg: "Please input duration"
-                        });
-                }
-                else {
-                    const updatePrescription = {
-                        code : this.code,
-                        generic_name: this.generic_name,
-                        dosage: this.dosage,
-                        formulation: this.formulation,
-                        brandname: this.brandname,
-                        frequency: this.frequency,
-                        duration: this.duration,
-                        quantity: this.quantity,
-                        form_type: this.form_type,
-                        activity_id: this.activity_id
+                        return false;
                     }
-                    axios.post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription).then(response => {
-                        console.log(response)
-                        if(response.data === 'success') {
-                            $("#prescriptionModal").modal('hide');
-                            this.prescriptionSubmitted = true
-                            Lobibox.alert("success",
-                                {
-                                    msg: "Successfully submitted prescription!"
-                                });
-                        } else {
-                            Lobibox.alert("error",
-                                {
-                                    msg: "Error in server!"
-                                });
-                        }
-                    });
+                    else if (!obj.brandname) {
+                        Lobibox.alert("error", {
+                            msg: "Please input brandname",
+                        });
+                        return false;
+                    }
+                    else if (!obj.dosage) {
+                        Lobibox.alert("error", {
+                            msg: "Please input dosage",
+                        });
+                        return false;
+                    }
+                    else if (!obj.quantity) {
+                        Lobibox.alert("error", {
+                            msg: "Please input quantity",
+                        });
+                        return false;
+                    }
+                    else if (!obj.formulation) {
+                        Lobibox.alert("error", {
+                            msg: "Please input formulation",
+                        });
+                        return false;
+                    }
+                    else if (!obj.frequency) {
+                        Lobibox.alert("error", {
+                            msg: "Please input frequency",
+                        });
+                        return false;
+                    }
+                    else if (!obj.duration) {
+                        Lobibox.alert("error", {
+                            msg: "Please input duration",
+                        });
+                        return false;
+                    }
+
+                    return true;
                 }
-            },
 
+                if (!checkRequiredProperties(this)) {
+                    return;
+                }
 
+                for (const prescription of this.prescriptions) {
+                    if (!checkRequiredProperties(prescription)) {
+                        return;
+                    }
+                }
 
-            addPrescriptionField() {
-                // Add a new prescription field
-                this.prescriptions.push({
-                    generic_name: '',
-                    brandname: '',
-                    dosage: '',
-                    quantity: '',
-                    formulation: '',
-                    frequency: '',
-                    duration: ''
+                const combinedPrescriptions = {
+                    singlePrescription: {
+                    generic_name: this.generic_name,
+                    brandname: this.brandname,
+                    dosage: this.dosage,
+                    quantity: this.quantity,
+                    formulation: this.formulation,
+                    frequency: this.frequency,
+                    duration: this.duration,
+                    activity_id: this.activity_id,
+                    code: this.code
+                    },
+                    multiplePrescriptions: this.prescriptions,
+                };
+                Lobibox.alert("success", {
+                    msg: "Prescriptions saved successfully!",
                 });
-            },
+                $("#prescriptionModal").modal("hide");
 
+                console.log('Combined Prescription Data:', combinedPrescriptions);
+
+                axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)
+                    .then(response => {
+                        console.log("Prescription submitted successfully", response.data);
+                        })
+                    .catch(error => {
+                        console.error("Error submitting prescription", error);
+                    });
+
+                // Reset the form fields and prescriptions array after saving
+                this.generic_name = '';
+                this.brandname = '';
+                this.dosage = '';
+                this.quantity = null;
+                this.formulation = '';
+                this.frequency = '';
+                this.duration = '';
+                this.prescriptions = [];
+            },
+            //------------------------------------------------------------------
+
+
+            //------------------------------------------------------------------
 
 
         },

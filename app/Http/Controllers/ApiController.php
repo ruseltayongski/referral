@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\Session;
 use Matrix\Exception;
 use App\Events\SocketReco;
 
+use App\PrescribedPrescription;
+
 class ApiController extends Controller
 {
     public function testSocketReferred() {
@@ -236,6 +238,7 @@ class ApiController extends Controller
             $patient_form = PregnantForm::where("code",$request->code)->first();
             $patient_id = $patient_form->patient_woman_id;
         }
+
         if($patient_form) {
             $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
 
@@ -261,16 +264,9 @@ class ApiController extends Controller
                     'department_id' => $tracking->department_id,
                     'referring_md' => $tracking->referring_md,
                     'action_md' => $user->id,
-                    'generic_name' => $request->generic_name,
-                    'brandname' => $request->brandname,
-                    'dosage' => $request->dosage,
-                    'quantity' => $request->quantity,
-                    'formulation' => $request->formulation,
-                    'frequency' => $request->frequency,
-                    'duration' => $request->duration,
                     'status' => 'prescription'
                 );
-                Activity::create($activity); //new prescription in activity
+                Activity::create($activity); //new prescription in activity 
             }
 
             $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
@@ -311,6 +307,95 @@ class ApiController extends Controller
             return $response;
         }
     }
+
+    //-------------------------------------------------------------------
+
+    public function savePrescriptions(Request $request) {
+        $validatedData = $request->validate([
+            'singlePrescription.generic_name' => 'required|string',
+            'singlePrescription.brandname' => 'required|string',
+            'singlePrescription.dosage' => 'required|string',
+            'singlePrescription.quantity' => 'required|integer',
+            'singlePrescription.formulation' => 'required|string',
+            'singlePrescription.frequency' => 'required|string',
+            'singlePrescription.duration' => 'required|string',
+            'multiplePrescriptions' => 'array',
+        ]);
+
+        $singlePrescription = $validatedData['singlePrescription'];
+        $multiplePrescriptions = $validatedData['multiplePrescriptions'];
+        
+        $this->saveSinglePrescription($singlePrescription);
+
+        $this->multipleSavePrescriptions($multiplePrescriptions);
+
+        return response()->json(['message' => 'Prescriptions saved successfully'], 200);
+    }
+    //--------------------------------------------------------------------------
+
+    private function saveSinglePrescription($singlePrescription) {
+
+        
+
+        //===========================================================================
+        if(!empty($singlePrescription)) {
+            $tracking = Tracking::where("code",$singlePrescription['code'])->first();
+
+            $activity_prescription = new Activity();
+            $activity_prescription->code = $singlePrescription['code'];
+            $activity_prescription->status = "prescription1";
+            $activity_prescription->save();
+
+            $activity_code = Activity::latest()->first();
+                $prescribed = new PrescribedPrescription();
+                
+                $prescribed::create($singlePrescription);
+
+                $prescribed->prescribed_activity_id = $activity_code->id;
+                $prescribed->code = $activity_code->code;
+                // $prescribed->generic_name = $singlePrescription['generic_name'];
+                // $prescribed->brandname = $singlePrescription['brandname'];
+                // $prescribed->dosage = $singlePrescription['dosage'];
+                // $prescribed->quantity = $singlePrescription['quantity'];
+                // $prescribed->formulation = $singlePrescription['formulation'];
+                // $prescribed->frequency = $singlePrescription['frequency'];
+                // $prescribed->duration = $singlePrescription['duration'];
+                //$prescribed->save();
+        }
+
+        // PrescribedPrescription::create($singlePrescription);
+    }
+    //--------------------------------------------------------------------
+
+    private function multipleSavePrescriptions($multiplePrescriptions) {
+        if($multiplePrescription) {
+            $activity_prescription = new Activity();
+            $activity_prescription->status = "prescription1";
+            $activity_code = Activity::select('code', 'id')->latest();
+
+            foreach($multiplePrescriptions as $prescription) {
+                $prescribed = new PrescribedPrescription();
+                $prescribed->prescribed_activity_id = $prescription->id;
+                $prescribed->code = $prescribed->code;
+                $prescribed->generic_name = $request->generic_name;
+                $prescribed->brandname = $request->brandname;
+                $prescribed->dosage = $request->dosage;
+                $prescribed->quantity = $request->quantity;
+                $prescribed->formulation = $request->formulation;
+                $prescribed->frequency = $request->frequency;
+                $prescribed->duration = $request->duration;
+                $prescribed->save();
+            } 
+        }
+        // foreach ($multiplePrescriptions as $prescription) {
+        //     PrescribedPrescription::create($prescription);
+        // }
+    }
+
+    //-------------------------------------------------------------------
+
+   
+
 
     public function patientTreated(Request $request) {
         $user = Session::get('auth');
@@ -586,8 +671,7 @@ class ApiController extends Controller
         return $activity ? json_encode(true) : json_encode(false);
     }
 
-    public function api(Request $request)
-    {
+    public function api(Request $request) {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 
