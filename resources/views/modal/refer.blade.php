@@ -140,6 +140,7 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
                 <hr />
+                dd($follow_track->id);
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                     <input type="hidden" name="code" id="telemedicine_followup_code" value="">
                     <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->

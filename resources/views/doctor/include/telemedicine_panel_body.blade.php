@@ -166,7 +166,7 @@
             </div> --}}
         </div>
     </div>
-
+ 
     @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
             <?php
@@ -303,49 +303,90 @@
             <div class="container">
             <p class="mt-0">
                 <?php
-                //  $userActivities = $user->activities;
-                // $userActivities = \App\Activity::where('id',$follow_track->id)
-                //                                 ->where('code', $follow_track->code)
-                //                                 ->get();
-                // $userActivities = $user->activities()->where('id', $follow_track->id)
-                //                                       ->where('code', $follow_track->code)
-                //                                        ->get();
-
-              // dd($position_count == "1");
-            if($position_count)
-             {
-                $userActivities = $user->activities()->where('id', $referred_track->id)
-                    ->where('code', $follow_track->code)
-                    ->get();
-                foreach ($userActivities as $activity)
-                {
-                    //dd($activity);
-                        $fileNames = explode('|', $activity->generic_name);
-                        foreach ($fileNames as $fileName) 
-                        {
-                            $fileType =  pathinfo($fileName, PATHINFO_EXTENSION);
-                            $filePath =  public_path() . '/fileupload/' . $user->username . '/' . $fileName;
-                        // dd($filePath);
-                            // Display the link with the appropriate icon and download/view attributes
-                            echo '<a href="' . $filePath . '" target="_blank">' . $fileName . '</a>';
-                            echo '&nbsp;';
-                        //    echo '<a href="' . route('file.download', ['filename' => urlencode($fileName)]) . '" download>' . $fileName . '</a>';
-                        //    echo '&nbsp;';
-                        //    echo '</a>';
-                            
-                        }
-                    }
-
-                }else{
-                    echo "no position";
-                }
                
-                
-               ?>
-            </p>
-        </div>
-        @endforeach
-    @endif
+               
+                    $userActivities = $user->activities()->where('id', $follow_track->id)
+                        ->where('code', $follow_track->code)
+                        ->get();
+                    // foreach ($userActivities as $activity)
+                    // {
+                    //     //dd($activity);
+                    //         $fileNames = explode('|', $activity->generic_name);
+                    //         foreach ($fileNames as $fileName) 
+                    //         {
+                    //             $fileType =  pathinfo($fileName, PATHINFO_EXTENSION);
+                    //             $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
+                    //             // dd($filePath);
+                    //             // Display the link with the appropriate icon and download/view attributes 
+                    //             echo '<a href="' . $filePath . '" target="_blank" download="' . $fileName . '">' . $fileName . '</a>';
+                    //             echo '&nbsp;';
+                    //        <? //    echo '<a href="' . route('file.download', ['filename' => urlencode($fileName)]) . '" download>' . $fileName . '</a>';
+                    //         //    echo '&nbsp;';
+                    //         //    echo '</a>';
+                                
+                    //         }
+                    //     }
+                ?>
+                    @foreach ($userActivities as $activity)
+                        
+                        <?php  $fileNames = explode('|', $activity->generic_name); ?>
+                    
+
+                        @foreach ($fileNames as $fileName)
+                            <?php
+                                $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+                                $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
+                        ?>
+
+                            <a href="javascript:void(0);" onclick="isPDF('{{$filePath}}')"  onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">{{ $fileName }}</a>
+                            &nbsp;
+                        @endforeach
+                @endforeach
+                </p>
+            </div>
+            @endforeach
+        @endif
+
+
+    <script>
+
+      function isPDF(filePath){
+        console.log('hello',filePath);
+            return filePath.toLowerCase().endsWith('.pdf');
+      }
+
+        function openFileViewer(filePath, fileName) {
+            console.log('my path',filePath);
+            var modalContent = `
+                <div>
+                   ${isPDF(filePath) ?
+                `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
+                `<img src="${filePath}" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;" />`
+            }
+                    <br />
+                    <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
+                    <button class="btn btn-outline-success">close</button>
+                </div>
+            `;
+            var modal = document.createElement('div');
+            modal.innerHTML = modalContent;
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.zIndex = '9999';
+
+            document.body.appendChild(modal);
+            modal.onclick = function () {
+                modal.parentNode.removeChild(modal);
+            };
+        }
+    </script>
+
+
+
     @if(count($redirected_track) > 0)
         @foreach($redirected_track as $redirect_track)
             <?php

@@ -75,7 +75,7 @@
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemedicine_followup_code").val(code);
-        $("#telemedicine_followup_id").val(referred_id); //I add this to get the followup_id jondy
+        $("#telemedicine_followup_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         if(alreadyFollowUp) {

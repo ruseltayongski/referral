@@ -419,11 +419,11 @@ class ApiController extends Controller
                 $filePaths[] = $filepath . '/' . $originalName;
                 $fileNames2[] = $originalName;
             }
-        
+            
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->first();
-        
+             
             json_encode($filePaths);
             $activityFile->generic_name = implode('|', $fileNames2);
            // $activityFile->status = "followup";
