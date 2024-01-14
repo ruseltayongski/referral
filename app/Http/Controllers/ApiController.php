@@ -386,9 +386,9 @@ class ApiController extends Controller
         }
     //  ---------------------jondy changes--------------------------->
     
-          $request->validate([ //this validation identify the type of file to upload
-            'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
-          ]);
+        //   $request->validate([ //this validation identify the type of file to upload
+        //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
+        //   ]);
 
         if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
@@ -422,12 +422,13 @@ class ApiController extends Controller
             
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
+                ->orderby('id')
                 ->first();
-             
-            json_encode($filePaths);
-            $activityFile->generic_name = implode('|', $fileNames2);
-           // $activityFile->status = "followup";
-            $activityFile->save();
+        
+                json_encode($filePaths);
+                $activityFile->generic_name = implode('|', $fileNames2);
+                $activityFile->status = "followup";
+                $activityFile->save();
          
         }
 

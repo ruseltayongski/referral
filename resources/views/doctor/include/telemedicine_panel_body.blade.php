@@ -166,8 +166,8 @@
             </div> --}}
         </div>
     </div>
- 
-    @if(count($followup_track) > 0)
+
+   @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
             <?php
             $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
@@ -301,16 +301,25 @@
                 </div>
             </div>
             <div class="container">
-            <p class="mt-0">
+             <p class="mt-0">
                 <?php
-               
-               
-                    $userActivities = $user->activities()->where('id', $follow_track->id)
-                        ->where('code', $follow_track->code)
-                        ->get();
+       
+                        $userActivities = $user->activities()->where('id', $follow_track->id)
+                            ->where('code', $follow_track->code)
+                            ->get();
+                  
+                    // $userActivities = $user->activities()
+                    //     ->where(function ($query) use ($follow_track, $referred_track){
+                    //         $query->where('id', $referred_track->id)
+                    //             ->orWhere('id',  $follow_track->id);
+                    //     })
+                    //      ->where('code', $follow_track->code)
+                    //      ->get();
+
+                       
                     // foreach ($userActivities as $activity)
                     // {
-                    //     //dd($activity);
+                    //     //dd($activity); //$referred_track->id $follow_track->id
                     //         $fileNames = explode('|', $activity->generic_name);
                     //         foreach ($fileNames as $fileName) 
                     //         {
@@ -331,22 +340,20 @@
                         
                         <?php  $fileNames = explode('|', $activity->generic_name); ?>
                     
-
                         @foreach ($fileNames as $fileName)
                             <?php
                                 $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
                                 $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
                         ?>
-
-                            <a href="javascript:void(0);" onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">{{ $fileName }}</a>
-                            &nbsp;
+                              <a href="javascript:void(0);" onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">
+                              {{ $fileName }}</a>
+                              &nbsp;  
                         @endforeach
                 @endforeach
                 </p>
             </div>
-            @endforeach
-        @endif
-
+        @endforeach
+     @endif  
 
     <script>
 
@@ -361,11 +368,17 @@
                 <div>
                    ${isPDF(filePath) ?
                 `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
-                `<img src="${filePath}" style="width: 50%; height: 50%; display: block; margin: 0 auto;" />`
+                `
+                <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+                    <img src="${filePath}" style="width: 30%; height: 60%; display: block; margin: 0 auto;" />
+                </div>
+                `
             }
                     <br />
-                    <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
-                    <button class="btn btn-outline-success">close</button>
+                    <div style="justify-content: center; align-items: center;">
+                       <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
+                       <button class="btn btn-outline-success">close</button>
+                    </div>
                 </div>
             `;
             var modal = document.createElement('div');
@@ -497,6 +510,7 @@
             </div>
         @endforeach
     @endif
+
     @if(count($activities) > 0)
         <?php $first = 0;
         $latest_act = \App\Activity::where('code',$row->code)->latest('created_at')->first();
