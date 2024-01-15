@@ -427,7 +427,7 @@ class ApiController extends Controller
         
                 json_encode($filePaths);
                 $activityFile->generic_name = implode('|', $fileNames2);
-                $activityFile->status = "followup";
+                //$activityFile->status = "followup";
                 $activityFile->save();
          
         }

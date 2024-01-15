@@ -72,7 +72,23 @@
     $followup_track = \App\Activity::where("code",$row->code)
         ->where("status","followup")
         ->get();
+        //dd($followup_track);
 
+        // $followup_track = \App\Activity::where("code", $row->code)
+        // ->where(function ($query) {
+        // $query->where("status", "followup")
+        //       ->orWhere("status", "referred");
+        // })
+        // ->where("dosage", "!=", null)
+        // ->get();
+
+//         $followup_track = \App\Activity::where("code", $row->code)
+//         ->where(function ($query) {
+//         $query->where("status", "followup")
+//               ->orWhere("status", "referred");
+//         })
+//         ->get();
+// dd($followup_track);
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
     $followup_accepted_track = 0;
@@ -169,6 +185,7 @@
 
    @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
+    
             <?php
             $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
             $position_count++;
@@ -304,10 +321,12 @@
              <p class="mt-0">
                 <?php
        
-                        $userActivities = $user->activities()->where('id', $follow_track->id)
-                            ->where('code', $follow_track->code)
-                            ->get();
-                  
+                        $userActivities = $user->activities()->where('code', $follow_track->code)
+                            ->where('id',$follow_track->id)
+                                ->orWhere('id', $referred_track->id)
+                                    ->get();
+                     
+                    dd($userActivities);
                     // $userActivities = $user->activities()
                     //     ->where(function ($query) use ($follow_track, $referred_track){
                     //         $query->where('id', $referred_track->id)
@@ -335,20 +354,34 @@
                                 
                     //         }
                     //     }
-                ?>
-                    @foreach ($userActivities as $activity)
-                        
-                        <?php  $fileNames = explode('|', $activity->generic_name); ?>
                     
-                        @foreach ($fileNames as $fileName)
-                            <?php
-                                $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-                                $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
-                        ?>
-                              <a href="javascript:void(0);" onclick="openFileViewer('{{ $filePath }}', '{{ $fileName }}')">
-                              {{ $fileName }}</a>
-                              &nbsp;  
-                        @endforeach
+
+                ?>
+                    
+                @foreach ($userActivities as $activity)
+                    <?php
+                    $fileNames = explode('|', $activity->generic_name);
+
+                    // Separate files from $referred_track and $follow_track
+                    $referredFiles = [];
+                    $followFiles = [];
+
+                    foreach ($fileNames as $fileName) {
+                        if (in_array($fileName, $referred_track_filenames)) {
+                            $referredFiles[] = $fileName;
+                        } else {
+                            $followFiles[] = $fileName;
+                        }
+                    }
+                    ?>
+
+                    <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFiles[0]) }}', '{{ $referredFiles[0] }}')">
+                        {{ $referredFiles[0] }}</a> <!-- Display in 2nd position -->
+
+                    @foreach ($followFiles as $followFile)
+                        <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $followFile) }}', '{{ $followFile }}')">
+                            {{ $followFile }}</a>&nbsp; <!-- Display in subsequent positions -->
+                    @endforeach
                 @endforeach
                 </p>
             </div>
@@ -370,14 +403,13 @@
                 `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
                 `
                 <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                    <img src="${filePath}" style="width: 30%; height: 60%; display: block; margin: 0 auto;" />
+                    <img src="${filePath}" style="height: 60%; display: block; margin: 0 auto;" />
                 </div>
                 `
             }
                     <br />
-                    <div style="justify-content: center; align-items: center;">
+                    <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
                        <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
-                       <button class="btn btn-outline-success">close</button>
                     </div>
                 </div>
             `;
@@ -397,7 +429,6 @@
             };
         }
     </script>
-
 
 
     @if(count($redirected_track) > 0)
