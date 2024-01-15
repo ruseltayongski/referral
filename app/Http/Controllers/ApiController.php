@@ -424,10 +424,11 @@ class ApiController extends Controller
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-        
+                $dosageValue = $index + 1;
                 json_encode($filePaths);
                 $activityFile->generic_name = implode('|', $fileNames2);
-                //$activityFile->status = "followup";
+                $activityFile->dosage = $dosageValue;
+
                 $activityFile->save();
          
         }

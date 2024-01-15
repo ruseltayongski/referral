@@ -320,13 +320,24 @@
             <div class="container">
              <p class="mt-0">
                 <?php
-       
+
+                        $activityFilesArray = \App\Activity::where('code', $follow_track->code)->pluck('generic_name')->toArray();
+
+                        $filenames = [];
+                        foreach ($activityFilesArray as $string) {
+                            if (!is_null($string)) {
+                                $fileArray = explode('|', $string);
+                                $filenames = array_merge($filenames, $fileArray);
+
+                                dd($filenames );
+                            }
+                        }
+
+                        $dosageValue = $index + 1;
                         $userActivities = $user->activities()->where('code', $follow_track->code)
-                            ->where('id',$follow_track->id)
-                                ->orWhere('id', $referred_track->id)
+                                ->where('dosage', $dosageValue)
                                     ->get();
-                     
-                    dd($userActivities);
+                        dd($activityFilesArray);
                     // $userActivities = $user->activities()
                     //     ->where(function ($query) use ($follow_track, $referred_track){
                     //         $query->where('id', $referred_track->id)
