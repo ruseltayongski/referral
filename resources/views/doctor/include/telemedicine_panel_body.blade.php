@@ -69,25 +69,21 @@
                 ->orWhere("status","transferred");
         })
         ->get();
-    $followup_track = \App\Activity::where("code",$row->code)
-        ->where("status","followup")
+    // $followup_track = \App\Activity::where("code",$row->code)
+    //     ->where("status","followup")
+    //         ->get();
+
+    // $followup_track = \App\Activity::where("code", $row->code)
+    //     ->where(function ($query) {
+    //         $query->where("status", "referred")
+    //         ->orWhere("status", "followup");
+    //       })
+    //         ->get(); 
+    $followup_track = \App\Activity::where("code", $row->code)
+        ->where(function ($query) {
+        $query->where("status", "followup");
+         })
         ->get();
-        //dd($followup_track);
-
-        // $followup_track = \App\Activity::where("code", $row->code)
-        // ->where(function ($query) {
-        // $query->where("status", "followup")
-        //       ->orWhere("status", "referred");
-        // })
-        // ->where("dosage", "!=", null)
-        // ->get();
-
-//         $followup_track = \App\Activity::where("code", $row->code)
-//         ->where(function ($query) {
-//         $query->where("status", "followup")
-//               ->orWhere("status", "referred");
-//         })
-//         ->get();
 // dd($followup_track);
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
@@ -319,25 +315,51 @@
             </div>
             <div class="container">
              <p class="mt-0">
-                <?php
+                    <?php
 
-                        $activityFilesArray = \App\Activity::where('code', $follow_track->code)->pluck('generic_name')->toArray();
-
-                        $filenames = [];
-                        foreach ($activityFilesArray as $string) {
-                            if (!is_null($string)) {
-                                $fileArray = explode('|', $string);
-                                $filenames = array_merge($filenames, $fileArray);
-
-                                dd($filenames );
-                            }
-                        }
-
-                        $dosageValue = $index + 1;
+                        // $activityFilesArray = \App\Activity::where('code', $follow_track->code)->pluck('generic_name')->toArray();
                         $userActivities = $user->activities()->where('code', $follow_track->code)
-                                ->where('dosage', $dosageValue)
-                                    ->get();
-                        dd($activityFilesArray);
+                             ->where('id', $follow_track->id)
+                                ->get();
+
+                        // foreach ($activityFilesArray as &$value) {
+                        //     $value = $value + 1;
+                        // }
+                        // if($followup_track == $followup_track) {
+                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
+                        //     ->where('id', $follow_track->id)
+                        //     ->get();
+                        // }
+                        // else if($followup_track == $followup_track) {
+                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
+                        //         ->where('id',$referred_track->id)
+                        //         ->get();
+                        // }
+                        // if() {
+                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
+                        //     ->where('status', 'referred')
+                        //     ->get();
+                        // }
+                        // else {
+                            // $userActivities = $user->activities()->where('code', $follow_track->code)
+                            // ->where('dosage', 1)
+                            //  ->get();
+                        //    if($follow_track->status == "referred"){
+                        //         $userActivities = $user->activities()->where("code",$follow_track->code)
+                        //         ->where("status","followup")
+                        //         ->get();
+                        //    }else if($follow_track->status == "followup"){
+                        //     $userActivities = $user->activities()->where("code",$follow_track->code)
+                        //       ->where("status","followup")
+                        //         ->get();
+                        //    }
+                       
+                       // }
+                        // $userActivities = $user->activities()->where('code', $follow_track->code)
+                        // ->where('status', 'referred')
+                        // ->get();
+                        
+                          
                     // $userActivities = $user->activities()
                     //     ->where(function ($query) use ($follow_track, $referred_track){
                     //         $query->where('id', $referred_track->id)
@@ -385,9 +407,6 @@
                         }
                     }
                     ?>
-
-                    <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFiles[0]) }}', '{{ $referredFiles[0] }}')">
-                        {{ $referredFiles[0] }}</a> <!-- Display in 2nd position -->
 
                     @foreach ($followFiles as $followFile)
                         <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $followFile) }}', '{{ $followFile }}')">
