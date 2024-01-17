@@ -349,8 +349,9 @@
                     formulation: this.formulation,
                     frequency: this.frequency,
                     duration: this.duration,
+                    code: this.code,
                     activity_id: this.activity_id,
-                    code: this.code
+                    form_type: this.form_type,
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
@@ -379,10 +380,6 @@
                 this.duration = '';
                 this.prescriptions = [];
             },
-            //------------------------------------------------------------------
-
-
-            //------------------------------------------------------------------
 
 
         },

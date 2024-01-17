@@ -19223,8 +19223,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           formulation: this.formulation,
           frequency: this.frequency,
           duration: this.duration,
+          code: this.code,
           activity_id: this.activity_id,
-          code: this.code
+          form_type: this.form_type
         },
         multiplePrescriptions: this.prescriptions
       };
@@ -19248,8 +19249,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.frequency = '';
       this.duration = '';
       this.prescriptions = [];
-    } //------------------------------------------------------------------
-    //------------------------------------------------------------------
+    }
   }
 });
 
