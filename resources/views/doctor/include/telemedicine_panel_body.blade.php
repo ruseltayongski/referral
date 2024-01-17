@@ -394,7 +394,7 @@
                     <br />
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
                         <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download ${fileNames}</a>
-                        <a href=""  class="btn btn-outline-primary">Update</a>
+                        <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}')" class="btn btn-outline-primary">Update</a>
                     </div>
                 </div>
             `;

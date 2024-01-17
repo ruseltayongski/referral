@@ -472,20 +472,12 @@ class ApiController extends Controller
         return Redirect::back();
     }
 // ----------------------I add this for controller of file view and download
-    // public function download($filename)
-    // {
-    //     dd($filename);
-    //     $user = Session::get('auth');
-    //     $file = public_path() . '/fileupload/' . $user->username . '/' . $filename;
-    //     return response()->download($file);
-    // }
+    public function patientFollowUpFileupdate(Request $request){
 
-    // public function view($filename){
-    //     $user = Session::get('auth');
-    //     $file = public_path() . '/fileupload/' . $user->username . '/' . $filename;
+        
 
-    //     return response()-> file($file);
-    // }
+    }
+
 // ----------------------I add this for controller of file view and download
 
     public function patientEndCycle(Request $request) {
