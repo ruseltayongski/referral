@@ -407,14 +407,14 @@ class ApiController extends Controller
                 }
                 
               // Check if the file is an image before applying compression
-             if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) {
-                $image = Image::make($file);
-                $image->resize(800, null, function ($constraint){ //this will compress the photo
-                       $constraint->aspectRatio();
-                })->save($filepath . '/' . $originalName, 80);
-              } else{
+            //  if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) {
+            //     $image = Image::make($file);
+            //     $image->resize(800, null, function ($constraint){ //this will compress the photo
+            //            $constraint->aspectRatio();
+            //     })->save($filepath . '/' . $originalName, 80);
+            //   } else{
                 $file->move($filepath, $originalName);// the pdf file will move here
-              }
+              //}
                 //$file->move($filepath, $originalName);
                 $filePaths[] = $filepath . '/' . $originalName;
                 $fileNames2[] = $originalName;

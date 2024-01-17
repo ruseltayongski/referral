@@ -62,29 +62,18 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","end")
         ->exists();
-
     $redirected_track = \App\Activity::where("code",$row->code)
         ->where(function($query) {
             $query->where("status","redirected")
                 ->orWhere("status","transferred");
         })
         ->get();
-    // $followup_track = \App\Activity::where("code",$row->code)
-    //     ->where("status","followup")
-    //         ->get();
-
-    // $followup_track = \App\Activity::where("code", $row->code)
-    //     ->where(function ($query) {
-    //         $query->where("status", "referred")
-    //         ->orWhere("status", "followup");
-    //       })
-    //         ->get(); 
     $followup_track = \App\Activity::where("code", $row->code)
         ->where(function ($query) {
-        $query->where("status", "followup");
-         })
+            $query->where("status", "followup");
+        })
         ->get();
-// dd($followup_track);
+
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
     $followup_accepted_track = 0;
@@ -107,6 +96,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
+
     <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
@@ -179,70 +169,71 @@
         </div>
     </div>
 
+
    @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
-    
             <?php
-            $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
-            $position_count++;
-            $follow_seen_track = \App\Seen::where("code",$follow_track->code)
-                ->where("facility_id",$follow_track->referred_to)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->exists();
-            $follow_queued_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_to",$follow_track->referred_to)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","queued")
-                ->exists();
-            $follow_accepted_hold = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_to",$follow_track->referred_to)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","accepted");
-            $follow_accepted_track = $follow_accepted_hold->exists();
-            $follow_rejected_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_to",$follow_track->referred_to)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","rejected")
-                ->exists();
-            $follow_cancelled_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_to",$follow_track->referred_to)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","cancelled")
-                ->exists();
-            $follow_examined_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","examined")
-                ->exists();
-            $follow_prescription_hold = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","prescription");
-            $follow_prescription_track = $follow_prescription_hold->exists();
-            $follow_upward_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","upward")
-                ->exists();
-            $follow_redirected_track = \App\Activity::where("code",$follow_track->code)
-                ->where("status","redirected")
-                ->exists();
-            $follow_treated_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">=",$follow_track->created_at)
-                ->where("status","treated")
-                ->exists();
-            $follow_followup_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">",$follow_track->created_at)
-                ->where("status","followup")
-                ->exists();
-            $follow_end_track = \App\Activity::where("code",$follow_track->code)
-                ->where("referred_from",$follow_track->referred_from)
-                ->where("created_at",">",$follow_track->created_at)
-                ->where("status","end")
-                ->exists();
+                $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
+                $position_count++;
+                $follow_seen_track = \App\Seen::where("code",$follow_track->code)
+                    ->where("facility_id",$follow_track->referred_to)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->exists();
+                $follow_queued_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_to",$follow_track->referred_to)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","queued")
+                    ->exists();
+                $follow_accepted_hold = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_to",$follow_track->referred_to)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","accepted");
+                $follow_accepted_track = $follow_accepted_hold->exists();
+                $follow_rejected_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_to",$follow_track->referred_to)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","rejected")
+                    ->exists();
+                $follow_cancelled_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_to",$follow_track->referred_to)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","cancelled")
+                    ->exists();
+                $follow_examined_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","examined")
+                    ->exists();
+                $follow_prescription_hold = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","prescription");
+                $follow_prescription_track = $follow_prescription_hold->exists();
+                $follow_upward_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","upward")
+                    ->exists();
+                $follow_redirected_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("status","redirected")
+                    ->exists();
+                $follow_treated_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">=",$follow_track->created_at)
+                    ->where("status","treated")
+                    ->exists();
+                $follow_followup_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">",$follow_track->created_at)
+                    ->where("status","followup")
+                    ->exists();
+                $follow_end_track = \App\Activity::where("code",$follow_track->code)
+                    ->where("referred_from",$follow_track->referred_from)
+                    ->where("created_at",">",$follow_track->created_at)
+                    ->where("status","end")
+                    ->exists();
             ?>
+
             <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
@@ -313,136 +304,101 @@
                     </div> --}}
                 </div>
             </div>
-            <div class="container">
-             <p class="mt-0">
+
+            <div class="container" style="width: 800px;"  >
+                <p class="mt-0">
                     <?php
+                        $referredActivities = $user->activities()
+                            ->where('code', $follow_track->code) 
+                            ->where('id', $referred_track->id)
+                            ->get();
 
-                        // $activityFilesArray = \App\Activity::where('code', $follow_track->code)->pluck('generic_name')->toArray();
-                        $userActivities = $user->activities()->where('code', $follow_track->code)
-                             ->where('id', $follow_track->id)
-                                ->get();
-
-                        // foreach ($activityFilesArray as &$value) {
-                        //     $value = $value + 1;
-                        // }
-                        // if($followup_track == $followup_track) {
-                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
-                        //     ->where('id', $follow_track->id)
-                        //     ->get();
-                        // }
-                        // else if($followup_track == $followup_track) {
-                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
-                        //         ->where('id',$referred_track->id)
-                        //         ->get();
-                        // }
-                        // if() {
-                        //     $userActivities = $user->activities()->where('code', $follow_track->code)
-                        //     ->where('status', 'referred')
-                        //     ->get();
-                        // }
-                        // else {
-                            // $userActivities = $user->activities()->where('code', $follow_track->code)
-                            // ->where('dosage', 1)
-                            //  ->get();
-                        //    if($follow_track->status == "referred"){
-                        //         $userActivities = $user->activities()->where("code",$follow_track->code)
-                        //         ->where("status","followup")
-                        //         ->get();
-                        //    }else if($follow_track->status == "followup"){
-                        //     $userActivities = $user->activities()->where("code",$follow_track->code)
-                        //       ->where("status","followup")
-                        //         ->get();
-                        //    }
-                       
-                       // }
-                        // $userActivities = $user->activities()->where('code', $follow_track->code)
-                        // ->where('status', 'referred')
-                        // ->get();
-                        
-                          
-                    // $userActivities = $user->activities()
-                    //     ->where(function ($query) use ($follow_track, $referred_track){
-                    //         $query->where('id', $referred_track->id)
-                    //             ->orWhere('id',  $follow_track->id);
-                    //     })
-                    //      ->where('code', $follow_track->code)
-                    //      ->get();
-
-                       
-                    // foreach ($userActivities as $activity)
-                    // {
-                    //     //dd($activity); //$referred_track->id $follow_track->id
-                    //         $fileNames = explode('|', $activity->generic_name);
-                    //         foreach ($fileNames as $fileName) 
-                    //         {
-                    //             $fileType =  pathinfo($fileName, PATHINFO_EXTENSION);
-                    //             $filePath = asset('public/fileupload/' . $user->username . '/' . $fileName);
-                    //             // dd($filePath);
-                    //             // Display the link with the appropriate icon and download/view attributes 
-                    //             echo '<a href="' . $filePath . '" target="_blank" download="' . $fileName . '">' . $fileName . '</a>';
-                    //             echo '&nbsp;';
-                    //        <? //    echo '<a href="' . route('file.download', ['filename' => urlencode($fileName)]) . '" download>' . $fileName . '</a>';
-                    //         //    echo '&nbsp;';
-                    //         //    echo '</a>';
-                                
-                    //         }
-                    //     }
-                    
-
-                ?>
-                    
-                @foreach ($userActivities as $activity)
-                    <?php
-                    $fileNames = explode('|', $activity->generic_name);
-
-                    // Separate files from $referred_track and $follow_track
-                    $referredFiles = [];
-                    $followFiles = [];
-
-                    foreach ($fileNames as $fileName) {
-                        if (in_array($fileName, $referred_track_filenames)) {
-                            $referredFiles[] = $fileName;
-                        } else {
-                            $followFiles[] = $fileName;
-                        }
-                    }
+                        $followActivities = $user->activities()
+                            ->where('code', $follow_track->code)
+                            ->where("status","followup")
+                            ->get();   
                     ?>
-
-                    @foreach ($followFiles as $followFile)
-                        <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $followFile) }}', '{{ $followFile }}')">
-                            {{ $followFile }}</a>&nbsp; <!-- Display in subsequent positions -->
+                    
+                    @foreach ($position as $index => $pos)
+                        @if ($index == 1)
+                            <?php $referredFiles = []; ?>
+                            @foreach ($referredActivities as $referredActivity)
+                                <?php
+                                $fileNames = explode('|', $referredActivity->generic_name);
+                                $referredFiles = array_merge($referredFiles, $fileNames);
+                                ?>
+                            @endforeach
+                            @if ($pos == $position[$position_count])
+                                   @foreach ($fileNames as $referredFile)
+                                        <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                            {{ $referredFile }}
+                                        </a>&nbsp;
+                                    @endforeach
+                            @endif
+                        @elseif ($index >= 2)
+                            <?php $followFiles = []; ?>
+                            @if (isset($followActivities[$index - 2]))
+                                <?php
+                                $followActivity = $followActivities[$index - 2];
+                                $fileNames = explode('|', $followActivity->generic_name);
+                                $followFiles = array_merge($followFiles, $fileNames);
+                                ?>
+                            @endif
+                            @if ($pos == $position[$position_count])
+                                    @foreach ($fileNames as $referredFile)   
+                                    <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                            {{ $referredFile }}
+                                        </a>&nbsp;
+                                    @endforeach
+                            @endif
+                        @endif
                     @endforeach
-                @endforeach
+                  
                 </p>
             </div>
+
         @endforeach
-     @endif  
+    @endif  
 
     <script>
-
-      function isPDF(filePath){
-        console.log('hello',filePath);
-            return filePath.toLowerCase().endsWith('.pdf'); 
+      function isPDF(referredFile){
+        console.log('hello', referredFile);
+            return referredFile.toLowerCase().endsWith('.pdf'); 
       }
 
-        function openFileViewer(filePath, fileName) {
-            console.log('my path',filePath);
+        //---------------------------------------------------------------------------------------------------
+        function openFileViewer(baseUrl, fileNames) {
+            console.log('my path', baseUrl);
+            
+            // Split the file names by pipe character and encode each part
+            var encodedFileNames = fileNames.split('|').map(function (part) {
+                return encodeURIComponent(part.trim());
+            });
+
+            // Join the encoded file names with pipe character to reconstruct the URL
+            var encodedUrl = encodedFileNames.join('|');
+
+            // Construct the full URL
+            var fullUrl = baseUrl + '/' + encodedUrl;
+           console.log("full url", fullUrl);
             var modalContent = `
                 <div>
-                   ${isPDF(filePath) ?
-                `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
-                `
-                <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                    <img src="${filePath}" style="height: 60%; display: block; margin: 0 auto;" />
-                </div>
-                `
-            }
+                    ${isPDF(baseUrl) ?
+                        `<embed src="${baseUrl}" type="application/pdf" width="100%" height="600px" />` :
+                        `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+                            <img src="${baseUrl}" style="height: 60%; display: block; margin: 0 auto;" />
+                        </div>
+                        `
+                    }
                     <br />
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
-                       <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
+                        <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download ${fileNames}</a>
+                        <a href=""  class="btn btn-outline-primary">Update</a>
                     </div>
                 </div>
             `;
+
             var modal = document.createElement('div');
             modal.innerHTML = modalContent;
             modal.style.position = 'fixed';
@@ -454,10 +410,49 @@
             modal.style.zIndex = '9999';
 
             document.body.appendChild(modal);
+
             modal.onclick = function () {
                 modal.parentNode.removeChild(modal);
             };
         }
+
+
+        //---------------------------------------------------------------------------------------------------
+        // function openFileViewer(filePath, fileName) {
+        //     console.log('my path',filePath);
+        //     var modalContent = `
+        //         <div>
+        //            ${isPDF(filePath) ?
+        //         `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
+        //         `
+        //         <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+        //             <img src="${filePath}" style="height: 60%; display: block; margin: 0 auto;" />
+        //         </div>
+        //         `
+        //     }
+        //             <br />
+        //             <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
+        //                <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
+        //             </div>
+        //         </div>
+
+                
+        //     `;
+        //     var modal = document.createElement('div');
+        //     modal.innerHTML = modalContent;
+        //     modal.style.position = 'fixed';
+        //     modal.style.top = '0';
+        //     modal.style.left = '0';
+        //     modal.style.width = '100%';
+        //     modal.style.height = '100%';
+        //     modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+        //     modal.style.zIndex = '9999';
+
+        //     document.body.appendChild(modal);
+        //     modal.onclick = function () {
+        //         modal.parentNode.removeChild(modal);
+        //     };
+        // }
     </script>
 
 

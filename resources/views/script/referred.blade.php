@@ -72,6 +72,16 @@
                 });
         }
     }
+    //------------------------my adding for update file uploader Follow up-----------------------------//
+
+     function editFileforFollowup()
+     {
+        $("#telemedicineFollowupFormModal").modal('show');
+             
+
+     }
+
+      //------------------------my adding for update file uploader Follow up End-----------------------------//
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemedicine_followup_code").val(code);

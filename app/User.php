@@ -22,6 +22,6 @@ class User extends Authenticatable
 
     public function activities()
     {
-        return $this->hasMany(Activity::class, 'referring_md');
+        return $this->hasMany(Activity::class, 'referring_md'   );
     }
 }
