@@ -74,16 +74,17 @@
     }
     //------------------------my adding for update file uploader Follow up-----------------------------//
 
-     function editFileforFollowup(baseUrl,fileNames)
+     function editFileforFollowup(baseUrl,fileNames,activity_id,code)
      {
-        console.log('my files',baseUrl);
+        console.log('my id:',activity_id);
+        console.log('my code:',code);
         event.preventDefault();
-
+        $("#edit_telemedicine_followup_code").val(code);
+        $("#edit_telemedicine_followup_id").val(activity_id);
         $("#selected-file-name").text(fileNames);
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineUpateFileFormModal").modal('show');
              
-
      }
      function displayFileName() {
     // Get the file input element

@@ -326,11 +326,13 @@
                                 <?php
                                 $fileNames = explode('|', $referredActivity->generic_name);
                                 $referredFiles = array_merge($referredFiles, $fileNames);
+                                $activity_id = $referredActivity->id;
+                                $activity_code = $referredActivity->code;
                                 ?>
                             @endforeach
                             @if ($pos == $position[$position_count])
                                    @foreach ($fileNames as $referredFile)
-                                        <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                        <a href="javascript:void(0);" onclick="openFileViewer('{{$activity_code}}','{{$activity_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
                                     @endforeach
@@ -346,7 +348,7 @@
                             @endif
                             @if ($pos == $position[$position_count])
                                     @foreach ($fileNames as $referredFile)   
-                                    <a href="javascript:void(0);" onclick="openFileViewer('{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                    <a href="javascript:void(0);" onclick="openFileViewer('{{$activity_code}}','{{$activity_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
                                     @endforeach
@@ -367,9 +369,8 @@
       }
 
         //---------------------------------------------------------------------------------------------------
-        function openFileViewer(baseUrl, fileNames) {
-            console.log('my path', baseUrl);
-            
+        function openFileViewer(code, id, baseUrl, fileNames) {
+          
             // Split the file names by pipe character and encode each part
             var encodedFileNames = fileNames.split('|').map(function (part) {
                 return encodeURIComponent(part.trim());
@@ -380,7 +381,7 @@
 
             // Construct the full URL
             var fullUrl = baseUrl + '/' + encodedUrl;
-           console.log("full url", fullUrl);
+          // console.log("full url", fullUrl);
             var modalContent = `
                 <div>
                     ${isPDF(baseUrl) ?
@@ -393,8 +394,8 @@
                     }
                     <br />
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
-                        <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download ${fileNames}</a>
-                        <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}')" class="btn btn-outline-primary">Update</a>
+                           <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download ${fileNames}</a>
+                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${id}')" class="btn btn-outline-primary">Update</a>
                     </div>
                 </div>
             `;
@@ -566,7 +567,7 @@
             </div>
         @endforeach
     @endif
-
+   
     @if(count($activities) > 0)
         <?php $first = 0;
         $latest_act = \App\Activity::where('code',$row->code)->latest('created_at')->first();

@@ -11,6 +11,9 @@ $facilities = \App\Facility::select('id','name')
     #file-input {
       display: none;
     }
+    #file-upload {
+      display: none;
+    }
 
     #file-label {
       background-color: #3498db;
@@ -162,28 +165,15 @@ $facilities = \App\Facility::select('id','name')
                     </div>
                     <!-- -----------------------Add file--------------------------- -->
                     <div class="form-group">
-                        
-                        <!-- <form id="upload-form" enctype="multipart/form-data"> -->
                                 <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                                 <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                            <!-- </form> -->
-                    
+    
                             <div id="file-list" class="mt-3"></div>
                     
                             <div class="preview-container" id="preview-container"></div>
                     </div>
 
                      <!-- -----------------------End of file--------------------------- -->
-                    <!-- <div class="form-group">
-                        <form id="upload-form" enctype="multipart/form-data">
-                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                        </form>
-                
-                        <div id="file-list" class="mt-3"></div>
-                
-                        <div class="preview-container" id="preview-container"></div>
-                    </div> -->
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -204,8 +194,8 @@ $facilities = \App\Facility::select('id','name')
                 <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
                 <hr />
                 <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
-                    <input type="hidden" name="code" id="telemedicine_followup_code" value="">
-                    <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="code" id="edit_telemedicine_followup_code" value="">
+                    <input type="hidden" name="followup_id" id="edit_telemedicine_followup_id" value=""><!--I add this for followup_id-->
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -223,31 +213,15 @@ $facilities = \App\Facility::select('id','name')
                             <option value="">Select Department...</option>
                         </select>
                     </div>
-                    <!-- -----------------------Add file--------------------------- -->
                     <div class="form-group">
-                        
-                        <!-- <form id="upload-form" enctype="multipart/form-data"> -->
-                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                                <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()">
-                            <!-- </form> -->
-                    
+                            <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
+                            <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" >
+
                             <div id="file-list" class="mt-3"></div>
-                    
+
                             <div class="preview-container" id="preview-container"></div>
                             <span id="selected-file-name"></span>
                     </div>
-
-                     <!-- -----------------------End of file--------------------------- -->
-                    <!-- <div class="form-group">
-                        <form id="upload-form" enctype="multipart/form-data">
-                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                        </form>
-                
-                        <div id="file-list" class="mt-3"></div>
-                
-                        <div class="preview-container" id="preview-container"></div>
-                    </div> -->
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>

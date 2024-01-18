@@ -390,7 +390,7 @@ class ApiController extends Controller
         //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
         //   ]);
 
-        if ($request->hasFile('files')) {
+       if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
             $filePaths = [];
             $fileNames2 = [];
@@ -407,7 +407,7 @@ class ApiController extends Controller
                 }
                 
               // Check if the file is an image before applying compression
-            //  if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) {
+            //  if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) { 
             //     $image = Image::make($file);
             //     $image->resize(800, null, function ($constraint){ //this will compress the photo
             //            $constraint->aspectRatio();
@@ -472,10 +472,37 @@ class ApiController extends Controller
         return Redirect::back();
     }
 // ----------------------I add this for controller of file view and download
-    public function patientFollowUpFileupdate(Request $request){
-
-        
-
+    public function patientFollowUpFileupdate(Request $request)
+    {
+        // $activity_code = $request->code;
+        // $activity_id   = $request->followup_id;
+        $uploadFiles = $request->file('files');
+     
+        if ($request->hasFile('files')) {
+            $filepath = public_path() . '/fileupload/' . $user->username;
+            $originalName = $uploadFile->getClientOriginalName();
+            dd($originalName);
+            // Check if the file already exists, and rename if necessary
+            $counter = 1;
+            while (file_exists($filepath . '/' . $originalName)) {
+                $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
+                $counter++;
+            }
+    
+            $uploadFile->move($filepath, $originalName);
+    
+            $activityFile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+    
+            $dosageValue = $index + 1;
+            $activityFile->generic_name = $originalName;
+            $activityFile->dosage = $dosageValue;
+            $activityFile->save();
+        }
+    
+    
     }
 
 // ----------------------I add this for controller of file view and download
