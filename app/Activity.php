@@ -12,7 +12,7 @@ class Activity extends Model
     // Relationship with PrescribedPrescription based on 'id' column
     public function prescribedPrescriptions()
     {
-        //return $this->hasMany(PrescribedPrescription::class, 'prescribed_activity_id', 'id');
-        return $this->hasMany(PrescribedPrescription::class, 'code', 'code');
+        return $this->hasMany(PrescribedPrescription::class, 'prescribed_activity_id', 'id');
+        //return $this->hasMany(PrescribedPrescription::class, 'code', 'code');
     }
 }

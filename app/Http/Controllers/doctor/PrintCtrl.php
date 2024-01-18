@@ -128,7 +128,10 @@ class PrintCtrl extends Controller
     public function printPrescription($tracking_id,$activity_id,Request $request) {
         if($request->prescription_new) {
             $code = Activity::find($activity_id)->code;
-            $activity_id = Activity::where("code",$code)->where("status","prescription")->where("id",">",$activity_id)->first()->id;
+            $activity_id = Activity::where("code",$code)
+                ->where("status","prescription")
+                ->where("id",">",$activity_id)
+                ->first()->id;
         }
 
         
@@ -149,7 +152,8 @@ class PrintCtrl extends Controller
                 "activity.created_at as prescription_date",
                 "activity.remarks as prescription",
 
-                "prescribed_prescriptions.generic_name as genericName",
+                "prescribed_prescriptions.prescribed_activity_id as prescribed_id",
+                "prescribed_prescriptions.generic_name as generic_name",
                 "prescribed_prescriptions.dosage as dosage",
                 "prescribed_prescriptions.formulation as formulation",
                 "prescribed_prescriptions.brandname as brandname",
@@ -164,7 +168,6 @@ class PrintCtrl extends Controller
                 "muncity.description as muncity",
                 \DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
             )
-
             ->where("tracking.id",$tracking_id)
             ->where("activity.id",$activity_id)
             ->leftJoin("users as action_md","action_md.id","=","tracking.action_md")
@@ -175,8 +178,13 @@ class PrintCtrl extends Controller
             ->leftJoin("patients","patients.id","=",\DB::raw("if(tracking.type = 'normal',pf.patient_id,preg_f.patient_woman_id)"))
             ->leftJoin("muncity","muncity.id","=","patients.muncity")
             ->leftJoin("activity","activity.code","=","tracking.code")
-            ->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.code", "=", "tracking.code")
+            //->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.code", "=", "tracking.code")
+            ->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.prescribed_activity_id", "=", "activity.id")
             ->first();
+
+            $prescribedActivityId = $prescription->prescribed_id;
+            // Fetch prescriptions based on prescribed_activity_id
+            $prescriptions = PrescribedPrescription::where('prescribed_activity_id', $prescribedActivityId)->get();
 
             $header = $prescription->action_md;
             $department = $prescription->department;
@@ -185,12 +193,12 @@ class PrintCtrl extends Controller
             $facility_contact = $prescription->facility_contact;
             $facility_email = $prescription->facility_email;
             $signature_path = realpath(__DIR__.'/../../../../'.$prescription->action_md_signature);
+
             $pdf = new PDFPrescription($header,$department,$facility,$facility_address,$facility_contact,$facility_email,$signature_path,$prescription->license);
             $pdf->setTitle($prescription->facility);
             $pdf->AddPage();
 
         
-
             //        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
             $imageWidth = 20;
             $pageWidth = $pdf->GetPageWidth();
@@ -276,31 +284,19 @@ class PrintCtrl extends Controller
         $pdf->SetLeftMargin($leftMargin);  
         /*$pdf->MultiCell(0, 5, $prescription->prescription , 0, 'L');*/
 
-        $rowText = "{$prescription->genericName}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
-        $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+        //---------------------------------------------------------------------------
+       
+        foreach ($prescriptions as $prescription) {
 
-        $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
-        $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
-        
-        $pdf->Ln();
+            $rowText = "{$prescription->generic_name}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
+            $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+    
+            $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
+            $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
 
+            $pdf->Ln(); 
+        }
         //----------------------------------------------------------------------------
-
-        //if ($prescription->prescribedPrescriptions) {
-            foreach ($prescription as $prescribedPrescriptions) {
-               
-                $rowText = "{$prescription->generic_name}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
-                $pdf->MultiCell(0, 5, $rowText, 0, 'L');
-        
-                $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
-                $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
-
-                 // Add a new line for each prescribed prescription
-                 $pdf->Ln();
-            }
-        //}
-        
-         //----------------------------------------------------------------------------
 
         $pdf->Output();
         exit;

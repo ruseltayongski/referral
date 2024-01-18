@@ -486,6 +486,52 @@ class ApiController extends Controller
             Activity::create($activity);
         }
 
+        
+        if ($request->hasFile('files')) {
+            $uploadFiles = $request->file('files');
+            $filePaths = [];
+            $fileNames2 = [];
+        
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $file->getClientOriginalName();
+        
+                // Check if the file already exists, and rename if necessary
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                    $counter++;
+                }
+                
+              // Check if the file is an image before applying compression
+            //  if(in_array($file->getClientOriginalExtension(), ['jpeg', 'png', 'jpg'])) { 
+            //     $image = Image::make($file);
+            //     $image->resize(800, null, function ($constraint){ //this will compress the photo
+            //            $constraint->aspectRatio();
+            //     })->save($filepath . '/' . $originalName, 80);
+            //   } else{
+                $file->move($filepath, $originalName);// the pdf file will move here
+              //}
+                //$file->move($filepath, $originalName);
+                $filePaths[] = $filepath . '/' . $originalName;
+                $fileNames2[] = $originalName;
+            }
+            
+            $activityFile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+                $dosageValue = $index + 1;
+                json_encode($filePaths);
+                $activityFile->generic_name = implode('|', $fileNames2);
+                $activityFile->dosage = $dosageValue;
+
+                $activityFile->save();
+         
+        }
+
+
+
         //start broadcast
         $patient = Patients::find($tracking->patient_id);
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
