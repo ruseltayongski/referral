@@ -19021,11 +19021,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -19053,10 +19058,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     form_type: {
       type: String
+    },
+    prescribedActivityId: {
+      type: Number
     }
   },
   created: function created() {
     console.log(this.activity_id, this.baseUrl, this.code);
+
+    //----------------------------------------------------------------
+    var prescriptionCode = this.code;
+    this.fetchPrescriptions(prescriptionCode);
+
+    //const prescribedActivityId = this.prescribedActivityId;
+    //this.fetchPrescriptions(prescribedActivityId);
+    //----------------------------------------------------------------
   },
   methods: {
     // submitPrescription() {
@@ -19133,28 +19149,81 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     //             }
     //         })
     //         .catch((error) => {
-    //                 console.error(error);
-    //                 Lobibox.alert("error", {
-    //                     msg: "An error occurred while saving the prescription.",
-    //                 });
+    //             console.error(error);
+    //             Lobibox.alert("error", {
+    //                 msg: "An error occurred while saving the prescription.",
     //             });
+    //         });
     //     }
     // },
     //------------------------------------------------------------------
-    addEmptyPrescriptionBlock: function addEmptyPrescriptionBlock() {
-      var emptyPrescription = {
-        generic_name: "",
-        brandname: "",
-        dosage: "",
-        quantity: "",
-        formulation: "",
-        frequency: "",
-        duration: ""
-      };
-      this.prescriptions.push(emptyPrescription);
+    fetchPrescriptions: function fetchPrescriptions(code) {
+      var _this = this;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var response, firstPrescription;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("".concat(_this.baseUrl, "/api/video/prescriptions/").concat(code));
+              case 3:
+                response = _context.sent;
+                _this.prescriptions = response.data.prescriptions;
+                firstPrescription = _this.prescriptions[0];
+                _this.generic_name = firstPrescription.generic_name;
+                _this.brandname = firstPrescription.brandname;
+                _this.dosage = firstPrescription.dosage;
+                _this.quantity = firstPrescription.quantity;
+                _this.formulation = firstPrescription.formulation;
+                _this.frequency = firstPrescription.frequency;
+                _this.duration = firstPrescription.duration;
+                _this.prescriptions = _this.prescriptions.slice(1);
+                _context.next = 19;
+                break;
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](0);
+                console.error('Error fetching prescriptions:', _context.t0);
+              case 19:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 16]]);
+      }))();
     },
-    deletePrescription: function deletePrescription(index) {
-      this.prescriptions.splice(index, 1);
+    updatePrescriptions: function updatePrescriptions() {
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(_this2.baseUrl, "/api/video/prescriptions"), {
+                  // Pass the updated prescription data here
+                  //savePrescriptions 
+                });
+              case 3:
+                response = _context2.sent;
+                console.log('Prescriptions updated successfully:', response.data);
+                _context2.next = 10;
+                break;
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                console.error('Error updating prescriptions:', _context2.t0);
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }))();
     },
     //------------------------------------------------------------------
     savePrescriptions: function savePrescriptions() {
@@ -19234,7 +19303,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
       $("#prescriptionModal").modal("hide");
       console.log('Combined Prescription Data:', combinedPrescriptions);
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescriptions"), combinedPrescriptions).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescriptions"), combinedPrescriptions).then(function (response) {
         console.log("Prescription submitted successfully", response.data);
       })["catch"](function (error) {
         console.error("Error submitting prescription", error);
@@ -19249,6 +19318,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.frequency = '';
       this.duration = '';
       this.prescriptions = [];
+    },
+    //------------------------------------------------------------------
+    addEmptyPrescriptionBlock: function addEmptyPrescriptionBlock() {
+      var emptyPrescription = {
+        generic_name: "",
+        brandname: "",
+        dosage: "",
+        quantity: "",
+        formulation: "",
+        frequency: "",
+        duration: ""
+      };
+      this.prescriptions.push(emptyPrescription);
+    },
+    deletePrescription: function deletePrescription(index) {
+      this.prescriptions.splice(index, 1);
     }
   }
 });
@@ -19780,11 +19865,9 @@ var _hoisted_31 = {
 var _hoisted_32 = {
   "class": "col"
 };
-var _hoisted_33 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": "generic_name"
-  }, "1.) Generic Name:", -1 /* HOISTED */);
-});
+var _hoisted_33 = {
+  "for": "generic_name"
+};
 var _hoisted_34 = ["onUpdate:modelValue"];
 var _hoisted_35 = {
   "class": "row prescription"
@@ -19930,7 +20013,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.deletePrescription(index);
       }
-    }, _hoisted_30, 8 /* PROPS */, _hoisted_28)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, _hoisted_30, 8 /* PROPS */, _hoisted_28)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_33, "1.) Generic Name:" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
       "onUpdate:modelValue": function onUpdateModelValue($event) {
         return prescription.generic_name = $event;
@@ -19984,7 +20067,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "btn btn-success btn-sm",
     type: "button",
     onClick: _cache[8] || (_cache[8] = function ($event) {
-      return _ctx.submitPrescription();
+      return $options.updatePrescriptions();
     })
   }, [_hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Update Prescription")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,

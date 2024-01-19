@@ -90,7 +90,7 @@
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="generic_name">1.) Generic Name:</label>
+                                <label for="generic_name">1.) Generic Name:{{ index + 1 }}</label>
                                 <input type="text" v-model="prescription.generic_name" class="form-control form-control-sm" >
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Close</button>
                     <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button>
-                    <button class="btn btn-success btn-sm" type="button" @click="submitPrescription()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
+                    <button class="btn btn-success btn-sm" type="button" @click="updatePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
                 </div>
             </div>
@@ -153,7 +153,6 @@
                 duration: "",
 
                 prescriptions: [], // Array to store multiple prescriptions
-
             };
 
         },
@@ -169,10 +168,23 @@
             },
             form_type: {
                 type: String
+            },
+
+            prescribedActivityId: {
+                type: Number
             }
         },
         created() {
             console.log(this.activity_id, this.baseUrl, this.code)
+
+            //----------------------------------------------------------------
+            const prescriptionCode = this.code;
+            this.fetchPrescriptions(prescriptionCode);
+
+
+            //const prescribedActivityId = this.prescribedActivityId;
+            //this.fetchPrescriptions(prescribedActivityId);
+            //----------------------------------------------------------------
         },
         methods: {
            
@@ -251,32 +263,47 @@
             //         })
 
             //         .catch((error) => {
-            //                 console.error(error);
-            //                 Lobibox.alert("error", {
-            //                     msg: "An error occurred while saving the prescription.",
-            //                 });
+            //             console.error(error);
+            //             Lobibox.alert("error", {
+            //                 msg: "An error occurred while saving the prescription.",
             //             });
-
+            //         });
             //     }
             // },
-
             //------------------------------------------------------------------
-            
-            addEmptyPrescriptionBlock() {
-                const emptyPrescription = {
-                    generic_name: "",
-                    brandname: "",
-                    dosage: "",
-                    quantity: "",
-                    formulation: "",
-                    frequency: "",
-                    duration: "",
-                };
-                this.prescriptions.push(emptyPrescription);
+            async fetchPrescriptions(code) {
+                try {
+                    const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
+
+                    this.prescriptions = response.data.prescriptions;
+
+                    const firstPrescription = this.prescriptions[0];
+
+                    this.generic_name = firstPrescription.generic_name;
+                    this.brandname = firstPrescription.brandname;
+                    this.dosage = firstPrescription.dosage;
+                    this.quantity = firstPrescription.quantity;
+                    this.formulation = firstPrescription.formulation;
+                    this.frequency = firstPrescription.frequency;
+                    this.duration = firstPrescription.duration;
+
+                    this.prescriptions = this.prescriptions.slice(1);
+                } catch (error) {
+                    console.error('Error fetching prescriptions:', error);
+                }
             },
-           
-            deletePrescription(index) {
-                this.prescriptions.splice(index, 1);
+            
+
+            async updatePrescriptions() {
+                try {
+                    const response = await axios.post(`${this.baseUrl}/api/video/prescriptions`, {
+                        // Pass the updated prescription data here
+                        //savePrescriptions 
+                    });
+                    console.log('Prescriptions updated successfully:', response.data);
+                } catch (error) {
+                    console.error('Error updating prescriptions:', error);
+                }
             },
 
             //------------------------------------------------------------------
@@ -379,6 +406,25 @@
                 this.frequency = '';
                 this.duration = '';
                 this.prescriptions = [];
+            },
+
+            //------------------------------------------------------------------
+            
+             addEmptyPrescriptionBlock() {
+                const emptyPrescription = {
+                    generic_name: "",
+                    brandname: "",
+                    dosage: "",
+                    quantity: "",
+                    formulation: "",
+                    frequency: "",
+                    duration: "",
+                };
+                this.prescriptions.push(emptyPrescription);
+            },
+           
+            deletePrescription(index) {
+                this.prescriptions.splice(index, 1);
             },
 
 
