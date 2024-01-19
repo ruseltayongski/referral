@@ -318,7 +318,7 @@
                             ->where("status","followup")
                             ->get();   
                     ?>
-                    
+                    <?php $fileNames = []; ?>
                     @foreach ($position as $index => $pos)
                         @if ($index == 1)
                             <?php $referredFiles = []; ?>
@@ -328,15 +328,16 @@
                                 $referredFiles = array_merge($referredFiles, $fileNames);
                                 $activity_id = $referredActivity->id;
                                 $activity_code = $referredActivity->code;
+                             //dd($activity_id);
                                 ?>
                             @endforeach
-                            @if ($pos == $position[$position_count])
+                            <!-- @if ($pos == $position[$position_count]) -->
                                    @foreach ($fileNames as $referredFile)
-                                        <a href="javascript:void(0);" onclick="openFileViewer('{{$activity_code}}','{{$activity_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                        <a href="javascript:void(0);" onclick="openFileViewer('{{$referred_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
                                     @endforeach
-                            @endif
+                            <!-- @endif -->
                         @elseif ($index >= 2)
                             <?php $followFiles = []; ?>
                             @if (isset($followActivities[$index - 2]))
@@ -344,11 +345,12 @@
                                 $followActivity = $followActivities[$index - 2];
                                 $fileNames = explode('|', $followActivity->generic_name);
                                 $followFiles = array_merge($followFiles, $fileNames);
+                                $follow_id = $followActivity->id;
                                 ?>
                             @endif
                             @if ($pos == $position[$position_count])
                                     @foreach ($fileNames as $referredFile)   
-                                    <a href="javascript:void(0);" onclick="openFileViewer('{{$activity_code}}','{{$activity_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                    <a href="javascript:void(0);" onclick="openFileViewer('{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
                                     @endforeach
@@ -369,8 +371,8 @@
       }
 
         //---------------------------------------------------------------------------------------------------
-        function openFileViewer(code, id, baseUrl, fileNames) {
-          
+        function openFileViewer(code, activity_id, follow_id, baseUrl, fileNames) {
+          console.log('baseurl', follow_id)
             // Split the file names by pipe character and encode each part
             var encodedFileNames = fileNames.split('|').map(function (part) {
                 return encodeURIComponent(part.trim());
@@ -395,7 +397,7 @@
                     <br />
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
                            <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download ${fileNames}</a>
-                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${id}')" class="btn btn-outline-primary">Update</a>
+                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}')" class="btn btn-outline-primary">Update</a>
                     </div>
                 </div>
             `;

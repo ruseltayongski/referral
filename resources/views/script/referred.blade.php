@@ -73,19 +73,25 @@
         }
     }
     //------------------------my adding for update file uploader Follow up-----------------------------//
-
-     function editFileforFollowup(baseUrl,fileNames,activity_id,code)
+    // ${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}
+     function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id)
      {
-        console.log('my id:',activity_id);
-        console.log('my code:',code);
+        console.log('my id:',follow_id);
+        // console.log('my code:',code);
+        // console.log('base url', baseUrl);
+
         event.preventDefault();
+
         $("#edit_telemedicine_followup_code").val(code);
-        $("#edit_telemedicine_followup_id").val(activity_id);
-        $("#selected-file-name").text(fileNames);
+        $("#edit_telemedicine_referred_id").val(activity_id);
+        $("#edit_telemedicine_followup_id").val(follow_id);
+        $("#file-list").text(fileNames);
+        $("#selected-file-name-input").val(fileNames);
+       
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineUpateFileFormModal").modal('show');
-             
      }
+
      function displayFileName() {
     // Get the file input element
     var fileInput = document.getElementById('file-upload');

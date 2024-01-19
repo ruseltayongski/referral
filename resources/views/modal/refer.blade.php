@@ -185,7 +185,7 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!------------------------------I add this for update the file----------------------------------------->
+<!------------------------------I this is for update the file----------------------------------------->
 
 <div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -196,6 +196,7 @@ $facilities = \App\Facility::select('id','name')
                 <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                     <input type="hidden" name="code" id="edit_telemedicine_followup_code" value="">
                     <input type="hidden" name="followup_id" id="edit_telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="referred_id" id="edit_telemedicine_referred_id" value=""><!--I add this for followup_id-->
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -215,12 +216,13 @@ $facilities = \App\Facility::select('id','name')
                     </div>
                     <div class="form-group">
                             <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" >
-
+                            <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
+                            <input type="file" id="file-upload" name="files" class="d-none">
+                            <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                             <div id="file-list" class="mt-3"></div>
 
                             <div class="preview-container" id="preview-container"></div>
-                            <span id="selected-file-name"></span>
+                        
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">

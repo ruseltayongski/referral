@@ -474,34 +474,90 @@ class ApiController extends Controller
 // ----------------------I add this for controller of file view and download
     public function patientFollowUpFileupdate(Request $request)
     {
-        // $activity_code = $request->code;
-        // $activity_id   = $request->followup_id;
-        $uploadFiles = $request->file('files');
-     
-        if ($request->hasFile('files')) {
-            $filepath = public_path() . '/fileupload/' . $user->username;
-            $originalName = $uploadFile->getClientOriginalName();
-            dd($originalName);
-            // Check if the file already exists, and rename if necessary
-            $counter = 1;
-            while (file_exists($filepath . '/' . $originalName)) {
-                $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
-                $counter++;
-            }
-    
-            $uploadFile->move($filepath, $originalName);
-    
-            $activityFile = Activity::where('id', $request->followup_id)
+        $user = Session::get('auth');
+        $retrieveFiles = $request->selectedFileName;
+        if ($request->hasFile('files')){
+                $uploadFile = $request->file('files');
+
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $uploadFile->getClientOriginalName();
+                // Check if the file already exists, and rename if necessary
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
+                    $counter++;
+                }
+   // $status_activity = Activity::where('id', $request->followup_id)
+                // ->where('code', $request->code)
+                // ->orwhere('status', "followup")
+                // ->orderby('id')
+                // ->orwhere('generic_name', '!=', null)
+                // ->first();
+                // $activityFile = Activity::
+                // where('code', $request->code)
+                // ->where(function ($query) {
+                //     $query->where('status', 'followup')
+                //         ->orWhere('status', 'referred');
+                // })
+                // ->orderBy('id')
+                // ->first();
+
+   // $activityFile = Activity::where('code', $request->code)
+                //     ->where(function ($query) use ($request) {
+                //         $query->where('id', $request->followup_id)
+                //             ->orWhere('id', $request->referred_id);
+                //     })
+                //     ->orderBy('id')
+                //     ->get();
+
+                $activityFile = Activity::where('id', $request->referred_id)
+                    ->where('code', $request->code)
+                    ->orderby('id')
+                    ->first();
+               
+                if($activityFile){
+                    $genericNameArray = explode('|', $activityFile->generic_name);
+                    $key = array_search($retrieveFiles, $genericNameArray);
+
+                    if($originalName !== $retrieveFiles){
+                        unlink($filepath . '/' . $retrieveFiles);
+                    }
+        
+                    if($key !== false) {
+                        $genericNameArray[$key] = $originalName;
+                    }
+                
+                    $activityFile->generic_name = implode('|', $genericNameArray);
+                    $activityFile->save();
+                    $uploadFile->move($filepath, $originalName);
+
+                }
+
+                $activity_followup = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-    
-            $dosageValue = $index + 1;
-            $activityFile->generic_name = $originalName;
-            $activityFile->dosage = $dosageValue;
-            $activityFile->save();
+      
+                if($activity_followup){
+                    $genericNameArray = explode('|', $activity_followup->generic_name);
+                    $key = array_search($retrieveFiles, $genericNameArray);
+
+                    if($originalName !== $retrieveFiles){
+                        unlink($filepath . '/' . $retrieveFiles);
+                    }
+        
+                    if($key !== false) {
+                        $genericNameArray[$key] = $originalName;
+                    }
+                
+                    $activity_followup->generic_name = implode('|', $genericNameArray);
+                    $activity_followup->save();
+                    $uploadFile->move($filepath, $originalName);
+                }
+           
+            
         }
-    
+        return Redirect::back();
     
     }
 
