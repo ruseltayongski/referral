@@ -424,11 +424,9 @@ class ApiController extends Controller
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-                $dosageValue = $index + 1;
+                
                 json_encode($filePaths);
                 $activityFile->generic_name = implode('|', $fileNames2);
-                $activityFile->dosage = $dosageValue;
-
                 $activityFile->save();
          
         }
@@ -471,8 +469,8 @@ class ApiController extends Controller
 
         return Redirect::back();
     }
-// ----------------------I add this for controller of file view and download
-    public function patientFollowUpFileupdate(Request $request)
+// ----------------------I add this for controller of file update
+    public function editpatientFollowUpFile(Request $request)
     {
         $user = Session::get('auth');
         $retrieveFiles = $request->selectedFileName;
@@ -487,35 +485,19 @@ class ApiController extends Controller
                     $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
                     $counter++;
                 }
-   // $status_activity = Activity::where('id', $request->followup_id)
-                // ->where('code', $request->code)
-                // ->orwhere('status', "followup")
-                // ->orderby('id')
-                // ->orwhere('generic_name', '!=', null)
-                // ->first();
-                // $activityFile = Activity::
-                // where('code', $request->code)
-                // ->where(function ($query) {
-                //     $query->where('status', 'followup')
-                //         ->orWhere('status', 'referred');
-                // })
-                // ->orderBy('id')
-                // ->first();
-
-   // $activityFile = Activity::where('code', $request->code)
-                //     ->where(function ($query) use ($request) {
-                //         $query->where('id', $request->followup_id)
-                //             ->orWhere('id', $request->referred_id);
-                //     })
-                //     ->orderBy('id')
-                //     ->get();
-
+              
                 $activityFile = Activity::where('id', $request->referred_id)
                     ->where('code', $request->code)
                     ->orderby('id')
                     ->first();
-               
-                if($activityFile){
+            
+                $activity_followup = Activity::where('id', $request->followup_id)
+                    ->where('code', $request->code)
+                    ->orderby('id')
+                    ->first();
+                   //dd($request->position_count_number);
+                if($request->position_count_number == 1){
+                   
                     $genericNameArray = explode('|', $activityFile->generic_name);
                     $key = array_search($retrieveFiles, $genericNameArray);
 
@@ -531,34 +513,85 @@ class ApiController extends Controller
                     $activityFile->save();
                     $uploadFile->move($filepath, $originalName);
 
-                }
-
-                $activity_followup = Activity::where('id', $request->followup_id)
-                ->where('code', $request->code)
-                ->orderby('id')
-                ->first();
-      
-                if($activity_followup){
+                }else if($request->position_count_number >= 2){
                     $genericNameArray = explode('|', $activity_followup->generic_name);
-                    $key = array_search($retrieveFiles, $genericNameArray);
-
-                    if($originalName !== $retrieveFiles){
-                        unlink($filepath . '/' . $retrieveFiles);
-                    }
-        
-                    if($key !== false) {
-                        $genericNameArray[$key] = $originalName;
-                    }
-                
-                    $activity_followup->generic_name = implode('|', $genericNameArray);
-                    $activity_followup->save();
-                    $uploadFile->move($filepath, $originalName);
+                        $key = array_search($retrieveFiles, $genericNameArray);
+    
+                        if($originalName !== $retrieveFiles){
+                            unlink($filepath . '/' . $retrieveFiles);
+                        }
+            
+                        if($key !== false) {
+                            $genericNameArray[$key] = $originalName;
+                        }
+                    
+                        $activity_followup->generic_name = implode('|', $genericNameArray);
+                        $activity_followup->save();
+                        $uploadFile->move($filepath, $originalName);
                 }
            
             
         }
         return Redirect::back();
     
+    }
+
+    public function AddpatientFollowUpFile(Request $request){
+        $user = Session::get('auth');
+        
+        if ($request->hasFile('files')) {
+            $uploadFiles = $request->file('files');
+            $filePaths = [];
+            $fileNames2 = [];
+        
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $file->getClientOriginalName();
+
+                // Check if the file already exists, and rename if necessary
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                    $counter++;
+                }
+          
+            
+                    $file->move($filepath, $originalName);// the pdf file will move here
+                
+                    $filePaths[] = $filepath . '/' . $originalName;
+                    $fileNames2[] = $originalName;  
+            }
+            $activity_referred = Activity::where('id', $request->addreferred_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            $activity_followup = Activity::where('id', $request->addfollowup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+               
+           // dd($request->addreferred_id,$request->addfollowup_id,$request->code,$request->addposition_counter);
+            if($request->addposition_counter == 1){
+              
+                $genericname_array = explode('|', $activity_referred->generic_name);
+                $genericname_array = array_merge($genericname_array, $fileNames2);
+
+                $activity_referred->generic_name = implode('|', $genericname_array);
+                $activity_referred->save();
+             
+            }else if($request->addposition_counter >= 2){
+                $genericname_array = explode('|', $activity_followup->generic_name);
+                $genericname_array = array_merge($genericname_array, $fileNames2);
+
+                $activity_followup->generic_name = implode('|', $genericname_array);
+                $activity_followup->save();
+ 
+            }
+        
+           
+        }
+
+     
     }
 
 // ----------------------I add this for controller of file view and download

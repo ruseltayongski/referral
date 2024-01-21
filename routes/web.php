@@ -311,7 +311,8 @@ Route::post('api/video/upward','ApiController@endorseUpward');
 Route::post('api/video/treated','ApiController@patientTreated');
 Route::post('api/video/end','ApiController@patientEndCycle');
 Route::post('api/video/followup','ApiController@patientFollowUp');
-Route::post('api/video/editfilefollowup','ApiController@patientFollowUpFileupdate'); //for update files
+Route::post('api/video/editfilefollowup','ApiController@editpatientFollowUpFile'); //for update files
+Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
 
 Route::post('api/video/prescription/check','ApiController@checkPrescription');
 Route::get('api/get_report','ApiController@apiGetReport');
