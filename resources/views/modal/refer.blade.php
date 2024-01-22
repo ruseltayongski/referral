@@ -14,6 +14,9 @@ $facilities = \App\Facility::select('id','name')
     #file-upload {
       display: none;
     }
+    #file-upload-update{
+      display: none;
+    }
 
     #file-label {
       background-color: #3498db;
@@ -136,6 +139,57 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!------------------------------Add files if empty----------------------------->
+
+<div class="modal fade" role="dialog" id="FollowupAddEmptyFileFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
+                <hr />
+                <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="telemedicineAddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+                    <input type="hidden" name="code" id="telemedicine_followup_code" value="">
+                    <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="referred_id" id="telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="position_count" id="position_counter" value=""><!--I add this for followup_id-->
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label style="padding:0px;">SELECT FACILITY:</label>
+                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
+                            <option value="">Select Facility...</option>
+                            @foreach($facilities as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
+                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
+                            <option value="">Select Department...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+    
+                            <div id="file-list" class="mt-3"></div>
+                    
+                            <div class="preview-container" id="preview-container"></div>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!------------------------------End of file------------------------------------->
 
 <div class="modal fade" role="dialog" id="telemedicineFollowupFormModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -182,58 +236,6 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!------------------------------Add more file----------------------------------------->
-
-<div class="modal fade" role="dialog" id="telemedicineAddFileFollowupFormModal">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_header"></h4>
-                <hr />
-                <form method="POST" action="{{ asset("api/video/addfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
-                   
-                    <input type="hidden" name="code" id="add_telemedicine_followup_code" value="">
-                    <input type="hidden" name="addfollowup_id" id="add_telemedicine_followup_id" value=""><!--I add this for followup_id-->
-                    <input type="hidden" name="addreferred_id" id="add_telemedicine_referred_id" value=""><!--I add this for followup_id-->
-                    <input type="hidden" name="addposition_counter" id="position_counter_number" value="">
-                    <input type="hidden" class="telemedicine" value="">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <label style="padding:0px;">SELECT FACILITY:</label>
-                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                            <option value="">Select Facility...</option>
-                            @foreach($facilities as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                            <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
-                            <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                            <input type="file" id="file-upload" name="files[]" multiple class="d-none">
-                            <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                            <div id="file-list" class="mt-3"></div>
-
-                            <div class="preview-container" id="preview-container"></div>
-                        
-                    </div>
-                    <hr />
-                    <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
-                    </div>
-                </form>
-                <div class="clearfix"></div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <!------------------------------for update the file----------------------------------------->
 
@@ -243,7 +245,8 @@ $facilities = \App\Facility::select('id','name')
             <div class="jim-content">
                 <h4 class="text-green" style="font-size: 15pt;" id="Update_followup_header"></h4>
                 <hr />
-                <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+               
+                <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm"enctype="multipart/form-data">
                    
                     <input type="hidden" name="code" id="edit_telemedicine_followup_code" value="">
                     <input type="hidden" name="followup_id" id="edit_telemedicine_followup_id" value=""><!--I add this for followup_id-->
@@ -267,13 +270,13 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                            <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
-                            <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                            <input type="file" id="file-upload" name="files" class="d-none">
-                            <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                            <div id="file-list" class="mt-3"></div>
+                        <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files</label>
+                        <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
+                        <input type="file" id="file-upload-update" name="files" class="d-none">
+                        <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
+                        <div id="file-list" class="mt-3"></div>
 
-                            <div class="preview-container" id="preview-container"></div>
+                        <div class="preview-container" id="preview-container"></div>
                         
                     </div>
                     <hr />
@@ -289,6 +292,96 @@ $facilities = \App\Facility::select('id','name')
 </div><!-- /.modal -->
 
 <!---------------------------End of the file update---------------------------------------------------->
+
+
+<!------------------------------Add more file----------------------------------------->
+
+<div class="modal fade" role="dialog" id="telemedicineAddFileFollowupFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_header"></h4>
+                <hr />
+                <form method="POST" action="{{ asset("api/video/addfilefollowup") }}" id="telemedicineAddFileForm" enctype="multipart/form-data">
+                   
+                    <input type="hidden" name="code" id="add_telemedicine_followup_code" value="">
+                    <input type="hidden" name="addfollowup_id" id="add_telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="addreferred_id" id="add_telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="addposition_counter" id="position_counter_number" value="">
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label style="padding:0px;">SELECT FACILITY:</label>
+                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
+                            <option value="">Select Facility...</option>
+                            @foreach($facilities as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
+                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
+                            <option value="">Select Department...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
+                        <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
+                        <input type="file" id="file-upload" name="files[]" multiple class="d-none">
+                        <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
+                        <div id="file-list" class="mt-3"></div>
+
+                        <div class="preview-container" id="preview-container"></div>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-------------------------- delete modal file -------------------------------------->
+<div class="modal fade" role="dialog" id="telemedicineDeleteFileFollowupFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-danger" style="font-size: 15pt;" id="Delete_followup_header"></h4>
+                <hr />
+                <form method="POST" action="{{ asset("api/video/deletefilefollowup") }}" id="telemedicineDeleteFileForm" enctype="multipart/form-data">
+                   
+                    <input type="hidden"  name="code"  id="telemedicine_code" value="">
+                    <input type="hidden" name="followup_id" id="delete_telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="referred_id" id="delete_telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden"  id="position_counterer" name="position_counter" value="">
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <input type="hidden" id="selected-file-name" name="selectedFileName" value="">
+                        <div id="file-name" class="mt-3 text-center"></div>
+
+                        <div class="preview-container" id="preview-containerfor">
+                            <img id="delete-image" src="" alt="delete Image?" style="max-width: 100%; max-height: 300px;">
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Submit</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------------------------- delete modal file -------------------------------------->
 
 <div class="modal fade" role="dialog" id="referAcceptFormModal">
     <div class="modal-dialog modal-sm" role="document">

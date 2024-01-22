@@ -313,6 +313,8 @@ Route::post('api/video/end','ApiController@patientEndCycle');
 Route::post('api/video/followup','ApiController@patientFollowUp');
 Route::post('api/video/editfilefollowup','ApiController@editpatientFollowUpFile'); //for update files
 Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
+Route::post('api/video/deletefilefollowup','ApiController@deletepatientFollowUpFile');
+Route::post('api/video/addfileIfempty','ApiController@addpatientFollowUpFileIfEmpty');
 
 Route::post('api/video/prescription/check','ApiController@checkPrescription');
 Route::get('api/get_report','ApiController@apiGetReport');

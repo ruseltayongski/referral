@@ -97,6 +97,24 @@
         $("#telemedicineUpateFileFormModal").modal('show');
      }
       //------------------------my adding for update file uploader Follow up End-----------------------------//
+
+      //------------------------Add files if empty-----------------------------//
+     function addfilesInFollowupIfempty(position,code,referred_id,follow_id){
+        console.log('position:', position);
+        console.log('position:', code);
+        console.log('referred id:', referred_id);
+        console.log('follow id:', follow_id)
+        event.preventDefault();
+        $("#position_counter").val(position);
+       $("#telemedicine_followup_code").val(code);
+       $("#telemedicine_referred_id").val(referred_id);
+       $("#telemedicine_followup_id").val(follow_id);
+
+      $("#Add_followup_headerform").html("Add Files")
+      $("#FollowupAddEmptyFileFormModal").modal('show');
+     }
+
+    //------------------------my adding for Add file-----------------------------//
      function AddFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
         console.log("position:", position);
         console.log('my code:',code);
@@ -116,21 +134,47 @@
         $("#Add_followup_header").html("Add More File")
         $("#telemedicineAddFileFollowupFormModal").modal('show');
      }
-     function DeleteFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
-       
-        $.ajax({
-            url:'api/video/delete-file-followup',
-            type: 'DELETE',
-            data:{referred_id:activity_id, follow_id:follow_id, baseUrl:baseUrl,fileNames:fileNames,code:code,position:position},
-            success: function (response) {
-                consolog.log(response);
-            },
-            error, function (xhr, status, error){
-                console.error('Error:', error);
-            }
-        });
 
-     }
+     function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
+    //    console.log("base Url:", baseUrl);
+    //    console.log("Filename:",fileNames);
+    //    console.log("referred Id:", referred_id);
+    //    console.log("follow Id:", follow_id);
+    //    console.log("code:", code);
+    //    console.log("podition", position);
+
+        event.preventDefault();
+
+        var fileExtension = fileNames.split('.').pop().toLowerCase();
+
+
+        if (fileExtension === 'pdf') {
+                var pdfViewer = '<embed id="pdfViewer" src="' + baseUrl + '" type="application/pdf" width="100%" height="300px" />';
+                $("#preview-containerfor").html(pdfViewer);
+                $("#pdfViewer").attr('src', baseUrl)
+        }else{
+
+                var deleteImage = $("#delete-image");
+                deleteImage.attr("src", baseUrl);
+        }
+    
+        $("#file-name").text(fileNames);
+        $("#telemedicine_code").val(code);
+        $("#delete_telemedicine_followup_id").val(follow_id);
+        $("#delete_telemedicine_referred_id").val(referred_id);
+        var position_counter = $("#position_counterer");
+        var selectedFileNameInput = $("#selected-file-name");
+        selectedFileNameInput.val(fileNames);
+        position_counter.val(position);
+        
+
+        $("#Delete_followup_header").html("Are you sure You want to delete this file?");
+        $("#telemedicineDeleteFileFollowupFormModal").modal('show');
+        
+        $("#telemedicineDeleteFileFollowupFormModal").on('hidden.bs.modal', function(){
+            location.reload();
+        });
+     }//end of the function 
 
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {

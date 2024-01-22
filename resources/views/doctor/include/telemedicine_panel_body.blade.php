@@ -305,7 +305,7 @@
                 </div>
             </div>
 
-            <div class="container" style="width: 800px;"  >
+            <div class="container" style="width: 800px;">
                 <p class="mt-0">
                     <?php
                         $referredActivities = $user->activities()
@@ -337,6 +337,11 @@
                                         <a href="javascript:void(0);" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
+                                        @if(empty($referredFile))
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
+                                           add files
+                                        </a>&nbsp;
+                                        @endif
                                     @endforeach
                             <!-- @endif -->
                         @elseif ($index >= 2)
@@ -354,6 +359,11 @@
                                     <a href="javascript:void(0);" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                             {{ $referredFile }}
                                         </a>&nbsp;
+                                        @if(empty($referredFile))
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
+                                           add files
+                                        </a>&nbsp;
+                                        @endif
                                     @endforeach
                             @endif
                         @endif
