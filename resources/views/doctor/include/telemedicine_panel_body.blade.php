@@ -305,7 +305,7 @@
                 </div>
             </div>
 
-            <div class="container" style="width: 800px;">
+            <div class="stepper-wrapper">
                 <p class="mt-0">
                     <?php
                         $referredActivities = $user->activities()
@@ -318,8 +318,8 @@
                             ->where("status","followup")
                             ->get();   
                     ?>
-                   
-                    <?php $fileNames = []; ?>
+                    <?php $pdfFiles = []; ?>
+                    <?php $imageFiles = []; ?>
                     @foreach ($position as $index => $pos)
                         @if ( $index== 1)
                             <?php $referredFiles = []; ?>
@@ -329,22 +329,34 @@
                                 $referredFiles = array_merge($referredFiles, $fileNames);
                                 $activity_id = $referredActivity->id;
                                 $activity_code = $referredActivity->code;
+
+                                foreach($fileNames as $filename){
+                                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                                    if (in_array($extension, ['pdf'])){
+                                        $pdfFiles[] = $filename;                                            
+                                    }elseif (in_array($extension, ['jpg', 'jpeg', 'png'])){
+                                        $imageFiles[] = $filename;
+                                    }
+                                }
                         
                                 ?>
                             @endforeach
-                            <!-- @if ($pos == $position[$position_count]) -->
-                                   @foreach ($fileNames as $referredFile)
-                                        <a href="javascript:void(0);" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
-                                            {{ $referredFile }}
-                                        </a>&nbsp;
-                                        @if(empty($referredFile))
-                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
-                                           add files
-                                        </a>&nbsp;
-                                        @endif
-                                    @endforeach
-                            <!-- @endif -->
+                               <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
+                    <!-- @if ($pos == $position[$position_count]) -->
+                            @foreach ($sortedFiles as $referredFile)
+                                <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                    {{ $referredFile }}
+                                </a>&nbsp;
+                            @endforeach
+                            @if(empty($sortedFiles))
+                                <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;add files
+                                </a>&nbsp;
+                            @endif
+                    <!-- @endif -->
                         @elseif ($index >= 2)
+                            <?php $pdfFiles_follow = []; ?>
+                            <?php $imageFiles_follow = []; ?>
                             <?php $followFiles = []; ?>
                             @if (isset($followActivities[$index - 2]))
                                 <?php
@@ -352,19 +364,29 @@
                                 $fileNames = explode('|', $followActivity->generic_name);
                                 $followFiles = array_merge($followFiles, $fileNames);
                                 $follow_id = $followActivity->id;
+
+                                foreach($fileNames as $filename){
+                                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                                    if (in_array($extension, ['pdf'])){
+                                        $pdfFiles_follow[] = $filename;                                            
+                                    }elseif (in_array($extension, ['jpg', 'jpeg', 'png'])){
+                                        $imageFiles_follow[] = $filename;
+                                    }
+                                }
                                 ?>
                             @endif
+                                <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
                             @if ($pos == $position[$position_count])
-                                    @foreach ($fileNames as $referredFile)   
-                                    <a href="javascript:void(0);" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
-                                            {{ $referredFile }}
-                                        </a>&nbsp;
-                                        @if(empty($referredFile))
-                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
-                                           add files
-                                        </a>&nbsp;
-                                        @endif
+                                    @foreach ($sortedFiles_follow as $referredFile)   
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                        {{ $referredFile }}
+                                    </a>&nbsp;
                                     @endforeach
+                                    @if(empty($sortedFiles_follow))
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
+                                           <i class="fa fa-plus" aria-hidden="true"></i>add files
+                                        </a>&nbsp;
+                                    @endif
                             @endif
                         @endif
                     @endforeach
@@ -401,16 +423,16 @@
                         `<embed src="${baseUrl}" type="application/pdf" width="100%" height="600px" />` :
                         `
                         <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                            <img src="${baseUrl}" style="height: 60%; display: block; margin: 0 auto;" />
+                            <img src="${baseUrl}" style="height: 60%;  display: block; margin: 0 auto;" />
                         </div>
                         `
                     }
                     <br />
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
-                           <a href="${baseUrl}" class="btn btn-outline-success" download="${fileNames}">Download</a>
-                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary">Update</a>
-                           <a href="" onclick="AddFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary">Add More</a>
-                           <a href="" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary">delete</a>
+                           <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}"><i class="fa fa-download" aria-hidden="true"></i>Download</a>
+                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Update</a>
+                           <a href="" onclick="AddFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor"><i class="fa fa-plus" aria-hidden="true"></i>Add More</a>
+                           <a href="" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete"><i class="fa fa-trash" aria-hidden="true"></i>delete</a>
                     </div>
                 </div>
             `;
@@ -431,7 +453,6 @@
                 modal.parentNode.removeChild(modal);
             };
         }
-
 
         //---------------------------------------------------------------------------------------------------
         // function openFileViewer(filePath, fileName) {
@@ -773,3 +794,32 @@
         </div>
     @endif
 </div>
+
+<style>
+  .d-file{
+    font-size: 12px;
+    color: white;
+    background-color: green;
+    transform: translateY(-10px);
+  }
+  a.d-file:hover {
+    background-color: #7AE205;
+    transform: translateY(-10px);
+}
+ .filecolor{
+    color: white;
+ }
+ a.filecolor:hover{
+    background-color: #76DF00;
+    transform: translateY(-10px);
+    color:white;
+ }
+ .filecolorDelete{
+    color: white;
+ }
+ a.filecolorDelete:hover{
+    background-color:red;
+    transform: translateY(-10px);
+    color: white;
+ }
+</style>

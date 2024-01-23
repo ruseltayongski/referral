@@ -76,13 +76,9 @@
     // ${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}
      function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position)
      {
-        // console.log('followup Id:',follow_id);
-        // console.log('referred Id',activity_id)
-        //console.log("position:", position);
-        // console.log('my code:',code);
-        // console.log('base url', baseUrl);
 
         event.preventDefault();
+        $(".telemedicine").val(1);
 
         $("#edit_telemedicine_followup_code").val(code);
         $("#edit_telemedicine_referred_id").val(activity_id);
@@ -95,6 +91,10 @@
         console.log("currentPosition:", $("#position_count_number").val());
         $("#Update_followup_header").html("Update File");
         $("#telemedicineUpateFileFormModal").modal('show');
+
+        $("#telemedicineUpateFileFormModal").on('hidden.bs.modal', function(){
+            location.reload();
+        });
      }
       //------------------------my adding for update file uploader Follow up End-----------------------------//
 
@@ -105,6 +105,8 @@
         console.log('referred id:', referred_id);
         console.log('follow id:', follow_id)
         event.preventDefault();
+        $(".telemedicine").val(1);
+
         $("#position_counter").val(position);
        $("#telemedicine_followup_code").val(code);
        $("#telemedicine_referred_id").val(referred_id);
@@ -122,6 +124,7 @@
         console.log('followup Id:',follow_id);
         console.log('referred Id',activity_id)
         event.preventDefault();
+        $(".telemedicine").val(1);
 
         $("#add_telemedicine_followup_code").val(code);
         $("#add_telemedicine_followup_id").val(follow_id);
@@ -136,12 +139,6 @@
      }
 
      function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
-    //    console.log("base Url:", baseUrl);
-    //    console.log("Filename:",fileNames);
-    //    console.log("referred Id:", referred_id);
-    //    console.log("follow Id:", follow_id);
-    //    console.log("code:", code);
-    //    console.log("podition", position);
 
         event.preventDefault();
 
@@ -176,10 +173,36 @@
         });
      }//end of the function 
 
+     function readURL(input) {
+            var url = input.value;
+            var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+
+            if (input.files && input.files[0]) {
+                var fileName = input.files[0].name;
+
+                if (ext === "pdf") {
+                    // For PDF files
+                    $('#file-preview-text').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
+                    $('#img-preview').css('display', 'none');
+                } else if (ext === "gif" || ext === "png" || ext === "jpeg" || ext === "jpg") {
+                    // For image files
+                    $('#file-preview-text').html('<i class="fa fa-file-image-o"></i> ' + fileName);
+                    $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
+                } else {
+                    // For other file types
+                    $('#file-preview-text').html('<i class="fa fa-file-o"></i> ' + fileName);
+                    $('#img-preview').css('display', 'none');
+                }
+            } else {
+                // Clear preview when no file selected
+                $('#file-preview-text').html('');
+                $('#img-preview').css('display', 'none');
+            }
+        }
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
-        $("#telemedicine_followup_code").val(code);
-        $("#telemedicine_followup_id").val(referred_id); //I add this add this to get the followup_id jondy
+        $("#telemed_follow_code").val(code);
+        $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         if(alreadyFollowUp) {

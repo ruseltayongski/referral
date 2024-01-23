@@ -384,12 +384,12 @@ class ApiController extends Controller
             );
             Activity::create($activity);
         }
-    //  ---------------------jondy changes--------------------------->
+     //  ---------------------jondy changes--------------------------->
     
         //   $request->validate([ //this validation identify the type of file to upload
         //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
         //   ]);
-
+// dd($request->all(), $request->file('filesInput'));
        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
             $filePaths = [];
@@ -417,14 +417,14 @@ class ApiController extends Controller
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-                
+          
                 json_encode($filePaths);
                 $activityFile->generic_name = implode('|', $fileNames2);
                 $activityFile->save();
          
         }
 
-    //  -----------------------jondy changes------------------------->
+     //  -----------------------jondy changes------------------------->
         //start broadcast
         $patient = Patients::find($tracking->patient_id);
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
@@ -591,8 +591,9 @@ class ApiController extends Controller
     public function addpatientFollowUpFileIfEmpty(Request $request){
        
         $user = Session::get('auth');
-        if ($request->hasFile('files')) {
-            $uploadFiles = $request->file('files');
+        //dd($request->all(), $request->filesInput);
+        if ($request->hasFile('filesInput')) {
+            $uploadFiles = $request->file('filesInput');
             $filePaths = [];
             $fileNames2 = [];
         

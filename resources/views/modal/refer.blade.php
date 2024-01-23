@@ -8,7 +8,11 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 ?>
 <style>
+
     #file-input {
+      display: none;
+    }
+    #files-input{
       display: none;
     }
     #file-upload {
@@ -139,6 +143,55 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!------------------------------Starting Adding file in first follow up------------------------------------>
+<div class="modal fade" role="dialog" id="telemedicineFollowupFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
+                <hr />
+                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+                    <input type="hidden" name="code" id="telemed_follow_code" value="">
+                    <input type="hidden" name="followup_id" id="telemedicine_follow_id" value=""><!--I add this for followup_id-->
+
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label style="padding:0px;">SELECT FACILITY:</label>
+                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
+                            <option value="">Select Facility...</option>
+                            @foreach($facilities as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
+                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
+                            <option value="">Select Department...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+    
+                            <div id="file-list" class="mt-3"></div>
+                    
+                            <div class="preview-container" id="preview-container"></div>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <!------------------------------Add files if empty----------------------------->
 
 <div class="modal fade" role="dialog" id="FollowupAddEmptyFileFormModal">
@@ -170,8 +223,8 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                                <label id="file-label" for="files-input" class="btn btn-primary">Select Files</label>
+                                <input type="file" id="files-input" name="filesInput[]" multiple class="d-none">
     
                             <div id="file-list" class="mt-3"></div>
                     
@@ -180,7 +233,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -190,53 +243,6 @@ $facilities = \App\Facility::select('id','name')
 </div><!-- /.modal -->
 
 <!------------------------------End of file------------------------------------->
-
-<div class="modal fade" role="dialog" id="telemedicineFollowupFormModal">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
-                <hr />
-                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
-                    <input type="hidden" name="code" id="telemedicine_followup_code" value="">
-                    <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
-                    <input type="hidden" class="telemedicine" value="">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <label style="padding:0px;">SELECT FACILITY:</label>
-                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                            <option value="">Select Facility...</option>
-                            @foreach($facilities as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
-    
-                            <div id="file-list" class="mt-3"></div>
-                    
-                            <div class="preview-container" id="preview-container"></div>
-                    </div>
-                    <hr />
-                    <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
-                    </div>
-                </form>
-                <div class="clearfix"></div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <!------------------------------for update the file----------------------------------------->
 
 <div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
@@ -272,17 +278,20 @@ $facilities = \App\Facility::select('id','name')
                     <div class="form-group">
                         <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files</label>
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-upload-update" name="files" class="d-none">
+                        <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)">
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                         <div id="file-list" class="mt-3"></div>
-
-                        <div class="preview-container" id="preview-container"></div>
+                       
+                        <div class="preview-container" id="preview-container">
+                            <p id="file-preview-text"></p>
+                            <img id="img-preview" src="#" alt="image preview" style="max-width: 100%; max-height: 300px; display: none;" />
+                        </div>
                         
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -337,7 +346,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
