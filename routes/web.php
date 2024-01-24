@@ -659,15 +659,11 @@ Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacility
 Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 
+
+
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
-
-
-
-
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 
-//Route::get('/api/video/prescriptions/{prescribed_activity_id}', 'ApiController@getPrescriptions');
-Route::post('/api/video/prescriptions/update', 'ApiController@updatePrescriptions');
 
 
 

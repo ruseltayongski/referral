@@ -309,80 +309,6 @@ class ApiController extends Controller
     // }
     //-------------------------------------------------------------------
     
-    public function savePrescriptions(Request $request) {
-        $validatedData = $request->validate([
-            'singlePrescription.generic_name' => 'required|string',
-            'singlePrescription.brandname' => 'required|string',
-            'singlePrescription.dosage' => 'required|string',
-            'singlePrescription.quantity' => 'required|integer',
-            'singlePrescription.formulation' => 'required|string',
-            'singlePrescription.frequency' => 'required|string',
-            'singlePrescription.duration' => 'required|string',
-            'singlePrescription.code' => 'required|string',
-            'singlePrescription.form_type' => 'required|string',
-            'multiplePrescriptions' => 'array',
-        ]);
-
-        $singlePrescription = $validatedData['singlePrescription'];
-        $multiplePrescriptions = $validatedData['multiplePrescriptions'];
-        $prescribedActivityId = $singlePrescription['prescribed_activity_id']; // Assuming this field is present in the request
-
-        // Check if the prescribed_activity_id already exists
-        $existingPrescription = PrescribedPrescription::where('prescribed_activity_id', $prescribedActivityId)->first();
-        
-        if ($existingPrescription) {
-            // Update the existing record
-            $this->updatePrescription($existingPrescription, $singlePrescription);
-        } else {
-            // Create a new record
-            $this->saveSinglePrescription($singlePrescription, $request);
-        }
-        $this->multipleSavePrescriptions($multiplePrescriptions);
-
-        return response()->json(['message' => 'Prescriptions saved successfully'], 200);
-    }
-    
-    private function updatePrescription($existingPrescription, $newPrescriptionData) {
-        // Update the fields with the new data
-        $existingPrescription->generic_name = $newPrescriptionData['generic_name'];
-        $existingPrescription->brandname = $newPrescriptionData['brandname'];
-        $existingPrescription->dosage = $newPrescriptionData['dosage'];
-        $existingPrescription->quantity = $newPrescriptionData['quantity'];
-        $existingPrescription->formulation = $newPrescriptionData['formulation'];
-        $existingPrescription->frequency = $newPrescriptionData['frequency'];
-        $existingPrescription->duration = $newPrescriptionData['duration']; 
-        // Save the changes
-        $existingPrescription->save();
-    }
-   
-
-    //-------------------------------------------------------------------
-
-    // public function savePrescriptions(Request $request) {
-    //     $validatedData = $request->validate([
-    //         'singlePrescription.generic_name' => 'required|string',
-    //         'singlePrescription.brandname' => 'required|string',
-    //         'singlePrescription.dosage' => 'required|string',
-    //         'singlePrescription.quantity' => 'required|integer',
-    //         'singlePrescription.formulation' => 'required|string',
-    //         'singlePrescription.frequency' => 'required|string',
-    //         'singlePrescription.duration' => 'required|string',
-    //         'singlePrescription.code' => 'required|string',
-    //         'singlePrescription.form_type' => 'required|string',
-    //         'multiplePrescriptions' => 'array',
-    //     ]);
-
-    //     $singlePrescription = $validatedData['singlePrescription'];
-    //     $multiplePrescriptions = $validatedData['multiplePrescriptions'];
-        
-    //     $this->saveSinglePrescription($singlePrescription, $request);
-
-    //     $this->multipleSavePrescriptions($multiplePrescriptions);
-
-    //     return response()->json(['message' => 'Prescriptions saved successfully'], 200);
-    // }
-    //--------------------------------------------------------------------------
-    
     private function saveSinglePrescription($singlePrescription, $request) {
         if(!empty($singlePrescription)) {
             if($request->username) //it means from mobile
@@ -430,54 +356,80 @@ class ApiController extends Controller
             $prescribed->save();
         }
     }
-    //-------------------------------------------------------------------
 
-    private function multipleSavePrescriptions($multiplePrescriptions) {
-        $latestActivity = Activity::latest()->first();
-
-        if (!$latestActivity) {
-            $latestActivity = new Activity();
-            $latestActivity->code = $multiplePrescriptions[0]['code'];
-            $latestActivity->save();
-        }
-        $prescribed_activity_id = $latestActivity->id;
-
-        foreach ($multiplePrescriptions as $prescriptionData) {
-            $prescription = new PrescribedPrescription();
-            $prescription->code = $latestActivity['code'];
-            $prescription->prescribed_activity_id = $prescribed_activity_id;
-
-            $prescription->generic_name = $prescriptionData['generic_name'];
-            $prescription->brandname = $prescriptionData['brandname'];
-            $prescription->dosage = $prescriptionData['dosage'];
-            $prescription->quantity = $prescriptionData['quantity'];
-            $prescription->formulation = $prescriptionData['formulation'];
-            $prescription->frequency = $prescriptionData['frequency'];
-            $prescription->duration = $prescriptionData['duration'];
-            $prescription->save();
-        }
-    }
-    //-------------------------------------------------------------------
     public function getPrescriptions($code) {
-
-        //$prescriptions = PrescribedPrescription::where('prescribed_activity_id', $row->$prescribedActivityId)->where('code', $code)->get();
         $prescriptions = PrescribedPrescription::where('code', $code)->get();
-
         return response()->json(['prescriptions' => $prescriptions], 200);
 
+        dd($prescriptions);
     }
 
-    // public function updatePrescriptions(Request $request){
-    //     // Implement the update logic based on your requirements
-    //     // Use $request->input() to access the updated prescription data
-    // }
+    public function savePrescriptions(Request $request) {
+        $validatedData = $request->validate([
+            'singlePrescription.generic_name' => 'required|string',
+            'singlePrescription.brandname' => 'required|string',
+            'singlePrescription.dosage' => 'required|string',
+            'singlePrescription.quantity' => 'required|integer',
+            'singlePrescription.formulation' => 'required|string',
+            'singlePrescription.frequency' => 'required|string',
+            'singlePrescription.duration' => 'required|string',
+            'singlePrescription.code' => 'required|string',
+            'singlePrescription.form_type' => 'required|string',
+            'multiplePrescriptions' => 'array',
+        ]);
 
+        $singlePrescription = $validatedData['singlePrescription'];
+        $multiplePrescriptions = $validatedData['multiplePrescriptions'];
 
+        $existingSinglePrescription = PrescribedPrescription::where('code', $singlePrescription['code'])->first();
 
+        if ($existingSinglePrescription) {
+            //Update SinglePrescription
+            $existingSinglePrescription->generic_name = $singlePrescription['generic_name'];
+            $existingSinglePrescription->brandname = $singlePrescription['brandname'];
+            $existingSinglePrescription->dosage = $singlePrescription['dosage'];
+            $existingSinglePrescription->quantity = $singlePrescription['quantity'];
+            $existingSinglePrescription->formulation = $singlePrescription['formulation'];
+            $existingSinglePrescription->frequency = $singlePrescription['frequency'];
+            $existingSinglePrescription->duration = $singlePrescription['duration'];
+            $existingSinglePrescription->save();
+        } else {
+            $this->saveSinglePrescription($singlePrescription, $request);
+        }
+       
+        $existingPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
+
+        foreach ($multiplePrescriptions as $prescriptionData) {
+            $existingPrescription = $existingPrescriptions->where('id', $prescriptionData['id'])->first();
+
+            if ($existingPrescription) {
+                $existingPrescription->update($prescriptionData);
+            } else {
+                $latestActivity = Activity::latest()->first();
+
+                if (!$latestActivity) {
+                    $latestActivity = new Activity();
+                    $latestActivity->code = $multiplePrescriptions[0]['code'];
+                    $latestActivity->save();
+                }
+                $prescribed_activity_id = $latestActivity->id;
+                $prescription = new PrescribedPrescription();
+                $prescription->code = $latestActivity['code'];
+                $prescription->prescribed_activity_id = $prescribed_activity_id;
+                $prescription->generic_name = $prescriptionData['generic_name'];
+                $prescription->brandname = $prescriptionData['brandname'];
+                $prescription->dosage = $prescriptionData['dosage'];
+                $prescription->quantity = $prescriptionData['quantity'];
+                $prescription->formulation = $prescriptionData['formulation'];
+                $prescription->frequency = $prescriptionData['frequency'];
+                $prescription->duration = $prescriptionData['duration'];
+                $prescription->save();
+            }
+        }
+        return response()->json(['message' => 'Prescriptions saved successfully'], 200);   
+    }
     //-------------------------------------------------------------------
-
    
-
 
     public function patientTreated(Request $request) {
         $user = Session::get('auth');

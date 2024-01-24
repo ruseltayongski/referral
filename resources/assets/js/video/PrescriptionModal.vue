@@ -130,8 +130,9 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Close</button>
                     <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button>
-                    <button class="btn btn-success btn-sm" type="button" @click="updatePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
+                    <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
+
                 </div>
             </div>
         </div>
@@ -169,22 +170,13 @@
             form_type: {
                 type: String
             },
-
-            prescribedActivityId: {
-                type: Number
-            }
         },
         created() {
             console.log(this.activity_id, this.baseUrl, this.code)
 
-            //----------------------------------------------------------------
             const prescriptionCode = this.code;
+
             this.fetchPrescriptions(prescriptionCode);
-
-
-            //const prescribedActivityId = this.prescribedActivityId;
-            //this.fetchPrescriptions(prescribedActivityId);
-            //----------------------------------------------------------------
         },
         methods: {
            
@@ -271,42 +263,6 @@
             //     }
             // },
             //------------------------------------------------------------------
-            async fetchPrescriptions(code) {
-                try {
-                    const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
-
-                    this.prescriptions = response.data.prescriptions;
-
-                    const firstPrescription = this.prescriptions[0];
-
-                    this.generic_name = firstPrescription.generic_name;
-                    this.brandname = firstPrescription.brandname;
-                    this.dosage = firstPrescription.dosage;
-                    this.quantity = firstPrescription.quantity;
-                    this.formulation = firstPrescription.formulation;
-                    this.frequency = firstPrescription.frequency;
-                    this.duration = firstPrescription.duration;
-
-                    this.prescriptions = this.prescriptions.slice(1);
-                } catch (error) {
-                    console.error('Error fetching prescriptions:', error);
-                }
-            },
-            
-
-            async updatePrescriptions() {
-                try {
-                    const response = await axios.post(`${this.baseUrl}/api/video/prescriptions`, {
-                        // Pass the updated prescription data here
-                        //savePrescriptions 
-                    });
-                    console.log('Prescriptions updated successfully:', response.data);
-                } catch (error) {
-                    console.error('Error updating prescriptions:', error);
-                }
-            },
-
-            //------------------------------------------------------------------
 
             savePrescriptions() {
 
@@ -369,19 +325,20 @@
 
                 const combinedPrescriptions = {
                     singlePrescription: {
-                    generic_name: this.generic_name,
-                    brandname: this.brandname,
-                    dosage: this.dosage,
-                    quantity: this.quantity,
-                    formulation: this.formulation,
-                    frequency: this.frequency,
-                    duration: this.duration,
-                    code: this.code,
-                    activity_id: this.activity_id,
-                    form_type: this.form_type,
+                        generic_name: this.generic_name,
+                        brandname: this.brandname,
+                        dosage: this.dosage,
+                        quantity: this.quantity,
+                        formulation: this.formulation,
+                        frequency: this.frequency,
+                        duration: this.duration,
+                        code: this.code,
+                        activity_id: this.activity_id,
+                        form_type: this.form_type,
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
+
                 Lobibox.alert("success", {
                     msg: "Prescriptions saved successfully!",
                 });
@@ -392,24 +349,32 @@
                 axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)
                     .then(response => {
                         console.log("Prescription submitted successfully", response.data);
-                        })
+
+                        // if(response.data === 'success') {
+                        //     $("#prescriptionModal").modal('hide');
+                        //     this.prescriptionSubmitted = true
+                        //     Lobibox.alert("success",
+                        //         {
+                        //             msg: "Successfully submitted prescription!"
+                        //         });
+                        // }
+
+                    })
                     .catch(error => {
                         console.error("Error submitting prescription", error);
                     });
 
                 // Reset the form fields and prescriptions array after saving
-                this.generic_name = '';
-                this.brandname = '';
-                this.dosage = '';
-                this.quantity = null;
-                this.formulation = '';
-                this.frequency = '';
-                this.duration = '';
-                this.prescriptions = [];
+                // this.generic_name = '';
+                // this.brandname = '';
+                // this.dosage = '';
+                // this.quantity = null;
+                // this.formulation = '';
+                // this.frequency = '';
+                // this.duration = '';
+                // this.prescriptions = [];
             },
 
-            //------------------------------------------------------------------
-            
              addEmptyPrescriptionBlock() {
                 const emptyPrescription = {
                     generic_name: "",
@@ -426,6 +391,33 @@
             deletePrescription(index) {
                 this.prescriptions.splice(index, 1);
             },
+
+            async fetchPrescriptions(code) {
+                try {
+                    const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
+
+                    this.prescriptions = response.data.prescriptions;
+
+                    const firstPrescription = this.prescriptions[0];
+                    this.generic_name = firstPrescription.generic_name;
+                    this.brandname = firstPrescription.brandname;
+                    this.dosage = firstPrescription.dosage;
+                    this.quantity = firstPrescription.quantity;
+                    this.formulation = firstPrescription.formulation;
+                    this.frequency = firstPrescription.frequency;
+                    this.duration = firstPrescription.duration;
+                    this.prescriptions = this.prescriptions.slice(1);
+
+                } catch (error) {
+                    console.error('Error fetching prescriptions:', error);
+                }
+            },
+
+            //------------------------------------------------------------------
+           
+            
+            //------------------------------------------------------------------
+            
 
 
         },

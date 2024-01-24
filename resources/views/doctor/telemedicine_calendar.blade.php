@@ -254,7 +254,7 @@
                                 <div class="row">
                                     <div class="box box-primary">
                                         <div class="box-body no-padding">
-                                            <div class="box-header with-border">
+                                            <div class="box-header with-border">    
                                                 <h4 class="box-title">Legends</h4>
                                             </div>
                                             <div id="external-events">
@@ -292,13 +292,13 @@
 
         /*-----------------------------------------------------------------*/
         function calendar_display(appointmentId) {
-//            refreshCalendar();
+            //refreshCalendar();
             $('#calendar').val(appointmentId);
             console.log('appointedId', appointmentId);
 
             $('#calendar').fullCalendar({
                dayRender: function (date, cell) {
-//
+
                    var formattedDate = moment(date).format('YYYY-MM-DD');
                    var url = "{{ route('get-Facility-Details', ':id') }}";
                    url = url.replace(':id', appointmentId);
@@ -333,7 +333,7 @@
                 },
                 dayClick: function (date, info, jsEvent, view) {
                     // Handle the click event here
-//                        alert('You clicked on ' + calEvent.title);
+                    //alert('You clicked on ' + calEvent.title);
                     var selectedDate = date.format('YYYY-MM-DD');
 
                     // Make an AJAX request to fetch available time slots
@@ -342,7 +342,7 @@
                         url: '{{ route("get-available-time-slots") }}',
                         data: {
                             selected_date: selectedDate
-//                                facility_id: facility_id
+                        //facility_id: facility_id
                         },
                         success: function (response) {
                             // Update the radio button list with available time slots
@@ -354,7 +354,7 @@
                             console.error('Error fetching available time slots:', error);
                         }
                     });
-//                        applyCustomStyleToCell(info.date, info.dayEl, selectedDate);
+                    //applyCustomStyleToCell(info.date, info.dayEl, selectedDate);
                 }
             });
             refreshCalendar();
