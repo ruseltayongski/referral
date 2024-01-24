@@ -48,6 +48,82 @@ $facilities = \App\Facility::select('id','name')
       margin: 10px;
     }
 </style>
+<script>
+
+  // select multiple image & pdf to preview
+
+ // document.getElementById('file-input').addEventListener('change', handleFileSelect);
+    document.addEventListener('DOMContentLoaded', function () {
+    // Your code here
+    document.getElementById('file-input').addEventListener('change', handleFileSelect);
+});
+    function handleFileSelect(event) {
+    const fileList = event.target.files;
+    const fileListView = document.getElementById('file-list');
+    const previewContainer = document.getElementById('preview-container');
+    // fileListView.innerHTML = '';
+    // previewContainer.innerHTML = '';
+
+    for (const file of fileList) {
+        const listItem = document.createElement('div');
+        listItem.textContent = file.name;
+        fileListView.appendChild(listItem);
+
+        // Display image preview for image files
+        if (file.type.startsWith('image/')) {
+        displayImagePreview(file, previewContainer);
+        }
+        // Display document preview for .doc and .docx files
+        else if (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
+        displayDocumentPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
+        }
+        // Display spreadsheet preview for .xls and .xlsx files
+        else if (file.name.toLowerCase().endsWith('.xls') || file.name.toLowerCase().endsWith('.xlsx')) {
+        displaySpreadsheetPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
+        }
+        // Display PDF preview for .pdf files
+        else if (file.type === 'application/pdf') {
+        displayPdfPreview(file, previewContainer, '../public/fileupload/PDF_file_icon.png'); // You can replace the placeholder URL
+        }
+    }
+    }
+
+    function displayImagePreview(file, container) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const preview = document.createElement('img');
+        preview.setAttribute('src', e.target.result);
+        preview.setAttribute('alt', file.name);
+        preview.classList.add('preview');
+        container.appendChild(preview);
+    };
+    reader.readAsDataURL(file);
+    }
+
+    function displayDocumentPreview(file, container, placeholderUrl) {
+    displayFilePreview(file, container, placeholderUrl);
+    }
+
+    function displaySpreadsheetPreview(file, container, placeholderUrl) {
+    displayFilePreview(file, container, placeholderUrl);
+    }
+
+    function displayPdfPreview(file, container, placeholderUrl) {
+    displayFilePreview(file, container, placeholderUrl);
+    }
+
+    function displayFilePreview(file, container, placeholderUrl) {
+    // For unsupported file types, display a placeholder image
+    const preview = document.createElement('img');
+    preview.setAttribute('src', placeholderUrl);
+    preview.setAttribute('alt', file.name);
+    preview.classList.add('preview');
+    container.appendChild(preview);
+    }
+
+</script>
+
+
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -173,13 +249,26 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                                <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
     
                             <div id="file-list" class="mt-3"></div>
-                    
                             <div class="preview-container" id="preview-container"></div>
                     </div>
+
+                    <!-- <div class="form-group">
+                        <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                        <input type="file" id="file-input" name="files[]" multiple class="d-none"> -->
+
+                        <!-- <div id="file-list" class="mt-3"></div>
+                        <div class="preview-container" id="preview-container"></div> -->
+                        <?php
+                            // for ($i = 1; $i <= 3; $i++) { // Change the loop condition based on the desired number of sections
+                            // echo '<div id="file-list-'.$i.'" class="mt-3">File List '.$i.'</div>
+                            //         <div class="preview-container" id="preview-container-'.$i.'">Preview Container '.$i.'</div>';
+                            // }
+                        ?>
+                    <!-- </div>      -->
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -335,13 +424,15 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                        <label id="file-label" for="file-upload" class="btn btn-primary">Select Files</label>
+                        <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-upload" name="files[]" multiple class="d-none">
+                        <input type="file" id="file-input" name="files[]" multiple class="d-none">
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                         <div id="file-list" class="mt-3"></div>
 
-                        <div class="preview-container" id="preview-container"></div>
+                        <div class="preview-container" id="preview-container">
+                            
+                        </div>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">

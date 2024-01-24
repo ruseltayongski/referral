@@ -151,10 +151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _vue_shared__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @vue/shared */ "./node_modules/@vue/shared/dist/shared.esm-bundler.js");
 
-if (session('delete_file_forfollowup')) {
-  session().forget('delete_file_forfollowup');
-  session().flash('delete_file_message', 'Successfully deleted filename!');
-}
+
 
 function defaultOnError(error) {
   throw error;

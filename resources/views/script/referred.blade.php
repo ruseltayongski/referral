@@ -116,7 +116,7 @@
       $("#FollowupAddEmptyFileFormModal").modal('show');
      }
 
-    //------------------------my adding for Add file-----------------------------//
+    //------------------------ Add more file-----------------------------//
      function AddFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
         console.log("position:", position);
         console.log('my code:',code);
@@ -136,6 +136,10 @@
         
         $("#Add_followup_header").html("Add More File")
         $("#telemedicineAddFileFollowupFormModal").modal('show');
+
+        $("#telemedicineAddFileFollowupFormModal").on('hidden.bs.modal', function(){
+            location.reload();
+        });
      }
 
      function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
@@ -172,7 +176,7 @@
             location.reload();
         });
      }//end of the function 
-
+     // select single image & pdf to preview
      function readURL(input) {
             var url = input.value;
             var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
@@ -181,24 +185,21 @@
                 var fileName = input.files[0].name;
 
                 if (ext === "pdf") {
-                    // For PDF files
                     $('#file-preview-text').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
                     $('#img-preview').css('display', 'none');
                 } else if (ext === "gif" || ext === "png" || ext === "jpeg" || ext === "jpg") {
-                    // For image files
                     $('#file-preview-text').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                     $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
                 } else {
-                    // For other file types
                     $('#file-preview-text').html('<i class="fa fa-file-o"></i> ' + fileName);
                     $('#img-preview').css('display', 'none');
                 }
             } else {
-                // Clear preview when no file selected
                 $('#file-preview-text').html('');
                 $('#img-preview').css('display', 'none');
             }
         }
+     
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemed_follow_code").val(code);
