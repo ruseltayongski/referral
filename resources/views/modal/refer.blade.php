@@ -35,18 +35,37 @@ $facilities = \App\Facility::select('id','name')
       overflow: hidden;
     }
 
-    .preview-container {
+    /* .preview-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       margin-top: 20px;
-    }
+    }*/
 
     .preview {
-      max-width: 100%;
-      height: auto;
+      width: 150px;
+      height: 150px;
       margin: 10px;
+    } 
+
+
+
+    .preview-container {
+        overflow-y: scroll;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
     }
+
+    .preview-item {
+        padding: 5px;
+        margin-right: 12px;
+        margin-left: 12px;  
+        
+    }
+
 </style>
 <script>
 
@@ -83,22 +102,50 @@ $facilities = \App\Facility::select('id','name')
         }
         // Display PDF preview for .pdf files
         else if (file.type === 'application/pdf') {
+             // Create a container for each image and its remove icon
+             const pdfContainer = document.createElement('div');
+                    pdfContainer.classList.add('pdf-container');
         displayPdfPreview(file, previewContainer, '../public/fileupload/PDF_file_icon.png'); // You can replace the placeholder URL
         }
+
+        
     }
     }
 
     function displayImagePreview(file, container) {
     const reader = new FileReader();
+
     reader.onload = function (e) {
+        // Create a container for each image and its remove icon
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+
+        // Create the image preview
         const preview = document.createElement('img');
         preview.setAttribute('src', e.target.result);
+        preview.style.width = '150px';
+        preview.style.height = '150px';
         preview.setAttribute('alt', file.name);
         preview.classList.add('preview');
-        container.appendChild(preview);
+
+        // Create the remove icon
+        const removeIcon = document.createElement('i');
+        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+        removeIcon.addEventListener('click', function() {
+            // Remove the associated image preview when the remove icon is clicked
+            container.removeChild(imageContainer);
+        });
+
+        // Append the image and remove icon to the container
+        imageContainer.appendChild(preview);
+        imageContainer.appendChild(removeIcon);
+
+        // Append the container to the main container
+        container.appendChild(imageContainer);
     };
+
     reader.readAsDataURL(file);
-    }
+}
 
     function displayDocumentPreview(file, container, placeholderUrl) {
     displayFilePreview(file, container, placeholderUrl);
@@ -221,13 +268,18 @@ $facilities = \App\Facility::select('id','name')
 </div><!-- /.modal -->
 
 <!------------------------------Starting Adding file in first follow up------------------------------------>
-<div class="modal fade" role="dialog" id="telemedicineFollowupFormModal">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
-                <hr />
-                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+<div class="modal fade" id="telemedicineFollowupFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+            <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                     <input type="hidden" name="code" id="telemed_follow_code" value="">
                     <input type="hidden" name="followup_id" id="telemedicine_follow_id" value=""><!--I add this for followup_id-->
 
@@ -251,35 +303,40 @@ $facilities = \App\Facility::select('id','name')
                     <div class="form-group">
                             <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="file-input" name="files[]" multiple class="d-none">
-    
-                            <div id="file-list" class="mt-3"></div>
-                            <div class="preview-container" id="preview-container"></div>
+                            <!-- <div id="file-list" class="mt-3"></div> -->
+                            <!-- <div class="preview-container" id="preview-container"></div> -->
                     </div>
 
-                    <!-- <div class="form-group">
-                        <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                        <input type="file" id="file-input" name="files[]" multiple class="d-none"> -->
+                    <!--=========================================================================================-->
 
-                        <!-- <div id="file-list" class="mt-3"></div>
-                        <div class="preview-container" id="preview-container"></div> -->
-                        <?php
-                            // for ($i = 1; $i <= 3; $i++) { // Change the loop condition based on the desired number of sections
-                            // echo '<div id="file-list-'.$i.'" class="mt-3">File List '.$i.'</div>
-                            //         <div class="preview-container" id="preview-container-'.$i.'">Preview Container '.$i.'</div>';
-                            // }
-                        ?>
-                    <!-- </div>      -->
+                   
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body preview-item">
+                                <div class="preview-container" id="preview-container"></div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+
+                    <!--=========================================================================================-->
+
+
+
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                     </div>
-                </form>
-                <div class="clearfix"></div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+            </form>
+            <div class="clearfix"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <!------------------------------Add files if empty----------------------------->
 
