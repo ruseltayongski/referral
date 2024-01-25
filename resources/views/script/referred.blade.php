@@ -238,6 +238,11 @@
             $("#followup_header").html("Follow Up Patient");
             telemedicine = 1;
             $("#telemedicineFollowupFormModal").modal('show');
+
+            $("#telemedicineFollowupFormModal").on('hidden.bs.modal', function(){
+            location.reload();
+        });
+
         }
     }
 

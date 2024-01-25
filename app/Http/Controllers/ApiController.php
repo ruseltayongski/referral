@@ -532,7 +532,7 @@ class ApiController extends Controller
 
     public function AddpatientFollowUpFile(Request $request){
         $user = Session::get('auth');
-
+      
         if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
             $filePaths = [];

@@ -12,6 +12,9 @@ $facilities = \App\Facility::select('id','name')
     #file-input {
       display: none;
     }
+    #file-inputed {
+      display: none;
+    }
     #files-input{
       display: none;
     }
@@ -47,11 +50,7 @@ $facilities = \App\Facility::select('id','name')
       height: 150px;
       margin: 10px;
     } 
-
-
-
     .preview-container {
-        overflow-y: scroll;
         display: flex;
         flex-wrap: nowrap;
         justify-content: center;
@@ -65,6 +64,31 @@ $facilities = \App\Facility::select('id','name')
         margin-left: 12px;  
         
     }
+
+    /* .pdf-container,
+    .image-container{
+        margin-bottom: 10px;
+    } */
+
+    .image-container {
+        position: relative;
+        display: inline-block; /* Ensure the container only takes the necessary space */
+    }
+    .pdf-container {
+        position: relative;
+        display: inline-block; /* Ensure the container only takes the necessary space */
+        margin-right: 10px; /* Adjust the margin as needed */
+        margin-top: 10px;
+    }
+    .remove-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: red; /* Set a background color to make the icon more visible */
+        padding: 5px; /* Add some padding for better visibility */
+        cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
+    }
+
 
 </style>
 <script>
@@ -83,89 +107,162 @@ $facilities = \App\Facility::select('id','name')
     // fileListView.innerHTML = '';
     // previewContainer.innerHTML = '';
 
-    for (const file of fileList) {
-        const listItem = document.createElement('div');
-        listItem.textContent = file.name;
-        fileListView.appendChild(listItem);
+        for (const file of fileList) {
+            const listItem = document.createElement('div');
+            listItem.textContent = file.name;
+            fileListView.appendChild(listItem);
 
-        // Display image preview for image files
-        if (file.type.startsWith('image/')) {
-        displayImagePreview(file, previewContainer);
-        }
-        // Display document preview for .doc and .docx files
-        else if (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
-        displayDocumentPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-        }
-        // Display spreadsheet preview for .xls and .xlsx files
-        else if (file.name.toLowerCase().endsWith('.xls') || file.name.toLowerCase().endsWith('.xlsx')) {
-        displaySpreadsheetPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-        }
-        // Display PDF preview for .pdf files
-        else if (file.type === 'application/pdf') {
-             // Create a container for each image and its remove icon
-             const pdfContainer = document.createElement('div');
-                    pdfContainer.classList.add('pdf-container');
-        displayPdfPreview(file, previewContainer, '../public/fileupload/PDF_file_icon.png'); // You can replace the placeholder URL
-        }
+            // Display image preview for image files
+            if (file.type.startsWith('image/')) {
+            displayImagePreview(file, previewContainer);
+            }
+            // // Display document preview for .doc and .docx files
+            // else if (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
+            // displayDocumentPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
+            // }
+            // // Display spreadsheet preview for .xls and .xlsx files
+            // else if (file.name.toLowerCase().endsWith('.xls') || file.name.toLowerCase().endsWith('.xlsx')) {
+            // displaySpreadsheetPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
+            // }
+            // Display PDF preview for .pdf files
+            else if (file.type === 'application/pdf') {
+               // Create a container for each PDF and its remove icon
+                const pdfContainer = document.createElement('div');
+                pdfContainer.classList.add('pdf-container');
+                //console.log("pdf name:",file.name);
+                // Display PDF preview
+                const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                
+                // Create the remove icon
+                const removeIcon = document.createElement('i');
+                removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                removeIcon.addEventListener('click', function() {
+                    // Remove the associated PDF container when the remove icon is clicked
+                    // previewContainer.removeChild(pdfContainer);
+                    pdfContainer.remove();
+                  
+                });
 
-        
-    }
+                // Append the PDF preview and remove icon to the container
+                pdfContainer.appendChild(pdfPreview);
+                pdfContainer.appendChild(removeIcon);
+
+                // Append the container to the main preview container
+                previewContainer.appendChild(pdfContainer);
+            }
+
+            
+        }
     }
 
     function displayImagePreview(file, container) {
-    const reader = new FileReader();
+        const reader = new FileReader();
+        console.log('my file', file.name);
+        reader.onload = function (e) {
+            // Create a container for each image and its remove icon
+            const imageContainer = document.createElement('div');
+            imageContainer.classList.add('image-container');
 
-    reader.onload = function (e) {
-        // Create a container for each image and its remove icon
-        const imageContainer = document.createElement('div');
-        imageContainer.classList.add('image-container');
+            // Create the image preview
+            const preview = document.createElement('img');
+            preview.setAttribute('src', e.target.result);
+            preview.style.width = '150px';
+            preview.style.height = '150px';
+            preview.setAttribute('alt', file.name);
+            preview.classList.add('preview');
 
-        // Create the image preview
+            preview.addEventListener('click', function () { 
+               // console.log(e.target.result);
+               //var imgsrc = e.target.result;
+               //console.log('img src:', imgsrc);
+                displayLargeImage(e.target.result,file.name);
+                
+            });
+
+            // Create the remove icon
+            const removeIcon = document.createElement('i');
+            removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+            removeIcon.addEventListener('click', function() {
+                // Remove the associated image preview when the remove icon is clicked
+                container.removeChild(imageContainer);
+            });
+
+            // Append the image and remove icon to the container
+            imageContainer.appendChild(preview);
+            imageContainer.appendChild(removeIcon);
+
+            // Append the container to the main container
+            container.appendChild(imageContainer);
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    // Function to display the larger image
+    function displayLargeImage(imgsrc, filename) {
+        // Create a modal or overlay element
+        console.log('img src:',imgsrc);    
+        console.log('img src:',filename);
+        // const overlay = document.createElement('div');
+        // overlay.classList.add('overlay');
+       
+        // // Create the larger image element
+        // const largeImage = document.createElement('img');
+        // largeImage.setAttribute('src', imgsrc);
+        // largeImage.style.width = '100%';
+        // largeImage.style.height = '100%';
+
+        // // Append the larger image to the overlay
+        // overlay.appendChild(largeImage);
+      
+        // // Add an event listener to close the overlay when clicked
+        // overlay.addEventListener('click', function () {
+        //     overlay.style.display = 'none';
+        // });
+
+        // // Append the overlay to the body
+        // document.body.appendChild(overlay);
+
+        $(".modal-title").html(filename);
+       
+        $("#imageView").attr('src', imgsrc);
+        $("#imageView").attr('width', '100%');
+        $("#imageView").attr('height', 'auto');
+
+        $("#viewLargerFileModal").css('z-index', 1060);
+        $("#viewLargerFileModal").modal("show");
+    }
+
+// function displayDocumentPreview(file, container, placeholderUrl) {
+//     displayFilePreview(file, container, placeholderUrl);
+//     }
+
+    // function displaySpreadsheetPreview(file, container, placeholderUrl) {
+    // displayFilePreview(file, container, placeholderUrl);
+    // }
+
+    function displayPdfPreview(file, placeholderUrl, container, ) {
+        console.log('originame pdf filename:', file);
+    // displayFilePreview(file, container, placeholderUrl);
+        const pdfPreview = document.createElement('embed');
+        pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
+    
+        pdfPreview.style.width = '150px';
+        pdfPreview.style.height = '150px';
+        pdfPreview.dataset.originalFilename = file;
+   
+        // $("#viewLargerFileModal").css('z-index', 1060);
+        // $("#viewLargerFileModal").modal("show");
+        return pdfPreview;
+    }
+    
+    function displayFilePreview(file, container, placeholderUrl) {
+        // For unsupported file types, display a placeholder image
         const preview = document.createElement('img');
-        preview.setAttribute('src', e.target.result);
-        preview.style.width = '150px';
-        preview.style.height = '150px';
+        preview.setAttribute('src', placeholderUrl);
         preview.setAttribute('alt', file.name);
         preview.classList.add('preview');
-
-        // Create the remove icon
-        const removeIcon = document.createElement('i');
-        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-        removeIcon.addEventListener('click', function() {
-            // Remove the associated image preview when the remove icon is clicked
-            container.removeChild(imageContainer);
-        });
-
-        // Append the image and remove icon to the container
-        imageContainer.appendChild(preview);
-        imageContainer.appendChild(removeIcon);
-
-        // Append the container to the main container
-        container.appendChild(imageContainer);
-    };
-
-    reader.readAsDataURL(file);
-}
-
-    function displayDocumentPreview(file, container, placeholderUrl) {
-    displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displaySpreadsheetPreview(file, container, placeholderUrl) {
-    displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displayPdfPreview(file, container, placeholderUrl) {
-    displayFilePreview(file, container, placeholderUrl);
-    }
-
-    function displayFilePreview(file, container, placeholderUrl) {
-    // For unsupported file types, display a placeholder image
-    const preview = document.createElement('img');
-    preview.setAttribute('src', placeholderUrl);
-    preview.setAttribute('alt', file.name);
-    preview.classList.add('preview');
-    container.appendChild(preview);
+        container.appendChild(preview);
     }
 
 </script>
@@ -267,6 +364,54 @@ $facilities = \App\Facility::select('id','name')
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" id="viewLargerFileModal" tabindex="-1" role="dialog" aria-labelledby="viewLargerFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Modal header content goes here -->
+                <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal body content goes here -->
+                <form method="POST" action="" id="viewLargerFileModal" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
+                                <img src="" id="imageView">
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+                        if (file.type === 'application/pdf') {?>
+                            <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                <embed src="" id="pdfPreviewContainer" type="application/pdf"/>
+                               
+                                </div>
+                            </div>
+                        </div>
+                       <?php }?>
+
+                        <hr/>
+                        <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Modal footer content goes here -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!------------------------------Starting Adding file in first follow up------------------------------------>
 <div class="modal fade" id="telemedicineFollowupFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -307,9 +452,7 @@ $facilities = \App\Facility::select('id','name')
                             <!-- <div class="preview-container" id="preview-container"></div> -->
                     </div>
 
-                    <!--=========================================================================================-->
-
-                   
+                    <!--=========================================================================================-->  
                     <div class="row">
                         <div class="card">
                             <div class="card-body preview-item">
@@ -318,13 +461,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
                     </div>
-                    
-                    
-
                     <!--=========================================================================================-->
-
-
-
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -481,9 +618,9 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                        <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
+                        <label id="file-label" for="file-inputed" class="btn btn-primary">Select Files</label>
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                        <input type="file" id="file-inputed" name="files[]" multiple class="d-none">
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                         <div id="file-list" class="mt-3"></div>
 
