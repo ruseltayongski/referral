@@ -389,16 +389,25 @@ class ApiController extends Controller
         //   $request->validate([ //this validation identify the type of file to upload
         //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
         //   ]);
+        if ($request->has('fileremove')) {
+            // Handle removal of existing files
+            $removeFiles = explode(',', $request->input('fileremove')[0]);
+            dd($removeFiles);
+        }
+
 // dd($request->all(), $request->file('filesInput'));
        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
+            // $removefiles = explode(',', $request->input('fileremove'));
+
+            // dd($removefiles);
             $filePaths = [];
             $fileNames2 = [];
         
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();
-        
+          
                 // Check if the file already exists, and rename if necessary
                 $counter = 1;
                 while (file_exists($filepath . '/' . $originalName)) {

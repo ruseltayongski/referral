@@ -107,7 +107,7 @@
         event.preventDefault();
         $(".telemedicine").val(1);
 
-        $("#position_counter").val(position);
+       $("#position_counter").val(position);
        $("#telemedicine_followup_code").val(code);
        $("#telemedicine_referred_id").val(referred_id);
        $("#telemedicine_followup_id").val(follow_id);
@@ -136,7 +136,6 @@
         
         $("#Add_followup_header").html("Add More File")
         $("#telemedicineAddFileFollowupFormModal").modal('show');
-
         $("#telemedicineAddFileFollowupFormModal").on('hidden.bs.modal', function(){
             location.reload();
         });
