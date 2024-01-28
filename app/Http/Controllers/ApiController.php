@@ -552,20 +552,20 @@ class ApiController extends Controller
         //     $removeFiles = explode(',', $request->input('fileremove')[0]);
         //     dd($removeFiles);
         // }
-//       if (isset($_REQUEST['removefile'])) {
-//     $removeFiles = $_REQUEST['removefile'];
-//     dd($removeFiles);
-// } else {
-//     // Handle the case where no files were removed
-//     dd($removeFiles);
-// }
+    //   if (isset($_REQUEST['removefile'])) {
+    //          $removeFiles = $_REQUEST['removefile'];
+    //         dd($removeFiles, $uploadFiles = $request->file('filesInput'));
+    //     } else {
+    //         // Handle the case where no files were removed
+    //         dd($removeFiles);
+    //     }
 
-        //dd($request->all(), $request->filesInput);
         if ($request->hasFile('filesInput')) {
             $uploadFiles = $request->file('filesInput');
+            $removeFiles = $_REQUEST['removefile'];
             $filePaths = [];
             $fileNames2 = [];
-        
+        dd($uploadFiles, $removeFiles);
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();

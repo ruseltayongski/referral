@@ -170,12 +170,10 @@
 
             });
             $("#AddEmptyFileFollowupForm").submit(function(event) {
-                    // Add removed files to the form data before submitting
-                    // $(this).find('input[name^="removefile"]').remove();
-                   // $(this).append('<input type="hidden" name="removefile" value="' + removedFiles + '">')
-                    // for (let i = 0; i < removedFiles.length; i++) {
-                    //     $(this).append('<input type="hidden" name="removefile[]" value="' + removedFiles[i] + '">');
-                    // }
+                   
+                    removedFiles.forEach(filename => {
+                        $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
+                    });
                 });
             imageCons.appendChild(prevImage);
             imageCons.appendChild(removeIcon);

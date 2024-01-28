@@ -514,6 +514,7 @@ $facilities = \App\Facility::select('id','name')
                         <input type="hidden" name="position_count" id="position_counter" value=""><!--I add this for followup_id-->
                         <input type="hidden" name="filename" id="filenames" value="">
                         <input type="hidden" class="telemedicine" value="">
+                        <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label style="padding:0px;">SELECT FACILITY:</label>
