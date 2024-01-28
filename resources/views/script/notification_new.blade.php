@@ -227,4 +227,23 @@
         });
     });
 
+    @if(session('file_save'))
+             <?php session()->forget('file_save'); ?>
+             Lobibox.notify('success', {
+                msg: 'Successfully saved file!'
+             });
+        @endif
+    
+    @if(session('delete_file'))
+             <?php  session()->forget('file_save'); ?>
+             lobibox.notify('success',{
+                msg: 'deleted file successfully'
+             });
+    @endif
+    @if(session('update_file'))
+             <?php session()->forget('update_file') ?>
+             lobibox.notify('success', {
+                msg: 'Successfully updated file!'
+             });
+    @endif
 </script>

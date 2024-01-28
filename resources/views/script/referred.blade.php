@@ -72,8 +72,154 @@
                 });
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Your code here
+    document.getElementById('files-input').addEventListener('change', SelectedFile);
+   
+    });
+    function SelectedFile(event) {
+        const listfile = event.target.files;
+        console.log('listfile', listfile);
+        const prevContainer = document.getElementById('container-preview');
+        prevContainer.innerHTML = '';
+        console.log('container', prevContainer);
+        for(const file of listfile){
+            const listItems = document.createElement('div');
+            listItems.textContent = file.name;
+            
+             // Display image preview for image files
+             if (file.type.startsWith('image/')) {
+                ImagePrev(file, prevContainer);
+            }
+            // Display PDF preview for .pdf files
+            else if(file.type === 'application/pdf'){
+                // Create a container for each PDF and its remove icon
+                const Containerpdf = document.createElement('div');
+                Containerpdf.classList.add('pdf-container');
+
+                const pdfPreview = PdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                const removedFiles = [];
+                // Create the remove icon
+                const removeIcon = document.createElement('i');
+                removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                removeIcon.addEventListener('click', function() {
+                    const filename = file.name;
+
+                    removedFiles.push(filename);
+                    $("#filecount").val(removedFiles.join(''));
+
+                    console.log('remove:', removedFiles);
+                    Containerpdf.remove();
+                 
+                });
+
+                $("#AddEmptyFileFollowupForm").submit(function(event) {
+                    // Add removed files to the form data before submitting
+                        $(this).find('input[name^="removefile"]').remove();
+
+                        for (let i = 0; i < removedFiles.lenght; i++){
+                            $(this).append('<input type="hidden" name="removefile[]" value="' +removedFiles[i] + '">');
+                        }
+
+                      });
+
+                Containerpdf.appendChild(pdfPreview);
+                Containerpdf.appendChild(removeIcon);
+                // Append the container to the main preview container
+                prevContainer.appendChild(Containerpdf);
+            }
+
+
+        }
+    }
+
+    function ImagePrev(file, container){
+        const reader = new FileReader();
+        //  console.log('my file namesss', file.name)
+         console.log("container 2nd",  container);
+        reader.onload = function (e){
+            const imageCons = document.createElement('div');
+            imageCons.classList.add('image-container');
+
+            const prevImage = document.createElement('img');
+            prevImage.setAttribute('src', e.target.result);
+            prevImage.style.width = '150px';
+            prevImage.style.height = '150px';
+            prevImage.setAttribute('alt', file.name);
+            prevImage.classList.add('preview');
+
+            prevImage.addEventListener('click', function () { 
+    
+                viewImage(e.target.result,file.name, container);
+                
+            });
+            const removedFiles = []; 
+            // Create the remove icon
+            const removeIcon = document.createElement('i');
+            removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+            removeIcon.addEventListener('click', function() {
+                container.removeChild(imageCons);
+
+                const filename = file.name;
+                removedFiles.push(filename);
+
+                $("#filecount").val(removedFiles.join(','));
+                // var namefile = $("#filecount").val();
+                console.log('remove:', removedFiles);
+
+            });
+            $("#AddEmptyFileFollowupForm").submit(function(event) {
+                    // Add removed files to the form data before submitting
+                    // $(this).find('input[name^="removefile"]').remove();
+                   // $(this).append('<input type="hidden" name="removefile" value="' + removedFiles + '">')
+                    // for (let i = 0; i < removedFiles.length; i++) {
+                    //     $(this).append('<input type="hidden" name="removefile[]" value="' + removedFiles[i] + '">');
+                    // }
+                });
+            imageCons.appendChild(prevImage);
+            imageCons.appendChild(removeIcon);
+
+            container.appendChild(imageCons);
+        };
+        reader.readAsDataURL(file);// to start reading the file's data and trigger the onload
+    }
+
+    function viewImage(imgsrc, filename){
+        console.log('img src:',imgsrc);    
+        console.log('filename:',filename);
+ 
+        $(".modal-title").html(filename);
+       
+        $("#imageView").attr('src', imgsrc);
+        $("#imageView").attr('width', '100%');
+        $("#imageView").attr('height', 'auto');
+
+        $("#viewLargerFileModal").css('z-index', 1060);
+        $("#viewLargerFileModal").modal("show");
+    
+    }
+
+    function PdfPreview(file, placeholderUrl, container){
+        console.log('originame pdf filename:', file);
+    // displayFilePreview(file, container, placeholderUrl);
+        const pdfPreview = document.createElement('embed');
+        pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
+    
+        pdfPreview.style.width = '150px';
+        pdfPreview.style.height = '150px';
+        pdfPreview.dataset.originalFilename = file;
+        pdfPreview.addEventListener('click', function () { 
+               
+            pdfshow(file,placeholderUrl);
+                
+            });
+       
+        return pdfPreview;
+    }
+
+
     //------------------------my adding for update file uploader Follow up-----------------------------//
-    // ${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}
      function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position)
      {
 
@@ -98,49 +244,41 @@
      }
       //------------------------my adding for update file uploader Follow up End-----------------------------//
 
-      //------------------------Add files if empty-----------------------------//
-     function addfilesInFollowupIfempty(position,code,referred_id,follow_id){
+      //------------------------Add files if empty add more-----------------------------//
+     function addfilesInFollowupIfempty(position,code,referred_id,follow_id,filenames){
         console.log('position:', position);
         console.log('position:', code);
         console.log('referred id:', referred_id);
-        console.log('follow id:', follow_id)
+        console.log('follow id:', follow_id);
+        console.log("filenames: ", filenames);
         event.preventDefault();
         $(".telemedicine").val(1);
-
-       $("#position_counter").val(position);
-       $("#telemedicine_followup_code").val(code);
-       $("#telemedicine_referred_id").val(referred_id);
-       $("#telemedicine_followup_id").val(follow_id);
-
-      $("#Add_followup_headerform").html("Add Files")
-      $("#FollowupAddEmptyFileFormModal").modal('show');
-     }
-
-    //------------------------ Add more file-----------------------------//
-     function AddFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
-        console.log("position:", position);
-        console.log('my code:',code);
-        console.log('base url', baseUrl);
-        console.log('followup Id:',follow_id);
-        console.log('referred Id',activity_id)
-        event.preventDefault();
-        $(".telemedicine").val(1);
-
-        $("#add_telemedicine_followup_code").val(code);
-        $("#add_telemedicine_followup_id").val(follow_id);
-        $("#add_telemedicine_referred_id").val(activity_id);
-        $("#position_counter_number").val(position);
-        var currentPosition = $("#position_counter_number").val();
-         console.log("Add Position:", currentPosition);
-    
-        
-        $("#Add_followup_header").html("Add More File")
-        $("#telemedicineAddFileFollowupFormModal").modal('show');
-        $("#telemedicineAddFileFollowupFormModal").on('hidden.bs.modal', function(){
+        $("#filenames").val(filenames);
+        $("#position_counter").val(position);
+        $("#telemedicine_followup_code").val(code);
+        $("#telemedicine_referred_id").val(referred_id);
+        $("#telemedicine_followup_id").val(follow_id);
+       
+        $("#Add_followup_headerform").html("Add Files")
+        $("#FollowupAddEmptyFileFormModal").modal('show');
+        $("#FollowupAddEmptyFileFormModal").on('hidden.bs.modal', function(){
             location.reload();
-        });
-     }
+          
 
+        });
+   
+        
+     }
+       
+    //  function showNotification(type, message) {
+    //     Lobibox.notify(type, {
+    //         size: 'large',
+    //         rounded: true,
+    //         delayIndicator: false,
+    //         msg: message
+    //         });
+    // }
+ //------------------------ delete file-----------------------------//
      function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
 
         event.preventDefault();
@@ -175,6 +313,7 @@
             location.reload();
         });
      }//end of the function 
+
      // select single image & pdf to preview
      function readURL(input) {
             var url = input.value;

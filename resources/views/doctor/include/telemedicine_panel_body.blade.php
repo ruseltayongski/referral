@@ -347,12 +347,13 @@
                                 <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
                                     {{ $referredFile }}
                                 </a>&nbsp;
-                            @endforeach
-                            @if(empty($sortedFiles))
-                                <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;add files
-                                </a>&nbsp;
-                            @endif
+                                @endforeach
+                                @if(empty($sortedFiles))
+                                    <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;add files
+                                    </a>&nbsp;
+                                @endif
+                         
                     <!-- @endif -->
                         @elseif ($index >= 2)
                             <?php $pdfFiles_follow = []; ?>
@@ -383,10 +384,11 @@
                                     </a>&nbsp;
                                     @endforeach
                                     @if(empty($sortedFiles_follow))
-                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}')">
-                                           <i class="fa fa-plus" aria-hidden="true"></i>add files
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>add files
                                         </a>&nbsp;
                                     @endif
+                                 
                             @endif
                         @endif
                     @endforeach
@@ -405,7 +407,7 @@
 
         //---------------------------------------------------------------------------------------------------
         function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames) {
-         // console.log('position: ', position);
+          console.log('filenames: ', fileNames);
             // Split the file names by pipe character and encode each part
             var encodedFileNames = fileNames.split('|').map(function (part) {
                 return encodeURIComponent(part.trim());
@@ -431,7 +433,7 @@
                     <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
                            <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}"><i class="fa fa-download" aria-hidden="true"></i>Download</a>
                            <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Update</a>
-                           <a href="" onclick="AddFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor"><i class="fa fa-plus" aria-hidden="true"></i>Add More</a>
+                           <a href="" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor"><i class="fa fa-plus" aria-hidden="true"></i>Add More</a>
                            <a href="" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete"><i class="fa fa-trash" aria-hidden="true"></i>delete</a>
                     </div>
                 </div>

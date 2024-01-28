@@ -83,7 +83,7 @@ $facilities = \App\Facility::select('id','name')
     .remove-icon {
         position: absolute;
         top: 0;
-        left: 0;
+        right: 0;
         background-color: red; /* Set a background color to make the icon more visible */
         padding: 5px; /* Add some padding for better visibility */
         cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
@@ -93,37 +93,31 @@ $facilities = \App\Facility::select('id','name')
 </style>
 <script>
 
-  // select multiple image & pdf to preview
+    // select multiple image & pdf to preview
 
  // document.getElementById('file-input').addEventListener('change', handleFileSelect);
-    document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     // Your code here
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
-});
+   
+    });
     function handleFileSelect(event) {
-    const fileList = event.target.files;
-    const fileListView = document.getElementById('file-list');
-    const previewContainer = document.getElementById('preview-container');
-    fileListView.innerHTML = '';
-    previewContainer.innerHTML = '';
-
+        const fileList = event.target.files;
+        console.log('fileList', fileList);
+        // const fileListView = document.getElementById('file-list');
+        const previewContainer = document.getElementById('preview-container');
+        // fileListView.innerHTML = '';
+        previewContainer.innerHTML = '';
+         console.log('containers', previewContainer);
         for (const file of fileList) {
             const listItem = document.createElement('div');
             listItem.textContent = file.name;
-            fileListView.appendChild(listItem);
+            // fileListView.appendChild(listItem);
 
             // Display image preview for image files
             if (file.type.startsWith('image/')) {
             displayImagePreview(file, previewContainer);
             }
-            // // Display document preview for .doc and .docx files
-            // else if (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
-            // displayDocumentPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-            // }
-            // // Display spreadsheet preview for .xls and .xlsx files
-            // else if (file.name.toLowerCase().endsWith('.xls') || file.name.toLowerCase().endsWith('.xlsx')) {
-            // displaySpreadsheetPreview(file, previewContainer, 'https://placehold.it/100x100'); // You can replace the placeholder URL
-            // }
             // Display PDF preview for .pdf files
             else if (file.type === 'application/pdf') {
                // Create a container for each PDF and its remove icon
@@ -144,7 +138,9 @@ $facilities = \App\Facility::select('id','name')
 
                     console.log('remove:', removedFiles);
                     pdfContainer.remove();
-                    $("#telemedicineFollowupForm").submit(function(event) {
+                 
+                });
+                $("#telemedicineFollowupForm").submit(function(event) {
                     // Add removed files to the form data before submitting
                         $(this).find('input[name^="fileremove"]').remove();
 
@@ -153,8 +149,6 @@ $facilities = \App\Facility::select('id','name')
                         }
 
                       });
-                });
-               
                 // Append the PDF preview and remove icon to the container
                 pdfContainer.appendChild(pdfPreview);
                 pdfContainer.appendChild(removeIcon);
@@ -169,7 +163,8 @@ $facilities = \App\Facility::select('id','name')
  
     function displayImagePreview(file, container) {
         const reader = new FileReader();
-        console.log('my file', file.name);
+        // console.log('my file', file.name);
+        console.log('my container', container);
         reader.onload = function (e) {
             // Create a container for each image and its remove icon
             const imageContainer = document.createElement('div');
@@ -203,7 +198,9 @@ $facilities = \App\Facility::select('id','name')
                 $("#filecount").val(removedFiles.join(','));
                 // var namefile = $("#filecount").val();
                 console.log('remove:', removedFiles);
-                $("#telemedicineFollowupForm").submit(function(event) {
+
+            });
+            $("#telemedicineFollowupForm").submit(function(event) {
                     // Add removed files to the form data before submitting
                     $(this).find('input[name^="fileremove"]').remove();
 
@@ -211,9 +208,6 @@ $facilities = \App\Facility::select('id','name')
                         $(this).append('<input type="hidden" name="fileremove[]" value="' +removedFiles[i] + '">');
                     }
                 });
-
-            });
-           
             // Append the image and remove icon to the container
             imageContainer.appendChild(preview);
             imageContainer.appendChild(removeIcon);
@@ -225,8 +219,25 @@ $facilities = \App\Facility::select('id','name')
         reader.readAsDataURL(file);
     }
 
+        // Function to display the larger image
+        function displayLargeImage(imgsrc, filename) {
+        // Create a modal or overlay element
+        console.log('img src:',imgsrc);    
+        console.log('img src:',filename);
+ 
+        $(".modal-title").html(filename);
+       
+        $("#imageView").attr('src', imgsrc);
+        $("#imageView").attr('width', '100%');
+        $("#imageView").attr('height', 'auto');
 
-    function displayPdfPreview(file, placeholderUrl, container, ) {
+        $("#viewLargerFileModal").css('z-index', 1060);
+        $("#viewLargerFileModal").modal("show");
+    }
+
+
+
+    function displayPdfPreview(file, placeholderUrl, container) {
         console.log('originame pdf filename:', file);
     // displayFilePreview(file, container, placeholderUrl);
         const pdfPreview = document.createElement('embed');
@@ -246,36 +257,13 @@ $facilities = \App\Facility::select('id','name')
 
     function  pdfshow(file){
         console.log('filename:', file);
-        if(file){
+        
             $(".modal-title").html(file);
             $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
             $("#viewpdf").css('z-index', 1060);
             $("#viewpdf").modal("show");
-        }
+        
     }
-    // Function to display the larger image
-    function displayLargeImage(imgsrc, filename) {
-        // Create a modal or overlay element
-        console.log('img src:',imgsrc);    
-        console.log('img src:',filename);
- 
-        $(".modal-title").html(filename);
-       
-        $("#imageView").attr('src', imgsrc);
-        $("#imageView").attr('width', '100%');
-        $("#imageView").attr('height', 'auto');
-
-        $("#viewLargerFileModal").css('z-index', 1060);
-        $("#viewLargerFileModal").modal("show");
-    }
-
-// function displayDocumentPreview(file, container, placeholderUrl) {
-//     displayFilePreview(file, container, placeholderUrl);
-//     }
-
-    // function displaySpreadsheetPreview(file, container, placeholderUrl) {
-    // displayFilePreview(file, container, placeholderUrl);
-    // }
 
     function displayFilePreview(file, container, placeholderUrl) {
         // For unsupported file types, display a placeholder image
@@ -386,7 +374,7 @@ $facilities = \App\Facility::select('id','name')
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" id="viewpdf" tabindex="-1" role="dialog" aria-labelledby="viewLargerFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
+<div class="modal fade" id="viewpdf" tabindex="-1" role="dialog" aria-labelledby="viewpdfFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -402,7 +390,7 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="card-body preview-item">
                                     <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
                                     <h4 id="files"></h>
-                                    <img src="" id="imageView">
+                                    <img src="" id="pdfView">
                                 </div>
                             </div>
                         </div>
@@ -484,8 +472,7 @@ $facilities = \App\Facility::select('id','name')
                             <input type="hidden" id="filecount" name="fileremove[]" multiple class="d-none">
                             <!-- <div id="file-list" class="mt-3"></div> -->
                             <!-- <div class="preview-container" id="preview-container"></div> -->
-                    </div>
-                    <!--=========================================================================================-->  
+                    </div>  
                     <div class="row">
                         <div class="card">
                             <div class="card-body preview-item">
@@ -494,7 +481,6 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
                     </div>
-                    <!--=========================================================================================-->
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -508,24 +494,25 @@ $facilities = \App\Facility::select('id','name')
   </div>
 </div>
 
-<!------------------------------Add files if empty----------------------------->
+<!------------------------------Add files if empty or more files----------------------------->
 
-    <div class="modal fade" id="FollowupAddEmptyFileFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
+<div class="modal fade" id="FollowupAddEmptyFileFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
+                        <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
             <div class="modal-body">
 
-                <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="telemedicineAddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+                <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="AddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                         <input type="hidden" name="code" id="telemedicine_followup_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
                         <input type="hidden" name="referred_id" id="telemedicine_referred_id" value=""><!--I add this for followup_id-->
                         <input type="hidden" name="position_count" id="position_counter" value=""><!--I add this for followup_id-->
+                        <input type="hidden" name="filename" id="filenames" value="">
                         <input type="hidden" class="telemedicine" value="">
                         {{ csrf_field() }}
                         <div class="form-group">
@@ -546,10 +533,15 @@ $facilities = \App\Facility::select('id','name')
                         <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="files-input" name="filesInput[]" multiple class="d-none">
-        
-                            <div id="file-list" class="mt-3"></div>
-                    
-                            <div class="preview-container" id="preview-container"></div>
+                            <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none">
+                            <!-- <div id="file-list" class="mt-3"></div> -->
+                        </div>
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                    <div class="container-preview" id="container-preview"></div>
+                                </div>
+                            </div>
                         </div>
                         <hr />
                         <div class="form-fotter pull-right">
@@ -601,7 +593,7 @@ $facilities = \App\Facility::select('id','name')
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
                         <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)">
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                        <div id="file-list" class="mt-3"></div>
+                        <!-- <div id="file-list" class="mt-3"></div> -->
                        
                         <div class="preview-container" id="preview-container">
                             <p id="file-preview-text"></p>
@@ -624,59 +616,9 @@ $facilities = \App\Facility::select('id','name')
 <!---------------------------End of the file update---------------------------------------------------->
 
 
-<!------------------------------Add more file----------------------------------------->
+<!-- ----------------------------Add more file----------------------------------------->
 
-<div class="modal fade" role="dialog" id="telemedicineAddFileFollowupFormModal">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_header"></h4>
-                <hr />
-                <form method="POST" action="{{ asset("api/video/addfilefollowup") }}" id="telemedicineAddFileForm" enctype="multipart/form-data">
-                   
-                    <input type="hidden" name="code" id="add_telemedicine_followup_code" value="">
-                    <input type="hidden" name="addfollowup_id" id="add_telemedicine_followup_id" value=""><!--I add this for followup_id-->
-                    <input type="hidden" name="addreferred_id" id="add_telemedicine_referred_id" value=""><!--I add this for followup_id-->
-                    <input type="hidden" name="addposition_counter" id="position_counter_number" value="">
-                    <input type="hidden" class="telemedicine" value="">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <label style="padding:0px;">SELECT FACILITY:</label>
-                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                            <option value="">Select Facility...</option>
-                            @foreach($facilities as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label id="file-label" for="file-inputed" class="btn btn-primary">Select Files</label>
-                        <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-inputed" name="files[]" multiple class="d-none">
-                        <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                        <div id="file-list" class="mt-3"></div>
 
-                        <div class="preview-container" id="preview-container">
-                            
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
-                    </div>
-                </form>
-                <div class="clearfix"></div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 
 <!-------------------------- delete modal file -------------------------------------->
@@ -754,6 +696,29 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script>
+$(document).ready(function() {
+    @if(session('file_save'))
+    var number = "{{ session('file_save') }}";
+        Lobibox.notify('success', {
+            msg: 'Successfully saved file!' + number +' Position'
+        });
+    @endif
 
+    @if(session('delete_file'))
+    var number = "{{ session('delete_file') }}";
+        Lobibox.notify('success', {
+            msg: 'Deleted file Successfully in ' + number +' Position'
+        });
+    @endif
 
+    @if(session('update_file'))
+    var number = "{{ session('update_file') }}";
+    Lobibox.notify('success', {
+        msg: 'Updated Successfully in ' + number +' position'
 
+    });
+    @endif
+});
+
+</script>

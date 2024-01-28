@@ -393,6 +393,9 @@ class ApiController extends Controller
             // Handle removal of existing files
             $removeFiles = explode(',', $request->input('fileremove')[0]);
             dd($removeFiles);
+        }else{
+            $removeFiles = explode(',', $request->input('fileremove')[0]);
+            dd($removeFiles);
         }
 
 // dd($request->all(), $request->file('filesInput'));
@@ -430,7 +433,7 @@ class ApiController extends Controller
                 json_encode($filePaths);
                 $activityFile->generic_name = implode('|', $fileNames2);
                 $activityFile->save();
-         
+               
         }
 
      //  -----------------------jondy changes------------------------->
@@ -535,71 +538,28 @@ class ApiController extends Controller
            
             
         }
+         session()->flash('update_file', $request->position_count_number);
         return Redirect::back();
     
     }
-
-    public function AddpatientFollowUpFile(Request $request){
-        $user = Session::get('auth');
-      
-        if ($request->hasFile('files')) {
-            $uploadFiles = $request->file('files');
-            $filePaths = [];
-            $fileNames2 = [];
-        
-            foreach ($uploadFiles as $file) {
-                $filepath = public_path() . '/fileupload/' . $user->username;
-                $originalName = $file->getClientOriginalName();
-
-                // Check if the file already exists, and rename if necessary
-                $counter = 1;
-                while (file_exists($filepath . '/' . $originalName)) {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
-                    $counter++;
-                }
-          
-            
-                    $file->move($filepath, $originalName);// the pdf file will move here
-                
-                    $filePaths[] = $filepath . '/' . $originalName;
-                    $fileNames2[] = $originalName;  
-            }
-                    $activity_referred = Activity::where('id', $request->addreferred_id)
-                        ->where('code', $request->code)
-                        ->orderby('id')
-                        ->first();
-                    $activity_followup = Activity::where('id', $request->addfollowup_id)
-                        ->where('code', $request->code)
-                        ->orderby('id')
-                        ->first();
-               
-           // dd($request->addreferred_id,$request->addfollowup_id,$request->code,$request->addposition_counter);
-            if($request->addposition_counter == 1){
-              
-                $genericname_array = explode('|', $activity_referred->generic_name);
-                $genericname_array = array_merge($genericname_array, $fileNames2);
-
-                $activity_referred->generic_name = implode('|', $genericname_array);
-                $activity_referred->save();
-             
-            }else if($request->addposition_counter >= 2){
-                $genericname_array = explode('|', $activity_followup->generic_name);
-                $genericname_array = array_merge($genericname_array, $fileNames2);
-
-                $activity_followup->generic_name = implode('|', $genericname_array);
-                $activity_followup->save();
- 
-            }
-        
-           
-        }
-
-        return Redirect::back();
-    }
-
+//---------------------------------Add files if empty or Add more files------------------------------->
     public function addpatientFollowUpFileIfEmpty(Request $request){
        
         $user = Session::get('auth');
+
+        // if ($request->has('fileremove')) {
+        //     // Handle removal of existing files
+        //     $removeFiles = explode(',', $request->input('fileremove')[0]);
+        //     dd($removeFiles);
+        // }
+//       if (isset($_REQUEST['removefile'])) {
+//     $removeFiles = $_REQUEST['removefile'];
+//     dd($removeFiles);
+// } else {
+//     // Handle the case where no files were removed
+//     dd($removeFiles);
+// }
+
         //dd($request->all(), $request->filesInput);
         if ($request->hasFile('filesInput')) {
             $uploadFiles = $request->file('filesInput');
@@ -633,21 +593,43 @@ class ApiController extends Controller
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-            if($request->position_count == 1){
-                json_encode($filePaths);
-                $referredFile->generic_name = implode('|', $fileNames2);
-                $referredFile->save();
+              
+           
+            if(empty($request->filename)){
+                if($request->position_count == 1){
+                    json_encode($filePaths);
+                    $referredFile->generic_name = implode('|', $fileNames2);
+                    $referredFile->save();
+    
+                }else if($request->position_count >= 2){
+                    json_decode($filepath);
+                    $followupfile->generic_name = implode('|', $fileNames2);
+                    $followupfile->save();
+                }
 
-            }else if($request->position_count >= 2){
-                json_decode($filepath);
-                $followupfile->generic_name = implode('|', $fileNames2);
-                $followupfile->save();
+            }else{
+                
+                if($request->position_count == 1){
+                    $genericname_array = explode('|', $referredFile->generic_name);
+                    $genericname_array = array_merge($genericname_array, $fileNames2);
+    
+                    $referredFile->generic_name = implode('|', $genericname_array);
+                    $referredFile->save();
+                       
+                }else if($request->position_count >= 2){
+                    $genericname_array = explode('|', $followupfile->generic_name);
+                    $genericname_array = array_merge($genericname_array, $fileNames2);
+    
+                    $followupfile->generic_name = implode('|', $genericname_array);
+                    $followupfile->save();
+           
+                }
+                
             }
-               
          
-        }
-                return Redirect::back();
-
+        }          
+                session()->flash('file_save', $request->position_count); 
+                return redirect()->back();
     }
 
     public function deletepatientFollowUpFile(Request $request){
@@ -689,7 +671,8 @@ class ApiController extends Controller
             $followup_activity->generic_name = implode('|', $followfile_array);
             $followup_activity->save();
         }
-
+        $position_count = $request->position_counter;
+        session()->flash('delete_file', $position_count);
         return Redirect::back();
     }
 
