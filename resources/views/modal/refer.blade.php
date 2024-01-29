@@ -119,9 +119,16 @@ $facilities = \App\Facility::select('id','name')
             const listItem = document.createElement('div');
             listItem.textContent = file.name;
             // fileListView.appendChild(listItem);
-            var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-            
-            if(ext === "pdf" || ext === "png" || ext === "jpeg" || ext === "jpg"){
+            let allowexten = ["pdf", "png", "jpeg", "jpg"];
+            let filearr = Array.from(fileList).map(file=>file.name);
+
+            let validext = filearr.every(filename => {
+                let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+                return allowexten.includes(ext);
+            });
+
+            if(validext){
+                isvalidFiles = true;
                     // Display image preview for image files
                     if (file.type.startsWith('image/')) {
                     displayImagePreview(file, previewContainer);
@@ -161,22 +168,36 @@ $facilities = \App\Facility::select('id','name')
                         previewContainer.appendChild(pdfContainer);
                     }
             }else{
-                    const errmsg = document.createElement('p');
-                    errmsg.textContent = 'Please upload a valid pdf or images file.';
-                    errmsg.style.color = 'red';
-
-                    previewContainer.appendChild(errmsg);
-
                     isvalidFiles = false;
-            }
-            $("#telemedicineFollowupForm").submit(function(event) {
-                if(!isvalidFiles){
-                    event.preventDefault();
-                }
-            });
+                    previewContainer.innerHTML = '';
+                    const errmsId = 'error-messages';
+                    let existmsg = document.getElementById(errmsId);
+                        console.log('filname', file.name);
+                        if(!existmsg){
+                            const errmsg = document.createElement('p');
+                            console.log('error: ', errmsg);
+                            
+                            errmsg.textContent = 'Please upload a valid pdf or images file..';
+                            errmsg.style.color = 'red';
+                            errmsg.id = errmsId;
+                            
+                            previewContainer.appendChild(errmsg);
 
+
+                        }
+                        break;
+                }
             
         }
+              
+                    $("#telemedicineFollowupForm").submit(function(event){
+                            if(!isvalidFiles){
+                                event.preventDefault();
+                                
+                            }
+                            
+                        });
+
     }
  
     function displayImagePreview(file, container) {

@@ -88,10 +88,21 @@
             const listItems = document.createElement('div');
             
             listItems.textContent = file.name;
-            var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-            
-            if(ext === "pdf" || (ext === "png" || ext === "jpeg" || ext === "jpg")){
+            let allowedextension =  ["pdf", "png", "jpeg", "jpg"];
+            let arrayfile = Array.from(listfile).map(file=>file.name);
+            // console.log('aarrrray',arrayfile)
+            //console.log('arrayfile:', listfile);
+            let allextension =  arrayfile.every(fileName => {
+                let ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+                return allowedextension.includes(ext);
+            });
+
+            // var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+            console.log('extension', allextension);
+
+            if(allextension){ 
                     // Display image preview for image files
+                    isvalidFiles = true;
                     if (file.type.startsWith('image/')) {
                         console.log("imagesss:", file);
                         ImagePrev(file, prevContainer);
@@ -101,7 +112,6 @@
                         // Create a container for each PDF and its remove icon
                         const Containerpdf = document.createElement('div');
                         Containerpdf.classList.add('pdf-container');
-
                         const pdfPreview = PdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
                         const removedFiles = [];
                         // Create the remove icon
@@ -133,33 +143,33 @@
                     }
                
             }else{
-                const errmsId = 'error-messages';
-                let existmsg = document.getElementById(errmsId);
-                console.log('filname', file.name);
-                    if(!existmsg){
-                        const errmsg = document.createElement('p');
-                        console.log('error: ', errmsg);
-                        
-                        errmsg.textContent = 'Please upload a valid pdf or images file..';
-                        errmsg.style.color = 'red';
-                        errmsg.id = errmsId;
-                        
-                        prevContainer.appendChild(errmsg);
-                    }
-                
                     isvalidFiles = false;
-
+                    prevContainer.innerHTML = '';
+                    const errmsId = 'error-messages';
+                    let existmsg = document.getElementById(errmsId);
+                        console.log('filname', file.name);
+                        if(!existmsg){
+                            const errmsg = document.createElement('p');
+                            console.log('error: ', errmsg);
+                            
+                            errmsg.textContent = 'Please upload a valid pdf or images file..';
+                            errmsg.style.color = 'red';
+                            errmsg.id = errmsId;
+                            
+                            prevContainer.appendChild(errmsg);
+                        }
+                         // Break out of the loop as there's an invalid file
+                        break;
+                          
                 }
-                 
-                $("#AddEmptyFileFollowupForm").submit(function(event){
-                    if(!isvalidFiles){
-                        event.preventDefault();
-                    }
-                    
-                });
-
-
         }
+                       $("#AddEmptyFileFollowupForm").submit(function(event){
+                            if(!isvalidFiles){
+                                event.preventDefault();
+                            }
+                            
+                        });
+
     }
 
     function ImagePrev(file, container){
@@ -198,7 +208,6 @@
 
             });
             $("#AddEmptyFileFollowupForm").submit(function(event) {
-                   
                     removedFiles.forEach(filename => {
                         $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
                     });
