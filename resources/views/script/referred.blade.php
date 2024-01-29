@@ -90,7 +90,7 @@
             listItems.textContent = file.name;
             var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
             
-            if(ext === "pdf" || ext === "png" || ext === "jpeg" || ext === "jpg"){
+            if(ext === "pdf" || (ext === "png" || ext === "jpeg" || ext === "jpg")){
                     // Display image preview for image files
                     if (file.type.startsWith('image/')) {
                         console.log("imagesss:", file);
@@ -150,6 +150,7 @@
                     isvalidFiles = false;
 
                 }
+                 
                 $("#AddEmptyFileFollowupForm").submit(function(event){
                     if(!isvalidFiles){
                         event.preventDefault();
