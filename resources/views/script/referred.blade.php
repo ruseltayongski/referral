@@ -86,49 +86,76 @@
         console.log('container', prevContainer);
         for(const file of listfile){
             const listItems = document.createElement('div');
-            listItems.textContent = file.name;
             
-             // Display image preview for image files
-             if (file.type.startsWith('image/')) {
-                ImagePrev(file, prevContainer);
-            }
-            // Display PDF preview for .pdf files
-            else if(file.type === 'application/pdf'){
-                // Create a container for each PDF and its remove icon
-                const Containerpdf = document.createElement('div');
-                Containerpdf.classList.add('pdf-container');
+            listItems.textContent = file.name;
+            var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+            
+            if(ext === "pdf" || ext === "png" || ext === "jpeg" || ext === "jpg"){
+                    // Display image preview for image files
+                    if (file.type.startsWith('image/')) {
+                        console.log("imagesss:", file);
+                        ImagePrev(file, prevContainer);
+                    }
+                    // Display PDF preview for .pdf files
+                    else if(file.type === 'application/pdf'){
+                        // Create a container for each PDF and its remove icon
+                        const Containerpdf = document.createElement('div');
+                        Containerpdf.classList.add('pdf-container');
 
-                const pdfPreview = PdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
-                const removedFiles = [];
-                // Create the remove icon
-                const removeIcon = document.createElement('i');
-                removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-                removeIcon.addEventListener('click', function() {
-                    const filename = file.name;
+                        const pdfPreview = PdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                        const removedFiles = [];
+                        // Create the remove icon
+                        const removeIcon = document.createElement('i');
+                        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                        removeIcon.addEventListener('click', function() {
+                            const filename = file.name;
 
-                    removedFiles.push(filename);
-                    $("#filecount").val(removedFiles.join(''));
+                            removedFiles.push(filename);
+                            $("#filecount").val(removedFiles.join(''));
 
-                    console.log('remove:', removedFiles);
-                    Containerpdf.remove();
-                 
+                            console.log('remove:', removedFiles);
+                            Containerpdf.remove();
+                        
+                        });
+
+                        $("#AddEmptyFileFollowupForm").submit(function(event) {
+                            
+                            removedFiles.forEach(filename => {
+                                $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
+                            });
+                            
+                        });
+
+                        Containerpdf.appendChild(pdfPreview);
+                        Containerpdf.appendChild(removeIcon);
+                        // Append the container to the main preview container
+                        prevContainer.appendChild(Containerpdf);
+                    }
+               
+            }else{
+                const errmsId = 'error-messages';
+                let existmsg = document.getElementById(errmsId);
+                console.log('filname', file.name);
+                    if(!existmsg){
+                        const errmsg = document.createElement('p');
+                        console.log('error: ', errmsg);
+                        
+                        errmsg.textContent = 'Please upload a valid pdf or images file..';
+                        errmsg.style.color = 'red';
+                        errmsg.id = errmsId;
+                        
+                        prevContainer.appendChild(errmsg);
+                    }
+                
+                    isvalidFiles = false;
+
+                }
+                $("#AddEmptyFileFollowupForm").submit(function(event){
+                    if(!isvalidFiles){
+                        event.preventDefault();
+                    }
+                    
                 });
-
-                $("#AddEmptyFileFollowupForm").submit(function(event) {
-                    // Add removed files to the form data before submitting
-                        $(this).find('input[name^="removefile"]').remove();
-
-                        for (let i = 0; i < removedFiles.lenght; i++){
-                            $(this).append('<input type="hidden" name="removefile[]" value="' +removedFiles[i] + '">');
-                        }
-
-                      });
-
-                Containerpdf.appendChild(pdfPreview);
-                Containerpdf.appendChild(removeIcon);
-                // Append the container to the main preview container
-                prevContainer.appendChild(Containerpdf);
-            }
 
 
         }

@@ -389,24 +389,31 @@ class ApiController extends Controller
         //   $request->validate([ //this validation identify the type of file to upload
         //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
         //   ]);
-        if ($request->has('fileremove')) {
-            // Handle removal of existing files
-            $removeFiles = explode(',', $request->input('fileremove')[0]);
-            dd($removeFiles);
-        }else{
-            $removeFiles = explode(',', $request->input('fileremove')[0]);
-            dd($removeFiles);
-        }
 
-// dd($request->all(), $request->file('filesInput'));
        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
-            // $removefiles = explode(',', $request->input('fileremove'));
 
-            // dd($removefiles);
+            $fileremove = $_REQUEST['removefiles'];
+            foreach($fileremove as $remove){
+                if($remove === ""){
+                    continue; //skip the empty string
+                 }
+
+                $fileNames = array_map(function ($file){
+                    return $file->getClientOriginalName();
+                }, $uploadFiles);
+
+                $index = array_search($remove, $fileNames);
+
+                if($index !== false){
+                    unset($uploadFiles[$index]);
+                }
+                
+            }
+            //dd($uploadFiles);
+        
             $filePaths = [];
             $fileNames2 = [];
-        
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();
@@ -478,8 +485,8 @@ class ApiController extends Controller
     public function editpatientFollowUpFile(Request $request)
     {
         $user = Session::get('auth');
-       
         $retrieveFiles = $request->selectedFileName;
+        //dd($request->all(), $retrieveFiles);
         if ($request->hasFile('files')){
                 $uploadFile = $request->file('files');
                
@@ -501,7 +508,7 @@ class ApiController extends Controller
                     ->where('code', $request->code)
                     ->orderby('id')
                     ->first();
-        
+                    $uploadFile->move($filepath, $originalName);
                 if($request->position_count_number == 1){
                    
                     $genericNameArray = explode('|', $activityFile->generic_name);
@@ -517,7 +524,7 @@ class ApiController extends Controller
                 
                     $activityFile->generic_name = implode('|', $genericNameArray);
                     $activityFile->save();
-                    $uploadFile->move($filepath, $originalName);
+                   
 
                 }else if($request->position_count_number >= 2){
                     $genericNameArray = explode('|', $activity_followup->generic_name);
@@ -533,7 +540,7 @@ class ApiController extends Controller
                     
                         $activity_followup->generic_name = implode('|', $genericNameArray);
                         $activity_followup->save();
-                        $uploadFile->move($filepath, $originalName);
+                       
                 }
            
             
@@ -547,29 +554,35 @@ class ApiController extends Controller
        
         $user = Session::get('auth');
 
-        // if ($request->has('fileremove')) {
-        //     // Handle removal of existing files
-        //     $removeFiles = explode(',', $request->input('fileremove')[0]);
-        //     dd($removeFiles);
-        // }
-    //   if (isset($_REQUEST['removefile'])) {
-    //          $removeFiles = $_REQUEST['removefile'];
-    //         dd($removeFiles, $uploadFiles = $request->file('filesInput'));
-    //     } else {
-    //         // Handle the case where no files were removed
-    //         dd($removeFiles);
-    //     }
-
         if ($request->hasFile('filesInput')) {
+
             $uploadFiles = $request->file('filesInput');
+
             $removeFiles = $_REQUEST['removefile'];
+            foreach($removeFiles as $remove) {
+                 if($remove === ""){
+                    continue; //skip the empty string
+                 }
+                $fileNames = array_map(function ($file){
+                    return $file->getClientOriginalName();
+                }, $uploadFiles);
+
+                $index = array_search($remove, $fileNames);
+
+                if($index !== false){
+                    unset($uploadFiles[$index]);
+                }
+                
+            }
+            
+             //dd($uploadFiles, $removeFiles);
+
             $filePaths = [];
             $fileNames2 = [];
-        dd($uploadFiles, $removeFiles);
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();
-        
+                
                 // Check if the file already exists, and rename if necessary
                 $counter = 1;
                 while (file_exists($filepath . '/' . $originalName)) {

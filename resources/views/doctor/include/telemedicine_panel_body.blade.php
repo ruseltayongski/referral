@@ -344,9 +344,9 @@
                                <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
-                                <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
-                                    {{ $referredFile }}
-                                </a>&nbsp;
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                        {{ $referredFile }}
+                                    </a>&nbsp;
                                 @endforeach
                                 @if(empty($sortedFiles))
                                     <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">

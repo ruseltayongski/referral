@@ -57,7 +57,13 @@ $facilities = \App\Facility::select('id','name')
         margin-top: 20px;
         flex-wrap: wrap;
     }
-
+    .container-preview {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
     .preview-item {
         padding: 5px;
         margin-right: 12px;
@@ -113,49 +119,61 @@ $facilities = \App\Facility::select('id','name')
             const listItem = document.createElement('div');
             listItem.textContent = file.name;
             // fileListView.appendChild(listItem);
+            var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+            
+            if(ext === "pdf" || ext === "png" || ext === "jpeg" || ext === "jpg"){
+                    // Display image preview for image files
+                    if (file.type.startsWith('image/')) {
+                    displayImagePreview(file, previewContainer);
+                    }
+                    // Display PDF preview for .pdf files
+                    else if (file.type === 'application/pdf') {
+                    // Create a container for each PDF and its remove icon
+                        const pdfContainer = document.createElement('div');
+                        pdfContainer.classList.add('pdf-container');
+                        //console.log("pdf name:",file.name);
+                        // Display PDF preview
+                        const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                        const removedFiles = [];
+                        // Create the remove icon
+                        const removeIcon = document.createElement('i');
+                        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                        removeIcon.addEventListener('click', function() {
+                            const filename = file.name;
 
-            // Display image preview for image files
-            if (file.type.startsWith('image/')) {
-            displayImagePreview(file, previewContainer);
+                            removedFiles.push(filename);
+                            $("#filecounter").val(removedFiles.join(','));
+
+                            console.log('remove:', removedFiles);
+                            pdfContainer.remove();
+                        
+                        });
+                        $("#telemedicineFollowupForm").submit(function(event) {
+                            removedFiles.forEach(filename => {
+                                $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
+                            }); 
+                        });
+                        // Append the PDF preview and remove icon to the container
+                        pdfContainer.appendChild(pdfPreview);
+                        pdfContainer.appendChild(removeIcon);
+
+                        // Append the container to the main preview container
+                        previewContainer.appendChild(pdfContainer);
+                    }
+            }else{
+                    const errmsg = document.createElement('p');
+                    errmsg.textContent = 'Please upload a valid pdf or images file.';
+                    errmsg.style.color = 'red';
+
+                    previewContainer.appendChild(errmsg);
+
+                    isvalidFiles = false;
             }
-            // Display PDF preview for .pdf files
-            else if (file.type === 'application/pdf') {
-               // Create a container for each PDF and its remove icon
-                const pdfContainer = document.createElement('div');
-                pdfContainer.classList.add('pdf-container');
-                //console.log("pdf name:",file.name);
-                // Display PDF preview
-                const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
-                const removedFiles = [];
-                // Create the remove icon
-                const removeIcon = document.createElement('i');
-                removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-                removeIcon.addEventListener('click', function() {
-                    const filename = file.name;
-
-                    removedFiles.push(filename);
-                    $("#filecount").val(removedFiles.join(''));
-
-                    console.log('remove:', removedFiles);
-                    pdfContainer.remove();
-                 
-                });
-                $("#telemedicineFollowupForm").submit(function(event) {
-                    // Add removed files to the form data before submitting
-                        $(this).find('input[name^="fileremove"]').remove();
-
-                        for (let i = 0; i < removedFiles.lenght; i++){
-                            $(this).append('<input type="hidden" name="fileremove[]" value="' +removedFiles[i] + '">');
-                        }
-
-                      });
-                // Append the PDF preview and remove icon to the container
-                pdfContainer.appendChild(pdfPreview);
-                pdfContainer.appendChild(removeIcon);
-
-                // Append the container to the main preview container
-                previewContainer.appendChild(pdfContainer);
-            }
+            $("#telemedicineFollowupForm").submit(function(event) {
+                if(!isvalidFiles){
+                    event.preventDefault();
+                }
+            });
 
             
         }
@@ -195,19 +213,16 @@ $facilities = \App\Facility::select('id','name')
                 const filename = file.name;
                 removedFiles.push(filename);
 
-                $("#filecount").val(removedFiles.join(','));
+                $("#filecounter").val(removedFiles.join(','));
                 // var namefile = $("#filecount").val();
                 console.log('remove:', removedFiles);
 
             });
             $("#telemedicineFollowupForm").submit(function(event) {
-                    // Add removed files to the form data before submitting
-                    $(this).find('input[name^="fileremove"]').remove();
-
-                    for (let i = 0; i < removedFiles.lenght; i++){
-                        $(this).append('<input type="hidden" name="fileremove[]" value="' +removedFiles[i] + '">');
-                    }
-                });
+                removedFiles.forEach(filename => {
+                        $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
+                });         
+            });
             // Append the image and remove icon to the container
             imageContainer.appendChild(preview);
             imageContainer.appendChild(removeIcon);
@@ -469,7 +484,7 @@ $facilities = \App\Facility::select('id','name')
                     <div class="form-group">
                             <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                            <input type="hidden" id="filecount" name="fileremove[]" multiple class="d-none">
+                            <input type="hidden" id="filecounter" name="removefiles[]" multiple class="d-none">
                             <!-- <div id="file-list" class="mt-3"></div> -->
                             <!-- <div class="preview-container" id="preview-container"></div> -->
                     </div>  
@@ -709,7 +724,7 @@ $(document).ready(function() {
     @if(session('delete_file'))
     var number = "{{ session('delete_file') }}";
         Lobibox.notify('success', {
-            msg: 'Deleted file Successfully in ' + number +' Position'
+            msg: 'Deleted file Successfully in ' + number + ' Position'
         });
     @endif
 
