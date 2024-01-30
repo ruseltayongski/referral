@@ -107,6 +107,7 @@ $facilities = \App\Facility::select('id','name')
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
    
     });
+
     function handleFileSelect(event) {
         const fileList = event.target.files;
         console.log('fileList', fileList);
@@ -126,9 +127,10 @@ $facilities = \App\Facility::select('id','name')
                 let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
                 return allowexten.includes(ext);
             });
-
+        //    const submitButton = $("#followup_submit");
             if(validext){
-                isvalidFiles = true;
+                isvalidFile = true;
+                $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
                     // Display image preview for image files
                     if (file.type.startsWith('image/')) {
                     displayImagePreview(file, previewContainer);
@@ -155,12 +157,14 @@ $facilities = \App\Facility::select('id','name')
                             pdfContainer.remove();
                         
                         });
-                        $("#telemedicineFollowupForm").submit(function(event) {
-                            removedFiles.forEach(filename => {
-                                $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
-                            }); 
-                        });
+                      
+                        // $("#telemedicineFollowupForm").submit(function(event) {
+                        //                     removedFiles.forEach(filename => {
+                        //                     $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
+                        //                 }); 
+                        //             });
                         // Append the PDF preview and remove icon to the container
+                        
                         pdfContainer.appendChild(pdfPreview);
                         pdfContainer.appendChild(removeIcon);
 
@@ -168,7 +172,7 @@ $facilities = \App\Facility::select('id','name')
                         previewContainer.appendChild(pdfContainer);
                     }
             }else{
-                    isvalidFiles = false;
+                    isvalidFile = false;
                     previewContainer.innerHTML = '';
                     const errmsId = 'error-messages';
                     let existmsg = document.getElementById(errmsId);
@@ -183,21 +187,20 @@ $facilities = \App\Facility::select('id','name')
                             
                             previewContainer.appendChild(errmsg);
 
-
                         }
-                        break;
+                         break;
+                           
                 }
-            
         }
-              
-                    $("#telemedicineFollowupForm").submit(function(event){
-                            if(!isvalidFiles){
+                         $("#telemedicineFollowupForm").submit(function(event){
+                            if(!isvalidFile){
                                 event.preventDefault();
-                                
+                            }else{
+                                //  $("#telemedicineFollowupForm").show();
+                                  previewContainer.innerHTML = '';
+                        
                             }
-                            
                         });
-
     }
  
     function displayImagePreview(file, container) {
@@ -233,17 +236,25 @@ $facilities = \App\Facility::select('id','name')
 
                 const filename = file.name;
                 removedFiles.push(filename);
-
                 $("#filecounter").val(removedFiles.join(','));
                 // var namefile = $("#filecount").val();
                 console.log('remove:', removedFiles);
+                if (container.children.length === 0) {
+                    // Reset the file input value
+                    const fileInput = document.getElementById('file-input'); 
+                    fileInput.value = '';
+                    // Optionally, trigger the change event
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
 
-            });
-            $("#telemedicineFollowupForm").submit(function(event) {
-                removedFiles.forEach(filename => {
-                        $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
-                });         
-            });
+            // $("#telemedicineFollowupForm").submit(function(event) {
+            //     removedFiles.forEach(filename => {
+            //             $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
+            //     });         
+            // });
+
             // Append the image and remove icon to the container
             imageContainer.appendChild(preview);
             imageContainer.appendChild(removeIcon);
@@ -256,7 +267,7 @@ $facilities = \App\Facility::select('id','name')
     }
 
         // Function to display the larger image
-        function displayLargeImage(imgsrc, filename) {
+        function displayLargeImage(imgsrc, filename, container) {
         // Create a modal or overlay element
         console.log('img src:',imgsrc);    
         console.log('img src:',filename);
@@ -520,7 +531,7 @@ $facilities = \App\Facility::select('id','name')
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                        <button type="submit" id="followup_submit" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                     </div>
             </form>
             <div class="clearfix"></div>
@@ -633,7 +644,8 @@ $facilities = \App\Facility::select('id','name')
                         <!-- <div id="file-list" class="mt-3"></div> -->
                        
                         <div class="preview-container" id="preview-container">
-                            <p id="file-preview-text"></p>
+                            <p id="file-preview-red"></p>
+                            <p id="file-preview-black"></p>
                             <img id="img-preview" src="#" alt="image preview" style="max-width: 100%; max-height: 300px; display: none;" />
                         </div>
                         

@@ -105,7 +105,7 @@
                     isvalidFiles = true;
                     if (file.type.startsWith('image/')) {
                         console.log("imagesss:", file);
-                        ImagePrev(file, prevContainer);
+                        ImagePrev(file, prevContainer,listfile);
                     }
                     // Display PDF preview for .pdf files
                     else if(file.type === 'application/pdf'){
@@ -125,16 +125,27 @@
 
                             console.log('remove:', removedFiles);
                             Containerpdf.remove();
-                        
+
+                            if(prevContainer.children.length === 0) {
+                                const fileInput = document.getElementById('files-input')
+                                fileInput.value = '';
+                                // $("input[name='removefile[]']").remove();
+                                
+                                // console.log('my remove name',removefile);
+                                
+                                const event = new Event('change');
+                                fileInput.dispatchEvent(event);
+                            }
+                                    
                         });
 
-                        $("#AddEmptyFileFollowupForm").submit(function(event) {
+                        // $("#AddEmptyFileFollowupForm").submit(function(event) {
                             
-                            removedFiles.forEach(filename => {
-                                $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
-                            });
+                        //     removedFiles.forEach(filename => {
+                        //         $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
+                        //     });
                             
-                        });
+                        // });
 
                         Containerpdf.appendChild(pdfPreview);
                         Containerpdf.appendChild(removeIcon);
@@ -166,15 +177,20 @@
                        $("#AddEmptyFileFollowupForm").submit(function(event){
                             if(!isvalidFiles){
                                 event.preventDefault();
+                            }else{
+                                // $("#AddEmptyFileFollowupForm").show();
+                                 prevContainer.innerHTML = '';
+
                             }
                             
                         });
 
     }
 
-    function ImagePrev(file, container){
+
+    function ImagePrev(file, container, listFile){
         const reader = new FileReader();
-        //  console.log('my file namesss', file.name)
+         console.log('list file', listFile);
          console.log("container 2nd",  container);
         reader.onload = function (e){
             const imageCons = document.createElement('div');
@@ -201,17 +217,40 @@
 
                 const filename = file.name;
                 removedFiles.push(filename);
+                const fileInput = document.getElementById('files-input');
+                const currentFiles = fileInput.files;
+                const updatedFiles = Array.from(currentFiles).filter(file => !removedFiles.includes(file.name));
 
-                $("#filecount").val(removedFiles.join(','));
+                // Create a new DataTransfer object to set the updated files
+                const newTransfer = new DataTransfer();
+                updatedFiles.forEach(file => newTransfer.items.add(file));
+
+                // Set the new DataTransfer object to the file input
+                fileInput.files = newTransfer.files
+                console.log('fileInput:', currentFiles);  
+             
+                // $("#filecount").val(removedFiles.join(','));
                 // var namefile = $("#filecount").val();
                 console.log('remove:', removedFiles);
+                // console.log('remove files number',removedFiles.children.length);
+                if(container.children.length === 0) {
+                    const fileInput = document.getElementById('files-input')
+                    fileInput.value = '';
+                    // $("input[name='removefile[]']").remove();
+            
+
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
 
             });
-            $("#AddEmptyFileFollowupForm").submit(function(event) {
-                    removedFiles.forEach(filename => {
-                        $(this).append('<input type="hidden" name="removefile[]" value="' + filename + '">');
-                    });
-                });
+            // $("#AddEmptyFileFollowupForm").submit(function(event) {
+              
+            //         removedFiles.forEach(filename => {
+            //             $(this).append('<input type="hidden" id="removefileId" name="removefile[]" value="' + filename + '">');
+            //         });
+            //     });
+                 
             imageCons.appendChild(prevImage);
             imageCons.appendChild(removeIcon);
 
@@ -358,18 +397,32 @@
                 var fileName = input.files[0].name;
 
                 if (ext === "pdf") {
-                    $('#file-preview-text').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
+                    isvalidFile = true;
+                    $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
                     $('#img-preview').css('display', 'none');
-                } else if (ext === "gif" || ext === "png" || ext === "jpeg" || ext === "jpg") {
-                    $('#file-preview-text').html('<i class="fa fa-file-image-o"></i> ' + fileName);
+                    $("#file-preview-red").html("");
+                } else if (ext === "png" || ext === "jpeg" || ext === "jpg") {
+                    isvalidFile = true;
+                    $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                     $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
-                } else {
-                    $('#file-preview-text').html('<i class="fa fa-file-o"></i> ' + fileName);
-                    $('#img-preview').css('display', 'none');
+                    $("#file-preview-red").html("");
+                }else{
+                    isvalidFile = false;
+                    $("#file-preview-red").html("Please upload a valid pdf or images file..");
+                    $("#file-preview-red").css('color', 'red');
+                    $("#file-preview-black").html("");
+                    $('#img-preview').attr('src', '').css('display', 'none');
+                    
                 }
-            } else {
-                $('#file-preview-text').html('');
-                $('#img-preview').css('display', 'none');
+                $("#telemedicineUpateFileForm").submit(function(event){
+                    if(!isvalidFile){
+                        event.preventDefault();
+                    }else{
+                        $("#telemedicineUpateFileForm").show();
+                    }
+                })
+            }else{
+                
             }
         }
      
