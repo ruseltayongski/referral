@@ -175,8 +175,8 @@
             console.log(this.activity_id, this.baseUrl, this.code)
 
             const prescriptionCode = this.code;
-
             this.fetchPrescriptions(prescriptionCode);
+        
         },
         methods: {
            
@@ -338,27 +338,16 @@
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
-
                 Lobibox.alert("success", {
                     msg: "Prescriptions saved successfully!",
                 });
                 $("#prescriptionModal").modal("hide");
 
                 console.log('Combined Prescription Data:', combinedPrescriptions);
-
+                
                 axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)
                     .then(response => {
                         console.log("Prescription submitted successfully", response.data);
-
-                        // if(response.data === 'success') {
-                        //     $("#prescriptionModal").modal('hide');
-                        //     this.prescriptionSubmitted = true
-                        //     Lobibox.alert("success",
-                        //         {
-                        //             msg: "Successfully submitted prescription!"
-                        //         });
-                        // }
-
                     })
                     .catch(error => {
                         console.error("Error submitting prescription", error);
@@ -392,6 +381,7 @@
                 this.prescriptions.splice(index, 1);
             },
 
+            
             async fetchPrescriptions(code) {
                 try {
                     const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
@@ -399,14 +389,29 @@
                     this.prescriptions = response.data.prescriptions;
 
                     const firstPrescription = this.prescriptions[0];
-                    this.generic_name = firstPrescription.generic_name;
-                    this.brandname = firstPrescription.brandname;
-                    this.dosage = firstPrescription.dosage;
-                    this.quantity = firstPrescription.quantity;
-                    this.formulation = firstPrescription.formulation;
-                    this.frequency = firstPrescription.frequency;
-                    this.duration = firstPrescription.duration;
-                    this.prescriptions = this.prescriptions.slice(1);
+
+                    // this.generic_name = firstPrescription.generic_name;
+                    // this.brandname = firstPrescription.brandname;
+                    // this.dosage = firstPrescription.dosage;
+                    // this.quantity = firstPrescription.quantity;
+                    // this.formulation = firstPrescription.formulation;
+                    // this.frequency = firstPrescription.frequency;
+                    // this.duration = firstPrescription.duration;
+                    // this.prescriptions = this.prescriptions.slice(1);
+                    
+                    if (firstPrescription) {
+                        this.generic_name = firstPrescription.generic_name || '';
+                        this.brandname = firstPrescription.brandname || '';
+                        this.dosage = firstPrescription.dosage || '';
+                        this.quantity = firstPrescription.quantity || '';
+                        this.formulation = firstPrescription.formulation || '';
+                        this.frequency = firstPrescription.frequency || '';
+                        this.duration = firstPrescription.duration || '';
+                        this.prescriptions = this.prescriptions.slice(1);
+                    } 
+                    else {
+                        console.error('No prescriptions available.');
+                    }
 
                 } catch (error) {
                     console.error('Error fetching prescriptions:', error);
@@ -414,9 +419,12 @@
             },
 
             //------------------------------------------------------------------
-           
+
+            
             
             //------------------------------------------------------------------
+
+
             
 
 

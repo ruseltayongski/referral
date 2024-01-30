@@ -25,6 +25,7 @@ class PrescribedPrescription extends Model
         'frequency',
         'duration',
         'quantity',
+        'prescribed_status',
     ];
 
     public function activity() {
