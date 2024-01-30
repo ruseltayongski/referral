@@ -578,7 +578,7 @@ class ApiController extends Controller
                 
             // }
         
-               dd($uploadFiles);
+            //    dd($uploadFiles);
 
             $filePaths = [];
             $fileNames2 = [];

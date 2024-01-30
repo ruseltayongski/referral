@@ -84,6 +84,13 @@
         const prevContainer = document.getElementById('container-preview');
         prevContainer.innerHTML = '';
         console.log('container', prevContainer);
+    
+        if(listfile.length === 0 ){
+                $("#AddEmptyFileFollowupForm").submit(function(event) {
+                event.preventDefault();
+            });
+        }
+
         for(const file of listfile){
             const listItems = document.createElement('div');
             
@@ -125,6 +132,14 @@
 
                             console.log('remove:', removedFiles);
                             Containerpdf.remove();
+
+                            const fileInput = document.getElementById('files-input');
+                            const currentfile = fileInput.files;
+                            const updatefiles = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
+                            console.log('update files pdf',fileInput.files);
+                            const newTransfer = new DataTransfer();
+                            updatefiles.forEach(file => newTransfer.items.add(file));
+                            fileInput.files = newTransfer.files;
 
                             if(prevContainer.children.length === 0) {
                                 const fileInput = document.getElementById('files-input')
@@ -217,20 +232,17 @@
 
                 const filename = file.name;
                 removedFiles.push(filename);
+
                 const fileInput = document.getElementById('files-input');
                 const currentFiles = fileInput.files;
                 const updatedFiles = Array.from(currentFiles).filter(file => !removedFiles.includes(file.name));
-
+                console.log('updated files', updatedFiles);
                 // Create a new DataTransfer object to set the updated files
                 const newTransfer = new DataTransfer();
                 updatedFiles.forEach(file => newTransfer.items.add(file));
-
                 // Set the new DataTransfer object to the file input
                 fileInput.files = newTransfer.files
-                console.log('fileInput:', currentFiles);  
-             
-                // $("#filecount").val(removedFiles.join(','));
-                // var namefile = $("#filecount").val();
+                //console.log('fileInput:', currentFiles);  
                 console.log('remove:', removedFiles);
                 // console.log('remove files number',removedFiles.children.length);
                 if(container.children.length === 0) {
