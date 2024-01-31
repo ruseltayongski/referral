@@ -408,6 +408,7 @@
         //---------------------------------------------------------------------------------------------------
         function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames) {
           console.log('filenames: ', fileNames);
+          console.log('baseUrl: ', baseUrl);
             // Split the file names by pipe character and encode each part
             var encodedFileNames = fileNames.split('|').map(function (part) {
                 return encodeURIComponent(part.trim());
@@ -421,48 +422,78 @@
           // console.log("full url", fullUrl);
             var modalContent = `
                 <div>
-                    ${isPDF(baseUrl) ?
-                        `<embed src="${baseUrl}" type="application/pdf" width="100%" height="600px" />
-                            <div class="center-block" style="display: flex; justify-content: center;">
-                                <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}">
-                                    <i class="fa fa-download" aria-hidden="true"></i> Download
-                                </a>
-                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                                </a>
-                                <a href="#" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor">
-                                    <i class="fa fa-plus" aria-hidden="true"></i> Add More
-                                </a>
-                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete">
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                </a>
-                            </div>
-                        ` :
+                    ${baseUrl && isPDF(baseUrl) ?
                         `
-                        <div class="row text-center">
-                            <div class="card center-block" style="width: 100rem; padding: 10rem 20rem;">
-                                <div class="card-body" style="border: 3px solid black; background-color: white; width: 100%; padding: 20px;">
-                                    <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                                        <img src="${baseUrl}" style="height: 60%; display: block; margin: 0 auto; align-items: center;" />
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="text-center">
+                                        <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
+                                            <div style="position: relative; width: 70%; height: 0; padding-bottom: 70%; margin: 0 auto; margin-bottom: 20px;">
+                                                <embed src="${baseUrl}" type="application/pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" />
+                                            </div>
+                                            <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                                                    <i class="fa fa-download"></i> Download
+                                                </a>
+                                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
+                                                    <i class="fa fa-pencil-square-o"></i> Update
+                                                </a>
+                                                <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" >
+                                                    <i class="fa fa-plus"></i> Add More
+                                                </a>
+                                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </a>
+                                        </div>
                                     </div>
                                 </div>
-                            
-                
-                                <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}">
-                                    <i class="fa fa-download" aria-hidden="true"></i> Download
-                                </a>
-                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                                </a>
-                                <a href="#" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor">
-                                    <i class="fa fa-plus" aria-hidden="true"></i> Add More
-                                </a>
-                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete">
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                </a>
                             </div>
                         </div>
+                               
+
+                        ` : baseUrl ?
+                        `
+                        <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="text-center">
+                                            <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
+                                                <img src="${baseUrl}" class="img-responsive center-block" style="border: 5px solid white; max-width: 40%; height: auto; margin-bottom: 20px;" />
+
+                                                <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                                                    <i class="fa fa-download"></i> Download
+                                                </a>
+                                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
+                                                    <i class="fa fa-pencil-square-o"></i> Update
+                                                </a>
+                                                <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" >
+                                                    <i class="fa fa-plus"></i> Add More
+                                                </a>
+                                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
     
+                            `
+                            :
+                            `
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="text-center">
+                                            <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
+                                                <div class="text-center">
+                                                    <p>No file available to display.</p>
+                                                </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             `
                         }
                     
@@ -487,42 +518,7 @@
             };
         }
 
-        //---------------------------------------------------------------------------------------------------
-        // function openFileViewer(filePath, fileName) {
-        //     console.log('my path',filePath);
-        //     var modalContent = `
-        //         <div>
-        //            ${isPDF(filePath) ?
-        //         `<embed src="${filePath}" type="application/pdf" width="100%" height="600px" />` :
-        //         `
-        //         <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-        //             <img src="${filePath}" style="height: 60%; display: block; margin: 0 auto;" />
-        //         </div>
-        //         `
-        //     }
-        //             <br />
-        //             <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
-        //                <a href="${filePath}" class="btn btn-outline-success" download="${fileName}">Download ${fileName}</a>
-        //             </div>
-        //         </div>
 
-                
-        //     `;
-        //     var modal = document.createElement('div');
-        //     modal.innerHTML = modalContent;
-        //     modal.style.position = 'fixed';
-        //     modal.style.top = '0';
-        //     modal.style.left = '0';
-        //     modal.style.width = '100%';
-        //     modal.style.height = '100%';
-        //     modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
-        //     modal.style.zIndex = '9999';
-
-        //     document.body.appendChild(modal);
-        //     modal.onclick = function () {
-        //         modal.parentNode.removeChild(modal);
-        //     };
-        // }
     </script>
 
 
@@ -840,19 +836,24 @@
     transform: translateY(-10px);
 }
  .filecolor{
-    color: white;
+    color: black;
+    border: 2px solid white;
+    
  }
  a.filecolor:hover{
     background-color: #76DF00;
     transform: translateY(-10px);
     color:white;
+    border: 2px solid yellow;
  }
  .filecolorDelete{
-    color: white;
+    color: black;
+    border: 2px solid white;
  }
  a.filecolorDelete:hover{
     background-color:red;
     transform: translateY(-10px);
     color: white;
+    border: 2px solid yellow
  }
 </style>
