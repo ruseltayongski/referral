@@ -72,25 +72,50 @@
                 });
         }
     }
+    //for empty error submission 
+    document.getElementById('AddEmptyFileFollowupForm').addEventListener('submit', function(event) {
+    var filesInput = document.getElementById('files-input');
+
+        if (filesInput.files.length === 0) {
+            // File input is empty, prevent form submission
+            event.preventDefault();
+            $("#err-message").html("Please select at least one file.");
+            $("#err-message").css('color', 'red');
+        }
+    });
+    document.getElementById('telemedicineUpateFileForm').addEventListener('submit', function(event) {
+    var filesInput = document.getElementById('file-upload-update');
+
+        if (filesInput.files.length === 0) {
+            // File input is empty, prevent form submission
+            event.preventDefault();
+            $("#file-empty").html("Please select at least one file.");
+            $("#file-empty").css('color', 'red');
+        }
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
     // Your code here
     document.getElementById('files-input').addEventListener('change', SelectedFile);
    
     });
+
+
     function SelectedFile(event) {
         const listfile = event.target.files;
-        console.log('listfile', listfile);
+
+        console.log('listfile :', listfile);
         const prevContainer = document.getElementById('container-preview');
         prevContainer.innerHTML = '';
         console.log('container', prevContainer);
-    
-        if(listfile.length === 0 ){
-                $("#AddEmptyFileFollowupForm").submit(function(event) {
-                event.preventDefault();
-            });
-        }
-
+        // const fileInputed = event.target;
+        // if(fileInputed.files.length === 0){
+        //     $("#AddEmptyFileFollowupForm").submit(function(event) {
+        //     event.preventDefault();
+        //     alert('Please select a file before submitting.');
+        //     return;
+        //     });
+        // }
         for(const file of listfile){
             const listItems = document.createElement('div');
             
@@ -103,12 +128,12 @@
                 let ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
                 return allowedextension.includes(ext);
             });
-
+            
             // var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
             console.log('extension', allextension);
-
             if(allextension){ 
                     // Display image preview for image files
+                  
                     isvalidFiles = true;
                     if (file.type.startsWith('image/')) {
                         console.log("imagesss:", file);
@@ -168,6 +193,11 @@
                         prevContainer.appendChild(Containerpdf);
                     }
                
+            }else if(!event.target.files.length && !prevContainer){
+            
+                        event.preventDefault();
+                        alert('Please select a file before submitting.');
+                        return;
             }else{
                     isvalidFiles = false;
                     prevContainer.innerHTML = '';
@@ -181,7 +211,7 @@
                             errmsg.textContent = 'Please upload a valid pdf or images file..';
                             errmsg.style.color = 'red';
                             errmsg.id = errmsId;
-                            
+                            $("#err-message").html("");
                             prevContainer.appendChild(errmsg);
                         }
                          // Break out of the loop as there's an invalid file
@@ -217,7 +247,7 @@
             prevImage.style.height = '150px';
             prevImage.setAttribute('alt', file.name);
             prevImage.classList.add('preview');
-
+            $("#err-message").html(""); // this will remove the display erro messages if empty
             prevImage.addEventListener('click', function () { 
     
                 viewImage(e.target.result,file.name, container);
@@ -241,10 +271,12 @@
                 const newTransfer = new DataTransfer();
                 updatedFiles.forEach(file => newTransfer.items.add(file));
                 // Set the new DataTransfer object to the file input
-                fileInput.files = newTransfer.files
+                fileInput.files = newTransfer.files;
                 //console.log('fileInput:', currentFiles);  
                 console.log('remove:', removedFiles);
                 // console.log('remove files number',removedFiles.children.length);
+               
+                console.log('image cons:')
                 if(container.children.length === 0) {
                     const fileInput = document.getElementById('files-input')
                     fileInput.value = '';
@@ -295,6 +327,7 @@
         pdfPreview.style.width = '150px';
         pdfPreview.style.height = '150px';
         pdfPreview.dataset.originalFilename = file;
+        $("#err-message").html(""); // this will remove the display erro messages if empty
         pdfPreview.addEventListener('click', function () { 
                
             pdfshow(file,placeholderUrl);
@@ -356,14 +389,6 @@
         
      }
        
-    //  function showNotification(type, message) {
-    //     Lobibox.notify(type, {
-    //         size: 'large',
-    //         rounded: true,
-    //         delayIndicator: false,
-    //         msg: message
-    //         });
-    // }
  //------------------------ delete file-----------------------------//
      function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
 
@@ -404,27 +429,28 @@
      function readURL(input) {
             var url = input.value;
             var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-
+            console.log('input', input);
             if (input.files && input.files[0]) {
                 var fileName = input.files[0].name;
-
                 if (ext === "pdf") {
                     isvalidFile = true;
                     $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
                     $('#img-preview').css('display', 'none');
                     $("#file-preview-red").html("");
+                    $("#file-empty").html("");
                 } else if (ext === "png" || ext === "jpeg" || ext === "jpg") {
                     isvalidFile = true;
                     $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                     $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
                     $("#file-preview-red").html("");
+                    $("#file-empty").html("");
                 }else{
                     isvalidFile = false;
                     $("#file-preview-red").html("Please upload a valid pdf or images file..");
                     $("#file-preview-red").css('color', 'red');
                     $("#file-preview-black").html("");
+                    $("#file-empty").html("");
                     $('#img-preview').attr('src', '').css('display', 'none');
-                    
                 }
                 $("#telemedicineUpateFileForm").submit(function(event){
                     if(!isvalidFile){

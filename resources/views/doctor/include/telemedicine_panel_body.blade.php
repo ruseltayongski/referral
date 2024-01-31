@@ -422,22 +422,53 @@
             var modalContent = `
                 <div>
                     ${isPDF(baseUrl) ?
-                        `<embed src="${baseUrl}" type="application/pdf" width="100%" height="600px" />` :
+                        `<embed src="${baseUrl}" type="application/pdf" width="100%" height="600px" />
+                            <div class="center-block" style="display: flex; justify-content: center;">
+                                <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Download
+                                </a>
+                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+                                </a>
+                                <a href="#" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                                </a>
+                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                            </div>
+                        ` :
                         `
-                        <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                            <img src="${baseUrl}" style="height: 60%;  display: block; margin: 0 auto;" />
+                        <div class="row text-center">
+                            <div class="card center-block" style="width: 100rem; padding: 10rem 20rem;">
+                                <div class="card-body" style="border: 3px solid black; background-color: white; width: 100%; padding: 20px;">
+                                    <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+                                        <img src="${baseUrl}" style="height: 60%; display: block; margin: 0 auto; align-items: center;" />
+                                    </div>
+                                </div>
+                            
+                
+                                <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Download
+                                </a>
+                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+                                </a>
+                                <a href="#" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                                </a>
+                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                            </div>
                         </div>
-                        `
-                    }
-                    <br />
-                    <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center">
-                           <a href="${baseUrl}" class="btn btn-outline-success filecolor" download="${fileNames}"><i class="fa fa-download" aria-hidden="true"></i>Download</a>
-                           <a href="" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolor"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Update</a>
-                           <a href="" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" class="btn btn-outline-primary filecolor"><i class="fa fa-plus" aria-hidden="true"></i>Add More</a>
-                           <a href="" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-outline-primary filecolorDelete"><i class="fa fa-trash" aria-hidden="true"></i>delete</a>
-                    </div>
+    
+                            `
+                        }
+                    
+             
                 </div>
-            `;
+                     `;
 
             var modal = document.createElement('div');
             modal.innerHTML = modalContent;

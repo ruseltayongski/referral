@@ -8,7 +8,13 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 ?>
 <style>
-
+    .custom-file{
+        display: inline-block;
+        cursor: pointer;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
     #file-input {
       display: none;
     }
@@ -99,11 +105,23 @@ $facilities = \App\Facility::select('id','name')
 </style>
 <script>
 
-    // select multiple image & pdf to preview
+   
 
- // document.getElementById('file-input').addEventListener('change', handleFileSelect);
- document.addEventListener('DOMContentLoaded', function () {
+    // select multiple image & pdf to preview
+    // document.getElementById('file-input').addEventListener('change', handleFileSelect);
+    document.addEventListener('DOMContentLoaded', function () {
     // Your code here
+    document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
+            var filesInput = document.getElementById('file-input');
+            if(filesInput.files.length === 0){
+                event.preventDefault();
+                $("#err-msgpdf").html("Please select at least one file.");
+            $("#err-msgpdf").css('color', 'red');
+            }
+            console.log('files inputed!', filesInput);
+        });
+
+
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
    
     });
@@ -149,10 +167,16 @@ $facilities = \App\Facility::select('id','name')
                         removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
                         removeIcon.addEventListener('click', function() {
                             const filename = file.name;
-
                             removedFiles.push(filename);
-                            $("#filecounter").val(removedFiles.join(','));
-
+                            
+                            const fileInput = document.getElementById('file-input');
+                            const currentfile = fileInput.files;
+                            const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
+                            console.log('current pdf file:',currentfile);
+                            const newTransfer = new DataTransfer();
+                            updatefile.forEach(file => newTransfer.items.add(file));
+                            fileInput.files = newTransfer.files;
+                            console.log('update pdf:', updatefile);
                             console.log('remove:', removedFiles);
                             pdfContainer.remove();
                         
@@ -164,7 +188,7 @@ $facilities = \App\Facility::select('id','name')
                         //                 }); 
                         //             });
                         // Append the PDF preview and remove icon to the container
-                        
+
                         pdfContainer.appendChild(pdfPreview);
                         pdfContainer.appendChild(removeIcon);
 
@@ -184,7 +208,7 @@ $facilities = \App\Facility::select('id','name')
                             errmsg.textContent = 'Please upload a valid pdf or images file..';
                             errmsg.style.color = 'red';
                             errmsg.id = errmsId;
-                            
+                            $("#err-msgpdf").html(""); //to empty the error messages submission
                             previewContainer.appendChild(errmsg);
 
                         }
@@ -219,7 +243,6 @@ $facilities = \App\Facility::select('id','name')
             preview.style.height = '150px';
             preview.setAttribute('alt', file.name);
             preview.classList.add('preview');
-
             preview.addEventListener('click', function () { 
                // console.log(e.target.result);
                //var imgsrc = e.target.result;
@@ -228,6 +251,7 @@ $facilities = \App\Facility::select('id','name')
                 
             });
             const removedFiles = []; 
+            $("#err-msgpdf").html(""); //to empty the error messages submission
             // Create the remove icon
             const removeIcon = document.createElement('i');
             removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
@@ -236,7 +260,16 @@ $facilities = \App\Facility::select('id','name')
 
                 const filename = file.name;
                 removedFiles.push(filename);
-                $("#filecounter").val(removedFiles.join(','));
+
+                const fileInput = document.getElementById('file-input');
+                const currentfiles = fileInput.files;
+                console.log('my current files: ',currentfiles);
+                const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
+                console.log("update files:", updatefiles);
+                const newTransfer = new DataTransfer();
+                updatefiles.forEach(file => newTransfer.items.add(file));
+                fileInput.files = newTransfer.files;
+                // $("#filecounter").val(removedFiles.join(','));
                 // var namefile = $("#filecount").val();
                 console.log('remove:', removedFiles);
                 if (container.children.length === 0) {
@@ -293,6 +326,7 @@ $facilities = \App\Facility::select('id','name')
         pdfPreview.style.width = '150px';
         pdfPreview.style.height = '150px';
         pdfPreview.dataset.originalFilename = file;
+        $("#err-msgpdf").html(""); //to empty the error messages submission
         pdfPreview.addEventListener('click', function () { 
                
             pdfshow(file,placeholderUrl);
@@ -514,15 +548,16 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                            <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                            <input type="hidden" id="filecounter" name="removefiles[]" multiple class="d-none">
+                            <label id="file-label" for="file-input" class="btn btn-primary custom-file">Select Files
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none"></label>
+                            <!-- <input type="hidden" id="filecounter" name="removefiles[]" multiple class="d-none"> -->
                             <!-- <div id="file-list" class="mt-3"></div> -->
                             <!-- <div class="preview-container" id="preview-container"></div> -->
                     </div>  
                     <div class="row">
                         <div class="card">
                             <div class="card-body preview-item">
+                                <p id="err-msgpdf" class="text-center"></p>
                                 <div class="preview-container" id="preview-container"></div>
                                
                             </div>
@@ -579,14 +614,15 @@ $facilities = \App\Facility::select('id','name')
                                 </select>
                         </div>
                         <div class="form-group">
-                            <label id="file-label" for="files-input" class="btn btn-primary">Select Files</label>
-                            <input type="file" id="files-input" name="filesInput[]" multiple class="d-none">
-                            <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none">
+                            <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
+                            <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
+                            <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
                             <!-- <div id="file-list" class="mt-3"></div> -->
                         </div>
                         <div class="row">
                             <div class="card">
                                 <div class="card-body preview-item">
+                                    <p id="err-message" class="text-center"></p>
                                     <div class="container-preview" id="container-preview"></div>
                                 </div>
                             </div>
@@ -613,7 +649,7 @@ $facilities = \App\Facility::select('id','name')
                 <h4 class="text-green" style="font-size: 15pt;" id="Update_followup_header"></h4>
                 <hr />
                
-                <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm"enctype="multipart/form-data">
+                <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data">
                    
                     <input type="hidden" name="code" id="edit_telemedicine_followup_code" value="">
                     <input type="hidden" name="followup_id" id="edit_telemedicine_followup_id" value=""><!--I add this for followup_id-->
@@ -637,14 +673,15 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                        <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files</label>
+                        <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)">
+                        <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)"></label>
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                         <!-- <div id="file-list" class="mt-3"></div> -->
                        
                         <div class="preview-container" id="preview-container">
                             <p id="file-preview-red"></p>
+                            <p id="file-empty"></p>
                             <p id="file-preview-black"></p>
                             <img id="img-preview" src="#" alt="image preview" style="max-width: 100%; max-height: 300px; display: none;" />
                         </div>
