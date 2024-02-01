@@ -304,7 +304,7 @@
                     </div> --}}
                 </div>
             </div>
-
+           
             <div class="stepper-wrapper">
                 <p class="mt-0">
                     <?php
@@ -312,11 +312,13 @@
                             ->where('code', $follow_track->code) 
                             ->where('id', $referred_track->id)
                             ->get();
-
+                       
                         $followActivities = $user->activities()
                             ->where('code', $follow_track->code)
                             ->where("status","followup")
-                            ->get();   
+                            ->get();  
+                            
+                            // dd($referredActivities, $followActivities);
                     ?>
                     <?php $pdfFiles = []; ?>
                     <?php $imageFiles = []; ?>
@@ -334,7 +336,7 @@
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles[] = $filename;                                            
-                                    }elseif (in_array($extension, ['jpg', 'jpeg', 'png'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
                                         $imageFiles[] = $filename;
                                     }
                                 }
@@ -342,10 +344,11 @@
                                 ?>
                             @endforeach
                                <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
+                           
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
                                     <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
-                                        {{ $referredFile }}
+                                        {{ $referredFile }} 
                                     </a>&nbsp;
                                 @endforeach
                                 @if(empty($sortedFiles))
@@ -370,7 +373,7 @@
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles_follow[] = $filename;                                            
-                                    }elseif (in_array($extension, ['jpg', 'jpeg', 'png'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
                                         $imageFiles_follow[] = $filename;
                                     }
                                 }
@@ -428,7 +431,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="text-center">
-                                        <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
+                                        <div class="card" style="padding: 20px;">
                                             <div style="position: relative; width: 70%; height: 0; padding-bottom: 70%; margin: 0 auto; margin-bottom: 20px;">
                                                 <embed src="${baseUrl}" type="application/pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" />
                                             </div>
@@ -457,8 +460,8 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <div class="text-center">
-                                            <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
-                                                <img src="${baseUrl}" class="img-responsive center-block" style="border: 5px solid white; max-width: 40%; height: auto; margin-bottom: 20px;" />
+                                            <div class="card" style="padding: 20px;">
+                                                <img src="${baseUrl}" class="img-responsive center-block" style="max-width: 40%; height: auto; margin-bottom: 20px;  display: block;" />
 
                                                 <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
                                                     <i class="fa fa-download"></i> Download
@@ -836,24 +839,22 @@
     transform: translateY(-10px);
 }
  .filecolor{
-    color: black;
-    border: 2px solid white;
-    
+    color: white;
+    background: linear-gradient(180deg, #52C755, #056608);
+    border: 1px solid #056608;
  }
  a.filecolor:hover{
-    background-color: #76DF00;
     transform: translateY(-10px);
     color:white;
-    border: 2px solid yellow;
+    background: linear-gradient(180deg, #056608, #8BD98D);
  }
  .filecolorDelete{
-    color: black;
-    border: 2px solid white;
+    color: white;
+    background: linear-gradient(180deg, #EE3533, #ED1E24);
  }
  a.filecolorDelete:hover{
-    background-color:red;
     transform: translateY(-10px);
     color: white;
-    border: 2px solid yellow
+    background: linear-gradient(180deg, #ED1E24, #F3787A);
  }
 </style>

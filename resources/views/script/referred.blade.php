@@ -432,25 +432,23 @@
             console.log('input', input);
             if (input.files && input.files[0]) {
                 var fileName = input.files[0].name;
+                $('#img-preview').attr('src', '').css('display', 'none');
+                $('#file-preview-black').html("");
+                $("#file-preview-red").html("");
+                $("#file-empty").html("");
+
+
                 if (ext === "pdf") {
                     isvalidFile = true;
+                    $('#img-preview').attr('src', '../public/fileupload/PDF_file_icon.png').css('display', 'block');
                     $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
-                    $('#img-preview').css('display', 'none');
-                    $("#file-preview-red").html("");
-                    $("#file-empty").html("");
-                } else if (ext === "png" || ext === "jpeg" || ext === "jpg") {
+                } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG") {
                     isvalidFile = true;
                     $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                     $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
-                    $("#file-preview-red").html("");
-                    $("#file-empty").html("");
-                }else{
+                } else {
                     isvalidFile = false;
-                    $("#file-preview-red").html("Please upload a valid pdf or images file..");
-                    $("#file-preview-red").css('color', 'red');
-                    $("#file-preview-black").html("");
-                    $("#file-empty").html("");
-                    $('#img-preview').attr('src', '').css('display', 'none');
+                    $("#file-preview-red").html("Please upload a valid pdf or image file.").css('color', 'red');
                 }
                 $("#telemedicineUpateFileForm").submit(function(event){
                     if(!isvalidFile){

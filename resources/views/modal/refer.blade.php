@@ -8,6 +8,13 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 ?>
 <style>
+    .custom-img-size {
+        max-width: 150px; /* or any other size */
+        height: auto;
+        display: block;
+        margin: 0 auto; /* for centering if needed */
+    }
+
     .custom-file{
         display: inline-block;
         cursor: pointer;
@@ -599,21 +606,6 @@ $facilities = \App\Facility::select('id','name')
                         <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label style="padding:0px;">SELECT FACILITY:</label>
-                                <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                                    <option value="">Select Facility...</option>
-                                        @foreach($facilities as $row)
-                                            <option value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endforeach
-                                </select>
-                        </div>
-                        <div class="form-group">
-                            <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                                <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                                    <option value="">Select Department...</option>
-                                </select>
-                        </div>
-                        <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
                             <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
                             <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
@@ -678,14 +670,21 @@ $facilities = \App\Facility::select('id','name')
                         <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)"></label>
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
                         <!-- <div id="file-list" class="mt-3"></div> -->
-                       
-                        <div class="preview-container" id="preview-container">
-                            <p id="file-preview-red"></p>
-                            <p id="file-empty"></p>
-                            <p id="file-preview-black"></p>
-                            <img id="img-preview" src="#" alt="image preview" style="max-width: 100%; max-height: 300px; display: none;" />
-                        </div>
-                        
+                            
+                            <div class="preview-container" id="preview-container">
+                                <p id="file-preview-red"></p>
+                                <p id="file-preview-black" class="text-center"></p>
+                                <p id="file-empty"></p>
+                            </div>
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img id="img-preview" src="#" onerror="this.src='fallback-img.jpg'" class="custom-img-size" />
+                                        <!-- <img id="pdf-preview" src="#" alt="image preview" class="custom-img-size" /> -->
+
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">

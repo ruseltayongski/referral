@@ -609,7 +609,7 @@ class ApiController extends Controller
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-              
+          
            
             if(empty($request->filename)){
                 if($request->position_count == 1){
