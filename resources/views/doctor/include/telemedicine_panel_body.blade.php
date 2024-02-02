@@ -229,7 +229,12 @@
                 ->where("status","end")
                 ->exists();
             ?>
+            <!-- =====================================================================================================-->
+
             <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
+
+             <!-- =====================================================================================================-->
+
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
@@ -300,6 +305,10 @@
                 </div>
             </div>
         @endforeach
+
+
+
+
     @endif
     @if(count($redirected_track) > 0)
         @foreach($redirected_track as $redirect_track)
@@ -411,6 +420,12 @@
             </div>
         @endforeach
     @endif
+
+
+
+
+
+
     @if(count($activities) > 0)
         <?php $first = 0;
         $latest_act = \App\Activity::where('code',$row->code)->latest('created_at')->first();

@@ -152,6 +152,7 @@
                 formulation: "",
                 frequency: "",
                 duration: "",
+                prescribed_activity_id: "",
 
                 prescriptions: [], // Array to store multiple prescriptions
             };
@@ -335,6 +336,8 @@
                         code: this.code,
                         activity_id: this.activity_id,
                         form_type: this.form_type,
+                        prescribed_activity_id: this.prescribed_activity_id,
+
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
@@ -407,6 +410,7 @@
                         this.formulation = firstPrescription.formulation || '';
                         this.frequency = firstPrescription.frequency || '';
                         this.duration = firstPrescription.duration || '';
+                        this.prescribed_activity_id = firstPrescription.prescribed_activity_id || '';
                         this.prescriptions = this.prescriptions.slice(1);
                     } 
                     else {

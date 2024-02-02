@@ -19043,6 +19043,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       formulation: "",
       frequency: "",
       duration: "",
+      prescribed_activity_id: "",
       prescriptions: [] // Array to store multiple prescriptions
     };
   },
@@ -19216,7 +19217,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           duration: this.duration,
           code: this.code,
           activity_id: this.activity_id,
-          form_type: this.form_type
+          form_type: this.form_type,
+          prescribed_activity_id: this.prescribed_activity_id
         },
         multiplePrescriptions: this.prescriptions
       };
@@ -19286,6 +19288,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                   _this.formulation = firstPrescription.formulation || '';
                   _this.frequency = firstPrescription.frequency || '';
                   _this.duration = firstPrescription.duration || '';
+                  _this.prescribed_activity_id = firstPrescription.prescribed_activity_id || '';
                   _this.prescriptions = _this.prescriptions.slice(1);
                 } else {
                   console.error('No prescriptions available.');
