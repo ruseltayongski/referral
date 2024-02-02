@@ -344,10 +344,10 @@
                                 ?>
                             @endforeach
                                <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
-                           
+                                <?php $allfiles = implode('|', array_map('/',$sortedFiles )); ?>
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}', '{{$allfiles}}')">
                                         {{ $referredFile }} 
                                     </a>&nbsp;
                                 @endforeach
@@ -380,9 +380,10 @@
                                 ?>
                             @endif
                                 <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
+                                <?php  $allfiles = implode('|', array_map('/',$sortedFiles_follow)) ?>
                             @if ($pos == $position[$position_count])
                                     @foreach ($sortedFiles_follow as $referredFile)   
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}')">
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}', '{{$allfiles}}')">
                                         {{ $referredFile }}
                                     </a>&nbsp;
                                     @endforeach
@@ -409,9 +410,10 @@
       }
 
         //---------------------------------------------------------------------------------------------------
-        function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames) {
+        function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
           console.log('filenames: ', fileNames);
           console.log('baseUrl: ', baseUrl);
+          console.log('all files', allfiles);
             // Split the file names by pipe character and encode each part
             var encodedFileNames = fileNames.split('|').map(function (part) {
                 return encodeURIComponent(part.trim());
@@ -454,50 +456,50 @@
                         </div>
                                
 
-                        ` : baseUrl ?
+                        ` :
                         `
-                        <div class="container">
+                            <div class="container">
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <div class="text-center">
-                                            <div class="card" style="padding: 20px;">
-                                                <img src="${baseUrl}" class="img-responsive center-block" style="max-width: 40%; height: auto; margin-bottom: 20px;  display: block;" />
+                                        <!-- Additional wrapper for vertical centering -->
+                                        <div class="vertical-center-wrapper" style="display: table; width: 100%; height: 100vh;">
+                                            <div class="text-center" style="display: table-cell; vertical-align: middle;">
+                                                <div class="card" style="padding: 20px;">
 
-                                                <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
-                                                    <i class="fa fa-download"></i> Download
-                                                </a>
-                                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
-                                                    <i class="fa fa-pencil-square-o"></i> Update
-                                                </a>
-                                                <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" >
-                                                    <i class="fa fa-plus"></i> Add More
-                                                </a>
-                                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
-                                                    <i class="fa fa-trash"></i> Delete
-                                                </a>
+                                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                                        <div class="carousel-inner">
+                                                             <img src="${baseUrl}" class="img-responsive center-block" style="max-width: 40%; height: auto; margin-bottom: 20px; display: block;" />
+                                                        </div>
+                                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>
+
+                                                    <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                                                        <i class="fa fa-download"></i> Download
+                                                    </a>
+                                                    <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
+                                                        <i class="fa fa-pencil-square-o"></i> Update
+                                                    </a>
+                                                    <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')">
+                                                        <i class="fa fa-plus"></i> Add More
+                                                    </a>
+                                                    <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-    
-                            `
-                            :
-                            `
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="text-center">
-                                            <div class="card" style="border: 3px solid black; background-color: #3cb371; padding: 20px;">
-                                                <div class="text-center">
-                                                    <p>No file available to display.</p>
-                                                </div>
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            `
+                        `
+                         
                         }
                     
              

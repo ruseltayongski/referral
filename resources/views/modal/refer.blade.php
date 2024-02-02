@@ -679,7 +679,7 @@ $facilities = \App\Facility::select('id','name')
                             <div class="row">
                                 <div class="card">
                                     <div class="card-body">
-                                        <img id="img-preview" src="#" onerror="this.src='fallback-img.jpg'" class="custom-img-size" />
+                                        <img id="img-preview" src="#" onerror="this.src=''" class="custom-img-size" />
                                         <!-- <img id="pdf-preview" src="#" alt="image preview" class="custom-img-size" /> -->
 
                                     </div>

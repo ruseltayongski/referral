@@ -393,23 +393,23 @@ class ApiController extends Controller
        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
 
-            $fileremove = $_REQUEST['removefiles'];
-            foreach($fileremove as $remove){
-                if($remove === ""){
-                    continue; //skip the empty string
-                 }
+            // $fileremove = $_REQUEST['removefiles'];
+            // foreach($fileremove as $remove){
+            //     if($remove === ""){
+            //         continue; //skip the empty string
+            //      }
 
-                $fileNames = array_map(function ($file){
-                    return $file->getClientOriginalName();
-                }, $uploadFiles);
+            //     $fileNames = array_map(function ($file){
+            //         return $file->getClientOriginalName();
+            //     }, $uploadFiles);
 
-                $index = array_search($remove, $fileNames);
+            //     $index = array_search($remove, $fileNames);
 
-                if($index !== false){
-                    unset($uploadFiles[$index]);
-                }
+            //     if($index !== false){
+            //         unset($uploadFiles[$index]);
+            //     }
                 
-            }
+            // }
             //dd($uploadFiles);
         
             $filePaths = [];
