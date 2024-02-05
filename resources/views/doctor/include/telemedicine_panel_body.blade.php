@@ -416,25 +416,17 @@
             const parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
             const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
             console.log('filenames', allfilename);
-
-            var fileExtension = fileNames.split('.').pop().toLowerCase();
-           
-            // const isPDF = (fileNames) => /\.pdf$/i.test(fileNames);
             
-            const images = allfilename.map(name => name.split('/').pop()).filter(name => !isPDF(name));
-            // console.log('images', images);
-            const pdfs = allfilename.map(name => name.split('/').pop()).filter(name => isPDF(name));
-
-            const hasPDFs = allfilename.some(name => isPDF(name.split('/').pop()));
-            
+             const clickedFile = allfilename.findIndex(file => file === fileNames);
+             console.log('selected file', clickedFile);
             let carouselItems = '';
-            const filesDisplay = fileExtension === 'pdf' ? pdfs : images;
             allfilename.forEach((file, index) => {
-                const isActive = index === 0 ? 'active' : '';
+                const isActive = index === clickedFile ? 'active' : '';
                 console.log('filname one', fileNames);
+                var fileExtension = file.split('.').pop().toLowerCase();
 
                 const fileUrl = `${baseUrl}/${file}`; 
-                console.log('images:', file);
+                
                 if(fileExtension === 'pdf'){
                     carouselItems += `
                     <div class="item ${isActive}">
@@ -444,7 +436,7 @@
                 }else{
                     carouselItems += `
                     <div class="item ${isActive}">
-                        <img src="${fileUrl}" alt="..." >
+                        <img src="${fileUrl}" alt="..." style="max-width:50%;height:Auto;">
                     </div>
                     `
                 }
@@ -472,7 +464,7 @@
                                                 </a>
                                         </div>
                                 </div>
-                               {{-- <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                                {{-- <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
                                                         <i class="fa fa-download"></i> Download
                                                     </a> --}}
                                                     <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
@@ -481,12 +473,12 @@
                                                     <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
                                                         <i class="fa fa-plus"></i> Add More
                                                     </a>
+                                                    <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </a> 
                                                     <a href="#"  class="btn btn-default btn-flat" onclick="closeModalButton()" id="closeModalId">
                                                         <i class="fa fa-times"></i> close
                                                     </a>
-                                                   {{-- <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
-                                                        <i class="fa fa-trash"></i> Delete
-                                                    </a> --}}
                             </div>
                         </div>
                     </div>
@@ -523,6 +515,7 @@
 
        function closeModalButton() {
            $("#carouselmodaId").hide();
+           location.reload();
        }
 
 

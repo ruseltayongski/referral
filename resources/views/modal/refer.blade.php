@@ -649,7 +649,7 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" name="position_count_number" id="position_count_number" value="">
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label style="padding:0px;">SELECT FACILITY:</label>
                         <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
                             <option value="">Select Facility...</option>
@@ -663,7 +663,7 @@ $facilities = \App\Facility::select('id','name')
                         <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
                             <option value="">Select Department...</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files
                         <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
