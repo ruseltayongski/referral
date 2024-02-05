@@ -344,10 +344,9 @@
                                 ?>
                             @endforeach
                                <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
-                                <?php $allfiles = implode('|', array_map('/',$sortedFiles )); ?>
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}', '{{$allfiles}}')">
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
                                         {{ $referredFile }} 
                                     </a>&nbsp;
                                 @endforeach
@@ -380,10 +379,10 @@
                                 ?>
                             @endif
                                 <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
-                                <?php  $allfiles = implode('|', array_map('/',$sortedFiles_follow)) ?>
+                                <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow)); ?>
                             @if ($pos == $position[$position_count])
                                     @foreach ($sortedFiles_follow as $referredFile)   
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/' . $referredFile) }}', '{{ $referredFile }}', '{{$allfiles}}')">
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$followActivities}}')">
                                         {{ $referredFile }}
                                     </a>&nbsp;
                                     @endforeach
@@ -411,102 +410,93 @@
 
         //---------------------------------------------------------------------------------------------------
         function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
-          console.log('filenames: ', fileNames);
-          console.log('baseUrl: ', baseUrl);
-          console.log('all files', allfiles);
-            // Split the file names by pipe character and encode each part
-            var encodedFileNames = fileNames.split('|').map(function (part) {
-                return encodeURIComponent(part.trim());
-            });
+            console.log('filenames: ', fileNames);
+            console.log('baseUrl: ', baseUrl);
+           
+            const parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
+            const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+            console.log('filenames', allfilename);
 
-            // Join the encoded file names with pipe character to reconstruct the URL
-            var encodedUrl = encodedFileNames.join('|');
+            var fileExtension = fileNames.split('.').pop().toLowerCase();
+           
+            // const isPDF = (fileNames) => /\.pdf$/i.test(fileNames);
+            
+            const images = allfilename.map(name => name.split('/').pop()).filter(name => !isPDF(name));
+            // console.log('images', images);
+            const pdfs = allfilename.map(name => name.split('/').pop()).filter(name => isPDF(name));
 
-            // Construct the full URL
-            var fullUrl = baseUrl + '/' + encodedUrl;
-          // console.log("full url", fullUrl);
+            const hasPDFs = allfilename.some(name => isPDF(name.split('/').pop()));
+            
+            let carouselItems = '';
+            const filesDisplay = fileExtension === 'pdf' ? pdfs : images;
+            allfilename.forEach((file, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                console.log('filname one', fileNames);
+
+                const fileUrl = `${baseUrl}/${file}`; 
+                console.log('images:', file);
+                if(fileExtension === 'pdf'){
+                    carouselItems += `
+                    <div class="item ${isActive}">
+                        <embed src="${fileUrl}" type="application/pdf" style="width:100%;height:500px;" />
+                    </div>
+                    `
+                }else{
+                    carouselItems += `
+                    <div class="item ${isActive}">
+                        <img src="${fileUrl}" alt="..." >
+                    </div>
+                    `
+                }
+            
+        });
             var modalContent = `
-                <div>
-                    ${baseUrl && isPDF(baseUrl) ?
-                        `
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="text-center">
-                                        <div class="card" style="padding: 20px;">
-                                            <div style="position: relative; width: 70%; height: 0; padding-bottom: 70%; margin: 0 auto; margin-bottom: 20px;">
-                                                <embed src="${baseUrl}" type="application/pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" />
-                                            </div>
-                                            <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
-                                                    <i class="fa fa-download"></i> Download
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- Additional wrapper for vertical centering -->
+                        <div class="vertical-center-wrapper" style="display: table; width: 100%; height: 100vh;">
+                            <div class="text-center" style="display: table-cell; vertical-align: middle;">
+                                <div class="card" style="padding: 20px;">
+                                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    ${carouselItems}
+                                                </div>
+                                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
                                                 </a>
-                                                <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
-                                                    <i class="fa fa-pencil-square-o"></i> Update
-                                                </a>
-                                                <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')" >
-                                                    <i class="fa fa-plus"></i> Add More
-                                                </a>
-                                                <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
-                                                    <i class="fa fa-trash"></i> Delete
+                                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
                                                 </a>
                                         </div>
-                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                               
-
-                        ` :
-                        `
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <!-- Additional wrapper for vertical centering -->
-                                        <div class="vertical-center-wrapper" style="display: table; width: 100%; height: 100vh;">
-                                            <div class="text-center" style="display: table-cell; vertical-align: middle;">
-                                                <div class="card" style="padding: 20px;">
-
-                                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                                                        <div class="carousel-inner">
-                                                             <img src="${baseUrl}" class="img-responsive center-block" style="max-width: 40%; height: auto; margin-bottom: 20px; display: block;" />
-                                                        </div>
-                                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                            <span class="sr-only">Previous</span>
-                                                        </a>
-                                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                            <span class="sr-only">Next</span>
-                                                        </a>
-                                                    </div>
-
-                                                    <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                               {{-- <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
                                                         <i class="fa fa-download"></i> Download
-                                                    </a>
-                                                    <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-success filecolor">
+                                                    </a> --}}
+                                                    <a href="#" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
                                                         <i class="fa fa-pencil-square-o"></i> Update
                                                     </a>
-                                                    <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}')">
+                                                    <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
                                                         <i class="fa fa-plus"></i> Add More
                                                     </a>
-                                                    <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
-                                                        <i class="fa fa-trash"></i> Delete
+                                                    <a href="#"  class="btn btn-default btn-flat" onclick="closeModalButton()" id="closeModalId">
+                                                        <i class="fa fa-times"></i> close
                                                     </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                   {{-- <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </a> --}}
                             </div>
-                        `
-                         
-                        }
-                    
-             
+                        </div>
+                    </div>
                 </div>
-                     `;
+            </div>
+                        
+         `;
 
             var modal = document.createElement('div');
+            modal.id = 'carouselmodaId'
             modal.innerHTML = modalContent;
             modal.style.position = 'fixed';
             modal.style.top = '0';
@@ -518,10 +508,22 @@
 
             document.body.appendChild(modal);
 
-            modal.onclick = function () {
-                modal.parentNode.removeChild(modal);
+            modal.onclick = function (event) {
+                if(event.target === modal){
+                    modal.parentNode.removeChild(modal);
+                }
             };
+
+           
         }
+
+        function closeModal() {
+          $("#carouselmodaId").hide();
+        }
+
+       function closeModalButton() {
+           $("#carouselmodaId").hide();
+       }
 
 
     </script>
@@ -828,8 +830,17 @@
         </div>
     @endif
 </div>
+<script>
+        // $(document).ready(function() {
+        //     $('#carousel-example-generic').carousel();
+        // });
 
+</script>
 <style>
+.carousel img {
+    margin: 0 auto;
+}
+
   .d-file{
     font-size: 12px;
     color: white;
