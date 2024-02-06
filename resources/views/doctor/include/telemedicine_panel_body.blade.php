@@ -1,4 +1,4 @@
-<link href="{{ asset('public/css/telemedicine_panel.css?v=12') }}" rel="stylesheet">
+<link href="{{ asset('public/css/telemedicine_panel.css?v=14') }}" rel="stylesheet">
 <div class="panel-body panel-scoped-telemedicine">
     <?php
     $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_track }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
         </div>
         <div class="stepper-item stepper-item-prescription @if($referred_prescription_track) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track) completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_track }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_track->id }}', '{{ $row->type }}, '{{ $fllow_track->referred_to }}'')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
                 <div class="stepper-item stepper-item-prescription @if($follow_examined_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}">
@@ -366,27 +366,29 @@
                     <div class="step-counter">2</div>
                     <div class="step-name">Seen</div>
                 </div>
-                <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter
-                                                <?php
-                    if($redirected_rejected_track)
-                        echo "bg-red";
-                    elseif($redirected_cancelled_track)
-                        echo "bg-yellow";
-                    elseif($redirected_queued_track && !$redirected_accepted_track)
-                        echo "bg-orange";
-                    ?>
-                            " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">3</div>
-                    <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
-                        if($redirected_rejected_track)
-                            echo 'Declined';
-                        elseif($redirected_cancelled_track)
+                    <?php
+                        if($follow_cancelled_track)
+                            echo "bg-yellow";
+                        elseif($follow_rejected_track)
+                            echo "bg-red";
+                        elseif($follow_queued_track && !$follow_accepted_track)
+                            echo "bg-orange";
+                    ?>"
+                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">{!! $follow_cancelled_track || $follow_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($follow_queued_track && !$follow_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</span></div>
+                    <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
+                    <?php
+                        if($follow_cancelled_track)
                             echo 'Cancelled';
-                        elseif($redirected_queued_track && !$redirected_accepted_track)
-                            echo "Queued at <br><b>".$queue_redirected."</b>";
+                        elseif($follow_rejected_track)
+                            echo 'Declined';
+                        elseif($follow_queued_track && !$follow_accepted_track)
+                            echo 'Queued at <br> <b>'. $queue_referred.'</b>';
                         else
-                            echo "Accepted"
-                        ?></div>
+                            echo 'Accepted'
+                    ?>
+                    </div>
                 </div>
                 <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter">4</div>

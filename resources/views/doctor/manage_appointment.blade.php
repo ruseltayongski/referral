@@ -52,10 +52,10 @@
                         <i class="fa fa-eye"></i> View All
                     </button>
                     <br><br>
-                    <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ $date }}">
+                    {{-- <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ $date }}">
                     <button type="submit" class="btn btn-info btn-sm btn-flat">
                         <i class="fa fa-filter"></i> Filter
-                    </button>
+                    </button> --}}
                 </div>
             </div>
             <h3>APPOINTMENTS</h3>
@@ -128,7 +128,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="label-border">
-                                        <label for="appointed_date">Appointed Date:</label>
+                                        <label for="appointed_date">Appointment Date:</label>
                                         <input type="date" class="form-control" name="appointed_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
                                         <label for="facility_id">Facility:</label>
@@ -148,7 +148,7 @@
                                             <div>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <label for="appointed_time">Appointment Time:</label><br>
                                                         <div class="col-md-6">
                                                             <span>From:</span>
                                                             <input type="time" class="form-control" name="appointed_time1" required>

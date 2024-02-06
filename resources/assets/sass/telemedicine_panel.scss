@@ -264,8 +264,9 @@
     content: "";
     border-bottom: 2px solid #ccc;
     width: 180px;
-    transform: rotate(50deg);
+    transform: rotate(45deg);
     top: -42px;
+    left: -80px;
   }
 
   .stepper-item-treated_new.completed::before {

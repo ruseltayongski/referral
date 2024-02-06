@@ -38,12 +38,12 @@
             }
         },
         props: {
-            isSelectedId: {
+            facilitySelectedId: {
                 type: Number
             }
         },
         watch: {
-            isSelectedId: async function (payload) {
+            facilitySelectedId: async function (payload,old) {
                 this.events = await this.__appointmentScheduleDate(payload)
                 this.updateCalendarEvents();
             }

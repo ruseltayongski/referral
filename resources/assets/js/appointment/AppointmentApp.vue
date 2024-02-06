@@ -5,7 +5,8 @@
                 <h3 class="page-header">Select Facility</h3>
                 <div class="row">
                     <div class="scroll-container">
-                        <appointment-facility v-if="appointment_sched" v-for="appointment in appointment_sched" :key="appointment.id" :isSelectedId="isSelectedId" :appointment="appointment" @isSelected="isSelected"></appointment-facility>
+                        <appointment-facility v-if="appointment_sched" v-for="appointment in appointment_sched" :key="appointment.id" 
+                        :facilitySelectedId="facilitySelectedId" :appointment="appointment" @facilitySelected="facilitySelected"></appointment-facility>
                     </div>
                 </div>
             </div>
@@ -15,8 +16,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <appointment-calendar :isSelectedId="isSelectedId" @appointedTime="appointedTime"></appointment-calendar>
-                <appointment-time :appointedTimes="appointedTimes"></appointment-time>
+                <appointment-calendar :facilitySelectedId="facilitySelectedId" @appointedTime="appointedTime"></appointment-calendar>
+                <appointment-time :facilitySelectedId="facilitySelectedId" :appointedTimes="appointedTimes"></appointment-time>
             </div>
         </div> 
     </div>
@@ -38,7 +39,7 @@
         ],
         data() {
             return {
-                isSelectedId : 0,
+                facilitySelectedId : 0,
                 appointedTimes: []
             }
         },
@@ -46,12 +47,11 @@
 
         },
         methods: {
-            isSelected(payload) {
-                this.isSelectedId = payload
+            facilitySelected(payload) {
+                this.facilitySelectedId = payload
             },
             appointedTime(payload) {
                 this.appointedTimes = payload
-                //console.log(this.)
             }
         }
     }

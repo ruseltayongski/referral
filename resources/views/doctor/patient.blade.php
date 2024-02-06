@@ -243,25 +243,23 @@ $counter = 0;
                                                data-patient_id = "{{ $row->id }}"
                                                data-toggle="modal"
                                                data-type="pregnant"
-                                               class="btn btn-primary btn-xs profile_info hide"
+                                               class="btn btn-primary btn-xs profile_info hide patient-emergency hidden"
                                                onclick="handleRefer()"
                                                style="width:100%;margin-bottom:5px;">
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
+                                            </a>
+                                            <a href="#pregnantModal"
+                                                data-patient_id = "{{ $row->id }}"
+                                                data-toggle="modal"
+                                                data-type="pregnant"
+                                                data-telemedicine="1"
+                                                onclick="handleTelemedicine()"
+                                                class="btn btn-success btn-xs profile_info hide patient-consultation hidden"
+                                                style="width:100%;margin-bottom:5px;">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
                                             </a><br>
-                                            @if($user->id == 4959 || $user->id == 6733 || $user->id == 4975)
-                                                <a href="#pregnantModal"
-                                                   data-patient_id = "{{ $row->id }}"
-                                                   data-toggle="modal"
-                                                   data-type="pregnant"
-                                                   data-telemedicine="1"
-                                                   onclick="handleTelemedicine()"
-                                                   class="btn btn-success btn-xs profile_info hide"
-                                                   style="width:100%;margin-bottom:5px;">
-                                                    <i class="fa fa-stethoscope"></i>
-                                                    Consultation
-                                                </a><br>
-                                            @endif
                                             <a href="#"
                                                id="walkinPregnant{{ $counter }}"
                                                data-patient_id = "{{ $row->id }}"
@@ -269,7 +267,7 @@ $counter = 0;
                                                data-type="pregnant"
                                                onclick="promptWalkinPregnant(<?php echo $counter++?>)"
                                                style="width:100%;"
-                                               class="btn btn-warning btn-xs profile_info hide">
+                                               class="btn btn-warning btn-xs profile_info hide patient-emergency hidden">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
@@ -281,23 +279,21 @@ $counter = 0;
                                                data-type="normal"
                                                style="width:100%;margin-bottom:5px;"
                                                onclick="handleRefer()"
-                                               class="btn btn-primary btn-xs profile_info">
+                                               class="btn btn-primary btn-xs profile_info patient-emergency hidden">
                                                 <i class="fa fa-ambulance"></i>
                                                 Refer
+                                            </a>
+                                            <a href="#normalFormModal"
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                onclick="handleTelemedicine()"
+                                                style="width:100%;margin-bottom:5px;"
+                                                class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
                                             </a><br>
-                                            @if($user->id == 4959 || $user->id == 6733 || $user->id == 4975)
-                                                <a href="#normalFormModal"
-                                                   data-patient_id="{{ $row->id }}"
-                                                   data-backdrop="static"
-                                                   data-toggle="modal"
-                                                   data-type="normal"
-                                                   onclick="handleTelemedicine()"
-                                                   style="width:100%;margin-bottom:5px;"
-                                                   class="btn btn-success btn-xs profile_info">
-                                                    <i class="fa fa-stethoscope"></i>
-                                                    Consultation
-                                                </a><br>
-                                            @endif
                                             <a href="#"
                                                id="walkinNormal{{ $counter }}"
                                                data-patient_id="{{ $row->id }}"
@@ -306,7 +302,7 @@ $counter = 0;
                                                data-type="normal"
                                                onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
                                                style="width:100%;"
-                                               class="btn btn-warning btn-xs profile_info">
+                                               class="btn btn-warning btn-xs profile_info patient-emergency hidden">
                                                 <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
@@ -346,6 +342,20 @@ $counter = 0;
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
     @include('script.datetime')
     <script>
+        $(document).ready(function() {
+            $(".patient-emergency").removeClass('hidden');
+            $(".patient-consultation").removeClass('hidden');
+            const telemedicineAppoinmentSlot = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get('appointment')));
+            if(telemedicineAppoinmentSlot) {
+                $(".patient-emergency").remove();
+                setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
+            }
+            else if(!telemedicineAppoinmentSlot) {
+                $(".patient-consultation").remove();
+                setCookie('telemedicineAppointment', false, 1);
+            }
+        });
+
         function handleRefer() {
             $(".telemedicine").val(0);
             selectFormTitle("Clinical ");

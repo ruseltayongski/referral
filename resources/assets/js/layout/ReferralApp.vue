@@ -662,14 +662,15 @@
                 .listen('SocketReferralDischarged', (event) => {
                     console.log(event);
                     if(event.payload.status === 'telemedicine') {
-                        if((event.payload.action_md === this.user.id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
+                        if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             console.log("callAdoctor");
                             this.action_md = event.payload.action_md;
                             this.doctorCaller = event.payload.doctorCaller;
                             this.telemedicineFormType = event.payload.form_type;
                             this.activity_id = event.payload.activity_id;
                             this.callADoctor(event.payload.tracking_id,event.payload.code);
-                        } else if(event.payload.referred_from === this.user.facility_id) {
+                        } 
+                        else if(event.payload.referred_from === this.user.facility_id) {
                             if(event.payload.telemedicine_status === 'examined') {
                                 console.log("examinedcompleted");
                                 this.examinedCompleted(event.payload.code, event.payload.activity_id);

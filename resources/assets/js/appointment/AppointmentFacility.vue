@@ -1,9 +1,9 @@
 <template>
     <div class="col-md-4 scroll-item">
-        <div :class="{ 'highlighted': appointment.facility.id == isSelectedId }" class="box box-widget widget-user with-badge">
+        <div :class="{ 'highlighted': appointment.facility.id == facilitySelectedId }" class="box box-widget widget-user with-badge">
             <div class="widget-user-header">
                 <h3 class="widget-user-username">
-                    {{ appointment.facility.name }} {{ appointment.facility.id }}
+                    {{ appointment.facility.name }}
                 </h3>
                 <h5 class="widget-user-desc">
                     {{ appointment.facility.address }}
@@ -48,22 +48,24 @@
             appointment: {
                 type: Object, 
             },
-            isSelectedId: {
+            facilitySelectedId: {
                 type: Number
             }
         },
         watch: {
-            isSelectedId: function(value) {
+            facilitySelectedId: function(value) {
                 
             }
         },
         methods: {
             facilitySelected(id) {
-                //remove element
-                $(".fc-day").css("background-color","")
-                $(".fc-day").removeClass("add-cursor-pointer")
-                //
-                this.$emit('isSelected', id)
+                if(this.facilitySelectedId !== id) {
+                    //remove element
+                    $(".fc-day").css("background-color","")
+                    $(".fc-day").removeClass("add-cursor-pointer")
+                    //
+                }
+                this.$emit('facilitySelected', id)
             }
         }
     }

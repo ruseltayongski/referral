@@ -120,36 +120,59 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, alreadyAccepted, action_md, referring_md, activity_id, form_tpe) {
-        if(alreadyAccepted || $("#accepted_progress"+code+activity_id).hasClass("completed")) {
-            var url = "<?php echo asset('api/video/call'); ?>";
-            var json = {
-                "_token" : "<?php echo csrf_token(); ?>",
-                "tracking_id" : tracking_id,
-                "code" : code,
-                "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
-                "referring_md" : referring_md,
-                "trigger_by" : "{{ $user->id }}",
-                "form_type" : form_tpe,
-                "activity_id" : activity_id
-            };
-            $.post(url,json,function(){
-
-            });
-            var windowName = 'NewWindow'; // Name of the new window
-            var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
-            if (newWindow && newWindow.outerWidth) {
-                // If the window was successfully opened, attempt to maximize it
-                newWindow.moveTo(0, 0);
-                newWindow.resizeTo(screen.availWidth, screen.availHeight);
-            }
-        } else if(!alreadyAccepted) {
-            Lobibox.alert("error",
-            {
-                msg: "You cannot follow up on a patient because it has not yet been examined."
-            });
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to) {
+        var url = "<?php echo asset('api/video/call'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "tracking_id" : tracking_id,
+            "code" : code,
+            "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
+            "referring_md" : referring_md,
+            "trigger_by" : "{{ $user->id }}",
+            "form_type" : form_tpe,
+            "activity_id" : activity_id,
+            "referred_to" : referred_to
+        };
+        $.post(url,json,function(){});
+        var windowName = 'NewWindow'; // Name of the new window
+        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
+        if (newWindow && newWindow.outerWidth) {
+            // If the window was successfully opened, attempt to maximize it
+            newWindow.moveTo(0, 0);
+            newWindow.resizeTo(screen.availWidth, screen.availHeight);
         }
+
+        // if($("#accepted_progress"+code+activity_id).hasClass("completed")) {
+        //     var url = "<?php echo asset('api/video/call'); ?>";
+        //     var json = {
+        //         "_token" : "<?php echo csrf_token(); ?>",
+        //         "tracking_id" : tracking_id,
+        //         "code" : code,
+        //         "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
+        //         "referring_md" : referring_md,
+        //         "trigger_by" : "{{ $user->id }}",
+        //         "form_type" : form_tpe,
+        //         "activity_id" : activity_id
+        //     };
+        //     $.post(url,json,function(){
+
+        //     });
+        //     var windowName = 'NewWindow'; // Name of the new window
+        //     var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+        //     var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
+        //     if (newWindow && newWindow.outerWidth) {
+        //         // If the window was successfully opened, attempt to maximize it
+        //         newWindow.moveTo(0, 0);
+        //         newWindow.resizeTo(screen.availWidth, screen.availHeight);
+        //     }
+        // } 
+        // else if(!alreadyAccepted) {
+        //     Lobibox.alert("error",
+        //     {
+        //         msg: "You cannot follow up on a patient because it has not yet been examined."
+        //     });
+        // }
     }
 
     function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {

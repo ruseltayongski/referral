@@ -54,7 +54,7 @@
                 <button type="submit" class="btn btn-block btn-flat btn-success">
                     <i class="fa fa-search"></i> Filter
                 </button>
-                <a href="{{ url('doctor/patient/add') }}" class="btn btn-block btn-flat btn-warning">
+                <a href="{{ url('doctor/patient/add') }}" id="addPatientBtn" class="btn btn-block btn-flat btn-warning">
                     <i class="fa fa-user-plus"></i> Add Patient
                 </a>
             </div>

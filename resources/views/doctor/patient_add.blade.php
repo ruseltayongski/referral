@@ -1,6 +1,6 @@
 <?php
-$user = Session::get('auth');
-$status = session::get('status');
+    $user = Session::get('auth');
+    $status = session::get('status');
 ?>
 @extends('layouts.app')
 
@@ -164,6 +164,9 @@ $status = session::get('status');
 @section('js')
 @include('script.filterMuncity')
 <script>
+    var telemedicineAppointment = JSON.stringify(getCookie('telemedicineAppointment'));
+    console.log(telemedicineAppointment);
+
     $(".select2").select2({ width: '100%' });
     $('.select_phic').on('change',function(){
         var status = $(this).val();
@@ -173,6 +176,7 @@ $status = session::get('status');
             $('.phicID').val('').attr('disabled',true);
         }
     });
+    
 </script>
 @endsection
 

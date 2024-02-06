@@ -206,7 +206,8 @@ class ApiController extends Controller
             "status" => "telemedicine",
             "doctorCaller" => $doctorCaller,
             "form_type" => $request->form_type,
-            "activity_id" => $request->activity_id
+            "activity_id" => $request->activity_id,
+            "referred_to" => (int)$request->referred_to
         ];
         broadcast(new SocketReferralDischarged($call));
     }

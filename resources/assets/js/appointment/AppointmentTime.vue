@@ -5,11 +5,50 @@
             appointedTimes: {
                 type: Object
             },
-
+            facilitySelectedId: {
+                type: Number
+            }
+        },
+        data() {
+            return {
+                selectedAppointmentTime: null,
+                showAppointmentTime: false,
+                base: $("#broadcasting_url").val()
+            }
         },
         watch: {
             appointedTimes: async function (payload) {
-                console.log(payload, "check")
+                this.showAppointmentTime = true;
+            },
+            facilitySelectedId: async function (newValue, oldValue) {
+                this.showAppointmentTime = false;
+            }
+        },
+        methods: {
+            proceedAppointment() {
+                if(!this.selectedAppointmentTime) {
+                    Lobibox.alert("error",
+                    {
+                        msg: "Please Select Time of Appoinment"
+                    });
+                    return;
+                }
+                const appointment = {
+                    facility_id: this.facilitySelectedId,
+                    appointmentId: this.selectedAppointmentTime
+                }
+                window.location.href = `${this.base}/doctor/patient?appointmentKey=${this.generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+            },
+            generateAppointmentKey(length) {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let key = '';
+
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * characters.length);
+                    key += characters.charAt(randomIndex);
+                }
+
+                return key;
             }
         }
     }
@@ -34,11 +73,11 @@
                                         <h3 class="box-title">Select Time of Appointment</h3>
                                         <div id="date-selected"></div>
                                     </div>
-                                    <div class="box-body" v-if="appointedTimes.length > 0">
+                                    <div class="box-body" v-if="appointedTimes.length > 0 && showAppointmentTime">
                                         <div id="appointment-time-list" v-for="appointment in appointedTimes" :key="appointment.id">
-                                            <input type="radio" name="foo" id="hours_radio">&nbsp;&nbsp;{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} - Available Slots: {{ appointment.slot }}
+                                            <input type="radio" class="hours_radio" v-model="selectedAppointmentTime" :value="appointment.id">&nbsp;&nbsp;{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} - Available Slots: {{ appointment.slot }}
                                         </div>
-                                        <button type="button" id="consultation" class="btn btn-success bt-md btn-block"><i class="fa fa-stethoscope"></i>&nbsp;Consultation</button>
+                                        <button type="button" id="consultation" class="btn btn-success bt-md btn-block" @click="proceedAppointment"><i class="fa fa-calendar"></i>&nbsp;Appointment</button>
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +92,7 @@
     #appointment-time-list {
         display: flex;padding: 5px;
     }
-    #hours_radio {
+    .hours_radio {
         margin-bottom: 5px;
         transform: scale(1.5);
         cursor: pointer;

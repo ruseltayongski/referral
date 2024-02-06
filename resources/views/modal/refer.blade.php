@@ -160,10 +160,10 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="form-group">
-                        <form id="upload-form" enctype="multipart/form-data">
+                        {{-- <form id="upload-form" enctype="multipart/form-data">
                             <label id="file-label" for="file-input" class="btn btn-primary">Select Files</label>
                             <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                        </form>
+                        </form> --}}
                 
                         <div id="file-list" class="mt-3"></div>
                 
