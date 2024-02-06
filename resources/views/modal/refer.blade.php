@@ -8,6 +8,39 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 ?>
 <style>
+.inputDnD .form-control-file {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 6em;
+  outline: none;
+  visibility: hidden;
+  cursor: pointer;
+  background-color: #c61c23;
+  box-shadow: 0 0 5px solid currentColor;
+}
+.inputDnD .form-control-file:before {
+  content: attr(data-title);
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  width: 100%;
+  min-height: 6em;
+  line-height: 2em;
+  padding-top: 1.5em;
+  opacity: 1;
+  visibility: visible;
+  text-align: center;
+  border: 0.25em dashed currentColor;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+.inputDnD .form-control-file:hover:before {
+  border-style: solid;
+  box-shadow: inset 0px 0px 0px 0.25em currentColor;
+}
+
+/* _______________________________________________ */
     .custom-img-size {
         max-width: 150px; /* or any other size */
         height: auto;
@@ -608,6 +641,7 @@ $facilities = \App\Facility::select('id','name')
                         <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
                             <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
+
                             <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
                             <!-- <div id="file-list" class="mt-3"></div> -->
                         </div>
@@ -805,5 +839,21 @@ $(document).ready(function() {
     });
     @endif
 });
+
+
+function readUrl(input) {
+  
+  if (input.files && input.files[0]) {
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      let imgData = e.target.result;
+      let imgName = input.files[0].name;
+      input.setAttribute("data-title", imgName);
+      console.log(e.target.result);
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+
+}
 
 </script>

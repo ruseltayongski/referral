@@ -382,8 +382,7 @@
         $("#FollowupAddEmptyFileFormModal").modal('show');
         $("#FollowupAddEmptyFileFormModal").on('hidden.bs.modal', function(){
             location.reload();
-          
-
+            $("#carouselmodaId").hide();
         });
    
         
