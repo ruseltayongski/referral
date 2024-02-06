@@ -154,7 +154,7 @@
                 duration: "",
                 prescribed_activity_id: "",
 
-                prescriptions: [], // Array to store multiple prescriptions
+                prescriptions: [],
             };
 
         },
@@ -393,15 +393,6 @@
 
                     const firstPrescription = this.prescriptions[0];
 
-                    // this.generic_name = firstPrescription.generic_name;
-                    // this.brandname = firstPrescription.brandname;
-                    // this.dosage = firstPrescription.dosage;
-                    // this.quantity = firstPrescription.quantity;
-                    // this.formulation = firstPrescription.formulation;
-                    // this.frequency = firstPrescription.frequency;
-                    // this.duration = firstPrescription.duration;
-                    // this.prescriptions = this.prescriptions.slice(1);
-                    
                     if (firstPrescription) {
                         this.generic_name = firstPrescription.generic_name || '';
                         this.brandname = firstPrescription.brandname || '';
@@ -421,17 +412,6 @@
                     console.error('Error fetching prescriptions:', error);
                 }
             },
-
-            //------------------------------------------------------------------
-
-            
-            
-            //------------------------------------------------------------------
-
-
-            
-
-
         },
     };
 </script>

@@ -19044,7 +19044,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       frequency: "",
       duration: "",
       prescribed_activity_id: "",
-      prescriptions: [] // Array to store multiple prescriptions
+      prescriptions: []
     };
   },
   props: {
@@ -19272,14 +19272,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               case 3:
                 response = _context.sent;
                 _this.prescriptions = response.data.prescriptions;
-                firstPrescription = _this.prescriptions[0]; // this.generic_name = firstPrescription.generic_name;
-                // this.brandname = firstPrescription.brandname;
-                // this.dosage = firstPrescription.dosage;
-                // this.quantity = firstPrescription.quantity;
-                // this.formulation = firstPrescription.formulation;
-                // this.frequency = firstPrescription.frequency;
-                // this.duration = firstPrescription.duration;
-                // this.prescriptions = this.prescriptions.slice(1);
+                firstPrescription = _this.prescriptions[0];
                 if (firstPrescription) {
                   _this.generic_name = firstPrescription.generic_name || '';
                   _this.brandname = firstPrescription.brandname || '';
@@ -19306,8 +19299,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }, _callee, null, [[0, 9]]);
       }))();
-    } //------------------------------------------------------------------
-    //------------------------------------------------------------------
+    }
   }
 });
 

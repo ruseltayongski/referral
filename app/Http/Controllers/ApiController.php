@@ -310,69 +310,31 @@ class ApiController extends Controller
     //-------------------------------------------------------------------
 
     public function getPrescriptions($code) {
-        $prescriptionActivity = Activity::where('code', $code)
-            ->where('status','prescription')
+        $followupStatus = Activity::where('code', $code)
+            ->where('status', 'followup')
             ->latest()
             ->first();
-        
-        if ($prescriptionActivity) {
-            $prescribed_status = ['5th followup'];
-    
+
+        $prescriptionStatus = Activity::where('code', $code)
+            ->where('status', 'prescription')
+            ->latest()
+            ->first();
+
+        if ($prescriptionStatus && $prescriptionStatus->id > ($followupStatus ? $followupStatus->id : 0)) {
+
+            $prescribed_status = ['referred', '1st followup', '2nd followup', '3rd followup', '4th followup', '5th followup', '6th followup', 
+                                    '7th followup', '8th followup', '9th followup', '10th followup', '11th followup'];
+
             $prescriptions = PrescribedPrescription::where('code', $code)
-                ->where('prescribed_activity_id', $prescriptionActivity->id)
+                ->where('prescribed_activity_id', $prescriptionStatus->id)
                 ->whereIn('prescribed_status', $prescribed_status)
                 ->get();
-        
+
             return response()->json(['prescriptions' => $prescriptions], 200);
         } else {
             return response()->json(['message' => 'Prescription activity not found'], 404);
         }
     }
-
-    // public function getPrescriptions($code) {
-    //     // $prescriptionActivity = Activity::where('code', $code)
-    //     //     ->where('status','prescription')
-    //     //     ->latest()
-    //     //     ->first();
-        
-    //         // if ($prescriptionActivity) {
-    //         //     $prescriptions = PrescribedPrescription::where('code', $code)
-    //         //         ->where('prescribed_activity_id', $prescriptionActivity->id)
-    //         //         ->where('prescribed_status', 'like', '% followup') // Filter by followup statuses
-    //         //         ->get();
-        
-    //         //     return response()->json(['prescriptions' => $prescriptions], 200);
-    //         // } else {
-    //         //     return response()->json(['message' => 'Prescription activity not found'], 404);
-    //         // }
-
-    //     // $followupActivity = Activity::where('code', $code)
-    //     // ->where('status', 'followup')
-    //     // ->latest()
-    //     // ->first();
-    
-    //     // $prescriptionActivity = Activity::where('code', $code)
-    //     //     ->where('status', 'prescription')
-    //     //     ->latest()
-    //     //     ->first();
-    
-    //     // if ($followupActivity && (!$prescriptionActivity || $followupActivity->id > $prescriptionActivity->id)) {
-    //     //     // If followup activity exists and its ID is greater than prescription activity's ID
-    //     //     return response()->json(['prescriptions' => []], 200);
-
-    //     // } elseif ($prescriptionActivity) {
-    //     //     // If prescription activity exists, fetch and return prescriptions
-    //     //     $prescriptions = PrescribedPrescription::where('code', $code)
-    //     //         ->where('prescribed_activity_id', $prescriptionActivity->id)
-    //     //         ->where('prescribed_status', 'like', '% followup') // Filter by followup statuses
-    //     //         ->get();
-    
-    //     //     return response()->json(['prescriptions' => $prescriptions], 200);
-    //     // } else {
-    //     //     // If neither followup nor prescription activity is found
-    //     //     return response()->json(['message' => 'Prescription activity not found'], 404);
-    //     // }
-    // }
     //------------------------------------------------------------------- 
 
     private function isPrescriptionExists($code, $prescribed_status) {
@@ -382,73 +344,9 @@ class ApiController extends Controller
 
         return !empty($existingFollowup);
     }
-     //------------------------------------------------------------------- 
+    //-------------------------------------------------------------------
 
-    // private function saveSinglePrescription($singlePrescription, $request, $isFollowup = true) {
-
-    //     if(!empty($singlePrescription)) {
-    //         if($request->username) //it means from mobile
-    //             $user = User::where('username',$request->username)->first();
-    //         else
-    //             $user = Session::get('auth');
-
-    //         $patient_form = null;
-    //         $patient_id = 0;
-    //             if($singlePrescription['form_type'] == 'normal') {
-    //                 $patient_form = PatientForm::where("code",$singlePrescription['code'])->first();
-    //                 $patient_id = $patient_form->patient_id;
-    //             }
-    //             else if($singlePrescription['form_type'] == 'pregnant') {
-    //                 $patient_form = PregnantForm::where("code",$singlePrescription['code'])->first();
-    //                 $patient_id = $patient_form->patient_woman_id;
-    //             }
-
-    //         $latestActivity = new Activity();
-    //         $latestActivity->patient_id = $patient_id;
-    //         $latestActivity->date_referred = $patient_form->time_referred;
-    //         $latestActivity->date_seen = $patient_form->time_transferred;
-    //         $latestActivity->referred_from = $patient_form->referring_facility;
-    //         $latestActivity->referred_to = $patient_form->referred_to;
-    //         $latestActivity->department_id = $patient_form->department_id;
-    //         $latestActivity->referring_md = $patient_form->referring_md;
-    //         $latestActivity->action_md = $patient_form->referred_md;
-    //         $latestActivity->code = $singlePrescription['code'];
-    //         $latestActivity->status = "prescription";
-    //         $latestActivity->remarks = "prescription examined";
-    //         $latestActivity->save();
-
-    //         $prescribed_activity_id = $latestActivity->id;
-
-    //         $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
-    //         $position_count = 0;
-
-            
-    //         // Increment the position count for each follow-up prescription
-    //         if ($isFollowup) {
-    //             $position_count++;
-    //             $prescribed_status = $position[$position_count - 1] . ' followup';
-    //         } 
-    //         // else {
-    //         //      $prescribed_status = 'followup';
-    //         // }
-
-    //         $prescribed = new PrescribedPrescription();
-    //         $prescribed->prescribed_activity_id = $prescribed_activity_id;
-    //         $prescribed->code = $latestActivity->code;
-    //         $prescribed->generic_name = $singlePrescription['generic_name'];
-    //         $prescribed->brandname = $singlePrescription['brandname'];
-    //         $prescribed->dosage = $singlePrescription['dosage'];
-    //         $prescribed->quantity = $singlePrescription['quantity'];
-    //         $prescribed->formulation = $singlePrescription['formulation'];
-    //         $prescribed->frequency = $singlePrescription['frequency'];
-    //         $prescribed->duration = $singlePrescription['duration'];
-    //         $prescribed->prescribed_status = $isFollowup ? $prescribed_status : 'referred';
-    //         $prescribed->save();
-    //     }
-       
-    // }
-
-   private function saveSinglePrescription($singlePrescription, $request, $isFollowup = true) {
+    private function saveSinglePrescription($singlePrescription, $request, $isFollowup = true) {
 
         if(!empty($singlePrescription)) {
             if($request->username) //it means from mobile
@@ -483,19 +381,17 @@ class ApiController extends Controller
 
             $prescribed_activity_id = $latestActivity->id;
 
-            $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
+            $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th", "12th"];
             $position_count = 0;
 
             $positionPrescription = PrescribedPrescription::where('code', $code)
             ->where('prescribed_status', $prescribed_status)
             ->first();
 
-            // Check if the follow-up data already exists in the database
             while ($isFollowup && $this->isPrescriptionExists($latestActivity->code, $position[$position_count] . ' followup')) {
                 $position_count++;
             }
 
-            // Increment the position count for each follow-up prescription
             if ($isFollowup) {
                 $position_count++;
                 $prescribed_status = $position_count < count($position) ? $position[$position_count - 1] . ' followup' : 'referred';
@@ -516,7 +412,6 @@ class ApiController extends Controller
             $prescribed->prescribed_status = $isFollowup ? $prescribed_status : 'referred';
             $prescribed->save();
         }
-       
     }
     //-------------------------------------------------------------------
 
@@ -575,9 +470,6 @@ class ApiController extends Controller
                 else {
                     $this->saveSinglePrescription($singlePrescription, $request, true);
                 }
-
-                //$position = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
-                //$position_count = 0;
 
                 $existingPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
 
