@@ -489,7 +489,8 @@ class ApiController extends Controller
         //dd($request->all(), $retrieveFiles);
         if ($request->hasFile('files')){
                 $uploadFile = $request->file('files');
-               
+            //    dd($uploadFile, $retrieveFiles );
+            //dd($request->all());
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $uploadFile->getClientOriginalName();
                 // Check if the file already exists, and rename if necessary
@@ -578,7 +579,7 @@ class ApiController extends Controller
                 
             // }
         
-            //    dd($uploadFiles);
+            //    dd($request->all());
 
             $filePaths = [];
             $fileNames2 = [];

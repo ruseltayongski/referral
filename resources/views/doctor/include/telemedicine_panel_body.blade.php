@@ -471,7 +471,7 @@
                 console.log('Is active file:', file);
             }
         });
-           
+
             var modalContent = `
             <div class="container">
                 <div class="row">
@@ -498,13 +498,13 @@
                                     <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
                                         <i class="fa fa-download"></i> Download
                                     </a>
-                                    <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
+                                    <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
                                         <i class="fa fa-pencil-square-o"></i> Update
                                     </a>
                                     <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
                                         <i class="fa fa-plus"></i> Add More
                                     </a>
-                                    <a href="#" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                    <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
                                         <i class="fa fa-trash"></i> Delete
                                     </a> 
                                     <a href="#"  class="btn btn-default btn-flat" onclick="closeModalButton()" id="closeModalId">
@@ -537,7 +537,7 @@
                 }
             };
 
-            DynamicEventListeners(); 
+             getfilename(baseUrl,code,activity_id,follow_id,position); 
         }
 
         function closeModal() {
@@ -551,26 +551,32 @@
 
       
 
-       function DynamicEventListeners() {
+       function getfilename(baseUrl,code,activity_id,follow_id,position) {
             // Use delegated events to handle clicks for dynamically added elements
+            var activeFileName = $('.carousel-inner .item.active').data('filename');
             $(document).on('click', '#updateButton', function(e) {
                 e.preventDefault();
-                var activeFileName = $('.carousel-inner .item.active').data('filename');
-                console.log('Update button clicked. Active file name:', activeFileName);
                 // Now call your function with the activeFileName
                 // e.g., editFileforFollowup(baseUrl, activeFileName, code, activity_id, follow_id, position);
+                editFileforFollowup(baseUrl, activeFileName, code, activity_id, follow_id,position);
             });
 
             $(document).on('click', '#deleteButton', function(e) {
-                // Similar handling for delete button
+                e.preventDefault();
+                DeleteFileforFollowup(baseUrl,activeFileName,code,activity_id,follow_id,position)
             });
 
+            $(document).on('click', '#AddfileEmpty', function(e) {
+                
+
+            });
             // And so on for other buttons...
 
             // Handle carousel slide change to update button actions dynamically
             $('#carouselModalId').on('slid.bs.carousel', '#carousel-example-generic', function() {
                 var activeFileName = $('.carousel-inner .item.active').data('filename');
                 // You can now dynamically update button actions here if needed
+               
             });
         }
 

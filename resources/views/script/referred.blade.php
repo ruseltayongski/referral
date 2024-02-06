@@ -341,7 +341,7 @@
     //------------------------my adding for update file uploader Follow up-----------------------------//
      function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position)
      {
-
+        console.log("updated filename: ", fileNames);
         event.preventDefault();
         $(".telemedicine").val(1);
 
