@@ -318,6 +318,12 @@
     
     }
 
+    $('#FollowupAddEmptyFileFormModal').on('hidden.bs.modal', function () {
+        $('#files-input').val('');
+        $('#container-preview').empty();
+        $("#imageView").attr('src', '');
+    });
+
     function PdfPreview(file, placeholderUrl, container){
         console.log('originame pdf filename:', file);
     // displayFilePreview(file, container, placeholderUrl);
@@ -353,13 +359,23 @@
         $("#position_count_number").val(position);
         var currentPosition = $("#position_count_number").val();
 
+        var fileExtension = fileNames.split('.').pop().toLowerCase();
+        if(fileExtension === 'pdf'){
+            $("#file-preview-black").html(fileNames);
+             $("#img-preview").attr('src','../public/fileupload/PDF_file_icon.png');
+        }else{
+            $("#file-preview-black").html(fileNames);
+            $("#img-preview").attr('src', `${baseUrl}/${fileNames}`);
+        }
+        
         console.log("currentPosition:", $("#position_count_number").val());
         $("#Update_followup_header").html("Update File");
         $("#telemedicineUpateFileFormModal").modal('show');
 
         $("#telemedicineUpateFileFormModal").on('hidden.bs.modal', function(){
-            location.reload();
+             location.reload();
         });
+       
      }
       //------------------------my adding for update file uploader Follow up End-----------------------------//
 
@@ -381,29 +397,30 @@
         $("#Add_followup_headerform").html("Add Files")
         $("#FollowupAddEmptyFileFormModal").modal('show');
         $("#FollowupAddEmptyFileFormModal").on('hidden.bs.modal', function(){
-            location.reload();
-            $("#carouselmodaId").hide();
+            //  location.reload();
+            // $("#carouselmodaId").hide();
+            // $("#carouselmodaId").hide();
         });
    
         
      }
-       
+
  //------------------------ delete file-----------------------------//
      function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
-
+    
         event.preventDefault();
 
         var fileExtension = fileNames.split('.').pop().toLowerCase();
 
 
         if (fileExtension === 'pdf') {
-                var pdfViewer = '<embed id="pdfViewer" src="' + baseUrl + '" type="application/pdf" width="100%" height="300px" />';
+                var pdfViewer = '<embed id="pdfViewer" src="' + `${baseUrl}/${fileNames}` + '" type="application/pdf" width="100%" height="300px" />';
                 $("#preview-containerfor").html(pdfViewer);
-                $("#pdfViewer").attr('src', baseUrl)
+                $("#pdfViewer").attr('src', `${baseUrl}/${fileNames}`)
         }else{
 
                 var deleteImage = $("#delete-image");
-                deleteImage.attr("src", baseUrl);
+                deleteImage.attr("src", `${baseUrl}/${fileNames}`);
         }
     
         $("#file-name").text(fileNames);
@@ -420,9 +437,10 @@
         $("#telemedicineDeleteFileFollowupFormModal").modal('show');
         
         $("#telemedicineDeleteFileFollowupFormModal").on('hidden.bs.modal', function(){
-            location.reload();
+             location.reload();
         });
      }//end of the function 
+
 
      // select single image & pdf to preview
      function readURL(input) {
@@ -501,7 +519,7 @@
             $("#telemedicineFollowupFormModal").modal('show');
 
             $("#telemedicineFollowupFormModal").on('hidden.bs.modal', function(){
-            location.reload();
+            // location.reload();
         });
 
         }

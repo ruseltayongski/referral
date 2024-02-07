@@ -409,29 +409,27 @@
       }
 
 
-            $(document).ready(function() {
-                // Listen for the slide event on the carousel
-                $('#carousel-example-generic').on('slid.bs.carousel', function () {
-                    // Get the filename of the active item
-                    var activeFileName = $(this).find('.item.active').data('filename');
+            // $(document).ready(function() {
+            //     // Listen for the slide event on the carousel
+            //     $('#carousel-example-generic').on('slid.bs.carousel', function () {
+            //         // Get the filename of the active item
+            //         var activeFileName = $(this).find('.item.active').data('filename');
                     
-                    // Update the href or onclick attributes of your action buttons here
-                    // For example, updating the download link:
-                    $('.filecolor').attr('download', activeFileName);
-                    // Assuming you have a function to update the URL based on the filename
-                    var updatedUrl = generateFileUrl(baseUrl, activeFileName);
-                    $('.filecolor').attr('href', updatedUrl);
+            //         // Update the href or onclick attributes of your action buttons here
+            //         // For example, updating the download link:
+            //         $('.filecolor').attr('download', activeFileName);
+            //         // Assuming you have a function to update the URL based on the filename
+            //         var updatedUrl = generateFileUrl(baseUrl, activeFileName);
+            //         $('.filecolor').attr('href', updatedUrl);
 
-                    // Similarly, update the other action buttons like update and delete
-                    // by modifying their onclick attributes or any relevant attributes
-                    // to reflect the activeFileName
-                });
-            });
+                
+            //     });
+            // });
 
-            // Helper function to generate file URL (modify as per your requirements)
-            function generateFileUrl(baseUrl, fileName) {
-                return `${baseUrl}/${fileName}`;
-            }
+            // // Helper function to generate file URL (modify as per your requirements)
+            // function generateFileUrl(baseUrl, fileName) {
+            //     return `${baseUrl}/${fileName}`;
+            // }
 
         //---------------------------------------------------------------------------------------------------
         function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
@@ -462,7 +460,7 @@
             }else{
                 carouselItems += `
                 <div class="item ${isActive}" data-filename="${file}">
-                    <img src="${fileUrl}" alt="..." style="max-width:50%;height:Auto;">
+                    <img src="${fileUrl}" alt="..." style="width:30%;height:20%;">
                 </div>
                 `
             }
@@ -504,7 +502,7 @@
                                     <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
                                         <i class="fa fa-plus"></i> Add More
                                     </a>
-                                    <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${fileNames}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                    <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
                                         <i class="fa fa-trash"></i> Delete
                                     </a> 
                                     <a href="#"  class="btn btn-default btn-flat" onclick="closeModalButton()" id="closeModalId">
@@ -538,43 +536,49 @@
             };
 
              getfilename(baseUrl,code,activity_id,follow_id,position); 
+    
         }
 
         function closeModal() {
           $("#carouselmodaId").hide();
+     
         }
 
        function closeModalButton() {
-           $("#carouselmodaId").hide();
-        //    location.reload();
+            $("#carouselmodaId").hide('hide');  
+          
        }
 
-      
 
        function getfilename(baseUrl,code,activity_id,follow_id,position) {
             // Use delegated events to handle clicks for dynamically added elements
-            var activeFileName = $('.carousel-inner .item.active').data('filename');
             $(document).on('click', '#updateButton', function(e) {
+                var editFileName = $('.carousel-inner .item.active').data('filename');
                 e.preventDefault();
-                // Now call your function with the activeFileName
-                // e.g., editFileforFollowup(baseUrl, activeFileName, code, activity_id, follow_id, position);
-                editFileforFollowup(baseUrl, activeFileName, code, activity_id, follow_id,position);
+        
+                console.log('editFileforFollowup', editFileName)
+                editFileforFollowup(baseUrl, editFileName, code, activity_id, follow_id,position);
             });
 
             $(document).on('click', '#deleteButton', function(e) {
                 e.preventDefault();
-                DeleteFileforFollowup(baseUrl,activeFileName,code,activity_id,follow_id,position)
+                var deleteFileName = $('.carousel-inner .item.active').data('filename');
+                console.log('delete file', deleteFileName);
+                DeleteFileforFollowup(baseUrl,deleteFileName,code,activity_id,follow_id,position)
             });
 
             $(document).on('click', '#AddfileEmpty', function(e) {
-                
-
+                e.preventDefault();
+                var addFileName = $('.carousel-inner .item.active').data('filename');    
+                addfilesInFollowupIfempty(position,code,activity_id,follow_id,addFileName)
             });
             // And so on for other buttons...
 
             // Handle carousel slide change to update button actions dynamically
             $('#carouselModalId').on('slid.bs.carousel', '#carousel-example-generic', function() {
                 var activeFileName = $('.carousel-inner .item.active').data('filename');
+
+               
                 // You can now dynamically update button actions here if needed
                
             });

@@ -8,39 +8,7 @@ $facilities = \App\Facility::select('id','name')
     ->orderBy('name','asc')->get();
 ?>
 <style>
-.inputDnD .form-control-file {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 6em;
-  outline: none;
-  visibility: hidden;
-  cursor: pointer;
-  background-color: #c61c23;
-  box-shadow: 0 0 5px solid currentColor;
-}
-.inputDnD .form-control-file:before {
-  content: attr(data-title);
-  position: absolute;
-  top: 0.5em;
-  left: 0;
-  width: 100%;
-  min-height: 6em;
-  line-height: 2em;
-  padding-top: 1.5em;
-  opacity: 1;
-  visibility: visible;
-  text-align: center;
-  border: 0.25em dashed currentColor;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  overflow: hidden;
-}
-.inputDnD .form-control-file:hover:before {
-  border-style: solid;
-  box-shadow: inset 0px 0px 0px 0.25em currentColor;
-}
-
-/* _______________________________________________ */
+    
     .custom-img-size {
         max-width: 150px; /* or any other size */
         height: auto;
@@ -61,9 +29,9 @@ $facilities = \App\Facility::select('id','name')
     #file-inputed {
       display: none;
     }
-    #files-input{
+    /* #files-input{
       display: none;
-    }
+    } */
     #file-upload {
       display: none;
     }
@@ -141,7 +109,53 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
     }
 
+/* for fileupload */
+    #top{
+        margin-top:20px;  
+    }
+    .btn-container{
+        background:#fff;
+        border-radius:5px;
+        padding-bottom:20px;
+        margin-bottom:20px;
+    }
+    .white{
+    color:white;
+    }
+    .imgupload{
+        color:#1E2832;
+        padding-top:40px;
+        font-size:7em;
+    }
+    #namefile{
+        color:black;
+    }
+    #files-input{
+        opacity: 0;
+        -moz-opacity: 0;
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+        width:200px;
+        cursor: pointer;
+        position:absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        /* bottom: 40px; */
+        top: 0;
+        height: 50px;
+}
 
+/*these two are set to not display at start*/
+.imgupload.ok{
+    display:none;
+    color:green;
+}
+.imgupload.stop{
+    display:none;
+    color:red;
+}
+.img-center{
+    text-align:center;
+}
 </style>
 <script>
 
@@ -652,8 +666,10 @@ $facilities = \App\Facility::select('id','name')
                                     <div class="container-preview" id="container-preview"></div>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
+                        </div> 
+
+
+                        <hr /> 
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                             <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
@@ -683,37 +699,26 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" name="position_count_number" id="position_count_number" value="">
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
-                    <!-- <div class="form-group">
-                        <label style="padding:0px;">SELECT FACILITY:</label>
-                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                            <option value="">Select Facility...</option>
-                            @foreach($facilities as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    
                     <div class="form-group">
-                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
-                        </select>
-                    </div> -->
-                    <div class="form-group">
-                        <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files
-                        <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                        <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)"></label>
-                        <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                        <!-- <div id="file-list" class="mt-3"></div> -->
-                            
+                        <div class="upload-header">
+                            <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files
+                            <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
+                            <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)"></label>
+                            <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
+                            <!-- <div id="file-list" class="mt-3"></div> -->
+                        </div>
                             <div class="preview-container" id="preview-container">
-                                <p id="file-preview-red"></p>
+                                <p class="text-danger"></p>
                                 <p id="file-preview-black" class="text-center"></p>
                                 <p id="file-empty"></p>
                             </div>
                             <div class="row">
                                 <div class="card">
                                     <div class="card-body">
-                                        <img id="img-preview" src="#" onerror="this.src=''" class="custom-img-size" />
+                                        <div id="preview-update">
+                                            <img id="img-preview" src="#" class="custom-img-size" />
+                                        </div>
                                         <!-- <img id="pdf-preview" src="#" alt="image preview" class="custom-img-size" /> -->
 
                                     </div>
@@ -855,5 +860,6 @@ function readUrl(input) {
   }
 
 }
+
 
 </script>
