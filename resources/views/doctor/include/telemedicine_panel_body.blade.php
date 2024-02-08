@@ -347,7 +347,8 @@
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
                                     <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
-                                        {{ $referredFile }} 
+
+                                    <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }} 
                                     </a>&nbsp;
                                 @endforeach
                                 @if(empty($sortedFiles))
@@ -382,8 +383,10 @@
                                 <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow)); ?>
                             @if ($pos == $position[$position_count])
                                     @foreach ($sortedFiles_follow as $referredFile)   
+                                  
                                     <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$followActivities}}')">
-                                        {{ $referredFile }}
+                                        <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }} 
+                                      
                                     </a>&nbsp;
                                     @endforeach
                                     @if(empty($sortedFiles_follow))
@@ -437,7 +440,8 @@
             console.log('baseUrl: ', baseUrl);
            
             const parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
-            const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+            // const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+            const allfilename = parsedfiles.map(file => file.generic_name ? file.generic_name.split('|') : []).flat();
             console.log('filenames', allfilename);
             
             const clickedFile = allfilename.findIndex(file => file === fileNames);
@@ -493,7 +497,7 @@
                                         </div>
                                 </div>
                                     
-                                    <a href="${baseUrl}" class="btn btn-success filecolor" download="${fileNames}">
+                                    <a href="" id="download" class="btn btn-success filecolor" download="">
                                         <i class="fa fa-download"></i> Download
                                     </a>
                                     <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
@@ -505,7 +509,7 @@
                                     <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
                                         <i class="fa fa-trash"></i> Delete
                                     </a> 
-                                    <a href="#"  class="btn btn-default btn-flat" onclick="closeModalButton()" id="closeModalId">
+                                    <a href="#"  class="btn btn-default btn-flat filecolorclose" onclick="closeModalButton()" id="closeModalId">
                                         <i class="fa fa-times"></i> close
                                     </a>
                             </div>
@@ -528,7 +532,8 @@
             modal.style.zIndex = '9999';
 
             document.body.appendChild(modal);
-
+            updateDownloadButton(baseUrl); 
+            
             modal.onclick = function (event) {
                 if(event.target === modal){
                     modal.parentNode.removeChild(modal);
@@ -536,34 +541,45 @@
             };
 
              getfilename(baseUrl,code,activity_id,follow_id,position); 
-    
+             
         }
 
         function closeModal() {
           $("#carouselmodaId").hide();
-     
+    
         }
 
        function closeModalButton() {
             $("#carouselmodaId").hide('hide');  
-          
+            // location.reload();
+            $("#carouselmodaId").remove();
        }
+       //this will control the arrow keyboard left & right
+       $(document).keydown(function(e) {
+            if (e.keyCode === 37) {
+            // Previous
+            $(".carousel-control.right").click();
+            return false;
+            }
+            if (e.keyCode === 39) {
+            // Next
+            $(".carousel-control.left").click();
+            return false;
+            }
 
+        });
 
        function getfilename(baseUrl,code,activity_id,follow_id,position) {
             // Use delegated events to handle clicks for dynamically added elements
             $(document).on('click', '#updateButton', function(e) {
                 var editFileName = $('.carousel-inner .item.active').data('filename');
                 e.preventDefault();
-        
-                console.log('editFileforFollowup', editFileName)
                 editFileforFollowup(baseUrl, editFileName, code, activity_id, follow_id,position);
             });
 
             $(document).on('click', '#deleteButton', function(e) {
                 e.preventDefault();
                 var deleteFileName = $('.carousel-inner .item.active').data('filename');
-                console.log('delete file', deleteFileName);
                 DeleteFileforFollowup(baseUrl,deleteFileName,code,activity_id,follow_id,position)
             });
 
@@ -572,19 +588,36 @@
                 var addFileName = $('.carousel-inner .item.active').data('filename');    
                 addfilesInFollowupIfempty(position,code,activity_id,follow_id,addFileName)
             });
-            // And so on for other buttons...
+          
 
             // Handle carousel slide change to update button actions dynamically
             $('#carouselModalId').on('slid.bs.carousel', '#carousel-example-generic', function() {
                 var activeFileName = $('.carousel-inner .item.active').data('filename');
-
-               
                 // You can now dynamically update button actions here if needed
                
             });
         }
 
-      
+        function updateDownloadButton(baseUrl) {
+            var activeFileName = $('.carousel-inner .item.active').data('filename');
+            // Assuming baseUrl is accessible and it points to the directory where files are stored
+            $('#download').attr('href', baseUrl + '/' + activeFileName);
+            $('#download').attr('download', activeFileName);
+        }
+        $(document).ready(function() {
+                var baseUrl = " <?php echo  asset('public/fileupload/' . $user->username . '/') ?>";
+             
+                updateDownloadButton(); // Initial setup for the download button
+                // Ensure the modal and carousel are in the DOM
+                $(document).on('slid.bs.carousel', '#carousel-example-generic', function () {
+                    
+                    updateDownloadButton(baseUrl); // Call this to update the download link based on the new active item
+                });
+                // Any other initialization code
+        });
+        // $('.carousel').on('slid.bs.carousel', function () {
+        //     updateDownloadButton();
+        // });
 
     </script>
 
@@ -902,32 +935,61 @@
 }
 
   .d-file{
-    font-size: 12px;
-    color: white;
-    background-color: green;
-    transform: translateY(-10px);
+    font-size: 14px;
+    color: #FFF; /* White text */
+    background-color: #4CAF50; /* A more subdued green */
+    padding: 8px 12px; /* Add some padding around the text */
+    margin: 4px; /* Add some margin between elements */
+    border-radius: 4px; /* Rounded corners */
+    display: inline-block; /* Allows for padding and margin */
+    white-space: nowrap; /* Prevents the text from wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    max-width: 150px; /* Maximum width */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+    text-decoration: none; /* Remove underline from links */
   }
-  a.d-file:hover {
-    background-color: #7AE205;
-    transform: translateY(-10px);
+  .d-file:hover {
+    background-color: #7AE205; /* Lighter green on hover */
+    transform: translateY(-2px); /* Smaller lift for a subtle effect */
+  }
+
+  .file-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .filecolor {
+    color: white !important;
+    background: linear-gradient(180deg, #52C755, #056608) !important;
+    border: 1px solid #056608 !important;
 }
- .filecolor{
-    color: white;
-    background: linear-gradient(180deg, #52C755, #056608);
-    border: 1px solid #056608;
- }
- a.filecolor:hover{
+ a.btn.filecolor:hover{
     transform: translateY(-10px);
     color:white;
     background: linear-gradient(180deg, #056608, #8BD98D);
  }
- .filecolorDelete{
+ a.btn.filecolorDelete{
     color: white;
     background: linear-gradient(180deg, #EE3533, #ED1E24);
  }
- a.filecolorDelete:hover{
+ a.btn.filecolorDelete:hover{
     transform: translateY(-10px);
     color: white;
     background: linear-gradient(180deg, #ED1E24, #F3787A);
+ }
+ .filecolorclose{
+    color: #333; /* Darker text for better readability */
+    background: linear-gradient(180deg, #EDEDED, #CCCCCC);
+    border: 1px solid #BBB; /* Subtle border for definition */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effect */
+ }
+.filecolorClose:hover{
+    transform: translateY(-10px); /* Move the button up and to the right */
+    color: white;
+    background: linear-gradient(180deg, #ED1E24, #F3787A);
+    /* Optional: Add a box-shadow for better visual effect on hover */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
  }
 </style>

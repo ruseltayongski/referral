@@ -109,53 +109,105 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
     }
 
-/* for fileupload */
-    #top{
-        margin-top:20px;  
-    }
-    .btn-container{
-        background:#fff;
-        border-radius:5px;
-        padding-bottom:20px;
-        margin-bottom:20px;
-    }
-    .white{
-    color:white;
-    }
-    .imgupload{
-        color:#1E2832;
-        padding-top:40px;
-        font-size:7em;
-    }
-    #namefile{
-        color:black;
-    }
-    #files-input{
-        opacity: 0;
-        -moz-opacity: 0;
-        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
-        width:200px;
-        cursor: pointer;
-        position:absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        /* bottom: 40px; */
-        top: 0;
-        height: 50px;
+    .custom-file {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: inline-block;
 }
 
-/*these two are set to not display at start*/
-.imgupload.ok{
-    display:none;
-    color:green;
+.custom-file:hover {
+    background-color: #0056b3;
 }
-.imgupload.stop{
-    display:none;
-    color:red;
+
+/* Style for the file list container */
+.container-preview {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f9f9f9;
 }
-.img-center{
-    text-align:center;
+
+/* Style for individual file entries in the list */
+.file-entry {
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #e9ecef;
+    border-radius: 3px;
 }
+
+/* update form modal element */
+.upload-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    padding: 20px 40px; /* Larger padding */
+    font-size: 20px; /* Larger font size */
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+}
+
+.custom-btn-default {
+    background-color: #6c757d;
+    color: white;
+}
+
+.custom-btn-default:hover {
+    background-color: #545b62;
+}
+
+.custom-btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.custom-btn-success:hover {
+    background-color: #218838;
+}
+
+.preview-container {
+    margin-top: 15px;
+}
+
+.card {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.custom-img-size {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.text-right {
+    text-align: right;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 </style>
 <script>
 
@@ -652,7 +704,7 @@ $facilities = \App\Facility::select('id','name')
                         <input type="hidden" class="telemedicine" value="">
                         <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
-                        <div class="form-group">
+                        <div class="form-group file-entry">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
                             <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
 
@@ -663,11 +715,10 @@ $facilities = \App\Facility::select('id','name')
                             <div class="card">
                                 <div class="card-body preview-item">
                                     <p id="err-message" class="text-center"></p>
-                                    <div class="container-preview" id="container-preview"></div>
+                                    <div class="container-preview file-entry" id="container-preview"></div>
                                 </div>
                             </div>
                         </div> 
-
 
                         <hr /> 
                         <div class="form-fotter pull-right">
@@ -700,36 +751,31 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
                     
-                    <div class="form-group">
-                        <div class="upload-header">
-                            <label id="file-label" for="file-upload-update" class="btn btn-primary">Select Files
-                            <!-- <input type="file" id="file-upload" name="files" class="d-none" onchange="displayFileName()" > -->
-                            <input type="file" id="file-upload-update" name="files" class="d-none"  onchange="readURL(this)"></label>
-                            <input type="hidden" id="selected-file-name-input" name="selectedFileName" value="">
-                            <!-- <div id="file-list" class="mt-3"></div> -->
-                        </div>
-                            <div class="preview-container" id="preview-container">
-                                <p class="text-danger"></p>
-                                <p id="file-preview-black" class="text-center"></p>
-                                <p id="file-empty"></p>
-                            </div>
-                            <div class="row">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div id="preview-update">
-                                            <img id="img-preview" src="#" class="custom-img-size" />
-                                        </div>
-                                        <!-- <img id="pdf-preview" src="#" alt="image preview" class="custom-img-size" /> -->
-
-                                    </div>
+                <div class="form-group formtogroup">
+                    <div class="upload-header">
+                        <label id="file-label" for="file-upload-update" class="btn custom-btn">Select Files
+                            <input type="file" id="file-upload-update" name="files" class="d-none" onchange="readURL(this)">
+                        </label>
+                        <input type="hidden" id="selected-file-name-input" name="selectedFileName">
+                    </div>
+                    <div class="preview-container" id="preview-container">
+                        <p id="file-preview-black" class="text-center"></p>
+                    </div>
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="preview-update">
+                                    <img id="img-preview" src="#" class="custom-img-size" />
                                 </div>
                             </div>
+                        </div>
                     </div>
-                    <hr />
-                    <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
-                    </div>
+                </div>
+                <hr />
+                <div class="form-footer text-right">
+                    <button class="btn custom-btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="followup_submit_telemedicine" class="btn custom-btn-success">Submit</button>
+                </div>
                 </form>
                 <div class="clearfix"></div>
             </div>
@@ -741,9 +787,6 @@ $facilities = \App\Facility::select('id','name')
 
 
 <!-- ----------------------------Add more file----------------------------------------->
-
-
-
 
 <!-------------------------- delete modal file -------------------------------------->
 <div class="modal fade" role="dialog" id="telemedicineDeleteFileFollowupFormModal">

@@ -83,16 +83,16 @@
             $("#err-message").css('color', 'red');
         }
     });
-    document.getElementById('telemedicineUpateFileForm').addEventListener('submit', function(event) {
-    var filesInput = document.getElementById('file-upload-update');
+    // document.getElementById('telemedicineUpateFileForm').addEventListener('submit', function(event) {
+    // var filesInput = document.getElementById('file-upload-update');
 
-        if (filesInput.files.length === 0) {
-            // File input is empty, prevent form submission
-            event.preventDefault();
-            $("#file-empty").html("Please select at least one file.");
-            $("#file-empty").css('color', 'red');
-        }
-    });
+    //     if (filesInput.files.length === 0) {
+    //         // File input is empty, prevent form submission
+    //         event.preventDefault();
+    //         $("#file-empty").html("Please select at least one file.");
+    //         $("#file-empty").css('color', 'red');
+    //     }
+    // });
 
     document.addEventListener('DOMContentLoaded', function () {
     // Your code here
@@ -322,7 +322,10 @@
         $('#files-input').val('');
         $('#container-preview').empty();
         $("#imageView").attr('src', '');
+        $("#carouselmodaId").remove();
     });
+
+ 
 
     function PdfPreview(file, placeholderUrl, container){
         console.log('originame pdf filename:', file);
@@ -363,6 +366,7 @@
         if(fileExtension === 'pdf'){
             $("#file-preview-black").html(fileNames);
              $("#img-preview").attr('src','../public/fileupload/PDF_file_icon.png');
+             $("#img-preview").css('width', '50%');
         }else{
             $("#file-preview-black").html(fileNames);
             $("#img-preview").attr('src', `${baseUrl}/${fileNames}`);
@@ -371,12 +375,17 @@
         console.log("currentPosition:", $("#position_count_number").val());
         $("#Update_followup_header").html("Update File");
         $("#telemedicineUpateFileFormModal").modal('show');
-
-        $("#telemedicineUpateFileFormModal").on('hidden.bs.modal', function(){
-             location.reload();
-        });
+        $("#carouselmodaId").modal('hide'); 
+        // $("#telemedicineUpateFileFormModal").on('hidden.bs.modal', function(){
+        //      location.reload();
+        // });
        
      }
+     $('#telemedicineUpateFileFormModal').on('hidden.bs.modal', function () {
+        $('#file-upload-update').val();
+        $("#carouselmodaId").remove();
+
+    });
       //------------------------my adding for update file uploader Follow up End-----------------------------//
 
       //------------------------Add files if empty add more-----------------------------//
@@ -436,12 +445,24 @@
         $("#Delete_followup_header").html("Are you sure You want to delete this file?");
         $("#telemedicineDeleteFileFollowupFormModal").modal('show');
         
-        $("#telemedicineDeleteFileFollowupFormModal").on('hidden.bs.modal', function(){
-             location.reload();
-        });
+        // $("#telemedicineDeleteFileFollowupFormModal").on('hidden.bs.modal', function(){
+        //      location.reload();
+        // });
      }//end of the function 
 
+        $('#telemedicineDeleteFileFollowupFormModal').on('hidden.bs.modal', function () {
+        $("#telemedicine_code").val("");
+        $("#delete_telemedicine_followup_id").val("");
+        $("#delete_telemedicine_referred_id").val("");
+        $("#position_counterer").val("");
+        $("#selected-file-name").val("");
+        // Clear text and image previews
+        $("#file-name").text("");
+        // $("#delete-image").attr("src", "");
+        $("#pdfViewer").remove();
+        $("#carouselmodaId").remove();
 
+    });
      // select single image & pdf to preview
      function readURL(input) {
             var url = input.value;
@@ -458,6 +479,7 @@
                 if (ext === "pdf") {
                     isvalidFile = true;
                     $('#img-preview').attr('src', '../public/fileupload/PDF_file_icon.png').css('display', 'block');
+                    $("#img-preview").css('width', '50%');
                     $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
                 } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG") {
                     isvalidFile = true;
