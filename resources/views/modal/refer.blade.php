@@ -124,7 +124,7 @@ $facilities = \App\Facility::select('id','name')
 
 /* Style for the file list container */
 .container-preview {
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     padding: 10px;
     margin-top: 10px;
     background-color: #f9f9f9;
@@ -212,22 +212,17 @@ hr {
 <script>
 
    
-
-    // select multiple image & pdf to preview
-    // document.getElementById('file-input').addEventListener('change', handleFileSelect);
     document.addEventListener('DOMContentLoaded', function () {
-    // Your code here
+
     document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
-            var filesInput = document.getElementById('file-input');
-            if(filesInput.files.length === 0){
-                event.preventDefault();
-                $("#err-msgpdf").html("Please select at least one file.");
-            $("#err-msgpdf").css('color', 'red');
-            }
-            console.log('files inputed!', filesInput);
-        });
-
-
+        var filesInput = document.getElementById('file-input');
+        if(filesInput.files.length === 0){
+            event.preventDefault();
+            $("#err-msgpdf").html("Please select at least one file.");
+        $("#err-msgpdf").css('color', 'red');
+        }
+        console.log('files inputed!', filesInput);
+    });
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
    
     });
@@ -235,15 +230,15 @@ hr {
     function handleFileSelect(event) {
         const fileList = event.target.files;
         console.log('fileList', fileList);
-        // const fileListView = document.getElementById('file-list');
         const previewContainer = document.getElementById('preview-container');
-        // fileListView.innerHTML = '';
+        
         previewContainer.innerHTML = '';
          console.log('containers', previewContainer);
         for (const file of fileList) {
+
             const listItem = document.createElement('div');
             listItem.textContent = file.name;
-            // fileListView.appendChild(listItem);
+          
             let allowexten = ["pdf", "png", "jpeg", "jpg"];
             let filearr = Array.from(fileList).map(file=>file.name);
 
@@ -251,7 +246,7 @@ hr {
                 let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
                 return allowexten.includes(ext);
             });
-        //    const submitButton = $("#followup_submit");
+      
             if(validext){
                 isvalidFile = true;
                 $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
@@ -261,10 +256,9 @@ hr {
                     }
                     // Display PDF preview for .pdf files
                     else if (file.type === 'application/pdf') {
-                    // Create a container for each PDF and its remove icon
+                        // Create a container for each PDF and its remove icon
                         const pdfContainer = document.createElement('div');
                         pdfContainer.classList.add('pdf-container');
-                        //console.log("pdf name:",file.name);
                         // Display PDF preview
                         const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
                         const removedFiles = [];
@@ -287,50 +281,41 @@ hr {
                             pdfContainer.remove();
                         
                         });
-                      
-                        // $("#telemedicineFollowupForm").submit(function(event) {
-                        //                     removedFiles.forEach(filename => {
-                        //                     $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
-                        //                 }); 
-                        //             });
-                        // Append the PDF preview and remove icon to the container
-
                         pdfContainer.appendChild(pdfPreview);
                         pdfContainer.appendChild(removeIcon);
-
                         // Append the container to the main preview container
                         previewContainer.appendChild(pdfContainer);
                     }
             }else{
-                    isvalidFile = false;
-                    previewContainer.innerHTML = '';
-                    const errmsId = 'error-messages';
-                    let existmsg = document.getElementById(errmsId);
-                        console.log('filname', file.name);
-                        if(!existmsg){
-                            const errmsg = document.createElement('p');
-                            console.log('error: ', errmsg);
-                            
-                            errmsg.textContent = 'Please upload a valid pdf or images file..';
-                            errmsg.style.color = 'red';
-                            errmsg.id = errmsId;
-                            $("#err-msgpdf").html(""); //to empty the error messages submission
-                            previewContainer.appendChild(errmsg);
-
-                        }
-                         break;
-                           
-                }
-        }
-                         $("#telemedicineFollowupForm").submit(function(event){
-                            if(!isvalidFile){
-                                event.preventDefault();
-                            }else{
-                                //  $("#telemedicineFollowupForm").show();
-                                  previewContainer.innerHTML = '';
+                isvalidFile = false;
+                previewContainer.innerHTML = '';
+                const errmsId = 'error-messages';
+                let existmsg = document.getElementById(errmsId);
+                    console.log('filname', file.name);
+                    if(!existmsg){
+                        const errmsg = document.createElement('p');
+                        console.log('error: ', errmsg);
                         
-                            }
-                        });
+                        errmsg.textContent = 'Please upload a valid pdf or images file..';
+                        errmsg.style.color = 'red';
+                        errmsg.id = errmsId;
+                        $("#err-msgpdf").html(""); //to empty the error messages submission
+                        previewContainer.appendChild(errmsg);
+
+                    }
+                        break;
+                           
+            }
+        }
+            $("#telemedicineFollowupForm").submit(function(event){
+            if(!isvalidFile){
+                event.preventDefault();
+            }else{
+                //  $("#telemedicineFollowupForm").show();
+                    previewContainer.innerHTML = '';
+        
+            }
+        });
     }
  
     function displayImagePreview(file, container) {
@@ -341,7 +326,6 @@ hr {
             // Create a container for each image and its remove icon
             const imageContainer = document.createElement('div');
             imageContainer.classList.add('image-container');
-
             // Create the image preview
             const preview = document.createElement('img');
             preview.setAttribute('src', e.target.result);
@@ -349,18 +333,18 @@ hr {
             preview.style.height = '150px';
             preview.setAttribute('alt', file.name);
             preview.classList.add('preview');
+
             preview.addEventListener('click', function () { 
-               // console.log(e.target.result);
-               //var imgsrc = e.target.result;
-               //console.log('img src:', imgsrc);
                 displayLargeImage(e.target.result,file.name, container);
                 
             });
+
             const removedFiles = []; 
             $("#err-msgpdf").html(""); //to empty the error messages submission
             // Create the remove icon
             const removeIcon = document.createElement('i');
             removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+
             removeIcon.addEventListener('click', function() {
                 container.removeChild(imageContainer);
 
@@ -388,16 +372,9 @@ hr {
                 }
             });
 
-            // $("#telemedicineFollowupForm").submit(function(event) {
-            //     removedFiles.forEach(filename => {
-            //             $(this).append('<input type="hidden" name="removefiles[]" value="' + filename + '">');
-            //     });         
-            // });
-
             // Append the image and remove icon to the container
             imageContainer.appendChild(preview);
             imageContainer.appendChild(removeIcon);
-
             // Append the container to the main container
             container.appendChild(imageContainer);
         };
@@ -406,7 +383,7 @@ hr {
     }
 
         // Function to display the larger image
-        function displayLargeImage(imgsrc, filename, container) {
+    function displayLargeImage(imgsrc, filename, container) {
         // Create a modal or overlay element
         console.log('img src:',imgsrc);    
         console.log('img src:',filename);
@@ -425,7 +402,7 @@ hr {
 
     function displayPdfPreview(file, placeholderUrl, container) {
         console.log('originame pdf filename:', file);
-    // displayFilePreview(file, container, placeholderUrl);
+        // displayFilePreview(file, container, placeholderUrl);
         const pdfPreview = document.createElement('embed');
         pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
     
@@ -445,10 +422,10 @@ hr {
     function  pdfshow(file){
         console.log('filename:', file);
         
-            $(".modal-title").html(file);
-            $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
-            $("#viewpdf").css('z-index', 1060);
-            $("#viewpdf").modal("show");
+        $(".modal-title").html(file);
+        $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
+        $("#viewpdf").css('z-index', 1060);
+        $("#viewpdf").modal("show");
         
     }
 
@@ -704,7 +681,7 @@ hr {
                         <input type="hidden" class="telemedicine" value="">
                         <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
-                        <div class="form-group file-entry">
+                        <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
                             <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
 
@@ -759,13 +736,15 @@ hr {
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName">
                     </div>
                     <div class="preview-container" id="preview-container">
-                        <p id="file-preview-black" class="text-center"></p>
+                    <p id="file-preview-black" class="text-center"></p>
                     </div>
                     <div class="row">
                         <div class="card">
                             <div class="card-body">
                                 <div id="preview-update">
                                     <img id="img-preview" src="#" class="custom-img-size" />
+                                     <p id="file-preview-red"></p>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -904,5 +883,27 @@ function readUrl(input) {
 
 }
 
+$(document).ready(function (){
+    $('#container-preview').hideFileEntryBackground();
+
+    $('#files-input').change(function (){
+        $('#container-preview').toggleFileEntryBackground(this.files.length > 0);
+    });
+});
+
+$.fn.toggleFileEntryBackground = function (show){
+    if(show){
+        this.addClass('file-entry');
+        this.show();
+    }else{
+        this.removeClass('file-entry');
+        this.remove;
+    }
+}
+
+$.fn.hideFileEntryBackground = function () {
+    this.removeClass('file-entry');
+    this.hide();
+}
 
 </script>

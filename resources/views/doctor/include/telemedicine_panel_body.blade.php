@@ -347,8 +347,12 @@
                     <!-- @if ($pos == $position[$position_count]) -->
                             @foreach ($sortedFiles as $referredFile)
                                     <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
-
-                                    <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }} 
+                                    <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
+                                    @if(ends_with($referredFile, '.pdf'))
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
+                                    @else
+                                        <i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
+                                    @endif
                                     </a>&nbsp;
                                 @endforeach
                                 @if(empty($sortedFiles))
@@ -382,15 +386,20 @@
                                 <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
                                 <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow)); ?>
                             @if ($pos == $position[$position_count])
-                                    @foreach ($sortedFiles_follow as $referredFile)   
+                                    @foreach ($sortedFiles_follow as $followFile)   
                                   
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$followActivities}}')">
-                                        <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }} 
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $followFile }}', '{{$followActivity}}')">
+                                        <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
+                                        @if(ends_with($followFile, '.pdf'))
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$followFile}} 
+                                        @else
+                                            <i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp; {{$followFile}}
+                                        @endif
                                       
                                     </a>&nbsp;
                                     @endforeach
                                     @if(empty($sortedFiles_follow))
-                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$followFile}}')">
                                         <i class="fa fa-plus" aria-hidden="true"></i>add files
                                         </a>&nbsp;
                                     @endif
@@ -411,38 +420,21 @@
             return referredFile.toLowerCase().endsWith('.pdf'); 
       }
 
-
-            // $(document).ready(function() {
-            //     // Listen for the slide event on the carousel
-            //     $('#carousel-example-generic').on('slid.bs.carousel', function () {
-            //         // Get the filename of the active item
-            //         var activeFileName = $(this).find('.item.active').data('filename');
-                    
-            //         // Update the href or onclick attributes of your action buttons here
-            //         // For example, updating the download link:
-            //         $('.filecolor').attr('download', activeFileName);
-            //         // Assuming you have a function to update the URL based on the filename
-            //         var updatedUrl = generateFileUrl(baseUrl, activeFileName);
-            //         $('.filecolor').attr('href', updatedUrl);
-
-                
-            //     });
-            // });
-
-            // // Helper function to generate file URL (modify as per your requirements)
-            // function generateFileUrl(baseUrl, fileName) {
-            //     return `${baseUrl}/${fileName}`;
-            // }
-
         //---------------------------------------------------------------------------------------------------
         function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
-            console.log('filenames: ', fileNames);
+            if(document.getElementById('carouselmodaId')){
+                return;
+            }
+            console.log('filenames: ', allfiles);
             console.log('baseUrl: ', baseUrl);
-           
-            const parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
-            // const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
-            const allfilename = parsedfiles.map(file => file.generic_name ? file.generic_name.split('|') : []).flat();
-            console.log('filenames', allfilename);
+            
+            
+            let parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
+            parsedfiles = Array.isArray(parsedfiles) ? parsedfiles : [parsedfiles];
+            console.log('parse files', parsedfiles);
+             //const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+            const allfilename =  parsedfiles.map(file => file.generic_name ? file.generic_name.split('|') : []).flat();
+             console.log('all filenames', allfilename);
             
             const clickedFile = allfilename.findIndex(file => file === fileNames);
             console.log('selected file', clickedFile);
@@ -453,21 +445,23 @@
             var fileExtension = file.split('.').pop().toLowerCase();
 
             const fileUrl = `${baseUrl}/${file}`; 
-           
-
-            if(fileExtension === 'pdf'){
-                carouselItems += `
-                <div class="item ${isActive}" data-filename="${file}">
-                    <embed src="${fileUrl}" type="application/pdf" style="width:100%;height:500px;" />
-                </div>
-                `
-            }else{
-                carouselItems += `
-                <div class="item ${isActive}" data-filename="${file}">
-                    <img src="${fileUrl}" alt="..." style="width:30%;height:20%;">
-                </div>
-                `
-            }
+        
+            console.log("my position in pdf and images:", position);
+                
+                if(fileExtension === 'pdf'){
+                        carouselItems += ` 
+                            <div class="item ${isActive}" data-filename="${file}">
+                                <embed src="${fileUrl}" type="application/pdf" style="width:100%;height:500px;" />
+                            </div>
+                        `;
+                }else{
+                        carouselItems += `
+                        <div class="item ${isActive}" data-filename="${file}">
+                            <img src="${fileUrl}" alt="..." style="width:30%;height:20%;">
+                        </div>
+                        `;
+                }
+            
             // console.log("Is active: ", isActive, file);
             if(isActive == 'active'){
                 console.log('Is active file:', file);
@@ -484,7 +478,7 @@
                                 <div class="card" style="padding: 20px;">
                                         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                                 <div class="carousel-inner">
-                                                    ${carouselItems}
+                                                 ${carouselItems}
                                                 </div>
                                                 <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
                                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -540,9 +534,12 @@
                 }
             };
 
+
              getfilename(baseUrl,code,activity_id,follow_id,position); 
              
         }
+
+
 
         function closeModal() {
           $("#carouselmodaId").hide();
@@ -979,15 +976,14 @@
     color: white;
     background: linear-gradient(180deg, #ED1E24, #F3787A);
  }
- .filecolorclose{
-    color: #333; /* Darker text for better readability */
+ a.btn.filecolorclose{
+    color:dark; /* Darker text for better readability */
     background: linear-gradient(180deg, #EDEDED, #CCCCCC);
     border: 1px solid #BBB; /* Subtle border for definition */
     transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effect */
  }
-.filecolorClose:hover{
+.filecolorclose:hover{
     transform: translateY(-10px); /* Move the button up and to the right */
-    color: white;
     background: linear-gradient(180deg, #ED1E24, #F3787A);
     /* Optional: Add a box-shadow for better visual effect on hover */
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
