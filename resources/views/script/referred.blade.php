@@ -411,6 +411,8 @@
         $("#telemed_follow_code").val(code);
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
+
+
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         if(alreadyFollowUp) {
             Lobibox.alert("error",
@@ -451,6 +453,11 @@
 
         }
     }
+
+    $('#telemedicineFollowupFormModal').on('hidden.bs.modal', function () {
+            $('#file-input').val('');
+            $('#preview-container').empty();
+        });
 
     function consultToOtherFacilities(code) {
         $("#followup_header").html("Consult to other facilities");

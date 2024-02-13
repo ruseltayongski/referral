@@ -385,64 +385,32 @@ class ApiController extends Controller
             Activity::create($activity);
         }
      //  ---------------------jondy changes--------------------------->
-    
-        //   $request->validate([ //this validation identify the type of file to upload
-        //     'files.*' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
-        //   ]);
-
        if ($request->hasFile('files')) {
             $uploadFiles = $request->file('files');
-
-            // $fileremove = $_REQUEST['removefiles'];
-            // foreach($fileremove as $remove){
-            //     if($remove === ""){
-            //         continue; //skip the empty string
-            //      }
-
-            //     $fileNames = array_map(function ($file){
-            //         return $file->getClientOriginalName();
-            //     }, $uploadFiles);
-
-            //     $index = array_search($remove, $fileNames);
-
-            //     if($index !== false){
-            //         unset($uploadFiles[$index]);
-            //     }
-                
-            // }
-            //dd($uploadFiles);
-        
             $filePaths = [];
             $fileNames2 = [];
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();
-          
-                // Check if the file already exists, and rename if necessary
                 $counter = 1;
                 while (file_exists($filepath . '/' . $originalName)) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
                     $counter++;
                 }
-
                 $file->move($filepath, $originalName);// the pdf file will move here
-            
                 //$file->move($filepath, $originalName);
                 $filePaths[] = $filepath . '/' . $originalName;
                 $fileNames2[] = $originalName;
             }
-            
             $activityFile = Activity::where('id', $request->followup_id)
                 ->where('code', $request->code)
                 ->orderby('id')
                 ->first();
-          
-                json_encode($filePaths);
-                $activityFile->generic_name = implode('|', $fileNames2);
-                $activityFile->save();
+            json_encode($filePaths);
+            $activityFile->generic_name = implode('|', $fileNames2);
+            $activityFile->save();
                
         }
-
      //  -----------------------jondy changes------------------------->
         //start broadcast
         $patient = Patients::find($tracking->patient_id);
@@ -486,30 +454,27 @@ class ApiController extends Controller
     {
         $user = Session::get('auth');
         $retrieveFiles = $request->selectedFileName;
-        //dd($request->all(), $retrieveFiles);
+
         if ($request->hasFile('files')){
-                $uploadFile = $request->file('files');
-            //    dd($uploadFile, $retrieveFiles );
-            //dd($request->all());
-                $filepath = public_path() . '/fileupload/' . $user->username;
-                $originalName = $uploadFile->getClientOriginalName();
+            $uploadFile = $request->file('files');
+            $filepath = public_path() . '/fileupload/' . $user->username;
+            $originalName = $uploadFile->getClientOriginalName();
                 // Check if the file already exists, and rename if necessary
-                $counter = 1;
+            $counter = 1;
                 while (file_exists($filepath . '/' . $originalName)) {
                     $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
                     $counter++;
                 }
               
-                $activityFile = Activity::where('id', $request->referred_id)
-                    ->where('code', $request->code)
-                    ->orderby('id')
-                    ->first();
-            
-                $activity_followup = Activity::where('id', $request->followup_id)
-                    ->where('code', $request->code)
-                    ->orderby('id')
-                    ->first();
-                    $uploadFile->move($filepath, $originalName);
+            $activityFile = Activity::where('id', $request->referred_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            $activity_followup = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            $uploadFile->move($filepath, $originalName);
                 if($request->position_count_number == 1){
                    
                     $genericNameArray = explode('|', $activityFile->generic_name);
@@ -522,29 +487,23 @@ class ApiController extends Controller
                     if($key !== false) {
                         $genericNameArray[$key] = $originalName;
                     }
-                
                     $activityFile->generic_name = implode('|', $genericNameArray);
                     $activityFile->save();
                    
-
                 }else if($request->position_count_number >= 2){
                     $genericNameArray = explode('|', $activity_followup->generic_name);
-                        $key = array_search($retrieveFiles, $genericNameArray);
-    
-                        if($originalName !== $retrieveFiles){
-                            unlink($filepath . '/' . $retrieveFiles);
-                        }
-            
-                        if($key !== false) {
-                            $genericNameArray[$key] = $originalName;
-                        }
-                    
-                        $activity_followup->generic_name = implode('|', $genericNameArray);
-                        $activity_followup->save();
+                    $key = array_search($retrieveFiles, $genericNameArray);
+
+                    if($originalName !== $retrieveFiles){
+                        unlink($filepath . '/' . $retrieveFiles);
+                    }
+                    if($key !== false) {
+                        $genericNameArray[$key] = $originalName;
+                    }
+                    $activity_followup->generic_name = implode('|', $genericNameArray);
+                    $activity_followup->save(); 
                        
                 }
-           
-            
         }
          session()->flash('update_file', $request->position_count_number);
         return Redirect::back();
@@ -559,44 +518,19 @@ class ApiController extends Controller
 
             $uploadFiles = $request->file('filesInput');
 
-            // $removeFiles = $_REQUEST['removefile'];
-
-            // $filesremove = [];
-
-            // foreach($removeFiles as $remove) {
-            //      if($remove === ""){
-            //         continue; //skip the empty string
-            //      }
-            //     $fileNames = array_map(function ($file){
-            //         return $file->getClientOriginalName();
-            //     }, $uploadFiles);
-
-            //     $index = array_search($remove, $fileNames);
-
-            //     if($index !== false){
-            //         unset($uploadFiles[$index]);
-            //     }
-                
-            // }
-        
-            //    dd($request->all());
-
             $filePaths = [];
             $fileNames2 = [];
             foreach ($uploadFiles as $file) {
                 $filepath = public_path() . '/fileupload/' . $user->username;
                 $originalName = $file->getClientOriginalName();
-                
                 // Check if the file already exists, and rename if necessary
                 $counter = 1;
-                while (file_exists($filepath . '/' . $originalName)) {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
-                    $counter++;
-                }
-                
+                    while (file_exists($filepath . '/' . $originalName)) {
+                        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                        $counter++;
+                    }
            
                 $file->move($filepath, $originalName);// the pdf file will move here
-              
                 $filePaths[] = $filepath . '/' . $originalName;
                 $fileNames2[] = $originalName;
             }
@@ -641,19 +575,16 @@ class ApiController extends Controller
                     $followupfile->save();
            
                 }
-                
             }
-         
         }          
-                session()->flash('file_save', $request->position_count); 
-                return redirect()->back();
+        session()->flash('file_save', $request->position_count); 
+        return redirect()->back();
     }
 
     public function deletepatientFollowUpFile(Request $request){
        
         $user = Session::get('auth');
         $selectedfile = $request->selectedFileName;
-       
         $filepath = public_path() . '/fileupload/' . $user->username;
         
         $referred_activity = Activity::where('id', $request->referred_id)
@@ -675,6 +606,7 @@ class ApiController extends Controller
 
             $referred_activity->generic_name = implode('|', $referredfile_array);
             $referred_activity->save();
+
         }else if($request->position_counter >= 2){
             $followfile_array = explode('|', $followup_activity->generic_name);
             $key = array_search($selectedfile, $followfile_array);
@@ -688,8 +620,7 @@ class ApiController extends Controller
             $followup_activity->generic_name = implode('|', $followfile_array);
             $followup_activity->save();
         }
-        $position_count = $request->position_counter;
-        session()->flash('delete_file', $position_count);
+        session()->flash('delete_file', $request->position_counter);
         return Redirect::back();
     }
 

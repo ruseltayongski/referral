@@ -16,7 +16,7 @@ class Tracking extends Model
         'date_seen',
         'mode_transportation',
         'date_accepted',
-        'referred_from',
+        'referred_from',  
         'referred_to',
         'department_id',
         'remarks',

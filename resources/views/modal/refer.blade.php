@@ -303,19 +303,19 @@ hr {
                         previewContainer.appendChild(errmsg);
 
                     }
-                        break;
-                           
+                        break;       
             }
-        }
             $("#telemedicineFollowupForm").submit(function(event){
-            if(!isvalidFile){
-                event.preventDefault();
-            }else{
-                //  $("#telemedicineFollowupForm").show();
-                    previewContainer.innerHTML = '';
-        
-            }
-        });
+                if(!isvalidFile){
+                    event.preventDefault();
+                }else{
+                    //  $("#telemedicineFollowupForm").show();
+                        previewContainer.innerHTML = '';
+            
+                }
+            });
+        }
+            
     }
  
     function displayImagePreview(file, container) {
@@ -586,14 +586,14 @@ hr {
                                 </div>
                             </div>
                         </div>
-                        <hr/>
-                        <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                    </div>
+                    <hr/>
+                <div class="form-fotter pull-right">
+                    <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <!-- Modal footer content goes here -->
-            </div>
+                <div class="modal-footer">
+                    <!-- Modal footer content goes here -->
+                </div>
         </div>
     </div>
 </div>
