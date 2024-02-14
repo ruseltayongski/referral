@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\ApiController;
+use App\AppointmentSchedule;
+use App\TelemedAssignDoctor;
 
 class PatientCtrl extends Controller
 {
@@ -213,6 +215,11 @@ class PatientCtrl extends Controller
             'brgy_others' => $req->brgy_others
         );
         Session::put('profileSearch',$data);
+        if($req->from_consultation) {
+            //return str_replace(' ', '', $unique).'&appointment='.$req->from_consultation;
+            return redirect('doctor/patient?appointmentKey='.$unique.'&appointment='.urlencode(json_encode($req->from_consultation)));
+        }
+
         return redirect('doctor/patient');
     }
 
@@ -477,6 +484,15 @@ class PatientCtrl extends Controller
     public function referPatient(Request $req,$type)
     {
         $user = Session::get('auth');
+        if($req->telemedicine) {
+            $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$req->appointmentId)->where('doctor_id',$req->doctorId)->first();
+            if($telemedAssignDoctor->appointment_by) {
+                return 'consultation_rejected';
+            }
+            $telemedAssignDoctor->appointment_by = $user->id;
+            $telemedAssignDoctor->save();
+        }
+
         $patient_id = $req->patient_id;
         $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
         $code = date('ymd').'-'.$user_code.'-'.date('His')."$user->facility_id"."$user->id";

@@ -10,14 +10,18 @@ class AppointmentSchedule extends Model
     protected $guarded = array();
 
     public function createdBy() {
-        return $this -> belongsTo(User::class, 'created_by', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function facility() {
-        return $this -> belongsTo(Facility::class, 'facility_id', 'id');
+        return $this->belongsTo(Facility::class, 'facility_id', 'id');
     }
 
-    public function department(){
-        return $this -> belongsTo(Department::class, 'department_id', 'id');
+    public function department() {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+    
+    public function telemedAssignedDoctor() {
+        return $this->hasMany(TelemedAssignDoctor::class, 'appointment_id', 'id');
     }
 }

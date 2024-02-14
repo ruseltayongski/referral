@@ -34,6 +34,7 @@
                 @endif
                 <form method="POST" class="form-horizontal form-submit" id="form-submit" action="{{ asset('doctor/patient/'.$method) }}">
                     {{ csrf_field() }}
+                    <input type="hidden" id="from-consultation" name="from_consultation" value="">
                     <table class="table table-input table-bordered table-hover" border="1">
                         <tr class="has-group">
                             <td>PhilHealth Status :</td>
@@ -164,8 +165,11 @@
 @section('js')
 @include('script.filterMuncity')
 <script>
-    var telemedicineAppointment = JSON.stringify(getCookie('telemedicineAppointment'));
-    console.log(telemedicineAppointment);
+    var telemedicineAppointment = JSON.parse(getCookie('telemedicineAppointment'));
+    if(telemedicineAppointment.length > 0) {
+        console.log(telemedicineAppointment);
+        $("#from-consultation").val(JSON.stringify(telemedicineAppointment));
+    }
 
     $(".select2").select2({ width: '100%' });
     $('.select_phic').on('change',function(){

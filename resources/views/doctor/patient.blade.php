@@ -345,12 +345,12 @@ $counter = 0;
         $(document).ready(function() {
             $(".patient-emergency").removeClass('hidden');
             $(".patient-consultation").removeClass('hidden');
-            const telemedicineAppoinmentSlot = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get('appointment')));
-            if(telemedicineAppoinmentSlot) {
+            const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
+            if(JSON.parse(telemedicineAppoinmentSlot)) {
                 $(".patient-emergency").remove();
                 setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
             }
-            else if(!telemedicineAppoinmentSlot) {
+            else {
                 $(".patient-consultation").remove();
                 setCookie('telemedicineAppointment', false, 1);
             }
@@ -635,7 +635,16 @@ $counter = 0;
                 type: 'POST',
                 success: function(data) {
                     console.log(data);
-                    console.log("successfully referred!");
+                    if(data == 'consultation_rejected') {
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#normalFormModal').modal('hide');
+                        Lobibox.alert("error",
+                        {
+                            msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+                        });
+                        return;
+                    }
                     //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                     if(data.referred_to == 790 || data.referred_to == 23) {
                         var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
@@ -832,16 +841,16 @@ $counter = 0;
         }
 
         @if(Session::get('patient_update_save'))
-        Lobibox.notify('success', {
-            title: "",
-            msg: "<?php echo Session::get("patient_message"); ?>",
-            size: 'mini',
-            rounded: true
-        });
-        <?php
-        Session::put("patient_update_save",false);
-        Session::put("patient_message",false)
-        ?>
+            Lobibox.notify('success', {
+                title: "",
+                msg: "<?php echo Session::get("patient_message"); ?>",
+                size: 'mini',
+                rounded: true
+            });
+            <?php
+                Session::put("patient_update_save",false);
+                Session::put("patient_message",false)
+            ?>
         @endif
     </script>
 @endsection

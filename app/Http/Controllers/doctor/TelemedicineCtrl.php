@@ -22,9 +22,6 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
-        $page = $req->input('page', 1);
-        $perPage = 20;
-
         $appointment_schedule = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -44,27 +41,22 @@ class TelemedicineCtrl extends Controller
                         'id',
                         'description'
                     );
+                },
+                'telemedAssignedDoctor' => function ($query) {
+                    $query->with(['doctor' => function ($query) {
+                        $query->select(
+                            'id',
+                            'fname',
+                            'lname'
+                        );
+                    }]);
                 }
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page);
+            ->paginate(20);
 
         $user_facility = User::
-            with([
-                'department' => function ($query) {
-                    $query->select(
-                        'id',
-                        'description'
-                    );
-                },
-                'facility' => function ($query) {
-                    $query->select(
-                        'id',
-                        'name'
-                    );
-                }
-            ])
-            ->where('department_id',"=", '5')
+            where('department_id',"=", '5')
             ->where('level',"=", 'doctor')
             ->groupBy('facility_id')
             ->get();
@@ -72,8 +64,6 @@ class TelemedicineCtrl extends Controller
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => $user_facility,
-            'facilityList' => Facility::all(),
-            'departmentList' => Department::all(),
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
@@ -98,8 +88,8 @@ class TelemedicineCtrl extends Controller
             $appointment_schedule->appointed_date = $request->appointed_date;
             $appointment_schedule->facility_id = $request->facility_id;
             $appointment_schedule->department_id = 5;
-            $appointment_schedule->appointed_time = $request->appointed_time.$i;
-            $appointment_schedule->appointedTime_to = $request->appointedTime_to.$i;
+            $appointment_schedule->appointed_time = $request['appointed_time'.$i];
+            $appointment_schedule->appointedTime_to = $request['appointed_time_to'.$i];
             $appointment_schedule->opdCategory = $request->opdCategory.$i;
             $appointment_schedule->slot = $request->slot.$i;
             $appointment_schedule->created_by = $user->id;
@@ -194,7 +184,18 @@ class TelemedicineCtrl extends Controller
 
     public function getAvailableTimeSlots(Request $request)
     {
-        $timeSlots = AppointmentSchedule::select('id','appointed_time','appointedTime_to','appointed_date','slot')
+        $timeSlots = AppointmentSchedule::
+            with([
+                'telemedAssignedDoctor' => function ($query) {
+                    $query->with(['doctor' => function ($query) {
+                        $query->select(
+                            'id',
+                            'fname',
+                            'lname'
+                        );
+                    }]);
+                }
+            ])
             ->where('appointed_date', $request->selected_date)
             ->where('facility_id', $request->facility_id)
             ->get();
@@ -211,22 +212,6 @@ class TelemedicineCtrl extends Controller
 
         return $doctors;
     }
-
-   /* public function getFacilitiesByDepartmentAndType($departmentId) {
-        // Assuming Facility and Department models with relationships
-
-        // Fetch facilities based on department ID and type
-        $facilities = Facility::where('department_id', $departmentId)
-            ->where(function($query) {
-                $query->where('type', 'OPD')
-                    ->orWhere('type', 5);
-            })
-            ->get();
-
-        return response()->json($facilities);
-    }*/
-
-
 
 }
 

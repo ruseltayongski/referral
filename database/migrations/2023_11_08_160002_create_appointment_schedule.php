@@ -17,6 +17,7 @@ class CreateAppointmentSchedule extends Migration
             $table->increments('id');
             $table->date('appointed_date')->nullable();
             $table->time('appointed_time')->nullable();
+            $table->time('appointedTime_to')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('facility_id')->nullable();
             $table->integer('department_id')->nullable();

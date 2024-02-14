@@ -73,7 +73,7 @@
                             <th class="text-center">Created By</th>
                             <th class="text-center">Facility</th>
                             <th class="text-center">Department</th>
-                            <th class="text-center">OPD Category</th>
+                            {{-- <th class="text-center">OPD Category</th> --}}
                             <th class="text-center">Available Doctor</th>
                             <th class="text-center">Slot</th>
                             <th class="text-center">Action</th>
@@ -86,9 +86,15 @@
                                 <td> {{ $row->createdBy->username }} </td>
                                 <td> {{ $row->facility->name }} </td>
                                 <td> {{ $row->department->description }} </td>
-                                <td> {{ $row->opdCategory }}</td>
-                                <td> Available Doctor </td>
-                                <td> {{ $row->slot }} </td>
+                                {{-- <td> {{ $row->opdCategory }}</td> --}}
+                                <td>
+                                    <ul>
+                                        @foreach($row->telemedAssignedDoctor as $doctorAssigned)
+                                        <li>{{ 'Dr. '.$doctorAssigned->doctor->fname.' '.$doctorAssigned->doctor->lname }}</li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                                <td> {{ count($row->telemedAssignedDoctor) }} </td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
@@ -175,10 +181,10 @@
                                                             <option value="Pediatric">Pediatric</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-12">
+                                                    {{-- <div class="col-md-12">
                                                         <label for="slot">Slot:</label>
                                                         <input type="number" class="form-control" name="slot1" required>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
@@ -526,10 +532,9 @@
                                 text: "Select Doctors"
                             }));
                             $.each(query_doctor_store, function (index, userData) {
-                                console.log("userData:", userData); // Log userData to the console
                                 $(`.available_doctor${i}`).append($('<option>', {
                                     value: userData.id,
-                                    text: userData.fname + ' ' + userData.lname
+                                    text: "Dr. "+userData.fname + ' ' + userData.lname
                                 }));
                             });
                         }

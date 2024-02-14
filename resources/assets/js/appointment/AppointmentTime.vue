@@ -12,6 +12,7 @@
         data() {
             return {
                 selectedAppointmentTime: null,
+                selectedAppointmentDoctor: null,
                 showAppointmentTime: false,
                 base: $("#broadcasting_url").val()
             }
@@ -19,24 +20,38 @@
         watch: {
             appointedTimes: async function (payload) {
                 this.showAppointmentTime = true;
+                this.selectedAppointmentTime = null;
+                this.selectedAppointmentDoctor = null;
             },
             facilitySelectedId: async function (newValue, oldValue) {
                 this.showAppointmentTime = false;
             }
         },
         methods: {
+            areAllDoctorsNotAvailable(doctors) {
+                return doctors.every(doctor => doctor.appointment_by);
+            },
             proceedAppointment() {
                 if(!this.selectedAppointmentTime) {
                     Lobibox.alert("error",
                     {
-                        msg: "Please Select Time of Appoinment"
+                        msg: "Please Select Time"
+                    });
+                    return;
+                }
+                else if(!this.selectedAppointmentDoctor) {
+                    Lobibox.alert("error",
+                    {
+                        msg: "Please Select Doctor"
                     });
                     return;
                 }
                 const appointment = {
                     facility_id: this.facilitySelectedId,
-                    appointmentId: this.selectedAppointmentTime
+                    appointmentId: this.selectedAppointmentTime,
+                    doctorId: this.selectedAppointmentDoctor
                 }
+                console.log(appointment)
                 window.location.href = `${this.base}/doctor/patient?appointmentKey=${this.generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
             },
             generateAppointmentKey(length) {
@@ -49,6 +64,13 @@
                 }
 
                 return key;
+            },
+            handleAppointmentTimeChange() {
+                this.selectedAppointmentDoctor = null
+            },
+            handleDoctorChange(doctorId) {
+                console.log(doctorId)
+                this.selectedAppointmentDoctor = doctorId
             }
         }
     }
@@ -65,17 +87,40 @@
                                 <div class="box-header with-border">
                                     <h4 class="box-title">Legends</h4>
                                 </div>
-                                <div id="external-events">
+                                <div>
                                     <div class="external-event bg-green">Available Slot</div>
                                 </div>
                                 <div class="box box-solid">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Select Time of Appointment</h3>
+                                        <h3 class="box-title">Select Time and Doctor</h3>
                                         <div id="date-selected"></div>
                                     </div>
                                     <div class="box-body" v-if="appointedTimes.length > 0 && showAppointmentTime">
-                                        <div id="appointment-time-list" v-for="appointment in appointedTimes" :key="appointment.id">
-                                            <input type="radio" class="hours_radio" v-model="selectedAppointmentTime" :value="appointment.id">&nbsp;&nbsp;{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} - Available Slots: {{ appointment.slot }}
+                                        <div class="appointment-time-list" v-for="appointment in appointedTimes" :key="appointment.id">
+                                            <input 
+                                                type="radio" 
+                                                class="hours_radio" 
+                                                v-model="selectedAppointmentTime" 
+                                                :value="appointment.id" 
+                                                @change="handleAppointmentTimeChange"
+                                                :disabled="areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor)"
+                                            >&nbsp;&nbsp;
+                                            <span :class="{ 'text-green' : !areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor),'text-red' : areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor) }">{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }}</span>
+                                            <ul v-if="appointment.id == selectedAppointmentTime" class="doctor-list" v-for="assignedDoctor in appointment.telemed_assigned_doctor" :key="assignedDoctor.id">
+                                                <li>
+                                                    <input 
+                                                        type="radio" 
+                                                        class="hours_radio" 
+                                                        v-model="selectedAppointmentDoctor" 
+                                                        :value="assignedDoctor.doctor.id" 
+                                                        @change="handleDoctorChange(assignedDoctor.doctor.id)"
+                                                        :disabled="assignedDoctor.appointment_by"
+                                                    >&nbsp;&nbsp;
+                                                    <small :class="{ 'text-green' : !assignedDoctor.appointment_by,'text-red' : assignedDoctor.appointment_by }">
+                                                        {{ `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}` }}
+                                                    </small>
+                                                </li>
+                                            </ul>
                                         </div>
                                         <button type="button" id="consultation" class="btn btn-success bt-md btn-block" @click="proceedAppointment"><i class="fa fa-calendar"></i>&nbsp;Appointment</button>
                                     </div>
@@ -89,8 +134,14 @@
     </div>
 </template>
 <style scoped>
-    #appointment-time-list {
-        display: flex;padding: 5px;
+    .appointment-time-list {
+        /* display: flex;  */
+        padding: 10px;
+    }
+    .appointment-time-list > .doctor-list {
+        display: block !important;
+        list-style-type: none;
+        margin-top: 7px;
     }
     .hours_radio {
         margin-bottom: 5px;

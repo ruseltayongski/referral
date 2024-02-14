@@ -980,8 +980,13 @@
                     </div>
                 </div>
 
-                <div>
-                    <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.4253709207023!2d123.89121421531463!3d10.307801970485654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a99951d8484415%3A0x5a8b6d8d8565633d!2sDepartment%20of%20Health%20Region%207!5e0!3m2!1sen!2sph!4v1654753116007!5m2!1sen!2sph" frameborder="0" allowfullscreen></iframe>
+                <div v-if="showIframe">
+                    <iframe
+                        style="border: 0; width: 100%; height: 350px;"
+                        :src="iframeSrc"
+                        frameborder="0"
+                        allowfullscreen
+                    ></iframe>
                 </div>
 
                 <div class="container">
@@ -1153,7 +1158,9 @@
                 count_gov_hosp: 0,
                 count_private_hosp: 0,
                 count_rhu: 0,
-                on_mounted: false
+                on_mounted: false,
+                showIframe: false,
+                iframeSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.4253709207023!2d123.89121421531463!3d10.307801970485654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a99951d8484415%3A0x5a8b6d8d8565633d!2sDepartment%20of%20Health%20Region%207!5e0!3m2!1sen!2sph!4v1654753116007!5m2!1sen!2sph"
             }
         },
         mounted() {
@@ -1204,6 +1211,8 @@
                 const lobiboxScript = document.createElement('script');
                 lobiboxScript.src = path + 'resources/plugin/Lobibox/Lobibox.js?v=2';
                 document.head.appendChild(lobiboxScript);
+
+                this.showIframe = true;
             });
         },
         created() {

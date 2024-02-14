@@ -134,7 +134,7 @@
                             text : val.description
                         }));
                     });
-                    facilityForTelemedicine(data.departments)
+                    facilityForTelemedicine(data.departments);
                 },
                 error: function(error){
                     $('#serverModal').modal();
@@ -175,7 +175,6 @@
         document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
     }
 
-    // Function to get the value of a cookie
     function getCookie(name) {
         const keyValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
         return keyValue ? keyValue[2] : null;

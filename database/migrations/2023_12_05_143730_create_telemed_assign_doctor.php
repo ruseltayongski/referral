@@ -15,7 +15,8 @@ class CreateTelemedAssignDoctor extends Migration
     {
         Schema::create('telemed_assign_doctor', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('appointment_id')->nullable();
+            $table->integer('appointment_by')->nullable();
+            $table->integer('appointment_id')->unsigned()->nullable();
             $table->integer('doctor_id')->nullable();
             $table->string('status', 255)->nullable();
             $table->integer('created_by')->nullable();

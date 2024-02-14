@@ -1,14 +1,27 @@
 <?php
-$user = Session::get('auth');
-$facilities = \App\Facility::select('id','name')
-    ->where('id','!=',$user->facility_id)
-    ->where('status',1)
-    ->where('referral_used','yes')
-    ->orderBy('name','asc')->get();
-$myfacility = \App\Facility::find($user->facility_id);
-$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-$inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
-$reason_for_referral = \App\ReasonForReferral::get();
+    $appointmentParam = $_GET['appointment'];
+    $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true),true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
+    $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
+    $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
+
+    $user = Session::get('auth');
+    $facilities = \App\Facility::select('id','name')
+        ->where('id','!=',$user->facility_id)
+        ->where('status',1)
+        ->where('referral_used','yes');
+    
+    if($facility_id_telemedicine) {
+        $facilities = $facilities->where('id', $facility_id_telemedicine);
+    }
+
+    $facilities = $facilities
+        ->orderBy('name','asc')
+        ->get();
+
+    $myfacility = \App\Facility::find($user->facility_id);
+    $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+    $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
+    $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
 <style>
@@ -34,6 +47,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <input type="hidden" name="code" value="" />
                         <input type="hidden" name="source" value="{{ $source }}" />
                         <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" />
+                        <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" />
+                        <input type="hidden" name="doctorId" value="{{ $telemedicine_doctor_id }}" />
                         <br>
                         <div class="row">
                             <div class="col-md-4">
@@ -295,7 +310,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
 </div>
 
 <script>
-
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
     $("#sbmitBtn").on('click',function(e){
         if(!($("#icd").val()) && !($("#other_diag").val())){
