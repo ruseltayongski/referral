@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track) completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_track->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
                 <div class="stepper-item stepper-item-prescription @if($follow_examined_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}">
@@ -299,8 +299,318 @@
                     </div> --}}
                 </div>
             </div>
+        <!-- my changes in file upload -->
+        <div class="stepper-wrapper">
+                <p class="mt-0">
+                    <?php
+                    $referredActivities = $user->activities()
+                        ->where('code', $follow_track->code) 
+                        ->where('id', $referred_track->id)
+                        ->get();
+                    
+                    $followActivities = $user->activities()
+                        ->where('code', $follow_track->code)
+                        ->where("status","followup")
+                        ->get();  
+                    // dd($referredActivities, $followActivities);
+                    ?>
+                    <?php $pdfFiles = []; ?>
+                    <?php $imageFiles = []; ?>
+                    @foreach ($position as $index => $pos)
+                        @if ( $index== 1)
+                            <?php $referredFiles = []; ?>
+                            @foreach ($referredActivities as $referredActivity)
+                                <?php
+                                $fileNames = explode('|', $referredActivity->generic_name);
+                                $referredFiles = array_merge($referredFiles, $fileNames);
+                                $activity_id = $referredActivity->id;
+                                $activity_code = $referredActivity->code;
+
+                                foreach($fileNames as $filename){
+                                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                                    if (in_array($extension, ['pdf'])){
+                                        $pdfFiles[] = $filename;                                            
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
+                                        $imageFiles[] = $filename;
+                                    }
+                                }
+                        
+                                ?>
+                            @endforeach
+                               <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
+                            <!-- @if ($pos == $position[$position_count]) -->
+                            @foreach ($sortedFiles as $referredFile)
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
+                                    <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
+                                    @if(ends_with($referredFile, '.pdf'))
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
+                                    @else
+                                        <i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
+                                    @endif
+                                    </a>&nbsp;
+                                @endforeach
+                                @if(empty($sortedFiles))
+                                    <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;add files
+                                    </a>&nbsp;
+                                @endif
+                         
+                                <!-- @endif -->
+                        @elseif ($index >= 2)
+                            <?php $pdfFiles_follow = []; ?>
+                            <?php $imageFiles_follow = []; ?>
+                            <?php $followFiles = []; ?>
+                            @if (isset($followActivities[$index - 2]))
+                                <?php
+                                $followActivity = $followActivities[$index - 2];
+                                $fileNames = explode('|', $followActivity->generic_name);
+                                $followFiles = array_merge($followFiles, $fileNames);
+                                $follow_id = $followActivity->id;
+
+                                foreach($fileNames as $filename){
+                                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                                    if (in_array($extension, ['pdf'])){
+                                        $pdfFiles_follow[] = $filename;                                            
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
+                                        $imageFiles_follow[] = $filename;
+                                    }
+                                }
+                                ?>
+                            @endif
+                                <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
+                                <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow)); ?>
+                            @if ($pos == $position[$position_count])
+                                    @foreach ($sortedFiles_follow as $followFile)   
+                                  
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $followFile }}', '{{$followActivity}}')">
+                                        <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
+                                        @if(ends_with($followFile, '.pdf'))
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$followFile}} 
+                                        @else
+                                            <i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp; {{$followFile}}
+                                        @endif
+                                      
+                                    </a>&nbsp;
+                                    @endforeach
+                                    @if(empty($sortedFiles_follow))
+                                        <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$followFile}}')">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>add files
+                                        </a>&nbsp;
+                                    @endif
+                                 
+                            @endif
+                        @endif
+                    @endforeach
+                  
+                </p>
+            </div>
+        <!-- end of my changes in display file upload -->
         @endforeach
     @endif
+    
+    <script>
+         //start of my changes in file upload script
+      function isPDF(referredFile){
+        console.log('hello', referredFile);
+            return referredFile.toLowerCase().endsWith('.pdf'); 
+      }
+
+        //---------------------------------------------------------------------------------------------------
+        function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
+            if(document.getElementById('carouselmodaId')){
+                return;
+            }
+            console.log('filenames: ', allfiles);
+            console.log('baseUrl: ', baseUrl);
+            
+            
+            let parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
+            parsedfiles = Array.isArray(parsedfiles) ? parsedfiles : [parsedfiles];
+            console.log('parse files', parsedfiles);
+             //const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+            const allfilename =  parsedfiles.map(file => file.generic_name ? file.generic_name.split('|') : []).flat().filter(name => name !== "");
+            console.log('all filenames', allfilename);
+            
+            const clickedFile = allfilename.findIndex(file => file === fileNames);
+            console.log('selected file', clickedFile);
+            let carouselItems = '';
+            allfilename.forEach((file, index) => {
+                let isActive = index === clickedFile ? 'active' : '';
+                console.log('filname one', fileNames);
+                var fileExtension = file.split('.').pop().toLowerCase();
+                const fileUrl = `${baseUrl}/${file}`; 
+                    if(fileExtension === 'pdf'){
+                            carouselItems += ` 
+                                <div class="item ${isActive}" data-filename="${file}">
+                                    <embed src="${fileUrl}" type="application/pdf" style="width:100%;height:500px;" />
+                                </div>
+                            `;
+                    }else{
+                            carouselItems += `
+                            <div class="item ${isActive}" data-filename="${file}">
+                                <img src="${fileUrl}" alt="..." style="width:30%;height:20%;">
+                            </div>
+                            `;
+                    }
+            });
+            var modalContent = `
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- Additional wrapper for vertical centering -->
+                        <div class="vertical-center-wrapper" style="display: table; width: 100%; height: 100vh;">
+                            <div class="text-center" style="display: table-cell; vertical-align: middle;">
+                                <div class="card" style="padding: 20px;">
+                                        <div id="carousel-example-generic" class="carousel slide" data-interval="false">
+                                                <div class="carousel-inner">
+                                                 ${carouselItems}
+                                                </div>
+                                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                        </div>
+                                </div>
+                                    <a href="" id="download" class="btn btn-success filecolor" download="">
+                                        <i class="fa fa-download"></i> Download
+                                    </a>
+                                    <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
+                                        <i class="fa fa-pencil-square-o"></i> Update
+                                    </a>
+                            
+                                    <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
+                                        <i class="fa fa-plus"></i> Add More
+                                    </a>
+
+                                    <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                    <a href="#" class="btn btn-default filecolorclose" onclick="closeModalButton()" id="closeModalId">
+                                        <i class="fa fa-times"></i> close
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        
+         `;
+            var modal = document.createElement('div');
+            modal.id = 'carouselmodaId'
+            modal.innerHTML = modalContent;
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.zIndex = '9999';
+
+            document.body.appendChild(modal);
+            updateDownloadButton(baseUrl); 
+            
+            modal.onclick = function (event) {
+                if(event.target === modal){
+                    modal.parentNode.removeChild(modal);
+                }
+            };
+
+
+             getfilename(baseUrl,code,activity_id,follow_id,position); 
+             
+        }
+
+
+
+        function closeModal() {
+          $("#carouselmodaId").hide();
+    
+        }
+
+       function closeModalButton() {
+            $("#carouselmodaId").hide('hide');  
+            // location.reload();
+            $("#carouselmodaId").remove();
+       }
+
+       $(document).ready(function() {
+
+             $('.carousel').carousel({
+                    interval: false,
+                });
+            //this will control the arrow keyboard left & right
+            $(document).keydown(function(e) {
+                    if (e.keyCode === 37) {
+                    // Previous
+                    $(".carousel-control.left").click();
+                    return false;
+                    }
+                    if (e.keyCode === 39) {
+                    // Next
+                    $(".carousel-control.right").click();
+                    return false;
+                    }
+
+                });
+
+        });
+        $(document).keydown(function(event) { //this will close modal of press the keyboard Esc
+                if (event.keyCode == 27) { 
+                    $('#carouselmodaId').hide();
+                    $("#carouselmodaId").remove();
+                }
+        });
+        function getfilename(baseUrl,code,activity_id,follow_id,position) {
+            // Use delegated events to handle clicks for dynamically added elements
+            $(document).on('click', '#updateButton', function(e) {
+                var editFileName = $('.carousel-inner .item.active').data('filename');
+                e.preventDefault();
+                editFileforFollowup(baseUrl, editFileName, code, activity_id, follow_id,position);
+            });
+
+            $(document).on('click', '#deleteButton', function(e) {
+                e.preventDefault();
+                var deleteFileName = $('.carousel-inner .item.active').data('filename');
+                DeleteFileforFollowup(baseUrl,deleteFileName,code,activity_id,follow_id,position)
+            });
+
+            $(document).on('click', '#AddfileEmpty', function(e) {
+                e.preventDefault();
+                var addFileName = $('.carousel-inner .item.active').data('filename');    
+                addfilesInFollowupIfempty(position,code,activity_id,follow_id,addFileName)
+            });
+
+            $('#carouselModalId').on('slid.bs.carousel', '#carousel-example-generic', function() {
+                var activeFileName = $('.carousel-inner .item.active').data('filename');
+               
+            });
+        }
+
+        function updateDownloadButton(baseUrl) {
+            var activeFileName = $('.carousel-inner .item.active').data('filename');
+            // Assuming baseUrl is accessible and it points to the directory where files are stored
+            $('#download').attr('href', baseUrl + '/' + activeFileName);
+            $('#download').attr('download', activeFileName);
+        }
+        $(document).ready(function() {
+            var baseUrl = " <?php echo  asset('public/fileupload/' . $user->username . '/') ?>";
+            
+            updateDownloadButton(); // Initial setup for the download button
+            // Ensure the modal and carousel are in the DOM
+            $(document).on('slid.bs.carousel', '#carousel-example-generic', function () {
+                
+                updateDownloadButton(baseUrl); // Call this to update the download link based on the new active item
+            });
+            // Any other initialization code
+        });
+        //end of my changes in file upload script
+    </script>
+
+
     @if(count($redirected_track) > 0)
         @foreach($redirected_track as $redirect_track)
             <?php
@@ -603,3 +913,81 @@
         </div>
     @endif
 </div>
+<style>
+    /* start my file upload style changes */
+.carousel img {
+    margin: 0 auto;
+}
+
+  .d-file{
+    font-size: 14px;
+    color: #FFF; 
+    background-color: #4CAF50; 
+    padding: 8px 12px;
+    margin: 4px;
+    border-radius: 5px; 
+    display: inline-block; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    max-width: 150px; 
+    transition: background-color 0.3s, transform 0.3s;
+    text-decoration: none; 
+  }
+  .d-file:hover {
+    background-color: #7AE205; 
+    transform: translateY(-2px);
+  }
+
+  .file-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .filecolor {
+    color: white !important;
+    background: linear-gradient(180deg, #52C755, #056608) !important;
+    border: 1px solid #056608 !important;
+}
+ a.btn.filecolor:hover{
+    transform: translateY(-10px);
+    color:white;
+    background: linear-gradient(180deg, #056608, #8BD98D);
+ }
+ a.btn.filecolorDelete{
+    color: white;
+    background: linear-gradient(180deg, #EE3533, #ED1E24);
+ }
+ a.btn.filecolorDelete:hover{
+    transform: translateY(-10px);
+    color: white;
+    background: linear-gradient(180deg, #ED1E24, #F3787A);
+ }
+ a.btn.filecolorclose{
+    color:dark; /* Darker text for better readability */
+    background: linear-gradient(180deg, #EDEDED, #CCCCCC);
+    border: 1px solid #BBB; /* Subtle border for definition */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effect */
+ }
+.filecolorclose:hover{
+    transform: translateY(-10px); /* Move the button up and to the right */
+    background: linear-gradient(180deg, #ED1E24, #F3787A);
+    /* Optional: Add a box-shadow for better visual effect on hover */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+ }
+
+#closeModalId {
+    display: inline-block;
+    width: auto; 
+}
+@media (max-width: 768px) {
+    #closeModalId {
+        display: block; 
+        width: 100%; 
+        margin-top: 10px; 
+    }
+}
+
+ /* end my file upload style changes */
+</style>

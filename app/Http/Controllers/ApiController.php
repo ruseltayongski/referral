@@ -384,6 +384,35 @@ class ApiController extends Controller
             Activity::create($activity);
         }
 
+        //  ---------------------jondy changes--------------------------->
+        if ($request->hasFile('files')) {
+            $uploadFiles = $request->file('files');
+            $filePaths = [];
+            $fileNames2 = [];
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $file->getClientOriginalName();
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                    $counter++;
+                }
+                $file->move($filepath, $originalName);// the pdf file will move here
+                //$file->move($filepath, $originalName);
+                $filePaths[] = $filepath . '/' . $originalName;
+                $fileNames2[] = $originalName;
+            }
+            $activityFile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            json_encode($filePaths);
+            $activityFile->generic_name = implode('|', $fileNames2);
+            $activityFile->save();
+            
+        }
+        //  -----------------------jondy changes------------------------->
+
         //start broadcast
         $patient = Patients::find($tracking->patient_id);
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
@@ -421,6 +450,184 @@ class ApiController extends Controller
 
         return Redirect::back();
     }
+
+
+    // ----------------------I add this for controller of file upload update
+    public function editpatientFollowUpFile(Request $request)
+    {
+        $user = Session::get('auth');
+        $retrieveFiles = $request->selectedFileName;
+
+        if ($request->hasFile('files')){
+            $uploadFile = $request->file('files');
+            $filepath = public_path() . '/fileupload/' . $user->username;
+            $originalName = $uploadFile->getClientOriginalName();
+                // Check if the file already exists, and rename if necessary
+            $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $uploadFile->getClientOriginalExtension();
+                    $counter++;
+                }
+              
+            $activityFile = Activity::where('id', $request->referred_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            $activity_followup = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            $uploadFile->move($filepath, $originalName);
+                if($request->position_count_number == 1){
+                   
+                    $genericNameArray = explode('|', $activityFile->generic_name);
+                    $key = array_search($retrieveFiles, $genericNameArray);
+                    
+                    if($originalName !== $retrieveFiles){
+                        unlink($filepath . '/' . $retrieveFiles);
+                    }
+        
+                    if($key !== false) {
+                        $genericNameArray[$key] = $originalName;
+                    }
+                    $activityFile->generic_name = implode('|', $genericNameArray);
+                    $activityFile->save();
+                   
+                }else if($request->position_count_number >= 2){
+                    $genericNameArray = explode('|', $activity_followup->generic_name);
+                    $key = array_search($retrieveFiles, $genericNameArray);
+
+                    if($originalName !== $retrieveFiles){
+                        unlink($filepath . '/' . $retrieveFiles);
+                    }
+                    if($key !== false) {
+                        $genericNameArray[$key] = $originalName;
+                    }
+                    $activity_followup->generic_name = implode('|', $genericNameArray);
+                    $activity_followup->save(); 
+                       
+                }
+        }
+         session()->flash('update_file', $request->position_count_number);
+        return Redirect::back();
+    }
+    //---------------------------------Add files if empty or Add more files------------------------------->
+    public function addpatientFollowUpFileIfEmpty(Request $request){
+       
+        $user = Session::get('auth');
+
+        if ($request->hasFile('filesInput')) {
+
+            $uploadFiles = $request->file('filesInput');
+
+            $filePaths = [];
+            $fileNames2 = [];
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/' . $user->username;
+                $originalName = $file->getClientOriginalName();
+                // Check if the file already exists, and rename if necessary
+                $counter = 1;
+                    while (file_exists($filepath . '/' . $originalName)) {
+                        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                        $counter++;
+                    }
+           
+                $file->move($filepath, $originalName);// the pdf file will move here
+                $filePaths[] = $filepath . '/' . $originalName;
+                $fileNames2[] = $originalName;
+            }
+            
+            $referredFile = Activity::where('id', $request->referred_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            
+            $followupfile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+          
+           
+            if(empty($request->filename)){
+                if($request->position_count == 1){
+                    json_encode($filePaths);
+                    $referredFile->generic_name = implode('|', $fileNames2);
+                    $referredFile->save();
+    
+                }else if($request->position_count >= 2){
+                    json_decode($filepath);
+                    $followupfile->generic_name = implode('|', $fileNames2);
+                    $followupfile->save();
+                }
+
+            }else{
+                
+                if($request->position_count == 1){
+                    $genericname_array = explode('|', $referredFile->generic_name);
+                    $genericname_array = array_merge($genericname_array, $fileNames2);
+    
+                    $referredFile->generic_name = implode('|', $genericname_array);
+                    $referredFile->save();
+                       
+                }else if($request->position_count >= 2){
+                    $genericname_array = explode('|', $followupfile->generic_name);
+                    $genericname_array = array_merge($genericname_array, $fileNames2);
+    
+                    $followupfile->generic_name = implode('|', $genericname_array);
+                    $followupfile->save();
+           
+                }
+            }
+        }          
+        session()->flash('file_save', $request->position_count); 
+        return redirect()->back();
+    }
+
+    public function deletepatientFollowUpFile(Request $request){
+       
+        $user = Session::get('auth');
+        $selectedfile = $request->selectedFileName;
+        $filepath = public_path() . '/fileupload/' . $user->username;
+        
+        $referred_activity = Activity::where('id', $request->referred_id)
+            ->where('code', $request->code)
+            ->first();
+        $followup_activity = Activity::where('id', $request->followup_id)
+            ->where('code', $request->code)
+            ->first();
+
+        if($request->position_counter == 1){
+            $referredfile_array = explode('|', $referred_activity->generic_name);
+            $key = array_search($selectedfile, $referredfile_array);
+            
+            if($key !== false){// Check if the selected file exists in the array
+                unset($referredfile_array[$key]);
+
+                unlink($filepath . '/' . $selectedfile);
+            }
+
+            $referred_activity->generic_name = implode('|', $referredfile_array);
+            $referred_activity->save();
+
+        }else if($request->position_counter >= 2){
+            $followfile_array = explode('|', $followup_activity->generic_name);
+            $key = array_search($selectedfile, $followfile_array);
+
+            if($key !== false){
+                unset($followfile_array[$key]);
+
+                unlink($filepath . '/' . $selectedfile);
+            }
+            $followup_activity->generic_name = implode('|', $followfile_array);
+            $followup_activity->save();
+        }
+
+        session()->flash('delete_file', $request->position_counter);
+        return Redirect::back();
+    }
+
+    // ----------------------end of my changes jondy file upload------------------------->
+
 
     public function patientEndCycle(Request $request) {
         $user = Session::get('auth');
