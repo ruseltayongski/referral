@@ -25,6 +25,7 @@ use App\Profile;
 use App\Province;
 use App\Seen;
 use App\Tracking;
+use App\PrescribedPrescription;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -312,7 +313,6 @@ class ApiController extends Controller
     //     }
     // }
     //-------------------------------------------------------------------
-    
     public function getPrescriptions($code) {
         $followupStatus = Activity::where('code', $code)
             ->where('status', 'followup')
@@ -583,6 +583,7 @@ class ApiController extends Controller
             return response()->json(['message' => 'Failed to delete prescription'], 500);
         }
     }
+    
     //-------------------------------------------------------------------
     public function patientTreated(Request $request) {
         $user = Session::get('auth');
