@@ -220,98 +220,370 @@ class ApiController extends Controller
         return "failed";
     }
 
-    public function updatePrescription(Request $request) {
-        //return $request->all();
-        if($request->username) //it means from mobile
-            $user = User::where('username',$request->username)->first();
-        else
-            $user = Session::get('auth');
+    // public function updatePrescription(Request $request) {
+    //     //return $request->all();
+    //     if($request->username) //it means from mobile
+    //         $user = User::where('username',$request->username)->first();
+    //     else
+    //         $user = Session::get('auth');
 
-        $patient_form = null;
-        $patient_id = 0;
-        if($request->form_type == 'normal') {
-            $patient_form = PatientForm::where("code",$request->code)->first();
-            $patient_id = $patient_form->patient_id;
-        }
-        else if($request->form_type == 'pregnant') {
-            $patient_form = PregnantForm::where("code",$request->code)->first();
-            $patient_id = $patient_form->patient_woman_id;
-        }
-        if($patient_form) {
-            $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
+    //     $patient_form = null;
+    //     $patient_id = 0;
+    //     if($request->form_type == 'normal') {
+    //         $patient_form = PatientForm::where("code",$request->code)->first();
+    //         $patient_id = $patient_form->patient_id;
+    //     }
+    //     else if($request->form_type == 'pregnant') {
+    //         $patient_form = PregnantForm::where("code",$request->code)->first();
+    //         $patient_id = $patient_form->patient_woman_id;
+    //     }
+    //     if($patient_form) {
+    //         $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
 
-            if($activity_prescription) {
-                $activity_prescription->generic_name = $request->generic_name;
-                $activity_prescription->dosage = $request->dosage;
-                $activity_prescription->formulation = $request->formulation;
-                $activity_prescription->brandname = $request->brandname;
-                $activity_prescription->frequency = $request->frequency;
-                $activity_prescription->duration = $request->duration;
-                $activity_prescription->quantity = $request->quantity;
-                $activity_prescription->save();
-            } else {
-                $tracking = Tracking::where("code",$request->code)->first();
-                $activity = array(
-                    'code' => $request->code,
-                    'patient_id' => $patient_id,
-                    'date_referred' => date('Y-m-d H:i:s'),
-                    'date_seen' => "0000-00-00 00:00:00",
-                    'referred_from' => $tracking->referred_from,
-                    'referred_to' => $tracking->referred_to,
-                    'department_id' => $tracking->department_id,
-                    'referring_md' => $tracking->referring_md,
-                    'action_md' => $user->id,
-                    'generic_name' => $request->generic_name,
-                    'dosage' => $request->dosage,
-                    'formulation' => $request->formulation,
-                    'brandname' => $request->brandname,
-                    'frequency' => $request->frequency,
-                    'duration' => $request->duration,
-                    'quantity' => $request->quantity,
-                    'status' => 'prescription'
-                );
-                Activity::create($activity); //new prescription in activity
-            }
+    //         if($activity_prescription) {
+    //             $activity_prescription->generic_name = $request->generic_name;
+    //             $activity_prescription->dosage = $request->dosage;
+    //             $activity_prescription->formulation = $request->formulation;
+    //             $activity_prescription->brandname = $request->brandname;
+    //             $activity_prescription->frequency = $request->frequency;
+    //             $activity_prescription->duration = $request->duration;
+    //             $activity_prescription->quantity = $request->quantity;
+    //             $activity_prescription->save();
+    //         } else {
+    //             $tracking = Tracking::where("code",$request->code)->first();
+    //             $activity = array(
+    //                 'code' => $request->code,
+    //                 'patient_id' => $patient_id,
+    //                 'date_referred' => date('Y-m-d H:i:s'),
+    //                 'date_seen' => "0000-00-00 00:00:00",
+    //                 'referred_from' => $tracking->referred_from,
+    //                 'referred_to' => $tracking->referred_to,
+    //                 'department_id' => $tracking->department_id,
+    //                 'referring_md' => $tracking->referring_md,
+    //                 'action_md' => $user->id,
+    //                 'generic_name' => $request->generic_name,
+    //                 'dosage' => $request->dosage,
+    //                 'formulation' => $request->formulation,
+    //                 'brandname' => $request->brandname,
+    //                 'frequency' => $request->frequency,
+    //                 'duration' => $request->duration,
+    //                 'quantity' => $request->quantity,
+    //                 'status' => 'prescription'
+    //             );
+    //             Activity::create($activity); //new prescription in activity
+    //         }
 
-            $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
-                $query->where("status","referred")
-                    ->orWhere("status","redirected")
-                    ->orWhere("status","transferred")
-                    ->orWhere('status',"followup");
-            })
-                ->orderBy("id","desc")
-                ->first();
+    //         $latest_activity = Activity::where("code",$tracking->code)->where(function($query) {
+    //             $query->where("status","referred")
+    //                 ->orWhere("status","redirected")
+    //                 ->orWhere("status","transferred")
+    //                 ->orWhere('status',"followup");
+    //         })
+    //             ->orderBy("id","desc")
+    //             ->first();
 
-            $broadcast_prescribed = [
-                "activity_id" => $latest_activity->id,
-                "code" => $request->code,
-                "referred_from" => $latest_activity->referred_from,
-                "status" => "telemedicine",
-                "telemedicine_status" => "prescription"
-            ];
+    //         $broadcast_prescribed = [
+    //             "activity_id" => $latest_activity->id,
+    //             "code" => $request->code,
+    //             "referred_from" => $latest_activity->referred_from,
+    //             "status" => "telemedicine",
+    //             "telemedicine_status" => "prescription"
+    //         ];
 
-            broadcast(new SocketReferralDischarged($broadcast_prescribed));
+    //         broadcast(new SocketReferralDischarged($broadcast_prescribed));
 
-            $response =  "success";
+    //         $response =  "success";
+    //     } else {
+    //         $response = "failed";
+    //     }
+
+    //     if($request->username) { //it means from mobile
+    //         if($response == 'success') {
+    //             return [
+    //                 "status_code" => 200
+    //             ];
+    //         } else {
+    //             return [
+    //                 "status_code" => 204
+    //             ];
+    //         }
+    //     } else {
+    //         return $response;
+    //     }
+    // }
+    //-------------------------------------------------------------------
+    
+    public function getPrescriptions($code) {
+        $followupStatus = Activity::where('code', $code)
+            ->where('status', 'followup')
+            ->latest()
+            ->first();
+
+        $prescriptionStatus = Activity::where('code', $code)
+            ->where('status', 'prescription')
+            ->latest()
+            ->first();
+
+        if ($prescriptionStatus && $prescriptionStatus->id > ($followupStatus ? $followupStatus->id : 0)) {
+
+            // $prescribed_status = ['referred', '1st followup', '2nd followup', '3rd followup', '4th followup', '5th followup', '6th followup', 
+            //                         '7th followup', '8th followup', '9th followup', '10th followup', '11th followup'];
+
+            $prescriptions = PrescribedPrescription::where('code', $code)
+                ->where('prescribed_activity_id', $prescriptionStatus->id)
+                // ->whereIn('prescribed_status', $prescribed_status)
+                ->get();
+
+            return response()->json(['prescriptions' => $prescriptions], 200);
         } else {
-            $response = "failed";
-        }
-
-        if($request->username) { //it means from mobile
-            if($response == 'success') {
-                return [
-                    "status_code" => 200
-                ];
-            } else {
-                return [
-                    "status_code" => 204
-                ];
-            }
-        } else {
-            return $response;
+            return response()->json(['message' => 'Prescription activity not found'], 404);
         }
     }
+    //------------------------------------------------------------------- 
 
+    private function isPrescriptionExists($code, $prescribed_status) {
+        $existingFollowup = PrescribedPrescription::where('code', $code)
+            ->where('prescribed_status', $prescribed_status)
+            ->first();
+
+        return !empty($existingFollowup);
+    }
+    //-------------------------------------------------------------------
+
+    private function saveSinglePrescription($singlePrescription, $request, $isFollowup = true) {
+
+        if(!empty($singlePrescription)) {
+            if($request->username) //it means from mobile
+                $user = User::where('username',$request->username)->first();
+            else
+                $user = Session::get('auth');
+
+            $patient_form = null;
+            $patient_id = 0;
+                if($singlePrescription['form_type'] == 'normal') {
+                    $patient_form = PatientForm::where("code",$singlePrescription['code'])->first();
+                    $patient_id = $patient_form->patient_id;
+                }
+                else if($singlePrescription['form_type'] == 'pregnant') {
+                    $patient_form = PregnantForm::where("code",$singlePrescription['code'])->first();
+                    $patient_id = $patient_form->patient_woman_id;
+                }
+
+            $latestActivity = new Activity();
+            $latestActivity->patient_id = $patient_id;
+            $latestActivity->date_referred = $patient_form->time_referred;
+            $latestActivity->date_seen = $patient_form->time_transferred;
+            $latestActivity->referred_from = $patient_form->referring_facility;
+            $latestActivity->referred_to = $patient_form->referred_to;
+            $latestActivity->department_id = $patient_form->department_id;
+            $latestActivity->referring_md = $patient_form->referring_md;
+            $latestActivity->action_md = $patient_form->referred_md;
+            $latestActivity->code = $singlePrescription['code'];
+            $latestActivity->status = "prescription";
+            $latestActivity->remarks = "prescription examined";
+            $latestActivity->save();
+
+            $prescribed_activity_id = $latestActivity->id;
+
+            $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th", "12th"];
+            $position_count = 0;
+
+            $positionPrescription = PrescribedPrescription::where('code', $code)
+            ->where('prescribed_status', $prescribed_status)
+            ->first();
+
+            while ($isFollowup && $this->isPrescriptionExists($latestActivity->code, $position[$position_count] . ' followup')) {
+                $position_count++;
+            }
+
+            if ($isFollowup) {
+                $position_count++;
+                $prescribed_status = $position_count < count($position) ? $position[$position_count - 1] . ' followup' : 'referred';
+            } else {
+                $prescribed_status = 'referred';
+            }
+
+            $prescribed = new PrescribedPrescription();
+            $prescribed->prescribed_activity_id = $prescribed_activity_id;
+            $prescribed->code = $latestActivity->code;
+            $prescribed->generic_name = $singlePrescription['generic_name'];
+            $prescribed->brandname = $singlePrescription['brandname'];
+            $prescribed->dosage = $singlePrescription['dosage'];
+            $prescribed->quantity = $singlePrescription['quantity'];
+            $prescribed->formulation = $singlePrescription['formulation'];
+            $prescribed->frequency = $singlePrescription['frequency'];
+            $prescribed->duration = $singlePrescription['duration'];
+            $prescribed->prescribed_status = $isFollowup ? $prescribed_status : 'referred';
+            $prescribed->save();
+        }
+    }
+    //-------------------------------------------------------------------
+
+    public function savePrescriptions(Request $request) {
+        $validatedData = $request->validate([
+            'singlePrescription.generic_name' => 'required|string',
+            'singlePrescription.brandname' => 'required|string',
+            'singlePrescription.dosage' => 'required|string',
+            'singlePrescription.quantity' => 'required|integer',
+            'singlePrescription.formulation' => 'required|string',
+            'singlePrescription.frequency' => 'required|string',
+            'singlePrescription.duration' => 'required|string',
+            'singlePrescription.code' => 'required|string',
+            'singlePrescription.form_type' => 'required|string',
+            'singlePrescription.prescribed_activity_id' => '',
+            'multiplePrescriptions' => 'array',
+        ]);
+
+        $singlePrescription = $validatedData['singlePrescription'];
+        $multiplePrescriptions = $validatedData['multiplePrescriptions'];
+
+        $followupActivity = Activity::where('code', $singlePrescription['code'])
+            ->where('status', 'followup')
+            ->latest()
+            ->first();
+
+        $referredActivity = Activity::where('code', $singlePrescription['code'])
+            ->where('status', 'referred')
+            ->latest()
+            ->first();
+
+            if ($followupActivity) {
+        
+                $activityExisting = Activity::where('code', $singlePrescription['code'])
+                    ->where('status', 'prescription')
+                    ->where('id', $singlePrescription['prescribed_activity_id'])
+                    ->latest()
+                    ->first();
+
+                //lacking compare ID of prescribed_prescription
+                $existingSinglePrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
+                    ->where('prescribed_activity_id', $activityExisting->id)
+                    ->where('prescribed_status', 'like', '% followup')
+                    ->first();
+
+                if ($existingSinglePrescription) {
+                    $existingSinglePrescription->generic_name = $singlePrescription['generic_name'];
+                    $existingSinglePrescription->brandname = $singlePrescription['brandname'];
+                    $existingSinglePrescription->dosage = $singlePrescription['dosage'];
+                    $existingSinglePrescription->quantity = $singlePrescription['quantity'];
+                    $existingSinglePrescription->formulation = $singlePrescription['formulation'];
+                    $existingSinglePrescription->frequency = $singlePrescription['frequency'];
+                    $existingSinglePrescription->duration = $singlePrescription['duration'];
+                    $existingSinglePrescription->save();
+                } 
+                else {
+                    $this->saveSinglePrescription($singlePrescription, $request, true);
+                }
+
+                $existingPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
+
+                $latestActivity = Activity::latest()->first();
+
+                if (!$latestActivity) {
+                    $latestActivity = new Activity();
+                    $latestActivity->code = $multiplePrescriptions[0]['code'];
+                    $latestActivity->save();
+                }
+                $prescribed_activity_id = $latestActivity->id;
+
+                $latestFollowupPrescription = PrescribedPrescription::where('prescribed_activity_id', $prescribed_activity_id)
+                    ->where('prescribed_status', 'like', '% followup')
+                    ->orderBy('id', 'desc')
+                    ->first();
+                
+                foreach ($multiplePrescriptions as $prescriptionData) {
+
+                    $existingPrescription = $existingPrescriptions->where('id', $prescriptionData['id'])->first();
+
+                    if ($existingPrescription) {
+                        $existingPrescription->update($prescriptionData);
+                    }
+                    else {
+
+                        if ($latestFollowupPrescription) {
+                            $prescribed_status = $latestFollowupPrescription->prescribed_status;
+                        } 
+                        
+                        $prescription = new PrescribedPrescription();
+                        $prescription->code = $latestActivity['code'];
+                        $prescription->prescribed_activity_id = $prescribed_activity_id;
+                        $prescription->generic_name = $prescriptionData['generic_name'];
+                        $prescription->brandname = $prescriptionData['brandname'];
+                        $prescription->dosage = $prescriptionData['dosage'];
+                        $prescription->quantity = $prescriptionData['quantity'];
+                        $prescription->formulation = $prescriptionData['formulation'];
+                        $prescription->frequency = $prescriptionData['frequency'];
+                        $prescription->duration = $prescriptionData['duration'];
+                        $prescription->prescribed_status = $prescribed_status;
+                        $prescription->save();
+                    }
+                }
+            } elseif($referredActivity) {
+                $existingReferredPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
+                ->where('prescribed_status', 'referred')
+                ->first();
+
+                if ($existingReferredPrescription) {
+                    $existingReferredPrescription->generic_name = $singlePrescription['generic_name'];
+                    $existingReferredPrescription->brandname = $singlePrescription['brandname'];
+                    $existingReferredPrescription->dosage = $singlePrescription['dosage'];
+                    $existingReferredPrescription->quantity = $singlePrescription['quantity'];
+                    $existingReferredPrescription->formulation = $singlePrescription['formulation'];
+                    $existingReferredPrescription->frequency = $singlePrescription['frequency'];
+                    $existingReferredPrescription->duration = $singlePrescription['duration'];
+                    $existingReferredPrescription->prescribed_status = 'referred';
+                    $existingReferredPrescription->save();
+                } 
+                else {
+                    $this->saveSinglePrescription($singlePrescription, $request, false);
+                }
+        
+                $existingMultiPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
+
+                $latestActivity = Activity::latest()->first();
+                if (!$latestActivity) {
+                    $latestActivity = new Activity();
+                    $latestActivity->code = $multiplePrescriptions[0]['code'];
+                    $latestActivity->save();
+                }
+                $prescribed_activity_id = $latestActivity->id;
+
+                foreach ($multiplePrescriptions as $prescriptionData) {
+
+                    $existingPrescription = $existingMultiPrescriptions->where('id', $prescriptionData['id'])->first();
+
+                    if ($existingPrescription) {
+                        $existingPrescription->update($prescriptionData);
+                    } 
+                    else {
+                        $prescription = new PrescribedPrescription();
+                        $prescription->code = $latestActivity['code'];
+                        $prescription->prescribed_activity_id = $prescribed_activity_id;
+                        $prescription->generic_name = $prescriptionData['generic_name'];
+                        $prescription->brandname = $prescriptionData['brandname'];
+                        $prescription->dosage = $prescriptionData['dosage'];
+                        $prescription->quantity = $prescriptionData['quantity'];
+                        $prescription->formulation = $prescriptionData['formulation'];
+                        $prescription->frequency = $prescriptionData['frequency'];
+                        $prescription->duration = $prescriptionData['duration'];
+                        $prescription->prescribed_status = 'referred';
+                        $prescription->save();
+                    }
+                }
+            }
+        return response()->json(['message' => 'Prescriptions saved successfully'], 200); 
+    }
+    //-------------------------------------------------------------------
+    public function deletePrescriptions($id) {
+        try {
+            $prescription = PrescribedPrescription::findOrFail($id);
+            $prescription->delete();
+            return response()->json(['message' => 'Prescription deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete prescription'], 500);
+        }
+    }
+    //-------------------------------------------------------------------
     public function patientTreated(Request $request) {
         $user = Session::get('auth');
         $patient_form = null;

@@ -19006,11 +19006,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
-
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ReferralApp",
   props: {
@@ -19040,7 +19037,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     playVideoCallAudio: function playVideoCallAudio() {
       var _this = this;
-
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var self;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -19049,7 +19045,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context.next = 2;
                 return _this.$refs.audioVideo.play();
-
               case 2:
                 self = _this;
                 setTimeout(function () {
@@ -19057,7 +19052,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   $("#video-call-confirmation").modal('hide');
                   self.$refs.audioVideo.pause();
                 }, 60000);
-
               case 4:
               case "end":
                 return _context.stop();
@@ -19231,11 +19225,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     notifyReferralUndoCancel: function notifyReferralUndoCancel(patient_code, activity_id, msg, status) {
       var stat = "success";
-
       if (status === "rejected") {
         stat = "error";
       }
-
       $("#rejected_progress" + patient_code + activity_id).removeClass("completed");
       Lobibox.notify(stat, {
         delay: false,
@@ -19331,19 +19323,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$refs.audioVideo.pause();
       $("#video-call-confirmation").modal('toggle');
       var windowName = 'NewWindow'; // Name of the new window
-
       var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-
       var referring_md_status = this.user.id === this.action_md ? 'no' : 'yes';
       var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=".concat(this.tracking_id, "&code=").concat(this.referral_code, "&form_type=").concat(this.telemedicineFormType, "&referring_md=").concat(referring_md_status, "&activity_id=").concat(this.activity_id);
       var newWindow = window.open(url, windowName, windowFeatures);
-
       if (newWindow && newWindow.outerWidth) {
         // If the window was successfully opened, attempt to maximize it
         newWindow.moveTo(0, 0);
         newWindow.resizeTo(screen.availWidth, screen.availHeight);
       }
-
       this.telemedicineExamined();
     },
     examinedCompleted: function examinedCompleted(patient_code, activity_id) {
@@ -19357,7 +19345,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     telemedicineExamined: function telemedicineExamined() {
       var _this2 = this;
-
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         var updateExamined;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -19371,7 +19358,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post("".concat($("#broadcasting_url").val(), "/api/video/examined"), updateExamined).then(function (response) {
                   console.log(response);
                 });
-
               case 3:
               case "end":
                 return _context2.stop();
@@ -19386,7 +19372,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   created: function created() {
     var _this3 = this;
-
     console.log("VUE.JS 3.2.3");
     Echo.join('chat').here(function (users) {
       //console.log(users)
@@ -19398,33 +19383,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     Echo.join('new_referral').listen('NewReferral', function (event) {
       if (_this3.user.facility_id === event.payload.referred_to) {
         _this3.playAudio();
-
         _this3.increment_referral++;
-
         if ($("#referral_page_check").val()) {
           console.log("append the refer patient");
           $('.count_referral').html(_this3.increment_referral);
           var position = event.payload.position;
           var position_bracket = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', '18th', '19th', '20th'];
           var position_content = '';
-
           if (position > 0) {
             position_content = "<div class='badge-overlay'>\n" + "                                            <span class='top-right badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" + "                                        </div>";
           }
-
           var type = event.payload.form_type;
           type = type == 'normal' ? 'normal-section' : 'pregnant-section';
           var referral_type = type == 'normal-section' ? 'normal' : 'pregnant';
           var content = '<li id="referral_incoming' + event.payload.patient_code + '">' + position_content + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.referred_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <span>' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </span>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="text-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n';
-          /*if(my_department_id==data.department_id) {*/
 
+          /*if(my_department_id==data.department_id) {*/
           content += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
           /*}*/
 
           content += '' + '        </div>\n' + '    </div>\n' + '</li>';
           $('.timeline').prepend(content);
         }
-
         _this3.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
       }
     });
@@ -19434,16 +19414,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if (response.data && event.payload.sender_facility !== _this3.user.facility_id && $("#archived_reco_page").val() !== 'true') {
           _this3.reco_count++;
           $("#reco_count").html(_this3.reco_count);
-
           _this3.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message);
-
           try {
             var objDiv = document.getElementById(event.payload.code);
             objDiv.scrollTop = objDiv.scrollHeight;
             if (!objDiv.scrollTop) _this3.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
           } catch (err) {
             console.log("modal not open");
-
             _this3.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track);
           }
         }
@@ -19451,7 +19428,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     Echo.join('referral_seen').listen('SocketReferralSeen', function (event) {
       $("#count_seen" + event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-
       if (event.payload.referring_facility_id === _this3.user.facility_id) {
         _this3.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track);
       }
@@ -19493,7 +19469,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     Echo.join('referral_discharged').listen('SocketReferralDischarged', function (event) {
       console.log(event);
-
       if (event.payload.status === 'telemedicine') {
         if ((event.payload.referred_to === _this3.user.facility_id || event.payload.referring_md === _this3.user.id) && event.payload.trigger_by !== _this3.user.id) {
           console.log("callAdoctor");
@@ -19501,20 +19476,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this3.doctorCaller = event.payload.doctorCaller;
           _this3.telemedicineFormType = event.payload.form_type;
           _this3.activity_id = event.payload.activity_id;
-
           _this3.callADoctor(event.payload.tracking_id, event.payload.code);
         } else if (event.payload.referred_from === _this3.user.facility_id) {
           if (event.payload.telemedicine_status === 'examined') {
             console.log("examinedcompleted");
-
             _this3.examinedCompleted(event.payload.code, event.payload.activity_id);
           } else if (event.payload.telemedicine_status === 'prescription') {
             console.log("prescribedCompleted");
-
             _this3.prescribedCompleted(event.payload.code, event.payload.activity_id);
           } else if (event.payload.telemedicine_status === 'upward') {
             console.log("upwardCompleted");
-
             _this3.upwardCompleted(event.payload.code, event.payload.activity_id);
           }
         }
@@ -19530,13 +19501,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           $('#closeReferralForm' + event.payload.patient_code).click();
           var content = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.cancelled_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '            was <span class="text-red"> cancelled </span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
           $('#referral_incoming' + event.payload.patient_code).html(content);
-
           _this3.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track);
         }
-
         if (event.payload.referred_from === _this3.user.facility_id && event.payload.admin === 'yes') {
           console.log("admin cancellation!!");
-
           _this3.notifyReferralCancelledAdmin(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track, event.payload.remarks);
         }
       } else if (event.payload.notif_type === "undo cancel") {
@@ -19544,89 +19512,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           console.log('undo cancel');
           console.log(event.payload);
           var status = event.payload.status;
-
           if (status === 'referred' || status === 'redirected' || status === 'accepted') {
             var type = event.payload.form_type;
             type = type === 'normal' ? 'normal-section' : 'pregnant-section';
             var referral_type = type === 'normal-section' ? 'normal' : 'pregnant';
-
             var _content = '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.undo_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was ';
-
             if (status === 'accepted') {
               _content += '<span class="badge bg-blue">' + event.payload.status + '</span> by <span class="text-warning">Dr. ' + event.payload.referred_md + '</span> of <span class="facility">' + event.payload.referred_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">';
             } else {
               _content += '<span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">';
             }
-
             if (status !== 'accepted') {
               _content += '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>';
-
               if (event.payload.cur_queue !== '') {
                 _content += '<h5 class="text-red pull-right">Queued at <b>' + event.payload.cur_queue + '&emsp;</b></h5>';
               }
             }
-
             _content += _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco);
             _content += '             </div>\n' + '        </div>\n' + '    </div>\n';
             $('#referral_incoming' + event.payload.patient_code).html(_content);
             var msg = event.payload.patient_name + " was referred again by Dr. " + event.payload.referring_md + " of " + event.payload.referring_name + "<br>" + event.payload.undo_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
-
             _this3.notifyReferralUndoCancel(event.payload.patient_code, event.payload.activity_id, msg, status);
           } else if (status === 'rejected') {
             var _content2 = '' + '   <i class="fa fa-user-times bg-maroon"></i>\n' + '   <div class="timeline-item">\n' + '       <span class="time"><i class="fa fa-calendar"></i>' + event.payload.undo_date + '</span>\n' + '       <h3 class="timeline-header no-border">\n' + '           <span>\n' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" target="_blank">' + event.payload.patient_name + '</a>\n' + '           </span>\n' + '          was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. ' + event.payload.referring_md + '</span>\n' + '       </h3>\n' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '   </div>';
-
             $('#referral_incoming' + event.payload.patient_code).html(_content2);
           }
         }
       } else if (event.payload.notif_type === "update form") {
         $('#closeReferralForm' + event.payload.patient_code).click();
-
         if (event.payload.faci_changed === true) {
           if (event.payload.old_facility === _this3.user.facility_id) {
             var _content3 = '    <i class="fa fa-ban bg-red"></i>\n' + '    <div class="timeline-item ">\n' + '        <span class="time"><i class="icon fa fa-calendar"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <span class="text-warning"> Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span> updated ' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '`s</a>' + '           </strong>' + "          form and <span class='text-red'> referred </span> pt to another facility. </h3>\n" + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '           </div>\n' + '        </div>\n' + '    </div>\n';
-
             $('#referral_incoming' + event.payload.patient_code).html(_content3);
-
             var _msg = event.payload.patient_name + "'s referral form was updated and pt was referred to another facility. <br>" + event.payload.update_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
-
             _this3.notifyReferralUpdateFormFaciChanged(_msg);
           }
-
           if (event.payload.referred_to === _this3.user.facility_id) {
             _this3.playAudio();
-
             _this3.increment_referral++;
-
             if ($("#referral_page_check").val()) {
               console.log("append the refer patient");
               $('.count_referral').html(_this3.increment_referral);
               var _type = event.payload.form_type;
               _type = _type === 'normal' ? 'normal-section' : 'pregnant-section';
-
               var _referral_type = _type === 'normal-section' ? 'normal' : 'pregnant';
-
               var _content4 = '<li id="referral_incoming' + event.payload.patient_code + '">' + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + _type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n';
-
               _content4 += '    <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">New Referral</h5>' + '             </div>';
               _content4 += '' + '        </div>\n' + '    </div>\n' + '</li>';
               $('.timeline').prepend(_content4);
             }
-
             _this3.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track);
           }
         } else if (event.payload.faci_changed === false) {
           if (event.payload.referred_to === _this3.user.facility_id) {
             var _type2 = event.payload.form_type;
             _type2 = _type2 === 'normal' ? 'normal-section' : 'pregnant-section';
-
             var _referral_type2 = _type2 === 'normal-section' ? 'normal' : 'pregnant';
-
             var _content5 = '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + _type2 + '" id="item-' + event.payload.tracking_id + '">\n' + '        <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.update_date + '</span></span>\n' + '        <h3 class="timeline-header no-border">' + '           <strong class="text-bold">    ' + '           <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </strong>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="badge bg-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <div class="timeline-footer">\n' + '           <div class="form-group">' + '                <a class="btn btn-warning btn-xs view_form" href="#referralForm"\n' + '                   data-toggle="modal"\n' + '                   data-code="' + event.payload.patient_code + '"\n' + '                   data-item="#item-' + event.payload.tracking_id + '"\n' + '                   data-referral_status="referred"\n' + '                   data-type="' + _referral_type2 + '"\n' + '                   data-id="' + event.payload.tracking_id + '"\n' + '                   data-referred_from="' + event.payload.referred_from + '"\n' + '                   data-patient_name="' + event.payload.patient_name + '"\n' + '                   data-backdrop="static">\n' + '                <i class="fa fa-folder"></i> View Form\n' + '               </a>' + _this3.buttonSeen(event.payload.count_seen, event.payload.tracking_id) + _this3.buttonReco(event.payload.patient_code, event.payload.count_reco) + '               <h5 class="text-red blink_new_referral pull-right">FORM HAS BEEN UPDATED!</h5>' + '             </div>\n' + '        </div>\n' + '    </div>\n';
-
             $('#referral_incoming' + event.payload.patient_code).html(_content5);
-
             var _msg2 = event.payload.patient_name + "'s referral form was updated by Dr. " + event.payload.referring_md + " of " + event.payload.referring_name + " <br> " + event.payload.update_date + '<br><br>\n' + '       <a href="' + event.payload.redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
-
             _this3.notifyReferralUpdateFormFaciSame(_msg2);
           }
         }
@@ -19665,11 +19609,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-
 var _withScopeId = function _withScopeId(n) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-c21bb81e"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
 };
-
 var _hoisted_1 = ["src"];
 var _hoisted_2 = {
   "class": "modal fade callModal",
@@ -19692,87 +19634,58 @@ var _hoisted_6 = ["src"];
 var _hoisted_7 = {
   "class": "txt"
 };
-
 var _hoisted_8 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "isCalling"
-  }, "is calling you", -1
-  /* HOISTED */
-  );
+  }, "is calling you", -1 /* HOISTED */);
 });
-
 var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     style: {
       "font-size": ".9em"
     }
-  }, "The call will start as soon as you accept", -1
-  /* HOISTED */
-  );
+  }, "The call will start as soon as you accept", -1 /* HOISTED */);
 });
-
 var _hoisted_10 = {
   "class": "row"
 };
 var _hoisted_11 = {
   "class": "col-xs-6"
 };
-
 var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-check"
-  }, null, -1
-  /* HOISTED */
-  );
+  }, null, -1 /* HOISTED */);
 });
-
 var _hoisted_13 = [_hoisted_12];
-
 var _hoisted_14 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "textAccept"
-  }, "Accept", -1
-  /* HOISTED */
-  );
+  }, "Accept", -1 /* HOISTED */);
 });
-
 var _hoisted_15 = {
   "class": "col-xs-6"
 };
-
 var _hoisted_16 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-times"
-  }, null, -1
-  /* HOISTED */
-  );
+  }, null, -1 /* HOISTED */);
 });
-
 var _hoisted_17 = [_hoisted_16];
-
 var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "textDecline"
-  }, "Decline", -1
-  /* HOISTED */
-  );
+  }, "Decline", -1 /* HOISTED */);
 });
-
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "audioVideo",
     src: $data.audioVideoUrl,
     loop: ""
-  }, null, 8
-  /* PROPS */
-  , _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.imageUrl,
     alt: "Image"
-  }, null, 8
-  /* PROPS */
-  , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.doctorCaller), 1
-  /* TEXT */
-  ), _hoisted_8, _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 8 /* PROPS */, _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.doctorCaller), 1 /* TEXT */), _hoisted_8, _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-default btn-sm acceptButton",
     "data-toggle": "modal",
@@ -19787,9 +19700,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function () {
       return $options.cancelCall && $options.cancelCall.apply($options, arguments);
     })
-  }, _hoisted_17)]), _hoisted_18])])])])])])], 64
-  /* STABLE_FRAGMENT */
-  );
+  }, _hoisted_17)]), _hoisted_18])])])])])])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -19804,6 +19715,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -19818,6 +19730,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
@@ -19825,18 +19738,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 var token = document.head.querySelector('meta[name="csrf-token"]');
-
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
-
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
@@ -19852,7 +19764,6 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   wssPort: 6001,
   disableStats: true,
   enabledTransports: ['ws', 'wss'] // <- added this param
-
 });
 
 /***/ }),
@@ -48951,12 +48862,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _LayoutApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LayoutApp.vue?vue&type=script&lang=js */ "./resources/assets/js/layout/LayoutApp.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp_7_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp_7_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_LayoutApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/assets/js/layout/LayoutApp.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_LayoutApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/assets/js/layout/LayoutApp.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -48979,7 +48890,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ReferralApp_vue_vue_type_template_id_c21bb81e_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReferralApp.vue?vue&type=template&id=c21bb81e&scoped=true */ "./resources/assets/js/layout/ReferralApp.vue?vue&type=template&id=c21bb81e&scoped=true");
 /* harmony import */ var _ReferralApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReferralApp.vue?vue&type=script&lang=js */ "./resources/assets/js/layout/ReferralApp.vue?vue&type=script&lang=js");
 /* harmony import */ var _ReferralApp_vue_vue_type_style_index_0_id_c21bb81e_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReferralApp.vue?vue&type=style&index=0&id=c21bb81e&scoped=true&lang=css */ "./resources/assets/js/layout/ReferralApp.vue?vue&type=style&index=0&id=c21bb81e&scoped=true&lang=css");
-/* harmony import */ var C_xampp_7_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -48987,7 +48898,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp_7_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ReferralApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ReferralApp_vue_vue_type_template_id_c21bb81e_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-c21bb81e"],['__file',"resources/assets/js/layout/ReferralApp.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ReferralApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ReferralApp_vue_vue_type_template_id_c21bb81e_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-c21bb81e"],['__file',"resources/assets/js/layout/ReferralApp.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -49403,7 +49314,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _layout_LayoutApp_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./layout/LayoutApp.vue */ "./resources/assets/js/layout/LayoutApp.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
-
 
 
 (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_layout_LayoutApp_vue__WEBPACK_IMPORTED_MODULE_1__["default"]).mount('#app_layout');

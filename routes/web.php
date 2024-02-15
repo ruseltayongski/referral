@@ -656,7 +656,10 @@ Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->n
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 
 
+Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
+Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 
+Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
 
 
 
