@@ -19,4 +19,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'referring_md');
+    }
 }

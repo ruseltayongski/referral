@@ -311,6 +311,12 @@ Route::post('api/video/upward','ApiController@endorseUpward');
 Route::post('api/video/treated','ApiController@patientTreated');
 Route::post('api/video/end','ApiController@patientEndCycle');
 Route::post('api/video/followup','ApiController@patientFollowUp');
+//for file upload ------------->
+Route::post('api/video/editfilefollowup','ApiController@editpatientFollowUpFile'); 
+Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
+Route::post('api/video/deletefilefollowup','ApiController@deletepatientFollowUpFile');
+Route::post('api/video/addfileIfempty','ApiController@addpatientFollowUpFileIfEmpty');
+//end of file upload ---------->
 Route::post('api/video/prescription/check','ApiController@checkPrescription');
 Route::get('api/get_report','ApiController@apiGetReport');
 Route::get('api/referral_list','ApiController@apiGetReferralList');

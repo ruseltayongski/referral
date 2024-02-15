@@ -7,6 +7,443 @@ $facilities = \App\Facility::select('id','name')
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
 ?>
+<style>
+    /* jondy changes */
+    .custom-img-size {
+        max-width: 150px; /* or any other size */
+        height: auto;
+        display: block;
+        margin: 0 auto; /* for centering if needed */
+    }
+
+    .custom-file{
+        display: inline-block;
+        cursor: pointer;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    #file-input {
+      display: none;
+    }
+    #file-inputed {
+      display: none;
+    }
+    /* #files-input{
+      display: none;
+    } */
+    #file-upload {
+      display: none;
+    }
+    #file-upload-update{
+      display: none;
+    }
+
+    #file-label {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 15px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #file-list {
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    /* .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }*/
+
+    .preview {
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+    } 
+    .preview-container {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .container-preview {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .preview-item {
+        padding: 5px;
+        margin-right: 12px;
+        margin-left: 12px;  
+        
+    }
+
+    /* .pdf-container,
+    .image-container{
+        margin-bottom: 10px;
+    } */
+
+    .image-container {
+        position: relative;
+        display: inline-block; /* Ensure the container only takes the necessary space */
+    }
+    .pdf-container {
+        position: relative;
+        display: inline-block; /* Ensure the container only takes the necessary space */
+        margin-right: 10px; /* Adjust the margin as needed */
+        margin-top: 10px;
+    }
+    .remove-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: red; /* Set a background color to make the icon more visible */
+        padding: 5px; /* Add some padding for better visibility */
+        cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
+    }
+
+    .custom-file {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.custom-file:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the file list container */
+.container-preview {
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Style for individual file entries in the list */
+.file-entry {
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+}
+
+/* update form modal element */
+.upload-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    padding: 20px 40px; /* Larger padding */
+    font-size: 20px; /* Larger font size */
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+}
+
+.custom-btn-default {
+    background-color: #6c757d;
+    color: white;
+}
+
+.custom-btn-default:hover {
+    background-color: #545b62;
+}
+
+.custom-btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.custom-btn-success:hover {
+    background-color: #218838;
+}
+
+.preview-container {
+    margin-top: 15px;
+}
+
+.card {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.custom-img-size {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.text-right {
+    text-align: right;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+/* end of my changes */
+</style>
+
+<script>
+//jondy chnages for pdf and images file upload
+   
+    document.addEventListener('DOMContentLoaded', function () {
+
+    document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
+        var filesInput = document.getElementById('file-input');
+        if(filesInput.files.length === 0){
+            event.preventDefault();
+            $("#err-msgpdf").html("Please select at least one file.");
+        $("#err-msgpdf").css('color', 'red');
+        }
+        console.log('files inputed!', filesInput);
+    });
+    document.getElementById('file-input').addEventListener('change', handleFileSelect);
+   
+    });
+
+    function handleFileSelect(event) {
+        const fileList = event.target.files;
+        console.log('fileList', fileList);
+        const previewContainer = document.getElementById('preview-container');
+        
+        previewContainer.innerHTML = '';
+         console.log('containers', previewContainer);
+        for (const file of fileList) {
+
+            const listItem = document.createElement('div');
+            listItem.textContent = file.name;
+          
+            let allowexten = ["pdf", "png", "jpeg", "jpg"];
+            let filearr = Array.from(fileList).map(file=>file.name);
+
+            let validext = filearr.every(filename => {
+                let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+                return allowexten.includes(ext);
+            });
+      
+            if(validext){
+                isvalidFile = true;
+                $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
+                    // Display image preview for image files
+                    if (file.type.startsWith('image/')) {
+                    displayImagePreview(file, previewContainer);
+                    }
+                    // Display PDF preview for .pdf files
+                    else if (file.type === 'application/pdf') {
+                        // Create a container for each PDF and its remove icon
+                        const pdfContainer = document.createElement('div');
+                        pdfContainer.classList.add('pdf-container');
+                        // Display PDF preview
+                        const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                        const removedFiles = [];
+                        // Create the remove icon
+                        const removeIcon = document.createElement('i');
+                        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                        removeIcon.addEventListener('click', function() {
+                            const filename = file.name;
+                            removedFiles.push(filename);
+                            
+                            const fileInput = document.getElementById('file-input');
+                            const currentfile = fileInput.files;
+                            const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
+                            console.log('current pdf file:',currentfile);
+                            const newTransfer = new DataTransfer();
+                            updatefile.forEach(file => newTransfer.items.add(file));
+                            fileInput.files = newTransfer.files;
+                            console.log('update pdf:', updatefile);
+                            console.log('remove:', removedFiles);
+                            pdfContainer.remove();
+                        
+                        });
+                        pdfContainer.appendChild(pdfPreview);
+                        pdfContainer.appendChild(removeIcon);
+                        // Append the container to the main preview container
+                        previewContainer.appendChild(pdfContainer);
+                    }
+            }else{
+                isvalidFile = false;
+                previewContainer.innerHTML = '';
+                const errmsId = 'error-messages';
+                let existmsg = document.getElementById(errmsId);
+                    console.log('filname', file.name);
+                    if(!existmsg){
+                        const errmsg = document.createElement('p');
+                        console.log('error: ', errmsg);
+                        
+                        errmsg.textContent = 'Please upload a valid pdf or images file..';
+                        errmsg.style.color = 'red';
+                        errmsg.id = errmsId;
+                        $("#err-msgpdf").html(""); //to empty the error messages submission
+                        previewContainer.appendChild(errmsg);
+
+                    }
+                        break;       
+            }
+            $("#telemedicineFollowupForm").submit(function(event){
+                if(!isvalidFile){
+                    event.preventDefault();
+                }else{
+                    //  $("#telemedicineFollowupForm").show();
+                        previewContainer.innerHTML = '';
+            
+                }
+            });
+        }
+            
+    }
+ 
+    function displayImagePreview(file, container) {
+        const reader = new FileReader();
+        // console.log('my file', file.name);
+        console.log('my container', container);
+        reader.onload = function (e) {
+            // Create a container for each image and its remove icon
+            const imageContainer = document.createElement('div');
+            imageContainer.classList.add('image-container');
+            // Create the image preview
+            const preview = document.createElement('img');
+            preview.setAttribute('src', e.target.result);
+            preview.style.width = '150px';
+            preview.style.height = '150px';
+            preview.setAttribute('alt', file.name);
+            preview.classList.add('preview');
+
+            preview.addEventListener('click', function () { 
+                displayLargeImage(e.target.result,file.name, container);
+                
+            });
+
+            const removedFiles = []; 
+            $("#err-msgpdf").html(""); //to empty the error messages submission
+            // Create the remove icon
+            const removeIcon = document.createElement('i');
+            removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+
+            removeIcon.addEventListener('click', function() {
+                container.removeChild(imageContainer);
+
+                const filename = file.name;
+                removedFiles.push(filename);
+
+                const fileInput = document.getElementById('file-input');
+                const currentfiles = fileInput.files;
+                console.log('my current files: ',currentfiles);
+                const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
+                console.log("update files:", updatefiles);
+                const newTransfer = new DataTransfer();
+                updatefiles.forEach(file => newTransfer.items.add(file));
+                fileInput.files = newTransfer.files;
+                // $("#filecounter").val(removedFiles.join(','));
+                // var namefile = $("#filecount").val();
+                console.log('remove:', removedFiles);
+                if (container.children.length === 0) {
+                    // Reset the file input value
+                    const fileInput = document.getElementById('file-input'); 
+                    fileInput.value = '';
+                    // Optionally, trigger the change event
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // Append the image and remove icon to the container
+            imageContainer.appendChild(preview);
+            imageContainer.appendChild(removeIcon);
+            // Append the container to the main container
+            container.appendChild(imageContainer);
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+        // Function to display the larger image
+    function displayLargeImage(imgsrc, filename, container) {
+        // Create a modal or overlay element
+        console.log('img src:',imgsrc);    
+        console.log('img src:',filename);
+ 
+        $(".modal-title").html(filename);
+       
+        $("#imageView").attr('src', imgsrc);
+        $("#imageView").attr('width', '100%');
+        $("#imageView").attr('height', 'auto');
+
+        $("#viewLargerFileModal").css('z-index', 1060);
+        $("#viewLargerFileModal").modal("show");
+    }
+
+
+
+    function displayPdfPreview(file, placeholderUrl, container) {
+        console.log('originame pdf filename:', file);
+        // displayFilePreview(file, container, placeholderUrl);
+        const pdfPreview = document.createElement('embed');
+        pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
+    
+        pdfPreview.style.width = '150px';
+        pdfPreview.style.height = '150px';
+        pdfPreview.dataset.originalFilename = file;
+        $("#err-msgpdf").html(""); //to empty the error messages submission
+        pdfPreview.addEventListener('click', function () { 
+               
+            pdfshow(file,placeholderUrl);
+                
+            });
+       
+        return pdfPreview;
+    }
+
+    function  pdfshow(file){
+        console.log('filename:', file);
+        
+        $(".modal-title").html(file);
+        $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
+        $("#viewpdf").css('z-index', 1060);
+        $("#viewpdf").modal("show");
+        
+    }
+
+    function displayFilePreview(file, container, placeholderUrl) {
+        // For unsupported file types, display a placeholder image
+        const preview = document.createElement('img');
+        preview.setAttribute('src', placeholderUrl);
+        preview.setAttribute('alt', file.name);
+        preview.classList.add('preview');
+        container.appendChild(preview);
+    }
+
+//end of my changes
+</script>
+
+
+
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -102,15 +539,83 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-<div class="modal fade" role="dialog" id="telemedicineFollowupFormModal">
+<!-- for viewing pdf file preview jondy changes -->
+<div class="modal fade" id="viewpdf" tabindex="-1" role="dialog" aria-labelledby="viewpdfFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <div class="jim-content">
+            <div class="modal-header">
+                <!-- Modal header content goes here -->
+                <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                    <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
+                                    <h4 id="files"></h>
+                                    <img src="" id="pdfView">
+                                </div>
+                            </div>
+                        </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Modal footer content goes here -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- for viewing images file preview jondy changes -->
+<div class="modal fade" id="viewLargerFileModal" tabindex="-1" role="dialog" aria-labelledby="viewLargerFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Modal header content goes here -->
+                <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                    <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
+                                    <h4 id="files"></h>
+                                    <img src="" id="imageView">
+                                </div>
+                            </div>
+                        </div>
+                    <hr/>
+                <div class="form-fotter pull-right">
+                    <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                </div>
+            </div>
+                <div class="modal-footer">
+                    <!-- Modal footer content goes here -->
+                </div>
+        </div>
+    </div>
+</div> <!------end of my changes------>
+
+<!------------------------------Starting Adding file in first follow up------------------------------------>
+<div class="modal fade" id="telemedicineFollowupFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
                 <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
-                <hr />
-                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm">
-                    <input type="hidden" name="code" id="telemedicine_followup_code" value="">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+      <div class="modal-body">
+        
+            <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+                    <input type="hidden" name="code" id="telemed_follow_code" value="">
+                    <input type="hidden" name="followup_id" id="telemedicine_follow_id" value=""><!--I add this for followup_id-->
+
                     <input type="hidden" class="telemedicine" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -128,10 +633,170 @@ $facilities = \App\Facility::select('id','name')
                             <option value="">Select Department...</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                            <label id="file-label" for="file-input" class="btn btn-primary custom-file">Select Files
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none"></label>
+                            <!-- <input type="hidden" id="filecounter" name="removefiles[]" multiple class="d-none"> -->
+                            <!-- <div id="file-list" class="mt-3"></div> -->
+                            <!-- <div class="preview-container" id="preview-container"></div> -->
+                    </div>  
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body preview-item">
+                                <p id="err-msgpdf" class="text-center"></p>
+                                <div class="preview-container" id="preview-container"></div>
+                               
+                            </div>
+                        </div>
+                    </div>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Submit</button>
+                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                    </div>
+            </form>
+            <div class="clearfix"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!------------------------------Add files if empty or more files----------------------------->
+
+<div class="modal fade" id="FollowupAddEmptyFileFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+            <div class="modal-body">
+
+                <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="AddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
+                        <input type="hidden" name="code" id="telemedicine_followup_code" value="">
+                        <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                        <input type="hidden" name="referred_id" id="telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                        <input type="hidden" name="position_count" id="position_counter" value=""><!--I add this for followup_id-->
+                        <input type="hidden" name="filename" id="filenames" value="">
+                        <input type="hidden" class="telemedicine" value="">
+                        <div id="removedFilesContainer"></div>
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
+                            <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
+
+                            <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
+                            <!-- <div id="file-list" class="mt-3"></div> -->
+                        </div>
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                    <p id="err-message" class="text-center"></p>
+                                    <div class="container-preview file-entry" id="container-preview"></div>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <hr /> 
+                        <div class="form-fotter pull-right">
+                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            <button type="submit" id="followup_submit_empty" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                        </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------End of file------------------------------------->
+<!------------------------------for update the file----------------------------------------->
+
+<div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-green" style="font-size: 15pt;" id="Update_followup_header"></h4>
+                <hr />
+               
+                <form method="POST" action="{{ asset("api/video/editfilefollowup") }}" id="telemedicineUpateFileForm" enctype="multipart/form-data">
+                   
+                    <input type="hidden" name="code" id="edit_telemedicine_followup_code" value="">
+                    <input type="hidden" name="followup_id" id="edit_telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="referred_id" id="edit_telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="position_count_number" id="position_count_number" value="">
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    
+                <div class="form-group formtogroup">
+                    <div class="upload-header">
+                        <label id="file-label" for="file-upload-update" class="btn custom-btn">Select Files
+                            <input type="file" id="file-upload-update" name="files" class="d-none" onchange="readURL(this)">
+                        </label>
+                        <input type="hidden" id="selected-file-name-input" name="selectedFileName">
+                    </div>
+                    <div class="preview-container" id="preview-container">
+                    <p id="file-preview-black" class="text-center"></p>
+                    </div>
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="preview-update">
+                                    <img id="img-preview" src="#" class="custom-img-size" />
+                                     <p id="file-preview-red"></p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-footer text-right">
+                    <button class="btn custom-btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="followup_submit_edit" class="btn custom-btn-success">Submit</button>
+                </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!---------------------------End of the file update---------------------------------------------------->
+
+
+<!-- ----------------------------Add more file----------------------------------------->
+
+<!-------------------------- delete modal file -------------------------------------->
+<div class="modal fade" role="dialog" id="telemedicineDeleteFileFollowupFormModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-danger" style="font-size: 15pt;" id="Delete_followup_header"></h4>
+                <hr />
+                <form method="POST" action="{{ asset("api/video/deletefilefollowup") }}" id="telemedicineDeleteFileForm" enctype="multipart/form-data">
+                   
+                    <input type="hidden"  name="code"  id="telemedicine_code" value="">
+                    <input type="hidden" name="followup_id" id="delete_telemedicine_followup_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden" name="referred_id" id="delete_telemedicine_referred_id" value=""><!--I add this for followup_id-->
+                    <input type="hidden"  id="position_counterer" name="position_counter" value="">
+                    <input type="hidden" class="telemedicine" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <input type="hidden" id="selected-file-name" name="selectedFileName" value="">
+                        <div id="file-name" class="mt-3 text-center"></div>
+
+                        <div class="preview-container" id="preview-containerfor">
+                            <img id="delete-image" src="" alt="delete Image?" style="max-width: 100%; max-height: 300px;">
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -139,6 +804,7 @@ $facilities = \App\Facility::select('id','name')
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-------------------------- delete modal file End-------------------------------------->
 
 <div class="modal fade" role="dialog" id="referAcceptFormModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -180,4 +846,53 @@ $facilities = \App\Facility::select('id','name')
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<script>// jondy changes
+$(document).ready(function() {
+    @if(session('file_save'))
+    var number = "{{ session('file_save') }}";
+        Lobibox.notify('success', {
+            msg: 'Successfully saved file!' + number +' Position'
+        });
+    @endif
 
+    @if(session('delete_file'))
+    var number = "{{ session('delete_file') }}";
+        Lobibox.notify('success', {
+            msg: 'Deleted file Successfully in ' + number + ' Position'
+        });
+    @endif
+
+    @if(session('update_file'))
+    var number = "{{ session('update_file') }}";
+    Lobibox.notify('success', {
+        msg: 'Updated Successfully in ' + number +' position'
+
+    });
+    @endif
+});
+
+//removing back ground if empty
+$(document).ready(function (){
+    $('#container-preview').hideFileEntryBackground();
+
+    $('#files-input').change(function (){
+        $('#container-preview').toggleFileEntryBackground(this.files.length > 0);
+    });
+});
+
+$.fn.toggleFileEntryBackground = function (show){
+    if(show){
+        this.addClass('file-entry');
+        this.show();
+    }else{
+        this.removeClass('file-entry');
+        this.remove;
+    }
+}
+
+$.fn.hideFileEntryBackground = function () {
+    this.removeClass('file-entry');
+    this.hide();
+}
+//end of my chnages 
+</script>

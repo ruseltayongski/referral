@@ -536,6 +536,7 @@
                                     value: userData.id,
                                     text: "Dr. "+userData.fname + ' ' + userData.lname
                                 }));
+
                             });
                         }
                     });
@@ -610,8 +611,10 @@
                 $.each(query_doctor_store, function (index, userData) {
                     $(`.available_doctor${currentCount}`).append($('<option>', {
                         value: userData.id,
-                        text: userData.username
+                        text: "Dr. "+userData.fname + ' ' + userData.lname
                     }));
+                    
+                    
                 });
             });
         }
