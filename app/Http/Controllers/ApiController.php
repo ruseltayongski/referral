@@ -571,6 +571,25 @@ class ApiController extends Controller
                     }
                 }
             }
+
+        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred")
+                ->orWhere('status',"followup");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $broadcast_prescribed = [
+            "activity_id" => $latest_activity->id,
+            "code" => $latestActivity->code,
+            "referred_from" => $latest_activity->referred_from,
+            "status" => "telemedicine",
+            "telemedicine_status" => "prescription"
+        ];
+
+        broadcast(new SocketReferralDischarged($broadcast_prescribed));    
         return response()->json(['message' => 'Prescriptions saved successfully'], 200); 
     }
     //-------------------------------------------------------------------
