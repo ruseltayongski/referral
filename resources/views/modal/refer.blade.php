@@ -609,57 +609,51 @@ hr {
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-        </div>
-      <div class="modal-body">
-        
-            <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
-                    <input type="hidden" name="code" id="telemed_follow_code" value="">
-                    <input type="hidden" name="followup_id" id="telemedicine_follow_id" value=""><!--I add this for followup_id-->
-
-                    <input type="hidden" class="telemedicine" value="">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <label style="padding:0px;">SELECT FACILITY:</label>
-                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                            <option value="">Select Facility...</option>
-                            @foreach($facilities as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
+                        <input type="hidden" name="code" id="telemed_follow_code" value="">
+                        <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
+                        <input type="hidden" class="telemedicine" value="">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <label style="padding:0px;">SELECT FACILITY:</label>
+                            <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
+                                <option value="">Select Facility...</option>
+                                @foreach($facilities as $row)
+                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="padding: 0px">SELECT DEPARTMENT:</label>
+                            <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
+                                <option value="">Select Department...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label id="file-label" for="file-input" class="btn btn-primary custom-file">Select Files
                             <input type="file" id="file-input" name="files[]" multiple class="d-none"></label>
-                            <!-- <input type="hidden" id="filecounter" name="removefiles[]" multiple class="d-none"> -->
-                            <!-- <div id="file-list" class="mt-3"></div> -->
-                            <!-- <div class="preview-container" id="preview-container"></div> -->
-                    </div>  
-                    <div class="row">
-                        <div class="card">
-                            <div class="card-body preview-item">
-                                <p id="err-msgpdf" class="text-center"></p>
-                                <div class="preview-container" id="preview-container"></div>
-                               
+                        </div>  
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body preview-item">
+                                    <p id="err-msgpdf" class="text-center"></p>
+                                    <div class="preview-container" id="preview-container"></div>
+                                
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <hr />
-                    <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
-                    </div>
-            </form>
-            <div class="clearfix"></div>
-
-      </div>
+                        <hr />
+                        <div class="form-fotter pull-right">
+                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                        </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!------------------------------Add files if empty or more files----------------------------->

@@ -14,8 +14,15 @@
                 selectedAppointmentTime: null,
                 selectedAppointmentDoctor: null,
                 showAppointmentTime: false,
-                base: $("#broadcasting_url").val()
+                base: $("#broadcasting_url").val(),
+                followUpReferredId: 0,
+                followUpCode: null
             }
+        },
+        mounted() {
+            const telemedicineFollowUp = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get('appointment')));
+            this.followUpReferredId = telemedicineFollowUp[0].referred_id;
+            this.followUpCode = telemedicineFollowUp[0].code;
         },
         watch: {
             appointedTimes: async function (payload) {
@@ -46,13 +53,23 @@
                     });
                     return;
                 }
-                const appointment = {
-                    facility_id: this.facilitySelectedId,
-                    appointmentId: this.selectedAppointmentTime,
-                    doctorId: this.selectedAppointmentDoctor
+                
+                if(this.followUpReferredId) {
+                    $("#telemed_follow_code").val(this.followUpCode);
+                    $("#telemedicine_follow_id").val(this.followUpReferredId);
+                    $(".telemedicine").val(1);
+                    $("#followup_header").html("Follow Up Patient");
+                    $("#telemedicineFollowupFormModal").modal('show');
                 }
-                console.log(appointment)
-                window.location.href = `${this.base}/doctor/patient?appointmentKey=${this.generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+                else {
+                    const appointment = {
+                        facility_id: this.facilitySelectedId,
+                        appointmentId: this.selectedAppointmentTime,
+                        doctorId: this.selectedAppointmentDoctor
+                    }
+                    console.log(appointment)
+                    window.location.href = `${this.base}/doctor/patient?appointmentKey=${this.generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+                }
             },
             generateAppointmentKey(length) {
                 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

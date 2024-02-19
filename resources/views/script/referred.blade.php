@@ -443,9 +443,14 @@
                 });
         }
         else {
-            $("#followup_header").html("Follow Up Patient");
-            telemedicine = 1;
-            $("#telemedicineFollowupFormModal").modal('show');
+            // $("#followup_header").html("Follow Up Patient");
+            // telemedicine = 1;
+            // $("#telemedicineFollowupFormModal").modal('show');
+            const appointment = {
+                code: code,
+                referred_id: referred_id
+            }
+            window.location.href = `{{ asset('doctor/appointment/calendar') }}?appointmentKey=${generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
         }
     }
 
