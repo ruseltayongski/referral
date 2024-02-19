@@ -60,6 +60,7 @@
                     $(".telemedicine").val(1);
                     $("#followup_header").html("Follow Up Patient");
                     $("#telemedicineFollowupFormModal").modal('show');
+                    $("#followup_facility_id").val(this.facilitySelectedId);
                 }
                 else {
                     const appointment = {

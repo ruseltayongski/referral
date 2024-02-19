@@ -614,6 +614,7 @@ hr {
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
                         <input type="hidden" name="code" id="telemed_follow_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
+                        <input type="hidden" name="followup_facility_id" id="followup_facility_id" value="">
                         <input type="hidden" class="telemedicine" value="">
                         {{ csrf_field() }}
                         <div class="form-group">
