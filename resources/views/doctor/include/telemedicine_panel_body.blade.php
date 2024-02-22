@@ -325,12 +325,11 @@
                                 $referredFiles = array_merge($referredFiles, $fileNames);
                                 $activity_id = $referredActivity->id;
                                 $activity_code = $referredActivity->code;
-
                                 foreach($fileNames as $filename){
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles[] = $filename;                                            
-                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp'])){
                                         $imageFiles[] = $filename;
                                     }
                                 }
@@ -371,7 +370,7 @@
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles_follow[] = $filename;                                            
-                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp'])){
                                         $imageFiles_follow[] = $filename;
                                     }
                                 }
@@ -448,7 +447,7 @@
                     }else{
                             carouselItems += `
                             <div class="item ${isActive}" data-filename="${file}">
-                                <img src="${fileUrl}" alt="..." style="width:30%;height:20%;">
+                                <img src="${fileUrl}" alt="..." style="max-width:100%;max-height:calc(100vh - 100px)">
                             </div>
                             `;
                     }
@@ -465,39 +464,40 @@
                                                 <div class="carousel-inner">
                                                  ${carouselItems}
                                                 </div>
-                                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                                <a class="left carousel-control left-control" href="#carousel-example-generic" role="button" data-slide="prev">
                                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                                     <span class="sr-only">Previous</span>
                                                 </a>
-                                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                                <a class="right carousel-control right-control" href="#carousel-example-generic" role="button" data-slide="next">
                                                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                                                     <span class="sr-only">Next</span>
                                                 </a>
                                         </div>
-                                </div>
-                                    <a href="" id="download" class="btn btn-success filecolor" download="">
-                                        <i class="fa fa-download"></i> Download
-                                    </a>
-                                    <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
-                                        <i class="fa fa-pencil-square-o"></i> Update
-                                    </a>
-                            
-                                    <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
-                                        <i class="fa fa-plus"></i> Add More
-                                    </a>
+                                        <div class="carousel-buttons" style="position: absolute; bottom: 10px; left: 0; right: 0;">
+                                            <a href="" id="download" class="btn btn-success filecolor" download="">
+                                                <i class="fa fa-download"></i> Download
+                                            </a>
+                                            <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
+                                                <i class="fa fa-pencil-square-o"></i> Update
+                                            </a>
+                                    
+                                            <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
+                                                <i class="fa fa-plus"></i> Add More
+                                            </a>
 
-                                    <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
-                                    <a href="#" class="btn btn-default filecolorclose" onclick="closeModalButton()" id="closeModalId">
-                                        <i class="fa fa-times"></i> close
-                                    </a>
+                                            <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </a>
+                                            <a href="#" class="btn btn-default filecolorclose" onclick="closeModalButton()" id="closeModalId">
+                                                <i class="fa fa-times"></i> close
+                                            </a>
+                                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-                        
          `;
             var modal = document.createElement('div');
             modal.id = 'carouselmodaId'
@@ -507,7 +507,7 @@
             modal.style.left = '0';
             modal.style.width = '100%';
             modal.style.height = '100%';
-            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
             modal.style.zIndex = '9999';
 
             document.body.appendChild(modal);
@@ -919,6 +919,14 @@
     margin: 0 auto;
 }
 
+.left-control .glyphicon-chevron-left{
+    left: 50%;
+    margin-left:-50px;
+}
+.right-control .glyphicon-chevron-right{
+    right: 50%;
+    margin-right:-50px;
+}
   .d-file{
     font-size: 14px;
     color: #FFF; 
@@ -935,7 +943,7 @@
     text-decoration: none; 
   }
   .d-file:hover {
-    background-color: #7AE205; 
+    color: #7AE205; 
     transform: translateY(-2px);
   }
 

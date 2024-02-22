@@ -6,6 +6,7 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
 ?>
 <style>
     /* jondy changes */
@@ -16,13 +17,23 @@ $facilities = \App\Facility::select('id','name')
         margin: 0 auto; /* for centering if needed */
     }
 
-    .custom-file{
+    /* .custom-file{
+          background-color: #3498db;
         display: inline-block;
         cursor: pointer;
-        padding: 10px 20px;
+        padding: 6px 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
+    } */
+    /* #file-label {
+      padding: 6px 20px;
+      cursor: pointer;
+      display: inline-block;
     }
+    #file-label:hover {
+        background-color: #2980b9; /* Adjusted hover state 
+    } */
+
     #file-input {
       display: none;
     }
@@ -39,25 +50,10 @@ $facilities = \App\Facility::select('id','name')
       display: none;
     }
 
-    #file-label {
-      background-color: #3498db;
-      color: #fff;
-      padding: 10px 15px;
-      cursor: pointer;
-      display: inline-block;
-    }
-
     #file-list {
       margin-top: 20px;
       overflow: hidden;
     }
-
-    /* .preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }*/
 
     .preview {
       width: 150px;
@@ -84,11 +80,16 @@ $facilities = \App\Facility::select('id','name')
         margin-left: 12px;  
         
     }
-
     /* .pdf-container,
     .image-container{
         margin-bottom: 10px;
     } */
+    
+    .btn-primary:focus, 
+        .btn-primary:hover {
+        background-color: #265a88;
+        background-position: 0 -15px;
+    }
 
     .image-container {
         position: relative;
@@ -109,18 +110,18 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
     }
 
-    .custom-file {
+    /* .custom-file {
     cursor: pointer;
     background-color: #007bff;
     color: white;
     padding: 10px 15px;
     border-radius: 5px;
     display: inline-block;
-}
+} */
 
-.custom-file:hover {
+/* .custom-file:hover {
     background-color: #0056b3;
-}
+} */
 
 /* Style for the file list container */
 .container-preview {
@@ -144,40 +145,17 @@ $facilities = \App\Facility::select('id','name')
     align-items: center;
     gap: 10px;
 }
-
-.custom-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    padding: 20px 40px; /* Larger padding */
-    font-size: 20px; /* Larger font size */
-}
-
 .custom-btn:hover {
     background-color: #0056b3;
-}
+} */
 
-.custom-btn-default {
-    background-color: #6c757d;
-    color: white;
-}
-
-.custom-btn-default:hover {
+/* .custom-btn-default:hover {
     background-color: #545b62;
-}
+} */
 
-.custom-btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.custom-btn-success:hover {
+/* .custom-btn-success:hover {
     background-color: #218838;
-}
+} */
 
 .preview-container {
     margin-top: 15px;
@@ -206,6 +184,9 @@ $facilities = \App\Facility::select('id','name')
 hr {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+#files-input{
+    display: none;
 }
 /* end of my changes */
 </style>
@@ -240,7 +221,7 @@ hr {
             const listItem = document.createElement('div');
             listItem.textContent = file.name;
           
-            let allowexten = ["pdf", "png", "jpeg", "jpg"];
+            let allowexten = ["pdf", "png", "jpeg", "jpg","webp"];
             let filearr = Array.from(fileList).map(file=>file.name);
 
             let validext = filearr.every(filename => {
@@ -261,7 +242,9 @@ hr {
                         const pdfContainer = document.createElement('div');
                         pdfContainer.classList.add('pdf-container');
                         // Display PDF preview
-                        const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                        const allowedFolderPath = "<?php echo  asset('public/fileupload') ?>";
+                        const pdffileIcon = 'PDF_file_icon.png';
+                        const pdfPreview = displayPdfPreview(file.name, allowedFolderPath +'/'+  pdffileIcon); // Replace the placeholder URL
                         const removedFiles = [];
                         // Create the remove icon
                         const removeIcon = document.createElement('i');
@@ -330,6 +313,7 @@ hr {
             // Create the image preview
             const preview = document.createElement('img');
             preview.setAttribute('src', e.target.result);
+            preview.setAttribute('id', 'imagesDisplay')
             preview.style.width = '150px';
             preview.style.height = '150px';
             preview.setAttribute('alt', file.name);
@@ -438,6 +422,17 @@ hr {
         preview.classList.add('preview');
         container.appendChild(preview);
     }
+
+document.addEventListener("DOMContentLoaded", function() { // this will clear the display of file upload when close it the modal form
+    document.getElementById("close_telemedbtn").onclick = function() {
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+    document.getElementById("close_telemedModal").onclick =  function() {
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+});
 
 //end of my changes
 </script>
@@ -605,36 +600,38 @@ hr {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_telemedModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h4 class="text-green" style="font-size: 15pt; margin-top: 0;" id="followup_header" ></h4>
+               
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
                         <input type="hidden" name="code" id="telemed_follow_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
-                        <input type="hidden" name="followup_facility_id" id="followup_facility_id" value="">
                         <input type="hidden" class="telemedicine" value="">
+                        <input type="hidden" id="followup_facility_id" class="followup_facility_id" value="">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label style="padding:0px;">SELECT FACILITY:</label>
-                            <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                                <option value="">Select Facility...</option>
-                                @foreach($facilities as $row)
-                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
-                                @endforeach
-                            </select>
+                            <label style="padding:0px;">FACILITY:</label>
+                            <input type="text" class="form-control"  name="facility" id="followup_facility_name" value="" readonly>
                         </div>
                         <div class="form-group">
-                            <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                            <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                                <option value="">Select Department...</option>
-                            </select>
+                            <label style="padding: 0px">DEPARTMENT:</label>
+                            <input type="text" class="form-control" name="department" id="department_Opd" value="OPD" readonly>
                         </div>
+
                         <div class="form-group">
-                            <label id="file-label" for="file-input" class="btn btn-primary custom-file">Select Files
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none"></label>
+                            <!-- <label style="padding: 0px">Note:</label> -->
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</label>
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                            <!-- <label for="file-label" class="btn btn-primary  form-control">Select Files</label> -->
+                          
                         </div>  
                         <div class="row">
                             <div class="card">
@@ -647,7 +644,7 @@ hr {
                         </div>
                         <hr />
                         <div class="form-fotter pull-right">
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            <button class="btn btn-default btn-flat" data-dismiss="modal" id="close_telemedbtn"><i class="fa fa-times"></i> Close</button>
                             <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                         </div>
                 </form>
@@ -663,10 +660,11 @@ hr {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
                 <div class="modal-header">
-                        <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                             <span aria-hidden="true">&times;</span>
                         </button>
+                        <h4 class="text-green" style="font-size: 15pt; margin-top: 0;" id="Add_followup_headerform"></h4>
+                        
                 </div>
             <div class="modal-body">
 
@@ -680,8 +678,12 @@ hr {
                         <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
-                            <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
+                            <!-- <label style="padding: 0px">Note:</label> -->
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                        </div>
+                        <div class="form-group">
+                            <label id="file-label" for="files-input" class="btn btn-primary custom-file form-control">Select Files
+                            <input type="file" id="files-input" name="filesInput[]" multiple></label>
 
                             <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
                             <!-- <div id="file-list" class="mt-3"></div> -->
@@ -706,10 +708,9 @@ hr {
         </div>
     </div>
 </div>
-
 <!------------------------------End of file------------------------------------->
-<!------------------------------for update the file----------------------------------------->
 
+<!------------------------------for update the file----------------------------------------->
 <div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -728,7 +729,9 @@ hr {
                     
                 <div class="form-group formtogroup">
                     <div class="upload-header">
-                        <label id="file-label" for="file-upload-update" class="btn custom-btn">Select Files
+                    <!-- <button id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</button> -->
+
+                        <label id="file-label" for="file-upload-update" class="btn btn-primary custom-file form-control">Select Files
                             <input type="file" id="file-upload-update" name="files" class="d-none" onchange="readURL(this)">
                         </label>
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName">
@@ -750,8 +753,8 @@ hr {
                 </div>
                 <hr />
                 <div class="form-footer text-right">
-                    <button class="btn custom-btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="followup_submit_edit" class="btn custom-btn-success">Submit</button>
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="followup_submit_edit" class="btn btn-success">Submit</button>
                 </div>
                 </form>
                 <div class="clearfix"></div>
@@ -889,5 +892,30 @@ $.fn.hideFileEntryBackground = function () {
     this.removeClass('file-entry');
     this.hide();
 }
-//end of my chnages 
+
+ $('#telemedicineFollowupFormModal').on('shown.bs.modal', function (e) {
+    var facility_id = $("#followup_facility_id").val();
+    //console.log('my facility',facility_id)
+ //function facilityName() {
+    $.ajax({
+            url: '{{ route("api.getName", ["id" => ""]) }}/' + facility_id, 
+            method: 'GET',
+            // async: false,
+            success: function(response) {
+                // Handle the response from the controller
+                // For example, you can update the UI based on the returned value
+                $("#followup_facility_name").val(response.name);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors
+                console.error('Error:', error);
+            }
+        });
+
+
+    //  }
+    //  facilityName();
+    //  setInterval(facilityName, 500);
+ });
+
 </script>

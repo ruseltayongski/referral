@@ -641,6 +641,20 @@ class ApiController extends Controller
         return "failed";
     }
 
+    public function getFacilityName($id)
+    {
+        //$facility_id = $request->facility_name_ID;
+        // $facility = Facility::select('id', 'name')->where('id',  $id)->first();
+        // $facilityId = $request->id
+        $facility = Facility::find($id)->name;
+
+        if ($facility) {
+            return response()->json(['name' => $facility]);
+        } else {
+            return response()->json(['error' => 'Facility not found'], 404);
+        }
+    }
+
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
         $patient_form = null;
@@ -701,7 +715,7 @@ class ApiController extends Controller
             json_encode($filePaths);
             $activityFile->generic_name = implode('|', $fileNames2);
             $activityFile->save();
-            
+            return Redirect::route('doctor_referred');
         }
         //  -----------------------jondy changes------------------------->
 
