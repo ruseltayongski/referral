@@ -1,4 +1,3 @@
-
 <template>
     <div class="modal fade" id="prescriptionModal" data-backdrop="static" data-keyboard="false" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -90,7 +89,7 @@
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="generic_name">1.) Generic Name:{{ index + 1 }}</label>
+                                <label for="generic_name">1.) Generic Name:</label>
                                 <input type="text" v-model="prescription.generic_name" class="form-control form-control-sm" >
                             </div>
                         </div>
@@ -132,7 +131,6 @@
                     <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
-
                 </div>
             </div>
         </div>
@@ -142,22 +140,6 @@
 <script>
     import axios from 'axios';
     export default {
-        data() {
-            return {
-                prescriptionSubmitted: false,
-                generic_name: "",
-                brandname: "",
-                dosage: "",
-                quantity: "",
-                formulation: "",
-                frequency: "",
-                duration: "",
-                prescribed_activity_id: "",
-
-                prescriptions: [],
-            };
-
-        },
         props: {
             activity_id: {
                 type: Number
@@ -172,6 +154,21 @@
                 type: String
             },
         },
+        data() {
+            return {
+                prescriptionSubmitted: false,
+                generic_name: "",
+                brandname: "",
+                dosage: "",
+                quantity: "",
+                formulation: "",
+                frequency: "",
+                duration: "",
+                prescribed_activity_id: "",
+                prescriptions: [],
+            };
+
+        },
         created() {
             console.log(this.activity_id, this.baseUrl, this.code)
 
@@ -180,93 +177,8 @@
         
         },
         methods: {
-           
-            // submitPrescription() {
-            //     if(!this.generic_name) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input generic name"
-            //             });
-            //     }
-            //     else if(!this.brandname) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input brand name"
-            //             });
-            //     }
-            //     else if(!this.dosage) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input dosage"
-            //             });
-            //     }
-            //     else if(!this.quantity) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input quantity"
-            //             });
-            //     }
-            //     else if(!this.formulation) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input formulation"
-            //             });
-            //     }
-            //     else if(!this.frequency) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input frequency"
-            //             });
-            //     }
-            //     else if(!this.duration) {
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: "Please input duration"
-            //             });
-            //     }
-            //     else {
-            //         const updatePrescription = {
-            //             code : this.code,
-            //             generic_name: this.generic_name,
-            //             brandname: this.brandname,
-            //             dosage: this.dosage,
-            //             quantity: this.quantity,
-            //             formulation: this.formulation,
-            //             frequency: this.frequency,
-            //             duration: this.duration,
-            //             form_type: this.form_type,
-            //             activity_id: this.activity_id
-            //         };
-            //         axios
-            //             .post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription)
-            //             .then(response => {
-            //             console.log(response)
-            //             if(response.data === 'success') {
-            //                 $("#prescriptionModal").modal('hide');
-            //                 this.prescriptionSubmitted = true
-            //                 Lobibox.alert("success",
-            //                     {
-            //                         msg: "Successfully submitted prescription!"
-            //                     });
-            //             } else {
-            //                 Lobibox.alert("error", {
-            //                         msg: "Error in server!"
-            //                 });
-            //             }
-            //         })
-
-            //         .catch((error) => {
-            //             console.error(error);
-            //             Lobibox.alert("error", {
-            //                 msg: "An error occurred while saving the prescription.",
-            //             });
-            //         });
-            //     }
-            // },
-            //------------------------------------------------------------------
 
             savePrescriptions() {
-
                 function checkRequiredProperties(obj) {
                     if (!obj.generic_name) {
                         Lobibox.alert("error", {
@@ -337,15 +249,13 @@
                         activity_id: this.activity_id,
                         form_type: this.form_type,
                         prescribed_activity_id: this.prescribed_activity_id,
-
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
                 Lobibox.alert("success", {
                     msg: "Prescriptions saved successfully!",
                 });
-                $("#prescriptionModal").modal("hide");
-
+                $("#prescriptionModal").modal("hide");   
                 console.log('Combined Prescription Data:', combinedPrescriptions);
                 
                 axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)
@@ -369,7 +279,6 @@
                 };
                 this.prescriptions.push(emptyPrescription);
             },
-            
 
             deletePrescription(index) {
                 const prescriptionToDelete = this.prescriptions[index];

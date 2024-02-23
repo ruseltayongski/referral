@@ -3124,11 +3124,11 @@ fieldset[disabled] .btn-default.focus {
   background-color: #286090;
   border-color: #122b40;
 }
-.btn-primary:hover {
+/* .btn-primary:hover {
   color: #fff;
   background-color: #286090;
   border-color: #204d74;
-}
+} */
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {

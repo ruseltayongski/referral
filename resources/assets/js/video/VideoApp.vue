@@ -220,27 +220,39 @@
                     self.$refs.ringingPhone.pause();
                 },60000);
             },
+
+            //--------------------------------------------------------------------------
+
             generatePrescription() {
                 const getPrescription = {
                     code : this.referral_code,
                     form_type : this.form_type,
-                    activity_id : this.activity_id
+                    tracking_id : this.tracking_id,
                 }
-                axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
-                    console.log(response)
-                    if(response.data === 'success') {
-                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${this.activity_id}`, '_blank');
-                    } else {
-                        Lobibox.alert("error",
-                        {
-                            msg: "No added prescription!"
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+                console.log(getPrescription);
+
+                axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
+                    .then((response) => {
+                        console.log(response)
+                        if (response.data.status === 'success') {
+                            const prescriptions = response.data.prescriptions[0].prescribed_activity_id;
+
+                            console.log('Prescriptions:', prescriptions);
+
+                            const prescribedActivityId = prescriptions;
+                            window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`, '_blank');
+                        } else {
+                            Lobibox.alert("error",  
+                            {
+                                msg: "No added prescription!"
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             },
+        
             endorseUpward() {
                 let self = this
                 Lobibox.confirm({
@@ -315,6 +327,7 @@
                             <p>Official Website: <span style="color: blue;">http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com</p>
                         </div>
                         <div class="clinical">
+                            <!-- <input type="text" id="activity_id" value=""> -->
                             <span style="color: #4CAF50;"><b>CLINICAL REFERRAL FORM</b></span>
                         </div>
                         <div class="tableForm">
