@@ -231,6 +231,7 @@ Route::get('doctor/patient/tsekap','doctor\PatientCtrl@tsekap');
 Route::post('doctor/patient/tsekap','doctor\PatientCtrl@searchTsekap');
 Route::get('doctor/print/form/{track_id}','doctor\PrintCtrl@printReferral');
 Route::get('doctor/print/prescription/{track_id}/{activity_id}','doctor\PrintCtrl@printPrescription');
+Route::get('doctor/print/labresult/{activity_id}','doctor\PrintCtrl@printLabResult');
 
 Route::get('doctor/list','doctor\UserCtrl@index');
 Route::post('doctor/list','doctor\UserCtrl@searchDoctor');

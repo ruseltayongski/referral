@@ -1,4 +1,3 @@
-
 <template>
     <div class="modal fade" id="prescriptionModal" data-backdrop="static" data-keyboard="false" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -132,7 +131,6 @@
                     <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
                     <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
-
                 </div>
             </div>
         </div>
@@ -173,8 +171,6 @@
             },
         },
         created() {
-            console.log(this.activity_id, this.baseUrl, this.code)
-
             const prescriptionCode = this.code;
             this.fetchPrescriptions(prescriptionCode);
         
