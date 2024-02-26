@@ -85,12 +85,7 @@ $facilities = \App\Facility::select('id','name')
         margin-bottom: 10px;
     } */
     
-    .btn-primary:focus, 
-        .btn-primary:hover {
-        background-color: #265a88;
-        background-position: 0 -15px;
-    }
-
+ 
     .image-container {
         position: relative;
         display: inline-block; /* Ensure the container only takes the necessary space */
@@ -194,236 +189,205 @@ hr {
 <script>
 //jondy chnages for pdf and images file upload
    
-    document.addEventListener('DOMContentLoaded', function () {
-
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
         var filesInput = document.getElementById('file-input');
         if(filesInput.files.length === 0){
             event.preventDefault();
             $("#err-msgpdf").html("Please select at least one file.");
-        $("#err-msgpdf").css('color', 'red');
+            $("#err-msgpdf").css('color', 'red');
         }
-        console.log('files inputed!', filesInput);
     });
+
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
-   
-    });
+});
 
-    function handleFileSelect(event) {
-        const fileList = event.target.files;
-        console.log('fileList', fileList);
-        const previewContainer = document.getElementById('preview-container');
-        
-        previewContainer.innerHTML = '';
-         console.log('containers', previewContainer);
-        for (const file of fileList) {
-
-            const listItem = document.createElement('div');
-            listItem.textContent = file.name;
-          
-            let allowexten = ["pdf", "png", "jpeg", "jpg","webp"];
-            let filearr = Array.from(fileList).map(file=>file.name);
-
-            let validext = filearr.every(filename => {
-                let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
-                return allowexten.includes(ext);
-            });
-      
-            if(validext){
-                isvalidFile = true;
-                $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
-                    // Display image preview for image files
-                    if (file.type.startsWith('image/')) {
+function handleFileSelect(event) {
+    const fileList = event.target.files;
+    console.log('fileList', fileList);
+    const previewContainer = document.getElementById('preview-container');
+    previewContainer.innerHTML = '';
+    console.log('containers', previewContainer);
+    for (const file of fileList) {
+        const listItem = document.createElement('div');
+        listItem.textContent = file.name;
+        let allowexten = ["pdf", "png", "jpeg", "jpg","webp"];
+        let filearr = Array.from(fileList).map(file=>file.name);
+        let validext = filearr.every(filename => {
+            let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+            return allowexten.includes(ext);
+        });
+        if(validext){
+            isvalidFile = true;
+            $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
+                // Display image preview for image files
+                if (file.type.startsWith('image/')) {
                     displayImagePreview(file, previewContainer);
-                    }
-                    // Display PDF preview for .pdf files
-                    else if (file.type === 'application/pdf') {
-                        // Create a container for each PDF and its remove icon
-                        const pdfContainer = document.createElement('div');
-                        pdfContainer.classList.add('pdf-container');
-                        // Display PDF preview
-                        const allowedFolderPath = "<?php echo  asset('public/fileupload') ?>";
-                        const pdffileIcon = 'PDF_file_icon.png';
-                        const pdfPreview = displayPdfPreview(file.name, allowedFolderPath +'/'+  pdffileIcon); // Replace the placeholder URL
-                        const removedFiles = [];
-                        // Create the remove icon
-                        const removeIcon = document.createElement('i');
-                        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-                        removeIcon.addEventListener('click', function() {
-                            const filename = file.name;
-                            removedFiles.push(filename);
-                            
-                            const fileInput = document.getElementById('file-input');
-                            const currentfile = fileInput.files;
-                            const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
-                            console.log('current pdf file:',currentfile);
-                            const newTransfer = new DataTransfer();
-                            updatefile.forEach(file => newTransfer.items.add(file));
-                            fileInput.files = newTransfer.files;
-                            console.log('update pdf:', updatefile);
-                            console.log('remove:', removedFiles);
-                            pdfContainer.remove();
+                }
+                // Display PDF preview for .pdf files
+                else if (file.type === 'application/pdf') {
+                    // Create a container for each PDF and its remove icon
+                    const pdfContainer = document.createElement('div');
+                    pdfContainer.classList.add('pdf-container');
+                    // Display PDF preview
+                    const allowedFolderPath = "<?php echo  asset('public/fileupload') ?>"; //jondy changes
+                    const pdffileIcon = 'PDF_file_icon.png'; //jondy changes
+                    const pdfPreview = displayPdfPreview(file.name, allowedFolderPath +'/'+  pdffileIcon); // Replace the placeholder URL jondy
+                    const removedFiles = [];
+                    // Create the remove icon
+                    const removeIcon = document.createElement('i');
+                    removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                    removeIcon.addEventListener('click', function() {
+                        const filename = file.name;
+                        removedFiles.push(filename);
                         
-                        });
-                        pdfContainer.appendChild(pdfPreview);
-                        pdfContainer.appendChild(removeIcon);
-                        // Append the container to the main preview container
-                        previewContainer.appendChild(pdfContainer);
-                    }
-            }else{
-                isvalidFile = false;
-                previewContainer.innerHTML = '';
-                const errmsId = 'error-messages';
-                let existmsg = document.getElementById(errmsId);
-                    console.log('filname', file.name);
-                    if(!existmsg){
-                        const errmsg = document.createElement('p');
-                        console.log('error: ', errmsg);
-                        
-                        errmsg.textContent = 'Please upload a valid pdf or images file..';
-                        errmsg.style.color = 'red';
-                        errmsg.id = errmsId;
-                        $("#err-msgpdf").html(""); //to empty the error messages submission
-                        previewContainer.appendChild(errmsg);
+                        const fileInput = document.getElementById('file-input');
+                        const currentfile = fileInput.files;
+                        const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
+                        console.log('current pdf file:',currentfile);
+                        const newTransfer = new DataTransfer();
+                        updatefile.forEach(file => newTransfer.items.add(file));
+                        fileInput.files = newTransfer.files;
+                        console.log('update pdf:', updatefile);
+                        console.log('remove:', removedFiles);
+                        pdfContainer.remove();
+                    
+                    });
+                    pdfContainer.appendChild(pdfPreview);
+                    pdfContainer.appendChild(removeIcon);
+                    // Append the container to the main preview container
+                    previewContainer.appendChild(pdfContainer);
+                }
+        }else{
+            isvalidFile = false;
+            previewContainer.innerHTML = '';
+            const errmsId = 'error-messages';
+            let existmsg = document.getElementById(errmsId);
+            console.log('filname', file.name);
+            if(!existmsg){
+                const errmsg = document.createElement('p');
+                console.log('error: ', errmsg);
+                
+                errmsg.textContent = 'Please upload a valid pdf or images file..';
+                errmsg.style.color = 'red';
+                errmsg.id = errmsId;
+                $("#err-msgpdf").html(""); //to empty the error messages submission
+                previewContainer.appendChild(errmsg);
 
-                    }
-                        break;       
             }
-            $("#telemedicineFollowupForm").submit(function(event){
-                if(!isvalidFile){
-                    event.preventDefault();
-                }else{
-                    //  $("#telemedicineFollowupForm").show();
-                        previewContainer.innerHTML = '';
-            
-                }
-            });
+            break;       
         }
+        $("#telemedicineFollowupForm").submit(function(event){
+            if(!isvalidFile){
+                event.preventDefault();
+            }else{
+                //  $("#telemedicineFollowupForm").show();
+                    previewContainer.innerHTML = '';
+        
+            }
+        });
+    }
             
-    }
+}
  
-    function displayImagePreview(file, container) {
-        const reader = new FileReader();
-        // console.log('my file', file.name);
-        console.log('my container', container);
-        reader.onload = function (e) {
-            // Create a container for each image and its remove icon
-            const imageContainer = document.createElement('div');
-            imageContainer.classList.add('image-container');
-            // Create the image preview
-            const preview = document.createElement('img');
-            preview.setAttribute('src', e.target.result);
-            preview.setAttribute('id', 'imagesDisplay')
-            preview.style.width = '150px';
-            preview.style.height = '150px';
-            preview.setAttribute('alt', file.name);
-            preview.classList.add('preview');
-
-            preview.addEventListener('click', function () { 
-                displayLargeImage(e.target.result,file.name, container);
-                
-            });
-
-            const removedFiles = []; 
-            $("#err-msgpdf").html(""); //to empty the error messages submission
-            // Create the remove icon
-            const removeIcon = document.createElement('i');
-            removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-
-            removeIcon.addEventListener('click', function() {
-                container.removeChild(imageContainer);
-
-                const filename = file.name;
-                removedFiles.push(filename);
-
-                const fileInput = document.getElementById('file-input');
-                const currentfiles = fileInput.files;
-                console.log('my current files: ',currentfiles);
-                const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
-                console.log("update files:", updatefiles);
-                const newTransfer = new DataTransfer();
-                updatefiles.forEach(file => newTransfer.items.add(file));
-                fileInput.files = newTransfer.files;
-                // $("#filecounter").val(removedFiles.join(','));
-                // var namefile = $("#filecount").val();
-                console.log('remove:', removedFiles);
-                if (container.children.length === 0) {
-                    // Reset the file input value
-                    const fileInput = document.getElementById('file-input'); 
-                    fileInput.value = '';
-                    // Optionally, trigger the change event
-                    const event = new Event('change');
-                    fileInput.dispatchEvent(event);
-                }
-            });
-
-            // Append the image and remove icon to the container
-            imageContainer.appendChild(preview);
-            imageContainer.appendChild(removeIcon);
-            // Append the container to the main container
-            container.appendChild(imageContainer);
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-        // Function to display the larger image
-    function displayLargeImage(imgsrc, filename, container) {
-        // Create a modal or overlay element
-        console.log('img src:',imgsrc);    
-        console.log('img src:',filename);
- 
-        $(".modal-title").html(filename);
-       
-        $("#imageView").attr('src', imgsrc);
-        $("#imageView").attr('width', '100%');
-        $("#imageView").attr('height', 'auto');
-
-        $("#viewLargerFileModal").css('z-index', 1060);
-        $("#viewLargerFileModal").modal("show");
-    }
-
-
-
-    function displayPdfPreview(file, placeholderUrl, container) {
-        console.log('originame pdf filename:', file);
-        // displayFilePreview(file, container, placeholderUrl);
-        const pdfPreview = document.createElement('embed');
-        pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
-    
-        pdfPreview.style.width = '150px';
-        pdfPreview.style.height = '150px';
-        pdfPreview.dataset.originalFilename = file;
-        $("#err-msgpdf").html(""); //to empty the error messages submission
-        pdfPreview.addEventListener('click', function () { 
-               
-            pdfshow(file,placeholderUrl);
-                
-            });
-       
-        return pdfPreview;
-    }
-
-    function  pdfshow(file){
-        console.log('filename:', file);
-        
-        $(".modal-title").html(file);
-        $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
-        $("#viewpdf").css('z-index', 1060);
-        $("#viewpdf").modal("show");
-        
-    }
-
-    function displayFilePreview(file, container, placeholderUrl) {
-        // For unsupported file types, display a placeholder image
+function displayImagePreview(file, container) {
+    const reader = new FileReader();
+    console.log('my container', container);
+    reader.onload = function (e) {
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+        // Create the image preview
         const preview = document.createElement('img');
-        preview.setAttribute('src', placeholderUrl);
+        preview.setAttribute('src', e.target.result);
+        preview.setAttribute('id', 'imagesDisplay')
+        preview.style.width = '150px';
+        preview.style.height = '150px';
         preview.setAttribute('alt', file.name);
         preview.classList.add('preview');
-        container.appendChild(preview);
-    }
+        preview.addEventListener('click', function () { 
+            displayLargeImage(e.target.result,file.name, container);    
+        });
+        const removedFiles = []; 
+        $("#err-msgpdf").html(""); //to empty the error messages submission
+        // Create the remove icon
+        const removeIcon = document.createElement('i');
+        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+        removeIcon.addEventListener('click', function() {
+            container.removeChild(imageContainer);
+            const filename = file.name;
+            removedFiles.push(filename);
 
-document.addEventListener("DOMContentLoaded", function() { // this will clear the display of file upload when close it the modal form
+            const fileInput = document.getElementById('file-input');
+            const currentfiles = fileInput.files;
+            console.log('my current files: ',currentfiles);
+            const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
+            console.log("update files:", updatefiles);
+            const newTransfer = new DataTransfer();
+            updatefiles.forEach(file => newTransfer.items.add(file));
+            fileInput.files = newTransfer.files;
+            // $("#filecounter").val(removedFiles.join(','));
+            // var namefile = $("#filecount").val();
+            console.log('remove:', removedFiles);
+            if (container.children.length === 0) {
+                // Reset the file input value
+                const fileInput = document.getElementById('file-input'); 
+                fileInput.value = '';
+                // Optionally, trigger the change event
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            }
+        });
+        // Append the image and remove icon to the container
+        imageContainer.appendChild(preview);
+        imageContainer.appendChild(removeIcon);
+        // Append the container to the main container
+        container.appendChild(imageContainer);
+    };
+    reader.readAsDataURL(file);
+}
+        // Function to display the larger image
+function displayLargeImage(imgsrc, filename, container) {
+    // Create a modal or overlay element
+    console.log('img src:',imgsrc);    
+    console.log('img src:',filename);
+    $(".modal-title").html(filename);
+    $("#imageView").attr('src', imgsrc);
+    $("#imageView").attr('width', '100%');
+    $("#imageView").attr('height', 'auto');
+    $("#viewLargerFileModal").css('z-index', 1060);
+    $("#viewLargerFileModal").modal("show");
+}
+
+function displayPdfPreview(file, placeholderUrl, container) {
+    console.log('originame pdf filename:', file);
+    const pdfPreview = document.createElement('embed');
+    pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
+    pdfPreview.style.width = '150px';
+    pdfPreview.style.height = '150px';
+    pdfPreview.dataset.originalFilename = file;
+    $("#err-msgpdf").html(""); //to empty the error messages submission
+    pdfPreview.addEventListener('click', function () { 
+        pdfshow(file,placeholderUrl);
+        });
+    return pdfPreview;
+}
+
+function pdfshow(file){
+    $(".modal-title").html(file);
+    $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
+    $("#viewpdf").css('z-index', 1060);
+    $("#viewpdf").modal("show");
+}
+
+function displayFilePreview(file, container, placeholderUrl) {
+    // For unsupported file types, display a placeholder image
+    const preview = document.createElement('img');
+    preview.setAttribute('src', placeholderUrl);
+    preview.setAttribute('alt', file.name);
+    preview.classList.add('preview');
+    container.appendChild(preview);
+}
+document.addEventListener("DOMContentLoaded", function() { // this will clear the display of file upload when close it the modal form jondy
     document.getElementById("close_telemedbtn").onclick = function() {
         $('.preview-container').empty();
         $('.imagesDisplay').attr('src', '');
@@ -434,10 +398,19 @@ document.addEventListener("DOMContentLoaded", function() { // this will clear th
     }
 });
 
+$("#telemedicineFollowupForm").submit(function (event){
+    $("#telemedicineFollowupFormModal").modal('hide');
+});
+
+$(document).keydown(function(event) { //this will close modal of press the keyboard Esc jondy
+    if (event.keyCode == 27) { 
+        $("#telemedicineFollowupFormModal").modal('hide');
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+}); 
 //end of my changes
 </script>
-
-
 
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -793,7 +766,7 @@ document.addEventListener("DOMContentLoaded", function() { // this will clear th
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button class="btn btn-default btn-flat" data-dismiss="modal" id="delete_Modal_close"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Submit</button>
                     </div>
                 </form>
