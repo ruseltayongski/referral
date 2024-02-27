@@ -26,6 +26,7 @@ use App\Province;
 use App\Seen;
 use App\Tracking;
 use App\PrescribedPrescription;
+use App\LabRequest;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Matrix\Exception;
 use App\Events\SocketReco;
+use Illuminate\Http\Response;
 
 class ApiController extends Controller
 {
@@ -263,7 +265,7 @@ class ApiController extends Controller
     //         $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
 
     //         if($activity_prescription) {
-    //             $activity_prescription->generic_name = $request->generic_name;
+    //             $activity_prescription->lab_result = $request->lab_result;
     //             $activity_prescription->dosage = $request->dosage;
     //             $activity_prescription->formulation = $request->formulation;
     //             $activity_prescription->brandname = $request->brandname;
@@ -283,7 +285,7 @@ class ApiController extends Controller
     //                 'department_id' => $tracking->department_id,
     //                 'referring_md' => $tracking->referring_md,
     //                 'action_md' => $user->id,
-    //                 'generic_name' => $request->generic_name,
+    //                 'lab_result' => $request->lab_result,
     //                 'dosage' => $request->dosage,
     //                 'formulation' => $request->formulation,
     //                 'brandname' => $request->brandname,
@@ -550,7 +552,25 @@ class ApiController extends Controller
                     }
                 }
             }
-        return response()->json(['message' => 'Prescriptions saved successfully'], 200); 
+
+        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred")
+                ->orWhere('status',"followup");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $broadcast_prescribed = [
+            "activity_id" => $latest_activity->id,
+            "code" => $latestActivity->code,
+            "referred_from" => $latest_activity->referred_from,
+            "status" => "telemedicine",
+            "telemedicine_status" => "prescription"
+        ];
+
+        broadcast(new SocketReferralDischarged($broadcast_prescribed));    
     }
 
     public function deletePrescriptions($id) {
@@ -598,6 +618,20 @@ class ApiController extends Controller
             return "success";
         }
         return "failed";
+    }
+
+    public function getFacilityName($id)
+    {
+        //$facility_id = $request->facility_name_ID;
+        // $facility = Facility::select('id', 'name')->where('id',  $id)->first();
+        // $facilityId = $request->id
+        $facility = Facility::find($id)->name;
+
+        if ($facility) {
+            return response()->json(['name' => $facility]);
+        } else {
+            return response()->json(['error' => 'Facility not found'], 404);
+        }
     }
 
     public function patientFollowUp(Request $request) {
@@ -658,9 +692,8 @@ class ApiController extends Controller
                 ->orderby('id')
                 ->first();
             json_encode($filePaths);
-            $activityFile->generic_name = implode('|', $fileNames2);
+            $activityFile->lab_result = implode('|', $fileNames2);
             $activityFile->save();
-            
         }
         //  -----------------------jondy changes------------------------->
 
@@ -676,6 +709,7 @@ class ApiController extends Controller
                     ->orWhere("status","followup");
             })
             ->count();
+
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -699,7 +733,7 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
         //end broadcast
 
-        return Redirect::back();
+        return Redirect::route('doctor_referred');
     }
 
 
@@ -731,7 +765,7 @@ class ApiController extends Controller
             $uploadFile->move($filepath, $originalName);
                 if($request->position_count_number == 1){
                    
-                    $genericNameArray = explode('|', $activityFile->generic_name);
+                    $genericNameArray = explode('|', $activityFile->lab_result);
                     $key = array_search($retrieveFiles, $genericNameArray);
                     
                     if($originalName !== $retrieveFiles){
@@ -741,11 +775,11 @@ class ApiController extends Controller
                     if($key !== false) {
                         $genericNameArray[$key] = $originalName;
                     }
-                    $activityFile->generic_name = implode('|', $genericNameArray);
+                    $activityFile->lab_result = implode('|', $genericNameArray);
                     $activityFile->save();
                    
                 }else if($request->position_count_number >= 2){
-                    $genericNameArray = explode('|', $activity_followup->generic_name);
+                    $genericNameArray = explode('|', $activity_followup->lab_result);
                     $key = array_search($retrieveFiles, $genericNameArray);
 
                     if($originalName !== $retrieveFiles){
@@ -754,7 +788,7 @@ class ApiController extends Controller
                     if($key !== false) {
                         $genericNameArray[$key] = $originalName;
                     }
-                    $activity_followup->generic_name = implode('|', $genericNameArray);
+                    $activity_followup->lab_result = implode('|', $genericNameArray);
                     $activity_followup->save(); 
                        
                 }
@@ -802,29 +836,29 @@ class ApiController extends Controller
             if(empty($request->filename)){
                 if($request->position_count == 1){
                     json_encode($filePaths);
-                    $referredFile->generic_name = implode('|', $fileNames2);
+                    $referredFile->lab_result = implode('|', $fileNames2);
                     $referredFile->save();
     
                 }else if($request->position_count >= 2){
                     json_decode($filepath);
-                    $followupfile->generic_name = implode('|', $fileNames2);
+                    $followupfile->lab_result = implode('|', $fileNames2);
                     $followupfile->save();
                 }
 
             }else{
                 
                 if($request->position_count == 1){
-                    $genericname_array = explode('|', $referredFile->generic_name);
+                    $genericname_array = explode('|', $referredFile->lab_result);
                     $genericname_array = array_merge($genericname_array, $fileNames2);
     
-                    $referredFile->generic_name = implode('|', $genericname_array);
+                    $referredFile->lab_result = implode('|', $genericname_array);
                     $referredFile->save();
                        
                 }else if($request->position_count >= 2){
-                    $genericname_array = explode('|', $followupfile->generic_name);
+                    $genericname_array = explode('|', $followupfile->lab_result);
                     $genericname_array = array_merge($genericname_array, $fileNames2);
     
-                    $followupfile->generic_name = implode('|', $genericname_array);
+                    $followupfile->lab_result = implode('|', $genericname_array);
                     $followupfile->save();
            
                 }
@@ -848,7 +882,7 @@ class ApiController extends Controller
             ->first();
 
         if($request->position_counter == 1){
-            $referredfile_array = explode('|', $referred_activity->generic_name);
+            $referredfile_array = explode('|', $referred_activity->lab_result);
             $key = array_search($selectedfile, $referredfile_array);
             
             if($key !== false){// Check if the selected file exists in the array
@@ -857,11 +891,11 @@ class ApiController extends Controller
                 unlink($filepath . '/' . $selectedfile);
             }
 
-            $referred_activity->generic_name = implode('|', $referredfile_array);
+            $referred_activity->lab_result = implode('|', $referredfile_array);
             $referred_activity->save();
 
         }else if($request->position_counter >= 2){
-            $followfile_array = explode('|', $followup_activity->generic_name);
+            $followfile_array = explode('|', $followup_activity->lab_result);
             $key = array_search($selectedfile, $followfile_array);
 
             if($key !== false){
@@ -869,7 +903,7 @@ class ApiController extends Controller
 
                 unlink($filepath . '/' . $selectedfile);
             }
-            $followup_activity->generic_name = implode('|', $followfile_array);
+            $followup_activity->lab_result = implode('|', $followfile_array);
             $followup_activity->save();
         }
 
@@ -2178,6 +2212,329 @@ class ApiController extends Controller
                 "status_code" => 204
             ];
         }
+    }
+
+    public function index() {
+        $data = array(
+            'LABOR00195' => '24 Hour Albumin',
+            'LABOR00196' => '24 Hour Creatinine',
+            'LABOR00283' => '24 Hour Urine Albumin',
+            'LABOR00284' => '24 Hour Urine Creatinine',
+            'LABOR00079' => '24 Hr. Urine Protein Det.',
+            'LABOR00156' => 'A/G Ratio',
+            'LABOR00112' => 'ABO Typing',
+            'LABOR00018' => 'ABO/Rh typing',
+            'LABOR00203' => 'Acid Fast Staining',
+            'LABOR00086' => 'Acid Phosphatase',
+            'LABOR00120' => 'AFB culture',
+            'LABOR00119' => 'AFB Stain',
+            'LABOR00198' => 'ALAT (SGPT)',
+            'LABOR00155' => 'Albumin',
+            'LABOR00242' => 'Alfa Feto Protein (AFP)',
+            'LABOR00050' => 'Alk. Phosphatase',
+            'LABOR00163' => 'Alkaline Phosphatase',
+            'LABOR00351' => 'ALT',
+            'LABOR00167' => 'Amylase',
+            'LABOR00220' => 'Anti DNA',
+            'LABOR00250' => 'Anti HBs (Quantitative)',
+            'LABOR00252' => 'Anti HCV (Hepa C Antibody)',
+            'LABOR00186' => 'APT\'S Test',
+            'LABOR00269' => 'APTT',
+            'LABOR00094' => 'Arterial Blood Gas Analysis',
+            'LABOR00199' => 'ASAT (SGOT)',
+            'LABOR00053' => 'ASO',
+            'LABOR00296' => 'ASO (qualitative)',
+            'LABOR00213' => 'ASO Titre',
+            'LABOR00074' => 'Autopsy',
+            'LABOR00075' => 'Autopsy - Partial',
+            'LABOR00300' => 'B-HCG (quantitative)',
+            'LABOR00279' => 'B1B2 Total & Direct',
+            'LABOR00206' => 'Bactec not Provided',
+            'LABOR00205' => 'Bactec Provided',
+            'LABOR00188' => 'Bence Jones Protein',
+            'LABOR00253' => 'Beta HCG (Quantitative)',
+            'LABOR00299' => 'Beta HCG (undiluted)',
+            'LABOR00254' => 'Beta HCG with Titar',
+            'LABOR00194' => 'Bilirubin, Total Direct',
+            'LABOR00227' => 'Biopsy, large',
+            'LABOR00226' => 'Biopsy, medium',
+            'LABOR00225' => 'Biopsy, small',
+            'LABOR00027' => 'Bleeding Time - Disposable',
+            'LABOR00026' => 'Bleeding Time - Manual',
+            'LABOR01002' => 'Blood Cholesterol',
+            'LABOR00117' => 'Blood Culture / sensitivity test',
+            'LABOR00301' => 'Blood Culture with Bactec',
+            'LABOR00303' => 'Blood Culture without Bactec',
+            'LABOR00197' => 'Blood Extraction',
+            'LABOR00111' => 'Blood Indices (MCV, MCH, MCHC)',
+            'LABOR00109' => 'Blood smear',
+            'LABOR00173' => 'Blood Typing',
+            'LABOR00286' => 'Blood Typing, ABO Only',
+            'LABOR00285' => 'Blood Typing, ABO Rh',
+            'LABOR00287' => 'Blood Typing, RH Only',
+            'LABOR00001' => 'BLOOD UREA NITROGEN (BUN)',
+            'LABOR00004' => 'BLOOD URIC ACID',
+            'LABOR00030' => 'Bone marrow',
+            'LABOR00067' => 'Bone Marrow Aspirate',
+            'LABOR00268' => 'Bone Marrow Smears',
+            'LABOR00180' => 'BSMP',
+            'LABOR00147' => 'BUN',
+            'LABOR00219' => 'C-Reactive Protein',
+            'LABOR00060' => 'C3',
+            'LABOR00247' => 'CA 125 (Ovary)',
+            'LABOR00245' => 'CA 15-3 (Breast)',
+            'LABOR00244' => 'CA 19-9 (Pancreas)',
+            'LABOR00246' => 'CA 72-4 (GIT)',
+            'LABOR00093' => 'Calcium',
+            'LABOR00006' => 'CBC',
+            'LABOR00243' => 'CEA (Colorectal)',
+            'LABOR00282' => 'Cell and Differential Count, Sugar and Protein',
+            'LABOR00230' => 'Cell Block',
+            'LABOR00228' => 'Cell Cytology',
+            'LABOR00291' => 'Cervical Biopsy',
+            'LABOR00231' => 'Cervical Punch Biopsy',
+            'LABOR00092' => 'Chloride',
+            'LABOR00145' => 'Chloride and Sugar',
+            'LABOR00045' => 'Cholesterol',
+            'LABOR00166' => 'CKMB',
+            'LABOR00107' => 'Clot Retraction Time (CRT, castor oil Method)',
+            'LABOR00025' => 'Clotting Time',
+            'LABOR00275' => 'Clotting Time (Lee White)',
+            'LABOR00005' => 'CLOTTING TIME - BLEEDING TIME',
+            'LABOR00105' => "Clotting Time, Bleeding Time (Slide, Duke's method)",
+            'LABOR00098' => 'Complete blood count (includes WBC count differential count, hemoglobin, hematocrit)',
+            'LABOR00115' => "Coomb's Test (Direct)",
+            'LABOR00019' => "Coomb's test - direct",
+            'LABOR00020' => "Coomb's test - indirect",
+            'LABOR00264' => 'Cortisol',
+            'LABOR00088' => 'CPK-MB',
+            'LABOR00047' => 'Crea Nitrogen',
+            'LABOR00148' => 'Creatinine Clearance Test ( CCT )',
+            'LABOR00046' => 'Creatinine Test',
+            'LABOR00207' => 'Cross Matching',
+            'LABOR00114' => 'Cross Matching (3 Phase)',
+            'LABOR00288' => 'Crossmatching per bag',
+            'LABOR00054' => 'CRP',
+            'LABOR00143' => 'CSF Analysis (cell count)',
+            'LABOR00070' => 'CSF Analysis (complete)',
+            'LABOR00071' => 'CSF Analysis - cell count / diff. count',
+            'LABOR00033' => 'CSF Analysis - Protein',
+            'LABOR00032' => 'CSF Analysis - Sugar',
+            'LABOR00187' => 'CSF, Body Fluids Transudate, Exudate Cell & Differential Ct. Sugar, Protein Analysis',
+            'LABOR00177' => 'CT, BT',
+            'LABOR00116' => 'Culture & Sensitivity',
+            'LABOR00248' => 'Cyfral 21-1 (Lungs)',
+            'LABOR00036' => 'Cytology (fluids) with cell block',
+            'LABOR00035' => 'Cytology (FNAB)',
+            'LABOR00294' => 'Decalcification of Bone',
+            'LABOR00059' => 'Dengue Antigen IgM',
+            'LABOR00058' => 'Dengue dot',
+            'LABOR00062' => 'DIC panel',
+            'LABOR00024' => 'DIC panel - Activated PT',
+            'LABOR00065' => 'DIC panel - Fibrin Degredation Product',
+            'LABOR00064' => 'DIC panel - Fibrinogen Assay',
+            'LABOR00023' => 'DIC panel - Prothrombin Time',
+            'LABOR00063' => 'DIC panel - Thrombin Time',
+            'LABOR00158' => 'Direct Bilirubin',
+            'LABOR00210' => 'DU Variant (Anti Du)',
+            'LABOR01004' => 'ECG',
+            'LABOR00102' => 'Erythrocytes Sedimentation Rate (ESR)',
+            'LABOR00061' => 'ESR',
+            'LABOR00258' => 'Estradiol',
+            'LABOR00281' => 'Extraction Fee',
+            'LABOR01003' => 'Fasting / Random Blood Sugar (FBS / RBS)',
+            'LABOR01000' => 'Fasting Blood Sugar',
+            'LABOR00191' => 'FBS / RBS',
+            'LABOR00040' => 'Fecalysis',
+            'LABOR00136' => 'Fecalysis - Apts Test',
+            'LABOR00134' => 'Fecalysis - Bile and Bilirubin',
+            'LABOR00138' => 'Fecalysis - Concentration Technic',
+            'LABOR00133' => 'Fecalysis - Occult Blood',
+            'LABOR00132' => 'Fecalysis - Routine Stool Exam',
+            'LABOR00140' => 'Fecalysis - Scock Tape for Enerobius',
+            'LABOR00139' => 'Fecalysis - Smear for Amoeba',
+            'LABOR00137' => 'Fecalysis - Sudan Test',
+            'LABOR00135' => 'Fecalysis - Urobilinogen & Stercobilinogen',
+            'LABOR00277' => 'Fecalysis w/ Kato Thick',
+            'LABOR00263' => 'Ferritin',
+            'LABOR00290' => 'FFP, Cryoppt Retyping per bag',
+            'LABOR00270' => 'Filaria',
+            'LABOR00229' => 'FNAB',
+            'LABOR00073' => 'Frozen Section',
+            'LABOR00256' => 'FSH',
+            'LABOR00297' => 'FT3',
+            'LABOR00238' => 'FT4',
+            'LABOR00223' => 'FTI',
+            'LABOR00298' => 'FTI (FT3/FT4 Index)',
+            'LABOR00239' => 'FTI/FTT4 Index',
+            'LABOR00202' => 'Geimsa Staining',
+            'LABOR00043' => 'Glucose',
+            'LABOR00149' => 'Glucose (FBS)',
+            'LABOR00118' => 'Gram Staining',
+            'LABOR00304' => 'Gram Staining (Direct)',
+            'LABOR00293' => 'Gram Staining of Cervical Smears',
+            'LABOR00292' => 'Gram Staining of Tissue',
+            'LABOR00002' => "Gram's Stain",
+            'LABOR00153' => 'GTT (Glucose Tolerance Test)',
+            'LABOR00221' => 'H.pylori',
+            'LABOR00295' => 'HbsAg',
+            'LABOR00251' => 'HbsAg & Anti HBs (Package)',
+            'LABOR00249' => 'HbsAg (Quantitative)',
+            'LABOR00083' => 'HDL / LDL',
+            'LABOR00176' => 'Hematocrit',
+            'LABOR00100' => 'Hemoglobin',
+            'LABOR00216' => 'Hepa B Antigen Quanti',
+            'LABOR00218' => 'Hepa C Antibody',
+            'LABOR00010' => 'Hepatitis - HBc',
+            'LABOR00012' => 'Hepatitis - HBe / HBeAg',
+            'LABOR00011' => 'Hepatitis - HBs',
+            'LABOR00009' => 'Hepatitis - HBsAg (EIA)',
+            'LABOR00008' => 'Hepatitis - HBsAg (RPHA)',
+            'LABOR00051' => 'Hepatitis - HBsAg (strips)',
+            'LABOR00208' => 'Hepatitis A Antigen',
+            'LABOR00209' => 'Hepatitis B Antigen',
+            'LABOR00013' => 'Hepatitis B profile',
+            'LABOR00015' => 'Hepatitis C profile - HCV (EIA)',
+            'LABOR00014' => 'Hepatitis C profile HCV (PA)',
+            'LABOR00217' => 'Hepatitis Test',
+            'LABOR00350' => 'HGT',
+            'LABOR00039' => 'Histopathology - Large',
+            'LABOR00038' => 'Histopathology - Medium or (2) small',
+            'LABOR00037' => 'Histopathology - Small (1)',
+            'LABOR00016' => 'HIV',
+            'LABOR00215' => 'HIV Antibody',
+            'LABOR00017' => 'HIV EIA',
+            'LABOR00122' => 'India Ink',
+            'LABOR00159' => 'Indirect Bilirubin',
+            'LABOR00172' => 'Inorganic Phospharous',
+            'LABOR00121' => 'KGH Mounting',
+            'LABOR00003' => 'KOH',
+            'LABOR00029' => "L.E.  Schilling's Hemogram",
+            'LABOR00028' => 'L.E. Preparation (manual)',
+            'LABOR00162' => 'LDH',
+            'LABOR00110' => 'LE Cell Preparation',
+            'LABOR00182' => 'Lee White, CT',
+            'LABOR00255' => 'LH (Luteinizing Hormone)',
+            'LABOR00201' => 'Lipid Profile',
+            'LABOR00108' => 'Malarial Smear',
+            'LABOR00068' => 'Malarial Smear - QBC',
+            'LABOR00069' => 'Malarial Smear- Slide',
+            'LABOR555' => 'MISCELLANEOUS TESTING',
+            'LABOR00041' => 'Occult Blood',
+            'LABOR00087' => 'OGTT',
+            'LABOR00280' => 'OGTT (3 takes))',
+            'LABOR00031' => 'Osmotic Fragility Test',
+            'LABOR00034' => "PAP's Smear",
+            'LABOR00099' => 'Partial Blood count ( WBC count, diff. count)',
+            'LABOR00091' => 'Patassium',
+            'LABOR00178' => 'Peripheral Smear',
+            'LABOR00007' => 'PLATELET COUNT',
+            'LABOR00103' => 'Platelet Count / Actual Platelet Count',
+            'LABOR00289' => 'Platelet Crossmatching',
+            'LABOR00169' => 'Potassium',
+            'LABOR00146' => 'Pregnancy Test',
+            'LABOR00081' => 'Pregnancy Test (Preg Test)',
+            'LABOR00259' => 'Progesterone',
+            'LABOR00257' => 'Prolactin',
+            'LABOR00106' => 'Prothrombin Time (INR) DerivedFibrinogen, Protime %  Activity',
+            'LABOR00181' => 'Protime',
+            'LABOR00241' => 'PSA (Prostate)',
+            'LABOR00189' => 'Quali Pregnancy Test',
+            'LABOR00190' => 'Quanti Pregnancy Test',
+            'LABOR00072' => 'Radical (Breast, Uterus, RND)',
+            'LABOR00278' => 'Rapid Blood Sugar / RBS',
+            'LABOR00174' => 'RBC Count',
+            'LABOR00101' => 'Red Blood Cell Count',
+            'LABOR00022' => 'Reticulocyte Count',
+            'LABOR00104' => 'Reticulocytos count',
+            'LABOR00113' => 'RH Blood Typing (Tube Method)',
+            'LABOR00055' => 'Rheumatoid factor',
+            'LABOR00214' => 'RPR (VDRL)',
+            'LABOR1005' => 'RT PCR',
+            'LABOR01005' => 'SAMPLE SAMPLE',
+            'LABOR00066' => "Schilling's Hemogram",
+            'LABOR00052' => 'Screening fee per blood unit',
+            'LABOR00082' => 'Semen Analysis',
+            'LABOR00142' => 'Seminal Fluid Analysis',
+            'LABOR00273' => 'Serial HB, HCT',
+            'LABOR00272' => 'Serial HB, HCT, Platelet',
+            'LABOR00274' => 'Serial HCT, PLatelet Ct',
+            'LABOR00049' => 'Serum Albumin',
+            'LABOR00096' => 'SGOT',
+            'LABOR00097' => 'SGPT',
+            'LABOR00042' => 'Smear for Amoeba',
+            'LABOR00271' => 'Smear for Malaria (SMP)',
+            'LABOR00090' => 'Sodium',
+            'LABOR00232' => 'Special Staining',
+            'LABOR0099' => 'SPUTUM',
+            'LABOR00204' => 'Stool / Rectal Swab Blood Culture:',
+            'LABOR01001' => 'SYPHILIS TEST',
+            'LABOR00240' => 'T Uptake',
+            'LABOR00234' => 'T3',
+            'LABOR00224' => 'T3 Uptake',
+            'LABOR00237' => 'T3, T4, TSH',
+            'LABOR00212' => 'T3T4',
+            'LABOR00235' => 'T4',
+            'LABOR00157' => 'Total Bilirubin',
+            'LABOR00095' => 'Total Bilirubin B1B2',
+            'LABOR00192' => 'Total Cholesterol',
+            'LABOR00165' => 'Total CPR',
+            'LABOR00048' => 'Total Protein',
+            'LABOR00144' => 'Total Protein & Globulin',
+            'LABOR00179' => 'Toxic Granules',
+            'LABOR00085' => 'TP, Albumin, AG ratio',
+            'LABOR00266' => 'TPAG',
+            'LABOR00152' => 'Triglycerides',
+            'LABOR00084' => 'Triglycerides / LDH',
+            'LABOR00200' => 'Trop T',
+            'LABOR00302' => 'Trop T (qualitative)',
+            'LABOR00262' => 'Trop T (Quantitative)',
+            'LABOR00222' => 'TSH',
+            'LABOR00056' => 'Typhidot',
+            'LABOR00193' => 'Urea (BUN)',
+            'LABOR00150' => 'Uric Acid',
+            'LABOR00044' => 'Uric Acid (Urates)',
+            'LABOR00129' => 'Urinalysis - Bench Jones Protein',
+            'LABOR00127' => 'Urinalysis - Bilirubin & Bile',
+            'LABOR00128' => 'Urinalysis - Diabetic & Calcium',
+            'LABOR00126' => 'Urinalysis - Qualitative & Quantitative Urobilinogen',
+            'LABOR00125' => 'Urinalysis - Qualitative Albumin',
+            'LABOR00124' => 'Urinalysis - Qualitative Sugar & Acetone',
+            'LABOR00123' => 'Urinalysis - Routine (Qualitative & Microscopic)',
+            'LABOR00130' => 'Urinalysis - Stone Analysis',
+            'LABOR00076' => 'Urinalysis MARTEST',
+            'LABOR00265' => 'Urinary Caculi (Stone Analysis)',
+            'LABOR00077' => 'Urine Albumin',
+            'LABOR00276' => 'Urine Bilirubin',
+            'LABOR00078' => 'Urine Ketone/Acetone',
+            'LABOR00184' => 'Urine PH',
+            'LABOR00185' => 'Urine Specific Gravity',
+            'LABOR00080' => 'Urine Sugar',
+            'LABOR00131' => 'Urine Sugar (Clinitest)',
+            'LABOR00175' => 'WBC Count',
+            'LABOR00057' => 'Widal',
+            'LABOR00141' => 'Widal Test'
+        );
+
+        return $data;
+    }
+
+    public function store(Request $request)
+    {
+        labRequest::where('activity_id', $request->activity_id)
+        ->delete();
+        foreach($request->laboratory_code as $row) {
+            LabRequest::create([
+                'activity_id' => $request->activity_id,
+                'requested_by' => $request->requested_by,
+                'laboratory_code' => $row
+            ]);
+        }
+        return response()->json(['lab_request' => $request->all()], Response::HTTP_CREATED);
+    }
+
+    public function checkLabResult(Request $request) {
+        return labRequest::where('activity_id', $request->activity_id)->first();
     }
 
 }

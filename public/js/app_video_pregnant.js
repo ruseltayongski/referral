@@ -19062,52 +19062,51 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   },
   created: function created() {
-    console.log(this.activity_id, this.baseUrl, this.code);
     var prescriptionCode = this.code;
     this.fetchPrescriptions(prescriptionCode);
   },
   methods: {
-    savePrescriptions: function savePrescriptions() {
-      function checkRequiredProperties(obj) {
-        if (!obj.generic_name) {
-          Lobibox.alert("error", {
-            msg: "Please input generic name"
-          });
-          return false;
-        } else if (!obj.brandname) {
-          Lobibox.alert("error", {
-            msg: "Please input brandname"
-          });
-          return false;
-        } else if (!obj.dosage) {
-          Lobibox.alert("error", {
-            msg: "Please input dosage"
-          });
-          return false;
-        } else if (!obj.quantity) {
-          Lobibox.alert("error", {
-            msg: "Please input quantity"
-          });
-          return false;
-        } else if (!obj.formulation) {
-          Lobibox.alert("error", {
-            msg: "Please input formulation"
-          });
-          return false;
-        } else if (!obj.frequency) {
-          Lobibox.alert("error", {
-            msg: "Please input frequency"
-          });
-          return false;
-        } else if (!obj.duration) {
-          Lobibox.alert("error", {
-            msg: "Please input duration"
-          });
-          return false;
-        }
-        return true;
+    checkRequiredProperties: function checkRequiredProperties(obj) {
+      if (!obj.generic_name) {
+        Lobibox.alert("error", {
+          msg: "Please input generic name"
+        });
+        return false;
+      } else if (!obj.brandname) {
+        Lobibox.alert("error", {
+          msg: "Please input brandname"
+        });
+        return false;
+      } else if (!obj.dosage) {
+        Lobibox.alert("error", {
+          msg: "Please input dosage"
+        });
+        return false;
+      } else if (!obj.quantity) {
+        Lobibox.alert("error", {
+          msg: "Please input quantity"
+        });
+        return false;
+      } else if (!obj.formulation) {
+        Lobibox.alert("error", {
+          msg: "Please input formulation"
+        });
+        return false;
+      } else if (!obj.frequency) {
+        Lobibox.alert("error", {
+          msg: "Please input frequency"
+        });
+        return false;
+      } else if (!obj.duration) {
+        Lobibox.alert("error", {
+          msg: "Please input duration"
+        });
+        return false;
       }
-      if (!checkRequiredProperties(this)) {
+      return true;
+    },
+    savePrescriptions: function savePrescriptions() {
+      if (!this.checkRequiredProperties(this)) {
         return;
       }
       var _iterator = _createForOfIteratorHelper(this.prescriptions),
@@ -19115,7 +19114,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var prescription = _step.value;
-          if (!checkRequiredProperties(prescription)) {
+          if (!this.checkRequiredProperties(prescription)) {
             return;
           }
         }

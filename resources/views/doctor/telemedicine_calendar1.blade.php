@@ -9,6 +9,7 @@
 @endsection
 
 @section('content')
+    @include('modal.refer')
     <div id="app_appointment">
         <appointment-app :user="{{ $user }}" :appointment_sched="{{ $appointment_sched }}"></appointment-app>
     </div>

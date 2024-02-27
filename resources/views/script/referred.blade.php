@@ -89,33 +89,28 @@
         document.getElementById('files-input').addEventListener('change', SelectedFile);
     });
 
-
     function SelectedFile(event) {
         const listfile = event.target.files;
         console.log('listfile :', listfile);
         const prevContainer = document.getElementById('container-preview');
         prevContainer.innerHTML = '';
         console.log('container', prevContainer);
-        
         for(const file of listfile){
             const listItems = document.createElement('div');
             listItems.textContent = file.name;
-            let allowedextension =  ["pdf", "png", "jpeg", "jpg"];
+            let allowedextension =  ["pdf", "png", "jpeg", "jpg","webp"];
             let arrayfile = Array.from(listfile).map(file=>file.name);
-
             let allextension =  arrayfile.every(fileName => {
                 let ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
                 return allowedextension.includes(ext);
             });
             
             if(allextension){ 
-                
                 isvalidFiles = true;
                 if (file.type.startsWith('image/')) {
                     console.log("imagesss:", file);
                     ImagePrev(file, prevContainer,listfile);
                 }
-                // Display PDF preview for .pdf files
                 else if(file.type === 'application/pdf'){
                     // Create a container for each PDF and its remove icon
                     const Containerpdf = document.createElement('div');
@@ -125,13 +120,11 @@
                     // Create the remove icon
                     const removeIcon = document.createElement('i');
                     removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-
                     removeIcon.addEventListener('click', function() {
                         const filename = file.name;
                         removedFiles.push(filename);
                         $("#filecount").val(removedFiles.join(''));
                         Containerpdf.remove();
-
                         const fileInput = document.getElementById('files-input');
                         const currentfile = fileInput.files;
                         const updatefiles = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
@@ -139,23 +132,20 @@
                         const newTransfer = new DataTransfer();
                         updatefiles.forEach(file => newTransfer.items.add(file));
                         fileInput.files = newTransfer.files;
-
                         if(prevContainer.children.length === 0) {
                             const fileInput = document.getElementById('files-input')
                             fileInput.value = '';
                             const event = new Event('change');
                             fileInput.dispatchEvent(event);
-                        }
-                                
+                        }           
                     });
                     Containerpdf.appendChild(pdfPreview);
                     Containerpdf.appendChild(removeIcon);
                     // Append the container to the main preview container
                     prevContainer.appendChild(Containerpdf);
                 }
-               
+
             }else if(!event.target.files.length && !prevContainer){
-            
                 event.preventDefault();
                 alert('Please select a file before submitting.');
                 return;
@@ -164,39 +154,33 @@
                 prevContainer.innerHTML = '';
                 const errmsId = 'error-messages';
                 let existmsg = document.getElementById(errmsId);
-                console.log('filname', file.name);
                     if(!existmsg){
                         const errmsg = document.createElement('p');
                         console.log('error: ', errmsg);
-                        
                         errmsg.textContent = 'Please upload a valid pdf or images file..';
                         errmsg.style.color = 'red';
                         errmsg.id = errmsId;
                         $("#err-message").html("");
                         prevContainer.appendChild(errmsg);
                     }
-                        // Break out of the loop as there's an invalid file
-                break;         
+                     break; // Break out of the loop as there's an invalid file        
             }
         }
-            $("#AddEmptyFileFollowupForm").submit(function(event){
-                if(!isvalidFiles){
-                    event.preventDefault();
-                }else{
-                    // $("#AddEmptyFileFollowupForm").show();
-                        prevContainer.innerHTML = '';
-                }  
-            });
-
+        $("#AddEmptyFileFollowupForm").submit(function(event){
+            if(!isvalidFiles){
+                event.preventDefault();
+            }else{
+                // $("#AddEmptyFileFollowupForm").show();
+                    prevContainer.innerHTML = '';
+            }  
+        });
     }
-
 
     function ImagePrev(file, container, listFile){
         const reader = new FileReader();
         reader.onload = function (e){
             const imageCons = document.createElement('div');
             imageCons.classList.add('image-container');
-
             const prevImage = document.createElement('img');
             prevImage.setAttribute('src', e.target.result);
             prevImage.style.width = '150px';
@@ -205,9 +189,7 @@
             prevImage.classList.add('preview');
             $("#err-message").html(""); // this will remove the display erro messages if empty
             prevImage.addEventListener('click', function () { 
-    
                 viewImage(e.target.result,file.name, container);
-                
             });
             const removedFiles = []; 
             // Create the remove icon
@@ -215,7 +197,6 @@
             removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
             removeIcon.addEventListener('click', function() {
                 container.removeChild(imageCons);
-
                 const filename = file.name;
                 removedFiles.push(filename);
                 const fileInput = document.getElementById('files-input');
@@ -232,7 +213,6 @@
                     const event = new Event('change');
                     fileInput.dispatchEvent(event);
                 }
-
             });
             imageCons.appendChild(prevImage);
             imageCons.appendChild(removeIcon);
@@ -258,18 +238,13 @@
         pdfPreview.style.height = '150px';
         pdfPreview.dataset.originalFilename = file;
         $("#err-message").html(""); // this will remove the display erro messages if empty
-
         pdfPreview.addEventListener('click', function () { 
             pdfshow(file,placeholderUrl);
-                
         });
-       
         return pdfPreview;
     }
-
     //------------------------my adding for update file uploader Follow up-----------------------------//
-    function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position)
-    {
+    function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
         console.log("updated filename: ", fileNames);
         event.preventDefault();
         $(".telemedicine").val(1);
@@ -281,7 +256,6 @@
         $("#position_count_number").val(position);
         var currentPosition = $("#position_count_number").val();
         var fileExtension = fileNames.split('.').pop().toLowerCase();
-
         if(fileExtension === 'pdf'){
             $("#file-preview-black").html(fileNames);
              $("#img-preview").attr('src','../public/fileupload/PDF_file_icon.png');
@@ -290,22 +264,17 @@
             $("#file-preview-black").html(fileNames);
             $("#img-preview").attr('src', `${baseUrl}/${fileNames}`);
         }
-
         $("#Update_followup_header").html("Update File");
         $("#telemedicineUpateFileFormModal").modal('show');
         $("#carouselmodaId").modal('hide'); 
-       
     }
 
     $('#telemedicineUpateFileFormModal').on('hidden.bs.modal', function () {
         $('#file-upload-update').val();
         $("#carouselmodaId").remove();
-
     });
-      //------------------------my adding for update file uploader Follow up End-----------------------------//
-
-      //------------------------Add files if empty add more-----------------------------//
-     function addfilesInFollowupIfempty(position,code,referred_id,follow_id,filenames){
+    //------------------------Add files if empty add more-----------------------------//
+    function addfilesInFollowupIfempty(position,code,referred_id,follow_id,filenames){
         event.preventDefault();
         $(".telemedicine").val(1);
         $("#filenames").val(filenames);
@@ -313,39 +282,45 @@
         $("#telemedicine_followup_code").val(code);
         $("#telemedicine_referred_id").val(referred_id);
         $("#telemedicine_followup_id").val(follow_id);
-       
         document.getElementById("container-preview").innerHTML = "";
         $("#err-message").html("");
         $("#Add_followup_headerform").html("Add Files")
         $("#FollowupAddEmptyFileFormModal").modal('show');
-        $("#FollowupAddEmptyFileFormModal").on('hidden.bs.modal', function(){
-            //  location.reload();
-            // $("#carouselmodaId").hide();
-            // $("#carouselmodaId").hide();
+        $("#AddEmptyFileFollowupForm").submit(function (event){
+            $("#FollowupAddEmptyFileFormModal").modal('hide');
         });
-   
-        
-     }
-     $('#FollowupAddEmptyFileFormModal').on('hidden.bs.modal', function () {
+    }
+
+    $('#FollowupAddEmptyFileFormModal').on('hidden.bs.modal', function () {
             $('#files-input').val('');
             $('#container-preview').empty();
             $("#imageView").attr('src', '');
             $("#carouselmodaId").remove();
         });
 
- //------------------------ delete file-----------------------------//
-     function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
+    $(document).keydown(function(event) { //this will close modal of press the keyboard Esc
+        if (event.keyCode == 27) { 
+            $("#FollowupAddEmptyFileFormModal").modal('hide');
+            $("#telemedicineUpateFileFormModal").modal('hide');
+            $("#telemedicineDeleteFileFollowupFormModal").modal('hide');
+            $('#files-input').val('');
+            $("#file-name").html('');
+            $('#container-preview').empty();
+            $("#imageView").attr('src', '');
+        }
+    }); 
+    //------------------------ delete file-----------------------------//
+    function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
         event.preventDefault();
-        var fileExtension = fileNames.split('.').pop().toLowerCase();
-
-        if (fileExtension === 'pdf') {
+        var ext = fileNames.split('.').pop().toLowerCase();
+        if (ext === 'pdf') {
             var pdfViewer = '<embed id="pdfViewer" src="' + `${baseUrl}/${fileNames}` + '" type="application/pdf" width="100%" height="300px" />';
             $("#preview-containerfor").html(pdfViewer);
             $("#pdfViewer").attr('src', `${baseUrl}/${fileNames}`)
         }else{
-            $("#delete-image").attr("src", `${baseUrl}/${fileNames}`);
+            $("#pdfViewer").remove();
+            $("#preview-containerfor").html('<img id="delete-image" src="' + `${baseUrl}/${fileNames}` + '" width="100%" height="250px" />'); //jondy changes
         }
-    
         $("#file-name").text(fileNames);
         $("#telemedicine_code").val(code);
         $("#delete_telemedicine_followup_id").val(follow_id);
@@ -354,7 +329,6 @@
         var selectedFileNameInput = $("#selected-file-name");
         selectedFileNameInput.val(fileNames);
         position_counter.val(position);
-        
         $("#Delete_followup_header").html("Are you sure You want to delete this file?");
         $("#telemedicineDeleteFileFollowupFormModal").modal('show');
      }//end of the function 
@@ -370,7 +344,6 @@
         // $("#delete-image").attr("src", "");
         $("#pdfViewer").remove();
         $("#carouselmodaId").remove();
-
         });
      // select single image & pdf to preview
     function readURL(input) {
@@ -383,13 +356,12 @@
             $('#file-preview-black').html("");
             $("#file-preview-red").html("");
             $("#file-empty").html("");
-
             if (ext === "pdf") {
                 isvalidFile = true;
                 $('#img-preview').attr('src', '../public/fileupload/PDF_file_icon.png').css('display', 'block');
                 $("#img-preview").css('width', '50%');
                 $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
-            } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG") {
+            } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG" || ext === "webp") {
                 isvalidFile = true;
                 $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                 $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
@@ -406,7 +378,6 @@
             })
         }
     }
-    // end of my file upload script changes
 
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
@@ -443,11 +414,19 @@
                 });
         }
         else {
-            $("#followup_header").html("Follow Up Patient");
-            telemedicine = 1;
-            $("#telemedicineFollowupFormModal").modal('show');
+            // $("#followup_header").html("Follow Up Patient");
+            // telemedicine = 1;
+            // $("#telemedicineFollowupFormModal").modal('show');
+            const appointment = {
+                code: code,
+                referred_id: referred_id
+            }
+            window.location.href = `{{ asset('doctor/appointment/calendar') }}?appointmentKey=${generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
         }
+         //immediately close the form modal after submission
+      
     }
+       
 
     function consultToOtherFacilities(code) {
         $("#followup_header").html("Consult to other facilities");
@@ -473,43 +452,12 @@
         $.post(url,json,function(){});
         var windowName = 'NewWindow'; // Name of the new window
         var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
         if (newWindow && newWindow.outerWidth) {
             // If the window was successfully opened, attempt to maximize it
             newWindow.moveTo(0, 0);
             newWindow.resizeTo(screen.availWidth, screen.availHeight);
         }
-
-        // if($("#accepted_progress"+code+activity_id).hasClass("completed")) {
-        //     var url = "<?php echo asset('api/video/call'); ?>";
-        //     var json = {
-        //         "_token" : "<?php echo csrf_token(); ?>",
-        //         "tracking_id" : tracking_id,
-        //         "code" : code,
-        //         "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
-        //         "referring_md" : referring_md,
-        //         "trigger_by" : "{{ $user->id }}",
-        //         "form_type" : form_tpe,
-        //         "activity_id" : activity_id
-        //     };
-        //     $.post(url,json,function(){
-
-        //     });
-        //     var windowName = 'NewWindow'; // Name of the new window
-        //     var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        //     var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
-        //     if (newWindow && newWindow.outerWidth) {
-        //         // If the window was successfully opened, attempt to maximize it
-        //         newWindow.moveTo(0, 0);
-        //         newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        //     }
-        // } 
-        // else if(!alreadyAccepted) {
-        //     Lobibox.alert("error",
-        //     {
-        //         msg: "You cannot follow up on a patient because it has not yet been examined."
-        //     });
-        // }
     }
 
     function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
@@ -526,6 +474,25 @@
                 msg: "No prescription has been created by the referred doctor"
             });
         }
+    }
+
+    function telemedicineLabResult(activity_id) {
+        const url = "{{ asset('api/check/labresult') }}";
+        var json = {
+            "activity_id" : activity_id
+        };
+        $.post(url,json,function(result) {
+            if(result) {
+                const pdf_url = "{{ asset('doctor/print/labresult') }}";
+                window.open(`${pdf_url}/${activity_id}`);
+            }
+            else {
+                Lobibox.alert("error",
+                {
+                    msg: "No lab request has been created by the referred doctor"
+                });
+            }
+        })
     }
 
     function telemedicineEndPatient(alreadyTreated, alreadyReferred, alreadyFollowUp, alreadyEnd, code, referred_id) {

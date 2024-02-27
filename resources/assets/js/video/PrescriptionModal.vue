@@ -170,72 +170,66 @@
 
         },
         created() {
-            console.log(this.activity_id, this.baseUrl, this.code)
-
             const prescriptionCode = this.code;
             this.fetchPrescriptions(prescriptionCode);
         
         },
         methods: {
-
-            savePrescriptions() {
-                function checkRequiredProperties(obj) {
-                    if (!obj.generic_name) {
-                        Lobibox.alert("error", {
-                            msg: "Please input generic name",
-                        });
-                        return false;
-                    }
-                    else if (!obj.brandname) {
-                        Lobibox.alert("error", {
-                            msg: "Please input brandname",
-                        });
-                        return false;
-                    }
-                    else if (!obj.dosage) {
-                        Lobibox.alert("error", {
-                            msg: "Please input dosage",
-                        });
-                        return false;
-                    }
-                    else if (!obj.quantity) {
-                        Lobibox.alert("error", {
-                            msg: "Please input quantity",
-                        });
-                        return false;
-                    }
-                    else if (!obj.formulation) {
-                        Lobibox.alert("error", {
-                            msg: "Please input formulation",
-                        });
-                        return false;
-                    }
-                    else if (!obj.frequency) {
-                        Lobibox.alert("error", {
-                            msg: "Please input frequency",
-                        });
-                        return false;
-                    }
-                    else if (!obj.duration) {
-                        Lobibox.alert("error", {
-                            msg: "Please input duration",
-                        });
-                        return false;
-                    }
-
-                    return true;
+            checkRequiredProperties(obj) {
+                if (!obj.generic_name) {
+                    Lobibox.alert("error", {
+                        msg: "Please input generic name",
+                    });
+                    return false;
+                }
+                else if (!obj.brandname) {
+                    Lobibox.alert("error", {
+                        msg: "Please input brandname",
+                    });
+                    return false;
+                }
+                else if (!obj.dosage) {
+                    Lobibox.alert("error", {
+                        msg: "Please input dosage",
+                    });
+                    return false;
+                }
+                else if (!obj.quantity) {
+                    Lobibox.alert("error", {
+                        msg: "Please input quantity",
+                    });
+                    return false;
+                }
+                else if (!obj.formulation) {
+                    Lobibox.alert("error", {
+                        msg: "Please input formulation",
+                    });
+                    return false;
+                }
+                else if (!obj.frequency) {
+                    Lobibox.alert("error", {
+                        msg: "Please input frequency",
+                    });
+                    return false;
+                }
+                else if (!obj.duration) {
+                    Lobibox.alert("error", {
+                        msg: "Please input duration",
+                    });
+                    return false;
                 }
 
-                if (!checkRequiredProperties(this)) {
+                return true;
+            },
+            savePrescriptions() {
+                if (!this.checkRequiredProperties(this)) {
                     return;
                 }
-
                 for (const prescription of this.prescriptions) {
-                    if (!checkRequiredProperties(prescription)) {
+                    if (!this.checkRequiredProperties(prescription)) {
                         return;
                     }
                 }
-
                 const combinedPrescriptions = {
                     singlePrescription: {
                         generic_name: this.generic_name,
@@ -252,6 +246,7 @@
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
+
                 Lobibox.alert("success", {
                     msg: "Prescriptions saved successfully!",
                 });
@@ -266,8 +261,7 @@
                         console.error("Error submitting prescription", error);
                     });
             },
-
-             addEmptyPrescriptionBlock() {
+            addEmptyPrescriptionBlock() {
                 const emptyPrescription = {
                     generic_name: "",
                     brandname: "",
@@ -279,7 +273,6 @@
                 };
                 this.prescriptions.push(emptyPrescription);
             },
-
             deletePrescription(index) {
                 const prescriptionToDelete = this.prescriptions[index];
                 if (prescriptionToDelete.id) {
@@ -300,7 +293,6 @@
                     this.prescriptions.splice(index, 1);
                 }
             },
-     
             async fetchPrescriptions(code) {
                 try {
                     const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
@@ -323,8 +315,8 @@
                     else {
                         console.error('No prescriptions available.');
                     }
-
-                } catch (error) {
+                } 
+                catch (error) {
                     console.error('Error fetching prescriptions:', error);
                 }
             },

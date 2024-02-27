@@ -6,6 +6,7 @@ use Anouar\Fpdf\Fpdf;
 use App\Activity;
 use App\Tracking;
 use App\Icd;
+use App\LabRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\doctor\ReferralCtrl;
@@ -267,6 +268,130 @@ class PrintCtrl extends Controller
             $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
             $pdf->Ln(); 
         }
+        $pdf->Output();
+        exit;
+    }
+
+    public function printLabResult($activity_id) {
+        $activity = Activity::with([
+            'patient',
+            'referredTo',
+            'labRequest' => function($query) {
+                $query->select('activity_id', 'laboratory_code', 'requested_by')
+                ->with(['requestedBy' => function($query) {
+                    $query->select('id','fname','lname','signature','license');
+                }]);
+            }
+        ])
+        ->find($activity_id);
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => asset('api/laboratories'),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $data = json_decode($response, true);
+
+        $activity->labRequest->each(function ($labRequest) use ($data) {
+            $labRequest->laboratory_description = $data[$labRequest->laboratory_code] ?? null;
+        });
+
+        $requested_by = $activity->labRequest[0]->requestedBy;
+
+        $header = 'Dr. '.$requested_by->fname.' '.$requested_by->lname;
+        $department = 'OPD';
+        $facility = $activity->referredTo;
+        $facility_address = $facility->address;
+        $facility_contact = $facility->contact;
+        $facility_email = $facility->email;
+        $signature_path = realpath(__DIR__.'/../../../../'.$requested_by->signature);
+
+        $pdf = new PDFPrescription($header,$department,$facility->name,$facility_address,$facility_contact,$facility_email,$signature_path,$facility->license);
+        $pdf->setTitle($facility->name);
+        $pdf->AddPage();
+
+        $imageWidth = 20;
+        $pageWidth = $pdf->GetPageWidth();
+
+        $pdf->SetFont('Arial','B',15);
+        $pdf->Cell(0,20,"LABORATORY REQUEST",0,"","C");
+        $pdf->Ln();
+
+        for ($x = 5; $x <= $pageWidth-10; $x += $imageWidth+40) {}
+
+        $patient = $activity->patient;
+        $patient_age_year =  ParamCtrl::getAge($patient->dob);
+        $patient_age_month = ParamCtrl::getMonths($patient->dob);
+
+        $patient_age = "";
+        if($patient_age_year == 1)
+            $patient_age .= $patient_age_year." year ";
+        else
+            $patient_age .= $patient_age_year." years ";
+
+        if($patient_age_month['month'] == 1)
+            $patient_age .= $patient_age_month['month']." month ";
+        else
+            $patient_age .= $patient_age_month['month']." months ";
+
+        if($patient_age_month['days'] == 1)
+            $patient_age .= $patient_age_month['days']." day old";
+        else
+            $patient_age .= $patient_age_month['days']." days old"; 
+        
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$patient->fname.' '.$patient->lname,"Name: "), 0, 'L');
+        $y = $pdf->getY();
+        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($activity->created_at)),"Date: "), 0);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
+        $y = $pdf->getY();
+        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$patient->sex,"Sex: "), 0);
+        $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,'Day-as, Cebu City, Cebu',"Address:"), 0, 'L');
+
+
+        $prescriptionSetY = 140;
+        $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
+        $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
+        $pdf->setY($prescriptionSetY);
+
+        $pdf->SetTextColor(102,56,0);
+        $pdf->SetFont('Arial','I',10);
+        $leftMargin = 50;
+        $pdf->SetLeftMargin($leftMargin);  
+
+        // Initialize a counter to keep track of prescriptions
+        $prescriptionCounter = 0;
+        foreach ($activity->labRequest as $row) {
+            //---------------------------------------------------------
+            if ($prescriptionCounter == 8) {
+                $pdf->AddPage();
+                $prescriptionCounter = 0;
+            }
+            $prescriptionCounter++;
+            //---------------------------------------------------------
+            
+            $rowText = "{$row->laboratory_description}";
+            $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+    
+            $rowText2 = "{$row->laboratory_code}";
+            $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
+
+            $pdf->Ln(); 
+        }
+        
         $pdf->Output();
         exit;
     }

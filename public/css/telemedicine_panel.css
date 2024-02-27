@@ -266,3 +266,102 @@
 .panel-scoped-telemedicine .stepper-item:nth-child(7)::after {
   content: none;
 }
+
+/* start my file upload style changes */
+.carousel img {
+  margin: 0 auto;
+}
+
+.left-control .glyphicon-chevron-left {
+  left: 50%;
+  margin-left: -50px;
+}
+
+.right-control .glyphicon-chevron-right {
+  right: 50%;
+  margin-right: -50px;
+}
+
+.d-file {
+  font-size: 14px;
+  color: #FFF;
+  background-color: #4CAF50;
+  padding: 8px 12px;
+  margin: 4px;
+  border-radius: 5px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  transition: background-color 0.3s, transform 0.3s;
+  text-decoration: none;
+}
+
+.d-file:hover {
+  color: #7AE205;
+  transform: translateY(-2px);
+}
+
+.file-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.filecolor {
+  color: white !important;
+  background: linear-gradient(180deg, #52C755, #056608) !important;
+  border: 1px solid #056608 !important;
+}
+
+a.btn.filecolor:hover {
+  transform: translateY(-10px);
+  color: white;
+  background: linear-gradient(180deg, #056608, #8BD98D);
+}
+
+a.btn.filecolorDelete {
+  color: white;
+  background: linear-gradient(180deg, #EE3533, #ED1E24);
+}
+
+a.btn.filecolorDelete:hover {
+  transform: translateY(-10px);
+  color: white;
+  background: linear-gradient(180deg, #ED1E24, #F3787A);
+}
+
+a.btn.filecolorclose {
+  color: dark;
+  /* Darker text for better readability */
+  background: linear-gradient(180deg, #EDEDED, #CCCCCC);
+  border: 1px solid #BBB;
+  /* Subtle border for definition */
+  transition: background-color 0.3s, transform 0.2s;
+  /* Smooth transition for hover effect */
+}
+
+.filecolorclose:hover {
+  transform: translateY(-10px);
+  /* Move the button up and to the right */
+  background: linear-gradient(180deg, #ED1E24, #F3787A);
+  /* Optional: Add a box-shadow for better visual effect on hover */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+#closeModalId {
+  display: inline-block;
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  #closeModalId {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+.popover {
+  width: 230px;
+}

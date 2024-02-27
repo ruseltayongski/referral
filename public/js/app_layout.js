@@ -19372,7 +19372,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   created: function created() {
     var _this3 = this;
-    console.log("VUE.JS 3.2.3");
+    console.log("VUE.JS 3");
     Echo.join('chat').here(function (users) {
       //console.log(users)
       var websocket_element = $(".websocket_status");
